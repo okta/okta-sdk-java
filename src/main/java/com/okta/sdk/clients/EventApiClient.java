@@ -3,7 +3,7 @@ package com.okta.sdk.clients;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.okta.sdk.framework.ApiClientConfiguration;
 import com.okta.sdk.framework.ApiResponse;
-import com.okta.sdk.framework.Filter;
+import com.okta.sdk.framework.FilterBuilder;
 import com.okta.sdk.framework.JsonApiClient;
 import com.okta.sdk.framework.PagedResults;
 import com.okta.sdk.framework.Utils;
@@ -59,13 +59,13 @@ public class EventApiClient extends JsonApiClient {
         return get(getEncodedPathWithQueryParams("/", params), new TypeReference<List<Event>>() { });
     }
 
-    public List<Event> getEventsWithFilter(Filter filter) throws IOException {
-        return get(getEncodedPath("?" + FILTER + "=%s", filter.toString()), new TypeReference<List<Event>>() { });
+    public List<Event> getEventsWithFilter(FilterBuilder filterBuilder) throws IOException {
+        return get(getEncodedPath("?" + FILTER + "=%s", filterBuilder.toString()), new TypeReference<List<Event>>() { });
     }
 
-    public List<Event> getEventsWithFilterAndStartDate(Filter filter, DateTime startDate) throws IOException {
+    public List<Event> getEventsWithFilterAndStartDate(FilterBuilder filterBuilder, DateTime startDate) throws IOException {
         Map<String, String> params = new HashMap<String, String>();
-        params.put(FILTER, filter.toString());
+        params.put(FILTER, filterBuilder.toString());
         params.put(START_DATE, Utils.convertDateTimeToString(startDate));
         return get(getEncodedPathWithQueryParams("/", params), new TypeReference<List<Event>>() { });
     }
@@ -88,9 +88,9 @@ public class EventApiClient extends JsonApiClient {
         return new ApiResponse<List<Event>>(resp, events);
     }
 
-    protected ApiResponse<List<Event>> getEventsApiResponseWithFilterAndLimit(Filter filter, int limit) throws IOException {
+    protected ApiResponse<List<Event>> getEventsApiResponseWithFilterAndLimit(FilterBuilder filterBuilder, int limit) throws IOException {
         Map<String, String> params = new HashMap<String, String>();
-        params.put(FILTER, filter.toString());
+        params.put(FILTER, filterBuilder.toString());
         params.put(LIMIT, Integer.toString(limit));
         HttpResponse resp = getHttpResponse(getEncodedPathWithQueryParams("/", params));
         List<Event> events = unmarshall(resp, new TypeReference<List<Event>>() { });
@@ -133,8 +133,8 @@ public class EventApiClient extends JsonApiClient {
         return new PagedResults<Event>(getEventsApiResponseWithLimit(limit));
     }
 
-    public PagedResults<Event> getEventsPagedResultsWithFilterAndLimit(Filter filter, int limit) throws IOException {
-        return new PagedResults<Event>(getEventsApiResponseWithFilterAndLimit(filter, limit));
+    public PagedResults<Event> getEventsPagedResultsWithFilterAndLimit(FilterBuilder filterBuilder, int limit) throws IOException {
+        return new PagedResults<Event>(getEventsApiResponseWithFilterAndLimit(filterBuilder, limit));
     }
 
     public PagedResults<Event> getEventsPagedResultsWithStartDateAndLimit(DateTime startDate, int limit) throws IOException {

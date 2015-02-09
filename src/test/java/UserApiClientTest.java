@@ -1,11 +1,6 @@
 import com.okta.sdk.clients.UserApiClient;
 import com.okta.sdk.framework.ApiClientConfiguration;
-import com.okta.sdk.framework.Filter;
-import com.okta.sdk.framework.Filters;
 import com.okta.sdk.framework.PagedResults;
-import com.okta.sdk.models.users.UserProfile;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.Assert;

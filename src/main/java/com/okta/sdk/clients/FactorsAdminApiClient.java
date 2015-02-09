@@ -2,13 +2,12 @@ package com.okta.sdk.clients;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.okta.sdk.framework.ApiClientConfiguration;
-import com.okta.sdk.framework.Filter;
+import com.okta.sdk.framework.FilterBuilder;
 import com.okta.sdk.framework.JsonApiClient;
 import com.okta.sdk.models.factors.OrgAuthFactor;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public class FactorsAdminApiClient extends JsonApiClient {
 
@@ -29,8 +28,8 @@ public class FactorsAdminApiClient extends JsonApiClient {
         return get(getEncodedPath("/factors"), new TypeReference<List<OrgAuthFactor>>() { });
     }
 
-    public List<OrgAuthFactor> getOrgFactors(Filter filter) throws IOException {
-        return get(getEncodedPath("/factors?filter=%s", filter.toString()), new TypeReference<List<OrgAuthFactor>>() { });
+    public List<OrgAuthFactor> getOrgFactors(FilterBuilder filterBuilder) throws IOException {
+        return get(getEncodedPath("/factors?" + FILTER + "=%s", filterBuilder.toString()), new TypeReference<List<OrgAuthFactor>>() { });
     }
 
     // OrgAuthFactor LIFECYCLE

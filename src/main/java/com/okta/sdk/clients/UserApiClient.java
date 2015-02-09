@@ -3,7 +3,7 @@ package com.okta.sdk.clients;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.okta.sdk.framework.ApiClientConfiguration;
 import com.okta.sdk.framework.ApiResponse;
-import com.okta.sdk.framework.Filter;
+import com.okta.sdk.framework.FilterBuilder;
 import com.okta.sdk.framework.JsonApiClient;
 import com.okta.sdk.framework.PagedResults;
 import com.okta.sdk.framework.Utils;
@@ -18,7 +18,6 @@ import com.okta.sdk.models.users.UserProfile;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +49,8 @@ public class UserApiClient extends JsonApiClient {
         return get(getEncodedPath("?" + LIMIT + "=%s", Integer.toString(limit)), new TypeReference<List<User>>() { });
     }
 
-    public List<User> getUsersWithFilter(Filter filter) throws IOException {
-        return get(getEncodedPath("?" + FILTER + "=%s", filter.toString()), new TypeReference<List<User>>() { });
+    public List<User> getUsersWithFilter(FilterBuilder filterBuilder) throws IOException {
+        return get(getEncodedPath("?" + FILTER + "=%s", filterBuilder.toString()), new TypeReference<List<User>>() { });
     }
 
     public List<User> getUsersByUrl(String url) throws IOException {
@@ -249,15 +248,15 @@ public class UserApiClient extends JsonApiClient {
         return new ApiResponse<List<User>>(resp, users);
     }
 
-    protected ApiResponse<List<User>> getUsersApiResponseWithFilter(Filter filter) throws IOException {
-        HttpResponse resp = getHttpResponse(getEncodedPath("?" + FILTER + "=%s", filter.toString()));
+    protected ApiResponse<List<User>> getUsersApiResponseWithFilter(FilterBuilder filterBuilder) throws IOException {
+        HttpResponse resp = getHttpResponse(getEncodedPath("?" + FILTER + "=%s", filterBuilder.toString()));
         List<User> users = unmarshallResponse(new TypeReference<List<User>>() { }, resp);
         return new ApiResponse<List<User>>(resp, users);
     }
 
-    protected ApiResponse<List<User>> getUsersApiResponseWithFilterAndLimit(Filter filter, int limit) throws IOException {
+    protected ApiResponse<List<User>> getUsersApiResponseWithFilterAndLimit(FilterBuilder filterBuilder, int limit) throws IOException {
         Map<String, String> params = new HashMap<String, String>();
-        params.put(FILTER, filter.toString());
+        params.put(FILTER, filterBuilder.toString());
         params.put(LIMIT, Integer.toString(limit));
         HttpResponse resp = getHttpResponse(getEncodedPathWithQueryParams("/", params));
         List<User> users = unmarshallResponse(new TypeReference<List<User>>() { }, resp);
@@ -291,12 +290,12 @@ public class UserApiClient extends JsonApiClient {
         return new PagedResults<User>(getUsersApiResponseWithLimit(limit));
     }
 
-    public PagedResults<User> getUsersPagedResultsWithFilter(Filter filter) throws IOException {
-        return new PagedResults<User>(getUsersApiResponseWithFilter(filter));
+    public PagedResults<User> getUsersPagedResultsWithFilter(FilterBuilder filterBuilder) throws IOException {
+        return new PagedResults<User>(getUsersApiResponseWithFilter(filterBuilder));
     }
 
-    public PagedResults<User> getUsersPagedResultsWithFilterAndLimit(Filter filter, int limit) throws IOException {
-        return new PagedResults<User>(getUsersApiResponseWithFilterAndLimit(filter, limit));
+    public PagedResults<User> getUsersPagedResultsWithFilterAndLimit(FilterBuilder filterBuilder, int limit) throws IOException {
+        return new PagedResults<User>(getUsersApiResponseWithFilterAndLimit(filterBuilder, limit));
     }
 
     public PagedResults<User> getUsersPagedResultsAfterCursorWithLimit(String after, int limit) throws IOException {

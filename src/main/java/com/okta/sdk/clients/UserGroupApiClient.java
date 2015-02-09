@@ -3,7 +3,7 @@ package com.okta.sdk.clients;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.okta.sdk.framework.ApiClientConfiguration;
 import com.okta.sdk.framework.ApiResponse;
-import com.okta.sdk.framework.Filter;
+import com.okta.sdk.framework.FilterBuilder;
 import com.okta.sdk.framework.JsonApiClient;
 import com.okta.sdk.framework.PagedResults;
 import com.okta.sdk.models.usergroups.UserGroup;
@@ -45,13 +45,13 @@ public class UserGroupApiClient extends JsonApiClient {
         return get(getEncodedPath("?" + LIMIT + "=%s", Integer.toString(limit)), new TypeReference<List<UserGroup>>() { });
     }
 
-    public List<UserGroup> getUserGroupsWithFilter(Filter filter) throws IOException {
-        return get(getEncodedPath("?" + FILTER + "=%s", filter.toString()), new TypeReference<List<UserGroup>>() { });
+    public List<UserGroup> getUserGroupsWithFilter(FilterBuilder filterBuilder) throws IOException {
+        return get(getEncodedPath("?" + FILTER + "=%s", filterBuilder.toString()), new TypeReference<List<UserGroup>>() { });
     }
 
-    public List<UserGroup> getUserGroupsWithFilterAndLimit(Filter filter, int limit) throws IOException {
+    public List<UserGroup> getUserGroupsWithFilterAndLimit(FilterBuilder filterBuilder, int limit) throws IOException {
         Map<String, String> params = new HashMap<String, String>();
-        params.put(FILTER, filter.toString());
+        params.put(FILTER, filterBuilder.toString());
         params.put(LIMIT, Integer.toString(limit));
         return get(getEncodedPathWithQueryParams("", params), new TypeReference<List<UserGroup>>() { });
     }
@@ -117,8 +117,8 @@ public class UserGroupApiClient extends JsonApiClient {
         return new ApiResponse<List<UserGroup>>(resp, groups);
     }
 
-    protected ApiResponse<List<UserGroup>> getUserGroupsApiResponseWithFilter(Filter filter) throws IOException {
-        HttpResponse resp = getHttpResponse(getEncodedPath("?" + FILTER + "=%s", filter.toString()));
+    protected ApiResponse<List<UserGroup>> getUserGroupsApiResponseWithFilter(FilterBuilder filterBuilder) throws IOException {
+        HttpResponse resp = getHttpResponse(getEncodedPath("?" + FILTER + "=%s", filterBuilder.toString()));
         List<UserGroup> groups = unmarshall(resp, new TypeReference<List<UserGroup>>() { });
         return new ApiResponse<List<UserGroup>>(resp, groups);
     }
@@ -169,8 +169,8 @@ public class UserGroupApiClient extends JsonApiClient {
         return new PagedResults<UserGroup>(getUserGroupsApiResponseAfterCursorWithLimit(after, limit));
     }
 
-    public PagedResults<UserGroup> getUserGroupsPagedResultsWithFilter(Filter filter) throws IOException {
-        return new PagedResults<UserGroup>(getUserGroupsApiResponseWithFilter(filter));
+    public PagedResults<UserGroup> getUserGroupsPagedResultsWithFilter(FilterBuilder filterBuilder) throws IOException {
+        return new PagedResults<UserGroup>(getUserGroupsApiResponseWithFilter(filterBuilder));
     }
 
     public PagedResults<UserGroup> getUserGroupsPagedResultsByUrl(String url) throws IOException {

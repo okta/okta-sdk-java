@@ -5,10 +5,10 @@ import org.joda.time.DateTime;
 
 import java.util.HashSet;
 
-public class Filter {
-    public Filter() { }
+public class FilterBuilder {
+    public FilterBuilder() { }
 
-    public Filter(String StringFilter) {
+    public FilterBuilder(String StringFilter) {
         STRING_BUILDER.append(StringFilter);
     }
 
@@ -29,202 +29,199 @@ public class Filter {
 
     @Override
     public String toString() {
-        try
-        {
-            hasTooManyAttributesWithOr();
-        }
-        catch (SdkException e){
-            throw new RuntimeException(e);
-        }
-
         return this.STRING_BUILDER.toString();
     }
 
-    private boolean hasTooManyAttributesWithOr() throws SdkException{
+    private boolean hasTooManyAttributesWithOr() {
         if (ATTRIBUTES.size() > 1 && orCount > 0) {
-            throw new SdkException("Cannot create a filter with two different attributes combined by \"or\"");
+            SdkException sdkException = new SdkException("Cannot create a filter with two different attributes combined by \"or\"");
+            throw new RuntimeException(sdkException);
         }
         return false;
     }
 
-    public Filter where(String attr) {
+    public FilterBuilder where(String attr) {
         return this.attr(attr);
     }
 
-    public Filter where(Filter filter) {
-        STRING_BUILDER.append("(" + filter.toString() + ")");
+    public FilterBuilder where(FilterBuilder filterBuilderBuilder) {
+        ATTRIBUTES.addAll(filterBuilderBuilder.ATTRIBUTES);
+        orCount += filterBuilderBuilder.orCount;
+        hasTooManyAttributesWithOr(); // The nested filter could contain extra attributes
+        STRING_BUILDER.append("(" + filterBuilderBuilder.toString() + ")");
         return this;
     }
 
-    public Filter attr(String attr) {
+    public FilterBuilder attr(String attr) {
         ATTRIBUTES.add(attr);
+        hasTooManyAttributesWithOr(); // We could have added too many attributes
         STRING_BUILDER.append(attr);
         return this;
     }
 
-    public Filter value(String value) {
+    public FilterBuilder value(String value) {
         STRING_BUILDER.append('"' + value + '"');
         return this;
     }
 
-    public Filter value(boolean value) {
+    public FilterBuilder value(boolean value) {
         STRING_BUILDER.append(String.valueOf(value).toLowerCase());
         return this;
     }
 
-    public Filter value(int value) {
+    public FilterBuilder value(int value) {
         STRING_BUILDER.append(value);
         return this;
     }
 
-    public Filter value(DateTime value) {
+    public FilterBuilder value(DateTime value) {
         STRING_BUILDER.append('"' + Utils.convertDateTimeToString(value) + '"');
         return this;
     }
 
-    private Filter equalTo() {
+    private FilterBuilder equalTo() {
         STRING_BUILDER.append(EQUAL_SIGN);
         return this;
     }
 
-    public Filter equalTo(String value) {
+    public FilterBuilder equalTo(String value) {
         return equalTo().value(value);
     }
 
-    public Filter equalTo(int value) {
+    public FilterBuilder equalTo(int value) {
         return equalTo().value(value);
     }
 
-    public Filter equalTo(Boolean value) {
+    public FilterBuilder equalTo(Boolean value) {
         return equalTo().value(value);
     }
 
-    public Filter equalTo(DateTime value) {
+    public FilterBuilder equalTo(DateTime value) {
         return equalTo().value(value);
     }
 
-    private Filter contains() {
+    private FilterBuilder contains() {
         STRING_BUILDER.append(CONTAIN_SIGN);
         return this;
     }
 
-    public Filter contains(String value) {
+    public FilterBuilder contains(String value) {
         return contains().value(value);
     }
 
-    public Filter contains(int value) {
+    public FilterBuilder contains(int value) {
         return contains().value(value);
     }
 
-    private Filter startsWith() {
+    private FilterBuilder startsWith() {
         STRING_BUILDER.append(STARTS_WITH_SIGN);
         return this;
     }
 
-    public Filter startsWith(String value) {
+    public FilterBuilder startsWith(String value) {
         return startsWith().value(value);
     }
 
-    public Filter startsWith(int value) {
+    public FilterBuilder startsWith(int value) {
         return startsWith().value(value);
     }
 
-    public Filter present() {
+    public FilterBuilder present() {
         STRING_BUILDER.append(PRESENT_SIGN);
         return this;
     }
 
-    public Filter present(String value) {
+    public FilterBuilder present(String value) {
         return value(value).present();
     }
 
-    private Filter greaterThan() {
+    private FilterBuilder greaterThan() {
         STRING_BUILDER.append(GREATER_THAN_SIGN);
         return this;
     }
 
-    public Filter greaterThan(String value) {
+    public FilterBuilder greaterThan(String value) {
         return greaterThan().value(value);
     }
 
-    public Filter greaterThan(int value) {
+    public FilterBuilder greaterThan(int value) {
         return greaterThan().value(value);
     }
 
-    public Filter greaterThan(DateTime value) {
+    public FilterBuilder greaterThan(DateTime value) {
         return greaterThan().value(value);
     }
 
-    private Filter greaterThanOrEqual() {
+    private FilterBuilder greaterThanOrEqual() {
         STRING_BUILDER.append(GREATER_THAN_OR_EQUAL_SIGN);
         return this;
     }
 
-    public Filter greaterThanOrEqual(String value) {
+    public FilterBuilder greaterThanOrEqual(String value) {
         return greaterThanOrEqual().value(value);
     }
 
-    public Filter greaterThanOrEqual(int value) {
+    public FilterBuilder greaterThanOrEqual(int value) {
         return greaterThanOrEqual().value(value);
     }
 
-    public Filter greaterThanOrEqual(DateTime value) {
+    public FilterBuilder greaterThanOrEqual(DateTime value) {
         return greaterThanOrEqual().value(value);
     }
 
-    private Filter lessThan() {
+    private FilterBuilder lessThan() {
         STRING_BUILDER.append(LESS_THAN_SIGN);
         return this;
     }
 
-    public Filter lessThan(String value) {
+    public FilterBuilder lessThan(String value) {
         return lessThan().value(value);
     }
 
-    public Filter lessThan(int value) {
+    public FilterBuilder lessThan(int value) {
         return lessThan().value(value);
     }
 
-    public Filter lessThan(DateTime value) {
+    public FilterBuilder lessThan(DateTime value) {
         return lessThan().value(value);
     }
 
-    private Filter lessThanOrEqual() {
+    private FilterBuilder lessThanOrEqual() {
         STRING_BUILDER.append(LESS_THAN_OR_EQUAL_SIGN);
         return this;
     }
 
-    public Filter lessThanOrEqual(String value) {
+    public FilterBuilder lessThanOrEqual(String value) {
         return lessThanOrEqual().value(value);
     }
 
-    public Filter lessThanOrEqual(int value) {
+    public FilterBuilder lessThanOrEqual(int value) {
         return lessThanOrEqual().value(value);
     }
 
-    public Filter lessThanOrEqual(DateTime value) {
+    public FilterBuilder lessThanOrEqual(DateTime value) {
         return lessThanOrEqual().value(value);
     }
 
-    public Filter and() {
+    public FilterBuilder and() {
         STRING_BUILDER.append(AND_SIGN);
         return this;
     }
 
-    public Filter and(Filter filter) {
+    public FilterBuilder and(FilterBuilder filterBuilder) {
         STRING_BUILDER.append(AND_SIGN);
-        return where(filter);
+        return where(filterBuilder);
     }
 
-    public Filter or() {
+    public FilterBuilder or() {
         orCount++;
         STRING_BUILDER.append(OR_SIGN);
         return this;
     }
 
-    public Filter or(Filter filter) {
+    public FilterBuilder or(FilterBuilder filterBuilder) {
         orCount++;
         STRING_BUILDER.append(OR_SIGN);
-        return where(filter);
+        return where(filterBuilder);
     }
 }

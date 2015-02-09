@@ -3,7 +3,7 @@ package com.okta.sdk.clients;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.okta.sdk.framework.ApiClientConfiguration;
 import com.okta.sdk.framework.ApiResponse;
-import com.okta.sdk.framework.Filter;
+import com.okta.sdk.framework.FilterBuilder;
 import com.okta.sdk.framework.Filters;
 import com.okta.sdk.framework.JsonApiClient;
 import com.okta.sdk.framework.PagedResults;
@@ -46,9 +46,9 @@ public class AppInstanceApiClient extends JsonApiClient {
         return get(getEncodedPathWithQueryParams("/", params), new TypeReference<List<AppInstance>>() { });
     }
 
-    public List<AppInstance> getAppInstancesWithFilter(Filter filter) throws IOException {
+    public List<AppInstance> getAppInstancesWithFilter(FilterBuilder filterBuilder) throws IOException {
         Map<String, String> params = new HashMap<String, String>();
-        params.put(FILTER, filter.toString());
+        params.put(FILTER, filterBuilder.toString());
         return get(getEncodedPathWithQueryParams("/", params), new TypeReference<List<AppInstance>>() { });
     }
 
@@ -130,9 +130,9 @@ public class AppInstanceApiClient extends JsonApiClient {
         return new ApiResponse<List<AppInstance>>(resp, appInstances);
     }
 
-    protected ApiResponse<List<AppInstance>> getAppInstancesApiResponseWithFilterAndLimit(Filter filter, int limit) throws IOException {
+    protected ApiResponse<List<AppInstance>> getAppInstancesApiResponseWithFilterAndLimit(FilterBuilder filterBuilder, int limit) throws IOException {
         Map<String, String> params = new HashMap<String, String>();
-        params.put(FILTER, filter.toString());
+        params.put(FILTER, filterBuilder.toString());
         params.put(LIMIT, Integer.toString(limit));
         HttpResponse resp = getHttpResponse(getEncodedPathWithQueryParams("/", params));
         List<AppInstance> appInstances = unmarshall(resp, new TypeReference<List<AppInstance>>() { });
@@ -165,8 +165,8 @@ public class AppInstanceApiClient extends JsonApiClient {
         return new PagedResults<AppInstance>(getAppInstancesApiResponseWithLimit(limit));
     }
 
-    public PagedResults<AppInstance> getAppInstancesPagedResultsWithFilterAndLimit(Filter filter, int limit) throws IOException {
-        return new PagedResults<AppInstance>(getAppInstancesApiResponseWithFilterAndLimit(filter, limit));
+    public PagedResults<AppInstance> getAppInstancesPagedResultsWithFilterAndLimit(FilterBuilder filterBuilder, int limit) throws IOException {
+        return new PagedResults<AppInstance>(getAppInstancesApiResponseWithFilterAndLimit(filterBuilder, limit));
     }
 
     public PagedResults<AppInstance> getAppInstancesPagedResultsWithLimitAndGroupId(int limit, String... groupId) throws IOException {
@@ -185,15 +185,15 @@ public class AppInstanceApiClient extends JsonApiClient {
     // UTILITY METHODS
     ////////////////////////////////////////////
 
-    private Filter getStatusFilter(String... statuses) {
+    private FilterBuilder getStatusFilter(String... statuses) {
         return Utils.getFilter(Filters.AppInstance.STATUS, statuses);
     }
 
-    private Filter getGroupFilter(String... groups) {
+    private FilterBuilder getGroupFilter(String... groups) {
         return Utils.getFilter(Filters.AppInstance.GROUP_ID, groups);
     }
 
-    private Filter getUserFilter(String... users) {
+    private FilterBuilder getUserFilter(String... users) {
         return Utils.getFilter(Filters.AppInstance.USER_ID, users);
     }
 }

@@ -17,17 +17,17 @@ public class Utils {
         return DATE_TIME_FORMATTER.parseDateTime(dateTimeString);
     }
 
-    public static Filter getFilter(String name, Object... objects) {
-        Filter filter = new Filter();
+    public static FilterBuilder getFilter(String name, Object... objects) {
+        FilterBuilder filterBuilder = new FilterBuilder();
         for (int i = 0; i < objects.length; i++) {
-            filter.where(name).equalTo(objects[i].toString());
+            filterBuilder.where(name).equalTo(objects[i].toString());
 
             // If it's not the last item in the array
             if (i != objects.length - 1) {
-                filter.or();
+                filterBuilder.or();
             }
         }
-        return filter;
+        return filterBuilder;
     }
 
     public static String getSdkVersion() {
