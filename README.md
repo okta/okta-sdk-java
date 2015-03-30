@@ -1,4 +1,6 @@
-# oktasdk-java *beta*
+# oktasdk-java
+
+This SDK is in EA, so all existing features are supported by Okta in a production setting
 
 To build and install:
 
