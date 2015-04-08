@@ -64,6 +64,18 @@ public class FactorsApiClient extends JsonApiClient {
         return post(getEncodedPath("/%s/factors", userId), enrollRequest, new TypeReference<Factor>() { });
     }
 
+    public Factor enrollSecurityQuestion(String userId, String question, String answer) throws IOException {
+        FactorEnrollRequest factorEnrollRequest = new FactorEnrollRequest();
+        factorEnrollRequest.setFactorType("question");
+        factorEnrollRequest.setProvider("OKTA");
+        Map profile = new HashMap<String, String>();
+        profile.put("question", question);
+        profile.put("answer", answer);
+        factorEnrollRequest.setProfile(profile);
+
+        return enrollFactor(userId, factorEnrollRequest);
+    }
+
     public Factor enrollFactor(String userId, FactorEnrollRequest enrollRequest, boolean updatePhone) throws IOException {
         return post(getEncodedPath("/%s/factors?updatePhone=%s", userId, String.valueOf(updatePhone)), enrollRequest, new TypeReference<Factor>() { });
     }
