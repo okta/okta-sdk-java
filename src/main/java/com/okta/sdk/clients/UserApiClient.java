@@ -64,15 +64,8 @@ public class UserApiClient extends JsonApiClient {
         return post(getEncodedPath("/"), user, new TypeReference<User>() { });
     }
 
-    public User createUser(User user, Boolean activate) throws IOException {
-        return createUser(user, activate, null);
-    }
-
-    public User createUser(User user, Boolean activate, Boolean sendEmail) throws IOException {
-        Map params = new HashMap<String, Boolean>();
-        params.put("activate", String.valueOf(activate));
-        params.put("sendEmail", String.valueOf(sendEmail));
-        return post(getEncodedPathWithQueryParams("", params), user, new TypeReference<User>() { });
+    public User createUser(User user, boolean activate) throws IOException {
+        return post(getEncodedPath("?activate=%s", String.valueOf(activate)), user, new TypeReference<User>() { });
     }
 
     public User createUser(String firstName, String lastName, String login, String email) throws IOException {
