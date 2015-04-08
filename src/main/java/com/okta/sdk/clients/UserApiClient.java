@@ -15,6 +15,7 @@ import com.okta.sdk.models.users.ResetPasswordToken;
 import com.okta.sdk.models.users.TempPassword;
 import com.okta.sdk.models.users.User;
 import com.okta.sdk.models.users.UserProfile;
+import mx4j.tools.config.DefaultConfigurationBuilder;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
@@ -59,13 +60,19 @@ public class UserApiClient extends JsonApiClient {
 
     // CRUD
 
-    public User createUser(User params) throws IOException {
-        return post(getEncodedPath("/"), params, new TypeReference<User>() { });
+    public User createUser(User user) throws IOException {
+        return post(getEncodedPath("/"), user, new TypeReference<User>() { });
     }
 
-    public User createUser(User user, boolean activate) throws IOException {
-        return post(getEncodedPath("?activate=%s", String.valueOf(activate)), user, new TypeReference<User>() {
-        });
+    public User createUser(User user, Boolean activate) throws IOException {
+        return createUser(user, activate, null);
+    }
+
+    public User createUser(User user, Boolean activate, Boolean sendEmail) throws IOException {
+        Map params = new HashMap<String, Boolean>();
+        params.put("activate", String.valueOf(activate));
+        params.put("sendEmail", String.valueOf(sendEmail));
+        return post(getEncodedPathWithQueryParams("", params), user, new TypeReference<User>() { });
     }
 
     public User createUser(String firstName, String lastName, String login, String email) throws IOException {
@@ -135,6 +142,19 @@ public class UserApiClient extends JsonApiClient {
     }
 
     // LIFECYCLE MANAGEMENT
+
+    public Map activateUser(String userId) throws IOException {
+        return activateUser(userId, null);
+    }
+
+    public Map activateUser(String userId, Boolean sendEmail) throws IOException {
+        if (sendEmail != null && sendEmail) {
+            return post(getEncodedPath("/%s/lifecycle/activate", userId), null, new TypeReference<Map>() { });
+        }
+        else {
+            return post(getEncodedPath("/%s/lifecycle/activate?sendEmail=false", userId), null, new TypeReference<Map>() { });
+        }
+    }
 
     public Map deactivateUser(String userId) throws IOException {
         return post(getEncodedPath("/%s/lifecycle/deactivate", userId), null, new TypeReference<Map>() { });

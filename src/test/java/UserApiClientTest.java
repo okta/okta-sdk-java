@@ -7,6 +7,7 @@ import org.testng.Assert;
 import com.okta.sdk.models.users.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class UserApiClientTest {
@@ -44,6 +45,31 @@ public class UserApiClientTest {
 
         // Delete
         usersClient.deleteUser(user.getId());
+    }
+
+    @Test
+    public void testLifecycles() throws Exception {
+        // Create user without activating
+        User newUser = usersClient.createUser(
+                "First",
+                "Last",
+                "login" + Integer.toString(random.nextInt()) + "@example.com",
+                "email" + Integer.toString(random.nextInt()) + "@example.com",
+                false);
+
+        // Activate without email
+        Map result = usersClient.activateUser(newUser.getId(), false);
+        Assert.assertNotNull(result.get("activationUrl"));
+
+        // Deactivate
+        Map deactivateResult = usersClient.deactivateUser(newUser.getId());
+        newUser = usersClient.getUser(newUser.getId());
+        Assert.assertEquals(newUser.getStatus(), "DEPROVISIONED");
+
+        // Activate with email
+        Map activateResult = usersClient.activateUser(newUser.getId());
+        newUser = usersClient.getUser(newUser.getId());
+        Assert.assertEquals(newUser.getStatus(), "PROVISIONED");
     }
 
     @Test

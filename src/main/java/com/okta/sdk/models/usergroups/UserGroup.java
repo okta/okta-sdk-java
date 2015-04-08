@@ -12,7 +12,12 @@ public class UserGroup extends ApiObject {
     /**
      * determines the group’s profile
      */
-    private String objectClass;
+    private String[] objectClass;
+
+    /**
+     * determines the group's type
+     */
+    private String type;
 
     /**
      * the group’s profile attributes
@@ -36,14 +41,14 @@ public class UserGroup extends ApiObject {
     /**
      * Gets objectClass
      */
-    public String getObjectClass() {
+    public String[] getObjectClass() {
         return this.objectClass;
     }
 
     /**
      * Sets objectClass
      */
-    public void setObjectClass(String val) {
+    public void setObjectClass(String[] val) {
         this.objectClass = val;
     }
 
@@ -59,5 +64,19 @@ public class UserGroup extends ApiObject {
      */
     public void setProfile(UserGroupProfile val) {
         this.profile = val;
+    }
+
+    /**
+     * Gets type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Sets type
+     */
+    public void setType(String type) {
+        this.type = type;
     }
 }
