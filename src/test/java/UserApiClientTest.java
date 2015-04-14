@@ -100,12 +100,23 @@ public class UserApiClientTest {
     @Test
     public void testSetRecoveryQuestion() throws Exception {
 
-        // Create a user and activate a user
+        // Create and activate a user
         String username = "fakeuser" + random.nextInt() + "@fake.com";
-        String password = "A1a!" + random.nextInt();
         usersClient.createUser("First", "Last", username, username, true);
 
         // Set their recovery question, it shouldn't throw an exception
         usersClient.setRecoveryQuestion(username, "What is your favorite color?", "Blue, no green");
+    }
+
+    @Test
+    public void testSetPassword() throws Exception {
+
+        // Create and activate a user
+        String username = "fakeuser" + random.nextInt() + "@fake.com";
+        User user = usersClient.createUser("First", "Last", username, username, true);
+
+        // Set their password, it shouldn't throw an exception
+        String password = "A1a!" + random.nextInt();
+        usersClient.setPassword(user.getId(), password);
     }
 }

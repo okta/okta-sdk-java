@@ -10,6 +10,7 @@ import com.okta.sdk.framework.Utils;
 import com.okta.sdk.models.users.ChangePasswordRequest;
 import com.okta.sdk.models.users.ChangeRecoveryQuestionRequest;
 import com.okta.sdk.models.users.LoginCredentials;
+import com.okta.sdk.models.users.Password;
 import com.okta.sdk.models.users.RecoveryQuestion;
 import com.okta.sdk.models.users.ResetPasswordToken;
 import com.okta.sdk.models.users.TempPassword;
@@ -205,9 +206,11 @@ public class UserApiClient extends JsonApiClient {
         return put(getEncodedPath("/%s", userId), dummyUser, new TypeReference<User>() { });
     }
 
-    public User setPassword(String userId, String password) throws IOException {
+    public User setPassword(String userId, String userPassword) throws IOException {
         LoginCredentials loginCredentials = new LoginCredentials();
-        loginCredentials.getPassword().setValue(password);
+        Password password = new Password();
+        password.setValue(userPassword);
+        loginCredentials.setPassword(password);
         return setCredentials(userId, loginCredentials);
     }
 
