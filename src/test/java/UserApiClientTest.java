@@ -119,4 +119,24 @@ public class UserApiClientTest {
         String password = "A1a!" + random.nextInt();
         usersClient.setPassword(user.getId(), password);
     }
+
+    @Test
+    public void testAddArbitraryValuesToProfile() throws Exception {
+
+        // Create and activate a user
+        String username = "fakeuser" + random.nextInt() + "@fake.com";
+        User user = usersClient.createUser("First", "Last", username, username, true);
+
+        // Get and modify the unmapped properties of a user
+        Map<String, Object> unmappedProperties = user.getProfile().getUnmapped();
+        String propName = "randomProp";
+        String propVal = "value";
+        unmappedProperties.put(propName, propVal);
+        user = usersClient.updateUser(user);
+
+        // Ensure the property was set and the value was stored
+        unmappedProperties = user.getProfile().getUnmapped();
+        Assert.assertTrue(unmappedProperties.containsKey(propName), "The unmapped property wasn't added");
+        Assert.assertEquals(unmappedProperties.get(propName), propVal, "The unmapped property was set to a different value");
+    }
 }
