@@ -109,7 +109,7 @@ public class UserApiClientTest {
     }
 
     @Test
-    public void testSetPassword() throws Exception {
+    public void testSetAndChangePassword() throws Exception {
 
         // Create and activate a user
         String username = "fakeuser" + random.nextInt() + "@fake.com";
@@ -118,6 +118,9 @@ public class UserApiClientTest {
         // Set their password, it shouldn't throw an exception
         String password = "A1a!" + random.nextInt();
         usersClient.setPassword(user.getId(), password);
+
+        // Change their password, it shouldn't throw an exception
+        usersClient.changePassword(user.getId(), password, "newA1a!" + random.nextInt());
     }
 
     @Test

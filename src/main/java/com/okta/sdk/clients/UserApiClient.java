@@ -227,8 +227,12 @@ public class UserApiClient extends JsonApiClient {
 
     public LoginCredentials changePassword(String userId, String oldPassword, String newPassword) throws IOException {
         ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
-        changePasswordRequest.getOldPassword().setValue(oldPassword);
-        changePasswordRequest.getNewPassword().setValue(newPassword);
+        Password oldPasswordObj = new Password();
+        oldPasswordObj.setValue(oldPassword);
+        changePasswordRequest.setOldPassword(oldPasswordObj);
+        Password newPasswordObj = new Password();
+        newPasswordObj.setValue(newPassword);
+        changePasswordRequest.setNewPassword(newPasswordObj);
 
         return post(getEncodedPath("/%s/credentials/change_password", userId), changePasswordRequest,
                 new TypeReference<LoginCredentials>() { });
@@ -236,7 +240,9 @@ public class UserApiClient extends JsonApiClient {
 
     public LoginCredentials changeRecoveryQuestion(String userId, String currentPassword, RecoveryQuestion recoveryQuestion) throws IOException {
         ChangeRecoveryQuestionRequest changeRecoveryQuestionRequest = new ChangeRecoveryQuestionRequest();
-        changeRecoveryQuestionRequest.getPassword().setValue(currentPassword);
+        Password currentPasswordObj = new Password();
+        currentPasswordObj.setValue(currentPassword);
+        changeRecoveryQuestionRequest.setPassword(currentPasswordObj);
         changeRecoveryQuestionRequest.setRecoveryQuestion(recoveryQuestion);
 
         return post(getEncodedPath("/%s/credentials/change_password", userId), changeRecoveryQuestionRequest,

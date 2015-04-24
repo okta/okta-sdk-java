@@ -6,7 +6,7 @@
 
     <groupId>com.okta</groupId>
     <artifactId>okta-sdk</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <properties>
         <jackson.version>2.5.0</jackson.version>
     </properties>
