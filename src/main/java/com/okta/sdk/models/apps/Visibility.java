@@ -13,8 +13,8 @@ public class Visibility extends ApiObject {
     /**
      * Hides this app for specific end-user apps
      */
-    @JsonProperty(value = "hide")
-    private HideAvailabilityOption hide;
+    @JsonProperty("hide")
+    private HideAvailabilityOption hideAvailabilityOption;
 
     /**
      * Displays specific appLinks for the app
@@ -39,14 +39,14 @@ public class Visibility extends ApiObject {
      * Gets hide
      */
     public HideAvailabilityOption getHideAvailabilityOption() {
-        return this.hide;
+        return this.hideAvailabilityOption;
     }
 
     /**
      * Sets hide
      */
     public void setHideAvailabilityOption(HideAvailabilityOption val) {
-        this.hide = val;
+        this.hideAvailabilityOption = val;
     }
 
     /**

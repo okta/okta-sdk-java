@@ -3,10 +3,10 @@ package com.okta.sdk.framework;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 public class Utils {
-    protected static String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ";
-    protected static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern(DATE_TIME_PATTERN);
+    protected static DateTimeFormatter DATE_TIME_FORMATTER = ISODateTimeFormat.dateTime();
     protected static int DEFAULT_RESULTS_LIMIT = 200;
 
     public static String convertDateTimeToString(DateTime dateTime) {
@@ -31,7 +31,7 @@ public class Utils {
     }
 
     public static String getSdkVersion() {
-        return "0.0.1";
+        return "0.0.4";
     }
 
     public static int getDefaultResultsLimit() {
