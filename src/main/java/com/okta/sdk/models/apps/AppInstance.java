@@ -67,7 +67,7 @@ public class AppInstance extends ApiObject {
 
     private AppCredentials credentials;
 
-    private AppSettings settings;
+    private Settings settings;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonProperty(value = "_links")
@@ -248,14 +248,14 @@ public class AppInstance extends ApiObject {
     /**
      * Gets settings
      */
-    public AppSettings getSettings() {
+    public Settings getSettings() {
         return this.settings;
     }
 
     /**
      * Sets settings
      */
-    public void setSettings(AppSettings val) {
+    public void setSettings(Settings val) {
         this.settings = val;
     }
 
