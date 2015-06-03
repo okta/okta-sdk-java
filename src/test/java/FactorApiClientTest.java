@@ -1,17 +1,12 @@
 import com.okta.sdk.clients.FactorsApiClient;
 import com.okta.sdk.clients.UserApiClient;
 import com.okta.sdk.framework.ApiClientConfiguration;
-import com.okta.sdk.framework.PagedResults;
 import com.okta.sdk.models.factors.Factor;
-import com.okta.sdk.models.factors.FactorEnrollRequest;
 import com.okta.sdk.models.users.User;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class FactorApiClientTest {

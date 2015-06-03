@@ -1,7 +1,6 @@
 package com.okta.sdk.models.factors;
 
 import com.okta.sdk.framework.ApiObject;
-import java.util.Map;
 
 public class FactorProfile extends ApiObject {
 

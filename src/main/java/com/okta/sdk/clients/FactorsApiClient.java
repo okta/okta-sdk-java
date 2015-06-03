@@ -13,15 +13,8 @@ import com.okta.sdk.models.factors.FactorUpdateRequest;
 import com.okta.sdk.models.factors.FactorVerificationResponse;
 import com.okta.sdk.models.factors.Question;
 import com.okta.sdk.models.factors.Verification;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

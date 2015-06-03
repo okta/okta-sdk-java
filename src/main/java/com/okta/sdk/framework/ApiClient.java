@@ -198,8 +198,7 @@ public abstract class ApiClient {
     }
 
     protected HttpResponse doExecute(HttpUriRequest httpUriRequest) throws IOException {
-        HttpResponse response = httpClient.execute(httpUriRequest);
-        return response;
+        return httpClient.execute(httpUriRequest);
     }
 
     ////////////////////////////////////////////

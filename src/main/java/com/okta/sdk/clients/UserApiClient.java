@@ -16,7 +16,6 @@ import com.okta.sdk.models.users.ResetPasswordToken;
 import com.okta.sdk.models.users.TempPassword;
 import com.okta.sdk.models.users.User;
 import com.okta.sdk.models.users.UserProfile;
-import mx4j.tools.config.DefaultConfigurationBuilder;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;

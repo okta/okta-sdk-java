@@ -1,13 +1,11 @@
 import com.okta.sdk.clients.UserGroupApiClient;
 import com.okta.sdk.framework.ApiClientConfiguration;
-import com.okta.sdk.framework.PagedResults;
 import com.okta.sdk.models.usergroups.UserGroup;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class UserGroupApiClientTest {
