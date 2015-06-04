@@ -42,14 +42,33 @@ public class UserApiClient extends JsonApiClient {
         return getUsersWithLimit(Utils.getDefaultResultsLimit());
     }
 
+    /**
+     * Search Okta User attributes - firstName, lastName and email for the query passed and return
+     * matching results
+     * @param query - firstName/lastName/email to be searched for
+     * @return List<Users> containing matching results
+     * @throws IOException
+     */
     public List<User> getUsersWithQuery(String query) throws IOException {
         return get(getEncodedPath("?" + SEARCH_QUERY + "=%s", query), new TypeReference<List<User>>() { });
     }
 
+    /**
+     * Return all users in Okta within a limit
+     * @return List<Users>
+     * @throws IOException
+     */
     public List<User> getUsersWithLimit(int limit) throws IOException {
         return get(getEncodedPath("?" + LIMIT + "=%s", Integer.toString(limit)), new TypeReference<List<User>>() { });
     }
 
+    /**
+     * Return all users in Okta that match the given filter
+     * Filters can be found at http://developer.okta.com/docs/api/resources/users.html#filters
+     * @param filterBuilder
+     * @return List<User> that match the given filter
+     * @throws IOException
+     */
     public List<User> getUsersWithFilter(FilterBuilder filterBuilder) throws IOException {
         return get(getEncodedPath("?" + FILTER + "=%s", filterBuilder.toString()), new TypeReference<List<User>>() { });
     }
