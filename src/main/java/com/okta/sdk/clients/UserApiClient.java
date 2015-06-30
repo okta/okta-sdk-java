@@ -7,6 +7,7 @@ import com.okta.sdk.framework.FilterBuilder;
 import com.okta.sdk.framework.JsonApiClient;
 import com.okta.sdk.framework.PagedResults;
 import com.okta.sdk.framework.Utils;
+import com.okta.sdk.models.usergroups.UserGroup;
 import com.okta.sdk.models.users.ChangePasswordRequest;
 import com.okta.sdk.models.users.ChangeRecoveryQuestionRequest;
 import com.okta.sdk.models.users.LoginCredentials;
@@ -133,12 +134,33 @@ public class UserApiClient extends JsonApiClient {
         return createUser(user, activate);
     }
 
+    /**
+     * Get the current user
+     * @return
+     * @throws IOException
+     */
     public User getMyUser() throws IOException {
         return get(getEncodedPath("/me"), new TypeReference<User>() { });
     }
 
+    /**
+     * Get a user, given the userId
+     * @param userId
+     * @return
+     * @throws IOException
+     */
     public User getUser(String userId) throws IOException {
         return get(getEncodedPath("/%s", userId), new TypeReference<User>() { });
+    }
+
+    /**
+     * Get all groups for a user
+     * @param userId
+     * @return
+     * @throws IOException
+     */
+    public List<UserGroup> getUserGroups(String userId) throws IOException  {
+        return get(getEncodedPath("/%s/groups", userId), new TypeReference<List<UserGroup>>() { });
     }
 
     public User updateUser(User params) throws IOException {
