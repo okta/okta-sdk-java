@@ -198,4 +198,12 @@ public class AuthApiClient extends JsonApiClient {
         params.put("result", userResponse);
         return post(getEncodedPath("/factors/%s/transactions/%s/verify", factorId, transactionId), params, new TypeReference<AuthResult>() { });
     }
+
+    public AuthResult cancelTransaction(String stateToken, String relayState) throws IOException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(STATE_TOKEN, stateToken);
+        params.put(RELAY_STATE, relayState);
+        return post(getEncodedPath("/cancel"), params, new TypeReference<AuthResult>() { });
+    }
+
 }
