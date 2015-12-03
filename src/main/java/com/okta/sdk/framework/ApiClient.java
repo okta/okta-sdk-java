@@ -2,6 +2,7 @@ package com.okta.sdk.framework;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.okta.sdk.exceptions.ApiException;
+import com.okta.sdk.exceptions.RateLimitExceededException;
 import com.okta.sdk.exceptions.SdkException;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -25,6 +26,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class ApiClient {
 
@@ -39,6 +41,7 @@ public abstract class ApiClient {
     protected String token;
     protected ApiClientConfiguration configuration;
     private final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
+    private AtomicReference<HttpResponse> lastHttpResponseRef = new AtomicReference<HttpResponse>();
 
     ////////////////////////////////////////////
     // CONSTRUCTORS
@@ -87,6 +90,16 @@ public abstract class ApiClient {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    /**
+     * There's a limit on the number of api requests in a time frame. Retrieving the
+     * RateLimitContext allows you to manage your requests with these limits in mind
+     *
+     * @return A way to view the rate limit information
+     */
+    public RateLimitContext getRateLimitContext() {
+        return new RateLimitContext(lastHttpResponseRef.get());
     }
 
     ////////////////////////////////////////////
@@ -198,7 +211,9 @@ public abstract class ApiClient {
     }
 
     protected HttpResponse doExecute(HttpUriRequest httpUriRequest) throws IOException {
-        return httpClient.execute(httpUriRequest);
+        HttpResponse response = httpClient.execute(httpUriRequest);
+        lastHttpResponseRef.set(response);
+        return response;
     }
 
     ////////////////////////////////////////////
@@ -292,6 +307,10 @@ public abstract class ApiClient {
         StatusLine statusLine = response.getStatusLine();
         int statusCode = statusLine.getStatusCode();
         ErrorResponse errors = unmarshall(response, new TypeReference<ErrorResponse>() { });
-        throw new ApiException(statusCode, errors);
+        if (statusCode == 429) {
+            throw new RateLimitExceededException(errors);
+        } else {
+            throw new ApiException(statusCode, errors);
+        }
     }
 }
