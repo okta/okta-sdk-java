@@ -44,13 +44,13 @@ String status = result.getStatus();
 This client is used to perform CRUD operations on user objects 
 (http://developer.okta.com/docs/api/resources/users.html).
 ```java
-UsersApiClient usersClient = new UsersApiClient(oktaSettings);
+UserApiClient userClient = new UserApiClient(oktaSettings);
 
 // Create a new user
 // First Name, Last Name, Email and Login are required. Password is optional.
 // The boolean variable is for activate which means that activate the user as soon as 
 // it is created.
-User newUser = usersClient.createUser(
+User newUser = userClient.createUser(
                 "First",
                 "Last",
                 "login@example.com",
@@ -80,7 +80,7 @@ userClient.createUser(user, true);
 // Read/Search
 // There are plenty of methods for reading users.
 // 1. Search user when user ID/loginName/loginShortName is known
-User user = usersClient.getUser("ID/loginName/loginShortName");
+User user = userClient.getUser("ID/loginName/loginShortName");
 
 // 2. Search user using filters. You can query the API for searching a user
 // with the help of filters mentioned at - http://developer.okta.com/docs/api/resources/users.html#filters
@@ -94,20 +94,20 @@ List<User> users = userClient.getUsersWithQuery("firstName/lastName/email");
 
 // Update
 newUser.getProfile().setLastName("NewLast");
-usersClient.updateUser(newUser);
+userClient.updateUser(newUser);
 
 // Delete (for Users this is the same as deactivate)
-usersClient.deleteUser(newUser.getId());
+userClient.deleteUser(newUser.getId());
 ```
 
 ###Paging
 ```java
-PagedResults<User> pagedResults = usersClient.getUsersPagedResultsWithLimit(10);
+PagedResults<User> pagedResults = userClient.getUsersPagedResultsWithLimit(10);
 
 int counter = 0;
 do {
     if(!pagedResults.isFirstPage()) {
-        pagedResults = usersClient.getUsersPagedResultsByUrl(pagedResults.getNextUrl());
+        pagedResults = userClient.getUsersPagedResultsByUrl(pagedResults.getNextUrl());
     }
 
     for(User user : pagedResults.getResult()) {
