@@ -9,15 +9,8 @@
     <version>0.0.4-SNAPSHOT</version>
     <properties>
         <jackson.version>2.5.0</jackson.version>
-        <aperture-reporter.version>1.0.0-000079.000042.e302966</aperture-reporter.version>
-        <test.listener>do-not-listen</test.listener>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.okta.libraries.framework</groupId>
-            <artifactId>aperture-reporter</artifactId>
-            <version>${aperture-reporter.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -65,14 +58,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <properties>
-                        <property>
-                            <name>${test.listener}</name>
-                            <value>com.okta.aperture.reporter.ApertureTestNgListener</value>
-                        </property>
-                    </properties>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -88,12 +73,4 @@
             <url>https://artifacts.aue1d.saasure.com/artifactory/topic</url>
         </snapshotRepository>
     </distributionManagement>
-    <profiles>
-        <profile>
-            <id>ci-run</id>
-            <properties>
-                <test.listener>listener</test.listener>
-            </properties>
-        </profile>
-    </profiles>
 </project>
