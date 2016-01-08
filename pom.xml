@@ -8,7 +8,12 @@
     <artifactId>okta-sdk</artifactId>
     <version>0.0.4-SNAPSHOT</version>
     <properties>
+        <httpclient.version>4.3.6</httpclient.version>
         <jackson.version>2.5.0</jackson.version>
+        <joda-time.version>2.7</joda-time.version>
+        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+        <slf4j-api.version>1.7.10</slf4j-api.version>
+        <testng.version>6.8.17</testng.version>
     </properties>
     <dependencies>
         <dependency>
@@ -29,7 +34,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.7</version>
+            <version>${joda-time.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -39,17 +44,17 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.10</version>
+            <version>${slf4j-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.3.6</version>
+            <version>${httpclient.version}</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.8.17</version>
+            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -58,6 +63,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
