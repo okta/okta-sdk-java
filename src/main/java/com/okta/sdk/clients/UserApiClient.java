@@ -163,6 +163,14 @@ public class UserApiClient extends JsonApiClient {
         return get(getEncodedPath("/%s/groups", userId), new TypeReference<List<UserGroup>>() { });
     }
 
+    public User partialUpdateUser(User params) throws IOException {
+        return post(getEncodedPath("/%s", params.getId()), params, new TypeReference<User>() { });
+    }
+
+    public User partialUpdateUser(String userId, User params) throws IOException {
+        return post(getEncodedPath("/%s", userId), params, new TypeReference<User>() { });
+    }
+
     public User updateUser(User params) throws IOException {
         return put(getEncodedPath("/%s", params.getId()), params, new TypeReference<User>() { });
     }
