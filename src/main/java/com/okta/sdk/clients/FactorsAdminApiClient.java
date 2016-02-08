@@ -15,11 +15,6 @@ public class FactorsAdminApiClient extends JsonApiClient {
         super(config);
     }
 
-    @Override
-    protected String getFullPath(String relativePath) {
-        return String.format("/api/v%d/org%s", this.apiVersion, relativePath);
-    }
-
     ////////////////////////////////////////////
     // COMMON METHODS
     ////////////////////////////////////////////
@@ -39,10 +34,17 @@ public class FactorsAdminApiClient extends JsonApiClient {
     }
 
     public OrgAuthFactor activateOrgFactor(String orgAuthFactorId, OrgAuthFactor orgAuthFactor) throws IOException {
-        return post(getEncodedPath("/factors/%s/lifecycle/activate", orgAuthFactorId), orgAuthFactor, new TypeReference<OrgAuthFactor>() { });
+        return post(getEncodedPath("/factors/%s/lifecycle/activate", orgAuthFactorId), orgAuthFactor, new TypeReference<OrgAuthFactor>() {
+        });
     }
 
     public OrgAuthFactor deActivateOrgFactor(String orgAuthFactorId) throws IOException {
         return post(getEncodedPath("/factors/%s/lifecycle/deactivate", orgAuthFactorId), null, new TypeReference<OrgAuthFactor>() { });
     }
+
+    @Override
+    protected String getFullPath(String relativePath) {
+        return String.format("/api/v%d/org%s", this.apiVersion, relativePath);
+    }
+
 }

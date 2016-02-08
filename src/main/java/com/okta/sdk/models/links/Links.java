@@ -8,6 +8,7 @@ import java.util.LinkedList;
 
 @JsonDeserialize(using = JsonDeserializer.None.class) // use default
 public class Links extends LinkedList<Link> implements LinksUnion {
+
     public Links() {
         super();
     }

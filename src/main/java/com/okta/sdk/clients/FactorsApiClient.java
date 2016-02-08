@@ -30,11 +30,6 @@ public class FactorsApiClient extends JsonApiClient {
         super(config);
     }
 
-    @Override
-    protected String getFullPath(String relativePath) {
-        return String.format("/api/v%d/users%s", this.apiVersion, relativePath);
-    }
-
     ////////////////////////////////////////////
     // COMMON METHODS
     ////////////////////////////////////////////
@@ -127,4 +122,10 @@ public class FactorsApiClient extends JsonApiClient {
         verification.setPassCode(passCode);
         return post(getEncodedPath("/%s/factors/%s/devices/%s/lifecycle/activate", userId, userFactorId, deviceId), verification, new TypeReference<Factor>() { });
     }
+
+    @Override
+    protected String getFullPath(String relativePath) {
+        return String.format("/api/v%d/users%s", this.apiVersion, relativePath);
+    }
+
 }

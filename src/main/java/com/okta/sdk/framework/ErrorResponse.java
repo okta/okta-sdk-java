@@ -60,4 +60,5 @@ public class ErrorResponse {
         errorCause.setErrorSummary(cause);
         this.errorCauses.add(errorCause);
     }
+
 }

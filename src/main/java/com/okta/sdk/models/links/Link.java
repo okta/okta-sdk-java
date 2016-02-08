@@ -21,6 +21,7 @@ public class Link implements LinksUnion {
     private String title;
     private String type;
     private Map<String, List<String>> hints;
+
     public String getRel() {
         return rel;
     }
@@ -28,6 +29,7 @@ public class Link implements LinksUnion {
     public void setRel(String rel) {
         this.rel = rel;
     }
+
     public String getHref() {
         return href;
     }

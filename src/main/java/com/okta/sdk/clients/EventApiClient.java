@@ -24,11 +24,6 @@ public class EventApiClient extends JsonApiClient {
         super(config);
     }
 
-    @Override
-    protected String getFullPath(String relativePath) {
-        return String.format("/api/v%d/events%s", this.apiVersion, relativePath);
-    }
-
     ////////////////////////////////////////////
     // COMMON METHODS
     ////////////////////////////////////////////
@@ -148,4 +143,10 @@ public class EventApiClient extends JsonApiClient {
     public PagedResults<Event> getEventsPagedResultsWithUrl(String url) throws IOException {
         return new PagedResults<Event>(getEventsApiResponseWithUrl(url));
     }
+
+    @Override
+    protected String getFullPath(String relativePath) {
+        return String.format("/api/v%d/events%s", this.apiVersion, relativePath);
+    }
+
 }

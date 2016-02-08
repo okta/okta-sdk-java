@@ -5,6 +5,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 public class Utils {
+
     protected static DateTimeFormatter DATE_TIME_FORMATTER = ISODateTimeFormat.dateTime();
     protected static int DEFAULT_RESULTS_LIMIT = 200;
 

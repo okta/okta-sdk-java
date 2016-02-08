@@ -33,6 +33,7 @@ public abstract class ApiClient {
     public static final String AFTER_CURSOR = "after";
     public static final String LIMIT = "limit";
     public static final String FILTER = "filter";
+    public static final String SEARCH = "search";
     public static final String SEARCH_QUERY = "q";
 
     protected HttpClient httpClient;

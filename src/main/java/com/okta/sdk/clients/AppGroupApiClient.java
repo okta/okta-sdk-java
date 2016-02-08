@@ -15,13 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 public class AppGroupApiClient extends JsonApiClient {
+
     public AppGroupApiClient(ApiClientConfiguration config) {
         super(config);
-    }
-
-    @Override
-    protected String getFullPath(String relativePath) {
-        return String.format("/api/v%d/apps%s", this.apiVersion, relativePath);
     }
 
     ////////////////////////////////////////////
@@ -113,4 +109,10 @@ public class AppGroupApiClient extends JsonApiClient {
     public PagedResults<AppGroup> getAppGroupsPagedResultsWithUrl(String url) throws IOException {
         return new PagedResults<AppGroup>(getAppGroupsApiResponseWithUrl(url));
     }
+
+    @Override
+    protected String getFullPath(String relativePath) {
+        return String.format("/api/v%d/apps%s", this.apiVersion, relativePath);
+    }
+
 }
