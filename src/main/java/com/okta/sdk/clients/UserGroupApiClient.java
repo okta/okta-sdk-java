@@ -21,11 +21,6 @@ public class UserGroupApiClient extends JsonApiClient {
         super(config);
     }
 
-    @Override
-    protected String getFullPath(String relativePath) {
-        return String.format("/api/v%d/groups%s", this.apiVersion, relativePath);
-    }
-
     ////////////////////////////////////////////
     // COMMON METHODS
     ////////////////////////////////////////////
@@ -186,4 +181,10 @@ public class UserGroupApiClient extends JsonApiClient {
     public PagedResults<User> getUsersPagedResultsAfterCursorWithLimit(String groupId, String after, int limit) throws IOException {
         return new PagedResults<User>(getUsersApiResponseAfterCursorWithLimit(groupId, after, limit));
     }
+
+    @Override
+    protected String getFullPath(String relativePath) {
+        return String.format("/api/v%d/groups%s", this.apiVersion, relativePath);
+    }
+
 }

@@ -31,11 +31,6 @@ public class AuthApiClient extends JsonApiClient {
         super(config);
     }
 
-    @Override
-    protected String getFullPath(String relativePath) {
-        return String.format("/api/v1/authn%s", relativePath);
-    }
-
     ////////////////////////////////////////////
     // COMMON METHODS
     ////////////////////////////////////////////
@@ -204,6 +199,11 @@ public class AuthApiClient extends JsonApiClient {
         params.put(STATE_TOKEN, stateToken);
         params.put(RELAY_STATE, relayState);
         return post(getEncodedPath("/cancel"), params, new TypeReference<AuthResult>() { });
+    }
+
+    @Override
+    protected String getFullPath(String relativePath) {
+        return String.format("/api/v1/authn%s", relativePath);
     }
 
 }

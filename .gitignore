@@ -32,8 +32,7 @@ hs_err_pid*
 .idea/uiDesigner.xml
 
 # Maven:
-target/maven-archiver
-target/surefire-reports
+target
 
 # Gradle:
 .idea/gradle.xml

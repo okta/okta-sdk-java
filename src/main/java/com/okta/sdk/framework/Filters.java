@@ -1,6 +1,7 @@
 package com.okta.sdk.framework;
 
 public class Filters {
+
     public static class User {
         public final static String ID = "id";
         public final static String STATUS = "status";
@@ -20,4 +21,5 @@ public class Filters {
     public static class OrgAuthFactor {
         public final static String STATUS = "status";
     }
+
 }

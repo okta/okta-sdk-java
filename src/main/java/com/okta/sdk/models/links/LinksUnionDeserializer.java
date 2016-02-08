@@ -9,13 +9,13 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import java.io.IOException;
 
 public class LinksUnionDeserializer extends StdDeserializer<LinksUnion> {
+
     public LinksUnionDeserializer() {
         super(LinksUnion.class);
     }
 
     @Override
-    public LinksUnion deserialize(JsonParser parser, DeserializationContext context) throws IOException
-    {
+    public LinksUnion deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         ObjectMapper mapper = (ObjectMapper) parser.getCodec();
         JsonNode root = mapper.readTree(parser);
         if (root.isArray()) {

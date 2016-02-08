@@ -6,33 +6,11 @@ import org.apache.http.HttpResponse;
 import org.joda.time.DateTime;
 
 public class RateLimitContext {
+
     private HttpResponse httpResponse;
 
     public RateLimitContext(HttpResponse httpResponse) {
         this.httpResponse = httpResponse;
-    }
-
-    private String getHeaderValueString(String headerName) throws Exception {
-        if (httpResponse == null) {
-            throw new SdkException("No http response");
-        }
-
-        Header[] headers = httpResponse.getHeaders(headerName);
-        if (headers.length > 0) {
-            Header header = headers[0];
-            return header.getValue();
-        } else {
-            throw new SdkException("No " + headerName + " header");
-        }
-    }
-
-    private long getHeaderValueLong(String headerName) throws Exception {
-        String headerString = getHeaderValueString(headerName);
-        try {
-            return Long.parseLong(headerString);
-        } catch (Exception e){
-            throw new SdkException("Error parsing " + headerName + " header");
-        }
     }
 
     /**
@@ -73,4 +51,28 @@ public class RateLimitContext {
     public Long getRequestLimit() throws Exception {
         return getHeaderValueLong("X-Rate-Limit-Limit");
     }
+
+    private String getHeaderValueString(String headerName) throws Exception {
+        if (httpResponse == null) {
+            throw new SdkException("No http response");
+        }
+
+        Header[] headers = httpResponse.getHeaders(headerName);
+        if (headers.length > 0) {
+            Header header = headers[0];
+            return header.getValue();
+        } else {
+            throw new SdkException("No " + headerName + " header");
+        }
+    }
+
+    private long getHeaderValueLong(String headerName) throws Exception {
+        String headerString = getHeaderValueString(headerName);
+        try {
+            return Long.parseLong(headerString);
+        } catch (Exception e){
+            throw new SdkException("Error parsing " + headerName + " header");
+        }
+    }
+
 }

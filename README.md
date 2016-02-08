@@ -6,17 +6,7 @@ To build and install:
 
 1. Clone the repo
 2. Navigate to the repo directory. It should contain pom.xml
-2. `mvn -Dmaven.test.skip=true install`
-
-To run the build with tests:
-
-1. Set the following environment variables:
-    * OKTA_TEST_URL
-    * OKTA_TEST_KEY
-    * OKTA_TEST_ADMIN_NAME
-    * OKTA_TEST_ADMIN_PASSWORD
-2. `mvn build`
-
+3. Build with tests `mvn install` or without tests `mvn -Dmaven.test.skip=true install`
 
 ###Client configuration
 ```java
@@ -44,13 +34,13 @@ String status = result.getStatus();
 This client is used to perform CRUD operations on user objects 
 (http://developer.okta.com/docs/api/resources/users.html).
 ```java
-UsersApiClient usersClient = new UsersApiClient(oktaSettings);
+UserApiClient userApiClient = new UserApiClient(oktaSettings);
 
 // Create a new user
 // First Name, Last Name, Email and Login are required. Password is optional.
 // The boolean variable is for activate which means that activate the user as soon as 
 // it is created.
-User newUser = usersClient.createUser(
+User newUser = userApiClient.createUser(
                 "First",
                 "Last",
                 "login@example.com",
@@ -75,44 +65,52 @@ user.setProfile(userProfile);
 user.setCredentials(loginCredentials);
 
 // true is for activate user as soon as it is created
-userClient.createUser(user, true);
+userApiClient.createUser(user, true);
 
 // Read/Search
 // There are plenty of methods for reading users.
 // 1. Search user when user ID/loginName/loginShortName is known
-User user = usersClient.getUser("ID/loginName/loginShortName");
+User user = userApiClient.getUser("ID/loginName/loginShortName");
 
 // 2. Search user using filters. You can query the API for searching a user
 // with the help of filters mentioned at - http://developer.okta.com/docs/api/resources/users.html#filters
 // Example - search for first name. Returns a list of users matching that query
 FilterBuilder filterBuilder = new FilterBuilder("profile.firstName eq \"" + firstName + "\"");
-List<User> users = userClient.getUsersWithFilter(filterBuilder);
+List<User> users = userApiClient.getUsersWithFilter(filterBuilder);
 
-// 3. Search users only on firstName, lastName or email
+// 3. Advanced search provides the option to filter on any user profile attribute, any custom defined
+// profile attribute, as well as the following top-level attributes: id, status, created, activated, 
+// statusChanged and lastUpdated. The advanced search performs a case insensitive filter against all fields
+// specified in the search parameter. Note that the results might not yet be up to date, as the most up to date
+// data can be delayed up to a few seconds, so use for convenience.
+FilterBuilder filterBuilder = new FilterBuilder("profile.flightNumber eq \"A415\"");
+List<User> users = userApiClient.getUsersWithSearch(filterBuilder);
+
+// 4. Search users only on firstName, lastName or email
 // The parameter passed is searched in the attributes - firstName, lastName and email of all Users.
-List<User> users = userClient.getUsersWithQuery("firstName/lastName/email");
+List<User> users = userApiClient.getUsersWithQuery("firstName/lastName/email");
 
 // Update
 newUser.getProfile().setLastName("NewLast");
-usersClient.updateUser(newUser);
+userApiClient.updateUser(newUser);
 
 // Delete (for Users this is the same as deactivate)
-usersClient.deleteUser(newUser.getId());
+userApiClient.deleteUser(newUser.getId());
 ```
 
 ###Paging
 ```java
-PagedResults<User> pagedResults = usersClient.getUsersPagedResultsWithLimit(10);
+PagedResults<User> pagedResults = userApiClient.getUsersPagedResultsWithLimit(10);
 
-int counter = 0;
-do {
-    if(!pagedResults.isFirstPage()) {
-        pagedResults = usersClient.getUsersPagedResultsByUrl(pagedResults.getNextUrl());
-    }
-
-    for(User user : pagedResults.getResult()) {
+while (true) {
+    for (User user : pagedResults.getResult()) {
         // Do something with user
     }
+    
+    if (!pagedResults.isLastPage()) {
+        pagedResults = userApiClient.getUsersPagedResultsByUrl(pagedResults.getNextUrl());
+    } else {
+        break;
+    }
 }
-while(!pagedResults.isLastPage());
 ```

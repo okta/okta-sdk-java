@@ -17,13 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 public class AppInstanceApiClient extends JsonApiClient {
+
     public AppInstanceApiClient(ApiClientConfiguration config) {
         super(config);
-    }
-
-    @Override
-    protected String getFullPath(String relativePath) {
-        return String.format("/api/v%d/apps%s", this.apiVersion, relativePath);
     }
 
     ////////////////////////////////////////////
@@ -196,4 +192,10 @@ public class AppInstanceApiClient extends JsonApiClient {
     private FilterBuilder getUserFilter(String... users) {
         return Utils.getFilter(Filters.AppInstance.USER_ID, users);
     }
+
+    @Override
+    protected String getFullPath(String relativePath) {
+        return String.format("/api/v%d/apps%s", this.apiVersion, relativePath);
+    }
+
 }

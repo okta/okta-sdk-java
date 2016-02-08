@@ -16,11 +16,6 @@ public class SessionApiClient extends JsonApiClient {
         super(config);
     }
 
-    @Override
-    protected String getFullPath(String relativePath) {
-        return String.format("/api/v%d/sessions%s", this.apiVersion, relativePath);
-    }
-
     ////////////////////////////////////////////
     // COMMON METHODS
     ////////////////////////////////////////////
@@ -58,7 +53,8 @@ public class SessionApiClient extends JsonApiClient {
     public Session createSessionWithSessionToken(String sessionToken) throws IOException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("sessionToken", sessionToken);
-        return post(getEncodedPath("/"), params, new TypeReference<Session>() { });
+        return post(getEncodedPath("/"), params, new TypeReference<Session>() {
+        });
     }
 
     public Session createSessionWithSessionTokenAndAdditionalFields(String sessionToken, String additionalFields) throws IOException {
@@ -68,14 +64,22 @@ public class SessionApiClient extends JsonApiClient {
     }
 
     public Session validateSession(String sessionId) throws IOException {
-        return get(getEncodedPath("/%s", sessionId), new TypeReference<Session>() { });
+        return get(getEncodedPath("/%s", sessionId), new TypeReference<Session>() {
+        });
     }
 
     public Session extendSession(String sessionId) throws IOException  {
-        return put(getEncodedPath("/%s", sessionId), new TypeReference<Session>() { });
+        return put(getEncodedPath("/%s", sessionId), new TypeReference<Session>() {
+        });
     }
 
     public void clearSession(String sessionId) throws IOException {
         delete(getEncodedPath("/%s", sessionId));
     }
+
+    @Override
+    protected String getFullPath(String relativePath) {
+        return String.format("/api/v%d/sessions%s", this.apiVersion, relativePath);
+    }
+
 }
