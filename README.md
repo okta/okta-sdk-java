@@ -1,5 +1,7 @@
 # oktasdk-java
 
+Will I run in bacon??!!
+
 This SDK is in EA, so all existing features are supported by Okta in a production setting
 
 To build and install:
@@ -18,7 +20,7 @@ ApiClientConfiguration oktaSettings = new ApiClientConfiguration(
 ```
 
 ###AuthApiClient
-This client is used to authenticate and validate user credentials. 
+This client is used to authenticate and validate user credentials.
 Information about the various states of authentication are available at http://developer.okta.com/docs/api/resources/authn.html
 ```java
 AuthApiClient authClient = new AuthApiClient(oktaSettings);
@@ -31,14 +33,14 @@ String status = result.getStatus();
 ```
 
 ###UserApiClient and CRUD
-This client is used to perform CRUD operations on user objects 
+This client is used to perform CRUD operations on user objects
 (http://developer.okta.com/docs/api/resources/users.html).
 ```java
 UserApiClient userApiClient = new UserApiClient(oktaSettings);
 
 // Create a new user
 // First Name, Last Name, Email and Login are required. Password is optional.
-// The boolean variable is for activate which means that activate the user as soon as 
+// The boolean variable is for activate which means that activate the user as soon as
 // it is created.
 User newUser = userApiClient.createUser(
                 "First",
@@ -79,7 +81,7 @@ FilterBuilder filterBuilder = new FilterBuilder("profile.firstName eq \"" + firs
 List<User> users = userApiClient.getUsersWithFilter(filterBuilder);
 
 // 3. Advanced search provides the option to filter on any user profile attribute, any custom defined
-// profile attribute, as well as the following top-level attributes: id, status, created, activated, 
+// profile attribute, as well as the following top-level attributes: id, status, created, activated,
 // statusChanged and lastUpdated. The advanced search performs a case insensitive filter against all fields
 // specified in the search parameter. Note that the results might not yet be up to date, as the most up to date
 // data can be delayed up to a few seconds, so use for convenience.
@@ -106,7 +108,7 @@ while (true) {
     for (User user : pagedResults.getResult()) {
         // Do something with user
     }
-    
+
     if (!pagedResults.isLastPage()) {
         pagedResults = userApiClient.getUsersPagedResultsByUrl(pagedResults.getNextUrl());
     } else {
