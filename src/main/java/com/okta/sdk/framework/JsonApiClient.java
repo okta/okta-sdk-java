@@ -48,14 +48,20 @@ public abstract class JsonApiClient extends ApiClient {
 
     @Override
     protected  <T> T unmarshall(HttpResponse response, TypeReference<T> clazz) throws IOException {
-        if (response.getEntity() == null || clazz.getType().equals(Void.class)) {
+        T toReturn = null;
+
+        try {
+
+            if (response.getEntity() != null && !Void.class.equals(clazz.getType())) {
+                InputStream inputStream = response.getEntity().getContent();
+                JsonParser parser = objectMapper.getFactory().createParser(inputStream);
+                toReturn = parser.readValueAs(clazz);
+            }
+
+        } finally {
             EntityUtils.consume(response.getEntity());
-            return null;
         }
-        InputStream inputStream = response.getEntity().getContent();
-        JsonParser parser = objectMapper.getFactory().createParser(inputStream);
-        T toReturn = parser.readValueAs(clazz);
-        EntityUtils.consume(response.getEntity());
+
         return toReturn;
     }
 
