@@ -19,7 +19,9 @@ public class PagedResults<T> {
     }
 
     public String getNextUrl() {
-        return apiResponse.getLinks().get("next").getHref();
+		if (apiResponse.getLinks().get("next")!=null)
+			return apiResponse.getLinks().get("next").getHref();
+		return null;
     }
 
     public List<T> getResult() {
