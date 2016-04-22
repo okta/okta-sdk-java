@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
 import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class ApiClient {
+
+    public static final int RETRY_COUNT = 3;
 
     public static final String AFTER_CURSOR = "after";
     public static final String LIMIT = "limit";
@@ -45,18 +48,15 @@ public abstract class ApiClient {
     private AtomicReference<HttpResponse> lastHttpResponseRef = new AtomicReference<HttpResponse>();
 
     ////////////////////////////////////////////
-    // CONSTRUCTORS
+    // CONSTRUCTOR
     ////////////////////////////////////////////
 
     public ApiClient(ApiClientConfiguration config) {
-        this(HttpClientBuilder.create()
-                        .setUserAgent("OktaSDKJava_v" + Utils.getSdkVersion())
-                        .disableCookieManagement().build(),
-                config);
-    }
+        StandardHttpRequestRetryHandler requestRetryHandler = new StandardHttpRequestRetryHandler(RETRY_COUNT, true);
+        HttpClient client = HttpClientBuilder.create().setRetryHandler(requestRetryHandler)
+                .setUserAgent("OktaSDKJava_v" + Utils.getSdkVersion()).disableCookieManagement().build();
 
-    protected ApiClient(HttpClient httpClient, ApiClientConfiguration config) {
-        this.httpClient = httpClient;
+        this.httpClient = client;
         this.baseUrl = config.getBaseUrl();
         this.apiVersion = config.getApiVersion();
         this.configuration = config;
