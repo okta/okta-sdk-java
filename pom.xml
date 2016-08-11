@@ -7,6 +7,13 @@
     <groupId>com.okta</groupId>
     <artifactId>okta-sdk</artifactId>
     <version>0.0.4-SNAPSHOT</version>
+
+    <scm>
+        <url>https://github.com/bazaarvoice/oktasdk-java</url>
+        <connection>scm:git:git@github.com:bazaarvoice/oktasdk-java.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
         <httpclient.version>4.5.2</httpclient.version>
         <jackson.version>2.5.0</jackson.version>
