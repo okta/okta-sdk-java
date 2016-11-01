@@ -79,6 +79,12 @@ public class User extends ApiObject {
     private Map<String, LinksUnion> links;
 
     /**
+     * Used only for creation of new Users.  These are the groups that the new User will be immediately added to.
+     */
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+    private List<String> groupIds;
+
+    /**
      * Gets id
      */
     public String getId() {
@@ -252,5 +258,23 @@ public class User extends ApiObject {
 
     public void setLinks(Map<String, LinksUnion> links) {
         this.links = links;
+    }
+
+    /**
+     * Used only for creation of new Users.  These are the groups that the new User will be immediately added to.
+     *
+     * @return list of group ids that new user will be added to
+     */
+    public List<String> getGroupIds() {
+        return this.groupIds;
+    }
+
+    /**
+     * Used only for creation of new Users.  These are the groups that the new User will be immediately added to.
+     *
+     * @param groupIds list of group ids that new user will be added to
+     */
+    public void setGroupIds(List<String> groupIds) {
+        this.groupIds = groupIds;
     }
 }
