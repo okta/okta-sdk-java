@@ -34,6 +34,14 @@ String status = result.getStatus();
 This client is used to perform CRUD operations on user objects 
 (http://developer.okta.com/docs/api/resources/users.html).
 ```java
+import com.okta.sdk.clients.UserApiClient;
+import com.okta.sdk.framework.ApiClientConfiguration;
+import com.okta.sdk.framework.FilterBuilder;
+import com.okta.sdk.models.users.LoginCredentials;
+import com.okta.sdk.models.users.Password;
+import com.okta.sdk.models.users.User;
+import com.okta.sdk.models.users.UserProfile;
+
 UserApiClient userApiClient = new UserApiClient(oktaSettings);
 
 // Create a new user
@@ -64,8 +72,8 @@ User user = new User();
 user.setProfile(userProfile);
 user.setCredentials(loginCredentials);
 
-// true is for activate user as soon as it is created
-userApiClient.createUser(user, true);
+boolean activate = true;
+userApiClient.createUser(user, activate);
 
 // Read/Search
 // There are plenty of methods for reading users.
@@ -75,6 +83,7 @@ User user = userApiClient.getUser("ID/loginName/loginShortName");
 // 2. Search user using filters. You can query the API for searching a user
 // with the help of filters mentioned at - http://developer.okta.com/docs/api/resources/users.html#filters
 // Example - search for first name. Returns a list of users matching that query
+String firstName = "John";
 FilterBuilder filterBuilder = new FilterBuilder("profile.firstName eq \"" + firstName + "\"");
 List<User> users = userApiClient.getUsersWithFilter(filterBuilder);
 
@@ -84,7 +93,7 @@ List<User> users = userApiClient.getUsersWithFilter(filterBuilder);
 // specified in the search parameter. Note that the results might not yet be up to date, as the most up to date
 // data can be delayed up to a few seconds, so use for convenience.
 FilterBuilder filterBuilder = new FilterBuilder("profile.flightNumber eq \"A415\"");
-List<User> users = userApiClient.getUsersWithSearch(filterBuilder);
+List<User> users = userApiClient.getUsersWithAdvancedSearch(filterBuilder);
 
 // 4. Search users only on firstName, lastName or email
 // The parameter passed is searched in the attributes - firstName, lastName and email of all Users.
