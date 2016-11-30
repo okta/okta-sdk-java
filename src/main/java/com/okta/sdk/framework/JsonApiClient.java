@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -47,6 +48,7 @@ public abstract class JsonApiClient extends ApiClient {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JodaModule().addSerializer(DateTime.class, new CustomDateTimeSerializer()));
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }

@@ -332,6 +332,48 @@ public class UserApiClient extends JsonApiClient {
         return put(getEncodedPath("/%s", userId), params, new TypeReference<User>() { });
     }
 
+    /**
+     * Update a user's Attributes using a partial User object
+     * The put method above only takes a full user object, otherwise it sets all unspecified attributes to null.
+     *
+     * @param userId        The id of the user to be updated.
+     * @param params        The user object containing the attributes to be updated.
+     * @return User         The updated user.
+     * @throws IOException  If an input or output exception occurred.
+     */
+    public User updateUserAttributes(String userId, User params) throws IOException {
+        return post(getEncodedPath("/%s", userId), params, new TypeReference<User>() {});
+    }
+
+    /**
+     * Update the user profile
+     *
+     * @param userId        The id of the user profile to update.
+     * @param params        The user profile object containing only attributes that need to be updated.
+     * @return User         The updated user.
+     * @throws IOException  If an input or output exception occurred.
+     */
+    public User updateUserProfile(String userId, UserProfile params) throws IOException {
+        User user = new User();
+        user.setProfile(params);
+        return post(getEncodedPath("/%s", userId), user, new TypeReference<User>() {});
+    }
+
+    /**
+     * Update the user credentials
+     *
+     * @param userId        The id of the user credentials to update.
+     * @param params        The user credentials object containing only attributes that need to be updated.
+     * @return User         The updated user.
+     * @throws IOException  If an input or output exception occurred.
+     */
+    public User updateUserCredentials(String userId, LoginCredentials params) throws IOException {
+        User user = new User();
+        user.setCredentials(params);
+        return post(getEncodedPath("/%s", userId), user, new TypeReference<User>() {});
+    }
+
+
     // Delete users.
 
     /**
