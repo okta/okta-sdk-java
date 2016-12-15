@@ -18,6 +18,7 @@ import com.okta.sdk.exceptions.RateLimitExceededException;
 import com.okta.sdk.exceptions.SdkException;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
@@ -26,14 +27,19 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.routing.HttpRoutePlanner;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.impl.conn.DefaultRoutePlanner;
 import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.Proxy;
+import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -64,9 +70,20 @@ public abstract class ApiClient {
     ////////////////////////////////////////////
 
     public ApiClient(ApiClientConfiguration config) {
+        Proxy proxy = ProxySelector.getDefault().select(URI.create(config.getBaseUrl())).iterator().next();
+        HttpRoutePlanner routePlanner;
+        if (Proxy.Type.HTTP.equals(proxy.type())) {
+            URI proxyUri = URI.create(proxy.type() + "://" + proxy.address());
+            HttpHost proxyHost = new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
+            routePlanner = new DefaultProxyRoutePlanner(proxyHost);
+        } else {
+            routePlanner = new DefaultRoutePlanner(null);
+        }
         StandardHttpRequestRetryHandler requestRetryHandler = new StandardHttpRequestRetryHandler(RETRY_COUNT, true);
         HttpClient client = HttpClientBuilder.create().setRetryHandler(requestRetryHandler)
-                .setUserAgent("OktaSDKJava_v" + Utils.getSdkVersion()).disableCookieManagement().build();
+                .setUserAgent("OktaSDKJava_v" + Utils.getSdkVersion()).disableCookieManagement()
+                .setRoutePlanner(routePlanner)
+                .build();
 
         this.httpClient = client;
         this.baseUrl = config.getBaseUrl();
