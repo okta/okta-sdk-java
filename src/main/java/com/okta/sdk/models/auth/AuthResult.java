@@ -23,8 +23,10 @@ import java.util.Map;
 public class AuthResult extends ApiObject {
 
     public static class Status {
+        public String PASSWORD_WARN = "PASSWORD_WARN";             //The user credentials are valid, but user has to be warned about password expiry
         public String PASSWORD_EXPIRED = "PASSWORD_EXPIRED";       //The user credentials are valid but expired; the user must change them
         public String RECOVERY = "RECOVERY";                       //The user is in the middle of the forgot-password flow
+        public String RECOVERY_CHALLENGE = "RECOVERY_CHALLENGE";   //The user has a second factor challenge to fulfil for password recovery
         public String PASSWORD_RESET = "PASSWORD_RESET";           //The user has answered their recovery question and needs to set a new password
         public String LOCKED_OUT = "LOCKED_OUT";                   //The user account is locked out; self-service unlock or admin unlock is required
         public String MFA_ENROLL = "MFA_ENROLL";                   //The user credentials are valid, but MFA is required and no factors are set up yet
@@ -47,6 +49,10 @@ public class AuthResult extends ApiObject {
     private String factorResultMessage;
 
     private String recoveryToken;
+
+    private String factorType;
+
+    private String recoveryType;
 
     private String sessionToken;
 
@@ -212,5 +218,33 @@ public class AuthResult extends ApiObject {
      */
     public void setEmbedded(Map<String, Object> val) {
         this.embedded = val;
+    }
+
+    /**
+     * Gets factorType
+     */
+    public String getFactorType() {
+        return this.factorType;
+    }
+
+    /**
+     * Sets factorType
+     */
+    public void setFactorType(String factorType) {
+        this.factorType = factorType;
+    }
+
+    /**
+     * Gets recoveryType
+     */
+    public String getRecoveryType() {
+        return this.recoveryType;
+    }
+
+    /**
+     * Sets recoveryType
+     */
+    public void setRecoveryType(String recoveryType) {
+        this.recoveryType = recoveryType;
     }
 }
