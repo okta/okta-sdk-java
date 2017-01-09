@@ -26,6 +26,8 @@ public class Accessibility extends ApiObject {
      */
     private String errorRedirectUrl;
 
+    private String loginRedirectUrl;
+
     /**
      * Gets selfService
      */
@@ -52,5 +54,19 @@ public class Accessibility extends ApiObject {
      */
     public void setErrorRedirectUrl(String val) {
         this.errorRedirectUrl = val;
+    }
+
+    /**
+     * Gets loginRedirectUrl
+     */
+    public String getLoginRedirectUrl() {
+        return this.loginRedirectUrl;
+    }
+
+    /**
+     * Sets loginRedirectUrl
+     */
+    public void setLoginRedirectUrl(String val) {
+        this.loginRedirectUrl = val;
     }
 }

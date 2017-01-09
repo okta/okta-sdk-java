@@ -20,6 +20,10 @@ public class FactorCatalogEntry extends ApiObject {
 
     private String provider;
 
+    private String status;
+
+    private String enrollment;
+
     /**
      * Gets factorType
      */
@@ -46,5 +50,33 @@ public class FactorCatalogEntry extends ApiObject {
      */
     public void setProvider(String val) {
         this.provider = val;
+    }
+
+    /**
+     * Gets status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets status
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    /**
+     * Gets enrollment
+     */
+    public String getEnrollment() {
+        return enrollment;
+    }
+
+    /**
+     * Sets enrollment
+     */
+    public void setEnrollment(String enrollment) {
+        this.enrollment = enrollment;
     }
 }

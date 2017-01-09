@@ -12,6 +12,7 @@
 
 package com.okta.sdk.models.apps;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.okta.sdk.framework.ApiObject;
 import com.okta.sdk.models.users.Password;
 
@@ -36,6 +37,11 @@ public class AppCredentials extends ApiObject {
      * Shared password for app
      */
     private Password password;
+
+    private Boolean revealPassword;
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    private Signing signing = new Signing();
 
     /**
      * Gets scheme
@@ -91,5 +97,33 @@ public class AppCredentials extends ApiObject {
      */
     public void setPassword(Password val) {
         this.password = val;
+    }
+
+    /**
+     * Gets revealPassword
+     */
+    public Boolean getRevealPassword() {
+        return this.revealPassword;
+    }
+
+    /**
+     * Sets revealPassword
+     */
+    public void setRevealPassword(Boolean val) {
+        this.revealPassword = val;
+    }
+
+    /**
+     * Gets signing
+     */
+    public Signing getSigning() {
+        return signing;
+    }
+
+    /**
+     * Sets signing
+     */
+    public void setSigning(Signing signing) {
+        this.signing = signing;
     }
 }

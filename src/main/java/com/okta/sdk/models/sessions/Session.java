@@ -13,6 +13,9 @@
 package com.okta.sdk.models.sessions;
 
 import com.okta.sdk.framework.ApiObject;
+import org.joda.time.DateTime;
+
+import java.util.List;
 
 public class Session extends ApiObject {
 
@@ -25,6 +28,22 @@ public class Session extends ApiObject {
      * unique key for the user
      */
     private String userId;
+
+    private String login;
+
+    private String status;
+
+    private DateTime createdAt;
+
+    private DateTime expiresAt;
+
+    private DateTime lastLogin;
+
+    private DateTime lastPasswordVerification;
+
+    private DateTime lastFactorVerification;
+
+    private List<String> amr;
 
     /**
      * indicates whether the user has enrolled a valid MFA credential
@@ -67,6 +86,118 @@ public class Session extends ApiObject {
      */
     public void setUserId(String val) {
         this.userId = val;
+    }
+
+    /**
+     * Gets login
+     */
+    public String getLogin() {
+        return this.login;
+    }
+
+    /**
+     * Sets login
+     */
+    public void setLogin(String val) {
+        this.login = val;
+    }
+
+    /**
+     * Gets status
+     */
+    public String getStatus() {
+        return this.status;
+    }
+
+    /**
+     * Sets login
+     */
+    public void setStatus(String val) {
+        this.status = val;
+    }
+
+    /**
+     * Gets createdAt
+     */
+    public DateTime getCreatedAt() {
+        return this.createdAt;
+    }
+
+    /**
+     * Sets createdAt
+     */
+    public void setCreatedAt(DateTime val) {
+        this.createdAt = val;
+    }
+
+    /**
+     * Gets expiresAt
+     */
+    public DateTime getExpiresAt() {
+        return this.expiresAt;
+    }
+
+    /**
+     * Sets expiresAt
+     */
+    public void setExpiresAt(DateTime val) {
+        this.expiresAt = val;
+    }
+
+    /**
+     * Gets lastLogin
+     */
+    public DateTime getLastLogin() {
+        return this.lastLogin;
+    }
+
+    /**
+     * Sets lastLogin
+     */
+    public void setLastLogin(DateTime val) {
+        this.lastLogin = val;
+    }
+
+    /**
+     * Gets lastPasswordVerification
+     */
+    public DateTime getLastPasswordVerification() {
+        return this.lastPasswordVerification;
+    }
+
+    /**
+     * Sets lastPasswordVerification
+     */
+    public void setLastPasswordVerification(DateTime val) {
+        this.lastPasswordVerification = val;
+    }
+
+    /**
+     * Gets lastFactorVerification
+     */
+    public DateTime getLastFactorVerification() {
+        return this.lastFactorVerification;
+    }
+
+    /**
+     * Sets lastFactorVerification
+     */
+    public void setLastFactorVerification(DateTime val) {
+        this.lastFactorVerification = val;
+    }
+
+    /**
+     * Gets amr
+     */
+    public List<String> getAmr() {
+        return this.amr;
+    }
+
+    /**
+     * Sets amr
+     */
+    public void setAmr(List<String> val) {
+        this.amr = val;
     }
 
     /**

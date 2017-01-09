@@ -13,6 +13,7 @@
 package com.okta.sdk.models.usergroups;
 
 import com.okta.sdk.framework.ApiObject;
+import org.joda.time.DateTime;
 
 public class UserGroup extends ApiObject {
 
@@ -20,6 +21,21 @@ public class UserGroup extends ApiObject {
      * unique key for group
      */
     private String id;
+
+    /**
+     * timestamp when user was created
+     */
+    private DateTime created;
+
+    /**
+     * timestamp when user was last updated
+     */
+    private DateTime lastUpdated;
+
+    /**
+     * timestamp when last membership was updated
+     */
+    private DateTime lastMembershipUpdated;
 
     /**
      * determines the group’s profile
@@ -48,6 +64,48 @@ public class UserGroup extends ApiObject {
      */
     public void setId(String val) {
         this.id = val;
+    }
+
+    /**
+     * Gets created
+     */
+    public DateTime getCreated() {
+        return this.created;
+    }
+
+    /**
+     * Sets created
+     */
+    public void setCreated(DateTime val) {
+        this.created = val;
+    }
+
+    /**
+     * Gets lastUpdated
+     */
+    public DateTime getLastUpdated() {
+        return this.lastUpdated;
+    }
+
+    /**
+     * Sets lastUpdated
+     */
+    public void setLastUpdated(DateTime val) {
+        this.lastUpdated = val;
+    }
+
+    /**
+     * Gets lastMembershipUpdated
+     */
+    public DateTime getLastMembershipUpdated() {
+        return this.lastMembershipUpdated;
+    }
+
+    /**
+     * Sets lastMembershipUpdated
+     */
+    public void setLastMembershipUpdated(DateTime val) {
+        this.lastMembershipUpdated = val;
     }
 
     /**

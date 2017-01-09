@@ -13,6 +13,7 @@
 package com.okta.sdk.models.apps;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.okta.sdk.framework.ApiObject;
 
 public class Settings extends ApiObject {
@@ -23,11 +24,32 @@ public class Settings extends ApiObject {
     @JsonProperty("app")
     private AppSettings appSettings;
 
+    private Notifications notifications;
+
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_DEFAULT)
+    private Boolean manualProvisioning;
+
     public AppSettings getAppSettings() {
         return appSettings;
     }
 
     public void setAppSettings(AppSettings appSettings) {
         this.appSettings = appSettings;
+    }
+
+    public Notifications getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Notifications notifications) {
+        this.notifications = notifications;
+    }
+
+    public Boolean getManualProvisioning() {
+        return manualProvisioning;
+    }
+
+    public void setManualProvisioning(Boolean manualProvisioning) {
+        this.manualProvisioning = manualProvisioning;
     }
 }

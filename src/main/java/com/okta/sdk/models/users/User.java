@@ -18,6 +18,7 @@ import com.okta.sdk.framework.ApiObject;
 import com.okta.sdk.models.links.LinksUnion;
 import org.joda.time.DateTime;
 
+import java.util.List;
 import java.util.Map;
 
 public class User extends ApiObject {
@@ -70,6 +71,8 @@ public class User extends ApiObject {
     private UserProfile profile;
 
     private LoginCredentials credentials;
+
+    private List<String> groupIds;
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonProperty(value = "_links")
@@ -213,6 +216,20 @@ public class User extends ApiObject {
      */
     public void setProfile(UserProfile val) {
         this.profile = val;
+    }
+
+    /**
+     * Gets groupIds
+     */
+    public List<String> getGroupIds() {
+        return this.groupIds;
+    }
+
+    /**
+     * Sets groupIds
+     */
+    public void setGroupIds(List<String> val) {
+        this.groupIds = val;
     }
 
     /**
