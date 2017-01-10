@@ -39,6 +39,11 @@ public class AuthApiClient extends JsonApiClient {
     public static final String OLD_PASSWORD = "oldPassword";
     public static final String NEW_PASSWORD = "newPassword";
 
+    public enum FactorType {
+        EMAIL,
+        SMS
+    }
+
     public AuthApiClient(ApiClientConfiguration config) {
         super(config);
     }
@@ -141,9 +146,16 @@ public class AuthApiClient extends JsonApiClient {
     }
 
     public AuthResult forgotPassword(String username, String relayState) throws IOException {
+        return forgotPassword(username, null, relayState);
+    }
+
+    public AuthResult forgotPassword(String username, FactorType factorType, String relayState) throws IOException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(USERNAME, username);
         params.put(RELAY_STATE, relayState);
+        if (factorType != null) {
+            params.put(FACTOR_TYPE, factorType);
+        }
         return post(getEncodedPath("/recovery/password"), params, new TypeReference<AuthResult>() { });
     }
 
