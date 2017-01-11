@@ -8,7 +8,7 @@ To build and install:
 2. Navigate to the repo directory. It should contain pom.xml
 3. Build with tests `mvn install` or without tests `mvn -Dmaven.test.skip=true install`
 
-###Client configuration
+### Client configuration
 ```java
 import com.okta.sdk.framework.ApiClientConfiguration;
 
@@ -17,7 +17,7 @@ ApiClientConfiguration oktaSettings = new ApiClientConfiguration(
                                         "your_api_key");
 ```
 
-###AuthApiClient
+### AuthApiClient
 This client is used to authenticate and validate user credentials. 
 Information about the various states of authentication are available at http://developer.okta.com/docs/api/resources/authn.html
 ```java
@@ -30,7 +30,7 @@ AuthResult result = authClient.authenticate(username, password, someRelayState);
 String status = result.getStatus();
 ```
 
-###UserApiClient and CRUD
+### UserApiClient and CRUD
 This client is used to perform CRUD operations on user objects 
 (http://developer.okta.com/docs/api/resources/users.html).
 ```java
@@ -107,7 +107,7 @@ userApiClient.updateUser(newUser);
 userApiClient.deleteUser(newUser.getId());
 ```
 
-###Paging
+### Paging
 ```java
 PagedResults<User> pagedResults = userApiClient.getUsersPagedResultsWithLimit(10);
 
@@ -123,3 +123,8 @@ while (true) {
     }
 }
 ```
+
+### Additional configuration
+
+#### DNS TTL Caching
+When using a [Security Manager](https://docs.oracle.com/javase/tutorial/essential/environment/security.html) or Java <1.6, the default JDK DNS cache policy is set to cache forever. This can cause service issues if the server at your cached IP goes down. We recommend setting a TTL of 30 seconds. To do so, uncomment and set `networkaddress.cache.ttl` to 30 in `$JRE_HOME/lib/security/java.security`.
