@@ -15,6 +15,7 @@ import com.okta.sdk.framework.ApiClientConfiguration;
 import com.okta.sdk.framework.FilterBuilder;
 import org.hamcrest.core.StringContains;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -63,14 +64,14 @@ public class LogsApiClientTest {
 
     @Test
     public void testOnlyStartDatetimeCreatesCorrectUri() throws IOException {
-        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START), null, null, null, LIMIT);
+        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START, DateTimeZone.UTC), null, null, null, LIMIT);
         assertThat(res, new StringContains(SINCE_SUBSTRING));
         assertThat(res, new StringContains(LIMIT_SUBSTRING));
     }
 
     @Test
     public void testStartDatetimeWithFilterCreatesCorrectUri() throws IOException {
-        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START), FILTER_BUILDER, null, null, LIMIT);
+        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START, DateTimeZone.UTC), FILTER_BUILDER, null, null, LIMIT);
         assertThat(res, new StringContains(SINCE_SUBSTRING));
         assertThat(res, new StringContains(LIMIT_SUBSTRING));
         assertThat(res, new StringContains(FILTER_BUILDER_SUBSTRING));
@@ -78,7 +79,7 @@ public class LogsApiClientTest {
 
     @Test
     public void testStartDatetimeWithSearchCreatesCorrectUri() throws IOException {
-        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START), null, SEARCH, null, LIMIT);
+        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START, DateTimeZone.UTC), null, SEARCH, null, LIMIT);
         assertThat(res, new StringContains(SINCE_SUBSTRING));
         assertThat(res, new StringContains(LIMIT_SUBSTRING));
         assertThat(res, new StringContains(SEARCH_SUBSTRING));
@@ -86,7 +87,7 @@ public class LogsApiClientTest {
 
     @Test
     public void testStartDatetimeWithAfterCreatesCorrectUri() throws IOException {
-        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START), null, null, AFTER_VALUE, LIMIT);
+        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START, DateTimeZone.UTC), null, null, AFTER_VALUE, LIMIT);
         assertThat(res, new StringContains(SINCE_SUBSTRING));
         assertThat(res, new StringContains(LIMIT_SUBSTRING));
         assertThat(res, new StringContains(AFTER_VALUE_SUBSTRING));
@@ -94,7 +95,7 @@ public class LogsApiClientTest {
 
     @Test
     public void testStartDatetimeWithFilterAndAfterCreatesCorrectUri() throws IOException {
-        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START), FILTER_BUILDER, null, AFTER_VALUE, LIMIT);
+        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START, DateTimeZone.UTC), FILTER_BUILDER, null, AFTER_VALUE, LIMIT);
         assertThat(res, new StringContains(SINCE_SUBSTRING));
         assertThat(res, new StringContains(LIMIT_SUBSTRING));
         assertThat(res, new StringContains(FILTER_BUILDER_SUBSTRING));
@@ -103,7 +104,7 @@ public class LogsApiClientTest {
 
     @Test
     public void testStartDatetimeWithFilterAndSearchCreatesCorrectUri() throws IOException {
-        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START), null, SEARCH, AFTER_VALUE, LIMIT);
+        String res = logsApiClient.getApiUri(new DateTime(UNIX_TIME_START, DateTimeZone.UTC), null, SEARCH, AFTER_VALUE, LIMIT);
         assertThat(res, new StringContains(SINCE_SUBSTRING));
         assertThat(res, new StringContains(LIMIT_SUBSTRING));
         assertThat(res, new StringContains(SEARCH_SUBSTRING));
