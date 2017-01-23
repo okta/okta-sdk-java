@@ -310,7 +310,7 @@ public class UserApiClient extends JsonApiClient {
     // Update users.
 
     /**
-     * Update a user with parameters.
+     * Update a user with parameters. Any non-specified properties are removed.
      *
      * @param  params       The user parameters to be updated.
      * @return User         The updated user.
@@ -321,7 +321,7 @@ public class UserApiClient extends JsonApiClient {
     }
 
     /**
-     * Update a user with parameters.
+     * Update a user with parameters. Any non-specified properties are removed.
      *
      * @param  userId       The id of the user to be updated.
      * @param  params       The user parameters to be updated.
@@ -330,6 +330,29 @@ public class UserApiClient extends JsonApiClient {
      */
     public User updateUser(String userId, User params) throws IOException {
         return put(getEncodedPath("/%s", userId), params, new TypeReference<User>() { });
+    }
+
+    /**
+     * Partially update a user with parameters. Any non-specified properties are ignored.
+     *
+     * @param  params       The user parameters to be updated.
+     * @return User         The updated user.
+     * @throws IOException  If an input or output exception occurred.
+     */
+    public User partialUpdateUser(User params) throws IOException {
+        return post(getEncodedPath("/%s", params.getId()), params, new TypeReference<User>() { });
+    }
+
+    /**
+     * Partially update a user with parameters. Any non-specified properties are ignored.
+     *
+     * @param  userId       The id of the user to be updated.
+     * @param  params       The user parameters to be updated.
+     * @return User         The updated user.
+     * @throws IOException  If an input or output exception occurred.
+     */
+    public User partialUpdateUser(String userId, User params) throws IOException {
+        return post(getEncodedPath("/%s", userId), params, new TypeReference<User>() { });
     }
 
     // Delete users.
