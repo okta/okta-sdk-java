@@ -1,8 +1,10 @@
 package com.okta.sdk.models.apps;
 
-public class Notifications {
-    public static class Vpn {
-        public static class Network {
+import com.okta.sdk.framework.ApiObject;
+
+public class Notifications extends ApiObject {
+    public static class Vpn extends ApiObject {
+        public static class Network extends ApiObject {
             private String connection;
 
             public String getConnection() {
