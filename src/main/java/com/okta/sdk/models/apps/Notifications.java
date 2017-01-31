@@ -16,6 +16,7 @@ public class Notifications {
 
         private Network network;
         private String message;
+        private String helpUrl;
 
         public Network getNetwork() {
             return network;
@@ -31,6 +32,14 @@ public class Notifications {
 
         public void setMessage(String message) {
             this.message = message;
+        }
+
+        public String getHelpUrl() {
+            return helpUrl;
+        }
+
+        public void setHelpUrl(String helpUrl) {
+            this.helpUrl = helpUrl;
         }
     }
 
