@@ -72,8 +72,6 @@ public class User extends ApiObject {
 
     private LoginCredentials credentials;
 
-    private List<String> groupIds;
-
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonProperty(value = "_links")
     private Map<String, LinksUnion> links;
@@ -222,20 +220,6 @@ public class User extends ApiObject {
      */
     public void setProfile(UserProfile val) {
         this.profile = val;
-    }
-
-    /**
-     * Gets groupIds
-     */
-    public List<String> getGroupIds() {
-        return this.groupIds;
-    }
-
-    /**
-     * Sets groupIds
-     */
-    public void setGroupIds(List<String> val) {
-        this.groupIds = val;
     }
 
     /**
