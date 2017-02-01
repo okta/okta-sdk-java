@@ -12,15 +12,23 @@
 
 package com.okta.sdk.framework;
 
+import java.util.Map;
+
 public class ApiClientConfiguration {
 
     private String baseUrl;
     private int apiVersion = 1;
     private String apiToken;
+    private Map<String, String> headers;
 
     public ApiClientConfiguration(String baseUrl, String apiToken) {
+        this(baseUrl, apiToken, null);
+    }
+
+    public ApiClientConfiguration(String baseUrl, String apiToken, Map headers) {
         this.baseUrl = baseUrl;
         this.apiToken = apiToken;
+        this.headers = headers;
     }
 
     public String getBaseUrl() {
@@ -41,5 +49,13 @@ public class ApiClientConfiguration {
 
     public void setApiToken(String apiToken) {
         this.apiToken = apiToken;
+    }
+
+    public Map getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map headers) {
+        this.headers = headers;
     }
 }

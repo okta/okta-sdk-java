@@ -233,6 +233,13 @@ public abstract class ApiClient {
         // Content type and accept header are determined by the child class
         setContentTypeHeader(httpUriRequest);
         setAcceptHeader(httpUriRequest);
+
+        // Walk through custom headers and set
+        Map<String, String> headers = this.configuration.getHeaders();
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            Header authHeader = new BasicHeader(header.getKey(), header.getValue());
+            httpUriRequest.setHeader(authHeader);
+        }
     }
 
     protected void setTokenHeader(HttpUriRequest httpUriRequest) throws IOException {
