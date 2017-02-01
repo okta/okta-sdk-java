@@ -236,10 +236,14 @@ public abstract class ApiClient {
 
         // Walk through custom headers and set
         Map<String, String> headers = this.configuration.getHeaders();
-        for (Map.Entry<String, String> header : headers.entrySet()) {
-            Header authHeader = new BasicHeader(header.getKey(), header.getValue());
-            httpUriRequest.setHeader(authHeader);
+        if (headers != null) {
+            // Update headers
+            for (Map.Entry<String, String> header : headers.entrySet()) {
+                Header extraHeader = new BasicHeader(header.getKey(), header.getValue());
+                httpUriRequest.setHeader(extraHeader);
+            }
         }
+        
     }
 
     protected void setTokenHeader(HttpUriRequest httpUriRequest) throws IOException {
