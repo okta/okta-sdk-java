@@ -27,9 +27,8 @@ Our categories include:
   * :memo: `:memo:` when writing docs
   * :fire: `:fire:` when removing code or files
   * :package: `:package:` when pushing a new release
-  * :arrow_up: `:arrow_up:` when upgrading dependencies
+  * :arrow_up: `:arrow_up:` when upgrading dependencies, or generating files
   * :arrow_down: `:arrow_down:` when downgrading dependencies
-  * :space_invader: `:space_invader:` when using generated files
 
 If you do not see an exact emoji match, use the best matching emoji.
 
