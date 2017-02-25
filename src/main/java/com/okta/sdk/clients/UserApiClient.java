@@ -78,6 +78,9 @@ public class UserApiClient extends JsonApiClient {
      * @throws IOException  If an input or output exception occurred.
      */
     public List<User> getUsersWithLimit(int limit) throws IOException {
+        if (limit == -1) {
+            return get(getFullPath("/"), new TypeReference<List<User>>() { });
+        }
         return get(getEncodedPath("?" + LIMIT + "=%s", Integer.toString(limit)), new TypeReference<List<User>>() {
         });
     }

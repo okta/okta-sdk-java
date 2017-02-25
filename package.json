@@ -1,6 +1,7 @@
 {
   "name": "@okta/oktasdk-java",
-  "version": "0.0.1",
+  "version": "0.0.4",
+  "private": true,
   "publishConfig": {
     "registry": "https://artifacts.aue1d.saasure.com/artifactory/api/npm/npm-okta"
   },
@@ -23,7 +24,7 @@
     "record-new-tapes": "npm run test:mock-okta || exit 0;",
     "postrecord-new-tapes": "npm run stop:mock-okta",
     "pretest": "npm run start:mock-okta",
-    "test": "echo \"Error: no test specified\" && exit 1;",
+    "test": "mvn test",
     "posttest": "npm run check:mock-okta"
   },
   "devDependencies": {
