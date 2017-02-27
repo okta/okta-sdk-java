@@ -16,12 +16,12 @@ import com.okta.sdk.framework.ApiObject;
 
 public class Password extends ApiObject {
 
-    private String value;
+    private char[] value;
 
     /**
      * Gets value
      */
-    public String getValue() {
+    public char[] getValue() {
         return this.value;
     }
 
@@ -29,6 +29,6 @@ public class Password extends ApiObject {
      * Sets value
      */
     public void setValue(String val) {
-        this.value = val;
+        this.value = val.toCharArray();
     }
 }
