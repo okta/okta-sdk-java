@@ -23,17 +23,17 @@ import java.util.Map;
 public class AuthResult extends ApiObject {
 
     public static class Status {
-        public String PASSWORD_WARN = "PASSWORD_WARN";             //The user credentials are valid, but user has to be warned about password expiry
-        public String PASSWORD_EXPIRED = "PASSWORD_EXPIRED";       //The user credentials are valid but expired; the user must change them
-        public String RECOVERY = "RECOVERY";                       //The user is in the middle of the forgot-password flow
-        public String RECOVERY_CHALLENGE = "RECOVERY_CHALLENGE";   //The user has a second factor challenge to fulfil for password recovery
-        public String PASSWORD_RESET = "PASSWORD_RESET";           //The user has answered their recovery question and needs to set a new password
-        public String LOCKED_OUT = "LOCKED_OUT";                   //The user account is locked out; self-service unlock or admin unlock is required
-        public String MFA_ENROLL = "MFA_ENROLL";                   //The user credentials are valid, but MFA is required and no factors are set up yet
-        public String MFA_ENROLL_ACTIVATE = "MFA_ENROLL_ACTIVATE"; //User enrolled for MFA but needs to be activated using the activation code(s)
-        public String MFA_REQUIRED = "MFA_REQUIRED";               //The user credentials are valid, but MFA is required
-        public String MFA_CHALLENGE = "MFA_CHALLENGE";             //The MFA passCode has been sent, and we are waiting for the user to enter it back
-        public String SUCCESS = "SUCCESS";                         //The user is authenticated
+        public static final String PASSWORD_WARN = "PASSWORD_WARN";             //The user credentials are valid, but user has to be warned about password expiry
+        public static final String PASSWORD_EXPIRED = "PASSWORD_EXPIRED";       //The user credentials are valid but expired; the user must change them
+        public static final String RECOVERY = "RECOVERY";                       //The user is in the middle of the forgot-password flow
+        public static final String RECOVERY_CHALLENGE = "RECOVERY_CHALLENGE";   //The user has a second factor challenge to fulfil for password recovery
+        public static final String PASSWORD_RESET = "PASSWORD_RESET";           //The user has answered their recovery question and needs to set a new password
+        public static final String LOCKED_OUT = "LOCKED_OUT";                   //The user account is locked out; self-service unlock or admin unlock is required
+        public static final String MFA_ENROLL = "MFA_ENROLL";                   //The user credentials are valid, but MFA is required and no factors are set up yet
+        public static final String MFA_ENROLL_ACTIVATE = "MFA_ENROLL_ACTIVATE"; //User enrolled for MFA but needs to be activated using the activation code(s)
+        public static final String MFA_REQUIRED = "MFA_REQUIRED";               //The user credentials are valid, but MFA is required
+        public static final String MFA_CHALLENGE = "MFA_CHALLENGE";             //The MFA passCode has been sent, and we are waiting for the user to enter it back
+        public static final String SUCCESS = "SUCCESS";                         //The user is authenticated
     }
 
     private String stateToken;
