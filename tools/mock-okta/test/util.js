@@ -36,6 +36,12 @@ const buildReq = (baseUrl, suiteName, methodName) => {
       headers,
       json: true,
     }),
+    put: opts => request.put({
+      uri: baseUrl + opts.path,
+      headers,
+      body: opts.body,
+      json: true,
+    }),
     post: opts => request.post({
       uri: baseUrl + opts.path,
       headers,
