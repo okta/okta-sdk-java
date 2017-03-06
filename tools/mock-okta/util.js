@@ -81,7 +81,9 @@ util.getAllTapes = (tapeDir) => {
 util.getTapeDetails = (tapeDir, tapes) => Array.from(tapes).map((tape) => {
   const filePath = `${tapeDir}/${tape}.js`;
   const tapeStr = fs.readFileSync(filePath, 'utf8');
-  return util.parseTapeComment(tapeStr);
+  const tapeDetail = util.parseTapeComment(tapeStr);
+  tapeDetail.tapeHash = tape;
+  return tapeDetail;
 });
 
 /*
@@ -106,6 +108,10 @@ util.standardizeRequest = (req) => {
     req.url = req.url.slice(0, -1);
   }
 
+  // Replace any encoded @
+  const urlAtSign = new RegExp('\%40', 'g');
+  req.url = req.url.replace(urlAtSign, '@');
+
   // If user-agent exists, standardize it
   if (req.headers['user-agent']) {
     // TODO: throw error if user-agent doesn't exist
@@ -128,6 +134,9 @@ util.standardizeRequest = (req) => {
       req.headers['content-length'] = jsonBuffer.length.toString();
     } else {
       jsonBuffer = new Buffer(0);
+      if (req.method !== 'GET') {
+        req.headers['content-length'] = '0';
+      }
     }
 
     // Stuff the buffer back into the request
@@ -175,3 +184,5 @@ util.check = () => request.get({
     process.exit(0);
   }
 });
+
+util.prettyJSON = obj => JSON.stringify(obj, null, 2);

@@ -18,6 +18,7 @@ import com.okta.sdk.framework.ApiResponse;
 import com.okta.sdk.framework.FilterBuilder;
 import com.okta.sdk.framework.JsonApiClient;
 import com.okta.sdk.framework.PagedResults;
+import com.okta.sdk.framework.Utils;
 import com.okta.sdk.models.usergroups.UserGroup;
 import com.okta.sdk.models.users.User;
 import org.apache.http.HttpResponse;
@@ -36,6 +37,9 @@ public class UserGroupApiClient extends JsonApiClient {
     ////////////////////////////////////////////
     // COMMON METHODS
     ////////////////////////////////////////////
+    public List<UserGroup> getUserGroups() throws IOException {
+        return getUserGroupsWithLimit(Utils.getDefaultResultsLimit());
+    }
 
     public List<UserGroup> getUserGroupsWithQuery(String query) throws IOException {
         return get(getEncodedPath("?" + SEARCH_QUERY + "=%s", query), new TypeReference<List<UserGroup>>() { });
@@ -49,6 +53,9 @@ public class UserGroupApiClient extends JsonApiClient {
     }
 
     public List<UserGroup> getUserGroupsWithLimit(int limit) throws IOException {
+        if (limit == -1) {
+            return get(getFullPath("/"), new TypeReference<List<UserGroup>>() { });
+        }
         return get(getEncodedPath("?" + LIMIT + "=%s", Integer.toString(limit)), new TypeReference<List<UserGroup>>() { });
     }
 
