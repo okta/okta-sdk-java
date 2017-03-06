@@ -17,6 +17,7 @@
     "start:mock-okta": "forever --minUptime 1000 --spinSleepTime 1000 start ./tools/mock-okta/index.js",
     "poststart:mock-okta": "wait-on tcp:3000",
     "stop:mock-okta": "forever stop ./tools/mock-okta/index.js",
+    "debug:mock-okta": "node ./tools/mock-okta/index.js",
     "check:mock-okta": "node ./tools/mock-okta/check.js",
     "test:mock-okta": "mocha --timeout 15000 tools/mock-okta/test/suites/**/*.js",
     "reset-test-env": "node ./tools/mock-okta/test/prep.js && rimraf ./tools/mock-okta/tapes/*.js",

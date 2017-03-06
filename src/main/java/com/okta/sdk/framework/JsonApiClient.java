@@ -73,6 +73,9 @@ public abstract class JsonApiClient extends ApiClient {
 
     @Override
     protected HttpEntity buildRequestEntity(Object object) throws IOException {
+        if (object == "") {
+            return new StringEntity("", "UTF-8");
+        }
         StringWriter writer = new StringWriter();
         JsonGenerator generator = objectMapper.getFactory().createGenerator(writer);
         objectMapper.writeValue(generator, object);

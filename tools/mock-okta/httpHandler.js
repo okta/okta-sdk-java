@@ -16,8 +16,9 @@ const util = require('./util');
 const httpHandler = module.exports;
 
 const handler = (opts, req, res) => {
+  
   if (req.url === '/mock/unused-tapes') {
-    res.end(JSON.stringify(util.getTapeDetails(opts.tapesDir, opts.unusedTapes), null, 2));
+    res.end(util.prettyJSON(util.getTapeDetails(opts.tapesDir, opts.unusedTapes)));
     return Promise.resolve();
   }
 
@@ -31,6 +32,38 @@ const handler = (opts, req, res) => {
       }
       setHeader(key, value);
     };
+    
+    const end = res.end.bind(res);
+    res.end = (msg) => {
+      if (msg === 'Recording Disabled') {
+        // Modify the message to be more informative
+        // Attempt to get the x-test-description and map it to an existing tape
+        const description = standardReq.headers['x-test-description'];
+        if (description) {
+          const possibleTapes = opts.tapeDetails.filter((tapeDetail) => {
+            return req.method === tapeDetail.method &&
+              description === tapeDetail.headers['x-test-description'];
+          });
+          msg = util.prettyJSON({
+            req: {
+              headers: req.headers,
+              method: req.method,
+              url: req.url,
+            },
+            standardReq: {
+              headers: standardReq.headers,
+              method: standardReq.method,
+              url: standardReq.url,
+            },
+            possibleTapes
+          });
+        } else {
+          msg = 'Missing the x-test-description header';
+        }
+        console.log(msg);
+      }
+      end(msg);
+    }
 
     opts.proxy(standardReq, res);
   });

@@ -37,13 +37,15 @@ const okta = yakbak(config.mockOkta.proxied, {
   noRecord: !args.record,
 });
 
-// Collect all the tape names
+// Collect all the tape names and tape details
 const unusedTapes = util.getAllTapes(tapesDir);
+const tapeDetails = util.getTapeDetails(tapesDir, unusedTapes);
 
 const app = http.createServer(httpHandler.create({
   proxy: okta,
   tapesDir,
   unusedTapes,
+  tapeDetails
 }));
 
 app.listen(config.mockOkta.port, () => {
