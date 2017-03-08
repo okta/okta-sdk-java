@@ -159,6 +159,21 @@ public class AuthApiClient extends JsonApiClient {
         return post(getEncodedPath("/recovery/password"), params, new TypeReference<AuthResult>() { });
     }
 
+	 public AuthResult forgotPasswordFactor(String username, String relayState, String factorType) throws IOException {
+		  Map<String, Object> params = new HashMap<String, Object>();
+        params.put(USERNAME, username);
+		  params.put(FACTOR_TYPE, factorType);
+        params.put(RELAY_STATE, relayState);
+        return post(getEncodedPath("/recovery/password"), params, new TypeReference<AuthResult>() { });
+	 }
+
+	 public AuthResult verifyRecoveryFactor(String stateToken, String passCode, String factorType) throws IOException {
+			Map<String, Object> params = new HashMap<String, Object>();
+	      params.put(STATE_TOKEN, stateToken);
+	      params.put("passCode", passCode);
+	      return post(getEncodedPath("/recovery/factors/%s/verify", factorType), params, new TypeReference<AuthResult>() { });
+	 }
+
     public AuthResult forgotPasswordAnswer(String stateToken, String relayState, String securityAnswer, String newPassword) throws IOException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(STATE_TOKEN, stateToken);
