@@ -80,8 +80,14 @@ public class SessionApiClient extends JsonApiClient {
         });
     }
 
+    @Deprecated
     public Session extendSession(String sessionId) throws IOException  {
         return put(getEncodedPath("/%s", sessionId), new TypeReference<Session>() {
+        });
+    }
+
+    public Session refreshSession(String sessionId) throws IOException  {
+        return post(getEncodedPath("/%s/lifecycle/refresh", sessionId), null, new TypeReference<Session>() {
         });
     }
 
