@@ -110,16 +110,16 @@ userApiClient.deleteUser(newUser.getId());
 ### Paging
 ```java
 PagedResults<User> pagedResults = userApiClient.getUsersPagedResultsWithLimit(10);
+processUsers(pagedResults);
 
-while (true) {
+while (!pagedResults.isLastPage()) {
+    pagedResults = userApiClient.getUsersPagedResultsByUrl(pagedResults.getNextUrl());
+    processUsers(pagedResults);
+}
+
+void processUsers(PagedResults<User>) {
     for (User user : pagedResults.getResult()) {
         // Do something with user
-    }
-    
-    if (!pagedResults.isLastPage()) {
-        pagedResults = userApiClient.getUsersPagedResultsByUrl(pagedResults.getNextUrl());
-    } else {
-        break;
     }
 }
 ```
