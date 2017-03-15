@@ -1,11 +1,13 @@
 # oktasdk-java
 
-This SDK is in EA, so all existing features are supported by Okta in a production setting
+This SDK is in EA, so all existing features are supported by Okta in a production setting.
+
+Please visit [Okta's Management Java SDK](http://developer.okta.com/docs/sdk/core/java_api_sdk/index.html) for complete documentation.
 
 To build and install:
 
 1. Clone the repo
-2. Navigate to the repo directory. It should contain pom.xml
+2. Navigate to the repo directory. It should contain `pom.xml`
 3. Build with tests `mvn install` or without tests `mvn -Dmaven.test.skip=true install`
 
 ### Client configuration
@@ -15,11 +17,23 @@ import com.okta.sdk.framework.ApiClientConfiguration;
 ApiClientConfiguration oktaSettings = new ApiClientConfiguration(
                                         "https://your_org.okta.com",
                                         "your_api_key");
+
+// Init with custom headers
+Map<String, String> headers = new HashMap<String, String>();
+
+headers.put("OktaAuthorization", "SWSS {{your_api_key}}");
+headers.put("Authorization", "Basic {{AUTHKEY}}");
+
+ApiClientConfiguration oktaSettings = new ApiClientConfiguration(
+                                        "https://your_org.okta.com",
+                                        "your_api_key",
+                                        headers
+);
 ```
 
 ### AuthApiClient
 This client is used to authenticate and validate user credentials. 
-Information about the various states of authentication are available at http://developer.okta.com/docs/api/resources/authn.html
+The [Authentication API](http://developer.okta.com/docs/api/resources/authn.html) has more information about the various states of authentication.
 ```java
 AuthApiClient authClient = new AuthApiClient(oktaSettings);
 
@@ -31,8 +45,8 @@ String status = result.getStatus();
 ```
 
 ### UserApiClient and CRUD
-This client is used to perform CRUD operations on user objects 
-(http://developer.okta.com/docs/api/resources/users.html).
+This client is used to perform CRUD operations on [`User` objects](http://developer.okta.com/docs/api/resources/users.html).
+
 ```java
 import com.okta.sdk.clients.UserApiClient;
 import com.okta.sdk.framework.ApiClientConfiguration;
@@ -75,37 +89,48 @@ user.setCredentials(loginCredentials);
 boolean activate = true;
 userApiClient.createUser(user, activate);
 
-// Read/Search
-// There are plenty of methods for reading users.
-// 1. Search user when user ID/loginName/loginShortName is known
-User user = userApiClient.getUser("ID/loginName/loginShortName");
+// Update the user's first name
+user.getProfile().setFirstName("newFirstName");
+userApiClient.updateUser(user);
 
-// 2. Search user using filters. You can query the API for searching a user
-// with the help of filters mentioned at - http://developer.okta.com/docs/api/resources/users.html#filters
-// Example - search for first name. Returns a list of users matching that query
+// Deactivate the user
+userApiClient.deleteUser(user.getId());
+```
+
+#### Filter, Search, and Query for Users
+To retrieve a `User`, use the `getUser` method when the ID, login, or email is known:
+
+```java
+// All searches are case sensitive
+User userById = userApiClient.getUser("00u0abcdefghIjklmo7");
+User userByEmail = userApiClient.getUser("email@example.com");
+User userByUsername = userApiClient.getUser("email");
+```
+
+You can apply a [filter](http://developer.okta.com/docs/api/resources/users.html#filters) using the `FilterBuilder` class:
+```java
+// Return all users whose first name is John
 String firstName = "John";
 FilterBuilder filterBuilder = new FilterBuilder("profile.firstName eq \"" + firstName + "\"");
 List<User> users = userApiClient.getUsersWithFilter(filterBuilder);
+```
 
-// 3. Advanced search provides the option to filter on any user profile attribute, any custom defined
-// profile attribute, as well as the following top-level attributes: id, status, created, activated, 
-// statusChanged and lastUpdated. The advanced search performs a case insensitive filter against all fields
-// specified in the search parameter. Note that the results might not yet be up to date, as the most up to date
-// data can be delayed up to a few seconds, so use for convenience.
+To query for users, use the `getUsersWithQuery` method:
+```java
+// Return all users whose firstName, lastName, or email constinas "test"
+List<User> users = userApiClient.getUsersWithQuery("test");
+
+```
+
+For any `User` profile attribute, custom defined profile attribute, and top-level attributes (`id`, `status`, `created`, `activated`, `statusChanged`, and `lastUpdated`), use the `getUsersWithAdvancedSearch` method.
+
+This performs a **case insensitive** search against all fields specified.
+```java
+// Return all users with custom profile attribute "flightNumber" matching "A415"
 FilterBuilder filterBuilder = new FilterBuilder("profile.flightNumber eq \"A415\"");
 List<User> users = userApiClient.getUsersWithAdvancedSearch(filterBuilder);
-
-// 4. Search users only on firstName, lastName or email
-// The parameter passed is searched in the attributes - firstName, lastName and email of all Users.
-List<User> users = userApiClient.getUsersWithQuery("firstName/lastName/email");
-
-// Update
-newUser.getProfile().setLastName("NewLast");
-userApiClient.updateUser(newUser);
-
-// Delete (for Users this is the same as deactivate)
-userApiClient.deleteUser(newUser.getId());
 ```
+**Note:** The most upd to date data can be delayed up to a few seconds, so use for convenience.
 
 ### Paging
 ```java
@@ -119,9 +144,52 @@ while (!pagedResults.isLastPage()) {
 
 void processUsers(PagedResults<User>) {
     for (User user : pagedResults.getResult()) {
-        // Do something with user
+        // Perform user action
     }
 }
+```
+
+### Get Custom Properties
+Universal Directory enables the ability to add properties that are not mapped to an object.
+
+```java
+UserApiClient usersClient = new UserApiClient(oktaSettings);
+User user = userApiClient.getUser("ID/loginName/loginShortName");
+Map unmappedProperties = user.getProfile().getUnmapped());
+```
+
+### GroupsClient and CRUD
+This client is used to perform CRUD operations on [`Group` objects](http://developer.okta.com/docs/api/resources/groups.html).
+```java
+import com.okta.sdk.clients.UserGroupApiClient;
+import com.okta.sdk.models.usergroups.UserGroup;
+import com.okta.sdk.models.usergroups.UserGroupProfile;
+
+UserGroupApiClient groupsClient = new UserGroupApiClient(oktaSettings);
+
+// Create and add group
+UserGroup group = new UserGroup();
+UserGroupProfile profile = new UserGroupProfile();
+
+profile.setName("admins");
+profile.setDescription("Admins of org");
+group.setProfile(profile);
+
+groupsClient.createUserGroup(group);
+
+// Retrieve the group by name
+List<UserGroup> groups = groupsClient.getUserGroupsWithQuery("admins");
+UserGroup admins = groups.get(0);
+
+// Or get by ID
+UserGroup admins = groupsClient.getUserGroup("00g0abcdefghIjklmo7");
+
+// Update the description of the group
+admins.getProfile().setDescription("Updated Admins of org");
+groupsClient.updateUserGroup(admins.getId(), admins);
+
+// Remove the group
+groupsClient.deleteUserGroup(admins.getId());
 ```
 
 ### Additional configuration
