@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -26,26 +26,30 @@ public class RateLimitContext {
     }
 
     /**
-     * @return The number of requests remaining in the current window
-     * @throws Exception
+     * @return The number of requests remaining in the current window.
+     * @throws Exception if value does not exist.
      */
     public long getNumRequestsRemaining() throws Exception {
         return getHeaderValueLong("X-Rate-Limit-Remaining");
     }
 
     /**
-     * @return When the next window starts, in Unix time. When the
-     * next window starts, the server will reset the request count
-     * @throws Exception
+     * Returns when the next window starts in Unix time.
+     * Server will reset the request count when the next window starts.
+     *
+     * @return {@link Long}
+     * @throws Exception if value does not exist.
      */
     public long getNextWindowUnixTime() throws Exception {
         return getHeaderValueLong("X-Rate-Limit-Reset");
     }
 
     /**
-     * @return When the next window starts, as a DateTime. When the
-     * next window starts, the server will reset the request count
-     * @throws Exception
+     * When the next window starts, as a DateTime. When the
+     * next window starts, the server will reset the request count.
+     *
+     * @return {@link DateTime}
+     * @throws Exception if value does not exist.
      */
     public DateTime getNextWindowDateTime() throws Exception {
         Long unixTime = getNextWindowUnixTime();
@@ -57,13 +61,22 @@ public class RateLimitContext {
     }
 
     /**
-     * @return The maximum number of requests allowed in a window
-     * @throws Exception
+     * Returns the maximum number of requests allowed in a window.
+     *
+     * @return {@link Long}
+     * @throws Exception if value does not exist.
      */
     public Long getRequestLimit() throws Exception {
         return getHeaderValueLong("X-Rate-Limit-Limit");
     }
 
+    /**
+     * Returns the string value of the specified header.
+     *
+     * @param headerName {@link String}
+     * @return {@link String}
+     * @throws Exception if the header was not found.
+     */
     private String getHeaderValueString(String headerName) throws Exception {
         if (httpResponse == null) {
             throw new SdkException("No http response");
@@ -78,6 +91,13 @@ public class RateLimitContext {
         }
     }
 
+    /**
+     * Returns the long value of the specified header.
+     *
+     * @param headerName {@link String}
+     * @return {@link Long}
+     * @throws Exception if the header does not exist.
+     */
     private long getHeaderValueLong(String headerName) throws Exception {
         String headerString = getHeaderValueString(headerName);
         try {

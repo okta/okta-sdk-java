@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,10 +23,14 @@ import java.util.Objects;
 public final class LogRequest extends ApiObject {
 
     /**
-     * Chain of Ip data
+     * Chain of Ip data.
      */
     private final List<LogIpAddress> ipChain;
 
+    /**
+     * Constructor for LogRequest
+     * @param ipChain {@link List}
+     */
     @JsonCreator
     public LogRequest(
             @JsonProperty("ipChain") List<LogIpAddress> ipChain
@@ -38,15 +42,28 @@ public final class LogRequest extends ApiObject {
         }
     }
 
+    /**
+     * Returns the ipChain.
+     * @return {@link List}
+     */
     public List<LogIpAddress> getIpChain() {
         return ipChain;
     }
 
+    /**
+     * Hashes the object.
+     * @return {@link Integer}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(ipChain);
     }
 
+    /**
+     * Overrides the method equals.
+     * @param obj {@link Object}
+     * @return {@link Boolean}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

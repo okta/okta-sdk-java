@@ -1,3 +1,15 @@
+/*!
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
+ * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
+ *
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.okta.sdk.models.apps;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,244 +25,277 @@ import java.util.Map;
 public class AppUser extends ApiObject {
 
     /**
-     * unique key for user
+     * Unique key for user.
      */
     private String id;
 
     /**
-     * unique external key for user
+     * Unique external key for user.
      */
     private String externalId;
 
     /**
-     * timestamp when user was created
+     * Timestamp when user was created.
      */
     private DateTime created;
 
     /**
-     * timestamp when user was last updated
+     * Timestamp when user was last updated.
      */
     private DateTime lastUpdated;
 
     /**
-     * toggles the assignment between user or group scope
+     * Toggles the assignment between user or group scope.
      */
     private String scope;
 
     /**
-     * status of app user
+     * Status of app user.
      */
     private String status;
 
     /**
-     * timestamp when user was last updated
+     * Timestamp when user was last updated.
      */
     private DateTime statusChanged;
 
     /**
-     * timestamp when app password last changed
+     * Timestamp when app password last changed.
      */
     private DateTime passwordChanged;
 
     /**
-     * synchronization state for app user
+     * Synchronization state for app user.
      */
     private String syncState;
 
     /**
-     * timestamp when last sync operation was executed
+     * Timestamp when last sync operation was executed.
      */
     private DateTime lastSync;
 
     /**
-     * credentials for assigned app
+     * Credentials for assigned app.
      */
     private LoginCredentials credentials;
 
     /**
-     * app-specific profile for the user
+     * App-specific profile for the user.
      */
     private UserProfile profile;
 
+    /**
+     * HAL links for response object.
+     */
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonProperty(value = "_links")
     private Map<String, LinksUnion> links;
 
     /**
-     * Gets id
+     * Returns the ID.
+     * @return {@link String}
      */
     public String getId() {
         return this.id;
     }
 
     /**
-     * Sets id
+     * Sets the ID.
+     * @param val {@link String}
      */
     public void setId(String val) {
         this.id = val;
     }
 
     /**
-     * Sets externalId
+     * Returns the externalId.
+     * @return {@link String}
+     */
+    public String getExternalId() {
+        return this.externalId;
+    }
+
+    /**
+     * Sets the externalId.
+     * @param val {@link String}
      */
     public void setExternalId(String val) {
         this.externalId = val;
     }
 
     /**
-     * Gets externalId
-     */
-    public String getExternalId() {
-        return this.externalId;
-    }
-
-
-    /**
-     * Gets created
+     * Returns the created time.
+     * @return {@link DateTime}
      */
     public DateTime getCreated() {
         return this.created;
     }
 
     /**
-     * Sets created
+     * Sets the created time.
+     * @param val {@link DateTime}
      */
     public void setCreated(DateTime val) {
         this.created = val;
     }
 
     /**
-     * Gets lastUpdated
+     * Returns the lastUpdated time.
+     * @return {@link DateTime}
      */
     public DateTime getLastUpdated() {
         return this.lastUpdated;
     }
 
     /**
-     * Sets lastUpdated
+     * Sets the lastUpdated time.
+     * @param val {@link DateTime}
      */
     public void setLastUpdated(DateTime val) {
         this.lastUpdated = val;
     }
 
     /**
-     * Gets scope
+     * Returns the scopes.
+     * @return {@link String}
      */
     public String getScope() {
         return this.scope;
     }
 
     /**
-     * Sets scope
+     * Sets the scope.
+     * @param val {@link String}
      */
     public void setScope(String val) {
         this.scope = val;
     }
 
     /**
-     * Gets status
+     * Returns the status.
+     * @return {@link String}
      */
     public String getStatus() {
         return this.status;
     }
 
     /**
-     * Sets status
+     * Sets the status.
+     * @param val {@link String}
      */
     public void setStatus(String val) {
         this.status = val;
     }
 
     /**
-     * Gets statusChanged
+     * Returns the statusChanged time.
+     * @return {@link DateTime}
      */
     public DateTime getStatusChanged() {
         return this.statusChanged;
     }
 
     /**
-     * Sets statusChanged
+     * Sets the statusChanged time.
+     * @param val {@link DateTime}
      */
     public void setStatusChanged(DateTime val) {
         this.statusChanged = val;
     }
 
-
     /**
-     * Gets passwordChanged
+     * Returns the passwordChanged time.
+     * @return {@link DateTime}
      */
     public DateTime getPasswordChanged() {
         return this.passwordChanged;
     }
 
     /**
-     * Sets passwordChanged
+     * Sets the passwordChanged time.
+     * @param val {@link DateTime}
      */
     public void setPasswordChanged(DateTime val) {
         this.passwordChanged = val;
     }
 
     /**
-     * Gets syncState
+     * Returns the syncState.
+     * @return {@link String}
      */
     public String getSyncState() {
         return this.syncState;
     }
 
     /**
-     * Sets scope
+     * Sets the syncState.
+     * @param val {@link String}
      */
     public void setSyncState(String val) {
         this.syncState = val;
     }
 
     /**
-     * Gets lastSync
+     * Returns the lastSync time.
+     * @return {@link DateTime}
      */
     public DateTime getLastSync() {
         return this.lastSync;
     }
 
     /**
-     * Sets passwordChanged
+     * Sets the passwordChanged.
+     * @param val {@link DateTime}
      */
     public void setLastSync(DateTime val) {
         this.lastSync = val;
     }
 
     /**
-     * Gets credentials
+     * Returns the credentials.
+     * @return {@link LoginCredentials}
      */
     public LoginCredentials getCredentials() {
         return this.credentials;
     }
 
     /**
-     * Sets credentials
+     * Sets the credentials.
+     * @param val {@link LoginCredentials}
      */
     public void setCredentials(LoginCredentials val) {
         this.credentials = val;
     }
 
     /**
-     * Gets profile
+     * Returns the profile.
+     * @return {@link UserProfile}
      */
     public UserProfile getProfile() {
         return this.profile;
     }
 
     /**
-     * Sets profile
+     * Sets the profile.
+     * @param val {@link UserProfile}
      */
     public void setProfile(UserProfile val) {
         this.profile = val;
     }
 
+    /**
+     * Returns the links object.
+     * @return {@link Map}
+     */
     public Map<String, LinksUnion> getLinks() {
         return links;
     }
 
-    public void setLinks(Map<String, LinksUnion> links) {
-        this.links = links;
+    /**
+     * Sets the links object.
+     * @param val {@link Map}
+     */
+    public void setLinks(Map<String, LinksUnion> val) {
+        this.links = val;
     }
 }

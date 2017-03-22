@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,41 +21,52 @@ import java.util.Objects;
 public final class LogAuthenticationContext extends ApiObject {
 
     /**
-     * The authentication provider
+     * The authentication provider.
      */
     private final String authenticationProvider;
 
     /**
-     * The credential provider
+     * The credential provider.
      */
     private final String credentialProvider;
 
     /**
-     * Type of credential
+     * Type of credential.
      */
     private final String credentialType;
 
     /**
-     * Issuer of the authentication
+     * Issuer of the authentication.
      */
     private final LogIssuer issuer;
 
     /**
-     * The authentication interface
+     * The authentication interface.
      */
     @JsonProperty(value = "interface")
     private final String authenticationInterface;
 
     /**
-     * The step in the authentication process
+     * The step in the authentication process.
      */
     private final int authenticationStep;
 
     /**
-     * The id of the external session
+     * The id of the external session.
      */
     private final String externalSessionId;
 
+    /**
+     * Creates the LogAuthenticationContext
+     *
+     * @param authenticationProvider {@link String}
+     * @param credentialProvider {@link String}
+     * @param credentialType {@link String}
+     * @param issuer {@link LogIssuer}
+     * @param authenticationInterface {@link String}
+     * @param authenticationStep {@link Integer}
+     * @param externalSessionId {@link String}
+     */
     @JsonCreator
     public LogAuthenticationContext(
             @JsonProperty("authenticationProvider") String authenticationProvider,
@@ -75,34 +86,66 @@ public final class LogAuthenticationContext extends ApiObject {
         this.externalSessionId = externalSessionId;
     }
 
+    /**
+     * Returns the authenticationProvider.
+     * @return {@link String}
+     */
     public String getAuthenticationProvider() {
         return authenticationProvider;
     }
 
+    /**
+     * Returns the credentialProvider.
+     * @return {@link String}
+     */
     public String getCredentialProvider() {
         return credentialProvider;
     }
 
+    /**
+     * Returns the credentialType.
+     * @return {@link String}
+     */
     public String getCredentialType() {
         return credentialType;
     }
 
+    /**
+     * Returns the issuer.
+     * @return {@link LogIssuer}
+     */
     public LogIssuer getIssuer() {
         return issuer;
     }
 
+    /**
+     * Returns the authenticationInterface.
+     * @return {@link String}
+     */
     public String getAuthenticationInterface() {
         return authenticationInterface;
     }
 
+    /**
+     * Returns the authenticationStep.
+     * @return {@link Integer}
+     */
     public int getAuthenticationStep() {
         return authenticationStep;
     }
 
+    /**
+     * Returns the externalSessionId.
+     * @return {@link String}
+     */
     public String getExternalSessionId() {
         return externalSessionId;
     }
 
+    /**
+     * Hashes the object.
+     * @return {@link Integer}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(
@@ -116,6 +159,12 @@ public final class LogAuthenticationContext extends ApiObject {
         );
     }
 
+    /**
+     * Overriding method for equals.
+     *
+     * @param obj {@link Object}
+     * @return {@link Boolean}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,57 +18,63 @@ import org.joda.time.DateTime;
 public class AppGroup extends ApiObject {
 
     /**
-     * unique key of group
+     * Unique key of group.
      */
     private String id;
 
     /**
-     * timestamp when app group was last updated
+     * Timestamp when app group was last updated.
      */
     private DateTime lastUpdated;
 
     /**
-     * priority of group assignment
+     * Priority of group assignment.
      */
     private Integer priority;
 
     /**
-     * Gets id
+     * Returns the ID.
+     * @return {@link String}
      */
     public String getId() {
         return this.id;
     }
 
     /**
-     * Sets id
+     * Sets the ID.
+     * @param val {@link String}
      */
     public void setId(String val) {
         this.id = val;
     }
 
     /**
-     * Gets lastUpdated
+     * Returns the lastUpdated time.
+     * @return {@link DateTime}
      */
     public DateTime getLastUpdated() {
         return this.lastUpdated;
     }
 
     /**
-     * Sets lastUpdated
+     * Sets the lastUpdated time.
+     * @param val {@link DateTime}
      */
     public void setLastUpdated(DateTime val) {
         this.lastUpdated = val;
     }
 
     /**
-     * Gets priority
+     * Returns the priority.
+     * @return {@link Integer}
      */
     public Integer getPriority() {
         return this.priority;
     }
 
     /**
-     * Sets priority
+     * Sets the priority.
+     * @param val {@link Integer}
      */
     public void setPriority(Integer val) {
         this.priority = val;

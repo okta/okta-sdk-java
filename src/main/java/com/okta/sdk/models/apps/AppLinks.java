@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,17 +16,22 @@ import com.okta.sdk.framework.ApiObject;
 
 public class AppLinks extends ApiObject {
 
+    /**
+     * Toggle for login.
+     */
     private Boolean login;
 
     /**
-     * Gets login
+     * Returns the login.
+     * @return {@link Boolean}
      */
     public Boolean getLogin() {
         return this.login;
     }
 
     /**
-     * Sets login
+     * Sets the login.
+     * @param val {@link Boolean}
      */
     public void setLogin(Boolean val) {
         this.login = val;

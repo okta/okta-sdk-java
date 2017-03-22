@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,30 +21,38 @@ import java.util.Objects;
 public final class LogGeographicalContext extends ApiObject {
 
     /**
-     * City of the event
+     * City of the event.
      */
     private final String city;
 
     /**
-     * Zone the client is in
+     * Zone the client is in.
      */
     private final String state;
 
     /**
-     * Country of the client
+     * Country of the client.
      */
     private final String country;
 
     /**
-     * Postal code of the client
+     * Postal code of the client.
      */
     private final String postalCode;
 
     /**
-     * Geolocation of the client
+     * Geolocation of the client.
      */
     private final LogGeolocation geolocation;
 
+    /**
+     * Constructor for LogGeographicalContext
+     * @param city {@link String}
+     * @param state {@link String}
+     * @param country {@link String}
+     * @param postalCode {@link String}
+     * @param geolocation {@link LogGeolocation}
+     */
     @JsonCreator
     public LogGeographicalContext(
             @JsonProperty("city") String city,
@@ -60,31 +68,60 @@ public final class LogGeographicalContext extends ApiObject {
         this.geolocation = geolocation;
     }
 
+    /**
+     * Returns the city.
+     * @return {@link String}
+     */
     public String getCity() {
         return city;
     }
 
+    /**
+     * Returns the state.
+     * @return {@link String}
+     */
     public String getState() {
         return state;
     }
 
+    /**
+     * Returns the country.
+     * @return {@link String}
+     */
     public String getCountry() {
         return country;
     }
 
+    /**
+     * Returns the postalCode.
+     * @return {@link String}
+     */
     public String getPostalCode() {
         return postalCode;
     }
 
+    /**
+     * Returns the geolocation.
+     * @return {@link LogGeolocation}
+     */
     public LogGeolocation getGeolocation() {
         return geolocation;
     }
 
+    /**
+     * Hashes the object.
+     * @return {@link Integer}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(city, state, country, postalCode, geolocation);
     }
 
+    /**
+     * Overrides the method equals.
+     * @param obj {@link Object}
+     * @return {@link Boolean}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

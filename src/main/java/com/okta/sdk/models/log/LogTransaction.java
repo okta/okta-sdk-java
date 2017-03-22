@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,20 +23,26 @@ import java.util.Objects;
 public final class LogTransaction extends ApiObject {
 
     /**
-     * The type of the transaction
+     * The type of the transaction.
      */
     private final String type;
 
     /**
-     * Transaction id
+     * Transaction id.
      */
     private final String id;
 
     /**
-     * Transaction details
+     * Transaction details.
      */
     private final Map<String, Object> detail;
 
+    /**
+     * Constructor for LogTransaction
+     * @param type {@link String}
+     * @param id {@link String}
+     * @param detail {@link Map}
+     */
     @JsonCreator
     public LogTransaction(
             @JsonProperty("type") String type,
@@ -52,23 +58,44 @@ public final class LogTransaction extends ApiObject {
         }
     }
 
+    /**
+     * Returns the type.
+     * @return {@link String}
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Returns the id.
+     * @return {@link String}
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Returns the detail.
+     * @return {@link Map}
+     */
     public Map<String, Object> getDetail() {
         return detail;
     }
 
+    /**
+     * Hashes the object.
+     * @return {@link Integer}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(type, id, detail);
     }
 
+    /**
+     * Overrides the method equals.
+     * @param obj {@link Object}
+     * @return {@link Boolean}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

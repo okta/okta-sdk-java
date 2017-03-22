@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,54 +17,63 @@ import com.okta.sdk.framework.ApiObject;
 public class Accessibility extends ApiObject {
 
     /**
-     * Enable self-service application assignment
+     * Enable self-service application assignment.
      */
     private Boolean selfService;
 
     /**
-     * Custom error page for this application
+     * Custom error page for this application.
      */
     private String errorRedirectUrl;
 
+    /**
+     * Login redirect URL.
+     */
     private String loginRedirectUrl;
 
     /**
-     * Gets selfService
+     * Returns the selfService.
+     * @return {@link Boolean}
      */
     public Boolean getSelfService() {
         return this.selfService;
     }
 
     /**
-     * Sets selfService
+     * Sets the selfService.
+     * @param val {@link Boolean}
      */
     public void setSelfService(Boolean val) {
         this.selfService = val;
     }
 
     /**
-     * Gets errorRedirectUrl
+     * Returns the errorRedirectUrl.
+     * @return {@link String}
      */
     public String getErrorRedirectUrl() {
         return this.errorRedirectUrl;
     }
 
     /**
-     * Sets errorRedirectUrl
+     * Sets the errorRedirectUrl.
+     * @param val {@link String}
      */
     public void setErrorRedirectUrl(String val) {
         this.errorRedirectUrl = val;
     }
 
     /**
-     * Gets loginRedirectUrl
+     * Returns the loginRedirectUrl.
+     * @return {@link String}
      */
     public String getLoginRedirectUrl() {
         return this.loginRedirectUrl;
     }
 
     /**
-     * Sets loginRedirectUrl
+     * Sets the loginRedirectUrl.
+     * @param val {@link String}
      */
     public void setLoginRedirectUrl(String val) {
         this.loginRedirectUrl = val;

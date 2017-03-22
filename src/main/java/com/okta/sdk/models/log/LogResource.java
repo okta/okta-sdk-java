@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,30 +23,38 @@ import java.util.Objects;
 public final class LogResource extends ApiObject {
 
     /**
-     * The resource id
+     * The resource id.
      */
     private final String id;
 
     /**
-     * The type of the resource
+     * The type of the resource.
      */
     private final String type;
 
     /**
-     * Alternative id of the resource
+     * Alternative id of the resource.
      */
     private final String alternateId;
 
     /**
-     * The display name of the resource
+     * The display name of the resource.
      */
     private final String displayName;
 
     /**
-     * Resource details
+     * Resource details.
      */
     private final Map<String, String> detailEntry;
 
+    /**
+     * Constructor for LogResource
+     * @param id {@link String}
+     * @param type {@link String}
+     * @param alternateId {@link String}
+     * @param displayName {@link String}
+     * @param detailEntry {@link Map}
+     */
     @JsonCreator
     public LogResource(
             @JsonProperty("id") String id,
@@ -66,31 +74,60 @@ public final class LogResource extends ApiObject {
         }
     }
 
+    /**
+     * Returns the ID.
+     * @return {@link String}
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Returns the type.
+     * @return {@link String}
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Returns the alternateId.
+     * @return {@link String}
+     */
     public String getAlternateId() {
         return alternateId;
     }
 
+    /**
+     * Returns the displayName.
+     * @return {@link String}
+     */
     public String getDisplayName() {
         return displayName;
     }
 
+    /**
+     * Returns the detailEntry.
+     * @return {@link Map}
+     */
     public Map<String, String> getDetailEntry() {
         return detailEntry;
     }
 
+    /**
+     * Hashes the object.
+     * @return {@link Integer}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, type, alternateId, displayName, detailEntry);
     }
 
+    /**
+     * Overrides the method equals.
+     * @param obj {@link Object}
+     * @return {@link Boolean}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

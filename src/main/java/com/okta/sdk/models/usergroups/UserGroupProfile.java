@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,114 +17,126 @@ import com.okta.sdk.framework.ApiObject;
 public class UserGroupProfile extends ApiObject {
 
     /**
-     * name of the group
+     * Name of the group.
      */
     private String name;
 
     /**
-     * description of the group
+     * Description of the group.
      */
     private String description;
 
     /**
-     * pre-windows 2000 name of the windows group
+     * Pre-windows 2000 name of the windows group.
      */
     private String samAccountName;
 
     /**
-     * the distinguished name of the windows group
+     * The distinguished name of the windows group.
      */
     private String dn;
 
     /**
-     * fully-qualified name of the windows group
+     * Fully-qualified name of the windows group.
      */
     private String windowsDomainQualifiedName;
 
     /**
-     * base-64 encoded GUID (objectGUID) of the windows group
+     * Base-64 encoded GUID (objectGUID) of the windows group.
      */
     private String externalId;
 
     /**
-     * Gets name
+     * Returns the name.
+     * @return {@link String}
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Sets name
+     * Sets the name.
+     * @param val {@link String}
      */
     public void setName(String val) {
         this.name = val;
     }
 
     /**
-     * Gets description
+     * Returns the description.
+     * @return {@link String}
      */
     public String getDescription() {
         return this.description;
     }
 
     /**
-     * Sets description
+     * Sets the description.
+     * @param val {@link String}
      */
     public void setDescription(String val) {
         this.description = val;
     }
 
     /**
-     * Gets samAccountName
+     * Returns the samAccountName.
+     * @return {@link String}
      */
     public String getSamAccountName() {
         return this.samAccountName;
     }
 
     /**
-     * Sets samAccountName
+     * Sets the samAccountName.
+     * @param val {@link String}
      */
     public void setSamAccountName(String val) {
         this.samAccountName = val;
     }
 
     /**
-     * Gets dn
+     * Returns the dn.
+     * @return {@link String}
      */
     public String getDn() {
         return this.dn;
     }
 
     /**
-     * Sets dn
+     * Sets the dn.
+     * @param val {@link String}
      */
     public void setDn(String val) {
         this.dn = val;
     }
 
     /**
-     * Gets windowsDomainQualifiedName
+     * Returns the windowsDomainQualifiedName.
+     * @return {@link String}
      */
     public String getWindowsDomainQualifiedName() {
         return this.windowsDomainQualifiedName;
     }
 
     /**
-     * Sets windowsDomainQualifiedName
+     * Sets the windowsDomainQualifiedName.
+     * @param val {@link String}
      */
     public void setWindowsDomainQualifiedName(String val) {
         this.windowsDomainQualifiedName = val;
     }
 
     /**
-     * Gets externalId
+     * Returns the externalId.
+     * @return {@link String}
      */
     public String getExternalId() {
         return this.externalId;
     }
 
     /**
-     * Sets externalId
+     * Sets the externalId.
+     * @param val {@link String}
      */
     public void setExternalId(String val) {
         this.externalId = val;

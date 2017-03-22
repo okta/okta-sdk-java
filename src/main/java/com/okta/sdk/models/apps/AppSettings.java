@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,266 +17,294 @@ import com.okta.sdk.framework.ApiObject;
 public class AppSettings extends ApiObject {
 
     /**
-     * The URL of the login page for this app
+     * The URL of the login page for this app.
      */
     private String url;
 
     /**
-     * Would you like Okta to add an integration for this app?
+     * Question asking Okta to add an integration for this app.
      */
     private Boolean requestIntegration;
 
     /**
-     * The URL of the authenticating site for this app
+     * The URL of the authenticating site for this app.
      */
     private String authURL;
 
     /**
-     * CSS selector for the username field in the login form
+     * CSS selector for the username field in the login form.
      */
     private String usernameField;
 
     /**
-     * CSS selector for the password field in the login form
+     * CSS selector for the password field in the login form.
      */
     private String passwordField;
 
     /**
-     * CSS selector for the login button in the login form
+     * CSS selector for the login button in the login form.
      */
     private String buttonField;
 
     /**
-     * CSS selector for the extra field in the form
+     * CSS selector for the extra field in the form.
      */
     private String extraFieldSelector;
 
     /**
-     * Value for extra field form field
+     * Value for extra field form field.
      */
     private String extraFieldValue;
 
     /**
-     * Name of the optional parameter in the login form
+     * Name of the optional parameter in the login form.
      */
     private String optionalField1;
 
     /**
-     * Name of the optional value in the login form
+     * Name of the optional value in the login form.
      */
     private String optionalField1Value;
 
     /**
-     * Name of the optional parameter in the login form
+     * Name of the optional parameter in the login form.
      */
     private String optionalField2;
 
     /**
-     * Name of the optional value in the login form
+     * Name of the optional value in the login form.
      */
     private String optionalField2Value;
 
     /**
-     * Name of the optional parameter in the login form
+     * Name of the optional parameter in the login form.
      */
     private String optionalField3;
 
     /**
-     * Name of the optional value in the login form
+     * Name of the optional value in the login form.
      */
     private String optionalField3Value;
 
     /**
-     * Gets url
+     * Returns the url.
+     * @return {@link String}
      */
     public String getUrl() {
         return this.url;
     }
 
     /**
-     * Sets url
+     * Sets the url.
+     * @param val {@link String}
      */
     public void setUrl(String val) {
         this.url = val;
     }
 
     /**
-     * Gets requestIntegration
+     * Returns the requestIntegration.
+     * @return {@link Boolean}
      */
     public Boolean getRequestIntegration() {
         return this.requestIntegration;
     }
 
     /**
-     * Sets requestIntegration
+     * Sets the requestIntegration.
+     * @param val {@link Boolean}
      */
     public void setRequestIntegration(Boolean val) {
         this.requestIntegration = val;
     }
 
     /**
-     * Gets authURL
+     * Returns the authURL.
+     * @return {@link String}
      */
     public String getAuthURL() {
         return this.authURL;
     }
 
     /**
-     * Sets authURL
+     * Sets the authURL.
+     * @param val {@link String}
      */
     public void setAuthURL(String val) {
         this.authURL = val;
     }
 
     /**
-     * Gets usernameField
+     * Returns the usernameField.
+     * @return {@link String}
      */
     public String getUsernameField() {
         return this.usernameField;
     }
 
     /**
-     * Sets usernameField
+     * Sets the usernameField.
+     * @param val {@link String}
      */
     public void setUsernameField(String val) {
         this.usernameField = val;
     }
 
     /**
-     * Gets passwordField
+     * Returns the passwordField.
+     * @return {@link String}
      */
     public String getPasswordField() {
         return this.passwordField;
     }
 
     /**
-     * Sets passwordField
+     * Sets the passwordField.
+     * @param val {@link String}
      */
     public void setPasswordField(String val) {
         this.passwordField = val;
     }
 
     /**
-     * Gets buttonField
+     * Returns the buttonField.
+     * @return {@link String}
      */
     public String getButtonField() {
         return this.buttonField;
     }
 
     /**
-     * Sets buttonField
+     * Sets the buttonField.
+     * @param val {@link String}
      */
     public void setButtonField(String val) {
         this.buttonField = val;
     }
 
     /**
-     * Gets extraFieldSelector
+     * Returns the extraFieldSelector.
+     * @return {@link String}
      */
     public String getExtraFieldSelector() {
         return this.extraFieldSelector;
     }
 
     /**
-     * Sets extraFieldSelector
+     * Sets the extraFieldSelector.
+     * @param val {@link String}
      */
     public void setExtraFieldSelector(String val) {
         this.extraFieldSelector = val;
     }
 
     /**
-     * Gets extraFieldValue
+     * Returns the extraFieldValue.
+     * @return {@link String}
      */
     public String getExtraFieldValue() {
         return this.extraFieldValue;
     }
 
     /**
-     * Sets extraFieldValue
+     * Sets the extraFieldValue.
+     * @param val {@link String}
      */
     public void setExtraFieldValue(String val) {
         this.extraFieldValue = val;
     }
 
     /**
-     * Gets optionalField1
+     * Returns the optionalField1.
+     * @return {@link String}
      */
     public String getOptionalField1() {
         return this.optionalField1;
     }
 
     /**
-     * Sets optionalField1
+     * Sets the optionalField1.
+     * @param val {@link String}
      */
     public void setOptionalField1(String val) {
         this.optionalField1 = val;
     }
 
     /**
-     * Gets optionalField1Value
+     * Returns the optionalField1Value.
+     * @return {@link String}
      */
     public String getOptionalField1Value() {
         return this.optionalField1Value;
     }
 
     /**
-     * Sets optionalField1Value
+     * Sets the optionalField1Value.
+     * @param val {@link String}
      */
     public void setOptionalField1Value(String val) {
         this.optionalField1Value = val;
     }
 
     /**
-     * Gets optionalField2
+     * Returns the optionalField2.
+     * @return {@link String}
      */
     public String getOptionalField2() {
         return this.optionalField2;
     }
 
     /**
-     * Sets optionalField2
+     * Sets the optionalField2.
+     * @param val {@link String}
      */
     public void setOptionalField2(String val) {
         this.optionalField2 = val;
     }
 
     /**
-     * Gets optionalField2Value
+     * Returns the optionalField2Value.
+     * @return {@link String}
      */
     public String getOptionalField2Value() {
         return this.optionalField2Value;
     }
 
     /**
-     * Sets optionalField2Value
+     * Sets the optionalField2Value.
+     * @param val {@link String}
      */
     public void setOptionalField2Value(String val) {
         this.optionalField2Value = val;
     }
 
     /**
-     * Gets optionalField3
+     * Returns the optionalField3.
+     * @return {@link String}
      */
     public String getOptionalField3() {
         return this.optionalField3;
     }
 
     /**
-     * Sets optionalField3
+     * Sets the optionalField3.
+     * @param val {@link String}
      */
     public void setOptionalField3(String val) {
         this.optionalField3 = val;
     }
 
     /**
-     * Gets optionalField3Value
+     * Returns the optionalField3Value.
+     * @return {@link String}
      */
     public String getOptionalField3Value() {
         return this.optionalField3Value;
     }
 
     /**
-     * Sets optionalField3Value
+     * Sets the optionalField3Value.
+     * @param val {@link String}
      */
     public void setOptionalField3Value(String val) {
         this.optionalField3Value = val;

@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,49 +16,64 @@ import com.okta.sdk.framework.ApiObject;
 
 public class FactorRequest extends ApiObject {
 
+    /**
+     * Answer for the question
+     */
     private String answer;
 
+    /**
+     * Passcode for Symantec VIP
+     */
     private String passCode;
 
+    /**
+     * Next Passcode for Symantec VIP
+     */
     private String nextPassCode;
 
     /**
-     * Gets answer
+     * Returns the answer.
+     * @return {@link String}
      */
     public String getAnswer() {
         return this.answer;
     }
 
     /**
-     * Sets answer
+     * Sets the answer.
+     * @param val {@link String}
      */
     public void setAnswer(String val) {
         this.answer = val;
     }
 
     /**
-     * Gets passCode
+     * Returns the passCode.
+     * @return {@link String}
      */
     public String getPassCode() {
         return this.passCode;
     }
 
     /**
-     * Sets passCode
+     * Sets the passCode.
+     * @param val {@link String}
      */
     public void setPassCode(String val) {
         this.passCode = val;
     }
 
     /**
-     * Gets nextPassCode
+     * Returns the nextPassCode.
+     * @return {@link String}
      */
     public String getNextPassCode() {
         return this.nextPassCode;
     }
 
     /**
-     * Sets nextPassCode
+     * Sets the nextPassCode.
+     * @param val {@link String}
      */
     public void setNextPassCode(String val) {
         this.nextPassCode = val;

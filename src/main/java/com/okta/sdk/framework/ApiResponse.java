@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -26,31 +26,63 @@ public class ApiResponse<T> {
     private HttpResponse response;
     private T responseObject;
 
+    /**
+     * Stores the ApiResponse.
+     *
+     * @param response {@link HttpResponse}
+     * @param responseObject {@link T}
+     */
     public ApiResponse(HttpResponse response, T responseObject) {
         this.response = response;
         this.responseObject = responseObject;
     }
 
+    /**
+     * Returns the HTTP response.
+     * @return {@link HttpResponse}
+     */
     public HttpResponse getResponse() {
         return response;
     }
 
+    /**
+     * Sets the HTTP response.
+     * @param response {@link HttpResponse}
+     */
     public void setResponse(HttpResponse response) {
         this.response = response;
     }
 
+    /**
+     * Returns the generic response object.
+     * @return {@link T}
+     */
     public T getResponseObject() {
         return responseObject;
     }
 
+    /**
+     * Sets the generic response object.
+     * @param responseObject {@link T}
+     */
     public void setResponseObject(T responseObject) {
         this.responseObject = responseObject;
     }
 
+    /**
+     * Returns the response header by name.
+     *
+     * @param name {@link String}
+     * @return {@link Header}
+     */
     public Header getHeader(String name) {
         return response.getFirstHeader(name);
     }
 
+    /**
+     * Returns the links from the response.
+     * @return {@link Map}
+     */
     public Map<String, Link> getLinks() {
         Header[] headers = response.getHeaders("Link");
         Map<String, Link> links = new HashMap<String, Link>();

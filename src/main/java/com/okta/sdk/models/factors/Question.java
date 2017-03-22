@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,33 +16,43 @@ import com.okta.sdk.framework.ApiObject;
 
 public class Question extends ApiObject {
 
+    /**
+     * Question for the factor.
+     */
     private String question;
 
+    /**
+     * Test of the question.
+     */
     private String questionText;
 
     /**
-     * Gets question
+     * Returns the question.
+     * @return {@link String}
      */
     public String getQuestion() {
         return this.question;
     }
 
     /**
-     * Sets question
+     * Sets the question.
+     * @param val {@link String}
      */
     public void setQuestion(String val) {
         this.question = val;
     }
 
     /**
-     * Gets questionText
+     * Returns the questionText.
+     * @return {@link String}
      */
     public String getQuestionText() {
         return this.questionText;
     }
 
     /**
-     * Sets questionText
+     * Sets the questionText.
+     * @param val {@link String}
      */
     public void setQuestionText(String val) {
         this.questionText = val;

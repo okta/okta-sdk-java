@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -49,8 +49,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class ApiClient {
 
+    /**
+     * Number of allowed attempts.
+     */
     public static final int RETRY_COUNT = 3;
 
+    /**
+     * Public static values for the ApiClient.
+     */
     public static final String AFTER_CURSOR = "after";
     public static final String LIMIT = "limit";
     public static final String FILTER = "filter";
@@ -65,10 +71,13 @@ public abstract class ApiClient {
     private final Logger LOGGER = LoggerFactory.getLogger(ApiClient.class);
     private AtomicReference<HttpResponse> lastHttpResponseRef = new AtomicReference<HttpResponse>();
 
-    ////////////////////////////////////////////
-    // CONSTRUCTOR
-    ////////////////////////////////////////////
-
+    /**
+     * Constructor for the ApiClient.
+     *
+     * Bootstraps an HTTPClient to make various requests to the Okta API.
+     *
+     * @param config {@link ApiClientConfiguration}
+     */
     public ApiClient(ApiClientConfiguration config) {
         Proxy proxy = ProxySelector.getDefault().select(URI.create(config.getBaseUrl())).iterator().next();
         HttpRoutePlanner routePlanner;
@@ -94,10 +103,9 @@ public abstract class ApiClient {
         initMarshaller();
     }
 
-    ////////////////////////////////////////////
-    // ABSTRACT METHODS
-    ////////////////////////////////////////////
-
+    /**
+     * Abstract methods.
+     */
     protected abstract void initMarshaller();
 
     protected abstract <T> T unmarshall(HttpResponse response, TypeReference<T> clazz) throws IOException;
@@ -114,17 +122,25 @@ public abstract class ApiClient {
     // PUBLIC METHODS
     ////////////////////////////////////////////
 
+    /**
+     * Returns the API token from the ApiClient.
+     * @return {@link String}
+     */
     public String getToken() {
         return this.token;
     }
 
+    /**
+     * Sets the API token.
+     * @param token {@link String}
+     */
     public void setToken(String token) {
         this.token = token;
     }
 
     /**
-     * There's a limit on the number of api requests in a time frame. Retrieving the
-     * RateLimitContext allows you to manage your requests with these limits in mind
+     * Returns the rate limit context for managing requests with specified limits.
+     * Note: There's a limit on the number of api requests in a time frame.
      *
      * @return A way to view the rate limit information
      */
@@ -136,16 +152,42 @@ public abstract class ApiClient {
     // HTTP METHODS
     ////////////////////////////////////////////
 
-    // POST
-
+    /**
+     * POST HTTP methods for communicating with the API.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @param  httpEntity {@link Object}             HTTP entity object request.
+     * @return {@link Map}                           API Response object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected Map post(String uri, Object httpEntity) throws IOException {
         return post(uri, httpEntity, new TypeReference<Map>() { });
     }
 
+    /**
+     * Generic HTTP GET method.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @param  httpEntity {@link Object}             HTTP entity object request.
+     * @param  clazz {@link TypeReference}           Generic type class reference.
+     * @param  <T> {@link T}                         Generic type param.
+     * @return {@link T}                             Returns a generic type object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected <T> T post(String uri, Object httpEntity, TypeReference<T> clazz) throws IOException {
         return post(uri, buildRequestEntity(httpEntity), clazz);
     }
 
+    /**
+     * Generic HTTP POST method.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @param  httpEntity {@link Object}             HTTP entity object request.
+     * @param  clazz {@link TypeReference}           Generic type class reference.
+     * @param  <T> {@link T}                         Generic type param.
+     * @return {@link T}                             Returns a generic type object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected <T> T post(String uri, HttpEntity httpEntity, TypeReference<T> clazz) throws IOException {
         HttpPost httpPost = new HttpPost();
         httpPost.setURI(getAbsoluteURI(uri));
@@ -154,18 +196,39 @@ public abstract class ApiClient {
         return unmarshallResponse(clazz, response);
     }
 
-    // GET
-
+    /**
+     * GET HTTP methods for communicating with the API.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @return {@link Map}                           API Response object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected Map get(String uri) throws IOException {
         return get(uri, new TypeReference<Map>() { });
     }
 
+    /**
+     * HTTP GET method.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @return {@link HttpResponse}                  API HTTP response.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected HttpResponse getHttpResponse(String uri) throws IOException {
         HttpGet httpGet = new HttpGet();
         httpGet.setURI(getAbsoluteURI(uri));
         return executeRequest(httpGet);
     }
 
+    /**
+     * Generic HTTP GET method.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @param  clazz {@link TypeReference}           Generic type class reference.
+     * @param  <T> {@link T}                         Generic type param.
+     * @return {@link T}                             Returns a generic type object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected <T> T get(String uri, TypeReference<T> clazz) throws IOException {
         HttpGet httpGet = new HttpGet();
         httpGet.setURI(getAbsoluteURI(uri));
@@ -173,24 +236,66 @@ public abstract class ApiClient {
         return unmarshallResponse(clazz, response);
     }
 
-    // PUT
+    /**
+     * PUT HTTP methods for communicating with the API.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @throws IOException                           If an input or output exception occurred.
 
+     */
     protected void put(String uri) throws IOException {
         put(uri, "");
     }
 
+    /**
+     * Generic HTTP PUT method.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @param  httpEntity {@link Object}             HTTP entity object request.
+     * @return {@link Map}                           API Response object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected Map put(String uri, Object httpEntity) throws IOException {
         return put(uri, httpEntity, new TypeReference<Map>() { });
     }
 
+    /**
+     * Generic HTTP PUT method.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @param  clazz {@link TypeReference}           Generic type class reference.
+     * @param  <T> {@link T}                         Generic type param.
+     * @return {@link T}                             Returns a generic type object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected <T> T put(String uri, TypeReference<T> clazz) throws IOException {
         return put(uri, "", clazz);
     }
 
+    /**
+     * Generic HTTP PUT method.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @param  clazz {@link TypeReference}           Generic type class reference.
+     * @param  <T> {@link T}                         Generic type param.
+     * @param  httpEntity {@link Object}             HTTP entity object request.
+     * @return {@link T}                             Returns a generic type object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected <T> T put(String uri, Object httpEntity, TypeReference<T> clazz) throws IOException {
         return put(uri, buildRequestEntity(httpEntity), clazz);
     }
 
+    /**
+     * Generic HTTP PUT method.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @param  clazz {@link TypeReference}           Generic type class reference.
+     * @param  <T> {@link T}                         Generic type param.
+     * @param  httpEntity {@link Object}             HTTP entity object request.
+     * @return {@link T}                             Returns a generic type object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected <T> T put(String uri, HttpEntity httpEntity, TypeReference<T> clazz) throws IOException {
         HttpPut httpPut = new HttpPut();
         httpPut.setURI(getAbsoluteURI(uri));
@@ -199,8 +304,12 @@ public abstract class ApiClient {
         return unmarshallResponse(clazz, response);
     }
 
-    // DELETE
-
+    /**
+     * DELETE HTTP methods for communicating with the API.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected void delete(String uri) throws IOException {
         HttpDelete httpDelete = new HttpDelete();
         httpDelete.setURI(getAbsoluteURI(uri));
@@ -208,6 +317,15 @@ public abstract class ApiClient {
         unmarshallResponse(new TypeReference<Void>() { }, response);
     }
 
+    /**
+     * Generic HTTP DELETE method.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @param  clazz {@link TypeReference}           Generic type class reference.
+     * @param  <T> {@link T}                         Generic type param.
+     * @return {@link T}                             Returns a generic type object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected <T> T delete(String uri, TypeReference<T> clazz) throws IOException {
         HttpDelete httpDelete = new HttpDelete();
         httpDelete.setURI(getAbsoluteURI(uri));
@@ -215,18 +333,33 @@ public abstract class ApiClient {
         return unmarshallResponse(clazz, response);
     }
 
-    // BASE HTTP METHODS
-
+    /**
+     * Executes a base HTTP request.
+     *
+     * @param  httpUriRequest {@link HttpUriRequest} Current HTTP URI request object.
+     * @return {@link HttpResponse}                  API Response object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected HttpResponse executeRequest(HttpUriRequest httpUriRequest) throws IOException {
         logRequest(httpUriRequest);
         setHeaders(httpUriRequest);
         return doExecute(httpUriRequest);
     }
 
+    /**
+     * Logs the request method and URI to the console.
+     * @param  httpUriRequest {@link HttpUriRequest} Current HTTP URI request object.
+     */
     protected void logRequest(HttpUriRequest httpUriRequest) {
         LOGGER.info(String.format("%s %s", httpUriRequest.getMethod(), httpUriRequest.getURI()));
     }
 
+    /**
+     * Sets the headers in the HTTP request.
+     *
+     * @param  httpUriRequest {@link HttpUriRequest} Current HTTP URI request object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected void setHeaders(HttpUriRequest httpUriRequest) throws IOException {
         setTokenHeader(httpUriRequest);
 
@@ -246,29 +379,63 @@ public abstract class ApiClient {
         
     }
 
+    /**
+     * Sets the authorization header to Okta's custom SWSS + API_TOKEN format.
+     *
+     * @param  httpUriRequest {@link HttpUriRequest} Current HTTP URI request object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected void setTokenHeader(HttpUriRequest httpUriRequest) throws IOException {
         Header authHeader = new BasicHeader("Authorization", String.format("SSWS %s", this.token));
         httpUriRequest.setHeader(authHeader);
     }
 
+    /**
+     * Executes/fires the request.
+     *
+     * @param  httpUriRequest {@link HttpUriRequest} Current HTTP URI request object.
+     * @return {@link HttpResponse}                  API response object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected HttpResponse doExecute(HttpUriRequest httpUriRequest) throws IOException {
         HttpResponse response = httpClient.execute(httpUriRequest);
         lastHttpResponseRef.set(response);
         return response;
     }
 
-    ////////////////////////////////////////////
-    // UTILITY METHODS
-    ////////////////////////////////////////////
+    
 
+    /**
+     * Utility method to encode given String.
+     *
+     * @param  str {@link String}                    String to be encoded.
+     * @return {@link String}                        Encoded string.
+     * @throws UnsupportedEncodingException          If character encoding is not supported.
+     */
     protected static String encode(String str) throws UnsupportedEncodingException {
         return URLEncoder.encode(str, "UTF-8");
     }
 
+    /**
+     * Utility method to return an encoded path.
+     *
+     * @param  formatStr {@link String}              String to be formatted with args.
+     * @param  args {@link String}                   Arguments to be encoded into body.
+     * @return {@link String}                        Encoded path.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected String getEncodedPath(String formatStr, String ... args) throws IOException {
         return getFullPath(getEncodedString(formatStr, args));
     }
 
+    /**
+     * Utility method to return encoded String.
+     *
+     * @param  formatStr {@link String}              String to be formatted with args.
+     * @param  args {@link String}                   Arguments to be encoded into body.
+     * @return {@link String}                        Encoded string.
+     * @throws UnsupportedEncodingException          If character encoding is not supported.
+     */
     private String getEncodedString(String formatStr, String[] args) throws UnsupportedEncodingException {
         final int ARGS_LENGTH = args.length;
         String[] encodedArgs = new String[ARGS_LENGTH];
@@ -278,6 +445,15 @@ public abstract class ApiClient {
         return String.format(formatStr, encodedArgs);
     }
 
+    /**
+     * Utility method to encode path with query values.
+     *
+     * @param  formatStr {@link String}              String to be formatted with args.
+     * @param  params {@link Map}                    Body params to be encoded.
+     * @param  args {@link String}                   Arguments to be encoded into body.
+     * @return {@link String}                        Encoded string.
+     * @throws UnsupportedEncodingException          If character encoding is not supported.
+     */
     protected String getEncodedPathWithQueryParams(String formatStr, Map<String, String> params, String... args) throws UnsupportedEncodingException {
         String uri = getEncodedString(formatStr, args);
         for (String key : params.keySet()) {
@@ -286,6 +462,15 @@ public abstract class ApiClient {
         return getFullPath(uri);
     }
 
+    /**
+     * Utility method to add parameter to URI.
+     *
+     * @param  uri {@link String}                    URI to make request to.
+     * @param  name {@link String}                   Name of parameter to add.
+     * @param  value {@link String}                  Value of parameter to add.
+     * @return {@link String}                        Encoded string.
+     * @throws UnsupportedEncodingException          If character encoding is not supported.
+     */
     private String addParameterToUri(String uri, String name, String value) throws UnsupportedEncodingException {
         int queryStringStart = uri.indexOf('?');
         if (queryStringStart == -1) {
@@ -297,6 +482,13 @@ public abstract class ApiClient {
         }
     }
 
+    /**
+     * Utility method to return absolute URI from relative URI.
+     *
+     * @param  relativeURI {@link String}            Current long URI.
+     * @return {@link URI}                           Absolute URI.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected URI getAbsoluteURI(String relativeURI) throws IOException {
         try {
             if(relativeURI.startsWith("http:") || relativeURI.startsWith("https:")) {
@@ -310,6 +502,16 @@ public abstract class ApiClient {
         }
     }
 
+    /**
+     * Utility method to unmarshall HTTP response if there is content.
+     * Returns "null" if API response body was empty.
+     *
+     * @param  <T> {@link T}                         Generic type param.
+     * @param  clazz {@link TypeReference}           Generic type class reference.
+     * @param  httpResponse {@link HttpResponse}     Response object.
+     * @return {@link T}                             Returns a generic type object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected <T> T unmarshallResponse(TypeReference<T> clazz, HttpResponse httpResponse) throws IOException {
         boolean contentReturned = checkResponse(httpResponse);
         if (contentReturned) {
@@ -319,6 +521,13 @@ public abstract class ApiClient {
         }
     }
 
+    /**
+     * Utility method to check the formatting of the HttpResponse received.
+     *
+     * @param  response {@link HttpResponse}         Response object.
+     * @return {@link Boolean}                       If request was successful.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected boolean checkResponse(HttpResponse response) throws IOException {
         if(response == null) {
             throw new SdkException("A response wasn't received");
@@ -344,6 +553,12 @@ public abstract class ApiClient {
         }
     }
 
+    /**
+     * Utility method to extract the error from the HTTP response.
+     *
+     * @param  response {@link HttpResponse}         Response object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
     protected void extractError(HttpResponse response) throws IOException {
         StatusLine statusLine = response.getStatusLine();
         int statusCode = statusLine.getStatusCode();

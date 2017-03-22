@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,57 +17,63 @@ import com.okta.sdk.framework.ApiObject;
 public class UserNameTemplate extends ApiObject {
 
     /**
-     * mapping expression for username
+     * <apping expression for username.
      */
     private String template;
 
     /**
-     * type of mapping expression
+     * Type of mapping expression.
      */
     private String type;
 
     /**
-     * suffix for built-in mapping expressions
+     * Suffix for built-in mapping expressions.
      */
     private String userSuffix;
 
     /**
-     * Gets template
+     * Returns the template.
+     * @return {@link String}
      */
     public String getTemplate() {
         return this.template;
     }
 
     /**
-     * Sets template
+     * Sets the template.
+     * @param val {@link String}
      */
     public void setTemplate(String val) {
         this.template = val;
     }
 
     /**
-     * Gets type
+     * Returns the type.
+     * @return {@link String}
      */
     public String getType() {
         return this.type;
     }
 
     /**
-     * Sets type
+     * Sets the type.
+     * @param val {@link String}
      */
     public void setType(String val) {
         this.type = val;
     }
 
     /**
-     * Gets userSuffix
+     * Returns the userSuffix.
+     * @return {@link String}
      */
     public String getUserSuffix() {
         return this.userSuffix;
     }
 
     /**
-     * Sets userSuffix
+     * Sets the userSuffix.
+     * @param val {@link String}
      */
     public void setUserSuffix(String val) {
         this.userSuffix = val;

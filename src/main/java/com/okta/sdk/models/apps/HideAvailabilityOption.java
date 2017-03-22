@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,38 +17,42 @@ import com.okta.sdk.framework.ApiObject;
 public class HideAvailabilityOption extends ApiObject {
 
     /**
-     * Okta Mobile for iOS or Android (pre-dates Android)
+     * Okta Mobile for iOS or Android (pre-dates Android).
      */
     private Boolean iOS;
 
     /**
-     * Okta Web Browser Home Page
+     * Okta Web Browser Home Page.
      */
     private Boolean web;
 
     /**
-     * Gets iOS
+     * Returns true if iOS.
+     * @return {@link Boolean}
      */
     public Boolean getIOS() {
         return this.iOS;
     }
 
     /**
-     * Sets iOS
+     * Sets the iOS.
+     * @param val {@link Boolean}
      */
     public void setIOS(Boolean val) {
         this.iOS = val;
     }
 
     /**
-     * Gets web
+     * Returns true if web.
+     * @return {@link Boolean}
      */
     public Boolean getWeb() {
         return this.web;
     }
 
     /**
-     * Sets web
+     * Sets the web.
+     * @param val {@link Boolean}
      */
     public void setWeb(Boolean val) {
         this.web = val;

@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,15 +21,20 @@ import java.util.Objects;
 public final class LogIssuer extends ApiObject {
 
     /**
-     * An id of the issuer
+     * Unique ID of the issuer.
      */
     private final String id;
 
     /**
-     * The type of the issuer
+     * The type of the issuer.
      */
     private final String type;
 
+    /**
+     * Constructor for LogIssuer
+     * @param id {@link String}
+     * @param type {@link String}
+     */
     @JsonCreator
     public LogIssuer(
             @JsonProperty("id") String id,
@@ -39,19 +44,36 @@ public final class LogIssuer extends ApiObject {
         this.type = type;
     }
 
+    /**
+     * Returns the id.
+     * @return {@link String}
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Returns the type.
+     * @return {@link String}
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Hashes the object.
+     * @return {@link Integer}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id, type);
     }
 
+    /**
+     * Overrides the method equals.
+     * @param obj {@link Object}
+     * @return {@link Boolean}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
