@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,49 +16,64 @@ import com.okta.sdk.framework.ApiObject;
 
 public class OrgAnonymousInfo extends ApiObject {
 
+    /**
+     * Name of the organization.
+     */
     private String name;
 
+    /**
+     * Phone number of support.
+     */
     private String supportPhoneNumber;
 
+    /**
+     * Technical contact reference.
+     */
     private String technicalContact;
 
     /**
-     * Gets name
+     * Returns the name.
+     * @return {@link String}
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Sets name
+     * Sets the name.
+     * @param val {@link String}
      */
     public void setName(String val) {
         this.name = val;
     }
 
     /**
-     * Gets supportPhoneNumber
+     * Returns the supportPhoneNumber.
+     * @return {@link String}
      */
     public String getSupportPhoneNumber() {
         return this.supportPhoneNumber;
     }
 
     /**
-     * Sets supportPhoneNumber
+     * Sets the supportPhoneNumber.
+     * @param val {@link String}
      */
     public void setSupportPhoneNumber(String val) {
         this.supportPhoneNumber = val;
     }
 
     /**
-     * Gets technicalContact
+     * Returns the technicalContact
+     * @return {@link String}
      */
     public String getTechnicalContact() {
         return this.technicalContact;
     }
 
     /**
-     * Sets technicalContact
+     * Sets the technicalContact.
+     * @param val {@link String}
      */
     public void setTechnicalContact(String val) {
         this.technicalContact = val;

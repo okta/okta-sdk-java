@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,33 +16,43 @@ import com.okta.sdk.framework.ApiObject;
 
 public class Provider extends ApiObject {
 
+    /**
+     * Provider type.
+     */
     private String type;
 
+    /**
+     * Provider name.
+     */
     private String name;
 
     /**
-     * Gets type
+     * Returns the type.
+     * @return {@link String}
      */
     public String getType() {
         return this.type;
     }
 
     /**
-     * Sets type
+     * Sets the type.
+     * @param val {@link String}
      */
     public void setType(String val) {
         this.type = val;
     }
 
     /**
-     * Gets name
+     * Returns the name.
+     * @return {@link String}
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Sets name
+     * Sets the name.
+     * @param val {@link String}
      */
     public void setName(String val) {
         this.name = val;

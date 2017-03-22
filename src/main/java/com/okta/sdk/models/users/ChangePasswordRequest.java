@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,33 +16,43 @@ import com.okta.sdk.framework.ApiObject;
 
 public class ChangePasswordRequest extends ApiObject {
 
+    /**
+     * Previous password.
+     */
     private Password oldPassword;
 
+    /**
+     * New password.
+     */
     private Password newPassword;
 
     /**
-     * Gets oldPassword
+     * Returns the oldPassword.
+     * @return {@link Password}
      */
     public Password getOldPassword() {
         return this.oldPassword;
     }
 
     /**
-     * Sets oldPassword
+     * Sets the oldPassword.
+     * @param val {@link Password}
      */
     public void setOldPassword(Password val) {
         this.oldPassword = val;
     }
 
     /**
-     * Gets newPassword
+     * Returns the newPassword.
+     * @return {@link Password}
      */
     public Password getNewPassword() {
         return this.newPassword;
     }
 
     /**
-     * Sets newPassword
+     * Sets the newPassword.
+     * @param val {@link Password}
      */
     public void setNewPassword(Password val) {
         this.newPassword = val;

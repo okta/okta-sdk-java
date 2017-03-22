@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,33 +16,43 @@ import com.okta.sdk.framework.ApiObject;
 
 public class ChangeRecoveryQuestionRequest extends ApiObject {
 
+    /**
+     * Recovery password object.
+     */
     private Password password;
 
+    /**
+     * Recovery question.
+     */
     private RecoveryQuestion recoveryQuestion;
 
     /**
-     * Gets password
+     * Returns the password.
+     * @return {@link Password}
      */
     public Password getPassword() {
         return this.password;
     }
 
     /**
-     * Sets password
+     * Sets the password.
+     * @param val {@link Password}
      */
     public void setPassword(Password val) {
         this.password = val;
     }
 
     /**
-     * Gets recoveryQuestion
+     * Returns the recoveryQuestion.
+     * @return {@link RecoveryQuestion}
      */
     public RecoveryQuestion getRecoveryQuestion() {
         return this.recoveryQuestion;
     }
 
     /**
-     * Sets recoveryQuestion
+     * Sets the recoveryQuestion.
+     * @param val {@link RecoveryQuestion}
      */
     public void setRecoveryQuestion(RecoveryQuestion val) {
         this.recoveryQuestion = val;

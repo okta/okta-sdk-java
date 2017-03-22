@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -21,20 +21,26 @@ import java.util.Objects;
 public final class LogUserAgent extends ApiObject {
 
     /**
-     * The raw user agent of the client
+     * The raw user agent of the client.
      */
     private final String rawUserAgent;
 
     /**
-     * The operating system of the client
+     * The operating system of the client.
      */
     private final String os;
 
     /**
-     * The browser used by the client
+     * The browser used by the client.
      */
     private final String browser;
 
+    /**
+     * Constructor for LogUserAgent
+     * @param rawUserAgent {@link String}
+     * @param os {@link String}
+     * @param browser {@link String}
+     */
     @JsonCreator
     public LogUserAgent(
             @JsonProperty("rawUserAgent") String rawUserAgent,
@@ -46,24 +52,44 @@ public final class LogUserAgent extends ApiObject {
         this.browser = browser;
     }
 
-
+    /**
+     * Returns the rawUserAgent.
+     * @return {@link String}
+     */
     public String getRawUserAgent() {
         return rawUserAgent;
     }
 
+    /**
+     * Returns the OS.
+     * @return {@link String}
+     */
     public String getOs() {
         return os;
     }
 
+    /**
+     * Returns the browser.
+     * @return {@link String}
+     */
     public String getBrowser() {
         return browser;
     }
 
+    /**
+     * Hashes the object.
+     * @return {@link Integer}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(rawUserAgent, os, browser);
     }
 
+    /**
+     * Overrides the method equals.
+     * @param obj {@link Object}
+     * @return {@link Boolean}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

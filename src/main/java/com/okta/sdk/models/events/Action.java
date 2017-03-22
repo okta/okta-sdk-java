@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,17 +17,17 @@ import com.okta.sdk.framework.ApiObject;
 public class Action extends ApiObject {
 
     /**
-     * Description of an action
+     * Description of an action.
      */
     private String message;
 
     /**
-     * Categories for an action
+     * Categories for an action.
      */
     private String[] categories;
 
     /**
-     * Identifies the unique type of an action
+     * Identifies the unique type of an action.
      */
     private String objectType;
 
@@ -37,56 +37,64 @@ public class Action extends ApiObject {
     private String requestUri;
 
     /**
-     * Gets message
+     * Returns the message.
+     * @return {@link String}
      */
     public String getMessage() {
         return this.message;
     }
 
     /**
-     * Sets message
+     * Sets the message.
+     * @param val {@link String}
      */
     public void setMessage(String val) {
         this.message = val;
     }
 
     /**
-     * Gets categories
+     * Returns the categories.
+     * @return List of Strings
      */
     public String[] getCategories() {
         return this.categories;
     }
 
     /**
-     * Sets categories
+     * Sets the categories.
+     * @param val List of Strings
      */
     public void setCategories(String[] val) {
         this.categories = val;
     }
 
     /**
-     * Gets objectType
+     * Returns the objectType.
+     * @return {@link String}
      */
     public String getObjectType() {
         return this.objectType;
     }
 
     /**
-     * Sets objectType
+     * Sets the objectType.
+     * @param val {@link String}
      */
     public void setObjectType(String val) {
         this.objectType = val;
     }
 
     /**
-     * Gets requestUri
+     * Returns the requestUri.
+     * @return {@link String}
      */
     public String getRequestUri() {
         return this.requestUri;
     }
 
     /**
-     * Sets requestUri
+     * Sets the requestUri.
+     * @param val {@link String}
      */
     public void setRequestUri(String val) {
         this.requestUri = val;

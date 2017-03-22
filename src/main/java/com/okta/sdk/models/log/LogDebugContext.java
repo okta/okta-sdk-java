@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,10 +23,14 @@ import java.util.Objects;
 public final class LogDebugContext extends ApiObject {
 
     /**
-     * Map of debug data keys to debug data values
+     * Map of debug data keys to debug data values.
      */
     private final Map<String, Object> debugData;
 
+    /**
+     * Constructor for LogDebugContext.
+     * @param debugData {@link Map}
+     */
     @JsonCreator
     public LogDebugContext(
             @JsonProperty("debugData") Map<String, Object> debugData
@@ -39,15 +43,28 @@ public final class LogDebugContext extends ApiObject {
 
     }
 
+    /**
+     * Returns the debugData.
+     * @return {@link Map}
+     */
     public Map<String, Object> getDebugData() {
         return debugData;
     }
 
+    /**
+     * Hashes the object.
+     * @return {@link Object}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(debugData);
     }
 
+    /**
+     * Overriding method for equals.
+     * @param obj {@link Object}
+     * @return {@link Boolean}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

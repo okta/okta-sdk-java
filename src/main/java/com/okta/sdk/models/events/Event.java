@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -18,124 +18,147 @@ import org.joda.time.DateTime;
 public class Event extends ApiObject {
 
     /**
-     * unique key for event
+     * Unique key for event.
      */
     private String id;
 
     /**
-     * timestamp when event was published  
+     * Timestamp when event was published.
      */
     private DateTime published;
 
     /**
-     * identifies the request
+     * Identifies the request.
      */
     private String requestId;
 
     /**
-     * session in which the event occurred
+     * Session in which the event occurred.
      */
     private String sessionId;
 
+    /**
+     * Action performed by the event.
+     */
     private Action action;
 
+    /**
+     * Actors causing the event.
+     */
     private Actor[] actors;
 
+    /**
+     * Event targets
+     */
     private Target[] targets;
 
     /**
-     * Gets id
+     * Returns the ID.
+     * @return {@link String}
      */
     public String getId() {
         return this.id;
     }
 
     /**
-     * Sets id
+     * Sets the ID.
+     * @param val {@link String}
      */
     public void setId(String val) {
         this.id = val;
     }
 
     /**
-     * Gets published
+     * Returns the published time.
+     * @return {@link DateTime}
      */
     public DateTime getPublished() {
         return this.published;
     }
 
     /**
-     * Sets published
+     * Sets the published time.
+     * @param val {@link String}
      */
     public void setPublished(DateTime val) {
         this.published = val;
     }
 
     /**
-     * Gets requestId
+     * Returns the requestId.
+     * @return {@link String}
      */
     public String getRequestId() {
         return this.requestId;
     }
 
     /**
-     * Sets requestId
+     * Sets the requestId.
+     * @param val {@link String}
      */
     public void setRequestId(String val) {
         this.requestId = val;
     }
 
     /**
-     * Gets sessionId
+     * Returns the sessionId.
+     * @return {@link String}
      */
     public String getSessionId() {
         return this.sessionId;
     }
 
     /**
-     * Sets sessionId
+     * Sets the sessionId.
+     * @param val {@link String}
      */
     public void setSessionId(String val) {
         this.sessionId = val;
     }
 
     /**
-     * Gets action
+     * Returns the action.
+     * @return {@link Action}
      */
     public Action getAction() {
         return this.action;
     }
 
     /**
-     * Sets action
+     * Sets the action.
+     * @param val {@link Action}
      */
     public void setAction(Action val) {
         this.action = val;
     }
 
     /**
-     * Gets actors
+     * Returns the actors.
+     * @return {@link Actor}
      */
     public Actor[] getActors() {
         return this.actors;
     }
 
     /**
-     * Sets actors
+     * Sets the actors.
+     * @param val {@link Actor}
      */
     public void setActors(Actor[] val) {
         this.actors = val;
     }
 
     /**
-     * Gets targets
+     * Returns the targets.
+     * @return {@link Target}
      */
     public Target[] getTargets() {
         return this.targets;
     }
 
     /**
-     * Sets targets
+     * Sets the targets.
+     * @param val {@link Target}
      */
     public void setTargets(Target[] val) {
         this.targets = val;

@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -17,38 +17,42 @@ import com.okta.sdk.framework.ApiObject;
 public class Credentials extends ApiObject {
 
     /**
-     * a user's login name
+     * User's login name.
      */
     private String username;
 
     /**
-     * a user's password
+     * User's plaintext password.
      */
     private String password;
 
     /**
-     * Gets username
+     * Returns the username.
+     * @return {@link String}
      */
     public String getUsername() {
         return this.username;
     }
 
     /**
-     * Sets username
+     * Sets the username.
+     * @param val {@link String}
      */
     public void setUsername(String val) {
         this.username = val;
     }
 
     /**
-     * Gets password
+     * Returns the password.
+     * @return {@link String}
      */
     public String getPassword() {
         return this.password;
     }
 
     /**
-     * Sets password
+     * Sets the password.
+     * @param val {@link String}
      */
     public void setPassword(String val) {
         this.password = val;

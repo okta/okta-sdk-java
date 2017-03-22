@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -16,97 +16,127 @@ import com.okta.sdk.framework.ApiObject;
 
 public class UserProfile extends ApiObject {
 
+    /**
+     * The login of the User.
+     */
     private String login;
 
+    /**
+     * The email of the User
+     */
     private String email;
 
+    /**
+     * The secondary email of the User.
+     */
     private String secondEmail;
 
+    /**
+     * The first name of the User.
+     */
     private String firstName;
 
+    /**
+     * The last name of the User.
+     */
     private String lastName;
 
+    /**
+     * The mobile phone of the User.
+     */
     private String mobilePhone;
 
     /**
-     * Gets login
+     * Returns the login.
+     * @return {@link String}
      */
     public String getLogin() {
         return this.login;
     }
 
     /**
-     * Sets login
+     * Sets the login.
+     * @param val {@link String}
      */
     public void setLogin(String val) {
         this.login = val;
     }
 
     /**
-     * Gets email
+     * Returns the email.
+     * @return {@link String}
      */
     public String getEmail() {
         return this.email;
     }
 
     /**
-     * Sets email
+     * Sets the email.
+     * @param val {@link String}
      */
     public void setEmail(String val) {
         this.email = val;
     }
 
     /**
-     * Gets secondEmail
+     * Returns the secondEmail.
+     * @return {@link String}
      */
     public String getSecondEmail() {
         return this.secondEmail;
     }
 
     /**
-     * Sets secondEmail
+     * Sets the secondEmail.
+     * @param val {@link String}
      */
     public void setSecondEmail(String val) {
         this.secondEmail = val;
     }
 
     /**
-     * Gets firstName
+     * Returns the firstName.
+     * @return {@link String}
      */
     public String getFirstName() {
         return this.firstName;
     }
 
     /**
-     * Sets firstName
+     * Sets the firstName.
+     * @param val {@link String}
      */
     public void setFirstName(String val) {
         this.firstName = val;
     }
 
     /**
-     * Gets lastName
+     * Returns the lastName.
+     * @return {@link String}
      */
     public String getLastName() {
         return this.lastName;
     }
 
     /**
-     * Sets lastName
+     * Sets the lastName.
+     * @param val {@link String}
      */
     public void setLastName(String val) {
         this.lastName = val;
     }
 
     /**
-     * Gets mobilePhone
+     * Returns the mobilePhone.
+     * @return {@link String}
      */
     public String getMobilePhone() {
         return this.mobilePhone;
     }
 
     /**
-     * Sets mobilePhone
+     * Sets the mobilePhone.
+     * @param val {@link String}
      */
     public void setMobilePhone(String val) {
         this.mobilePhone = val;

@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -23,169 +23,193 @@ import java.util.Map;
 public class Factor extends ApiObject {
 
     /**
-     * unique key for factor
+     * Unique key for factor.
      */
     private String id;
 
     /**
-     * type of factor
+     * Type of factor.
      */
     private String factorType;
 
     /**
-     * factor provider
+     * Factor of the provider.
      */
     private String provider;
 
     /**
-     * status of factor
+     * Status of the factor.
      */
     private String status;
 
     /**
-     * timestamp when factor was created
+     * Timestamp when factor was created.
      */
     private DateTime created;
 
     /**
-     * timestamp when factor was last updated
+     * Timestamp when factor was last updated.
      */
     private DateTime lastUpdated;
 
     /**
-     * profile of a supported factor
+     * Profile of a supported factor.
      */
     private Map<String, Object> profile;
 
+    /**
+     * HAL links of the factor.
+     */
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonProperty(value = "_links")
     private Map<String, LinksUnion> links;
 
+    /**
+     * HAL embedded of the factor.
+     */
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
     @JsonProperty(value = "_embedded")
     private Map<String, Object> embedded;
 
     /**
-     * Gets id
+     * Returns the unique id.
+     * @return {@link String}
      */
     public String getId() {
         return this.id;
     }
 
     /**
-     * Sets id
+     * Sets the uniqu id.
+     * @param val {@link String}
      */
     public void setId(String val) {
         this.id = val;
     }
 
     /**
-     * Gets factorType
+     * Returns the factorType.
+     * @return {@link String}
      */
     public String getFactorType() {
         return this.factorType;
     }
 
     /**
-     * Sets factorType
+     * Sets the factorType.
+     * @param val {@link String}
      */
     public void setFactorType(String val) {
         this.factorType = val;
     }
 
     /**
-     * Gets provider
+     * Returns the provider.
+     * @return {@link String}
      */
     public String getProvider() {
         return this.provider;
     }
 
     /**
-     * Sets provider
+     * Sets the provider.
+     * @param val {@link String}
      */
     public void setProvider(String val) {
         this.provider = val;
     }
 
     /**
-     * Gets status
+     * Returns the status.
+     * @return {@link String}
      */
     public String getStatus() {
         return this.status;
     }
 
     /**
-     * Sets status
+     * Sets the status.
+     * @param val {@link String}
      */
     public void setStatus(String val) {
         this.status = val;
     }
 
     /**
-     * Gets created
+     * Returns the created time.
+     * @return {@link DateTime}
      */
     public DateTime getCreated() {
         return this.created;
     }
 
     /**
-     * Sets created
+     * Sets the created time.
+     * @param val {@link DateTime}
      */
     public void setCreated(DateTime val) {
         this.created = val;
     }
 
     /**
-     * Gets lastUpdated
+     * Returns the lastUpdated time.
+     * @return {@link DateTime}
      */
     public DateTime getLastUpdated() {
         return this.lastUpdated;
     }
 
     /**
-     * Sets lastUpdated
+     * Sets the lastUpdated time.
+     * @param val {@link DateTime}
      */
     public void setLastUpdated(DateTime val) {
         this.lastUpdated = val;
     }
 
     /**
-     * Gets profile
+     * Returns the profile.
+     * @return {@link Map}
      */
     public Map<String, Object> getProfile() {
         return this.profile;
     }
 
     /**
-     * Sets profile
+     * Sets the profile.
+     * @param val {@link Map}
      */
     public void setProfile(Map<String, Object> val) {
         this.profile = val;
     }
 
     /**
-     * Gets links
+     * Returns the links.
+     * @return {@link Map}
      */
     public Map<String, LinksUnion> getLinks() {
         return this.links;
     }
 
     /**
-     * Sets links
+     * Sets the links.
+     * @param val {@link Map}
      */
     public void setLinks(Map<String, LinksUnion> val) {
         this.links = val;
     }
 
     /**
-     * Gets embedded
+     * Gets the embedded HAL.
+     * @return {@link Map}
      */
     public Map<String, Object> getEmbedded() {
         return this.embedded;
     }
 
     /**
-     * Sets embedded
+     * Sets the embedded HAL.
+     * @param val {@link Map}
      */
     public void setEmbedded(Map<String, Object> val) {
         this.embedded = val;

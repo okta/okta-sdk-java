@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2015-2016, Okta, Inc. and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015-2017, Okta, Inc. and/or its affiliates. All rights reserved.
  * The Okta software accompanied by this notice is provided pursuant to the Apache License, Version 2.0 (the "License.")
  *
  * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
@@ -19,111 +19,129 @@ import com.okta.sdk.models.users.Password;
 public class AppCredentials extends ApiObject {
 
     /**
-     * Determines how credentials are managed for the signOnMode
+     * Determines how credentials are managed for the signOnMode.
      */
     private String scheme;
 
     /**
-     * Template used to generate a user’s username when the application is assigned via a group or directly to a user
+     * Template used to generate a user’s username when the application is assigned via a group or directly to a user.
      */
     private UserNameTemplate userNameTemplate;
 
     /**
-     * Shared username for app
+     * Shared username for app.
      */
     private String userName;
 
     /**
-     * Shared password for app
+     * Shared password for app.
      */
     private Password password;
 
+    /**
+     * Toggle for reveal password.
+     */
     private Boolean revealPassword;
 
+    /**
+     * Token signing reference object.
+     */
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private Signing signing = new Signing();
 
     /**
-     * Gets scheme
+     * Returns the scheme.
+     * @return {@link String}
      */
     public String getScheme() {
         return this.scheme;
     }
 
     /**
-     * Sets scheme
+     * Sets the scheme.
+     * @param val {@link String}
      */
     public void setScheme(String val) {
         this.scheme = val;
     }
 
     /**
-     * Gets userNameTemplate
+     * Returns the userNameTemplate.
+     * @return {@link UserNameTemplate}
      */
     public UserNameTemplate getUserNameTemplate() {
         return this.userNameTemplate;
     }
 
     /**
-     * Sets userNameTemplate
+     * Sets the userNameTemplate.
+     * @param val {@link UserNameTemplate}
      */
     public void setUserNameTemplate(UserNameTemplate val) {
         this.userNameTemplate = val;
     }
 
     /**
-     * Gets userName
+     * Returns the userName.
+     * @return {@link String}
      */
     public String getUserName() {
         return this.userName;
     }
 
     /**
-     * Sets userName
+     * Sets the userName.
+     * @param val {@link String}
      */
     public void setUserName(String val) {
         this.userName = val;
     }
 
     /**
-     * Gets password
+     * Returns the password.
+     * @return {@link Password}
      */
     public Password getPassword() {
         return this.password;
     }
 
     /**
-     * Sets password
+     * Sets the password.
+     * @param val {@link Password}
      */
     public void setPassword(Password val) {
         this.password = val;
     }
 
     /**
-     * Gets revealPassword
+     * Returns the revealPassword.
+     * @return {@link Boolean}
      */
     public Boolean getRevealPassword() {
         return this.revealPassword;
     }
 
     /**
-     * Sets revealPassword
+     * Sets the revealPassword.
+     * @param val {@link Boolean}
      */
     public void setRevealPassword(Boolean val) {
         this.revealPassword = val;
     }
 
     /**
-     * Gets signing
+     * Returns the signing object.
+     * @return {@link Signing}
      */
     public Signing getSigning() {
         return signing;
     }
 
     /**
-     * Sets signing
+     * Sets the signing object.
+     * @param val {@link Signing}
      */
-    public void setSigning(Signing signing) {
-        this.signing = signing;
+    public void setSigning(Signing val) {
+        this.signing = val;
     }
 }
