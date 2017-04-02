@@ -154,9 +154,23 @@ public class SessionApiClient extends JsonApiClient {
      * @param  sessionId {@link String}              Unique ID of the session.
      * @return {@link Session}                       Current session object.
      * @throws IOException                           If an input or output exception occurred.
+     * @deprecated use {@link #refreshSession(String)} instead.
      */
+    @Deprecated
     public Session extendSession(String sessionId) throws IOException  {
         return put(getEncodedPath("/%s", sessionId), new TypeReference<Session>() {
+        });
+    }
+
+    /**
+     * Returns a refreshed session.
+     *
+     * @param  sessionId {@link String}              Unique ID of the session.
+     * @return {@link Session}                       Refreshed session object.
+     * @throws IOException                           If an input or output exception occurred.
+     */
+    public Session refreshSession(String sessionId) throws IOException  {
+        return post(getEncodedPath("/%s/lifecycle/refresh", sessionId), null, new TypeReference<Session>() {
         });
     }
 
