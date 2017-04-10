@@ -115,16 +115,16 @@ public class AuthApiClient extends JsonApiClient {
     }
 
     /**
-     * Authenticate into organization.
+     * Authenticate with activation token
      *
      * @param  token {@link String}                 activationToken to use for authentication.
      * @return {@link AuthResult}                   Result of the authentication transaction.
      * @throws IOException                          If an input or output exception occurred.
      */
-    public AuthResult authenticate(String token) throws IOException {
+    public AuthResult authenticateWithActivationToken(String token) throws IOException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(TOKEN, token);
-        return post(getEncodedPath(""), params, new TypeReference<AuthResult>() { });
+        return post(getEncodedPath("/"), params, new TypeReference<AuthResult>() { });
     }
 
     /**
