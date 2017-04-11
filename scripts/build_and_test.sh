@@ -15,9 +15,9 @@ BUILD_AND_TEST_TEST_SUITE_ID=771f3f55-7db9-11e5-80ff-22000b5181e9
 start_test_suite ${BUILD_AND_TEST_TEST_SUITE_ID}
  
 function build_and_test() {
-  ${MAVEN} clean deploy -s "${MAVEN_SETTINGS}"
+    ${MAVEN} clean package -s "${MAVEN_SETTINGS}"
 }
- 
+
 if ! build_and_test; then
   fail_test_suite
   exit 1
