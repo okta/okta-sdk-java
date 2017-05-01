@@ -1,8 +1,0 @@
-{
-  "@okta/generator-samples": {
-    "parentType": "sdk",
-    "version": "1.11.0",
-    "environment": "Java",
-    "name": "oktasdk-java"
-  }
-}
