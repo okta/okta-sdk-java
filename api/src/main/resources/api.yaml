@@ -1,0 +1,182 @@
+#
+# Copyright 2017 Okta
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+{
+    "swagger":"2.0",
+    "info":{
+        "version":"0.1.0-SNAPSHOT",
+        "title":"jersey"
+    },
+    "host":"",
+    "basePath":"/jersey/",
+    "schemes":[
+        "http"
+    ],
+    "paths":{
+        "/troopers":{
+            "get":{
+                "description":"Returns a Collection of all Stormtroopers.",
+                "consumes":[
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                ],
+                "responses":{
+                    "200":{
+                        "description":"OK",
+                        "headers":{
+                        },
+                        "schema":{
+                            "type":"array",
+                            "items":{
+                                "$ref":"#/definitions/Stormtrooper"
+                            }
+                        }
+                    }
+                }
+            },
+            "post":{
+                "consumes":[
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "name":"body",
+                        "in":"body",
+                        "required":true,
+                        "schema":{
+                            "$ref":"#/definitions/Stormtrooper"
+                        }
+                    }
+                ],
+                "responses":{
+                    "200":{
+                        "description":"OK",
+                        "headers":{
+                        },
+                        "schema":{
+                            "$ref":"#/definitions/Stormtrooper"
+                        }
+                    }
+                }
+            }
+        },
+        "/troopers/{id}":{
+            "get":{
+                "consumes":[
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "type":"string",
+                        "name":"id",
+                        "in":"path",
+                        "required":true
+                    }
+                ],
+                "responses":{
+                    "200":{
+                        "description":"OK",
+                        "headers":{
+                        },
+                        "schema":{
+                            "$ref":"#/definitions/Stormtrooper"
+                        }
+                    }
+                }
+            },
+            "post":{
+                "consumes":[
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "type":"string",
+                        "name":"id",
+                        "in":"path",
+                        "required":true
+                    },
+                    {
+                        "name":"body",
+                        "in":"body",
+                        "required":true,
+                        "schema":{
+                            "$ref":"#/definitions/Stormtrooper"
+                        }
+                    }
+                ],
+                "responses":{
+                    "200":{
+                        "description":"OK",
+                        "headers":{
+                        },
+                        "schema":{
+                            "$ref":"#/definitions/Stormtrooper"
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "consumes":[
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                    {
+                        "type":"string",
+                        "name":"id",
+                        "in":"path",
+                        "required":true
+                    }
+                ],
+                "responses":{
+                    "204":{
+                        "description":"No Content",
+                        "headers":{
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions":{
+        "Stormtrooper":{
+            "properties":{
+                "id":{
+                    "type":"string"
+                },
+                "planetOfOrigin":{
+                    "type":"string"
+                },
+                "species":{
+                    "type":"string"
+                },
+                "type":{
+                    "type":"string"
+                }
+            }
+        }
+    }
+}

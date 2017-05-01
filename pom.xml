@@ -43,6 +43,13 @@
         <slf4j.version>1.7.22</slf4j.version>
         <testng.version>6.9.10</testng.version>
 
+        <swagger-annotations.version>1.5.8</swagger-annotations.version>
+        <jersey.version>2.22.2</jersey.version>
+        <jackson.version>2.7.0</jackson.version>
+        <jodatime.version>2.7</jodatime.version>
+        <snakeyaml.version>1.17</snakeyaml.version>
+        <jjwt.version>0.6.0</jjwt.version>
+
         <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
 
         <!-- Test Dependencies: Only required for testing when building the SDK.  Not required by SDK users at runtime: -->
@@ -76,6 +83,10 @@
 
     <modules>
         <module>base-api</module>
+        <module>base-impl</module>
+        <module>swagger-templates</module>
+        <module>api</module>
+
     </modules>
 
     <dependencyManagement>
@@ -85,6 +96,37 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${jodatime.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
             </dependency>
 
             <dependency>
