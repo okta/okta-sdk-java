@@ -1,2 +1,8 @@
 
-The project has no dependencies.
+Lists of 6 third-party dependencies.
+     (The Apache Software License, Version 2.0) JCommander (com.beust:jcommander:1.48 - http://beust.com/jcommander)
+     (GNU LESSER GENERAL PUBLIC LICENSE) BeanShell (org.beanshell:bsh:2.0b4 - no url defined)
+     (The Apache Software License, Version 2.0) Apache Groovy (org.codehaus.groovy:groovy-all:2.4.7 - http://groovy-lang.org)
+     (BSD Licence 3) Java Hamcrest (org.hamcrest:java-hamcrest:2.0.0.0 - http://hamcrest.org/JavaHamcrest/)
+     (MIT License) SLF4J API Module (org.slf4j:slf4j-api:1.7.22 - http://www.slf4j.org)
+     (Apache  Version 2.0, January 2004) testng (org.testng:testng:6.9.10 - http://github.com/cbeust/testng)
