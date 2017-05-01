@@ -2,10 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.okta</groupId>
-    <artifactId>okta-sdk</artifactId>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
+
+    <groupId>com.okta.sdk</groupId>
+    <artifactId>okta-sdk-root</artifactId>
     <version>0.0.4-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Okta SDK for Java</description>
@@ -14,7 +20,7 @@
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
-            <url>https://github.com/okta/oktasdk-java/blob/master/LICENSE.md</url>
+            <url>https://github.com/okta/oktasdk-java/blob/master/LICENSE</url>
         </license>
     </licenses>
     
@@ -34,147 +40,61 @@
     </scm>
 
     <properties>
-        <httpclient.version>4.5.2</httpclient.version>
-        <jackson.version>2.5.0</jackson.version>
-        <joda-time.version>2.7</joda-time.version>
-        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
-        <slf4j-api.version>1.7.10</slf4j-api.version>
-        <testng.version>6.8.17</testng.version>
-        <org.hamcrest.version>1.3</org.hamcrest.version>
-        <com.google.guava.version>18.0</com.google.guava.version>
+        <slf4j.version>1.7.22</slf4j.version>
+        <testng.version>6.9.10</testng.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>java-hamcrest</artifactId>
+                <version>2.0.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${joda-time.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${com.google.guava.version}</version>
-        </dependency>
+
+        <!-- Test dependencies -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-            <version>${org.hamcrest.version}</version>
+            <artifactId>java-hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
     <profiles>
-        <profile>
-            <id>java8-doclint-disabled</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <properties>
-                <javadoc.opts>-Xdoclint:none</javadoc.opts>
-            </properties>
-        </profile>
     </profiles>
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.12</version>
+                <inherited>false</inherited>
                 <executions>
                     <execution>
-                        <id>attach-sources</id>
                         <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
+                            <goal>aggregate-add-third-party</goal>
                         </goals>
                         <configuration>
-                            <additionalparam>${javadoc.opts}</additionalparam>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                        <configuration>
-                            <keyname>${gpg.keyname}</keyname>
-                            <passphraseServerId>${gpg.keyname}</passphraseServerId>
+                            <outputDirectory>${project.basedir}</outputDirectory>
+                            <thirdPartyFilename>THIRD-PARTY-NOTICES</thirdPartyFilename>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>master</id>
-            <name>master-releases</name>
-            <url>https://artifacts.aue1d.saasure.com/artifactory/topic</url>
-        </repository>
-        <snapshotRepository>
-            <id>master</id>
-            <name>master-snapshots</name>
-            <url>https://artifacts.aue1d.saasure.com/artifactory/topic</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
