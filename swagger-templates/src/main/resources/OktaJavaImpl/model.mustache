@@ -17,6 +17,7 @@
 
 package {{package}};
 
+
 {{#imports}}
 import {{import}};
 {{/imports}}
@@ -28,6 +29,6 @@ import java.io.Serializable;
 
 {{#models}}
 {{#model}}
-{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>modelInterface}}{{/isEnum}}
+{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>pojo}}{{/isEnum}}
 {{/model}}
 {{/models}}

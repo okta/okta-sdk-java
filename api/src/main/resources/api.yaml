@@ -13,170 +13,4313 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 {
-    "swagger":"2.0",
-    "info":{
-        "version":"0.1.0-SNAPSHOT",
-        "title":"jersey"
+  "swagger": "2.0",
+  "info": {
+    "title": "Okta API",
+    "description": "Allows customers to easily access the Okta API",
+    "termsOfService": "http://developer.okta.com/terms/",
+    "contact": {
+      "name": "Okta Developer Team",
+      "email": "devex-public@okta.com",
+      "url": "http://developer.okta.com/"
     },
-    "host":"",
-    "basePath":"/jersey/",
-    "schemes":[
-        "http"
-    ],
-    "paths":{
-        "/troopers":{
-            "get":{
-                "description":"Returns a Collection of all Stormtroopers.",
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"array",
-                            "items":{
-                                "$ref":"#/definitions/Stormtrooper"
-                            }
-                        }
-                    }
-                }
-            },
-            "post":{
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "name":"body",
-                        "in":"body",
-                        "required":true,
-                        "schema":{
-                            "$ref":"#/definitions/Stormtrooper"
-                        }
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/Stormtrooper"
-                        }
-                    }
-                }
-            }
-        },
-        "/troopers/{id}":{
-            "get":{
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"id",
-                        "in":"path",
-                        "required":true
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/Stormtrooper"
-                        }
-                    }
-                }
-            },
-            "post":{
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"id",
-                        "in":"path",
-                        "required":true
-                    },
-                    {
-                        "name":"body",
-                        "in":"body",
-                        "required":true,
-                        "schema":{
-                            "$ref":"#/definitions/Stormtrooper"
-                        }
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/Stormtrooper"
-                        }
-                    }
-                }
-            },
-            "delete":{
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"id",
-                        "in":"path",
-                        "required":true
-                    }
-                ],
-                "responses":{
-                    "204":{
-                        "description":"No Content",
-                        "headers":{
-                        }
-                    }
-                }
-            }
-        }
+    "license": {
+      "name": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "definitions":{
-        "Stormtrooper":{
-            "properties":{
-                "id":{
-                    "type":"string"
-                },
-                "planetOfOrigin":{
-                    "type":"string"
-                },
-                "species":{
-                    "type":"string"
-                },
-                "type":{
-                    "type":"string"
-                }
-            }
-        }
+    "version": "0.0.1"
+  },
+  "externalDocs": {
+    "description": "Find more info here",
+    "url": "http://developer.okta.com/docs/api/getting_started/design_principles.html"
+  },
+  "host": "your-subdomain.okta.com",
+  "basePath": "/",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "api_token": {
+      "description": "SSWS {API Token}",
+      "in": "header",
+      "name": "Authorization",
+      "type": "apiKey"
     }
+  },
+  "paths": {
+    "/api/v1/groups": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Enumerates groups in your organization with pagination. A subset of groups can be returned that match a supported filter expression or query.",
+        "operationId": "getGroups",
+        "parameters": [
+          {
+            "description": "Searches the name property of groups for matching value",
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "description": "Filter expression for groups",
+            "in": "query",
+            "name": "filter",
+            "type": "string"
+          },
+          {
+            "description": "Specifies the pagination cursor for the next page of groups",
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "description": "Specifies the number of group results in a page",
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/UserGroup"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "List Groups",
+        "tags": [
+          "Group"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Adds a new group with `OKTA_GROUP` type to your organization.",
+        "operationId": "createGroup",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UserGroup"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Add Group",
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/groups/rules": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Lists all group rules for your organization.",
+        "operationId": "listRules",
+        "parameters": [
+          {
+            "default": -1,
+            "description": "Specifies the number of rule results in a page",
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "default": "",
+            "description": "Specifies the pagination cursor for the next page of rules",
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/GroupMembershipMediationRule"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "List Group Rules",
+        "tags": [
+          "Group"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Creates a group rule to dynamically add users to the specified group if they match the condition",
+        "operationId": "createRule",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/GroupMembershipMediationRule"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GroupMembershipMediationRule"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Create Group Rule",
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/groups/rules/{id}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Removes a specific group rule by id from your organization",
+        "operationId": "deleteRule",
+        "parameters": [
+          {
+            "description": "id of a group rule",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "removeUsers",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "additionalProperties": {
+                "type": "object"
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Delete a group Rule",
+        "tags": [
+          "Group"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Fetches a specific group rule by id from your organization",
+        "operationId": "getRule",
+        "parameters": [
+          {
+            "description": "id of a group rule",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GroupMembershipMediationRule"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Get Group Rule",
+        "tags": [
+          "Group"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/GroupMembershipMediationRule"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GroupMembershipMediationRule"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/groups/rules/{id}/lifecycle/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Activates a specific group rule by id from your organization",
+        "operationId": "activateRule",
+        "parameters": [
+          {
+            "description": "id of a group rule",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Activate a group Rule",
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/groups/rules/{id}/lifecycle/deactivate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Deactivates a specific group rule by id from your organization",
+        "operationId": "deactivateRule",
+        "parameters": [
+          {
+            "description": "id of a group rule",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Deactivate a group Rule",
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/groups/{id}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Removes a group with `OKTA_GROUP` type from your organization.",
+        "operationId": "deleteGroup",
+        "parameters": [
+          {
+            "description": "id of the group to delete",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Remove Group",
+        "tags": [
+          "Group"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Fetches a specific group by `id` from your organization",
+        "operationId": "getGroup",
+        "parameters": [
+          {
+            "description": "id of a group",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Get Group",
+        "tags": [
+          "Group"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates the profile for a group with `OKTA_GROUP` type from your organization.",
+        "operationId": "updateGroup",
+        "parameters": [
+          {
+            "description": "id of the group to update",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UserGroup"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Update Group",
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/groups/{id}/apps": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Enumerates all [applications](apps.html#application-model) that are assigned to a group. See [Application Group Operations](apps.html#application-group-operations)",
+        "operationId": "getApps",
+        "parameters": [
+          {
+            "description": "id of the group",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Specifies the pagination cursor for the next page of apps",
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "description": "Specifies the number of app results for a page",
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/PublicAppInstance"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "List Assigned Applications",
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/groups/{id}/catalog/apps": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getCatalogApps",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/PublicAppInstance"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/groups/{id}/stats": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getUserGroupStats",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserGroupStats"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/groups/{id}/users": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Enumerates all [users](#users.html) that are a member of a group.",
+        "operationId": "getGroupUsers",
+        "parameters": [
+          {
+            "description": "id of the group",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Specifies the pagination cursor for the next page of users",
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "description": "Specifies the number of user results in a page",
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/User"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "List Group Members",
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/groups/{id}/users/{userId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "removeUserFromGroup",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Group"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "addUserToGroup",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Group"
+        ]
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Lists users in your organization with pagination in most cases.  A subset of users can be returned that match a supported filter expression or search criteria.",
+        "operationId": "getUsers",
+        "parameters": [
+          {
+            "description": "Finds a user that matches firstName, lastName, and email properties",
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "description": "Specifies the pagination cursor for the next page of users",
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "description": "Specifies the number of results returned",
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "description": "Filters users with a supported expression for a subset of properties",
+            "in": "query",
+            "name": "filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "type": "string"
+          },
+          {
+            "description": "Searches for users with a supported filtering  expression for most properties",
+            "in": "query",
+            "name": "search",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/User"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "List Users",
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Creates a new user in your Okta organization with or without credentials.",
+        "operationId": "createUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/InputUserWithGroupIds"
+            }
+          },
+          {
+            "default": true,
+            "description": "Executes activation lifecycle operation when creating the user",
+            "in": "query",
+            "name": "activate",
+            "type": "boolean"
+          },
+          {
+            "default": false,
+            "description": "Indicates whether to create a user with a specified authentication provider",
+            "in": "query",
+            "name": "provider",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Create User",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Deletes a user permanently.  This operation can only be performed on users that have a `DEPROVISIONED` status.  **This action cannot be recovered!**",
+        "operationId": "deactivateOrDeleteUser",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Delete User",
+        "tags": [
+          "User"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateUserWithDefaults",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Update a user's profile and/or credentials using strict-update semantics.",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          {
+            "description": "id of user to update",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Update User",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/appLinks": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Fetches appLinks for all direct or indirect (via group membership) assigned applications.",
+        "operationId": "getAppLinks",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": false,
+            "in": "query",
+            "name": "showAll",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/AppLink"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Get Assigned App Links",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/catalog/apps": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getUserCatalogApps",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/PublicAppInstance"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/credentials/change_password": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Changes a user's password by validating the user's current password.  This operation can only be performed on users in `STAGED`, `ACTIVE`, `PASSWORD_EXPIRED`, or `RECOVERY` status that have a valid [password credential](#password-object)",
+        "operationId": "changePassword",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ChangePasswordCredentials"
+            }
+          },
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Credentials"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Change Password",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/credentials/change_recovery_question": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Changes a user's recovery question & answer credential by validating the user's current password.  This operation can only be performed on users in **STAGED**, **ACTIVE** or **RECOVERY** `status` that have a valid [password credential](#password-object)",
+        "operationId": "changeRecoveryQuestion",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Credentials"
+            }
+          },
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Credentials"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Change Recovery Question",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/credentials/forgot_password": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Generates a one-time token (OTT) that can be used to reset a user's password.  The user will be required to validate their security question's answer when visiting the reset link.  This operation can only be performed on users with a valid [recovery question credential](#recovery-question-object) and have an `ACTIVE` status.",
+        "operationId": "forgotPasswordWithRecoveryAnswer",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Credentials"
+            }
+          },
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": true,
+            "in": "query",
+            "name": "sendEmail",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BaseCredentialsObject"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Forgot Password",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/groups": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Fetches the groups of which the user is a member.",
+        "operationId": "getUserGroups",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/UserGroup"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Get Member Groups",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/lifecycle/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Activates a user.  This operation can only be performed on users with a `STAGED` status.  Activation of a user is an asynchronous operation.  The user will have the `transitioningToStatus` property with a value of `ACTIVE` during activation to indicate that the user hasn't completed the asynchronous operation.  The user will have a status of `ACTIVE` when the activation process is complete.",
+        "operationId": "activateUser",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": true,
+            "description": "Sends an activation email to the user if true",
+            "in": "query",
+            "name": "sendEmail",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ActivationToken"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Activate User",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/lifecycle/deactivate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Deactivates a user.  This operation can only be performed on users that do not have a `DEPROVISIONED` status.  Deactivation of a user is an asynchronous operation.  The user will have the `transitioningToStatus` property with a value of `DEPROVISIONED` during deactivation to indicate that the user hasn't completed the asynchronous operation.  The user will have a status of `DEPROVISIONED` when the deactivation process is complete.",
+        "operationId": "lifecycleDeactivateUser",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "additionalProperties": {
+                "type": "object"
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Deactivate User",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/lifecycle/expire_password": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "This operation transitions the user to the status of `PASSWORD_EXPIRED` so that the user is required to change their password at their next login.",
+        "operationId": "expirePassword",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": false,
+            "description": "Sets the user's password to a temporary password,  if true",
+            "in": "query",
+            "name": "tempPassword",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Expire Password",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/lifecycle/forgot_password": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "forgotPassword",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": true,
+            "in": "query",
+            "name": "sendEmail",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordToken"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/lifecycle/reset_factors": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "This operation resets all factors for the specified user. All MFA factor enrollments returned to the unenrolled state. The user's status remains ACTIVE. This link is present only if the user is currently enrolled in one or more MFA factors.",
+        "operationId": "resetAllFactors",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "additionalProperties": {
+                "type": "object"
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Reset Factors",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/lifecycle/reset_password": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Generates a one-time token (OTT) that can be used to reset a user's password.  The OTT link can be automatically emailed to the user or returned to the API caller and distributed using a custom flow.",
+        "operationId": "resetPassword",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "additionalProperties": {
+                "type": "object"
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordToken"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Reset Password",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/lifecycle/suspend": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Suspends a user.  This operation can only be performed on users with an `ACTIVE` status.  The user will have a status of `SUSPENDED` when the process is complete.",
+        "operationId": "suspendUser",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "additionalProperties": {
+                "type": "object"
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Suspend User",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/lifecycle/unlock": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Unlocks a user with a `LOCKED_OUT` status and returns them to `ACTIVE` status.  Users will be able to login with their current password.",
+        "operationId": "unlockUser",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "additionalProperties": {
+                "type": "object"
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Unlock User",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/lifecycle/unsuspend": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Unsuspends a user and returns them to the `ACTIVE` state.  This operation can only be performed on users that have a `SUSPENDED` status.",
+        "operationId": "unsuspendUser",
+        "parameters": [
+          {
+            "description": "id of user",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "additionalProperties": {
+                "type": "object"
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Unsuspend User",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/roles": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listAssignedRoles",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/MediationRoleAssignment"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "assignRoleToUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MediationRoleAssignment"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationRoleAssignment"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/roles/{roleId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "unassignRoleFromUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getRoleForUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationRoleAssignment"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/roles/{roleId}/targets/catalog/apps": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listAppTargetsForRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "addAllAppsAsTargetToRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/roles/{roleId}/targets/catalog/apps/{appName}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "removeAppTargetFromRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "appName",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "addAppTargetToRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "appName",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/roles/{roleId}/targets/groups": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listGroupTargetsForRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/UserGroup"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/roles/{roleId}/targets/groups/{groupId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "removeGroupTargetFromRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "addGroupTargetToRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{id}/sessions": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "clearUserSessions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listUserFactors",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/UserFactor"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "enrollFactor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/FactorEnrollRequest"
+            }
+          },
+          {
+            "default": false,
+            "in": "query",
+            "name": "updatePhone",
+            "type": "boolean"
+          },
+          {
+            "default": "",
+            "in": "query",
+            "name": "templateId",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserFactor"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/authn": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "preAuth",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/FactorAuthenticationContext"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/FactorActionResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/catalog": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getFactorsCatalog",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/FactorCatalogEntry"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/questions": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listQuestions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "resetFactor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getFactor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserFactor"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateFactorDevice",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/FactorUpdateRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/FactorDevice"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateFactor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/FactorUpdateRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserFactor"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}/devices/{deviceId}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getFactorDevice",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deviceId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/FactorDevice"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}/devices/{deviceId}/lifecycle/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "activateFactorDevice",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deviceId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/FactorDeviceActivationRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/FactorDevice"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "activateUserFactor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/FactorActivationRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate/email": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "sendActivationEmail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserFactor"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate/sms": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "sendActivationSms",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/FactorEnrollRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserFactor"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}/notifications": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getPendingNotifications",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}/qr/{oneTimeSessionToken}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "generateQRCodeImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "oneTimeSessionToken",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}/transactions/{transactionId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "cancelFactorTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "transactionId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getFactorTransactionStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "transactionId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/FactorVerificationResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}/verify": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "authenticate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": "",
+            "in": "query",
+            "name": "templateId",
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/FactorVerificationRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/FactorVerificationResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ActivationToken": {
+      "properties": {
+        "activationToken": {
+          "type": "string"
+        },
+        "activationUrl": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "AppLink": {
+      "properties": {
+        "appAssignmentId": {
+          "type": "string"
+        },
+        "appInstanceId": {
+          "type": "string"
+        },
+        "appName": {
+          "type": "string"
+        },
+        "credentialsSetup": {
+          "type": "boolean"
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "linkUrl": {
+          "type": "string"
+        },
+        "logoUrl": {
+          "type": "string"
+        },
+        "sortOrder": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "AssignUserToGroupsMediationAction": {
+      "properties": {
+        "groupIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "AuthProvider": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "orn:okta:authn:provider:directory:activedirectory",
+            "orn:okta:authn:provider:federation",
+            "orn:okta:authn:provider:directory:ldap",
+            "orn:okta:authn:provider:okta",
+            "orn:okta:authn:provider:social",
+            "orn:okta:authn:provider:okta:import"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BaseCredentialsObject": {
+      "properties": {},
+      "type": "object"
+    },
+    "ChangePasswordCredentials": {
+      "properties": {
+        "newPassword": {
+          "$ref": "#/definitions/PasswordCredential"
+        },
+        "oldPassword": {
+          "$ref": "#/definitions/PasswordCredential"
+        }
+      },
+      "type": "object"
+    },
+    "Credentials": {
+      "properties": {
+        "password": {
+          "$ref": "#/definitions/PasswordCredential"
+        },
+        "provider": {
+          "$ref": "#/definitions/AuthProvider"
+        },
+        "recovery_question": {
+          "$ref": "#/definitions/RecoveryQuestionCredential"
+        }
+      },
+      "type": "object"
+    },
+    "EmbeddedObject": {
+      "properties": {
+        "key": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FactorActionResponse": {
+      "properties": {
+        "allowedFactors": {
+          "items": {
+            "$ref": "#/definitions/FactorCatalogEntry"
+          },
+          "type": "array"
+        },
+        "enrolledFactors": {
+          "items": {
+            "$ref": "#/definitions/UserFactor"
+          },
+          "type": "array"
+        },
+        "nextAction": {
+          "enum": [
+            "BYPASS",
+            "ENROLL",
+            "CHALLENGE"
+          ],
+          "type": "string"
+        },
+        "policy": {
+          "$ref": "#/definitions/FactorActionResponse$Policy"
+        }
+      },
+      "type": "object"
+    },
+    "FactorActionResponse$Policy": {
+      "properties": {
+        "allowRememberDevice": {
+          "type": "boolean"
+        },
+        "rememberDeviceByDefault": {
+          "type": "boolean"
+        },
+        "rememberDeviceLifetimeInMinutes": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "FactorActivationRequest": {
+      "properties": {
+        "attestation": {
+          "type": "string"
+        },
+        "clientData": {
+          "type": "string"
+        },
+        "credentialId": {
+          "type": "string"
+        },
+        "factorId": {
+          "type": "string"
+        },
+        "nextPassCode": {
+          "type": "string"
+        },
+        "passCode": {
+          "type": "string"
+        },
+        "publicKey": {
+          "$ref": "#/definitions/FactorActivationRequest$PublicKey"
+        },
+        "rechallengeExistingFactor": {
+          "type": "boolean"
+        },
+        "registrationData": {
+          "type": "string"
+        },
+        "sessionId": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FactorActivationRequest$PublicKey": {
+      "properties": {
+        "alg": {
+          "type": "string"
+        },
+        "e": {
+          "type": "string"
+        },
+        "ext": {
+          "type": "boolean"
+        },
+        "kty": {
+          "type": "string"
+        },
+        "n": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FactorAuthenticationContext": {
+      "properties": {
+        "deviceToken": {
+          "type": "string"
+        },
+        "forceMFA": {
+          "type": "boolean"
+        },
+        "ipAddress": {
+          "type": "string"
+        },
+        "other": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "sessionId": {
+          "type": "string"
+        },
+        "userAgentString": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FactorCatalogEntry": {
+      "properties": {},
+      "type": "object"
+    },
+    "FactorDevice": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "links": {
+          "type": "object"
+        },
+        "status": {
+          "enum": [
+            "PENDING_ACTIVATION",
+            "ACTIVE",
+            "INACTIVE"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FactorDeviceActivationRequest": {
+      "properties": {
+        "factorId": {
+          "type": "string"
+        },
+        "passCode": {
+          "type": "string"
+        },
+        "rechallengeExistingFactor": {
+          "type": "boolean"
+        },
+        "sessionId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FactorEnrollRequest": {
+      "properties": {
+        "device": {
+          "type": "string"
+        },
+        "deviceType": {
+          "enum": [
+            "other",
+            "any",
+            "phone",
+            "mobile",
+            "hardware",
+            "smartphone:ios",
+            "smartphone:android",
+            "smartphone:windows",
+            "smartphone:blackberry",
+            "smartphone:unknown",
+            "ios",
+            "android",
+            "windows",
+            "unknown"
+          ],
+          "type": "string"
+        },
+        "factorType": {
+          "type": "string"
+        },
+        "mfaStateTokenId": {
+          "type": "string"
+        },
+        "profile": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "rechallengeExistingFactor": {
+          "type": "boolean"
+        },
+        "sessionId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "verify": {
+          "$ref": "#/definitions/Verify"
+        }
+      },
+      "type": "object"
+    },
+    "FactorUpdateRequest": {
+      "properties": {
+        "profile": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "verify": {
+          "$ref": "#/definitions/Verify"
+        }
+      },
+      "type": "object"
+    },
+    "FactorVerificationRequest": {
+      "properties": {
+        "answer": {
+          "type": "string"
+        },
+        "authenticatorData": {
+          "type": "string"
+        },
+        "clientData": {
+          "type": "string"
+        },
+        "customTemplateId": {
+          "type": "string"
+        },
+        "factorId": {
+          "type": "string"
+        },
+        "mfaStateTokenId": {
+          "type": "string"
+        },
+        "nextPassCode": {
+          "type": "string"
+        },
+        "passCode": {
+          "type": "string"
+        },
+        "pushAttempt": {
+          "type": "boolean"
+        },
+        "rememberDevice": {
+          "type": "boolean"
+        },
+        "rememberDeviceAllowed": {
+          "type": "boolean"
+        },
+        "resend": {
+          "type": "boolean"
+        },
+        "sessionId": {
+          "type": "string"
+        },
+        "signatureData": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "transactionId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "userResponse": {
+          "enum": [
+            "APPROVE",
+            "REJECT"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FactorVerificationResponse": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "expiresAt": {
+          "type": "string"
+        },
+        "factorResult": {
+          "enum": [
+            "SUCCESS",
+            "CHALLENGE",
+            "WAITING",
+            "FAILED",
+            "REJECTED",
+            "TIMEOUT",
+            "TIME_WINDOW_EXCEEDED",
+            "PASSCODE_REPLAYED",
+            "ERROR"
+          ],
+          "type": "string"
+        },
+        "factorResultMessage": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "GroupMembershipMediationActions": {
+      "properties": {
+        "assignUserToGroups": {
+          "$ref": "#/definitions/AssignUserToGroupsMediationAction"
+        }
+      },
+      "type": "object"
+    },
+    "GroupMembershipMediationConditions": {
+      "properties": {
+        "expression": {
+          "$ref": "#/definitions/GroupMembershipMediationExpressionCondition"
+        },
+        "groups": {
+          "$ref": "#/definitions/GroupMembershipMediationGroupCondition"
+        },
+        "people": {
+          "$ref": "#/definitions/GroupMembershipMediationPeopleCondition"
+        },
+        "users": {
+          "$ref": "#/definitions/GroupMembershipMediationUserCondition"
+        }
+      },
+      "type": "object"
+    },
+    "GroupMembershipMediationExpressionCondition": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "GroupMembershipMediationGroupCondition": {
+      "properties": {
+        "exclude": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "GroupMembershipMediationPeopleCondition": {
+      "properties": {
+        "groups": {
+          "$ref": "#/definitions/GroupMembershipMediationGroupCondition"
+        },
+        "users": {
+          "$ref": "#/definitions/GroupMembershipMediationUserCondition"
+        }
+      },
+      "type": "object"
+    },
+    "GroupMembershipMediationRule": {
+      "properties": {
+        "actions": {
+          "$ref": "#/definitions/GroupMembershipMediationActions"
+        },
+        "conditions": {
+          "$ref": "#/definitions/GroupMembershipMediationConditions"
+        },
+        "created": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "INACTIVE",
+            "INVALID"
+          ],
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "GroupMembershipMediationUserCondition": {
+      "properties": {
+        "exclude": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "HashedPassword": {
+      "properties": {},
+      "type": "object"
+    },
+    "InputUserWithGroupIds": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "activated": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string"
+        },
+        "credentials": {
+          "$ref": "#/definitions/Credentials"
+        },
+        "groupIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastLogin": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "passwordChanged": {
+          "type": "string"
+        },
+        "profile": {
+          "$ref": "#/definitions/UserProfile"
+        },
+        "status": {
+          "enum": [
+            "STAGED",
+            "PROVISIONED",
+            "ACTIVE",
+            "RECOVERY",
+            "PASSWORD_EXPIRED",
+            "LOCKED_OUT",
+            "DEPROVISIONED",
+            "SUSPENDED"
+          ],
+          "type": "string"
+        },
+        "statusChanged": {
+          "type": "string"
+        },
+        "transitioningToStatus": {
+          "enum": [
+            "STAGED",
+            "PROVISIONED",
+            "ACTIVE",
+            "RECOVERY",
+            "PASSWORD_EXPIRED",
+            "LOCKED_OUT",
+            "DEPROVISIONED",
+            "SUSPENDED"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Link": {
+      "properties": {
+        "hints": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "type": "object"
+        },
+        "href": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        },
+        "templated": {
+          "type": "boolean"
+        },
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "LinksUnion": {
+      "properties": {},
+      "type": "object"
+    },
+    "MediationRoleAssignment": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "created": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ],
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PasswordCredential": {
+      "properties": {
+        "hash": {
+          "$ref": "#/definitions/HashedPassword"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/LinksUnion"
+          },
+          "type": "object"
+        },
+        "accessibility": {
+          "$ref": "#/definitions/PublicAppInstance$Accessibility"
+        },
+        "created": {
+          "type": "string"
+        },
+        "credentials": {
+          "$ref": "#/definitions/PublicAppInstance$Credentials"
+        },
+        "features": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "licensing": {
+          "$ref": "#/definitions/PublicAppInstance$Licensing"
+        },
+        "name": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/PublicAppInstance$Settings"
+        },
+        "signOnMode": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "INACTIVE",
+            "DELETED"
+          ],
+          "type": "string"
+        },
+        "visibility": {
+          "$ref": "#/definitions/PublicAppInstance$Visibility"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Accessibility": {
+      "properties": {
+        "errorRedirectUrl": {
+          "type": "string"
+        },
+        "loginRedirectUrl": {
+          "type": "string"
+        },
+        "selfService": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Credentials": {
+      "properties": {
+        "password": {
+          "$ref": "#/definitions/PasswordCredential"
+        },
+        "revealPassword": {
+          "type": "boolean"
+        },
+        "scheme": {
+          "type": "string"
+        },
+        "signing": {
+          "$ref": "#/definitions/PublicAppInstance$Credentials$Signing"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "userNameTemplate": {
+          "$ref": "#/definitions/PublicAppInstance$Credentials$UsernameTemplate"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Credentials$Signing": {
+      "properties": {
+        "kid": {
+          "type": "string"
+        },
+        "lastRotated": {
+          "type": "string"
+        },
+        "nextRotation": {
+          "type": "string"
+        },
+        "rotationMode": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Credentials$UsernameTemplate": {
+      "properties": {
+        "suffix": {
+          "type": "string"
+        },
+        "template": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Licensing": {
+      "properties": {
+        "seatCount": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Settings": {
+      "properties": {
+        "app": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "manualProvisioning": {
+          "type": "boolean"
+        },
+        "notifications": {
+          "$ref": "#/definitions/PublicAppInstance$Settings$Notifications"
+        },
+        "signOn": {
+          "$ref": "#/definitions/PublicSignOnModeMediated"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Settings$Notifications": {
+      "properties": {
+        "vpn": {
+          "$ref": "#/definitions/PublicAppInstance$Settings$Notifications$Vpn"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Settings$Notifications$Vpn": {
+      "properties": {
+        "helpUrl": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "network": {
+          "$ref": "#/definitions/PublicAppInstance$Settings$Notifications$Vpn$Network"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Settings$Notifications$Vpn$Network": {
+      "properties": {
+        "connection": {
+          "type": "string"
+        },
+        "exclude": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Visibility": {
+      "properties": {
+        "appLinks": {
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "type": "object"
+        },
+        "autoSubmitToolbar": {
+          "type": "boolean"
+        },
+        "hide": {
+          "$ref": "#/definitions/PublicAppInstance$Visibility$Hide"
+        }
+      },
+      "type": "object"
+    },
+    "PublicAppInstance$Visibility$Hide": {
+      "properties": {
+        "iOS": {
+          "type": "boolean"
+        },
+        "web": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "PublicSignOnModeMediated": {
+      "properties": {},
+      "type": "object"
+    },
+    "RecoveryQuestionCredential": {
+      "properties": {
+        "question": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ResetPasswordToken": {
+      "properties": {
+        "resetPasswordUrl": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "User": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "activated": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string"
+        },
+        "credentials": {
+          "$ref": "#/definitions/Credentials"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastLogin": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "passwordChanged": {
+          "type": "string"
+        },
+        "profile": {
+          "$ref": "#/definitions/UserProfile"
+        },
+        "status": {
+          "enum": [
+            "STAGED",
+            "PROVISIONED",
+            "ACTIVE",
+            "RECOVERY",
+            "PASSWORD_EXPIRED",
+            "LOCKED_OUT",
+            "DEPROVISIONED",
+            "SUSPENDED"
+          ],
+          "type": "string"
+        },
+        "statusChanged": {
+          "type": "string"
+        },
+        "transitioningToStatus": {
+          "enum": [
+            "STAGED",
+            "PROVISIONED",
+            "ACTIVE",
+            "RECOVERY",
+            "PASSWORD_EXPIRED",
+            "LOCKED_OUT",
+            "DEPROVISIONED",
+            "SUSPENDED"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserFactor": {
+      "properties": {},
+      "type": "object"
+    },
+    "UserGroup": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "$ref": "#/definitions/EmbeddedObject"
+          },
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/LinksUnion"
+          },
+          "type": "object"
+        },
+        "created": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastMembershipUpdated": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "objectClass": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "profile": {
+          "$ref": "#/definitions/UserGroupProfile"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserGroupProfile": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserGroupStats": {
+      "properties": {
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "appsCount": {
+          "type": "integer"
+        },
+        "groupPushMappingsCount": {
+          "type": "integer"
+        },
+        "usersCount": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "UserProfile": {
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        },
+        "mobilePhone": {
+          "type": "string"
+        },
+        "secondEmail": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Verify": {
+      "properties": {
+        "activationToken": {
+          "type": "string"
+        },
+        "nextPassCode": {
+          "type": "string"
+        },
+        "passCode": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
 }

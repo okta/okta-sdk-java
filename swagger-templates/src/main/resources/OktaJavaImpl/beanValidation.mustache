@@ -13,21 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{>licenseInfo}}
-
-package {{package}};
-
-{{#imports}}
-import {{import}};
-{{/imports}}
-
-{{#serializableModel}}
-import java.io.Serializable;
-{{/serializableModel}}
-
-
-{{#models}}
-{{#model}}
-{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>modelInterface}}{{/isEnum}}
-{{/model}}
-{{/models}}
+{{#required}}
+  @NotNull
+{{/required}}
+{{>beanValidationCore}}

@@ -362,6 +362,15 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      *
      * @since 1.3.0
      */
+    protected List getListProperty(ListProperty property){
+        return getListProperty(property.getName());
+    }
+
+    /**
+     * Returns the {@link List} property identified by {@code key}
+     *
+     * @since 1.3.0
+     */
     protected List getListProperty(String key){
         Object list = getProperty(key);
         return (List) list;

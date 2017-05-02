@@ -13,21 +13,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{>licenseInfo}}
-
-package {{package}};
-
-{{#imports}}
-import {{import}};
-{{/imports}}
-
-{{#serializableModel}}
-import java.io.Serializable;
-{{/serializableModel}}
-
-
-{{#models}}
-{{#model}}
-{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>modelInterface}}{{/isEnum}}
-{{/model}}
-{{/models}}
+{{#jackson}}
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "{{discriminator}}", visible = true )
+@JsonSubTypes({
+  {{#children}}
+  @JsonSubTypes.Type(value = {{name}}.class, name = "{{^vendorExtensions.x-discriminator-value}}{{name}}{{/vendorExtensions.x-discriminator-value}}{{#vendorExtensions.x-discriminator-value}}{{{vendorExtensions.x-discriminator-value}}}{{/vendorExtensions.x-discriminator-value}}"),
+  {{/children}}
+}){{/jackson}}
