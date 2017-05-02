@@ -1,4 +1,4 @@
-# oktasdk-java
+# oktasdk-javas
 
 This SDK is in EA, so all existing features are supported by Okta in a production setting.
 
