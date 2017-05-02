@@ -20,11 +20,10 @@ package {{package}};
 {{#imports}}
 import {{import}};
 {{/imports}}
+import com.okta.sdk.api.model.*;
 
 import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.impl.resource.AbstractInstanceResource;
-import com.okta.sdk.impl.resource.Property;
-import com.okta.sdk.impl.resource.StringProperty;
+import com.okta.sdk.impl.resource.*;
 
 import java.util.Map;
 {{#serializableModel}}
@@ -37,22 +36,21 @@ import java.io.Serializable;
  */{{#description}}
 @ApiModel(description = "{{{description}}}"){{/description}}
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
-public class {{classname}}Impl extends AbstractInstanceResource implements {{classname}} {
+public class Default{{classname}} extends AbstractInstanceResource implements {{classname}} {
 
     // SIMPLE PROPERTIES
 {{#vars}}
-    private final StringProperty {{name}} = new StringProperty("{{name}}");
+    private final {{vendorExtensions.propertyType}}{{#vendorExtensions.typeClassExtra}}<{{{datatypeWithEnum}}}>{{/vendorExtensions.typeClassExtra}} {{name}}Property = new {{vendorExtensions.propertyType}}("{{name}}"{{vendorExtensions.constructorTypeExtra}});
 {{/vars}}
 
-    private final Map<String, Property> propertyDescriptors = createPropertyDescriptorMap({{#vars}}{{name}}{{^-last}}, {{/-last}}{{/vars}});
+    private final Map<String, Property> propertyDescriptors = createPropertyDescriptorMap({{#vars}}{{name}}Property{{^-last}}, {{/-last}}{{/vars}});
 
 
-
-    public {{classname}}Impl(InternalDataStore dataStore) {
+    public Default{{classname}}(InternalDataStore dataStore) {
         super(dataStore);
     }
 
-    public {{classname}}Impl(InternalDataStore dataStore, Map<String, Object> properties) {
+    public Default{{classname}}(InternalDataStore dataStore, Map<String, Object> properties) {
         super(dataStore, properties);
     }
 
@@ -64,12 +62,12 @@ public class {{classname}}Impl extends AbstractInstanceResource implements {{cla
 {{#vars}}
 
     public {{{datatypeWithEnum}}} {{getter}}() {
-        return getString({{name}});
+    return {{#vendorExtensions.forceCast}}({{{datatypeWithEnum}}}){{/vendorExtensions.forceCast}} {{vendorExtensions.propertyTypeMethod}}({{name}}Property);
     }
     {{^isReadOnly}}
 
     public {{classname}} {{setter}}({{{datatypeWithEnum}}} {{name}}) {
-        setProperty({{name}}, {{name}});
+        setProperty({{name}}Property, {{name}});
         return this;
     }
     {{/isReadOnly}}

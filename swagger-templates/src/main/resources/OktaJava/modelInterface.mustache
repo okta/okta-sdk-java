@@ -13,14 +13,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{>licenseInfo}}
-
-package {{package}};
-
-{{#imports}}
-import {{import}};
-{{/imports}}
-
 import com.okta.sdk.resource.Deletable;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.Saveable;
@@ -46,6 +38,18 @@ public interface {{classname}} extends Resource, Saveable, Deletable {
 {{^isReadOnly}}
     public {{classname}} {{setter}}({{{datatypeWithEnum}}} {{name}});
 {{/isReadOnly}}
+{{#isEnum}}
+    {{^isContainer}}
+        {{>modelInnerEnum}}
+    {{/isContainer}}
+{{/isEnum}}
+{{#items.isEnum}}
+    {{#items}}
+        {{^isContainer}}
+            {{>modelInnerEnum}}
+        {{/isContainer}}
+    {{/items}}
+{{/items.isEnum}}
 
 {{/vars}}
 {{/model}}{{/models}}

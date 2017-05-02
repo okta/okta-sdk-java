@@ -38,13 +38,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class OktaJavaClientCodegen extends AbstractJavaCodegen
+public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         implements BeanValidationFeatures, PerformBeanValidationFeatures, GzipFeatures
 {
+
+    private final String codeGenName;
+
+
     static final String MEDIA_TYPE = "mediaType";
 
     @SuppressWarnings("hiding")
-    private static final Logger LOGGER = LoggerFactory.getLogger(OktaJavaClientCodegen.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractOktaJavaClientCodegen.class);
 
     public static final String PARCELABLE_MODEL = "parcelableModel";
 
@@ -53,17 +57,19 @@ public class OktaJavaClientCodegen extends AbstractJavaCodegen
     protected boolean performBeanValidation = false;
     protected boolean useGzipFeature = false;
 
-    public OktaJavaClientCodegen() {
+    public AbstractOktaJavaClientCodegen(String codeGenName, String relativeTemplateDir, String modelPackage) {
         super();
-        outputFolder = "generated-code" + File.separator + "okta_java";
-        embeddedTemplateDir = templateDir = "OktaJava";
+        this.codeGenName = codeGenName;
+
+        outputFolder = "generated-code" + File.separator + codeGenName;
+        embeddedTemplateDir = templateDir = relativeTemplateDir;
 
         artifactId = "not_used";
 
+        this.modelPackage = modelPackage;
         // TODO: these are hard coded for now, calling Maven Plugin does NOT set the packages correctly.
         invokerPackage = "com.okta.sdk.invoker";
         apiPackage = "com.okta.sdk.api";
-        modelPackage = "com.okta.sdk.model";
 
         cliOptions.add(CliOption.newBoolean(PARCELABLE_MODEL, "Whether to generate models for Android that implement Parcelable with the okhttp-gson library."));
         cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API annotations"));
@@ -80,10 +86,7 @@ public class OktaJavaClientCodegen extends AbstractJavaCodegen
         setLibrary("okhttp-gson");
 
         apiTemplateFiles.clear();
-
         modelTemplateFiles.clear();
-        modelTemplateFiles.put("modelInterface.mustache", ".java");
-        modelTemplateFiles.put("modelImpl.mustache", "Impl.java");
 
     }
 
@@ -110,7 +113,7 @@ public class OktaJavaClientCodegen extends AbstractJavaCodegen
 
     @Override
     public String getName() {
-        return "javabrian";
+        return codeGenName;
     }
 
     @Override
@@ -218,6 +221,7 @@ public class OktaJavaClientCodegen extends AbstractJavaCodegen
     public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
         super.postProcessModelProperty(model, property);
         if(!BooleanUtils.toBoolean(model.isEnum)) {
+
             //final String lib = getLibrary();
             //Needed imports for Jackson based libraries
             if(additionalProperties.containsKey("jackson")) {
