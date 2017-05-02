@@ -61,7 +61,6 @@
                 <version>0.5.0-beta-1</version>
                 <configuration>
                     <apiFile>${project.basedir}/src/main/resources/api.yaml</apiFile>
-                    <language>javabrian</language>
 
                     <!--<apiPackage>${project.groupId}.swagger.handler</apiPackage>-->
                     <!--<modelPackage>${project.groupId}.swagger.model</modelPackage>-->
@@ -69,10 +68,22 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>swagger-codegen</id>
+                        <id>swagger-codegen-api</id>
                         <goals>
                             <goal>codegen</goal>
                         </goals>
+                        <configuration>
+                            <language>okta_java</language>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>swagger-codegen-impl</id>
+                        <goals>
+                            <goal>codegen</goal>
+                        </goals>
+                        <configuration>
+                            <language>okta_java_impl</language>
+                        </configuration>
                     </execution>
                 </executions>
                 <dependencies>
