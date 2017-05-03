@@ -23,13 +23,11 @@ import java.io.Serializable;
 {{#models}}{{#model}}
 /**
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
- */{{#description}}
-@ApiModel(description = "{{{description}}}"){{/description}}
+ */
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
 public interface {{classname}} extends Resource, Saveable, Deletable {
 
 {{#vars}}
-    @ApiModelProperty({{#example}}example = "{{example}}", {{/example}}{{#required}}required = {{required}}, {{/required}}value = "{{{description}}}")
     {{#vendorExtensions.extraAnnotation}}
         {{{vendorExtensions.extraAnnotation}}}
     {{/vendorExtensions.extraAnnotation}}

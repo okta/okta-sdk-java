@@ -237,9 +237,21 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
     }
 
     @Override
+    public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
+       CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
+        // super add these imports, and we don't want that dependency
+        codegenModel.imports.remove("ApiModel");
+       return codegenModel;
+    }
+
+    @Override
     public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
         super.postProcessModelProperty(model, property);
         if(!BooleanUtils.toBoolean(model.isEnum)) {
+
+            // super add these imports, and we don't want that dependency
+            model.imports.remove("ApiModelProperty");
+            model.imports.remove("ApiModel");
 
             //final String lib = getLibrary();
             //Needed imports for Jackson based libraries
@@ -378,8 +390,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
                 }
             }
         }
-
-        String f = null;
     }
 
 
@@ -403,77 +413,5 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
             }
         }
         return super.getTypeDeclaration(p);
-    }
-
-    @Override
-    public String toDefaultValue(Property p) {
-        if (p instanceof ArrayProperty) {
-            final ArrayProperty ap = (ArrayProperty) p;
-            final String pattern;
-            if (fullJavaUtil) {
-                pattern = "new java.util.ArrayList<%s>()";
-            } else {
-                pattern = "new ArrayList<%s>()";
-            }
-            if (ap.getItems() == null) {
-                return null;
-            }
-            return String.format(pattern, getTypeDeclaration(ap.getItems()));
-        } else if (p instanceof MapProperty) {
-            final MapProperty ap = (MapProperty) p;
-            final String pattern;
-            if (fullJavaUtil) {
-                pattern = "new java.util.HashMap<String, %s>()";
-            } else {
-                pattern = "new HashMap<String, %s>()";
-            }
-            if (ap.getAdditionalProperties() == null) {
-                return null;
-            }
-            return String.format(pattern, getTypeDeclaration(ap.getAdditionalProperties()));
-        } else if (p instanceof IntegerProperty) {
-            IntegerProperty dp = (IntegerProperty) p;
-            if (dp.getDefault() != null) {
-                return dp.getDefault().toString();
-            }
-            return "null";
-        } else if (p instanceof LongProperty) {
-            LongProperty dp = (LongProperty) p;
-            if (dp.getDefault() != null) {
-                return dp.getDefault().toString()+"l";
-            }
-            return "null";
-        } else if (p instanceof DoubleProperty) {
-            DoubleProperty dp = (DoubleProperty) p;
-            if (dp.getDefault() != null) {
-                return dp.getDefault().toString() + "d";
-            }
-            return "null";
-        } else if (p instanceof FloatProperty) {
-            FloatProperty dp = (FloatProperty) p;
-            if (dp.getDefault() != null) {
-                return dp.getDefault().toString() + "f";
-            }
-            return "null";
-        } else if (p instanceof BooleanProperty) {
-            BooleanProperty bp = (BooleanProperty) p;
-            if (bp.getDefault() != null) {
-                return bp.getDefault().toString();
-            }
-            return "null";
-        } else if (p instanceof StringProperty) {
-            StringProperty sp = (StringProperty) p;
-            if (sp.getDefault() != null) {
-                String _default = sp.getDefault();
-                if (sp.getEnum() == null) {
-                    return "\"" + escapeText(_default) + "\"";
-                } else {
-                    // convert to enum var name later in postProcessModels
-                    return _default;
-                }
-            }
-            return "null";
-        }
-        return super.toDefaultValue(p);
     }
 }
