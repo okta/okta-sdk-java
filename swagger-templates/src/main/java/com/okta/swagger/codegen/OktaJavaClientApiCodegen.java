@@ -19,8 +19,10 @@ public class OktaJavaClientApiCodegen extends AbstractOktaJavaClientCodegen
 {
 
     public OktaJavaClientApiCodegen() {
-        super("okta_java", "OktaJava", "com.okta.sdk.api.model");
+        super("okta_java", "OktaJava", "com.okta.sdk.model");
 
         modelTemplateFiles.put("model.mustache", ".java");
+
+        apiTemplateFiles.put("api.mustache", ".java");
     }
 }
