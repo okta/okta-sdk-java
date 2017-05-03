@@ -18,17 +18,18 @@
 package {{package}};
 
 {{#imports}}
-import {{import}};
+    import {{import}};
 {{/imports}}
+import com.okta.sdk.resource.CollectionResource;
+
 
 {{#serializableModel}}
-import java.io.Serializable;
+    import java.io.Serializable;
 {{/serializableModel}}
 
 
 {{#models}}
-{{#model}}
-{{#vendorExtensions.isResourceList}}{{>modelListResourceInterface}}{{/vendorExtensions.isResourceList}}{{^vendorExtensions.isResourceList}}
-{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>modelInterface}}{{/isEnum}}{{/vendorExtensions.isResourceList}}
-{{/model}}
+    {{#model}}
+        public interface {{classname}}List extends CollectionResource<{{classname}}> {}
+    {{/model}}
 {{/models}}

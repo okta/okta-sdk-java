@@ -1,0 +1,9 @@
+{{#bodyParam}}
+    {{bodyParam.paramName}}.save();
+    return {{bodyParam.paramName}};
+{{/bodyParam}}{{^bodyParam}}
+    //Map<String, Object> queryArgs = new LinkedHashMap<>();{{#queryParams}}
+    // queryArgs.put("{{paramName}}", {{paramName}});{{/queryParams}}
+    String href = "{{{vendorExtensions.hrefFiltered}}}";
+    dataStore.create(href, new VoidResource(dataStore));
+{{/bodyParam}}
