@@ -16,8 +16,14 @@
 package com.okta.swagger.codegen;
 
 import io.swagger.codegen.CodegenModel;
+import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenProperty;
+import io.swagger.models.Model;
+import io.swagger.models.Operation;
+import io.swagger.models.Swagger;
 import org.apache.commons.lang3.BooleanUtils;
+
+import java.util.Map;
 
 public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 {
@@ -28,7 +34,10 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         super("okta_java_impl", "OktaJavaImpl", "com.okta.sdk.impl.model");
 
         modelTemplateFiles.put("modelImpl.mustache", ".java");
-        this.overrideApiPackage = "com.okta.sdk.api.model";
+        overrideApiPackage = "com.okta.sdk.api.model";
+        vendorExtensions().put("overrideApiPackage", overrideApiPackage);
+
+        apiTemplateFiles.put("api.mustache", ".java");
     }
     @Override
     public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
@@ -82,6 +91,68 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             property.vendorExtensions.put("propertyTypeMethod", propertyTypeMethod);
 
         }
+    }
+
+    public CodegenOperation fromOperation(String path,
+                                          String httpMethod,
+                                          Operation operation,
+                                          Map<String, Model> definitions,
+                                          Swagger swagger) {
+        CodegenOperation co = super.fromOperation(path,
+                                                  httpMethod,
+                                                  operation,
+                                                  definitions,
+                                                  swagger);
+
+        co.vendorExtensions.put("resourceReturnType", co.returnType);
+
+        if ("put".equals(httpMethod) ) {
+
+            co.vendorExtensions.put("dsMethod", "create");
+            co.vendorExtensions.put("isPut", true);
+
+            if (co.bodyParam == null) {
+                co.vendorExtensions.put("resourceReturnType", "VoidResource");
+            }
+            else {
+                co.vendorExtensions.put("dsMethod", "save");
+            }
+
+            if (co.allParams.size() == 2 &&
+                co.bodyParam != null) { // TODO clean this up
+                    co.vendorExtensions.put("isSimpleUpdate", true);
+                    co.vendorExtensions.put("resource", co.bodyParam);
+            }
+        }
+
+        if ("post".equals(httpMethod) ) {
+
+            co.vendorExtensions.put("dsMethod", "create");
+            co.vendorExtensions.put("isPost", true);
+
+            if (co.allParams.size() == 1 &&
+                co.bodyParam != null) {
+                    co.vendorExtensions.put("isSimpleCreate", true);
+                    co.vendorExtensions.put("resource", co.bodyParam);
+            }
+        }
+
+        if ("get".equals(httpMethod)) {
+            co.vendorExtensions.put("dsMethod", "getResource");
+            co.vendorExtensions.put("isGet", true);
+        }
+
+        else if ("delete".equals(httpMethod)) {
+            co.vendorExtensions.put("dsMethod", "delete");
+            co.vendorExtensions.put("isDelete", true);
+        }
+
+        // pre interpolate the resource href
+        co.vendorExtensions.put("hrefFiltered", co.path
+                .replaceAll("\\{", "\" + ")
+                .replaceAll("\\}", "+ \""));
+
+        return co;
     }
 
     @Override

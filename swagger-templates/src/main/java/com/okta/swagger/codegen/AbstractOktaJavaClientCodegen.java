@@ -25,15 +25,33 @@ import io.swagger.codegen.languages.AbstractJavaCodegen;
 import io.swagger.codegen.languages.features.BeanValidationFeatures;
 import io.swagger.codegen.languages.features.GzipFeatures;
 import io.swagger.codegen.languages.features.PerformBeanValidationFeatures;
+import io.swagger.models.Model;
+import io.swagger.models.ModelImpl;
+import io.swagger.models.Operation;
+import io.swagger.models.Path;
+import io.swagger.models.Response;
 import io.swagger.models.Swagger;
+import io.swagger.models.properties.ArrayProperty;
+import io.swagger.models.properties.BooleanProperty;
+import io.swagger.models.properties.DoubleProperty;
+import io.swagger.models.properties.FloatProperty;
+import io.swagger.models.properties.IntegerProperty;
+import io.swagger.models.properties.LongProperty;
+import io.swagger.models.properties.MapProperty;
+import io.swagger.models.properties.Property;
+import io.swagger.models.properties.RefProperty;
+import io.swagger.models.properties.StringProperty;
+import io.swagger.models.refs.GenericRef;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.net.www.content.text.Generic;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -94,6 +112,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
     public void preprocessSwagger(Swagger swagger) {
         vendorExtensions.put("basePath", swagger.getBasePath());
         super.preprocessSwagger(swagger);
+        addListModels(swagger);
     }
 
     @Override
@@ -308,5 +327,153 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
 
         name = sanitizeName(name);
         return camelize(name) + "Api";
+    }
+
+    private Property getArrayPropertyFromOperation(Operation operation) {
+
+
+        if (operation != null && operation.getResponses() != null) {
+            Response response = operation.getResponses().get("200");
+            if (response != null) {
+                return response.getSchema();
+            }
+        }
+        return null;
+    }
+
+    public void addListModels(Swagger swagger) {
+
+        Map<String, Object> additionalListModels = new HashMap<>();
+
+        for (Path path : swagger.getPaths().values()) {
+
+            List<Property> properties = new ArrayList<>();
+            properties.add(getArrayPropertyFromOperation(path.getGet()));
+            properties.add(getArrayPropertyFromOperation(path.getPost()));
+            properties.add(getArrayPropertyFromOperation(path.getPatch()));
+            properties.add(getArrayPropertyFromOperation(path.getPut()));
+
+            for (Property p : properties) {
+                if (p != null && "array".equals(p.getType())) {
+
+                    ArrayProperty arrayProperty = (ArrayProperty) p;
+                    if ( arrayProperty.getItems() instanceof RefProperty) {
+                        RefProperty ref = (RefProperty) arrayProperty.getItems();
+                        String modelThatNeedsCollection = ref.getSimpleRef();
+
+                        // Do not generate List wrappers for primitives (or strings)
+                        if (!languageSpecificPrimitives.contains(modelThatNeedsCollection)) {
+                            String modelName = modelThatNeedsCollection + "List";
+
+                            ModelImpl model = new ModelImpl();
+                            model.setName(modelName);
+                            model.setAllowEmptyValue(false);
+                            model.setDescription("Collection List for " + modelThatNeedsCollection);
+                            model.setVendorExtension("isResourceList", true);
+                            model.setType(modelName);
+
+                            swagger.addDefinition(modelName, model);
+                        }
+                    }
+                }
+            }
+        }
+
+        String f = null;
+    }
+
+
+    //FIXME, these methods are the keys to dealing with generating lists
+
+    @Override
+    public String getTypeDeclaration(Property p) {
+
+        if (p instanceof ArrayProperty) {
+            ArrayProperty ap = (ArrayProperty) p;
+            Property inner = ap.getItems();
+            if (inner == null) {
+                // mimic super behavior
+                LOGGER.warn(ap.getName() + "(array property) does not have a proper inner type defined");
+                return null;
+            }
+
+            String type = super.getTypeDeclaration(inner);
+            if (!languageSpecificPrimitives.contains(type)) {
+                return type + "List";
+            }
+        }
+        return super.getTypeDeclaration(p);
+    }
+
+    @Override
+    public String toDefaultValue(Property p) {
+        if (p instanceof ArrayProperty) {
+            final ArrayProperty ap = (ArrayProperty) p;
+            final String pattern;
+            if (fullJavaUtil) {
+                pattern = "new java.util.ArrayList<%s>()";
+            } else {
+                pattern = "new ArrayList<%s>()";
+            }
+            if (ap.getItems() == null) {
+                return null;
+            }
+            return String.format(pattern, getTypeDeclaration(ap.getItems()));
+        } else if (p instanceof MapProperty) {
+            final MapProperty ap = (MapProperty) p;
+            final String pattern;
+            if (fullJavaUtil) {
+                pattern = "new java.util.HashMap<String, %s>()";
+            } else {
+                pattern = "new HashMap<String, %s>()";
+            }
+            if (ap.getAdditionalProperties() == null) {
+                return null;
+            }
+            return String.format(pattern, getTypeDeclaration(ap.getAdditionalProperties()));
+        } else if (p instanceof IntegerProperty) {
+            IntegerProperty dp = (IntegerProperty) p;
+            if (dp.getDefault() != null) {
+                return dp.getDefault().toString();
+            }
+            return "null";
+        } else if (p instanceof LongProperty) {
+            LongProperty dp = (LongProperty) p;
+            if (dp.getDefault() != null) {
+                return dp.getDefault().toString()+"l";
+            }
+            return "null";
+        } else if (p instanceof DoubleProperty) {
+            DoubleProperty dp = (DoubleProperty) p;
+            if (dp.getDefault() != null) {
+                return dp.getDefault().toString() + "d";
+            }
+            return "null";
+        } else if (p instanceof FloatProperty) {
+            FloatProperty dp = (FloatProperty) p;
+            if (dp.getDefault() != null) {
+                return dp.getDefault().toString() + "f";
+            }
+            return "null";
+        } else if (p instanceof BooleanProperty) {
+            BooleanProperty bp = (BooleanProperty) p;
+            if (bp.getDefault() != null) {
+                return bp.getDefault().toString();
+            }
+            return "null";
+        } else if (p instanceof StringProperty) {
+            StringProperty sp = (StringProperty) p;
+            if (sp.getDefault() != null) {
+                String _default = sp.getDefault();
+                if (sp.getEnum() == null) {
+                    return "\"" + escapeText(_default) + "\"";
+                } else {
+                    // convert to enum var name later in postProcessModels
+                    return _default;
+                }
+            }
+            return "null";
+        }
+        return super.toDefaultValue(p);
     }
 }

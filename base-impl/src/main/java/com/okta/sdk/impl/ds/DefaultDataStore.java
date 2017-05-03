@@ -46,6 +46,7 @@ import com.okta.sdk.impl.query.DefaultCriteria;
 import com.okta.sdk.impl.query.DefaultOptions;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.ReferenceFactory;
+import com.okta.sdk.impl.resource.VoidResource;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import com.okta.sdk.impl.util.StringInputStream;
@@ -486,6 +487,11 @@ public class DefaultDataStore implements InternalDataStore {
        ===================================================================== */
 
     @Override
+    public void delete(String href) {
+        doDelete(href, VoidResource.class, null);
+    }
+
+    @Override
     public <T extends Resource> void delete(T resource) {
         doDelete(resource, null);
     }
@@ -519,12 +525,8 @@ public class DefaultDataStore implements InternalDataStore {
         return builder.toString();
     }
 
-    private <T extends Resource> void doDelete(T resource, final String possiblyNullPropertyName) {
+    private void doDelete(String resourceHref, Class resourceClass, final String possiblyNullPropertyName) {
 
-        Assert.notNull(resource, "resource argument cannot be null.");
-        Assert.isInstanceOf(AbstractResource.class, resource, "Resource argument must be an AbstractResource.");
-
-        final String resourceHref = resource.getHref();
         Assert.hasText(resourceHref, "This resource does not have an href value, therefore it cannot be deleted.");
         final String requestHref;
         if (Strings.hasText(possiblyNullPropertyName)) { //delete just that property, not the entire resource:
@@ -545,8 +547,16 @@ public class DefaultDataStore implements InternalDataStore {
         });
 
         final CanonicalUri resourceUri = canonicalize(resourceHref, null);
-        ResourceDataRequest request = new DefaultResourceDataRequest(ResourceAction.DELETE, resourceUri, resource.getClass(), new HashMap<String, Object>());
+        ResourceDataRequest request = new DefaultResourceDataRequest(ResourceAction.DELETE, resourceUri, resourceClass, new HashMap<String, Object>());
         chain.filter(request);
+    }
+
+    private <T extends Resource> void doDelete(T resource, final String possiblyNullPropertyName) {
+
+        Assert.notNull(resource, "resource argument cannot be null.");
+        Assert.isInstanceOf(AbstractResource.class, resource, "Resource argument must be an AbstractResource.");
+
+        doDelete(resource.getHref(), resource.getClass(), possiblyNullPropertyName);
     }
 
     /* =====================================================================
