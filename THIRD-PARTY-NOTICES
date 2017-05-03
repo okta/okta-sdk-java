@@ -1,5 +1,5 @@
 
-Lists of 86 third-party dependencies.
+Lists of 85 third-party dependencies.
      (All files contained in this JAR are licensed under the Apache
          2.0 license, unless noted differently in their source (see
          swing2swt).) aQute Bundle Tool Library (biz.aQute:bndlib:1.15.0 - http://www.aQute.biz/Code/Bnd)
@@ -30,7 +30,6 @@ Lists of 86 third-party dependencies.
      (The Apache Software License, Version 2.0) Commons IO (commons-io:commons-io:2.4 - http://commons.apache.org/io/)
      (Apache License, Version 2.0) JSON Web Token support for the JVM (io.jsonwebtoken:jjwt:0.6.0 - http://nexus.sonatype.org/oss-repository-hosting.html/jjwt)
      (Apache License 2.0) swagger-annotations (io.swagger:swagger-annotations:1.5.12 - https://github.com/swagger-api/swagger-core/modules/swagger-annotations)
-     (Apache License 2.0) swagger-annotations (io.swagger:swagger-annotations:1.5.3 - https://github.com/swagger-api/swagger-core/modules/swagger-annotations)
      (Apache License 2.0) swagger-codegen (core library) (io.swagger:swagger-codegen:2.2.2 - https://github.com/swagger-api/swagger-codegen/modules/swagger-codegen)
      (Apache License 2.0) swagger-compat-spec-parser (io.swagger:swagger-compat-spec-parser:1.0.26 - http://nexus.sonatype.org/oss-repository-hosting.html/swagger-parser-project/modules/swagger-compat-spec-parser)
      (Apache License 2.0) swagger-core (io.swagger:swagger-core:1.5.12 - https://github.com/swagger-api/swagger-core/modules/swagger-core)
