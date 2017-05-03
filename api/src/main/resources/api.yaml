@@ -267,13 +267,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "additionalProperties": {
-                "type": "object"
-              },
-              "type": "object"
-            }
+            "description": "Success"
           }
         },
         "security": [
@@ -1456,92 +1450,92 @@
         ]
       }
     },
-    "/api/v1/users/{id}/lifecycle/deactivate": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Deactivates a user.  This operation can only be performed on users that do not have a `DEPROVISIONED` status.  Deactivation of a user is an asynchronous operation.  The user will have the `transitioningToStatus` property with a value of `DEPROVISIONED` during deactivation to indicate that the user hasn't completed the asynchronous operation.  The user will have a status of `DEPROVISIONED` when the deactivation process is complete.",
-        "operationId": "lifecycleDeactivateUser",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "additionalProperties": {
-                "type": "object"
-              },
-              "type": "object"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Deactivate User",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/expire_password": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "This operation transitions the user to the status of `PASSWORD_EXPIRED` so that the user is required to change their password at their next login.",
-        "operationId": "expirePassword",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "default": false,
-            "description": "Sets the user's password to a temporary password,  if true",
-            "in": "query",
-            "name": "tempPassword",
-            "type": "boolean"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "object"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Expire Password",
-        "tags": [
-          "User"
-        ]
-      }
-    },
+#    "/api/v1/users/{id}/lifecycle/deactivate": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "description": "Deactivates a user.  This operation can only be performed on users that do not have a `DEPROVISIONED` status.  Deactivation of a user is an asynchronous operation.  The user will have the `transitioningToStatus` property with a value of `DEPROVISIONED` during deactivation to indicate that the user hasn't completed the asynchronous operation.  The user will have a status of `DEPROVISIONED` when the deactivation process is complete.",
+#        "operationId": "lifecycleDeactivateUser",
+#        "parameters": [
+#          {
+#            "description": "id of user",
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "additionalProperties": {
+#                "type": "object"
+#              },
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "summary": "Deactivate User",
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
+#    "/api/v1/users/{id}/lifecycle/expire_password": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "description": "This operation transitions the user to the status of `PASSWORD_EXPIRED` so that the user is required to change their password at their next login.",
+#        "operationId": "expirePassword",
+#        "parameters": [
+#          {
+#            "description": "id of user",
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "default": false,
+#            "description": "Sets the user's password to a temporary password,  if true",
+#            "in": "query",
+#            "name": "tempPassword",
+#            "type": "boolean"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "summary": "Expire Password",
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
     "/api/v1/users/{id}/lifecycle/forgot_password": {
       "post": {
         "consumes": [
@@ -1584,219 +1578,219 @@
         ]
       }
     },
-    "/api/v1/users/{id}/lifecycle/reset_factors": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "This operation resets all factors for the specified user. All MFA factor enrollments returned to the unenrolled state. The user's status remains ACTIVE. This link is present only if the user is currently enrolled in one or more MFA factors.",
-        "operationId": "resetAllFactors",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "additionalProperties": {
-                "type": "object"
-              },
-              "type": "object"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Reset Factors",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/reset_password": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Generates a one-time token (OTT) that can be used to reset a user's password.  The OTT link can be automatically emailed to the user or returned to the API caller and distributed using a custom flow.",
-        "operationId": "resetPassword",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "additionalProperties": {
-                "type": "object"
-              },
-              "type": "object"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/ResetPasswordToken"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Reset Password",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/suspend": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Suspends a user.  This operation can only be performed on users with an `ACTIVE` status.  The user will have a status of `SUSPENDED` when the process is complete.",
-        "operationId": "suspendUser",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "additionalProperties": {
-                "type": "object"
-              },
-              "type": "object"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Suspend User",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/unlock": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Unlocks a user with a `LOCKED_OUT` status and returns them to `ACTIVE` status.  Users will be able to login with their current password.",
-        "operationId": "unlockUser",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "additionalProperties": {
-                "type": "object"
-              },
-              "type": "object"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Unlock User",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/unsuspend": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Unsuspends a user and returns them to the `ACTIVE` state.  This operation can only be performed on users that have a `SUSPENDED` status.",
-        "operationId": "unsuspendUser",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "additionalProperties": {
-                "type": "object"
-              },
-              "type": "object"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Unsuspend User",
-        "tags": [
-          "User"
-        ]
-      }
-    },
+#    "/api/v1/users/{id}/lifecycle/reset_factors": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "description": "This operation resets all factors for the specified user. All MFA factor enrollments returned to the unenrolled state. The user's status remains ACTIVE. This link is present only if the user is currently enrolled in one or more MFA factors.",
+#        "operationId": "resetAllFactors",
+#        "parameters": [
+#          {
+#            "description": "id of user",
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "additionalProperties": {
+#                "type": "object"
+#              },
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "summary": "Reset Factors",
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
+#    "/api/v1/users/{id}/lifecycle/reset_password": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "description": "Generates a one-time token (OTT) that can be used to reset a user's password.  The OTT link can be automatically emailed to the user or returned to the API caller and distributed using a custom flow.",
+#        "operationId": "resetPassword",
+#        "parameters": [
+#          {
+#            "description": "id of user",
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "body",
+#            "name": "body",
+#            "required": true,
+#            "schema": {
+#              "additionalProperties": {
+#                "type": "object"
+#              },
+#              "type": "object"
+#            }
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "$ref": "#/definitions/ResetPasswordToken"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "summary": "Reset Password",
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
+#    "/api/v1/users/{id}/lifecycle/suspend": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "description": "Suspends a user.  This operation can only be performed on users with an `ACTIVE` status.  The user will have a status of `SUSPENDED` when the process is complete.",
+#        "operationId": "suspendUser",
+#        "parameters": [
+#          {
+#            "description": "id of user",
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "additionalProperties": {
+#                "type": "object"
+#              },
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "summary": "Suspend User",
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
+#    "/api/v1/users/{id}/lifecycle/unlock": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "description": "Unlocks a user with a `LOCKED_OUT` status and returns them to `ACTIVE` status.  Users will be able to login with their current password.",
+#        "operationId": "unlockUser",
+#        "parameters": [
+#          {
+#            "description": "id of user",
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "additionalProperties": {
+#                "type": "object"
+#              },
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "summary": "Unlock User",
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
+#    "/api/v1/users/{id}/lifecycle/unsuspend": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "description": "Unsuspends a user and returns them to the `ACTIVE` state.  This operation can only be performed on users that have a `SUSPENDED` status.",
+#        "operationId": "unsuspendUser",
+#        "parameters": [
+#          {
+#            "description": "id of user",
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "additionalProperties": {
+#                "type": "object"
+#              },
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "summary": "Unsuspend User",
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
     "/api/v1/users/{id}/roles": {
       "get": {
         "consumes": [
@@ -1958,60 +1952,60 @@
       }
     },
     "/api/v1/users/{id}/roles/{roleId}/targets/catalog/apps": {
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "listAppTargetsForRole",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "roleId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "after",
-            "type": "string"
-          },
-          {
-            "default": -1,
-            "format": "int32",
-            "in": "query",
-            "name": "limit",
-            "type": "integer"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "items": {
-                "type": "object"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      },
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "listAppTargetsForRole",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "path",
+#            "name": "roleId",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "query",
+#            "name": "after",
+#            "type": "string"
+#          },
+#          {
+#            "default": -1,
+#            "format": "int32",
+#            "in": "query",
+#            "name": "limit",
+#            "type": "integer"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "items": {
+#                "type": "object"
+#              },
+#              "type": "array"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "User"
+#        ]
+#      },
       "put": {
         "consumes": [
           "application/json"
@@ -2479,44 +2473,44 @@
         ]
       }
     },
-    "/api/v1/users/{userId}/factors/questions": {
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "listQuestions",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "items": {
-                "type": "object"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
+#    "/api/v1/users/{userId}/factors/questions": {
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "listQuestions",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "userId",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "items": {
+#                "type": "object"
+#              },
+#              "type": "array"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
     "/api/v1/users/{userId}/factors/{userFactorId}": {
       "delete": {
         "consumes": [
@@ -2639,52 +2633,52 @@
           "User"
         ]
       },
-      "put": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "updateFactor",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "userFactorId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/definitions/FactorUpdateRequest"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/UserFactor"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
+#      "put": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "updateFactor",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "userId",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "path",
+#            "name": "userFactorId",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "body",
+#            "name": "body",
+#            "schema": {
+#              "$ref": "#/definitions/FactorUpdateRequest"
+#            }
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "$ref": "#/definitions/UserFactor"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "User"
+#        ]
+#      }
     },
     "/api/v1/users/{userId}/factors/{userFactorId}/devices/{deviceId}": {
       "get": {
@@ -2787,54 +2781,54 @@
         ]
       }
     },
-    "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "activateUserFactor",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "userFactorId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/definitions/FactorActivationRequest"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "object"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
+#    "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "activateUserFactor",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "userId",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "path",
+#            "name": "userFactorId",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "body",
+#            "name": "body",
+#            "schema": {
+#              "$ref": "#/definitions/FactorActivationRequest"
+#            }
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
     "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate/email": {
       "post": {
         "consumes": [
@@ -2924,50 +2918,50 @@
         ]
       }
     },
-    "/api/v1/users/{userId}/factors/{userFactorId}/notifications": {
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "getPendingNotifications",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "userFactorId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "items": {
-                "type": "object"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
+#    "/api/v1/users/{userId}/factors/{userFactorId}/notifications": {
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "getPendingNotifications",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "userId",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "path",
+#            "name": "userFactorId",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "items": {
+#                "type": "object"
+#              },
+#              "type": "array"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
     "/api/v1/users/{userId}/factors/{userFactorId}/qr/{oneTimeSessionToken}": {
       "get": {
         "consumes": [
@@ -4206,7 +4200,18 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-links": [
+        {
+          "arguments": [
+            {
+              "dest": "id",
+              "src": "id"
+            }
+          ],
+          "operationId": "getUserGroups"
+        }
+      ]
     },
     "UserFactor": {
       "properties": {},

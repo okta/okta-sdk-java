@@ -71,6 +71,8 @@ public interface InternalDataStore extends DataStore {
 
     <T extends Resource> void delete(T resource);
 
+    void delete(String href);
+
     <T extends Resource> void deleteResourceProperty(T resource, String propertyName);
 
     <T extends Resource> T getResource(String href, Class<T> clazz, Map<String,Object> queryParameters);
