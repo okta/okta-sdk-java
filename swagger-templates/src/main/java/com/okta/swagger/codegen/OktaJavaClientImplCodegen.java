@@ -34,7 +34,8 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         super("okta_java_impl", "OktaJavaImpl", "com.okta.sdk.impl.model");
 
         modelTemplateFiles.put("modelImpl.mustache", ".java");
-        overrideApiPackage = "com.okta.sdk.api.model";
+        overrideApiPackage = "com.okta.sdk.model";
+        apiPackage         = "com.okta.sdk.impl.api";
         vendorExtensions().put("overrideApiPackage", overrideApiPackage);
 
         apiTemplateFiles.put("api.mustache", ".java");
@@ -153,6 +154,11 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                 .replaceAll("\\}", "+ \""));
 
         return co;
+    }
+
+    @Override
+    public String toApiName(String name) {
+        return "Default" + super.toApiName(name);
     }
 
     @Override

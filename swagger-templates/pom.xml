@@ -25,6 +25,7 @@
     </parent>
 
     <artifactId>swagger-templates</artifactId>
+    <name>Okta Java SDK :: Swagger Templates</name>
 
     <properties>
         <swagger-version>2.2.2</swagger-version>
