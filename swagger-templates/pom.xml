@@ -24,7 +24,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>swagger-templates</artifactId>
+    <artifactId>okta-api-swagger-templates</artifactId>
     <name>Okta Java SDK :: Swagger Templates</name>
 
     <properties>
