@@ -24,15 +24,15 @@ import com.okta.sdk.lang.Assert;
  * outgoing HTTP requests is modified and thus causing communication issues. For example, for Google App Engine you
  * need to set {@link AuthenticationScheme#BASIC} in order for your code to properly communicate with Okta API server.
  * </pre>
- * There are currently three authentication schemes available: <a href="http://docs.okta.com/rest/product-guide/#authentication-basic">HTTP
- * Basic Authentication</a>, <a href="http://docs.okta.com/rest/product-guide/#authentication-digest">SAUTHC1 Digest Authentication</a>,
- * and SSWS (Okta session bearer token).
+ * There are currently two authentication schemes available: <a href="http://docs.okta.com/rest/product-guide/#authentication-basic">HTTP
+ * Basic Authentication</a>, and SSWS (Okta session bearer token).
  *
- * @since 0.9.3
+ * @since 1.0.0
  */
 public enum AuthenticationScheme {
 
-    BASIC("com.okta.sdk.impl.http.authc.BasicRequestAuthenticator"); //HTTP Basic Authentication
+    BASIC("com.okta.sdk.impl.http.authc.BasicRequestAuthenticator"), //HTTP Basic Authentication
+    SSWS("com.okta.sdk.impl.http.authc.SswsAuthenticator"); //SSWS Authentication
 
     private final String requestAuthenticatorClassName;
 

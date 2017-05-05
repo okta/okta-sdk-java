@@ -40,7 +40,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.8</jdk.version>
-        <slf4j.version>1.7.22</slf4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <testng.version>6.9.10</testng.version>
 
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
@@ -86,6 +86,7 @@
         <module>base-impl</module>
         <module>swagger-templates</module>
         <module>api</module>
+        <module>httpclient</module>
 
     </modules>
 
@@ -151,6 +152,13 @@
                 <version>${snakeyaml.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.3</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>java-hamcrest</artifactId>
@@ -162,6 +170,19 @@
                 <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>3.4</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
