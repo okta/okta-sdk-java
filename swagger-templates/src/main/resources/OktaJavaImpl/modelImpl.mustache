@@ -37,20 +37,22 @@ import java.io.Serializable;
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
 public class Default{{classname}} extends AbstractInstanceResource implements {{classname}} {
 
-    // SIMPLE PROPERTIES
 {{#vars}}
     private final {{vendorExtensions.propertyType}}{{#vendorExtensions.typeClassExtra}}<{{{datatypeWithEnum}}}>{{/vendorExtensions.typeClassExtra}} {{name}}Property = new {{vendorExtensions.propertyType}}("{{name}}"{{vendorExtensions.constructorTypeExtra}});
 {{/vars}}
 
     private final Map<String, Property> propertyDescriptors = createPropertyDescriptorMap({{#vars}}{{name}}Property{{^-last}}, {{/-last}}{{/vars}});
 
+    private final InternalDataStore dataStore;
 
     public Default{{classname}}(InternalDataStore dataStore) {
         super(dataStore);
+        this.dataStore = dataStore;
     }
 
     public Default{{classname}}(InternalDataStore dataStore, Map<String, Object> properties) {
         super(dataStore, properties);
+        this.dataStore = dataStore;
     }
 
     @Override
@@ -77,6 +79,25 @@ public class Default{{classname}} extends AbstractInstanceResource implements {{
     public void delete() {
 
     }
+
+{{#vendorExtensions.operations}}{{#.}}
+  /**
+  * {{summary}}
+  * {{notes}}
+  {{#vendorExtensions.allParams}}
+  * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+  {{/vendorExtensions.allParams}}
+  {{#returnType}}
+  * @return {{returnType}}
+  {{/returnType}}
+  */
+  public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}}) {
+  {{#vendorExtensions.fromModelPathParams}}{{#.}}
+    {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();
+  {{/.}}{{/vendorExtensions.fromModelPathParams}}
+  {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+  }
+{{/.}}{{/vendorExtensions.operations}}
 
 {{/model}}{{/models}}
 }

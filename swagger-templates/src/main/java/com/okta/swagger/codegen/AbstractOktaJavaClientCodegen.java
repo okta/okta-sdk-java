@@ -15,9 +15,12 @@
  */
 package com.okta.swagger.codegen;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.codegen.CliOption;
 import io.swagger.codegen.CodegenConstants;
 import io.swagger.codegen.CodegenModel;
+import io.swagger.codegen.CodegenOperation;
+import io.swagger.codegen.CodegenParameter;
 import io.swagger.codegen.CodegenProperty;
 import io.swagger.codegen.CodegenType;
 import io.swagger.codegen.SupportingFile;
@@ -25,6 +28,7 @@ import io.swagger.codegen.languages.AbstractJavaCodegen;
 import io.swagger.codegen.languages.features.BeanValidationFeatures;
 import io.swagger.codegen.languages.features.GzipFeatures;
 import io.swagger.codegen.languages.features.PerformBeanValidationFeatures;
+import io.swagger.models.HttpMethod;
 import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
@@ -32,29 +36,22 @@ import io.swagger.models.Path;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.swagger.models.properties.ArrayProperty;
-import io.swagger.models.properties.BooleanProperty;
-import io.swagger.models.properties.DoubleProperty;
-import io.swagger.models.properties.FloatProperty;
-import io.swagger.models.properties.IntegerProperty;
-import io.swagger.models.properties.LongProperty;
-import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
-import io.swagger.models.properties.StringProperty;
-import io.swagger.models.refs.GenericRef;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.net.www.content.text.Generic;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         implements BeanValidationFeatures, PerformBeanValidationFeatures, GzipFeatures
@@ -113,6 +110,70 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         vendorExtensions.put("basePath", swagger.getBasePath());
         super.preprocessSwagger(swagger);
         addListModels(swagger);
+
+        // we want to move any operations defined by the 'x-okta-links' vendor extension to the model
+
+        Map<String, Model> modelMap = swagger.getDefinitions().entrySet().stream()
+                .filter(e -> e.getValue().getVendorExtensions().containsKey("x-okta-links"))
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+
+
+        modelMap.forEach((k, model) -> {
+            List<ObjectNode> linkNodes = (List<ObjectNode>) model.getVendorExtensions().get("x-okta-links");
+            linkNodes.forEach(n -> {
+                String operationId = n.get("operationId").textValue();
+
+                // find the swagger path operation
+                swagger.getPaths().forEach((pathName, path) -> {
+                    Optional<Map.Entry<HttpMethod, Operation>> operationEntry = path.getOperationMap().entrySet().stream().filter(e -> e.getValue().getOperationId().equals(operationId)).findFirst();
+
+                    if (operationEntry.isPresent()) {
+
+                        Operation operation = operationEntry.get().getValue();
+
+                        List<CodegenOperation> operations = (List<CodegenOperation>) model.getVendorExtensions().getOrDefault("operations", new ArrayList<CodegenOperation>());
+
+                        CodegenOperation cgOperation = fromOperation(
+                                pathName,
+                                operationEntry.get().getKey().name().toLowerCase(),
+                                operation,
+                                swagger.getDefinitions(),
+                                swagger);
+
+                        // now any params that match the models we need to use the model value directly
+                        // for example if the path contained {id} we would call getId() instead
+
+                        List<CodegenParameter> cgParamAllList = new ArrayList<>();
+                        List<CodegenParameter> cgParamModelList = new ArrayList<>();
+
+
+                        cgOperation.pathParams.forEach(param -> {
+                            if (model.getProperties().containsKey(param.paramName)) {
+                                cgParamModelList.add(param);
+
+                                CodegenProperty cgProperty = fromProperty(param.paramName, model.getProperties().get(param.paramName));
+                                param.vendorExtensions.put("fromModel", cgProperty);
+                            }
+                            else {
+                                cgParamAllList.add(param);
+                            }
+                        });
+                        cgParamAllList.addAll(cgOperation.queryParams);
+                        cgParamAllList.addAll(cgOperation.bodyParams);
+
+                        cgOperation.vendorExtensions.put("allParams", cgParamAllList);
+                        cgOperation.vendorExtensions.put("fromModelPathParams", cgParamModelList);
+
+                        operations.add(cgOperation);
+                        model.getVendorExtensions().put("operations", operations);
+
+                        // mark the operation as moved so we do NOT add it to the client
+                        operation.getVendorExtensions().put("moved", true);
+
+                    }
+                });
+            });
+        });
     }
 
     @Override
@@ -183,11 +244,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         }
     }
 
-    @Override
-    public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
-        return super.postProcessOperations(objs);
-    }
-
     /**
      *  Prioritizes consumes mime-type list by moving json-vendor and json mime-types up front, but 
      *  otherwise preserves original consumes definition order. 
@@ -241,6 +297,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
        CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
         // super add these imports, and we don't want that dependency
         codegenModel.imports.remove("ApiModel");
+
+//        this.api
+
        return codegenModel;
     }
 

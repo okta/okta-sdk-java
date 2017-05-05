@@ -48,8 +48,21 @@ public interface {{classname}} extends Resource, Saveable, Deletable {
         {{/isContainer}}
     {{/items}}
 {{/items.isEnum}}
-
 {{/vars}}
+
+{{#vendorExtensions.operations}}{{#.}}
+  /**
+  * {{summary}}
+  * {{notes}}
+  {{#vendorExtensions.allParams}}
+  * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+  {{/vendorExtensions.allParams}}
+  {{#returnType}}
+  * @return {{returnType}}
+  {{/returnType}}
+  */
+  public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}});
+{{/.}}{{/vendorExtensions.operations}}
 {{/model}}{{/models}}
 }
 
