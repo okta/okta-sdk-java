@@ -16,6 +16,7 @@
 {{>licenseInfo}}
 package {{package}};
 
+import {{vendorExtensions.overrideModelPackage}}.*;
 import {{vendorExtensions.overrideApiPackage}}.*;
 
 {{#imports}}import {{import}};
@@ -33,7 +34,7 @@ import java.util.Map;
 
 {{>generatedAnnotation}}
 {{#operations}}
-public class {{classname}} {
+public class {{classname}} implements {{interfaceClassname}} {
 
     private final InternalDataStore dataStore;
 
@@ -41,7 +42,7 @@ public class {{classname}} {
         this.dataStore = dataStore;
     }
 
-  {{#operation}}
+  {{#operation}}{{^vendorExtensions.moved}}
   /**
    * {{summary}}
    * {{notes}}
@@ -52,11 +53,12 @@ public class {{classname}} {
    * @return {{returnType}}
    {{/returnType}}
    */
+  @Override
   public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
   }
 
-  {{/operation}}
+  {{/vendorExtensions.moved}}{{/operation}}
 
 }
 {{/operations}}

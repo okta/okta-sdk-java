@@ -28,15 +28,16 @@ import java.util.Map;
 public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 {
 
-    private final String overrideApiPackage;
+    private final String overrideModelPackage;
 
     public OktaJavaClientImplCodegen() {
         super("okta_java_impl", "OktaJavaImpl", "com.okta.sdk.impl.model");
 
         modelTemplateFiles.put("modelImpl.mustache", ".java");
-        overrideApiPackage = "com.okta.sdk.model";
+        overrideModelPackage = "com.okta.sdk.model";
         apiPackage         = "com.okta.sdk.impl.api";
-        vendorExtensions().put("overrideApiPackage", overrideApiPackage);
+        vendorExtensions().put("overrideModelPackage", overrideModelPackage);
+        vendorExtensions().put("overrideApiPackage", "com.okta.sdk.api");
 
         apiTemplateFiles.put("api.mustache", ".java");
     }
@@ -149,6 +150,12 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         }
 
         // pre interpolate the resource href
+
+        // this gets a little tricky, if the vendor extension 'fromModel' is set, we need to use a method name
+        if (co.vendorExtensions.containsKey("fromModel") ) {
+            String f = null;
+        }
+
         co.vendorExtensions.put("hrefFiltered", co.path
                 .replaceAll("\\{", "\" + ")
                 .replaceAll("\\}", "+ \""));
@@ -166,11 +173,26 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         return "Default" + super.toModelDocFilename(name);
     }
 
+    @Override
+    public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
+
+        objs.entrySet().stream()
+                .filter(e -> "operations".equals(e.getKey()) && e.getValue() instanceof Map)
+                .filter(e -> ((Map<String, Object>) e.getValue()).containsKey("classname"))
+                .forEach(e -> {
+                        Map<String, Object> ops = (Map<String, Object>) e.getValue();
+                        String interfaceClassname = ops.get("classname").toString().replaceFirst("^Default", "");
+                        ops.put("interfaceClassname", interfaceClassname);
+                });
+
+        return super.postProcessOperations(objs);
+    }
+
     public String toModelImport(String name) {
         if ("".equals(modelPackage())) {
             return name;
         } else {
-            return overrideApiPackage + "." + name;
+            return overrideModelPackage + "." + name;
         }
     }
 
