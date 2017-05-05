@@ -92,6 +92,28 @@
     <dependencyManagement>
         <dependencies>
 
+            <!-- Inter project dependencies -->
+            <dependency>
+                <groupId>com.okta.sdk</groupId>
+                <artifactId>okta-sdk-base-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.okta.sdk</groupId>
+                <artifactId>okta-sdk-base-impl</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.okta.sdk</groupId>
+                <artifactId>okta-sdk-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.okta.sdk</groupId>
+                <artifactId>okta-api-swagger-templates</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -166,23 +188,26 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>1.12</version>
-                <executions>
-                    <execution>
-                        <inherited>false</inherited>
-                        <goals>
-                            <goal>aggregate-add-third-party</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}</outputDirectory>
-                            <thirdPartyFilename>THIRD-PARTY-NOTICES</thirdPartyFilename>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            <!-- TODO: find another way to generate the THIRD-PARTY-NOTICES, i've had nothing but problems
+                 with this plugin, the mycila one doesn't do this
+             -->
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>license-maven-plugin</artifactId>-->
+                <!--<version>1.12</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<inherited>false</inherited>-->
+                        <!--<goals>-->
+                            <!--<goal>aggregate-add-third-party</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<outputDirectory>${project.basedir}</outputDirectory>-->
+                            <!--<thirdPartyFilename>THIRD-PARTY-NOTICES</thirdPartyFilename>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
             <plugin>
                 <groupId>com.mycila</groupId>
