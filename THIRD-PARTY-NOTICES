@@ -29,7 +29,7 @@ This project includes:
   Commons IO under The Apache Software License, Version 2.0
   Compiler assisted localization library (CAL10N) - API under MIT License
   Default Plexus Container under Apache License, Version 2.0
-  EasyMock under MIT License
+  EasyMock under Apache 2
   FindBugs-jsr305 under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
@@ -40,7 +40,7 @@ This project includes:
   JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
   JavaMail API jar under CDDL or GPLv2+CE
   Javassist under MPL 1.1 or LGPL 2.1 or Apache License 2.0
-  JCL 1.1.1 implemented over SLF4J under MIT License
+  JCL 1.2 implemented over SLF4J under MIT License
   JCommander under The Apache Software License, Version 2.0
   jmustache under The (New) BSD License
   Joda-Time under Apache 2
@@ -70,6 +70,7 @@ This project includes:
   Okta Java SDK :: API under The Apache License, Version 2.0
   Okta Java SDK :: Base API under The Apache License, Version 2.0
   Okta Java SDK :: Base Impl under The Apache License, Version 2.0
+  Okta Java SDK :: Extensions :: HTTP Client under The Apache License, Version 2.0
   Okta Java SDK :: Swagger Templates under The Apache License, Version 2.0
   org.osgi.core under Apache License, Version 2.0
   OSGi OBR Service API under The Apache Software License, Version 2.0
