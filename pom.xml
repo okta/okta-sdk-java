@@ -188,26 +188,27 @@
     </dependencies>
     <build>
         <plugins>
-            <!-- TODO: find another way to generate the THIRD-PARTY-NOTICES, i've had nothing but problems
-                 with this plugin, the mycila one doesn't do this
-             -->
-            <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>license-maven-plugin</artifactId>-->
-                <!--<version>1.12</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<inherited>false</inherited>-->
-                        <!--<goals>-->
-                            <!--<goal>aggregate-add-third-party</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<outputDirectory>${project.basedir}</outputDirectory>-->
-                            <!--<thirdPartyFilename>THIRD-PARTY-NOTICES</thirdPartyFilename>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.jasig.maven</groupId>
+                <artifactId>maven-notice-plugin</artifactId>
+                <version>1.0.6.1</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <fileName>THIRD-PARTY-NOTICES</fileName>
+                    <generateChildNotices>false</generateChildNotices>
+                    <licenseMapping>
+                        <mapping>src/license/mapping.xml</mapping>
+                    </licenseMapping>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>com.mycila</groupId>
