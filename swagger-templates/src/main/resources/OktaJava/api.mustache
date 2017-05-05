@@ -33,8 +33,7 @@ import java.util.LinkedHashMap;
 {{#operations}}
 public interface {{classname}} {
 
-
-    {{#operation}}
+    {{#operation}}{{^vendorExtensions.moved}}
     /**
     * {{summary}}
     * {{notes}}
@@ -47,7 +46,7 @@ public interface {{classname}} {
     */
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
 
-    {{/operation}}
+    {{/vendorExtensions.moved}}{{/operation}}
 
     }
 {{/operations}}
