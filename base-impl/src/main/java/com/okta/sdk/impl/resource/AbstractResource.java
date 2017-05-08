@@ -57,7 +57,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         } else {
             this.properties = new LinkedHashMap<>();
         }
-        setProperties(properties);
+        setInternalProperties(properties);
     }
 
     /**
@@ -94,7 +94,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
 
     public abstract Map<String, Property> getPropertyDescriptors();
 
-    public void setProperties(Map<String, Object> properties) {
+    public void setInternalProperties(Map<String, Object> properties) {
         writeLock.lock();
         try {
             this.dirtyProperties.clear();
@@ -522,7 +522,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     }
 
     @Override
-    protected Map<String, Object> getProperties() {
+    protected Map<String, Object> getInternalProperties() {
         return properties;
     }
 

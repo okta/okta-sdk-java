@@ -45,8 +45,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -414,8 +416,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
 
     public void addListModels(Swagger swagger) {
 
-        Map<String, Object> additionalListModels = new HashMap<>();
+        Map<String, Model> listModels = new LinkedHashMap<>();
 
+        // lists in paths
         for (Path path : swagger.getPaths().values()) {
 
             List<Property> properties = new ArrayList<>();
@@ -424,31 +427,51 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
             properties.add(getArrayPropertyFromOperation(path.getPatch()));
             properties.add(getArrayPropertyFromOperation(path.getPut()));
 
-            for (Property p : properties) {
-                if (p != null && "array".equals(p.getType())) {
+            listModels.putAll(processListsFromProperties(properties));
+        }
 
-                    ArrayProperty arrayProperty = (ArrayProperty) p;
-                    if ( arrayProperty.getItems() instanceof RefProperty) {
-                        RefProperty ref = (RefProperty) arrayProperty.getItems();
-                        String modelThatNeedsCollection = ref.getSimpleRef();
+        swagger.getDefinitions()
+                .forEach((key, model) -> {
+                    if (model != null && model.getProperties() != null) {
+                        System.out.println("Model: "+ key);
+                        listModels.putAll(processListsFromProperties(model.getProperties().values()));
+                    }
+                });
 
-                        // Do not generate List wrappers for primitives (or strings)
-                        if (!languageSpecificPrimitives.contains(modelThatNeedsCollection)) {
-                            String modelName = modelThatNeedsCollection + "List";
+        listModels.forEach(swagger::addDefinition);
 
-                            ModelImpl model = new ModelImpl();
-                            model.setName(modelName);
-                            model.setAllowEmptyValue(false);
-                            model.setDescription("Collection List for " + modelThatNeedsCollection);
-                            model.setVendorExtension("isResourceList", true);
-                            model.setType(modelName);
+    }
 
-                            swagger.addDefinition(modelName, model);
-                        }
+    private Map<String, Model> processListsFromProperties(Collection<Property> properties) {
+
+        Map<String, Model> result = new LinkedHashMap<>();
+
+        for (Property p : properties) {
+            if (p != null && "array".equals(p.getType())) {
+
+                ArrayProperty arrayProperty = (ArrayProperty) p;
+                if ( arrayProperty.getItems() instanceof RefProperty) {
+                    RefProperty ref = (RefProperty) arrayProperty.getItems();
+
+                    String baseName = ref.getSimpleRef();
+
+                    // Do not generate List wrappers for primitives (or strings)
+                    if (!languageSpecificPrimitives.contains(baseName)) {
+                        String modelName = baseName + "List";
+
+                        ModelImpl model = new ModelImpl();
+                        model.setName(modelName);
+                        model.setAllowEmptyValue(false);
+                        model.setDescription("Collection List for " + baseName);
+                        model.setVendorExtension("isResourceList", true);
+                        model.setType(modelName);
+
+                        result.put(modelName, model);
                     }
                 }
             }
         }
+        return result;
     }
 
 
