@@ -476,7 +476,7 @@ public class DefaultDataStore implements InternalDataStore {
 
         //ensure the caller's argument is updated with what is returned from the server if the types are the same:
         if (returnType.equals(abstractResource.getClass())) {
-            abstractResource.setProperties(data);
+            abstractResource.setInternalProperties(data);
         }
 
         return resourceFactory.instantiate(returnType, data);
