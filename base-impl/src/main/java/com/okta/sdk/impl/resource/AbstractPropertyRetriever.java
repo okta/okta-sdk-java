@@ -246,7 +246,7 @@ public abstract class AbstractPropertyRetriever {
                 @SuppressWarnings("unchecked")
                 T instance = propertyConstructor.newInstance(name, new Enlistment((Map<String, Object>) value) , this);
 
-                getProperties().put(name, instance);
+                getInternalProperties().put(name, instance);
 
                 return instance;
             } catch (Exception e) {
@@ -294,6 +294,6 @@ public abstract class AbstractPropertyRetriever {
     /**
      * @since 1.2.0
      */
-    protected abstract Map<String, Object> getProperties();
+    protected abstract Map<String, Object> getInternalProperties();
 
 }

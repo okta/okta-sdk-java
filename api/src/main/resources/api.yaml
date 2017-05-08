@@ -55,6 +55,2318 @@
     }
   },
   "paths": {
+    "/api/v1/apps": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Enumerates apps added to your organization with pagination. A subset of apps can be returned that match a supported filter expression or query.",
+        "operationId": "listAppInstances",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "description": "Specifies the pagination cursor for the next page of apps",
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "description": "Specifies the number of results for a page",
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "description": "Filters apps by status, user.id, group.id or credentials.signing.kid expression",
+            "in": "query",
+            "name": "filter",
+            "type": "string"
+          },
+          {
+            "description": "Traverses users link relationship and optionally embeds Application User resource",
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          },
+          {
+            "default": false,
+            "in": "query",
+            "name": "includeNonDeleted",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/PublicAppInstance"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "List Applications",
+        "tags": [
+          "App"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Adds a new application to your Okta organization.",
+        "operationId": "createAppInstance",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/PublicAppInstance"
+            }
+          },
+          {
+            "default": true,
+            "description": "Executes activation lifecycle operation when creating the app",
+            "in": "query",
+            "name": "activate",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PublicAppInstance"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Add Application",
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/user/types": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getTypes",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/CVDAppUserProfile"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/user/types/{typeId}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getAppUserType",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CVDAppUserProfile"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/user/types/{typeId}/schemas": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getSchemasForType",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Schema"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "addSchemaToType",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Schema"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Schema"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/user/types/{typeId}/schemas/{schemaId}": {
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateSchemaByType",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "schemaId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Schema"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Schema"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+#    "/api/v1/apps/{idOrExternalKey}/sso/saml/metadata": {
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "getSamlMetadata",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "idOrExternalKey",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "query",
+#            "name": "kid",
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "type": "string"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "App"
+#        ]
+#      }
+#    },
+    "/api/v1/apps/{id}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deleteAppInstance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "readAppInstance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PublicAppInstance"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateAppInstance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/PublicAppInstance"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PublicAppInstance"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/catalog/groups": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getGroupCatalogForApp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/UserGroup"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/catalog/users": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getUserCatalogForApp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/User"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/connector": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "readConnectorSettings",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConnectorSettings"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "upsertConnectorSettings",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ConnectorSettings"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConnectorSettings"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/connector/test": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "testConnectorSettings",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ConnectorSettings"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConnectorSettings"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/credentials/keys": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getKeys",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/JsonWebKeyRSAMediated"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/credentials/keys/generate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "generateKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "format": "int32",
+            "in": "query",
+            "name": "validityYears",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/credentials/keys/{keyId}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getAppKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "keyId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+#    "/api/v1/apps/{id}/customum_support": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "setCustomUserManagementSupport",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "body",
+#            "name": "body",
+#            "schema": {
+#              "type": "object"
+#            }
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "App"
+#        ]
+#      }
+#    },
+#    "/api/v1/apps/{id}/enableFeatures": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "enableAppFeatures",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "body",
+#            "name": "body",
+#            "schema": {
+#              "type": "object"
+#            }
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success"
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "App"
+#        ]
+#      }
+#    },
+#    "/api/v1/apps/{id}/externalKey": {
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "getExternalId",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "type": "string"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "App"
+#        ]
+#      }
+#    },
+    "/api/v1/apps/{id}/groups": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listGroupAppAssignments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/GroupAppAssignment"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/groups/{groupId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deleteGroupAppAssignment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "readGroupAppAssignment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GroupAppAssignment"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "upsertGroupAppAssignment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/GroupAppAssignment"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GroupAppAssignment"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+#    "/api/v1/apps/{id}/lifecycle/activate": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "activateAppInstance",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "additionalProperties": {
+#                "type": "object"
+#              },
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "App"
+#        ]
+#      }
+#    },
+#    "/api/v1/apps/{id}/lifecycle/deactivate": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "deactivateAppInstance",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "additionalProperties": {
+#                "type": "object"
+#              },
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "App"
+#        ]
+#      }
+#    },
+#    "/api/v1/apps/{id}/sso/wsfed/metadata": {
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "getWSFedMetadata",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "type": "string"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "App"
+#        ]
+#      }
+#    },
+#    "/api/v1/apps/{id}/types/{typeName}": {
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "getCustomTypeValues",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "path",
+#            "name": "typeName",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "items": {
+#                "type": "object"
+#              },
+#              "type": "array"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "App"
+#        ]
+#      }
+#    },
+    "/api/v1/apps/{id}/user/imported/schema": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getImportedSchema",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Schema"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/user/schemas": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getSchemas",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Schema"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/user/schemas/{schemaId}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getSchema",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "schemaId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Schema"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateSchema",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "schemaId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Schema"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Schema"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/user/types": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getTypesForAppInstance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/CVDAppUserProfile"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/user/types/effective": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getEffectiveType",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CVDAppUserProfile"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/user/types/groups": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getGroupAppAssignmentUserType",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CVDAppUserProfile"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/user/types/{typeId}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getType",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "typeId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CVDAppUserProfile"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateType",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "typeId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/CVDAppUserProfile"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CVDAppUserProfile"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/users": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listAppUsers",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "query_scope",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/AppUser"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "createAppUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/users/{userId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deleteAppUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "readAppUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateAppUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "upsertAppUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/users/{userId}/credentials/cyclePassword": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "resetSyncedPassword",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/users/{userId}/lifecycle/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "activateAppUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{id}/users/{userId}/lifecycle/deactivate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deactivateAppUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{instanceId}/servercertificate": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getCertificates",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "instanceId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/UploadedCertificateMetadata"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{instanceId}/servercertificate/{certificateId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deleteCertificate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "instanceId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "certificateId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "getCertificate",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "certificateId",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "$ref": "#/definitions/UploadedCertificateMetadata"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "App"
+#        ]
+#      }
+    },
+    "/api/v1/apps/{sourceAppInstanceId}/credentials/keys/{keyId}/clone": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "cloneKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sourceAppInstanceId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "keyId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "targetAid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+#    "/api/v1/events": {
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "getSystemLogEntries",
+#        "parameters": [
+#          {
+#            "in": "query",
+#            "name": "after",
+#            "type": "string"
+#          },
+#          {
+#            "in": "query",
+#            "name": "filter",
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "items": {
+#                "type": "object"
+#              },
+#              "type": "array"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "Event"
+#        ]
+#      }
+#    },
+    "/api/v1/events/nodelay": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "setNoDelay",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Event"
+        ]
+      }
+    },
     "/api/v1/groups": {
       "get": {
         "consumes": [
@@ -825,6 +3137,1879 @@
         ]
       }
     },
+    "/api/v1/idps": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listTrusts",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/IdpTrust"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "createTrust",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/IdpTrust"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpTrust"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/credentials/keys": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listKeys",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/JsonWebKeyRSAMediated"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "createKey",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/credentials/keys/{id}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deleteKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getIdpKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/tx/{id}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getIdpTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpTransaction"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/tx/{id}/cancel": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "cancelIdpTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/tx/{id}/lifecycle/confirm/{userId}": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "confirmIdpTransactionUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/IdpTargetUser"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpTransaction"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/tx/{id}/lifecycle/provision": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "doIdpTransactionJit",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/IdpTargetUser"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpTransaction"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/tx/{id}/source": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getIdpTransactionSourceUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpAppUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/tx/{id}/target": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getIdpTransactionTargetUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpTargetUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/tx/{id}/users": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getIdpTransactionMatchedUsers",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/User"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/{id}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deleteTrust",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getTrust",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpTrust"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateTrust",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/IdpTrust"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpTrust"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/{id}/credentials/keys": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getSigningKeys",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/JsonWebKeyRSAMediated"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/{id}/credentials/keys/generate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "generateSigningKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "format": "int32",
+            "in": "query",
+            "name": "validityYears",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/{id}/credentials/keys/{keyId}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getSigningKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "keyId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/{id}/lifecycle/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "activateIdpAppInstance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpTrust"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/{id}/lifecycle/deactivate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deactivateIdpAppInstance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpTrust"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/{id}/metadata.xml": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getServiceProviderMetadata",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/{id}/users": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listIdpAppUsers",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/IdpAppUser"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/idps/{id}/users/{userId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "unlinkAppUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getAppUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/IdpAppUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Idp"
+        ]
+      }
+    },
+    "/api/v1/meta/schemas/apps/{appId}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getAppInstanceProfile",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ProfileDefinition"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Schema"
+        ]
+      }
+    },
+    "/api/v1/meta/schemas/user/default": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getUserSchemas",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ProfileDefinition"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Schema"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updatePartialUserSchemas",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/ProfileDefinition"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ProfileDefinition"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Schema"
+        ]
+      }
+    },
+    "/api/v1/policies": {
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "getPolicies",
+#        "parameters": [
+#          {
+#            "in": "query",
+#            "name": "type",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "query",
+#            "name": "status",
+#            "type": "string"
+#          },
+#          {
+#            "in": "query",
+#            "name": "after",
+#            "type": "string"
+#          },
+#          {
+#            "default": -1,
+#            "format": "int32",
+#            "in": "query",
+#            "name": "limit",
+#            "type": "integer"
+#          },
+#          {
+#            "default": "",
+#            "in": "query",
+#            "name": "expand",
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "Policy"
+#        ]
+#      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "createPolicy",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicy"
+            }
+          },
+          {
+            "default": true,
+            "in": "query",
+            "name": "activate",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicy"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      }
+    },
+    "/api/v1/policies/{id}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deletePolicy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getPolicy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": "",
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicy"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updatePolicy",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicy"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicy"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      }
+    },
+    "/api/v1/policies/{id}/lifecycle/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "activatePolicy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      }
+    },
+    "/api/v1/policies/{id}/lifecycle/deactivate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deactivatePolicy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      }
+    },
+    "/api/v1/policies/{id}/rules": {
+#      "get": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "getPolicyRules",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "id",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "Policy"
+#        ]
+#      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "addPolicyRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicyRule"
+            }
+          },
+          {
+            "default": true,
+            "in": "query",
+            "name": "activate",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicyRule"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      }
+    },
+    "/api/v1/policies/{id}/rules/{ruleid}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deletePolicyRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ruleid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getPolicyRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ruleid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicyRule"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updatePolicyRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ruleid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicyRule"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicyRule"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      }
+    },
+    "/api/v1/policies/{id}/rules/{ruleid}/lifecycle/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "activatePolicyRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ruleid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      }
+    },
+    "/api/v1/policies/{id}/rules/{ruleid}/lifecycle/deactivate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deactivatePolicyRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ruleid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      }
+    },
+    "/api/v1/templates/sms": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getCustomSmsTemplates",
+        "parameters": [
+          {
+            "default": "",
+            "in": "query",
+            "name": "templateType",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Template"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "saveOrgCustomSmsTemplate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Template"
+        ]
+      }
+    },
+    "/api/v1/templates/sms/{templateId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deleteOrgCustomSmsTemplate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "templateId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Template"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getOrgCustomSmsTemplate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "templateId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Template"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "partialUpdateCustomSmsTemplate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "templateId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Template"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "updateCustomSmsTemplate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "templateId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Template"
+        ]
+      }
+    },
     "/api/v1/users": {
       "get": {
         "consumes": [
@@ -1239,7 +5424,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/Credentials"
+              "$ref": "#/definitions/UserCredentials"
             }
           }
         },
@@ -1266,7 +5451,7 @@
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/Credentials"
+              "$ref": "#/definitions/UserCredentials"
             }
           },
           {
@@ -1284,7 +5469,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/Credentials"
+              "$ref": "#/definitions/UserCredentials"
             }
           }
         },
@@ -1311,7 +5496,7 @@
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/Credentials"
+              "$ref": "#/definitions/UserCredentials"
             }
           },
           {
@@ -2587,52 +6772,52 @@
           "User"
         ]
       },
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "updateFactorDevice",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "userFactorId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/definitions/FactorUpdateRequest"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/FactorDevice"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      },
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "updateFactorDevice",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "userId",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "path",
+#            "name": "userFactorId",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "body",
+#            "name": "body",
+#            "schema": {
+#              "$ref": "#/definitions/FactorUpdateRequest"
+#            }
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "$ref": "#/definitions/FactorDevice"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "User"
+#        ]
+#      },
 #      "put": {
 #        "consumes": [
 #          "application/json"
@@ -2870,6 +7055,47 @@
         ]
       }
     },
+#    "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate/poll": {
+#      "post": {
+#        "consumes": [
+#          "application/json"
+#        ],
+#        "operationId": "pollFactorActivation",
+#        "parameters": [
+#          {
+#            "in": "path",
+#            "name": "userId",
+#            "required": true,
+#            "type": "string"
+#          },
+#          {
+#            "in": "path",
+#            "name": "userFactorId",
+#            "required": true,
+#            "type": "string"
+#          }
+#        ],
+#        "produces": [
+#          "application/json"
+#        ],
+#        "responses": {
+#          "200": {
+#            "description": "Success",
+#            "schema": {
+#              "type": "object"
+#            }
+#          }
+#        },
+#        "security": [
+#          {
+#            "api_token": []
+#          }
+#        ],
+#        "tags": [
+#          "User"
+#        ]
+#      }
+#    },
     "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate/sms": {
       "post": {
         "consumes": [
@@ -2994,6 +7220,53 @@
         "responses": {
           "200": {
             "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/factors/{userFactorId}/resend": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "resendCode",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userFactorId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": "",
+            "in": "query",
+            "name": "templateId",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserFactor"
+            }
           }
         },
         "security": [
@@ -3162,6 +7435,51 @@
       },
       "type": "object"
     },
+    "AgentWrapper": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "AppFeatureWrapper": {
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "featureDisplayName": {
+          "type": "string"
+        },
+        "featureLabel": {
+          "type": "string"
+        },
+        "featureName": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "AppInstanceMediationPolicyRuleCondition": {
+      "properties": {
+        "exclude": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "AppLink": {
       "properties": {
         "appAssignmentId": {
@@ -3197,6 +7515,73 @@
       },
       "type": "object"
     },
+    "AppUser": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "created": {
+          "type": "string"
+        },
+        "credentials": {
+          "$ref": "#/definitions/AppUser$Credentials"
+        },
+        "externalId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastSync": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "passwordChanged": {
+          "type": "string"
+        },
+        "profile": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "statusChanged": {
+          "type": "string"
+        },
+        "syncState": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "AppUser$Credentials": {
+      "properties": {
+        "password": {
+          "$ref": "#/definitions/PasswordCredential"
+        },
+        "userName": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "AssignUserToGroupsMediationAction": {
       "properties": {
         "groupIds": {
@@ -3204,6 +7589,18 @@
             "type": "string"
           },
           "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "AuthContextMediationPolicyRuleCondition": {
+      "properties": {
+        "authType": {
+          "enum": [
+            "ANY",
+            "RADIUS"
+          ],
+          "type": "string"
         }
       },
       "type": "object"
@@ -3227,8 +7624,73 @@
       },
       "type": "object"
     },
+    "AuthProviderMediationPolicyRuleCondition": {
+      "properties": {
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "provider": {
+          "enum": [
+            "ANY",
+            "OKTA",
+            "ACTIVE_DIRECTORY",
+            "LDAP"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "BaseCredentialsObject": {
       "properties": {},
+      "type": "object"
+    },
+    "CVDAppUserProfile": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "description": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "schemas": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "enum": [
+            "STANDARD",
+            "IMPORTED"
+          ],
+          "type": "string"
+        }
+      },
       "type": "object"
     },
     "ChangePasswordCredentials": {
@@ -3242,16 +7704,110 @@
       },
       "type": "object"
     },
-    "Credentials": {
+    "ClientMediationPolicyCondition": {
       "properties": {
-        "password": {
-          "$ref": "#/definitions/PasswordCredential"
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "ConnectorSettings": {
+      "properties": {
+        "agents": {
+          "items": {
+            "$ref": "#/definitions/AgentWrapper"
+          },
+          "type": "array"
         },
-        "provider": {
-          "$ref": "#/definitions/AuthProvider"
+        "appInstanceId": {
+          "type": "string"
         },
-        "recovery_question": {
-          "$ref": "#/definitions/RecoveryQuestionCredential"
+        "connectorType": {
+          "type": "string"
+        },
+        "features": {
+          "items": {
+            "$ref": "#/definitions/AppFeatureWrapper"
+          },
+          "type": "array"
+        },
+        "storeReturnedAppUserFields": {
+          "type": "boolean"
+        },
+        "timeoutSeconds": {
+          "type": "integer"
+        },
+        "userManagementModeType": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Credentials$Client": {
+      "properties": {
+        "client_id": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Credentials$Signing": {
+      "properties": {
+        "kid": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Credentials$Trust": {
+      "properties": {
+        "audience": {
+          "type": "string"
+        },
+        "issuer": {
+          "type": "string"
+        },
+        "kid": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DeviceMediationPolicyRuleCondition": {
+      "properties": {
+        "platform": {
+          "$ref": "#/definitions/DeviceMediationPolicyRuleCondition$Platform"
+        },
+        "trustLevel": {
+          "enum": [
+            "ANY",
+            "TRUSTED"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DeviceMediationPolicyRuleCondition$Platform": {
+      "properties": {
+        "supportedMDMFrameworks": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "types": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -3604,6 +8160,66 @@
       },
       "type": "object"
     },
+    "GrantTypeMediationPolicyRuleCondition": {
+      "properties": {
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "GroupAppAssignment": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "profile": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "GroupMediationPolicyRuleCondition": {
+      "properties": {
+        "exclude": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "GroupMembershipMediationActions": {
       "properties": {
         "assignUserToGroups": {
@@ -3723,6 +8339,173 @@
       "properties": {},
       "type": "object"
     },
+    "IdpAppUser": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "created": {
+          "type": "string"
+        },
+        "externalId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "profile": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "IdpCredentials": {
+      "properties": {
+        "client": {
+          "$ref": "#/definitions/Credentials$Client"
+        },
+        "signing": {
+          "$ref": "#/definitions/Credentials$Signing"
+        },
+        "trust": {
+          "$ref": "#/definitions/Credentials$Trust"
+        }
+      },
+      "type": "object"
+    },
+    "IdpTargetUser": {
+      "properties": {
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "profile": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "IdpTransaction": {
+      "properties": {
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "context": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "created": {
+          "type": "string"
+        },
+        "expiresAt": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "idp": {
+          "$ref": "#/definitions/IdpTransaction$Idp"
+        },
+        "sessionToken": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ACCOUNT_LINK",
+            "ACCOUNT_JIT",
+            "SUCCESS"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "IdpTransaction$Idp": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "IdpTrust": {
+      "properties": {
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "created": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "policy": {
+          "$ref": "#/definitions/Policy"
+        },
+        "protocol": {
+          "$ref": "#/definitions/Protocol"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ],
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "SAML2",
+            "GOOGLE",
+            "FACEBOOK",
+            "LINKEDIN",
+            "MICROSOFT",
+            "X509"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "InputUserWithGroupIds": {
       "properties": {
         "_embedded": {
@@ -3744,7 +8527,7 @@
           "type": "string"
         },
         "credentials": {
-          "$ref": "#/definitions/Credentials"
+          "$ref": "#/definitions/UserCredentials"
         },
         "groupIds": {
           "items": {
@@ -3799,6 +8582,79 @@
       },
       "type": "object"
     },
+    "IpTrustMediationPolicyRuleCondition": {
+      "properties": {
+        "trustType": {
+          "enum": [
+            "ANY",
+            "SUSPICIOUS",
+            "UNTRUSTED"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "JsonNode": {
+      "properties": {},
+      "type": "object"
+    },
+    "JsonWebKeyRSAMediated": {
+      "properties": {
+        "alg": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string"
+        },
+        "e": {
+          "type": "string"
+        },
+        "expiresAt": {
+          "type": "string"
+        },
+        "key_ops": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "kid": {
+          "type": "string"
+        },
+        "kty": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "n": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "use": {
+          "type": "string"
+        },
+        "x5c": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "x5t": {
+          "type": "string"
+        },
+        "x5t#S256": {
+          "type": "string"
+        },
+        "x5u": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "Link": {
       "properties": {
         "hints": {
@@ -3838,6 +8694,160 @@
       "properties": {},
       "type": "object"
     },
+    "MDMEnrollmentMediationPolicyRuleCondition": {
+      "properties": {
+        "blockNonSafeAndroid": {
+          "type": "boolean"
+        },
+        "enrollment": {
+          "enum": [
+            "OMM",
+            "ANY_OR_NONE"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MediationPolicy": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "conditions": {
+          "$ref": "#/definitions/MediationPolicyRuleConditions"
+        },
+        "created": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ],
+          "type": "string"
+        },
+        "system": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "MediationPolicyRule": {
+      "properties": {
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "type": "object"
+        },
+        "actions": {
+          "$ref": "#/definitions/MediationPolicyRuleActions"
+        },
+        "conditions": {
+          "$ref": "#/definitions/MediationPolicyRuleConditions"
+        },
+        "created": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "INACTIVE",
+            "INVALID"
+          ],
+          "type": "string"
+        },
+        "system": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "MediationPolicyRuleActions": {
+      "properties": {},
+      "type": "object"
+    },
+    "MediationPolicyRuleConditions": {
+      "properties": {
+        "apps": {
+          "$ref": "#/definitions/AppInstanceMediationPolicyRuleCondition"
+        },
+        "authContext": {
+          "$ref": "#/definitions/AuthContextMediationPolicyRuleCondition"
+        },
+        "authProvider": {
+          "$ref": "#/definitions/AuthProviderMediationPolicyRuleCondition"
+        },
+        "clients": {
+          "$ref": "#/definitions/ClientMediationPolicyCondition"
+        },
+        "device": {
+          "$ref": "#/definitions/DeviceMediationPolicyRuleCondition"
+        },
+        "grantTypes": {
+          "$ref": "#/definitions/GrantTypeMediationPolicyRuleCondition"
+        },
+        "groups": {
+          "$ref": "#/definitions/GroupMediationPolicyRuleCondition"
+        },
+        "ipTrust": {
+          "$ref": "#/definitions/IpTrustMediationPolicyRuleCondition"
+        },
+        "mdmEnrollment": {
+          "$ref": "#/definitions/MDMEnrollmentMediationPolicyRuleCondition"
+        },
+        "network": {
+          "$ref": "#/definitions/NetworkMediationPolicyRuleCondition"
+        },
+        "people": {
+          "$ref": "#/definitions/PeopleMediationPolicyRuleCondition"
+        },
+        "userStatus": {
+          "$ref": "#/definitions/UserStatusMediationPolicyRuleCondition"
+        },
+        "users": {
+          "$ref": "#/definitions/UserMediationPolicyRuleCondition"
+        }
+      },
+      "type": "object"
+    },
     "MediationRoleAssignment": {
       "properties": {
         "_embedded": {
@@ -3874,10 +8884,432 @@
       },
       "type": "object"
     },
+    "NetworkMediationPolicyRuleCondition": {
+      "properties": {
+        "connection": {
+          "enum": [
+            "ANYWHERE",
+            "ON_NETWORK",
+            "OFF_NETWORK",
+            "ZONE"
+          ],
+          "type": "string"
+        },
+        "exclude": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "OrgCustomSmsMediationTemplate": {
+      "properties": {
+        "created": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "template": {
+          "type": "string"
+        },
+        "translations": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "PasswordCredential": {
       "properties": {
         "hash": {
           "$ref": "#/definitions/HashedPassword"
+        }
+      },
+      "type": "object"
+    },
+    "PeopleMediationPolicyRuleCondition": {
+      "properties": {
+        "groups": {
+          "$ref": "#/definitions/GroupMediationPolicyRuleCondition"
+        },
+        "users": {
+          "$ref": "#/definitions/UserMediationPolicyRuleCondition"
+        }
+      },
+      "type": "object"
+    },
+    "Policy": {
+      "properties": {
+        "accountLink": {
+          "$ref": "#/definitions/Policy$AccountLink"
+        },
+        "maxClockSkew": {
+          "type": "integer"
+        },
+        "provisioning": {
+          "$ref": "#/definitions/Provisioning"
+        },
+        "subject": {
+          "$ref": "#/definitions/Policy$Subject"
+        }
+      },
+      "type": "object"
+    },
+    "Policy$AccountLink": {
+      "properties": {
+        "action": {
+          "enum": [
+            "AUTO",
+            "CALLOUT",
+            "DISABLED"
+          ],
+          "type": "string"
+        },
+        "callout": {
+          "$ref": "#/definitions/Policy$Callout"
+        },
+        "filter": {
+          "$ref": "#/definitions/Policy$AccountLink$Filter"
+        }
+      },
+      "type": "object"
+    },
+    "Policy$AccountLink$Filter": {
+      "properties": {
+        "groups": {
+          "$ref": "#/definitions/Policy$AccountLink$Filter$Groups"
+        }
+      },
+      "type": "object"
+    },
+    "Policy$AccountLink$Filter$Groups": {
+      "properties": {
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "Policy$Callout": {
+      "properties": {
+        "binding": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Policy$Subject": {
+      "properties": {
+        "filter": {
+          "type": "string"
+        },
+        "matchAttribute": {
+          "type": "string"
+        },
+        "matchType": {
+          "enum": [
+            "USERNAME",
+            "EMAIL",
+            "USERNAME_OR_EMAIL",
+            "CUSTOM_ATTRIBUTE"
+          ],
+          "type": "string"
+        },
+        "userNameTemplate": {
+          "$ref": "#/definitions/Policy$UserNameTemplate"
+        }
+      },
+      "type": "object"
+    },
+    "Policy$UserNameTemplate": {
+      "properties": {
+        "template": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ProfileDefinition": {
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string"
+        },
+        "definitions": {
+          "additionalProperties": {
+            "$ref": "#/definitions/PublicSchema"
+          },
+          "type": "object"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "properties": {
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonNode"
+          },
+          "type": "object"
+        },
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Protocol": {
+      "properties": {
+        "algorithms": {
+          "$ref": "#/definitions/Protocol$Algorithms"
+        },
+        "credentials": {
+          "$ref": "#/definitions/IdpCredentials"
+        },
+        "endpoints": {
+          "$ref": "#/definitions/Protocol$EndpointsList"
+        },
+        "scopes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "settings": {
+          "$ref": "#/definitions/Protocol$Settings"
+        },
+        "type": {
+          "enum": [
+            "SAML2",
+            "OIDC",
+            "OAUTH2",
+            "MTLS"
+          ],
+          "type": "string"
+        },
+        "validation": {
+          "$ref": "#/definitions/Protocol$Validation"
+        }
+      },
+      "type": "object"
+    },
+    "Protocol$AlgorithmType": {
+      "properties": {
+        "digest": {
+          "enum": [
+            "NONE",
+            "SHA_1",
+            "SHA_256"
+          ],
+          "type": "string"
+        },
+        "encryption": {
+          "enum": [
+            "NONE",
+            "AES_256_CBC",
+            "AES_128_CBC",
+            "AES_128_GCM"
+          ],
+          "type": "string"
+        },
+        "keyTransport": {
+          "enum": [
+            "NONE",
+            "RSA_OAEP"
+          ],
+          "type": "string"
+        },
+        "signature": {
+          "$ref": "#/definitions/Protocol$AlgorithmType$Signature"
+        }
+      },
+      "type": "object"
+    },
+    "Protocol$AlgorithmType$Signature": {
+      "properties": {
+        "algorithm": {
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "RESPONSE",
+            "TOKEN",
+            "ANY",
+            "REQUEST",
+            "NONE"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Protocol$Algorithms": {
+      "properties": {
+        "request": {
+          "$ref": "#/definitions/Protocol$AlgorithmType"
+        },
+        "response": {
+          "$ref": "#/definitions/Protocol$AlgorithmType"
+        }
+      },
+      "type": "object"
+    },
+    "Protocol$Endpoint": {
+      "properties": {
+        "binding": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "INSTANCE",
+            "ORG"
+          ],
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Protocol$EndpointsList": {
+      "properties": {
+        "acs": {
+          "$ref": "#/definitions/Protocol$Endpoint"
+        },
+        "authorization": {
+          "$ref": "#/definitions/Protocol$Endpoint"
+        },
+        "metadata": {
+          "$ref": "#/definitions/Protocol$Endpoint"
+        },
+        "slo": {
+          "$ref": "#/definitions/Protocol$Endpoint"
+        },
+        "sso": {
+          "$ref": "#/definitions/Protocol$Endpoint"
+        },
+        "token": {
+          "$ref": "#/definitions/Protocol$Endpoint"
+        }
+      },
+      "type": "object"
+    },
+    "Protocol$Settings": {
+      "properties": {
+        "nameFormat": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Protocol$Validation": {
+      "properties": {
+        "revocation": {
+          "enum": [
+            "CRL",
+            "DELTA_CRL",
+            "OCSP"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Provisioning": {
+      "properties": {
+        "action": {
+          "enum": [
+            "AUTO",
+            "CALLOUT",
+            "DISABLED"
+          ],
+          "type": "string"
+        },
+        "callout": {
+          "$ref": "#/definitions/Policy$Callout"
+        },
+        "groups": {
+          "$ref": "#/definitions/Provisioning$Groups"
+        },
+        "profileMaster": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Provisioning$Groups": {
+      "properties": {
+        "action": {
+          "enum": [
+            "NONE",
+            "APPEND",
+            "SYNC",
+            "ASSIGN"
+          ],
+          "type": "string"
+        },
+        "assignments": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "filter": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "sourceAttributeName": {
+          "type": "string"
         }
       },
       "type": "object"
@@ -4112,6 +9544,26 @@
       },
       "type": "object"
     },
+    "PublicSchema": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "string"
+        },
+        "required": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "PublicSignOnModeMediated": {
       "properties": {},
       "type": "object"
@@ -4127,6 +9579,37 @@
     "ResetPasswordToken": {
       "properties": {
         "resetPasswordUrl": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Schema": {
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "schema": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UploadedCertificateMetadata": {
+      "properties": {
+        "certificateId": {
+          "type": "string"
+        },
+        "commonName": {
+          "type": "string"
+        },
+        "expiryDate": {
           "type": "string"
         }
       },
@@ -4153,7 +9636,7 @@
           "type": "string"
         },
         "credentials": {
-          "$ref": "#/definitions/Credentials"
+          "$ref": "#/definitions/UserCredentials"
         },
         "id": {
           "type": "string"
@@ -4213,6 +9696,20 @@
         }
       ]
     },
+    "UserCredentials": {
+      "properties": {
+        "password": {
+          "$ref": "#/definitions/PasswordCredential"
+        },
+        "provider": {
+          "$ref": "#/definitions/AuthProvider"
+        },
+        "recovery_question": {
+          "$ref": "#/definitions/RecoveryQuestionCredential"
+        }
+      },
+      "type": "object"
+    },
     "UserFactor": {
       "properties": {},
       "type": "object"
@@ -4256,7 +9753,18 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-links": [
+        {
+          "arguments": [
+            {
+              "dest": "id",
+              "src": "id"
+            }
+          ],
+          "operationId": "getGroupUsers"
+        }
+      ]
     },
     "UserGroupProfile": {
       "properties": {
@@ -4289,6 +9797,23 @@
       },
       "type": "object"
     },
+    "UserMediationPolicyRuleCondition": {
+      "properties": {
+        "exclude": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "UserProfile": {
       "properties": {
         "email": {
@@ -4307,6 +9832,23 @@
           "type": "string"
         },
         "secondEmail": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UserStatusMediationPolicyRuleCondition": {
+      "properties": {
+        "value": {
+          "enum": [
+            "ACTIVE",
+            "INACTIVE",
+            "PENDING",
+            "DELETED",
+            "EXPIRED_PASSWORD",
+            "ACTIVATING",
+            "SUSPENDED"
+          ],
           "type": "string"
         }
       },
