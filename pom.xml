@@ -87,6 +87,7 @@
         <module>swagger-templates</module>
         <module>api</module>
         <module>httpclient</module>
+        <module>examples</module>
 
     </modules>
 
@@ -114,6 +115,11 @@
                 <artifactId>okta-api-swagger-templates</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>com.okta.sdk</groupId>
+                <artifactId>okta-sdk-httpclient</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -124,6 +130,11 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.2</version>
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>

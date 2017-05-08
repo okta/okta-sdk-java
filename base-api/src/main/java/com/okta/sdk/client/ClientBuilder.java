@@ -305,7 +305,7 @@ public interface ClientBuilder {
 
     /**
      * Overrides the default (very secure)
-     * <a href="http://docs.okta.com/rest/product-guide/#authentication-digest">Okta SAuthc1 Digest
+     * <a href="http://docs.okta.com/rest/product-guide/#authentication-digest">Okta SSWS Digest
      * Authentication Scheme</a> used to authenticate every request sent to the Okta API server.
      *
      * <p>It is not recommended that you override this setting <em>unless</em> your application is deployed in an

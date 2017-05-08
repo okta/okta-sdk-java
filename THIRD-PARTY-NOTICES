@@ -49,6 +49,8 @@ This project includes:
   JUnit under Common Public License Version 1.0
   kXML 2 under The BSD License
   libphonenumber under The Apache Software License, Version 2.0
+  Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
+  Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Maven Archiver under The Apache Software License, Version 2.0
   Maven Artifact under The Apache Software License, Version 2.0
   Maven Artifact Manager under The Apache Software License, Version 2.0
@@ -70,6 +72,8 @@ This project includes:
   Okta Java SDK :: API under The Apache License, Version 2.0
   Okta Java SDK :: Base API under The Apache License, Version 2.0
   Okta Java SDK :: Base Impl under The Apache License, Version 2.0
+  Okta Java SDK :: Examples under The Apache License, Version 2.0
+  Okta Java SDK :: Examples :: Quickstart Code under The Apache License, Version 2.0
   Okta Java SDK :: Extensions :: HTTP Client under The Apache License, Version 2.0
   Okta Java SDK :: Swagger Templates under The Apache License, Version 2.0
   org.osgi.core under Apache License, Version 2.0
