@@ -152,7 +152,7 @@ public class DefaultDataStore implements InternalDataStore {
         this.requestExecutor = requestExecutor;
         this.baseUrlResolver = baseUrlResolver;
         this.cacheManager = cacheManager;
-        this.resourceFactory = null; // FIXME
+        this.resourceFactory = new DefaultResourceFactory(this);
         this.mapMarshaller = new JacksonMapMarshaller();
         this.queryStringFactory = new QueryStringFactory();
         this.cacheResolver = new DefaultCacheResolver(this.cacheManager, new DefaultCacheRegionNameResolver());

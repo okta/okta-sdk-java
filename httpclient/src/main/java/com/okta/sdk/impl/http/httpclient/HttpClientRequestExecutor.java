@@ -141,7 +141,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
      * @param clientCredentials the Okta account API Key that will be used to authenticate the client with Okta's API sever
      * @param proxy the HTTP proxy to be used when communicating with the Okta API server (can be null)
      * @param authenticationScheme the HTTP authentication scheme to be used when communicating with the Okta API server.
-     *                             If null, then Sauthc1 will be used.
+     *                             If null, then SSWS will be used.
      */
     public HttpClientRequestExecutor(ClientCredentials clientCredentials, Proxy proxy, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, Integer connectionTimeout) {
         Assert.notNull(clientCredentials, "clientCredentials argument is required.");
