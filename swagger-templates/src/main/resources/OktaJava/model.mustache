@@ -28,7 +28,7 @@ import java.io.Serializable;
 
 {{#models}}
 {{#model}}
-{{#vendorExtensions.isResourceList}}{{>modelListResourceInterface}}{{/vendorExtensions.isResourceList}}{{^vendorExtensions.isResourceList}}
-{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>modelInterface}}{{/isEnum}}{{/vendorExtensions.isResourceList}}
+{{#vendorExtensions.x-isResourceList}}{{>modelListResourceInterface}}{{/vendorExtensions.x-isResourceList}}{{^vendorExtensions.x-isResourceList}}
+{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>modelInterface}}{{/isEnum}}{{/vendorExtensions.x-isResourceList}}
 {{/model}}
 {{/models}}

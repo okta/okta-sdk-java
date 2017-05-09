@@ -13,47 +13,37 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{>licenseInfo}}
 
-package {{package}};
-
-
-{{#imports}}
-import {{import}};
-{{/imports}}
-import com.okta.sdk.api.model.*;
+import com.okta.sdk.model.*;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.resource.AbstractCollectionResource;
 import com.okta.sdk.impl.resource.Property;
 
 import java.util.Collections;
 import java.util.Map;
-{{#serializableModel}}
-import java.io.Serializable;
-{{/serializableModel}}
 
-public class Default{{classname}}List extends AbstractCollectionResource<{{classname}}> implements {{classname}}List {
+public class Default{{classname}} extends AbstractCollectionResource<{{vendorExtensions.baseType}}> implements {{classname}} {
 
 
-    public Default{{classname}}List(InternalDataStore dataStore) {
+    public Default{{classname}}(InternalDataStore dataStore) {
        super(dataStore);
     }
 
-    public Default{{classname}}List(InternalDataStore dataStore, Map<String, Object> properties) {
+    public Default{{classname}}(InternalDataStore dataStore, Map<String, Object> properties) {
        super(dataStore, properties);
     }
 
-    public Default{{classname}}List(InternalDataStore dataStore, Map<String, Object> properties, Map<String, Object> queryParams) {
+    public Default{{classname}}(InternalDataStore dataStore, Map<String, Object> properties, Map<String, Object> queryParams) {
        super(dataStore, properties, queryParams);
     }
 
     @Override
     public Map<String, Property> getPropertyDescriptors() {
-    return Collections.emptyMap();
+        return Collections.emptyMap();
     }
 
     @Override
-    protected Class<PublicAppInstance> getItemType() {
-        return {{classname}}.class;
+    protected Class<{{vendorExtensions.baseType}}> getItemType() {
+        return {{vendorExtensions.baseType}}.class;
     }
 }
