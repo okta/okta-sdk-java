@@ -17,7 +17,6 @@
 
 package {{package}};
 
-
 {{#imports}}
 import {{import}};
 {{/imports}}
@@ -26,9 +25,6 @@ import {{import}};
 import java.io.Serializable;
 {{/serializableModel}}
 
-
-{{#models}}
-{{#model}}
-{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>pojo}}{{/isEnum}}
-{{/model}}
-{{/models}}
+{{#models}}{{#model}}
+{{#vendorExtensions.x-isResourceList}}{{>modelListResourceImpl}}{{/vendorExtensions.x-isResourceList}}{{^vendorExtensions.x-isResourceList}}{{>modelImpl}}{{/vendorExtensions.x-isResourceList}}
+{{/model}}{{/models}}

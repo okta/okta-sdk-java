@@ -300,7 +300,10 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         // super add these imports, and we don't want that dependency
         codegenModel.imports.remove("ApiModel");
 
-//        this.api
+        if (model.getVendorExtensions().containsKey("x-baseType")) {
+            String baseType = (String) model.getVendorExtensions().get("x-baseType");
+            codegenModel.vendorExtensions.put("baseType", toModelName(baseType));
+        }
 
        return codegenModel;
     }
@@ -463,7 +466,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
                         model.setName(modelName);
                         model.setAllowEmptyValue(false);
                         model.setDescription("Collection List for " + baseName);
-                        model.setVendorExtension("isResourceList", true);
+                        model.setVendorExtension("x-isResourceList", true);
+                        model.setVendorExtension("x-baseType", baseName);
                         model.setType(modelName);
 
                         result.put(modelName, model);

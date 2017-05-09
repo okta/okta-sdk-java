@@ -13,23 +13,11 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{>licenseInfo}}
 
-package {{package}};
-
-{{#imports}}
-    import {{import}};
-{{/imports}}
 import com.okta.sdk.resource.CollectionResource;
 
-
-{{#serializableModel}}
-    import java.io.Serializable;
-{{/serializableModel}}
-
-
-{{#models}}
-    {{#model}}
-        public interface {{classname}}List extends CollectionResource<{{classname}}> {}
-    {{/model}}
-{{/models}}
+/**
+* {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
+*/
+{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
+public interface {{classname}} extends CollectionResource<{{vendorExtensions.baseType}}> {}
