@@ -81,7 +81,22 @@ public class {{classname}} extends AbstractClient implements {{interfaceClassnam
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
   }
 
-  {{/vendorExtensions.moved}}{{/operation}}
+  {{#vendorExtensions.hasOptional}}
+  /**
+  * {{summary}}
+  * {{notes}}
+  {{#vendorExtensions.nonOptionalParams}}
+  * @param {{paramName}} {{description}} (required)
+  {{/vendorExtensions.nonOptionalParams}}
+  {{#returnType}}
+  * @return {{returnType}}
+  {{/returnType}}
+  */
+  @Override
+  public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
+      {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+      }
+{{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 
 }
 {{/operations}}

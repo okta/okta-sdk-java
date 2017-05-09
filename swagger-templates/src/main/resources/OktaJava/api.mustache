@@ -81,6 +81,18 @@ public interface {{classname}} extends DataStore {
     */
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
 
-    {{/vendorExtensions.moved}}{{/operation}}
+    {{#vendorExtensions.hasOptional}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#vendorExtensions.nonOptionalParams}}
+    * @param {{paramName}} {{description}} (required)
+    {{/vendorExtensions.nonOptionalParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
+{{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 }
 {{/operations}}

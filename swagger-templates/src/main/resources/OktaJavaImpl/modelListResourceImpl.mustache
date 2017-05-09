@@ -24,6 +24,8 @@ import java.util.Map;
 
 public class Default{{classname}} extends AbstractCollectionResource<{{vendorExtensions.baseType}}> implements {{classname}} {
 
+    private static final ArrayProperty<{{vendorExtensions.baseType}}> ITEMS = new ArrayProperty<>("items", {{vendorExtensions.baseType}}.class);
+    private static final Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(ITEMS);
 
     public Default{{classname}}(InternalDataStore dataStore) {
        super(dataStore);
@@ -39,7 +41,7 @@ public class Default{{classname}} extends AbstractCollectionResource<{{vendorExt
 
     @Override
     public Map<String, Property> getPropertyDescriptors() {
-        return Collections.emptyMap();
+        return PROPERTY_DESCRIPTORS;
     }
 
     @Override
