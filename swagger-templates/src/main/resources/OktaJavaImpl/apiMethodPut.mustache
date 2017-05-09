@@ -5,5 +5,5 @@
     //Map<String, Object> queryArgs = new LinkedHashMap<>();{{#queryParams}}
     // queryArgs.put("{{paramName}}", {{paramName}});{{/queryParams}}
     String href = "{{{vendorExtensions.hrefFiltered}}}";
-    dataStore.create(href, new VoidResource(dataStore));
+    getDataStore().create(href, new VoidResource(getDataStore()));
 {{/bodyParam}}

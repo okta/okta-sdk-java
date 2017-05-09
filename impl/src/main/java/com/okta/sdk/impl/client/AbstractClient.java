@@ -24,6 +24,7 @@ import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.impl.api.ApiKeyResolver;
 import com.okta.sdk.impl.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.ds.DefaultDataStore;
+import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.http.RequestExecutor;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
@@ -43,11 +44,11 @@ import java.lang.reflect.Constructor;
  * time one needs to instantiate or look up a Resource.</p>
  *
  * @see <a href="http://www.okta.com/docs/quickstart/connect">Communicating with Okta: Get your API Key</a>
- * @since 1.0.alpha
+ * @since 1.0.0
  */
-public class DefaultClient implements Client {
+public abstract class AbstractClient implements Client {
 
-    private final DataStore dataStore;
+    private final InternalDataStore dataStore;
 
     /**
      * Instantiates a new Client instance that will communicate with the Okta REST API.  See the class-level
@@ -63,9 +64,8 @@ public class DefaultClient implements Client {
      *                             Okta REST resources (can be null)
      * @param authenticationScheme the HTTP authentication scheme to be used when communicating with the Okta API
      *                             server (can be null)
-     * @since 1.2.0
      */
-    public DefaultClient(ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
+    public AbstractClient(ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
         Assert.notNull(clientCredentials, "clientCredentials argument cannot be null.");
         Assert.notNull(apiKeyResolver, "apiKeyResolver argument cannot be null.");
         Assert.notNull(baseUrlResolver, "baseUrlResolver argument cannot be null.");
@@ -74,10 +74,8 @@ public class DefaultClient implements Client {
         this.dataStore = createDataStore(requestExecutor, baseUrlResolver, clientCredentials, apiKeyResolver, cacheManager);
     }
 
-    /**
-     * @since 1.2.0
-     */
-    protected DataStore createDataStore(RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, CacheManager cacheManager) {
+
+    protected InternalDataStore createDataStore(RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, CacheManager cacheManager) {
         return new DefaultDataStore(requestExecutor, baseUrlResolver, clientCredentials, apiKeyResolver, cacheManager);
     }
 
@@ -92,7 +90,7 @@ public class DefaultClient implements Client {
     }
 
     @Override
-    public DataStore getDataStore() {
+    public InternalDataStore getDataStore() {
         return this.dataStore;
     }
 
