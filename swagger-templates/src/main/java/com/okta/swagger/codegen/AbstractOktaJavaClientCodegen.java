@@ -23,7 +23,6 @@ import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenParameter;
 import io.swagger.codegen.CodegenProperty;
 import io.swagger.codegen.CodegenType;
-import io.swagger.codegen.SupportingFile;
 import io.swagger.codegen.languages.AbstractJavaCodegen;
 import io.swagger.codegen.languages.features.BeanValidationFeatures;
 import io.swagger.codegen.languages.features.GzipFeatures;
@@ -39,7 +38,6 @@ import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,6 +110,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         vendorExtensions.put("basePath", swagger.getBasePath());
         super.preprocessSwagger(swagger);
         addListModels(swagger);
+        moveOperationsToSingleClient(swagger);
 
         // we want to move any operations defined by the 'x-okta-links' vendor extension to the model
 
@@ -176,6 +175,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
                 });
             });
         });
+    }
+
+    private void moveOperationsToSingleClient(Swagger swagger) {
+        swagger.getPaths().values().forEach(path ->
+            path.getOperations().forEach(operation ->
+                operation.setTags(Collections.singletonList("client"))
+            )
+        );
     }
 
     @Override
@@ -378,11 +385,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
     @Override
     public String toApiName(String name) {
         if (name.length() == 0) {
-            return "DefaultApi";
+            return "Client";
         }
 
         name = sanitizeName(name);
-        return camelize(name) + "Api";
+        return camelize(name);
     }
 
     private Property getArrayPropertyFromOperation(Operation operation) {
