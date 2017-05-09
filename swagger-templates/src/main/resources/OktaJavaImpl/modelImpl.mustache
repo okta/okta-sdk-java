@@ -13,22 +13,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{>licenseInfo}}
 
-package {{package}};
-
-{{#imports}}
-import {{import}};
-{{/imports}}
 import com.okta.sdk.model.*;
 
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.resource.*;
 
 import java.util.Map;
-{{#serializableModel}}
-import java.io.Serializable;
-{{/serializableModel}}
 
 {{#models}}{{#model}}
 /**
