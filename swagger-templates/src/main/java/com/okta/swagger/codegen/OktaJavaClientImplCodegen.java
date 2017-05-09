@@ -31,10 +31,10 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     private final String overrideModelPackage;
 
     public OktaJavaClientImplCodegen() {
-        super("okta_java_impl", "OktaJavaImpl", "com.okta.sdk.impl.model");
+        super("okta_java_impl", "OktaJavaImpl", "com.okta.sdk.impl.resource");
 
         modelTemplateFiles.put("model.mustache", ".java");
-        overrideModelPackage = "com.okta.sdk.model";
+        overrideModelPackage = "com.okta.sdk.resource";
         apiPackage         = "com.okta.sdk.impl.client";
         vendorExtensions().put("overrideModelPackage", overrideModelPackage);
         vendorExtensions().put("overrideApiPackage", "com.okta.sdk.client");

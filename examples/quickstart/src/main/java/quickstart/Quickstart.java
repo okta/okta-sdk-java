@@ -18,8 +18,8 @@ package quickstart;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
-import com.okta.sdk.model.UserGroup;
-import com.okta.sdk.model.UserGroupProfile;
+import com.okta.sdk.resource.UserGroup;
+import com.okta.sdk.resource.UserGroupProfile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
