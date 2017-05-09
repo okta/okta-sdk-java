@@ -224,26 +224,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         if (additionalProperties.containsKey(USE_GZIP_FEATURE)) {
             this.setUseGzipFeature(convertPropertyToBooleanAndWriteBack(USE_GZIP_FEATURE));
         }
-
-        final String invokerFolder = (sourceFolder + '/' + invokerPackage).replace(".", "/");
-        final String authFolder = (sourceFolder + '/' + invokerPackage + ".auth").replace(".", "/");
-
-        //Common files
-
-        writeOptional(outputFolder, new SupportingFile("manifest.mustache", "", "AndroidManifest.xml"));
-
-        if ("okhttp-gson".equals(getLibrary()) || StringUtils.isEmpty(getLibrary())) {
-            // the "okhttp-gson" library template requires "ApiCallback.mustache" for async call
-//            supportingFiles.add(new SupportingFile("ApiCallback.mustache", invokerFolder, "ApiCallback.java"));
-//            supportingFiles.add(new SupportingFile("ApiResponse.mustache", invokerFolder, "ApiResponse.java"));
-//            supportingFiles.add(new SupportingFile("JSON.mustache", invokerFolder, "JSON.java"));
-//            supportingFiles.add(new SupportingFile("ProgressRequestBody.mustache", invokerFolder, "ProgressRequestBody.java"));
-//            supportingFiles.add(new SupportingFile("ProgressResponseBody.mustache", invokerFolder, "ProgressResponseBody.java"));
-//            supportingFiles.add(new SupportingFile("GzipRequestInterceptor.mustache", invokerFolder, "GzipRequestInterceptor.java"));
-//            additionalProperties.put("gson", "true");
-        } else {
-            LOGGER.error("Unknown library option (-l/--library): " + getLibrary());
-        }
     }
 
     /**
