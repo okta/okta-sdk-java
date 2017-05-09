@@ -2,6 +2,6 @@ language: java
 jdk:
 - oraclejdk8
 before_install:
-- source ./ci/before_install.sh
+- source ./src/ci/before_install.sh
 script:
 -  mvn install
