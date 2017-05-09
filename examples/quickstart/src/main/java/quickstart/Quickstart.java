@@ -15,26 +15,17 @@
  */
 package quickstart;
 
-import com.okta.sdk.api.GroupApi;
-import com.okta.sdk.authc.AuthenticationRequest;
-import com.okta.sdk.authc.AuthenticationResult;
-import com.okta.sdk.authc.UsernamePasswordRequests;
-import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
-import com.okta.sdk.impl.api.DefaultGroupApi;
+import com.okta.sdk.impl.api.DefaultClient;
 import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.model.User;
 import com.okta.sdk.model.UserGroup;
 import com.okta.sdk.model.UserGroupProfile;
-import com.okta.sdk.resource.ResourceException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -56,7 +47,7 @@ public class Quickstart {
         Client client = builder.build();
 
         // TODO: this needs to change
-        GroupApi groupApiClient = new DefaultGroupApi((InternalDataStore) client.getDataStore());
+        DefaultClient groupApiClient = new DefaultClient((InternalDataStore) client.getDataStore());
 
         UserGroup group = client.instantiate(UserGroup.class);
 
