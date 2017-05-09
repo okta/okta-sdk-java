@@ -82,10 +82,9 @@
     </scm>
 
     <modules>
-        <module>base-api</module>
-        <module>base-impl</module>
         <module>swagger-templates</module>
         <module>api</module>
+        <module>impl</module>
         <module>httpclient</module>
         <module>examples</module>
 
@@ -97,12 +96,12 @@
             <!-- Inter project dependencies -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
-                <artifactId>okta-sdk-base-api</artifactId>
+                <artifactId>okta-sdk-api</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
-                <artifactId>okta-sdk-base-impl</artifactId>
+                <artifactId>okta-sdk-impl</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
@@ -438,6 +437,27 @@
                     <configuration>
                         <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.zalando.maven.plugins</groupId>
+                    <artifactId>swagger-codegen-maven-plugin</artifactId>
+                    <version>0.5.0-beta-1</version>
+                    <configuration>
+                        <!-- This is relative to a direct sub module -->
+                        <apiFile>${project.basedir}/../src/swagger/api.yaml</apiFile>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.okta.sdk</groupId>
+                            <artifactId>okta-api-swagger-templates</artifactId>
+                            <version>1.0.0-SNAPSHOT</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.0.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
