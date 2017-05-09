@@ -2,4 +2,4 @@
     // queryArgs.put("{{paramName}}", {{paramName}});{{/queryParams}}
     String href = "{{{vendorExtensions.hrefFiltered}}}";
 
-    {{#returnType}}return {{/returnType}}dataStore.getResource(href, {{#returnType}}{{{returnType}}}.class{{/returnType}}{{^returnType}}VoidResource.class{{/returnType}});
+    {{#returnType}}return {{/returnType}}getDataStore().getResource(href, {{#returnType}}{{{returnType}}}.class{{/returnType}}{{^returnType}}VoidResource.class{{/returnType}});

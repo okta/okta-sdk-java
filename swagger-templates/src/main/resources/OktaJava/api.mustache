@@ -22,16 +22,51 @@ import {{modelPackage}}.*;
 {{/imports}}
 
 import java.util.LinkedHashMap;
-{{^fullJavaUtil}}
-    import java.util.ArrayList;
-    import java.util.HashMap;
-    import java.util.List;
-    import java.util.Map;
-{{/fullJavaUtil}}
+import com.okta.sdk.ds.DataStore;
 
 {{>generatedAnnotation}}
 {{#operations}}
-public interface {{classname}} {
+/**
+* The {@code Client} is the main entry point to the Okta Java SDK.  A JVM project wishing to
+* communicate with the Okta REST API service must build a {@code Client} instance.  After obtaining
+* a {@code Client instance}, the REST API may be used by making simple Java calls on objects returned from
+* the Client (or any children objects obtained therein).
+* <p/>
+* For example:
+* <pre>
+* String path = System.getProperty("user.home") + "/.okta/<a href="http://www.okta.com/docs/get-api-key">apiKey.properties</a>";
+* Client client = {@link Clients Clients}.{@link com.okta.sdk.client.Clients#builder() builder()}
+*     .{@link com.okta.sdk.client.ClientBuilder#setApiKey(ApiKey) setApiKey}({@link ApiKeys ApiKeys}.builder()
+*         .setFileLocation(path)
+*         .build())
+*     .build();
+*
+* ApplicationList applications = client.getApplications();
+*
+* System.out.println("My Applications: ");
+*
+* for (Application application : applications) {
+*     System.out.println(application);
+* }
+* </pre>
+* <h3>DataStore API</h3>
+* As of 0.8, this interface extends {@link DataStore}, but the actual class implementation will merely act as a
+* wrapper to its internal 'real' {@code DataStore} instance.  This is a convenience mechanism to eliminate the constant need to
+* call {@code client.getDataStore()} every time one needs to instantiate or look up a Resource.
+*
+* @see <a href="http://www.okta.com/docs/quickstart/connect">Communicating with Okta: Get your API Key</a>
+* @see DataStore
+* @since 1.0.0
+*/
+public interface {{classname}} extends DataStore {
+
+    /**
+    * Returns the internal {@link DataStore} of the client.  It is typically not necessary to invoke this method as
+    * the Client implements the {@link DataStore} API and will delegate to this instance automatically.
+    *
+    * @return the client's internal {@link DataStore}.
+    */
+    DataStore getDataStore();
 
     {{#operation}}{{^vendorExtensions.moved}}
     /**
@@ -47,6 +82,5 @@ public interface {{classname}} {
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
 
     {{/vendorExtensions.moved}}{{/operation}}
-
-    }
+}
 {{/operations}}

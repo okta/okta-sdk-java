@@ -84,7 +84,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         this.modelPackage = modelPackage;
         // TODO: these are hard coded for now, calling Maven Plugin does NOT set the packages correctly.
         invokerPackage = "com.okta.sdk.invoker";
-        apiPackage = "com.okta.sdk.api";
+        apiPackage = "com.okta.sdk.client";
 
         cliOptions.add(CliOption.newBoolean(PARCELABLE_MODEL, "Whether to generate models for Android that implement Parcelable with the okhttp-gson library."));
         cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API annotations"));
