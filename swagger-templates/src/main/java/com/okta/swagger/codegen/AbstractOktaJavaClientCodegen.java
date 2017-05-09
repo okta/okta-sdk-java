@@ -34,6 +34,7 @@ import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
+import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
@@ -112,8 +113,16 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         addListModels(swagger);
         moveOperationsToSingleClient(swagger);
 
-        // we want to move any operations defined by the 'x-okta-links' vendor extension to the model
+        // TODO: https://github.com/okta/openapi/issues/23
+        swagger.getPaths().values().forEach(path ->
+                path.getOperations().forEach(operation ->
+                    operation.getParameters().stream()
+                            .filter(param -> "body".equals(param.getName())).forEach(param ->
+                                param.setRequired(true)
+                            )
+                        ));
 
+        // we want to move any operations defined by the 'x-okta-links' vendor extension to the model
         Map<String, Model> modelMap = swagger.getDefinitions().entrySet().stream()
                 .filter(e -> e.getValue().getVendorExtensions().containsKey("x-okta-links"))
                 .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
@@ -341,6 +350,37 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         }
         return objs;
     }
+
+    @Override
+    public CodegenOperation fromOperation(String path,
+                                          String httpMethod,
+                                          Operation operation,
+                                          Map<String, Model> definitions,
+                                          Swagger swagger) {
+        CodegenOperation co = super.fromOperation(path,
+                httpMethod,
+                operation,
+                definitions,
+                swagger);
+
+        // mark the operation as having optional params, so we can take advantage of it in the template
+        if (co.allParams.parallelStream().anyMatch(param -> !param.required)) {
+            co.vendorExtensions.put("hasOptional", true);
+
+            List<CodegenParameter> nonOptionalParams = co.allParams.stream()
+                    .filter(param -> param.required)
+                    .map(CodegenParameter::copy)
+                    .collect(Collectors.toList());
+
+            if (!nonOptionalParams.isEmpty()) {
+                CodegenParameter param = nonOptionalParams.get(nonOptionalParams.size()-1);
+                param.hasMore = false;
+                co.vendorExtensions.put("nonOptionalParams", nonOptionalParams);
+            }
+        }
+        return co;
+    }
+
 
     public void setParcelableModel(boolean parcelableModel) {
         this.parcelableModel = parcelableModel;
