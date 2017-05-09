@@ -28,7 +28,7 @@ import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
  *
  * ### For testing purposes only ###
  *
- * {@code RequestExecutor} stub to allow a DefaultClient to be instantiated in a unit test.
+ * {@code RequestExecutor} stub to allow a AbstractClient to be instantiated in a unit test.
  *
  * @since 1.0.0
  */

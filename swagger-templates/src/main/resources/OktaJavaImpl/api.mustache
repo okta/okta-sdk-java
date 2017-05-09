@@ -16,11 +16,20 @@
 {{>licenseInfo}}
 package {{package}};
 
+import com.okta.sdk.cache.CacheManager;
+import com.okta.sdk.client.AuthenticationScheme;
+import com.okta.sdk.client.Proxy;
+import com.okta.sdk.impl.api.ApiKeyResolver;
+import com.okta.sdk.impl.authc.credentials.ClientCredentials;
+import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
+import com.okta.sdk.impl.util.BaseUrlResolver;
+
 import {{vendorExtensions.overrideModelPackage}}.*;
 import {{vendorExtensions.overrideApiPackage}}.*;
 
 {{#imports}}import {{import}};
 {{/imports}}
+import com.okta.sdk.impl.client.AbstractClient;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.resource.VoidResource;
 
@@ -34,12 +43,26 @@ import java.util.Map;
 
 {{>generatedAnnotation}}
 {{#operations}}
-public class {{classname}} implements {{interfaceClassname}} {
+public class {{classname}} extends AbstractClient implements {{interfaceClassname}} {
 
-    private final InternalDataStore dataStore;
-
-    public {{classname}}(InternalDataStore dataStore){
-        this.dataStore = dataStore;
+    /**
+    * Instantiates a new Client instance that will communicate with the Okta REST API.  See the class-level
+    * JavaDoc for a usage example.
+    *
+    * @param clientCredentials           the Okta account credentials that will be used to authenticate the client with
+    *                                    Okta's API server
+    * @param apiKeyResolver              Okta API Key resolver
+    * @param baseUrlResolver             Okta base URL resolver
+    * @param proxy                       the HTTP proxy to be used when communicating with the Okta API server (can be
+    *                                    null)
+    * @param cacheManager                the {@link CacheManager} that should be used to cache
+    *                                    Okta REST resources (can be null)
+    * @param authenticationScheme        the HTTP authentication scheme to be used when communicating with the Okta API
+    * @param requestAuthenticatorFactory
+    * @param connectionTimeout
+    */
+    public DefaultClient(ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
+        super(clientCredentials, apiKeyResolver, baseUrlResolver, proxy, cacheManager, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
     }
 
   {{#operation}}{{^vendorExtensions.moved}}

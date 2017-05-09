@@ -20,8 +20,8 @@ import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.Proxy
 import com.okta.sdk.impl.api.ApiKeyResolver
 import com.okta.sdk.impl.authc.credentials.ClientCredentials
-import com.okta.sdk.ds.DataStore
 import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials
+import com.okta.sdk.impl.ds.InternalDataStore
 import com.okta.sdk.impl.http.Request
 import com.okta.sdk.impl.http.RequestExecutor
 import com.okta.sdk.impl.http.Response
@@ -31,7 +31,7 @@ import com.okta.sdk.impl.util.BaseUrlResolver
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * A DefaultClient subclass that will count every request delegated to the RequestExecutor, useful for integration
+ * A AbstractClient subclass that will count every request delegated to the RequestExecutor, useful for integration
  * tests that need to assert traffic profiles to the server.
  *
  * This implementation DOES NOT count HTTP redirects since the default RequestExecutor will execute them transparently.
@@ -47,7 +47,7 @@ public class RequestCountingClient extends DefaultClient {
     }
 
     @Override
-    protected DataStore createDataStore(final RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, CacheManager cacheManager) {
+    protected InternalDataStore createDataStore(final RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, CacheManager cacheManager) {
 
         RequestExecutor countingExecutor = new RequestExecutor() {
             @Override

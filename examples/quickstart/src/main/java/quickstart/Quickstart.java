@@ -18,8 +18,6 @@ package quickstart;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
-import com.okta.sdk.impl.api.DefaultClient;
-import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.model.UserGroup;
 import com.okta.sdk.model.UserGroupProfile;
 
@@ -46,16 +44,13 @@ public class Quickstart {
         // in pre-defined locations.
         Client client = builder.build();
 
-        // TODO: this needs to change
-        DefaultClient groupApiClient = new DefaultClient((InternalDataStore) client.getDataStore());
-
         UserGroup group = client.instantiate(UserGroup.class);
 
         UserGroupProfile groupProfile = client.instantiate(UserGroupProfile.class);
         groupProfile.setName("my-user-group-"+ UUID.randomUUID().toString());
         group.setProfile(groupProfile);
 
-        group = groupApiClient.createGroup(group);
+        group = client.createGroup(group);
 
         System.out.println("Group: '"+ group.getId()+ "' was last updated on: "+ group.getLastUpdated());
 
