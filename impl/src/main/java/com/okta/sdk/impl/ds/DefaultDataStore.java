@@ -616,7 +616,7 @@ public class DefaultDataStore implements InternalDataStore {
         Map<String, Object> out = null;
 
         if (response.hasBody()) {
-            out = mapMarshaller.unmarshall(response.getBody());
+            out = mapMarshaller.unmarshall(response.getBody(), response.getHeaders().getLinkMap());
         }
 
         return out;

@@ -18,12 +18,16 @@ package quickstart;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
+import com.okta.sdk.resource.User;
 import com.okta.sdk.resource.UserGroup;
 import com.okta.sdk.resource.UserGroupProfile;
 
+import com.okta.sdk.resource.UserList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -53,6 +57,14 @@ public class Quickstart {
         group = client.createGroup(group);
 
         System.out.println("Group: '"+ group.getId()+ "' was last updated on: "+ group.getLastUpdated());
+
+        UserList users = client.getUsers();
+
+        int ii = 0;
+        for (User user : users) {
+            System.out.println("["+ ii++ +"] User: " + user.getProfile().getEmail());
+        }
+
 
 //
 //        // Retrieve your application

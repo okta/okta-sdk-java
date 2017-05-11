@@ -31,7 +31,7 @@ public class DefaultFieldList extends AbstractCollectionResource<Field> implemen
 
     private static final ArrayProperty<Field> ITEMS = new ArrayProperty<>("items", Field.class);
 
-    private static final Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(OFFSET, LIMIT, ITEMS);
+    private static final Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(ITEMS);
 
     public DefaultFieldList(InternalDataStore dataStore) {
         super(dataStore);

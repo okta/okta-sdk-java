@@ -37,8 +37,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 import static com.okta.sdk.impl.api.ApiKeyParameter.ID;
-import static com.okta.sdk.impl.resource.AbstractCollectionResource.LIMIT;
-import static com.okta.sdk.impl.resource.AbstractCollectionResource.OFFSET;
 
 public class ReadCacheFilter extends AbstractCacheFilter {
 
@@ -86,10 +84,9 @@ public class ReadCacheFilter extends AbstractCacheFilter {
             Map<String, ?> apiKeyData = getCachedValue(cacheHref, cacheClass);
 
             if (!Collections.isEmpty(apiKeyData)) {
-                int offset = getValue(query, OFFSET.getName(), 0);
-                int limit = getValue(query, LIMIT.getName(), 25);
-                data = new CollectionProperties.Builder().setHref(href).setOffset(offset).setLimit(limit)
-                                                         .setItemsMap(apiKeyData).build();
+                data = new CollectionProperties.Builder().setHref(href)
+                                                         .setItemsMap(apiKeyData)
+                                                         .build();
             }
         } else {
             //Prevent an expanded request to obtain a non-expanded resource from the cache

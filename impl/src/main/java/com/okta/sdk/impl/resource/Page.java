@@ -22,12 +22,5 @@ import java.util.Collection;
  */
 public interface Page<T> {
 
-    int getOffset();
-
-    int getLimit();
-
-    /** @since 1.0.RC4 */
-    int getSize();
-
     Collection<T> getItems();
 }

@@ -31,7 +31,7 @@ public class DefaultApiKeyList extends AbstractCollectionResource<ApiKey> implem
 
     public static final ArrayProperty<ApiKey> ITEMS = new ArrayProperty<ApiKey>(ITEMS_PROPERTY_NAME, ApiKey.class);
 
-    private static final Map<String,Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(OFFSET, LIMIT, ITEMS);
+    private static final Map<String,Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(ITEMS);
 
     public DefaultApiKeyList(InternalDataStore dataStore) {
         super(dataStore);

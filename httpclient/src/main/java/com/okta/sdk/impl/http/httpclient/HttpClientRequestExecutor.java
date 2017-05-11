@@ -458,6 +458,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         Response response = new DefaultResponse(httpStatus, mediaType, body, contentLength);
 
         response.getHeaders().add(HttpHeaders.OKTA_REQUEST_ID, headers.getOktaRequestId());
+        response.getHeaders().put(HttpHeaders.LINK, headers.getLinkHeaders());
 
         return response;
     }
