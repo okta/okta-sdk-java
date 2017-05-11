@@ -121,7 +121,7 @@ class JacksonMapMarshallerTest {
         replay objectMapper
 
         try {
-            mapMarshaller.unmarshall(inputStream)
+            mapMarshaller.unmarshall(inputStream, null)
             fail("shouldn't be here")
         } catch (MarshalingException e) {
             assertEquals e.getMessage(), "Unable to convert InputStream String to Map."

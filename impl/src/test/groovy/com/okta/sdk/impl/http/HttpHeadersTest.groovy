@@ -23,6 +23,8 @@ import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 
 import static org.testng.Assert.*
+import static org.hamcrest.MatcherAssert.*
+import static org.hamcrest.Matchers.*
 
 /**
  * @since 1.0.RC9
@@ -401,5 +403,18 @@ class HttpHeadersTest {
         httpHeaders.setLocation(new URI(location))
 
         assertEquals httpHeaders.hashCode(), other.hashCode()
+    }
+
+    @Test
+    void testLinkMap() {
+
+        def headers = new HttpHeaders()
+        headers.add("Link", "<https://example.com/api/v1/users?limit=200>; rel=\"self\"")
+        headers.add("Link", "<https://dev-259824.oktapreview.com/api/v1/users?after=200u9wv2af0FYl791n0h7&limit=200>; rel=\"next\"")
+
+        def result = headers.getLinkMap()
+        assertThat(result.get("self"), equalToObject("https://example.com/api/v1/users?limit=200"))
+        assertThat(result.get("next"), equalToObject("https://dev-259824.oktapreview.com/api/v1/users?after=200u9wv2af0FYl791n0h7&limit=200"))
+        assertThat(result, aMapWithSize(2))
     }
 }

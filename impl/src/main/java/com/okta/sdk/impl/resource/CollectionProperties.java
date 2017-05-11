@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.okta.sdk.impl.resource.AbstractCollectionResource.ITEMS_PROPERTY_NAME;
-import static com.okta.sdk.impl.resource.AbstractCollectionResource.LIMIT;
-import static com.okta.sdk.impl.resource.AbstractCollectionResource.OFFSET;
 
 /**
  * @since 1.0.RC
@@ -32,8 +30,6 @@ public class CollectionProperties extends LinkedHashMap<String, Object> {
     private CollectionProperties(Builder builder) {
 
         put(AbstractResource.HREF_PROP_NAME, builder.href);
-        put(OFFSET.getName(), builder.offset);
-        put(LIMIT.getName(), builder.limit);
         put(ITEMS_PROPERTY_NAME, builder.itemsMapList);
     }
 
@@ -41,8 +37,6 @@ public class CollectionProperties extends LinkedHashMap<String, Object> {
 
         private String href;
         private final List<Map<String, ?>> itemsMapList = new LinkedList<Map<String, ?>>();
-        private int offset;
-        private int limit;
 
 
         public Builder setHref(String href) {
@@ -52,16 +46,6 @@ public class CollectionProperties extends LinkedHashMap<String, Object> {
 
         public Builder setItemsMap(Map<String, ?> itemsMap) {
             itemsMapList.add(itemsMap);
-            return this;
-        }
-
-        public Builder setOffset(int offset) {
-            this.offset = offset;
-            return this;
-        }
-
-        public Builder setLimit(int limit) {
-            this.limit = limit;
             return this;
         }
 
