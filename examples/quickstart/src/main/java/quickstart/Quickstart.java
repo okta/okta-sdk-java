@@ -49,21 +49,18 @@ public class Quickstart {
         Client client = builder.build();
 
         UserGroup group = client.instantiate(UserGroup.class);
-
-        UserGroupProfile groupProfile = client.instantiate(UserGroupProfile.class);
-        groupProfile.setName("my-user-group-"+ UUID.randomUUID().toString());
-        group.setProfile(groupProfile);
+        group.getProfile().setName("my-user-group-"+ UUID.randomUUID().toString());
 
         group = client.createGroup(group);
 
         System.out.println("Group: '"+ group.getId()+ "' was last updated on: "+ group.getLastUpdated());
 
-        UserList users = client.getUsers();
-
-        int ii = 0;
-        for (User user : users) {
-            System.out.println("["+ ii++ +"] User: " + user.getProfile().getEmail());
-        }
+//        UserList users = client.getUsers();
+//
+//        int ii = 0;
+//        for (User user : users) {
+//            System.out.println("["+ ii++ +"] User: " + user.getProfile().getEmail());
+//        }
 
 
 //

@@ -27,6 +27,7 @@ import java.util.Map;
 
 public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 {
+    private static final String CREATE_NESTED_KEY = "x-oktaInstantiateNested";
 
     private final String overrideModelPackage;
 
@@ -87,7 +88,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                     default:
                         propertyType = "ResourceReference";
                         propertyTypeMethod = "getResourceProperty";
-                        property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatype + ".class");
+                        property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatype + ".class, "+ property.vendorExtensions.containsKey(CREATE_NESTED_KEY));
                         property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
                 }
             }
@@ -165,6 +166,14 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                 .replaceAll("\\}", "+ \""));
 
         return co;
+    }
+
+    @Override
+    public void preprocessSwagger(Swagger swagger) {
+        super.preprocessSwagger(swagger);
+
+        // there are a few cases were we want to make sure a .instantiate will create empty nested models
+        swagger.getDefinitions().get("User").getProperties().get("profile").getVendorExtensions().put(CREATE_NESTED_KEY, true);swagger.getDefinitions().get("UserGroup").getProperties().get("profile").getVendorExtensions().put(CREATE_NESTED_KEY, true);
     }
 
     @Override

@@ -22,7 +22,18 @@ import com.okta.sdk.resource.Resource;
  */
 public class ResourceReference<T extends Resource> extends Property<T> {
 
+    private final boolean createOnAccess;
+
     public ResourceReference(String name, Class<T> type) {
+        this(name, type, false);
+    }
+
+    public ResourceReference(String name, Class<T> type, boolean createOnAccess) {
         super(name, type);
+        this.createOnAccess = createOnAccess;
+    }
+
+    public boolean isCreateOnAccess() {
+        return createOnAccess;
     }
 }
