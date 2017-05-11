@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.impl.ds;
 
+import com.okta.sdk.impl.http.Link;
+
 import java.io.InputStream;
 import java.util.Map;
 
@@ -27,6 +29,6 @@ public interface MapMarshaller {
 
     Map unmarshal(String marshalled);
 
-    Map<String, Object> unmarshall(InputStream inputStream);
+    Map<String, Object> unmarshall(InputStream inputStream, Map<String, String> linkMap);
 
 }

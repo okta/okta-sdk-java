@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.okta.sdk.impl.http.Link;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,7 +78,7 @@ public class JacksonMapMarshaller implements MapMarshaller {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<String, Object> unmarshall(InputStream marshalled) {
+    public Map<String, Object> unmarshall(InputStream marshalled, Map<String, String> linkMap) {
         try {
             Object resolvedObj = this.objectMapper.readValue(marshalled, Object.class);
             if (resolvedObj instanceof Map) {
@@ -86,9 +87,7 @@ public class JacksonMapMarshaller implements MapMarshaller {
                 List list = (List) resolvedObj;
                 Map<String, Object> ret = new LinkedHashMap<>();
                 ret.put("items", list);
-                ret.put("offset", 0);
-                ret.put("limit", 100);
-                ret.put("size", list.size());
+                ret.put("nextPage", linkMap.get("next"));
                 ret.put("href", "local");
                 return ret;
             }

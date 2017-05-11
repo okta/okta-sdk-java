@@ -19,6 +19,8 @@ import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.lang.Classes;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -36,12 +38,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public abstract class AbstractCollectionResource<T extends Resource> extends AbstractResource implements CollectionResource<T> {
 
-    public static final IntegerProperty OFFSET = new IntegerProperty("offset");
-    public static final IntegerProperty LIMIT = new IntegerProperty("limit");
-    public static final IntegerProperty SIZE = new IntegerProperty("size");
+    private final Logger log = LoggerFactory.getLogger(AbstractCollectionResource.class);
+
+    public static final StringProperty NEXT_PAGE = new StringProperty("nextPage");
     public static final String ITEMS_PROPERTY_NAME = "items";
 
     private final Map<String, Object> queryParams;
+    private String nextPageHref = null;
 
     private AtomicBoolean firstPageQueryRequired = new AtomicBoolean();
 
@@ -53,10 +56,12 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
     protected AbstractCollectionResource(InternalDataStore dataStore, Map<String, Object> properties) {
         super(dataStore, properties);
         this.queryParams = Collections.emptyMap();
+        this.nextPageHref = getString(NEXT_PAGE);
     }
 
     protected AbstractCollectionResource(InternalDataStore dataStore, Map<String, Object> properties, Map<String, Object> queryParams) {
         super(dataStore, properties);
+        this.nextPageHref = getString(NEXT_PAGE);
         if (queryParams != null) {
             this.queryParams = queryParams;
         } else {
@@ -77,19 +82,12 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
         return isMaterialized(props) && (props.get(ITEMS_PROPERTY_NAME) instanceof Iterable);
     }
 
-    @Override
-    public int getOffset() {
-        return getInt(OFFSET);
+    private String getNextPageHref() {
+        return nextPageHref;
     }
 
-    @Override
-    public int getLimit() {
-        return getInt(LIMIT);
-    }
-
-    @Override
-    public int getSize() {
-        return getInt(SIZE);
+    private boolean hasNextPage() {
+        return getNextPageHref() != null;
     }
 
     /** @since 1.0.RC4.4 */
@@ -143,7 +141,7 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
             }
         }
 
-        return new DefaultPage<T>(getOffset(), getLimit(), getSize(), items);
+        return new DefaultPage<T>(items);
     }
 
 
@@ -199,41 +197,27 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
 
             boolean hasNext = currentPageIterator.hasNext();
 
-            int pageLimit = currentPage.getLimit();
+            //If we have already exhausted the whole collection size there is no need to contact the backend again: https://github.com/okta/okta-sdk-java/issues/161
+            if (!hasNext && hasNextPage()) {
 
-            boolean exhaustedLimit = (currentItemIndex == pageLimit);
+                //if we're done with the current page, and we've exhausted the page limit (i.e. we've read a
+                //full page), we will have to execute another request to check to see if another page exists.
+                //We can't 'trust' the current page iterator to know if more results exist on the server since it
+                //only represents a single page.
 
-            if (!hasNext && exhaustedLimit) {
+                AbstractCollectionResource nextResource =
+                        getDataStore().getResource(getNextPageHref(), resource.getClass());
+                Page<T> nextPage = nextResource.getCurrentPage();
+                Iterator<T> nextIterator = nextPage.getItems().iterator();
 
-                //If we have already exhausted the whole collection size there is no need to contact the backend again: https://github.com/okta/okta-sdk-java/issues/161
-                boolean exhaustedSize = (currentPage.getOffset() + pageLimit) >= getSize();
-                if (!exhaustedSize) {
-
-                    //if we're done with the current page, and we've exhausted the page limit (i.e. we've read a
-                    //full page), we will have to execute another request to check to see if another page exists.
-                    //We can't 'trust' the current page iterator to know if more results exist on the server since it
-                    //only represents a single page.
-
-                    //query for the next page (move the offset up):
-                    int offset = currentPage.getOffset() + pageLimit;
-
-                    Map<String, Object> queryParams = new LinkedHashMap<String, Object>(resource.queryParams);
-                    queryParams.put(OFFSET.getName(), offset);
-                    queryParams.put(LIMIT.getName(), pageLimit);
-
-                    AbstractCollectionResource nextResource =
-                            getDataStore().getResource(resource.getHref(), resource.getClass(), queryParams);
-                    Page<T> nextPage = nextResource.getCurrentPage();
-                    Iterator<T> nextIterator = nextPage.getItems().iterator();
-
-                    if (nextIterator.hasNext()) {
-                        hasNext = true;
-                        //update to reflect the new page:
-                        this.resource = nextResource;
-                        this.currentPage = nextPage;
-                        this.currentPageIterator = nextIterator;
-                        this.currentItemIndex = 0;
-                    }
+                if (nextIterator.hasNext()) {
+                    hasNext = true;
+                    //update to reflect the new page:
+                    this.resource = nextResource;
+                    this.currentPage = nextPage;
+                    this.currentPageIterator = nextIterator;
+                    this.currentItemIndex = 0;
+                    nextPageHref = nextResource.getString(NEXT_PAGE);
                 }
             }
 
@@ -255,31 +239,10 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
 
     private static class DefaultPage<T> implements Page<T> {
 
-        private final int offset;
-        private final int limit;
-        private final int size;
         private final Collection<T> items;
 
-        DefaultPage(int offset, int limit, int size, Collection<T> items) {
-            this.offset = offset;
-            this.limit = limit;
-            this.size = size;
+        DefaultPage(Collection<T> items) {
             this.items = Collections.unmodifiableCollection(items);
-        }
-
-        @Override
-        public int getOffset() {
-            return this.offset;
-        }
-
-        @Override
-        public int getLimit() {
-            return this.limit;
-        }
-
-        @Override
-        public int getSize() {
-            return this.size;
         }
 
         @Override
@@ -292,9 +255,6 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
         List<T> emptyList = Collections.emptyList();
 
         Map<String, Object> properties = new LinkedHashMap<>();
-        properties.put(LIMIT.getName(), 100);
-        properties.put(OFFSET.getName(), 0);
-        properties.put(SIZE.getName(), 0);
         properties.put(ITEMS_PROPERTY_NAME, emptyList);
 
         Constructor<R> ctor = Classes.getConstructor(implClass, InternalDataStore.class, Map.class);
@@ -306,9 +266,6 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
         List<T> singletonList = Collections.singletonList(item);
 
         Map<String, Object> properties = new LinkedHashMap<>();
-        properties.put(LIMIT.getName(), 100);
-        properties.put(OFFSET.getName(), 0);
-        properties.put(SIZE.getName(), 1);
         properties.put(ITEMS_PROPERTY_NAME, singletonList);
 
         Constructor<R> ctor = Classes.getConstructor(implClass, InternalDataStore.class, Map.class);

@@ -38,6 +38,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @since 0.1, gratefully imported from the Spring Framework.
@@ -73,6 +76,8 @@ public class HttpHeaders implements MultiValueMap<String, String> {
     private static final String LOCATION = "Location";
 
     private static final String PRAGMA = "Pragma";
+
+    public static final String LINK = "Link";
 
     public static final String OKTA_REQUEST_ID = "Okta-Request-Id";
 
@@ -496,6 +501,31 @@ public class HttpHeaders implements MultiValueMap<String, String> {
      */
     public String getOktaRequestId() {
         return getFirst(OKTA_REQUEST_ID);
+    }
+
+    public List<String> getLinkHeaders() {
+        return get(LINK);
+    }
+
+    public Map<String, String> getLinkMap() {
+
+        List<String> links = getLinkHeaders();
+        if (!com.okta.sdk.lang.Collections.isEmpty(links)) {
+            List<String> headerValues = headers.get(LINK);
+            return headerValues.stream()
+                    .map(HttpHeaders::parseLinkHeader)
+                    .collect(Collectors.toMap(Link::getRelationType, Link::getHref));
+        }
+        return Collections.emptyMap();
+    }
+
+    private static Link parseLinkHeader(String rawHeader) {
+        Pattern pattern = Pattern.compile("\\<(.*)\\>;.*rel=\"(.*)\"");
+        Matcher matcher = pattern.matcher(rawHeader);
+        if (matcher.matches()) {
+            return new DefaultLink(matcher.group(2), matcher.group(1));
+        }
+        return null;
     }
 
     // Utility methods
