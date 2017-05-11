@@ -334,12 +334,22 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
 
         Object value = getProperty(key);
         if (value == null) {
+
+            if (property.isCreateOnAccess()) {
+                // create the new resource as an empty object so the developer does not need to deal with
+                // calling .instantiate directly
+                T resource = dataStore.instantiate(clazz);
+                setProperty(key, resource, false);
+                return resource;
+            }
             return null;
         }
+
         if (clazz.isInstance(value)) {
             return (T) value;
         }
-        if (value instanceof Map && !((Map) value).isEmpty()) {
+
+        if (value instanceof Map) {
             T resource = dataStore.instantiate(clazz, (Map<String, Object>) value);
 
             //replace the existing link object (map with an href) with the newly constructed Resource instance.
