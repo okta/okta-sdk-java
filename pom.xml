@@ -247,6 +247,7 @@
                 <version>3.0</version>
                 <configuration>
                     <aggregate>true</aggregate>
+                    <skipExistingHeaders>true</skipExistingHeaders>
                     <header>${root.dir}/src/license/header.txt</header>
                     <headerDefinitions>
                         <headerDefinition>${root.dir}/src/license/header_format.xml</headerDefinition>
