@@ -80,6 +80,10 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                         propertyType = "IntegerProperty";
                         propertyTypeMethod = "getInt";
                         break;
+                    case "Date":
+                        propertyType = "DateProperty";
+                        propertyTypeMethod = "getDateProperty";
+                        break;
                     default:
                         propertyType = "ResourceReference";
                         propertyTypeMethod = "getResourceProperty";
