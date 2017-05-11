@@ -38,7 +38,6 @@
   "host": "your-subdomain.okta.com",
   "basePath": "/",
   "schemes": [
-    "http",
     "https"
   ],
   "consumes": [
@@ -136,6 +135,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/PublicAppInstance"
             }
@@ -321,6 +321,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/Schema"
             }
@@ -369,6 +370,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/Schema"
             }
@@ -395,46 +397,6 @@
         ]
       }
     },
-#    "/api/v1/apps/{idOrExternalKey}/sso/saml/metadata": {
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "getSamlMetadata",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "idOrExternalKey",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "query",
-#            "name": "kid",
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "type": "string"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "App"
-#        ]
-#      }
-#    },
     "/api/v1/apps/{id}": {
       "delete": {
         "consumes": [
@@ -470,7 +432,7 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "readAppInstance",
+        "operationId": "getAppInstance",
         "parameters": [
           {
             "in": "path",
@@ -519,6 +481,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/PublicAppInstance"
             }
@@ -670,7 +633,7 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "readConnectorSettings",
+        "operationId": "getConnectorSettings",
         "parameters": [
           {
             "in": "path",
@@ -714,6 +677,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/ConnectorSettings"
             }
@@ -756,6 +720,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/ConnectorSettings"
             }
@@ -903,122 +868,6 @@
         ]
       }
     },
-#    "/api/v1/apps/{id}/customum_support": {
-#      "post": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "setCustomUserManagementSupport",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "id",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "body",
-#            "name": "body",
-#            "schema": {
-#              "type": "object"
-#            }
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "type": "object"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "App"
-#        ]
-#      }
-#    },
-#    "/api/v1/apps/{id}/enableFeatures": {
-#      "post": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "enableAppFeatures",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "id",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "body",
-#            "name": "body",
-#            "schema": {
-#              "type": "object"
-#            }
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success"
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "App"
-#        ]
-#      }
-#    },
-#    "/api/v1/apps/{id}/externalKey": {
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "getExternalId",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "id",
-#            "required": true,
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "type": "string"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "App"
-#        ]
-#      }
-#    },
     "/api/v1/apps/{id}/groups": {
       "get": {
         "consumes": [
@@ -1120,7 +969,7 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "readGroupAppAssignment",
+        "operationId": "getGroupAppAssignment",
         "parameters": [
           {
             "in": "path",
@@ -1181,6 +1030,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/GroupAppAssignment"
             }
@@ -1270,85 +1120,6 @@
 #                "type": "object"
 #              },
 #              "type": "object"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "App"
-#        ]
-#      }
-#    },
-#    "/api/v1/apps/{id}/sso/wsfed/metadata": {
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "getWSFedMetadata",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "id",
-#            "required": true,
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "type": "string"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "App"
-#        ]
-#      }
-#    },
-#    "/api/v1/apps/{id}/types/{typeName}": {
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "getCustomTypeValues",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "id",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "path",
-#            "name": "typeName",
-#            "required": true,
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "items": {
-#                "type": "object"
-#              },
-#              "type": "array"
 #            }
 #          }
 #        },
@@ -1496,6 +1267,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/Schema"
             }
@@ -1721,6 +1493,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/CVDAppUserProfile"
             }
@@ -1831,6 +1604,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/AppUser"
             }
@@ -1898,7 +1672,7 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "readAppUser",
+        "operationId": "getAppUser",
         "parameters": [
           {
             "in": "path",
@@ -1959,6 +1733,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/AppUser"
             }
@@ -2005,6 +1780,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/AppUser"
             }
@@ -2220,39 +1996,45 @@
           "App"
         ]
       },
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "getCertificate",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "certificateId",
-#            "required": true,
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "$ref": "#/definitions/UploadedCertificateMetadata"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "App"
-#        ]
-#      }
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getCertificate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "instanceId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "certificateId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UploadedCertificateMetadata"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
     },
     "/api/v1/apps/{sourceAppInstanceId}/credentials/keys/{keyId}/clone": {
       "post": {
@@ -2298,73 +2080,6 @@
         ],
         "tags": [
           "App"
-        ]
-      }
-    },
-#    "/api/v1/events": {
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "getSystemLogEntries",
-#        "parameters": [
-#          {
-#            "in": "query",
-#            "name": "after",
-#            "type": "string"
-#          },
-#          {
-#            "in": "query",
-#            "name": "filter",
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "items": {
-#                "type": "object"
-#              },
-#              "type": "array"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "Event"
-#        ]
-#      }
-#    },
-    "/api/v1/events/nodelay": {
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "setNoDelay",
-        "parameters": [],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "Event"
         ]
       }
     },
@@ -2442,6 +2157,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/UserGroup"
             }
@@ -2527,6 +2243,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/GroupMembershipMediationRule"
             }
@@ -2644,6 +2361,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/GroupMembershipMediationRule"
             }
@@ -2832,6 +2550,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/UserGroup"
             }
@@ -3200,6 +2919,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/IdpTrust"
             }
@@ -3283,6 +3003,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/JsonWebKeyRSAMediated"
             }
@@ -3388,6 +3109,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/JsonWebKeyRSAMediated"
             }
@@ -3503,6 +3225,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/IdpTargetUser"
             }
@@ -3545,6 +3268,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/IdpTargetUser"
             }
@@ -3758,6 +3482,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/IdpTrust"
             }
@@ -4108,7 +3833,7 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "getAppUser",
+        "operationId": "getIdpAppUser",
         "parameters": [
           {
             "in": "path",
@@ -4215,6 +3940,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/ProfileDefinition"
             }
@@ -4242,62 +3968,62 @@
       }
     },
     "/api/v1/policies": {
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "getPolicies",
-#        "parameters": [
-#          {
-#            "in": "query",
-#            "name": "type",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "query",
-#            "name": "status",
-#            "type": "string"
-#          },
-#          {
-#            "in": "query",
-#            "name": "after",
-#            "type": "string"
-#          },
-#          {
-#            "default": -1,
-#            "format": "int32",
-#            "in": "query",
-#            "name": "limit",
-#            "type": "integer"
-#          },
-#          {
-#            "default": "",
-#            "in": "query",
-#            "name": "expand",
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "type": "object"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "Policy"
-#        ]
-#      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getPolicies",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "default": "",
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicy"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      },
       "post": {
         "consumes": [
           "application/json"
@@ -4307,6 +4033,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/MediationPolicy"
             }
@@ -4418,6 +4145,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/MediationPolicy"
             }
@@ -4515,39 +4243,39 @@
       }
     },
     "/api/v1/policies/{id}/rules": {
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "getPolicyRules",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "id",
-#            "required": true,
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "type": "object"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "Policy"
-#        ]
-#      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getPolicyRules",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationPolicyRule"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Policy"
+        ]
+      },
       "post": {
         "consumes": [
           "application/json"
@@ -4563,6 +4291,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/MediationPolicyRule"
             }
@@ -4692,6 +4421,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/MediationPolicyRule"
             }
@@ -4840,6 +4570,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
             }
@@ -4945,6 +4676,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
             }
@@ -4985,6 +4717,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/OrgCustomSmsMediationTemplate"
             }
@@ -5096,6 +4829,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/InputUserWithGroupIds"
             }
@@ -5213,6 +4947,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/User"
             }
@@ -5254,6 +4989,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/User"
             }
@@ -5406,6 +5142,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/ChangePasswordCredentials"
             }
@@ -5451,6 +5188,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/UserCredentials"
             }
@@ -5496,6 +5234,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/UserCredentials"
             }
@@ -5672,51 +5411,6 @@
 #          }
 #        ],
 #        "summary": "Deactivate User",
-#        "tags": [
-#          "User"
-#        ]
-#      }
-#    },
-#    "/api/v1/users/{id}/lifecycle/expire_password": {
-#      "post": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "description": "This operation transitions the user to the status of `PASSWORD_EXPIRED` so that the user is required to change their password at their next login.",
-#        "operationId": "expirePassword",
-#        "parameters": [
-#          {
-#            "description": "id of user",
-#            "in": "path",
-#            "name": "id",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "default": false,
-#            "description": "Sets the user's password to a temporary password,  if true",
-#            "in": "query",
-#            "name": "tempPassword",
-#            "type": "boolean"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "type": "object"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "summary": "Expire Password",
 #        "tags": [
 #          "User"
 #        ]
@@ -6028,6 +5722,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/MediationRoleAssignment"
             }
@@ -6125,184 +5820,6 @@
             "schema": {
               "$ref": "#/definitions/MediationRoleAssignment"
             }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/roles/{roleId}/targets/catalog/apps": {
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "listAppTargetsForRole",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "id",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "path",
-#            "name": "roleId",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "query",
-#            "name": "after",
-#            "type": "string"
-#          },
-#          {
-#            "default": -1,
-#            "format": "int32",
-#            "in": "query",
-#            "name": "limit",
-#            "type": "integer"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "items": {
-#                "type": "object"
-#              },
-#              "type": "array"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "User"
-#        ]
-#      },
-      "put": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "addAllAppsAsTargetToRole",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "roleId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/roles/{roleId}/targets/catalog/apps/{appName}": {
-      "delete": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "removeAppTargetFromRole",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "roleId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "appName",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      },
-      "put": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "addAppTargetToRole",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "roleId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "appName",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
           }
         },
         "security": [
@@ -6541,6 +6058,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/FactorEnrollRequest"
             }
@@ -6595,6 +6113,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/FactorAuthenticationContext"
             }
@@ -6659,44 +6178,6 @@
         ]
       }
     },
-#    "/api/v1/users/{userId}/factors/questions": {
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "listQuestions",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "userId",
-#            "required": true,
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "items": {
-#                "type": "object"
-#              },
-#              "type": "array"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "User"
-#        ]
-#      }
-#    },
     "/api/v1/users/{userId}/factors/{userFactorId}": {
       "delete": {
         "consumes": [
@@ -6772,99 +6253,7 @@
         "tags": [
           "User"
         ]
-      },
-#      "post": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "updateFactorDevice",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "userId",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "path",
-#            "name": "userFactorId",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "body",
-#            "name": "body",
-#            "schema": {
-#              "$ref": "#/definitions/FactorUpdateRequest"
-#            }
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "$ref": "#/definitions/FactorDevice"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "User"
-#        ]
-#      },
-#      "put": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "updateFactor",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "userId",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "path",
-#            "name": "userFactorId",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "body",
-#            "name": "body",
-#            "schema": {
-#              "$ref": "#/definitions/FactorUpdateRequest"
-#            }
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "$ref": "#/definitions/UserFactor"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "User"
-#        ]
-#      }
+      }
     },
     "/api/v1/users/{userId}/factors/{userFactorId}/devices/{deviceId}": {
       "get": {
@@ -6941,6 +6330,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/FactorDeviceActivationRequest"
             }
@@ -6967,228 +6357,6 @@
         ]
       }
     },
-#    "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate": {
-#      "post": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "activateUserFactor",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "userId",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "path",
-#            "name": "userFactorId",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "body",
-#            "name": "body",
-#            "schema": {
-#              "$ref": "#/definitions/FactorActivationRequest"
-#            }
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "type": "object"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "User"
-#        ]
-#      }
-#    },
-    "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate/email": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "sendActivationEmail",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "userFactorId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/UserFactor"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-#    "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate/poll": {
-#      "post": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "pollFactorActivation",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "userId",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "path",
-#            "name": "userFactorId",
-#            "required": true,
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "type": "object"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "User"
-#        ]
-#      }
-#    },
-    "/api/v1/users/{userId}/factors/{userFactorId}/lifecycle/activate/sms": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "sendActivationSms",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "userFactorId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/definitions/FactorEnrollRequest"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/UserFactor"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-#    "/api/v1/users/{userId}/factors/{userFactorId}/notifications": {
-#      "get": {
-#        "consumes": [
-#          "application/json"
-#        ],
-#        "operationId": "getPendingNotifications",
-#        "parameters": [
-#          {
-#            "in": "path",
-#            "name": "userId",
-#            "required": true,
-#            "type": "string"
-#          },
-#          {
-#            "in": "path",
-#            "name": "userFactorId",
-#            "required": true,
-#            "type": "string"
-#          }
-#        ],
-#        "produces": [
-#          "application/json"
-#        ],
-#        "responses": {
-#          "200": {
-#            "description": "Success",
-#            "schema": {
-#              "items": {
-#                "type": "object"
-#              },
-#              "type": "array"
-#            }
-#          }
-#        },
-#        "security": [
-#          {
-#            "api_token": []
-#          }
-#        ],
-#        "tags": [
-#          "User"
-#        ]
-#      }
-#    },
     "/api/v1/users/{userId}/factors/{userFactorId}/qr/{oneTimeSessionToken}": {
       "get": {
         "consumes": [
@@ -7397,6 +6565,7 @@
           {
             "in": "body",
             "name": "body",
+            "required": true,
             "schema": {
               "$ref": "#/definitions/FactorVerificationRequest"
             }
@@ -7436,7 +6605,7 @@
       },
       "type": "object"
     },
-    "AgentWrapper": {
+    "Agent": {
       "properties": {
         "id": {
           "type": "string"
@@ -7447,7 +6616,7 @@
       },
       "type": "object"
     },
-    "AppFeatureWrapper": {
+    "AppFeature": {
       "properties": {
         "enabled": {
           "type": "boolean"
@@ -7522,51 +6691,68 @@
           "additionalProperties": {
             "type": "object"
           },
+          "readOnly": true,
           "type": "object"
         },
         "_links": {
           "additionalProperties": {
             "$ref": "#/definitions/Link"
           },
+          "readOnly": true,
           "type": "object"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "credentials": {
           "$ref": "#/definitions/AppUser$Credentials"
         },
         "externalId": {
+          "readOnly": true,
           "type": "string"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "lastSync": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "passwordChanged": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "profile": {
           "additionalProperties": {
             "type": "object"
           },
+          "readOnly": true,
           "type": "object"
         },
         "scope": {
           "type": "string"
         },
         "status": {
+          "readOnly": true,
           "type": "string"
         },
         "statusChanged": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "syncState": {
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -7609,6 +6795,7 @@
     "AuthProvider": {
       "properties": {
         "name": {
+          "readOnly": true,
           "type": "string"
         },
         "type": {
@@ -7620,6 +6807,7 @@
             "orn:okta:authn:provider:social",
             "orn:okta:authn:provider:okta:import"
           ],
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -7720,7 +6908,7 @@
       "properties": {
         "agents": {
           "items": {
-            "$ref": "#/definitions/AgentWrapper"
+            "$ref": "#/definitions/Agent"
           },
           "type": "array"
         },
@@ -7732,7 +6920,7 @@
         },
         "features": {
           "items": {
-            "$ref": "#/definitions/AppFeatureWrapper"
+            "$ref": "#/definitions/AppFeature"
           },
           "type": "array"
         },
@@ -7859,64 +7047,6 @@
         },
         "rememberDeviceLifetimeInMinutes": {
           "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "FactorActivationRequest": {
-      "properties": {
-        "attestation": {
-          "type": "string"
-        },
-        "clientData": {
-          "type": "string"
-        },
-        "credentialId": {
-          "type": "string"
-        },
-        "factorId": {
-          "type": "string"
-        },
-        "nextPassCode": {
-          "type": "string"
-        },
-        "passCode": {
-          "type": "string"
-        },
-        "publicKey": {
-          "$ref": "#/definitions/FactorActivationRequest$PublicKey"
-        },
-        "rechallengeExistingFactor": {
-          "type": "boolean"
-        },
-        "registrationData": {
-          "type": "string"
-        },
-        "sessionId": {
-          "type": "string"
-        },
-        "version": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "FactorActivationRequest$PublicKey": {
-      "properties": {
-        "alg": {
-          "type": "string"
-        },
-        "e": {
-          "type": "string"
-        },
-        "ext": {
-          "type": "boolean"
-        },
-        "kty": {
-          "type": "string"
-        },
-        "n": {
-          "type": "string"
         }
       },
       "type": "object"
@@ -8178,18 +7308,23 @@
           "additionalProperties": {
             "type": "object"
           },
+          "readOnly": true,
           "type": "object"
         },
         "_links": {
           "additionalProperties": {
             "$ref": "#/definitions/Link"
           },
+          "readOnly": true,
           "type": "object"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "priority": {
@@ -8346,30 +7481,39 @@
           "additionalProperties": {
             "type": "object"
           },
+          "readOnly": true,
           "type": "object"
         },
         "_links": {
           "additionalProperties": {
             "$ref": "#/definitions/Link"
           },
+          "readOnly": true,
           "type": "object"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "externalId": {
+          "readOnly": true,
           "type": "string"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "profile": {
           "additionalProperties": {
             "type": "object"
           },
+          "readOnly": true,
           "type": "object"
         }
       },
@@ -8412,27 +7556,36 @@
           "additionalProperties": {
             "$ref": "#/definitions/Link"
           },
+          "readOnly": true,
           "type": "object"
         },
         "context": {
           "additionalProperties": {
             "type": "object"
           },
+          "readOnly": true,
           "type": "object"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "expiresAt": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "idp": {
-          "$ref": "#/definitions/IdpTransaction$Idp"
+          "$ref": "#/definitions/IdpTransaction$Idp",
+          "readOnly": true
         },
         "sessionToken": {
+          "readOnly": true,
           "type": "string"
         },
         "status": {
@@ -8441,6 +7594,7 @@
             "ACCOUNT_JIT",
             "SUCCESS"
           ],
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -8449,12 +7603,15 @@
     "IdpTransaction$Idp": {
       "properties": {
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "name": {
+          "readOnly": true,
           "type": "string"
         },
         "type": {
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -8466,15 +7623,21 @@
           "additionalProperties": {
             "$ref": "#/definitions/Link"
           },
+          "readOnly": true,
           "type": "object"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "name": {
@@ -8491,6 +7654,7 @@
             "ACTIVE",
             "INACTIVE"
           ],
+          "readOnly": true,
           "type": "string"
         },
         "type": {
@@ -8606,12 +7770,16 @@
           "type": "string"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "e": {
           "type": "string"
         },
         "expiresAt": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "key_ops": {
@@ -8621,12 +7789,16 @@
           "type": "array"
         },
         "kid": {
+          "readOnly": true,
           "type": "string"
         },
         "kty": {
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "n": {
@@ -8636,18 +7808,21 @@
           "type": "string"
         },
         "use": {
+          "readOnly": true,
           "type": "string"
         },
         "x5c": {
           "items": {
             "type": "string"
           },
+          "readOnly": true,
           "type": "array"
         },
         "x5t": {
           "type": "string"
         },
         "x5t#S256": {
+          "readOnly": true,
           "type": "string"
         },
         "x5u": {
@@ -8855,21 +8030,28 @@
           "additionalProperties": {
             "type": "object"
           },
+          "readOnly": true,
           "type": "object"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "description": {
           "type": "string"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "label": {
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "status": {
@@ -8877,9 +8059,11 @@
             "ACTIVE",
             "INACTIVE"
           ],
+          "readOnly": true,
           "type": "string"
         },
         "type": {
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -8914,12 +8098,17 @@
     "OrgCustomSmsMediationTemplate": {
       "properties": {
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "name": {
@@ -9106,7 +8295,8 @@
           "$ref": "#/definitions/IdpCredentials"
         },
         "endpoints": {
-          "$ref": "#/definitions/Protocol$EndpointsList"
+          "$ref": "#/definitions/Protocol$EndpointsList",
+          "readOnly": true
         },
         "scopes": {
           "items": {
@@ -9124,6 +8314,7 @@
             "OAUTH2",
             "MTLS"
           ],
+          "readOnly": true,
           "type": "string"
         },
         "validation": {
@@ -9196,6 +8387,7 @@
     "Protocol$Endpoint": {
       "properties": {
         "binding": {
+          "readOnly": true,
           "type": "string"
         },
         "destination": {
@@ -9215,6 +8407,7 @@
           "type": "string"
         },
         "url": {
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -9226,7 +8419,8 @@
           "$ref": "#/definitions/Protocol$Endpoint"
         },
         "authorization": {
-          "$ref": "#/definitions/Protocol$Endpoint"
+          "$ref": "#/definitions/Protocol$Endpoint",
+          "readOnly": true
         },
         "metadata": {
           "$ref": "#/definitions/Protocol$Endpoint"
@@ -9238,7 +8432,8 @@
           "$ref": "#/definitions/Protocol$Endpoint"
         },
         "token": {
-          "$ref": "#/definitions/Protocol$Endpoint"
+          "$ref": "#/definitions/Protocol$Endpoint",
+          "readOnly": true
         }
       },
       "type": "object"
@@ -9321,18 +8516,22 @@
           "additionalProperties": {
             "type": "object"
           },
+          "readOnly": true,
           "type": "object"
         },
         "_links": {
           "additionalProperties": {
             "$ref": "#/definitions/LinksUnion"
           },
+          "readOnly": true,
           "type": "object"
         },
         "accessibility": {
           "$ref": "#/definitions/PublicAppInstance$Accessibility"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "credentials": {
@@ -9345,18 +8544,22 @@
           "type": "array"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "label": {
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "licensing": {
           "$ref": "#/definitions/PublicAppInstance$Licensing"
         },
         "name": {
+          "readOnly": true,
           "type": "string"
         },
         "settings": {
@@ -9371,6 +8574,7 @@
             "INACTIVE",
             "DELETED"
           ],
+          "readOnly": true,
           "type": "string"
         },
         "visibility": {
@@ -9622,33 +8826,46 @@
           "additionalProperties": {
             "type": "object"
           },
+          "readOnly": true,
           "type": "object"
         },
         "_links": {
           "additionalProperties": {
             "$ref": "#/definitions/Link"
           },
+          "readOnly": true,
           "type": "object"
         },
         "activated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "credentials": {
           "$ref": "#/definitions/UserCredentials"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "lastLogin": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "passwordChanged": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "profile": {
@@ -9665,9 +8882,12 @@
             "DEPROVISIONED",
             "SUSPENDED"
           ],
+          "readOnly": true,
           "type": "string"
         },
         "statusChanged": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "transitioningToStatus": {
@@ -9681,6 +8901,7 @@
             "DEPROVISIONED",
             "SUSPENDED"
           ],
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -9703,7 +8924,8 @@
           "$ref": "#/definitions/PasswordCredential"
         },
         "provider": {
-          "$ref": "#/definitions/AuthProvider"
+          "$ref": "#/definitions/AuthProvider",
+          "readOnly": true
         },
         "recovery_question": {
           "$ref": "#/definitions/RecoveryQuestionCredential"
@@ -9721,36 +8943,47 @@
           "additionalProperties": {
             "$ref": "#/definitions/EmbeddedObject"
           },
+          "readOnly": true,
           "type": "object"
         },
         "_links": {
           "additionalProperties": {
             "$ref": "#/definitions/LinksUnion"
           },
+          "readOnly": true,
           "type": "object"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "lastMembershipUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "objectClass": {
           "items": {
             "type": "string"
           },
+          "readOnly": true,
           "type": "array"
         },
         "profile": {
           "$ref": "#/definitions/UserGroupProfile"
         },
         "type": {
+          "readOnly": true,
           "type": "string"
         }
       },

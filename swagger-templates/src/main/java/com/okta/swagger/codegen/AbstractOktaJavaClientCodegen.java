@@ -76,6 +76,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
     public AbstractOktaJavaClientCodegen(String codeGenName, String relativeTemplateDir, String modelPackage) {
         super();
         this.codeGenName = codeGenName;
+        this.dateLibrary = "legacy";
 
         outputFolder = "generated-code" + File.separator + codeGenName;
         embeddedTemplateDir = templateDir = relativeTemplateDir;
