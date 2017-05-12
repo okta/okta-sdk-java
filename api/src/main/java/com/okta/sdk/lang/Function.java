@@ -17,9 +17,7 @@ package com.okta.sdk.lang;
 
 /**
  * Represents a function that accepts one argument and produces a result.
- * <p>
  * <p>This is a functional interface whose functional method is {@link #apply(Object)}.</p>
- * <p>
  * <p>This is mostly for internal development needs to allow for certain JDK 8 functionality in a JDK 7 environment.</p>
  *
  * @param <T> the type of the input to the function

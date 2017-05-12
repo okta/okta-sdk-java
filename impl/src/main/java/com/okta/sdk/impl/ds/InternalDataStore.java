@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * Internal DataStore used for implementation purposes only.  Not intended to be called by SDK end users!
- * <p/>
+ * <p>
  * <b>WARNING: This API CAN CHANGE AT ANY TIME, WITHOUT NOTICE.  DO NOT DEPEND ON IT.</b>
  *
  * @since 1.0.0

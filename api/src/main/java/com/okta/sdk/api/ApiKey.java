@@ -21,22 +21,14 @@ import com.okta.sdk.resource.Saveable;
 
 /**
  * An ApiKey is a secure random username/password pair (called an {@link #getId() id} and
- * {@link #getSecret() secret}) attributed to an {@link Account} that can be used by the account to make secure
- * requests to an API service.
- *
- * <p>An {@link Account Account} may have zero or more ApiKeys, and allowing multiple keys is often useful for key
- * rotation strategies.  For example, a new key can be generated while an existing key is in use.  Applications can
- * then reference the new key (e.g. on startup), and once running, the old key can then be deleted.  This allows for
- * key rotation without an interruption in service, which would happen otherwise if an old key was invalidated the
- * instant a new key was generated.</p>
+ * {@link #getSecret() secret}) that can be used by the account to make secure requests
+ * to an API service.
  *
  * @see #getId()
  * @see #getSecret()
- * @see #getAccount()
  * @since 1.0.0
  */
-public interface ApiKey extends Resource, Saveable, Deletable {
-    // temporarily extending com.okta.sdk.client.ApiKey before deleting it in 1.0 final
+public interface ApiKey extends Resource {
 
     /**
      * Returns the ApiKey ID that uniquely identifies this ApiKey among all others.
@@ -60,29 +52,4 @@ public interface ApiKey extends Resource, Saveable, Deletable {
      * @return the ApiKey plaintext secret
      */
     String getSecret();
-
-    /**
-     * Returns the ApiKey status.  ApiKeys that are not {@link ApiKeyStatus#ENABLED ENABLED} cannot be used to
-     * authenticate requests.  ApiKeys are enabled by default when they are created.
-     *
-     * @return the ApiKey status.
-     */
-    ApiKeyStatus getStatus();
-
-    /**
-     * Sets the ApiKey status.  ApiKeys that are not {@link ApiKeyStatus#ENABLED ENABLED} cannot be used to
-     * authenticate requests. ApiKeys are enabled by default when they are created.
-     *
-     * @param status the api key's status.
-     */
-    void setStatus(ApiKeyStatus status);
-
-    /**
-     * Saves this ApiKey resource and ensures the server response reflects the specified {@link
-     * ApiKeyOptions}.
-     *
-     * @param options The {@link ApiKeyOptions} to use to customize the ApiKey resource representation returned in the
-     *                save response.
-     */
-    void save(ApiKeyOptions options);
 }

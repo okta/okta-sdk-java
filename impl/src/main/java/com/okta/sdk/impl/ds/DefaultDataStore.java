@@ -23,7 +23,6 @@ import com.okta.sdk.impl.api.ApiKeyResolver;
 import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials;
 import com.okta.sdk.impl.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.cache.DisabledCacheManager;
-import com.okta.sdk.impl.ds.api.ApiKeyQueryFilter;
 import com.okta.sdk.impl.ds.api.DecryptApiKeySecretFilter;
 import com.okta.sdk.impl.ds.cache.CacheResolver;
 import com.okta.sdk.impl.ds.cache.DefaultCacheResolver;
@@ -157,10 +156,6 @@ public class DefaultDataStore implements InternalDataStore {
         if (isCachingEnabled()) {
             this.filters.add(new ReadCacheFilter(this.baseUrlResolver, this.cacheResolver, COLLECTION_CACHING_ENABLED));
             this.filters.add(new WriteCacheFilter(this.baseUrlResolver, this.cacheResolver, COLLECTION_CACHING_ENABLED, referenceFactory));
-        }
-
-        if(clientCredentials instanceof ApiKeyCredentials) {
-            this.filters.add(new ApiKeyQueryFilter(this.queryStringFactory));
         }
 
         this.filters.add(new ProviderAccountResultFilter());

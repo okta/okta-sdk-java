@@ -15,8 +15,6 @@
  */
 package com.okta.sdk.impl.api
 
-import com.okta.sdk.api.ApiKeyOptions
-import com.okta.sdk.api.ApiKeyStatus
 import org.testng.annotations.Test
 
 import static org.testng.Assert.*
@@ -80,40 +78,9 @@ class ClientApiKeyTest {
     }
 
     @Test(expectedExceptions = IllegalAccessError)
-    void testApiKeyStatus() {
-        def apiKey = new ClientApiKey("fooId", "barSecret")
-        apiKey.getStatus()
-    }
-
-    @Test(expectedExceptions = IllegalAccessError)
-    void testSetStatus() {
-        def apiKey = new ClientApiKey("fooId", "barSecret")
-        apiKey.setStatus(ApiKeyStatus.ENABLED)
-    }
-
-    @Test(expectedExceptions = IllegalAccessError)
-    void testSaveWithOptions() {
-        def apiKey = new ClientApiKey("fooId", "barSecret")
-        ApiKeyOptions mock = [] as ApiKeyOptions
-        apiKey.save(mock)
-    }
-
-    @Test(expectedExceptions = IllegalAccessError)
-    void testDelete() {
-        def apiKey = new ClientApiKey("fooId", "barSecret")
-        apiKey.delete()
-    }
-
-    @Test(expectedExceptions = IllegalAccessError)
     void testGetHref() {
         def apiKey = new ClientApiKey("fooId", "barSecret")
         apiKey.getHref()
-    }
-
-    @Test(expectedExceptions = IllegalAccessError)
-    void testSave() {
-        def apiKey = new ClientApiKey("fooId", "barSecret")
-        apiKey.save()
     }
 
 }

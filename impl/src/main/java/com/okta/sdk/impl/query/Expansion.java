@@ -20,18 +20,17 @@ import com.okta.sdk.query.Criterion;
 
 /**
  * An expansion represents a request to materialize a referenced resource within the requested resource itself.
- * <p/>
+ * <p>
  * For example, an Account resource references its parent/owning directory, itself a complex object.  Normally when
  * returning an Account resource, the account's directory is represented as a linked resource, and the directory's
  * properties are not included in the Account's resource representation.
- * <p/>
+ * <p>
  * If, when querying for the account, an expansion directive is specified (e.g. expand=directory), then the caller is
  * requesting that not only should the account be returned materialized but also that its referenced directory should
  * be included in the result, materialized as well.  For example:
- * <p/>
  * <h3>Default Behavior (no expansion)</h3>
- * <p/>
- * Request: GET /accounts/someAccountId<br/>
+ * <p>
+ * Request: GET /accounts/someAccountId<br>
  * Response:
  * <pre>
  * {
@@ -45,8 +44,8 @@ import com.okta.sdk.query.Criterion;
  * </pre>
  * Notice that the directory property is a complex object with only an {@code href} property - i.e. it is a link only.
  * <h3>With Expansion</h3>
- * <p/>
- * Request: GET /accounts/someAccountId?expand=directory<br/>
+ * <p>
+ * Request: GET /accounts/someAccountId?expand=directory<br>
  * Response:
  * <pre>
  * {

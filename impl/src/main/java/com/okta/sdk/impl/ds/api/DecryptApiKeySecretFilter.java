@@ -16,9 +16,7 @@
 package com.okta.sdk.impl.ds.api;
 
 import com.okta.sdk.api.ApiKey;
-import com.okta.sdk.api.ApiKeyList;
 import com.okta.sdk.impl.api.ApiKeyParameter;
-import com.okta.sdk.impl.api.DefaultApiKeyList;
 import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials;
 import com.okta.sdk.impl.ds.DefaultResourceDataResult;
 import com.okta.sdk.impl.ds.Filter;
@@ -31,10 +29,7 @@ import com.okta.sdk.impl.security.EncryptionService;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.resource.Resource;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,31 +62,11 @@ public class DecryptApiKeySecretFilter implements Filter {
 
         Class<? extends Resource> clazz = result.getResourceClass();
 
-        if (!(ApiKey.class.isAssignableFrom(clazz) || ApiKeyList.class.isAssignableFrom(clazz))) {
+        if (!(ApiKey.class.isAssignableFrom(clazz))) {
             return result;
         }
 
         Map<String, Object> data = result.getData();
-
-        if (DefaultApiKeyList.isCollectionResource(data)) {
-
-            @SuppressWarnings("unchecked")
-            Collection<Map<String, Object>> items = (Collection<Map<String, Object>>) data.get(DefaultApiKeyList.ITEMS_PROPERTY_NAME);
-
-            if (items.isEmpty()) {
-                return result;
-            }
-
-            List<Map<String, Object>> clonedItems = new ArrayList<Map<String, Object>>(items.size());
-
-            for (Map<String, Object> item : items) {
-                clonedItems.add(clone(item));
-            }
-
-            data.put(DefaultApiKeyList.ITEMS_PROPERTY_NAME, clonedItems);
-
-            return result;
-        }
 
         return new DefaultResourceDataResult(result.getAction(), result.getUri(), clazz, clone(data));
     }

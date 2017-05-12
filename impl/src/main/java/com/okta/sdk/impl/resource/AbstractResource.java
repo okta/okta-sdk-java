@@ -278,14 +278,15 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * All other overloaded implementations of setProperty method will assume isNullable=false
      * and therefore setting the value to null by calling those methods, will take no effect and
      * retain the old/previous value for the property.
-     *
+     * @param property the key of the value to set
+     * @param value the actual value to be set
+     * @param dirty mark the object as dirty if true
+     * @param isNullable true if the value can be set to {@code null}
      */
     protected void setProperty(Property property, Object value, final boolean dirty, final boolean isNullable) {
         setProperty(property.getName(), value, dirty, isNullable);
     }
 
-    /**
-     */
     private Object setProperty(String name, Object value, final boolean dirty, final boolean isNullable) {
         writeLock.lock();
         Object previous;
@@ -317,8 +318,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         return previous;
     }
 
-    /**
-     */
     @SuppressWarnings("unchecked")
     protected <T extends Resource> T getResourceProperty(ResourceReference<T> property) {
         String key = property.getName();
@@ -361,7 +360,8 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
 
     /**
      * Returns the {@link List} property identified by {@code key}
-     *
+     * @param property identifier
+     * @return property identified by {@code property}
      */
     protected List getListProperty(ListProperty property){
         return getListProperty(property.getName());
@@ -419,11 +419,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
 //        throw new IllegalArgumentException(msg);
 //    }
 
-    /**
-     * @param property
-     * @param value
-     * @param <T>
-     */
     protected <T extends Resource> void setResourceProperty(ResourceReference<T> property, Resource value) {
         Assert.notNull(property, "Property argument cannot be null.");
         String name = property.getName();
@@ -439,6 +434,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      *
      * @param property the property whose value is going to be set to <code>value</code>
      * @param value    the value to be set to <code>property</code>
+     * @param <T>      the type of Resource returned
      */
     protected <T extends Resource> void setMaterializableResourceProperty(ResourceReference<T> property, Resource value) {
         Assert.notNull(property, "Property argument cannot be null.");

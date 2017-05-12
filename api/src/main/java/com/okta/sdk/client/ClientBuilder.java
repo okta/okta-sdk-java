@@ -99,7 +99,7 @@ import com.okta.sdk.cache.CacheManager;
  *     <li>It auto-sizes itself based on your application's memory usage.  It will not cause OutOfMemoryExceptions.
  *         (It does this by retaining only 100 strong references to cached objects.  Additional cached objects are
  *          weakly referenced, ensuring the garbage collector can evict weakly referenced cache entries if it needs
- *          more memory for your application.).</li>
+ *          more memory for your application.).
  *     </li>
  * </ul>
  *
@@ -300,6 +300,7 @@ public interface ClientBuilder {
      *
      * @param cacheManager the {@link CacheManager} that should be used to cache Okta REST resources, reducing
      *                     round-trips to the Okta API server and enhancing application performance.
+     * @return the ClientBuilder instance for method chaining
      */
     ClientBuilder setCacheManager(CacheManager cacheManager);
 

@@ -30,12 +30,12 @@ public interface Request extends HttpMessage {
     /**
      * Returns the request target resource's Uniform Resource Locator location <em>without a query string</em>.  Query
      * string parameters are maintained separately via the {@link #getQueryString() queryString} property.
-     * <p/>
+     * <p>
      * This URI can be thought of the request fully qualified URL before any question mark indicating query parameters,
      * e.g. the parts in bold only:
-     * <p/>
-     * <code><b>https://some.host.com/some/resource/path/here</b>?some=param&another=param</code>.
-     * <p/>
+     * <p>
+     * {@code https://some.host.com/some/resource/path/here?some=param&another=param}.
+     * <p>
      * Any potential question mark itself and anything after it are not included.
      *
      * @return the request target resource's Uniform Resource Locator location <em>without a query string</em>.

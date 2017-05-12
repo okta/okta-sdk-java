@@ -31,7 +31,7 @@ import java.util.SimpleTimeZone;
 /**
  * This {@link RequestAuthenticator} implements a <a href="http://docs.okta.com/rest/product-guide/#authentication-basic">HTTP
  * Basic Authentication</a> scheme. This defines the HTTP authentication scheme to be used when communicating with the Okta API server.
- * </pre>
+ * <p>
  * The `Client` gets the request authenticator configured via
  * {@link com.okta.sdk.client.ClientBuilder#setAuthenticationScheme(com.okta.sdk.client.AuthenticationScheme)}
  *

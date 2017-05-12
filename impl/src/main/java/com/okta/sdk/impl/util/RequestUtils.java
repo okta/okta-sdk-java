@@ -28,7 +28,7 @@ public class RequestUtils {
      * Returns {@code true} if the specified URI uses a standard port (i.e. http == 80 or https == 443),
      * {@code false} otherwise.
      *
-     * @param uri
+     * @param uri true if the specified URI uses a standard port
      * @return true if the specified URI is using a non-standard port, false otherwise
      */
     public static boolean isDefaultPort(URI uri) {

@@ -1,11 +1,11 @@
 /*
- * Copyright 2014 Stormpath, Inc.
+ * Copyright 2002-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.okta.sdk.lang;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -29,8 +32,32 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.TreeSet;
+import java.util.TimeZone;
 
+/**
+ * Miscellaneous {@link String} utility methods.
+ *
+ * <p>Mainly for internal use within the framework; consider
+ * <a href="http://commons.apache.org/proper/commons-lang/">Apache's Commons Lang</a>
+ * for a more comprehensive suite of {@code String} utilities.
+ *
+ * <p>This class delivers some simple functionality that should really be
+ * provided by the core Java {@link String} and {@link StringBuilder}
+ * classes. It also provides easy-to-use methods to convert between
+ * delimited strings, such as CSV strings, and collections and arrays.
+ *
+ * Borrowed from the <a href="https://github.com/spring-projects/spring-framework/blob/master/spring-core/src/main/java/org/springframework/util/StringUtils.java">Spring Framework</a>
+ *
+ * @author Rod Johnson
+ * @author Juergen Hoeller
+ * @author Keith Donald
+ * @author Rob Harrop
+ * @author Rick Evans
+ * @author Arjen Poutsma
+ * @author Sam Brannen
+ * @author Brian Clozel
+ * @since 16 April 2001
+ */
 public abstract class Strings {
 
     private static final String FOLDER_SEPARATOR = "/";
@@ -43,41 +70,40 @@ public abstract class Strings {
 
     private static final char EXTENSION_SEPARATOR = '.';
 
-    /**
-     * Constant representing the empty string, equal to &quot;&quot;
-     */
-    public static final String EMPTY_STRING = "";
-
-    /**
-     * Constant representing the default delimiter character (comma), equal to <code>','</code>
-     */
-    public static final char DEFAULT_DELIMITER_CHAR = ',';
-
-    /**
-     * Constant representing the default quote character (double quote), equal to <code>'&quot;'</code>
-     */
-    public static final char DEFAULT_QUOTE_CHAR = '"';
-
-    /**
-     * Constant representing the UTF-8 Charset.
-     */
-    public static final Charset UTF_8 = Charset.forName("UTF-8");
 
     //---------------------------------------------------------------------
     // General convenience methods for working with Strings
     //---------------------------------------------------------------------
 
     /**
-     * Check that the given CharSequence is neither <code>null</code> nor of length 0.
-     * Note: Will return <code>true</code> for a CharSequence that purely consists of whitespace.
-     * <p><pre>
-     * Strings.hasLength(null) = false
-     * Strings.hasLength("") = false
-     * Strings.hasLength(" ") = true
-     * Strings.hasLength("Hello") = true
+     * Check whether the given {@code String} is empty.
+     * <p>This method accepts any Object as an argument, comparing it to
+     * {@code null} and the empty String. As a consequence, this method
+     * will never return {@code true} for a non-null non-String object.
+     * <p>The Object signature is useful for general attribute handling code
+     * that commonly deals with Strings but generally has to iterate over
+     * Objects since attributes may e.g. be primitive value objects as well.
+     * @param str the candidate String
+     * @since 3.2.1
+     * @return true if string is empty or null;
+     */
+    public static boolean isEmpty(Object str) {
+        return (str == null || "".equals(str));
+    }
+
+    /**
+     * Check that the given {@code CharSequence} is neither {@code null} nor
+     * of length 0.
+     * <p>Note: this method returns {@code true} for a {@code CharSequence}
+     * that purely consists of whitespace.
+     * <pre class="code">
+     * StringUtils.hasLength(null) = false
+     * StringUtils.hasLength("") = false
+     * StringUtils.hasLength(" ") = true
+     * StringUtils.hasLength("Hello") = true
      * </pre>
-     * @param str the CharSequence to check (may be <code>null</code>)
-     * @return <code>true</code> if the CharSequence is not null and has length
+     * @param str the {@code CharSequence} to check (may be {@code null})
+     * @return {@code true} if the {@code CharSequence} is not {@code null} and has length
      * @see #hasText(String)
      */
     public static boolean hasLength(CharSequence str) {
@@ -85,36 +111,40 @@ public abstract class Strings {
     }
 
     /**
-     * Check that the given String is neither <code>null</code> nor of length 0.
-     * Note: Will return <code>true</code> for a String that purely consists of whitespace.
-     * @param str the String to check (may be <code>null</code>)
-     * @return <code>true</code> if the String is not null and has length
+     * Check that the given {@code String} is neither {@code null} nor of length 0.
+     * <p>Note: this method returns {@code true} for a {@code String} that
+     * purely consists of whitespace.
+     * @param str the {@code String} to check (may be {@code null})
+     * @return {@code true} if the {@code String} is not {@code null} and has length
      * @see #hasLength(CharSequence)
+     * @see #hasText(String)
      */
     public static boolean hasLength(String str) {
         return hasLength((CharSequence) str);
     }
 
     /**
-     * Check whether the given CharSequence has actual text.
-     * More specifically, returns <code>true</code> if the string not <code>null</code>,
-     * its length is greater than 0, and it contains at least one non-whitespace character.
-     * <p><pre>
-     * Strings.hasText(null) = false
-     * Strings.hasText("") = false
-     * Strings.hasText(" ") = false
-     * Strings.hasText("12345") = true
-     * Strings.hasText(" 12345 ") = true
+     * Check whether the given {@code CharSequence} contains actual <em>text</em>.
+     * <p>More specifically, this method returns {@code true} if the
+     * {@code CharSequence} is not {@code null}, its length is greater than
+     * 0, and it contains at least one non-whitespace character.
+     * <pre class="code">
+     * StringUtils.hasText(null) = false
+     * StringUtils.hasText("") = false
+     * StringUtils.hasText(" ") = false
+     * StringUtils.hasText("12345") = true
+     * StringUtils.hasText(" 12345 ") = true
      * </pre>
-     * @param str the CharSequence to check (may be <code>null</code>)
-     * @return <code>true</code> if the CharSequence is not <code>null</code>,
+     * @param str the {@code CharSequence} to check (may be {@code null})
+     * @return {@code true} if the {@code CharSequence} is not {@code null},
      * its length is greater than 0, and it does not contain whitespace only
-     * @see java.lang.Character#isWhitespace
+     * @see Character#isWhitespace
      */
     public static boolean hasText(CharSequence str) {
         if (!hasLength(str)) {
             return false;
         }
+
         int strLen = str.length();
         for (int i = 0; i < strLen; i++) {
             if (!Character.isWhitespace(str.charAt(i))) {
@@ -125,12 +155,13 @@ public abstract class Strings {
     }
 
     /**
-     * Check whether the given String has actual text.
-     * More specifically, returns <code>true</code> if the string not <code>null</code>,
-     * its length is greater than 0, and it contains at least one non-whitespace character.
-     * @param str the String to check (may be <code>null</code>)
-     * @return <code>true</code> if the String is not <code>null</code>, its length is
-     * greater than 0, and it does not contain whitespace only
+     * Check whether the given {@code String} contains actual <em>text</em>.
+     * <p>More specifically, this method returns {@code true} if the
+     * {@code String} is not {@code null}, its length is greater than 0,
+     * and it contains at least one non-whitespace character.
+     * @param str the {@code String} to check (may be {@code null})
+     * @return {@code true} if the {@code String} is not {@code null}, its
+     * length is greater than 0, and it does not contain whitespace only
      * @see #hasText(CharSequence)
      */
     public static boolean hasText(String str) {
@@ -138,16 +169,17 @@ public abstract class Strings {
     }
 
     /**
-     * Check whether the given CharSequence contains any whitespace characters.
-     * @param str the CharSequence to check (may be <code>null</code>)
-     * @return <code>true</code> if the CharSequence is not empty and
+     * Check whether the given {@code CharSequence} contains any whitespace characters.
+     * @param str the {@code CharSequence} to check (may be {@code null})
+     * @return {@code true} if the {@code CharSequence} is not empty and
      * contains at least 1 whitespace character
-     * @see java.lang.Character#isWhitespace
+     * @see Character#isWhitespace
      */
     public static boolean containsWhitespace(CharSequence str) {
         if (!hasLength(str)) {
             return false;
         }
+
         int strLen = str.length();
         for (int i = 0; i < strLen; i++) {
             if (Character.isWhitespace(str.charAt(i))) {
@@ -158,9 +190,9 @@ public abstract class Strings {
     }
 
     /**
-     * Check whether the given String contains any whitespace characters.
-     * @param str the String to check (may be <code>null</code>)
-     * @return <code>true</code> if the String is not empty and
+     * Check whether the given {@code String} contains any whitespace characters.
+     * @param str the {@code String} to check (may be {@code null})
+     * @return {@code true} if the {@code String} is not empty and
      * contains at least 1 whitespace character
      * @see #containsWhitespace(CharSequence)
      */
@@ -169,42 +201,16 @@ public abstract class Strings {
     }
 
     /**
-     * Returns a 'cleaned' representation of the specified argument.  'Cleaned' is defined as the following:
-     * <p>
-     * <ol>
-     * <li>If the specified <code>String</code> is <code>null</code>, return <code>null</code></li>
-     * <li>If not <code>null</code>, {@link String#trim() trim()} it.</li>
-     * <li>If the trimmed string is equal to the empty String (i.e. &quot;&quot;), return <code>null</code></li>
-     * <li>If the trimmed string is not the empty string, return the trimmed version</li>
-     * </ol>
-     * <p>
-     * Therefore this method always ensures that any given string has trimmed text, and if it doesn't, <code>null</code>
-     * is returned.
-     *
-     * @param s the input String to clean.
-     * @return a populated-but-trimmed String or <code>null</code> otherwise
-     */
-    public static String clean(String s) {
-        if (s == null) {
-            return null;
-        }
-        String value = trimWhitespace(s);
-        if (value == null || "".equals(value)) {
-            return null;
-        }
-        return value;
-    }
-
-    /**
-     * Trim leading and trailing whitespace from the given String.
-     * @param str the String to check
-     * @return the trimmed String
+     * Trim leading and trailing whitespace from the given {@code String}.
+     * @param str the {@code String} to check
+     * @return the trimmed {@code String}
      * @see java.lang.Character#isWhitespace
      */
     public static String trimWhitespace(String str) {
         if (!hasLength(str)) {
             return str;
         }
+
         StringBuilder sb = new StringBuilder(str);
         while (sb.length() > 0 && Character.isWhitespace(sb.charAt(0))) {
             sb.deleteCharAt(0);
@@ -216,39 +222,39 @@ public abstract class Strings {
     }
 
     /**
-     * Trim <i>all</i> whitespace from the given String:
-     * leading, trailing, and inbetween characters.
-     * @param str the String to check
-     * @return the trimmed String
+     * Trim <i>all</i> whitespace from the given {@code String}:
+     * leading, trailing, and in between characters.
+     * @param str the {@code String} to check
+     * @return the trimmed {@code String}
      * @see java.lang.Character#isWhitespace
      */
     public static String trimAllWhitespace(String str) {
         if (!hasLength(str)) {
             return str;
         }
-        StringBuilder sb = new StringBuilder(str);
-        int index = 0;
-        while (sb.length() > index) {
-            if (Character.isWhitespace(sb.charAt(index))) {
-                sb.deleteCharAt(index);
-            }
-            else {
-                index++;
+
+        int len = str.length();
+        StringBuilder sb = new StringBuilder(str.length());
+        for (int i = 0; i < len; i++) {
+            char c = str.charAt(i);
+            if (!Character.isWhitespace(c)) {
+                sb.append(c);
             }
         }
         return sb.toString();
     }
 
     /**
-     * Trim leading whitespace from the given String.
-     * @param str the String to check
-     * @return the trimmed String
+     * Trim leading whitespace from the given {@code String}.
+     * @param str the {@code String} to check
+     * @return the trimmed {@code String}
      * @see java.lang.Character#isWhitespace
      */
     public static String trimLeadingWhitespace(String str) {
         if (!hasLength(str)) {
             return str;
         }
+
         StringBuilder sb = new StringBuilder(str);
         while (sb.length() > 0 && Character.isWhitespace(sb.charAt(0))) {
             sb.deleteCharAt(0);
@@ -257,15 +263,16 @@ public abstract class Strings {
     }
 
     /**
-     * Trim trailing whitespace from the given String.
-     * @param str the String to check
-     * @return the trimmed String
+     * Trim trailing whitespace from the given {@code String}.
+     * @param str the {@code String} to check
+     * @return the trimmed {@code String}
      * @see java.lang.Character#isWhitespace
      */
     public static String trimTrailingWhitespace(String str) {
         if (!hasLength(str)) {
             return str;
         }
+
         StringBuilder sb = new StringBuilder(str);
         while (sb.length() > 0 && Character.isWhitespace(sb.charAt(sb.length() - 1))) {
             sb.deleteCharAt(sb.length() - 1);
@@ -274,15 +281,16 @@ public abstract class Strings {
     }
 
     /**
-     * Trim all occurences of the supplied leading character from the given String.
-     * @param str the String to check
+     * Trim all occurrences of the supplied leading character from the given {@code String}.
+     * @param str the {@code String} to check
      * @param leadingCharacter the leading character to be trimmed
-     * @return the trimmed String
+     * @return the trimmed {@code String}
      */
     public static String trimLeadingCharacter(String str, char leadingCharacter) {
         if (!hasLength(str)) {
             return str;
         }
+
         StringBuilder sb = new StringBuilder(str);
         while (sb.length() > 0 && sb.charAt(0) == leadingCharacter) {
             sb.deleteCharAt(0);
@@ -291,15 +299,16 @@ public abstract class Strings {
     }
 
     /**
-     * Trim all occurences of the supplied trailing character from the given String.
-     * @param str the String to check
+     * Trim all occurrences of the supplied trailing character from the given {@code String}.
+     * @param str the {@code String} to check
      * @param trailingCharacter the trailing character to be trimmed
-     * @return the trimmed String
+     * @return the trimmed {@code String}
      */
     public static String trimTrailingCharacter(String str, char trailingCharacter) {
         if (!hasLength(str)) {
             return str;
         }
+
         StringBuilder sb = new StringBuilder(str);
         while (sb.length() > 0 && sb.charAt(sb.length() - 1) == trailingCharacter) {
             sb.deleteCharAt(sb.length() - 1);
@@ -309,11 +318,12 @@ public abstract class Strings {
 
 
     /**
-     * Test if the given String starts with the specified prefix,
+     * Test if the given {@code String} starts with the specified prefix,
      * ignoring upper/lower case.
-     * @param str the String to check
+     * @param str the {@code String} to check
      * @param prefix the prefix to look for
      * @see java.lang.String#startsWith
+     * @return true if {@code str} stars with {@code prefix}
      */
     public static boolean startsWithIgnoreCase(String str, String prefix) {
         if (str == null || prefix == null) {
@@ -325,17 +335,19 @@ public abstract class Strings {
         if (str.length() < prefix.length()) {
             return false;
         }
+
         String lcStr = str.substring(0, prefix.length()).toLowerCase();
         String lcPrefix = prefix.toLowerCase();
         return lcStr.equals(lcPrefix);
     }
 
     /**
-     * Test if the given String ends with the specified suffix,
+     * Test if the given {@code String} ends with the specified suffix,
      * ignoring upper/lower case.
-     * @param str the String to check
+     * @param str the {@code String} to check
      * @param suffix the suffix to look for
      * @see java.lang.String#endsWith
+     * @return true if {@code str} ends with @{suffix}
      */
     public static boolean endsWithIgnoreCase(String str, String suffix) {
         if (str == null || suffix == null) {
@@ -359,6 +371,7 @@ public abstract class Strings {
      * @param str the original string (or StringBuilder)
      * @param index the index in the original string to start matching against
      * @param substring the substring to match at the given index
+     * @return true if substring matches, otherwise false
      */
     public static boolean substringMatch(CharSequence str, int index, CharSequence substring) {
         for (int j = 0; j < substring.length(); j++) {
@@ -371,14 +384,16 @@ public abstract class Strings {
     }
 
     /**
-     * Count the occurrences of the substring in string s.
-     * @param str string to search in. Return 0 if this is null.
-     * @param sub string to search for. Return 0 if this is null.
+     * Count the occurrences of the substring {@code sub} in string {@code str}.
+     * @param str string to search in. Return 0 if this is {@code null}.
+     * @param sub string to search for. Return 0 if this is {@code null}.
+     * @return count of {@code sub}
      */
     public static int countOccurrencesOf(String str, String sub) {
-        if (str == null || sub == null || str.length() == 0 || sub.length() == 0) {
+        if (!hasLength(str) || !hasLength(sub)) {
             return 0;
         }
+
         int count = 0;
         int pos = 0;
         int idx;
@@ -390,21 +405,30 @@ public abstract class Strings {
     }
 
     /**
-     * Replace all occurences of a substring within a string with
+     * Replace all occurrences of a substring within a string with
      * another string.
-     * @param inString String to examine
-     * @param oldPattern String to replace
-     * @param newPattern String to insert
-     * @return a String with the replacements
+     * @param inString {@code String} to examine
+     * @param oldPattern {@code String} to replace
+     * @param newPattern {@code String} to insert
+     * @return a {@code String} with the replacements
      */
     public static String replace(String inString, String oldPattern, String newPattern) {
         if (!hasLength(inString) || !hasLength(oldPattern) || newPattern == null) {
             return inString;
         }
-        StringBuilder sb = new StringBuilder();
-        int pos = 0; // our position in the old string
         int index = inString.indexOf(oldPattern);
-        // the index of an occurrence we've found, or -1
+        if (index == -1) {
+            // no occurrence -> can return input as-is
+            return inString;
+        }
+
+        int capacity = inString.length();
+        if (newPattern.length() > oldPattern.length()) {
+            capacity += 16;
+        }
+        StringBuilder sb = new StringBuilder(capacity);
+
+        int pos = 0;  // our position in the old string
         int patLen = oldPattern.length();
         while (index >= 0) {
             sb.append(inString.substring(pos, index));
@@ -412,33 +436,35 @@ public abstract class Strings {
             pos = index + patLen;
             index = inString.indexOf(oldPattern, pos);
         }
+
+        // append any characters to the right of a match
         sb.append(inString.substring(pos));
-        // remember to append any characters to the right of a match
         return sb.toString();
     }
 
     /**
      * Delete all occurrences of the given substring.
-     * @param inString the original String
+     * @param inString the original {@code String}
      * @param pattern the pattern to delete all occurrences of
-     * @return the resulting String
+     * @return the resulting {@code String}
      */
     public static String delete(String inString, String pattern) {
         return replace(inString, pattern, "");
     }
 
     /**
-     * Delete any character in a given String.
-     * @param inString the original String
+     * Delete any character in a given {@code String}.
+     * @param inString the original {@code String}
      * @param charsToDelete a set of characters to delete.
      * E.g. "az\n" will delete 'a's, 'z's and new lines.
-     * @return the resulting String
+     * @return the resulting {@code String}
      */
     public static String deleteAny(String inString, String charsToDelete) {
         if (!hasLength(inString) || !hasLength(charsToDelete)) {
             return inString;
         }
-        StringBuilder sb = new StringBuilder();
+
+        StringBuilder sb = new StringBuilder(inString.length());
         for (int i = 0; i < inString.length(); i++) {
             char c = inString.charAt(i);
             if (charsToDelete.indexOf(c) == -1) {
@@ -454,21 +480,21 @@ public abstract class Strings {
     //---------------------------------------------------------------------
 
     /**
-     * Quote the given String with single quotes.
-     * @param str the input String (e.g. "myString")
-     * @return the quoted String (e.g. "'myString'"),
-     * or <code>null</code> if the input was <code>null</code>
+     * Quote the given {@code String} with single quotes.
+     * @param str the input {@code String} (e.g. "myString")
+     * @return the quoted {@code String} (e.g. "'myString'"),
+     * or {@code null} if the input was {@code null}
      */
     public static String quote(String str) {
         return (str != null ? "'" + str + "'" : null);
     }
 
     /**
-     * Turn the given Object into a String with single quotes
-     * if it is a String; keeping the Object as-is else.
+     * Turn the given Object into a {@code String} with single quotes
+     * if it is a {@code String}; keeping the Object as-is else.
      * @param obj the input Object (e.g. "myString")
-     * @return the quoted String (e.g. "'myString'"),
-     * or the input object as-is if not a String
+     * @return the quoted {@code String} (e.g. "'myString'"),
+     * or the input object as-is if not a {@code String}
      */
     public static Object quoteIfString(Object obj) {
         return (obj instanceof String ? quote((String) obj) : obj);
@@ -478,6 +504,7 @@ public abstract class Strings {
      * Unqualify a string qualified by a '.' dot character. For example,
      * "this.name.is.qualified", returns "qualified".
      * @param qualifiedName the qualified name
+     * @return unqualified string
      */
     public static String unqualify(String qualifiedName) {
         return unqualify(qualifiedName, '.');
@@ -488,107 +515,124 @@ public abstract class Strings {
      * "this:name:is:qualified" returns "qualified" if using a ':' separator.
      * @param qualifiedName the qualified name
      * @param separator the separator
+     * @return unqualified string
      */
     public static String unqualify(String qualifiedName, char separator) {
         return qualifiedName.substring(qualifiedName.lastIndexOf(separator) + 1);
     }
 
     /**
-     * Capitalize a <code>String</code>, changing the first letter to
+     * Capitalize a {@code String}, changing the first letter to
      * upper case as per {@link Character#toUpperCase(char)}.
      * No other letters are changed.
-     * @param str the String to capitalize, may be <code>null</code>
-     * @return the capitalized String, <code>null</code> if null
+     * @param str the {@code String} to capitalize, may be {@code null}
+     * @return the capitalized {@code String}, or {@code null} if the supplied
+     * string is {@code null}
      */
     public static String capitalize(String str) {
         return changeFirstCharacterCase(str, true);
     }
 
     /**
-     * Uncapitalize a <code>String</code>, changing the first letter to
+     * Uncapitalize a {@code String}, changing the first letter to
      * lower case as per {@link Character#toLowerCase(char)}.
      * No other letters are changed.
-     * @param str the String to uncapitalize, may be <code>null</code>
-     * @return the uncapitalized String, <code>null</code> if null
+     * @param str the {@code String} to uncapitalize, may be {@code null}
+     * @return the uncapitalized {@code String}, or {@code null} if the supplied
+     * string is {@code null}
      */
     public static String uncapitalize(String str) {
         return changeFirstCharacterCase(str, false);
     }
 
     private static String changeFirstCharacterCase(String str, boolean capitalize) {
-        if (str == null || str.length() == 0) {
+        if (!hasLength(str)) {
             return str;
         }
-        StringBuilder sb = new StringBuilder(str.length());
+
+        char baseChar = str.charAt(0);
+        char updatedChar;
         if (capitalize) {
-            sb.append(Character.toUpperCase(str.charAt(0)));
+            updatedChar = Character.toUpperCase(baseChar);
         }
         else {
-            sb.append(Character.toLowerCase(str.charAt(0)));
+            updatedChar = Character.toLowerCase(baseChar);
         }
-        sb.append(str.substring(1));
-        return sb.toString();
+        if (baseChar == updatedChar) {
+            return str;
+        }
+
+        char[] chars = str.toCharArray();
+        chars[0] = updatedChar;
+        return new String(chars, 0, chars.length);
     }
 
     /**
-     * Extract the filename from the given path,
-     * e.g. "mypath/myfile.txt" -&gt; "myfile.txt".
-     * @param path the file path (may be <code>null</code>)
-     * @return the extracted filename, or <code>null</code> if none
+     * Extract the filename from the given Java resource path,
+     * e.g. {@code "mypath/myfile.txt" -> "myfile.txt"}.
+     * @param path the file path (may be {@code null})
+     * @return the extracted filename, or {@code null} if none
      */
     public static String getFilename(String path) {
         if (path == null) {
             return null;
         }
+
         int separatorIndex = path.lastIndexOf(FOLDER_SEPARATOR);
         return (separatorIndex != -1 ? path.substring(separatorIndex + 1) : path);
     }
 
     /**
-     * Extract the filename extension from the given path,
+     * Extract the filename extension from the given Java resource path,
      * e.g. "mypath/myfile.txt" -&gt; "txt".
-     * @param path the file path (may be <code>null</code>)
-     * @return the extracted filename extension, or <code>null</code> if none
+     * @param path the file path (may be {@code null})
+     * @return the extracted filename extension, or {@code null} if none
      */
     public static String getFilenameExtension(String path) {
         if (path == null) {
             return null;
         }
+
         int extIndex = path.lastIndexOf(EXTENSION_SEPARATOR);
         if (extIndex == -1) {
             return null;
         }
+
         int folderIndex = path.lastIndexOf(FOLDER_SEPARATOR);
         if (folderIndex > extIndex) {
             return null;
         }
+
         return path.substring(extIndex + 1);
     }
 
     /**
-     * Strip the filename extension from the given path,
+     * Strip the filename extension from the given Java resource path,
      * e.g. "mypath/myfile.txt" -&gt; "mypath/myfile".
-     * @param path the file path (may be <code>null</code>)
+     * @param path the file path (may be {@code null})
      * @return the path with stripped filename extension,
-     * or <code>null</code> if none
+     * or {@code null} if none
      */
     public static String stripFilenameExtension(String path) {
         if (path == null) {
             return null;
         }
+
         int extIndex = path.lastIndexOf(EXTENSION_SEPARATOR);
         if (extIndex == -1) {
             return path;
         }
+
         int folderIndex = path.lastIndexOf(FOLDER_SEPARATOR);
         if (folderIndex > extIndex) {
             return path;
         }
+
         return path.substring(0, extIndex);
     }
 
     /**
-     * Apply the given relative path to the given path,
+     * Apply the given relative path to the given Java resource path,
      * assuming standard Java folder separation (i.e. "/" separators).
      * @param path the path to start from (usually a full file path)
      * @param relativePath the relative path to apply
@@ -631,7 +675,12 @@ public abstract class Strings {
         String prefix = "";
         if (prefixIndex != -1) {
             prefix = pathToUse.substring(0, prefixIndex + 1);
-            pathToUse = pathToUse.substring(prefixIndex + 1);
+            if (prefix.contains("/")) {
+                prefix = "";
+            }
+            else {
+                pathToUse = pathToUse.substring(prefixIndex + 1);
+            }
         }
         if (pathToUse.startsWith(FOLDER_SEPARATOR)) {
             prefix = prefix + FOLDER_SEPARATOR;
@@ -639,7 +688,7 @@ public abstract class Strings {
         }
 
         String[] pathArray = delimitedListToStringArray(pathToUse, FOLDER_SEPARATOR);
-        List<String> pathElements = new LinkedList<String>();
+        List<String> pathElements = new LinkedList<>();
         int tops = 0;
 
         for (int i = pathArray.length - 1; i >= 0; i--) {
@@ -682,24 +731,80 @@ public abstract class Strings {
     }
 
     /**
-     * Parse the given <code>localeString</code> value into a {@link java.util.Locale}.
-     * <p>This is the inverse operation of {@link java.util.Locale#toString Locale's toString}.
-     * @param localeString the locale string, following <code>Locale's</code>
-     * <code>toString()</code> format ("en", "en_UK", etc);
+     * Decode the given encoded URI component value. Based on the following rules:
+     * <ul>
+     * <li>Alphanumeric characters {@code "a"} through {@code "z"}, {@code "A"} through {@code "Z"},
+     * and {@code "0"} through {@code "9"} stay the same.</li>
+     * <li>Special characters {@code "-"}, {@code "_"}, {@code "."}, and {@code "*"} stay the same.</li>
+     * <li>A sequence "{@code %<i>xy</i>}" is interpreted as a hexadecimal representation of the character.</li>
+     * </ul>
+     * @param source the encoded String (may be {@code null})
+     * @param charset the character set
+     * @return the decoded value
+     * @throws IllegalArgumentException when the given source contains invalid encoded sequences
+     * @since 5.0
+     * @see java.net.URLDecoder#decode(String, String)
+     */
+    public static String uriDecode(String source, Charset charset) {
+        if (source == null) {
+            return null;
+        }
+        int length = source.length();
+        if (length == 0) {
+            return source;
+        }
+        Assert.notNull(charset, "Charset must not be null");
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(length);
+        boolean changed = false;
+        for (int i = 0; i < length; i++) {
+            int ch = source.charAt(i);
+            if (ch == '%') {
+                if (i + 2 < length) {
+                    char hex1 = source.charAt(i + 1);
+                    char hex2 = source.charAt(i + 2);
+                    int u = Character.digit(hex1, 16);
+                    int l = Character.digit(hex2, 16);
+                    if (u == -1 || l == -1) {
+                        throw new IllegalArgumentException("Invalid encoded sequence \"" + source.substring(i) + "\"");
+                    }
+                    bos.write((char) ((u << 4) + l));
+                    i += 2;
+                    changed = true;
+                }
+                else {
+                    throw new IllegalArgumentException("Invalid encoded sequence \"" + source.substring(i) + "\"");
+                }
+            }
+            else {
+                bos.write(ch);
+            }
+        }
+        return (changed ? new String(bos.toByteArray(), charset) : source);
+    }
+
+    /**
+     * Parse the given {@code localeString} value into a {@link Locale}.
+     * <p>This is the inverse operation of {@link Locale#toString Locale's toString}.
+     * @param localeString the locale {@code String}, following {@code Locale's}
+     * {@code toString()} format ("en", "en_UK", etc);
      * also accepts spaces as separators, as an alternative to underscores
-     * @return a corresponding <code>Locale</code> instance
+     * @return a corresponding {@code Locale} instance
+     * @throws IllegalArgumentException in case of an invalid locale specification
      */
     public static Locale parseLocaleString(String localeString) {
         String[] parts = tokenizeToStringArray(localeString, "_ ", false, false);
         String language = (parts.length > 0 ? parts[0] : "");
         String country = (parts.length > 1 ? parts[1] : "");
+
         validateLocalePart(language);
         validateLocalePart(country);
+
         String variant = "";
-        if (parts.length >= 2) {
+        if (parts.length > 2) {
             // There is definitely a variant, and it is everything after the country
             // code sans the separator between the country code and the variant.
-            int endIndexOfCountryCode = localeString.indexOf(country) + country.length();
+            int endIndexOfCountryCode = localeString.indexOf(country, language.length()) + country.length();
             // Strip off any leading '_' and whitespace, what's left is the variant.
             variant = trimLeadingWhitespace(localeString.substring(endIndexOfCountryCode));
             if (variant.startsWith("_")) {
@@ -712,7 +817,7 @@ public abstract class Strings {
     private static void validateLocalePart(String localePart) {
         for (int i = 0; i < localePart.length(); i++) {
             char ch = localePart.charAt(i);
-            if (ch != '_' && ch != ' ' && !Character.isLetterOrDigit(ch)) {
+            if (ch != ' ' && ch != '_' && ch != '#' && !Character.isLetterOrDigit(ch)) {
                 throw new IllegalArgumentException(
                         "Locale part \"" + localePart + "\" contains invalid characters");
             }
@@ -723,10 +828,26 @@ public abstract class Strings {
      * Determine the RFC 3066 compliant language tag,
      * as used for the HTTP "Accept-Language" header.
      * @param locale the Locale to transform to a language tag
-     * @return the RFC 3066 compliant language tag as String
+     * @return the RFC 3066 compliant language tag as {@code String}
      */
     public static String toLanguageTag(Locale locale) {
         return locale.getLanguage() + (hasText(locale.getCountry()) ? "-" + locale.getCountry() : "");
+    }
+
+    /**
+     * Parse the given {@code timeZoneString} value into a {@link TimeZone}.
+     * @param timeZoneString the time zone {@code String}, following {@link TimeZone#getTimeZone(String)}
+     * but throwing {@link IllegalArgumentException} in case of an invalid time zone specification
+     * @return a corresponding {@link TimeZone} instance
+     * @throws IllegalArgumentException in case of an invalid time zone specification
+     */
+    public static TimeZone parseTimeZoneString(String timeZoneString) {
+        TimeZone timeZone = TimeZone.getTimeZone(timeZoneString);
+        if ("GMT".equals(timeZone.getID()) && !timeZoneString.startsWith("GMT")) {
+            // We don't want that GMT fallback...
+            throw new IllegalArgumentException("Invalid time zone specification '" + timeZoneString + "'");
+        }
+        return timeZone;
     }
 
 
@@ -735,16 +856,18 @@ public abstract class Strings {
     //---------------------------------------------------------------------
 
     /**
-     * Append the given String to the given String array, returning a new array
-     * consisting of the input array contents plus the given String.
-     * @param array the array to append to (can be <code>null</code>)
-     * @param str the String to append
-     * @return the new array (never <code>null</code>)
+     * Append the given {@code String} to the given {@code String} array,
+     * returning a new array consisting of the input array contents plus
+     * the given {@code String}.
+     * @param array the array to append to (can be {@code null})
+     * @param str the {@code String} to append
+     * @return the new array (never {@code null})
      */
     public static String[] addStringToArray(String[] array, String str) {
         if (Objects.isEmpty(array)) {
             return new String[] {str};
         }
+
         String[] newArr = new String[array.length + 1];
         System.arraycopy(array, 0, newArr, 0, array.length);
         newArr[array.length] = str;
@@ -752,12 +875,12 @@ public abstract class Strings {
     }
 
     /**
-     * Concatenate the given String arrays into one,
+     * Concatenate the given {@code String} arrays into one,
      * with overlapping array elements included twice.
      * <p>The order of elements in the original arrays is preserved.
-     * @param array1 the first array (can be <code>null</code>)
-     * @param array2 the second array (can be <code>null</code>)
-     * @return the new array (<code>null</code> if both given arrays were <code>null</code>)
+     * @param array1 the first array (can be {@code null})
+     * @param array2 the second array (can be {@code null})
+     * @return the new array ({@code null} if both given arrays were {@code null})
      */
     public static String[] concatenateStringArrays(String[] array1, String[] array2) {
         if (Objects.isEmpty(array1)) {
@@ -766,6 +889,7 @@ public abstract class Strings {
         if (Objects.isEmpty(array2)) {
             return array1;
         }
+
         String[] newArr = new String[array1.length + array2.length];
         System.arraycopy(array1, 0, newArr, 0, array1.length);
         System.arraycopy(array2, 0, newArr, array1.length, array2.length);
@@ -773,14 +897,14 @@ public abstract class Strings {
     }
 
     /**
-     * Merge the given String arrays into one, with overlapping
+     * Merge the given {@code String} arrays into one, with overlapping
      * array elements only included once.
      * <p>The order of elements in the original arrays is preserved
      * (with the exception of overlapping elements, which are only
      * included on their first occurrence).
-     * @param array1 the first array (can be <code>null</code>)
-     * @param array2 the second array (can be <code>null</code>)
-     * @return the new array (<code>null</code> if both given arrays were <code>null</code>)
+     * @param array1 the first array (can be {@code null})
+     * @param array2 the second array (can be {@code null})
+     * @return the new array ({@code null} if both given arrays were {@code null})
      */
     public static String[] mergeStringArrays(String[] array1, String[] array2) {
         if (Objects.isEmpty(array1)) {
@@ -789,7 +913,8 @@ public abstract class Strings {
         if (Objects.isEmpty(array2)) {
             return array1;
         }
-        List<String> result = new ArrayList<String>();
+
+        List<String> result = new ArrayList<>();
         result.addAll(Arrays.asList(array1));
         for (String str : array2) {
             if (!result.contains(str)) {
@@ -800,57 +925,61 @@ public abstract class Strings {
     }
 
     /**
-     * Turn given source String array into sorted array.
+     * Turn given source {@code String} array into sorted array.
      * @param array the source array
-     * @return the sorted array (never <code>null</code>)
+     * @return the sorted array (never {@code null})
      */
     public static String[] sortStringArray(String[] array) {
         if (Objects.isEmpty(array)) {
             return new String[0];
         }
+
         Arrays.sort(array);
         return array;
     }
 
     /**
-     * Copy the given Collection into a String array.
-     * The Collection must contain String elements only.
-     * @param collection the Collection to copy
-     * @return the String array (<code>null</code> if the passed-in
-     * Collection was <code>null</code>)
+     * Copy the given {@code Collection} into a {@code String} array.
+     * <p>The {@code Collection} must contain {@code String} elements only.
+     * @param collection the {@code Collection} to copy
+     * @return the {@code String} array ({@code null} if the supplied
+     * {@code Collection} was {@code null})
      */
     public static String[] toStringArray(Collection<String> collection) {
         if (collection == null) {
             return null;
         }
+
         return collection.toArray(new String[collection.size()]);
     }
 
     /**
-     * Copy the given Enumeration into a String array.
-     * The Enumeration must contain String elements only.
+     * Copy the given Enumeration into a {@code String} array.
+     * The Enumeration must contain {@code String} elements only.
      * @param enumeration the Enumeration to copy
-     * @return the String array (<code>null</code> if the passed-in
-     * Enumeration was <code>null</code>)
+     * @return the {@code String} array ({@code null} if the passed-in
+     * Enumeration was {@code null})
      */
     public static String[] toStringArray(Enumeration<String> enumeration) {
         if (enumeration == null) {
             return null;
         }
-        List<String> list = java.util.Collections.list(enumeration);
+
+        List<String> list = Collections.list(enumeration);
         return list.toArray(new String[list.size()]);
     }
 
     /**
-     * Trim the elements of the given String array,
-     * calling <code>String.trim()</code> on each of them.
-     * @param array the original String array
+     * Trim the elements of the given {@code String} array,
+     * calling {@code String.trim()} on each of them.
+     * @param array the original {@code String} array
      * @return the resulting array (of the same size) with trimmed elements
      */
     public static String[] trimArrayElements(String[] array) {
         if (Objects.isEmpty(array)) {
             return new String[0];
         }
+
         String[] result = new String[array.length];
         for (int i = 0; i < array.length; i++) {
             String element = array[i];
@@ -860,16 +989,17 @@ public abstract class Strings {
     }
 
     /**
-     * Remove duplicate Strings from the given array.
-     * Also sorts the array, as it uses a TreeSet.
-     * @param array the String array
+     * Remove duplicate strings from the given array.
+     * <p>As of 4.2, it preserves the original order, as it uses a {@link LinkedHashSet}.
+     * @param array the {@code String} array
      * @return an array without duplicates, in natural sort order
      */
     public static String[] removeDuplicateStrings(String[] array) {
         if (Objects.isEmpty(array)) {
             return array;
         }
-        Set<String> set = new TreeSet<String>();
+
+        Set<String> set = new LinkedHashSet<>();
         for (String element : array) {
             set.add(element);
         }
@@ -877,13 +1007,13 @@ public abstract class Strings {
     }
 
     /**
-     * Split a String at the first occurrence of the delimiter.
+     * Split a {@code String} at the first occurrence of the delimiter.
      * Does not include the delimiter in the result.
      * @param toSplit the string to split
      * @param delimiter to split the string up with
      * @return a two element array with index 0 being before the delimiter, and
      * index 1 being after the delimiter (neither element includes the delimiter);
-     * or <code>null</code> if the delimiter wasn't found in the given input String
+     * or {@code null} if the delimiter wasn't found in the given input {@code String}
      */
     public static String[] split(String toSplit, String delimiter) {
         if (!hasLength(toSplit) || !hasLength(delimiter)) {
@@ -893,129 +1023,40 @@ public abstract class Strings {
         if (offset < 0) {
             return null;
         }
+
         String beforeDelimiter = toSplit.substring(0, offset);
         String afterDelimiter = toSplit.substring(offset + delimiter.length());
         return new String[] {beforeDelimiter, afterDelimiter};
     }
 
-    public static String[] split(String line) {
-        return split(line, DEFAULT_DELIMITER_CHAR);
-    }
-
-    public static String[] split(String line, char delimiter) {
-        return split(line, delimiter, DEFAULT_QUOTE_CHAR);
-    }
-
-    public static String[] split(String line, char delimiter, char quoteChar) {
-        return split(line, delimiter, quoteChar, quoteChar);
-    }
-
-    public static String[] split(String line, char delimiter, char beginQuoteChar, char endQuoteChar) {
-        return split(line, delimiter, beginQuoteChar, endQuoteChar, false, true);
-    }
-
     /**
-     * Splits the specified delimited String into tokens, supporting quoted tokens so that quoted strings themselves
-     * won't be tokenized.
-     * <p>
-     * This method's implementation is very loosely based (with significant modifications) on
-     * <a href="http://blogs.bytecode.com.au/glen">Glen Smith</a>'s open-source
-     * <a href="http://opencsv.svn.sourceforge.net/viewvc/opencsv/trunk/src/au/com/bytecode/opencsv/CSVReader.java?&view=markup">CSVReader.java</a>
-     * file.
-     * <p>
-     * That file is Apache 2.0 licensed as well, making Glen's code a great starting point for us to modify to
-     * our needs.
-     *
-     * @param aLine          the String to parse
-     * @param delimiter      the delimiter by which the <tt>line</tt> argument is to be split
-     * @param beginQuoteChar the character signifying the start of quoted text (so the quoted text will not be split)
-     * @param endQuoteChar   the character signifying the end of quoted text
-     * @param retainQuotes   if the quotes themselves should be retained when constructing the corresponding token
-     * @param trimTokens     if leading and trailing whitespace should be trimmed from discovered tokens.
-     * @return the tokens discovered from parsing the given delimited <tt>line</tt>.
-     */
-    public static String[] split(String aLine, char delimiter, char beginQuoteChar, char endQuoteChar,
-                                 boolean retainQuotes, boolean trimTokens) {
-        String line = clean(aLine);
-        if (line == null) {
-            return null;
-        }
-
-        List<String> tokens = new ArrayList<String>();
-        StringBuilder sb = new StringBuilder();
-        boolean inQuotes = false;
-
-        for (int i = 0; i < line.length(); i++) {
-
-            char c = line.charAt(i);
-            if (c == beginQuoteChar) {
-                // this gets complex... the quote may end a quoted block, or escape another quote.
-                // do a 1-char lookahead:
-                if (inQuotes  // we are in quotes, therefore there can be escaped quotes in here.
-                    && line.length() > (i + 1)  // there is indeed another character to check.
-                    && line.charAt(i + 1) == beginQuoteChar) { // ..and that char. is a quote also.
-                    // we have two quote chars in a row == one quote char, so consume them both and
-                    // put one on the token. we do *not* exit the quoted text.
-                    sb.append(line.charAt(i + 1));
-                    i++;
-                } else {
-                    inQuotes = !inQuotes;
-                    if (retainQuotes) {
-                        sb.append(c);
-                    }
-                }
-            } else if (c == endQuoteChar) {
-                inQuotes = !inQuotes;
-                if (retainQuotes) {
-                    sb.append(c);
-                }
-            } else if (c == delimiter && !inQuotes) {
-                String s = sb.toString();
-                if (trimTokens) {
-                    s = s.trim();
-                }
-                tokens.add(s);
-                sb = new StringBuilder(); // start work on next token
-            } else {
-                sb.append(c);
-            }
-        }
-        String s = sb.toString();
-        if (trimTokens) {
-            s = s.trim();
-        }
-        tokens.add(s);
-        return tokens.toArray(new String[tokens.size()]);
-    }
-
-    /**
-     * Take an array Strings and split each element based on the given delimiter.
-     * A <code>Properties</code> instance is then generated, with the left of the
+     * Take an array of strings and split each element based on the given delimiter.
+     * A {@code Properties} instance is then generated, with the left of the
      * delimiter providing the key, and the right of the delimiter providing the value.
      * <p>Will trim both the key and value before adding them to the
-     * <code>Properties</code> instance.
+     * {@code Properties} instance.
      * @param array the array to process
      * @param delimiter to split each element using (typically the equals symbol)
-     * @return a <code>Properties</code> instance representing the array contents,
-     * or <code>null</code> if the array to process was null or empty
+     * @return a {@code Properties} instance representing the array contents,
+     * or {@code null} if the array to process was {@code null} or empty
      */
     public static Properties splitArrayElementsIntoProperties(String[] array, String delimiter) {
         return splitArrayElementsIntoProperties(array, delimiter, null);
     }
 
     /**
-     * Take an array Strings and split each element based on the given delimiter.
-     * A <code>Properties</code> instance is then generated, with the left of the
+     * Take an array of strings and split each element based on the given delimiter.
+     * A {@code Properties} instance is then generated, with the left of the
      * delimiter providing the key, and the right of the delimiter providing the value.
      * <p>Will trim both the key and value before adding them to the
-     * <code>Properties</code> instance.
+     * {@code Properties} instance.
      * @param array the array to process
      * @param delimiter to split each element using (typically the equals symbol)
      * @param charsToDelete one or more characters to remove from each element
      * prior to attempting the split operation (typically the quotation mark
-     * symbol), or <code>null</code> if no removal should occur
-     * @return a <code>Properties</code> instance representing the array contents,
-     * or <code>null</code> if the array to process was <code>null</code> or empty
+     * symbol), or {@code null} if no removal should occur
+     * @return a {@code Properties} instance representing the array contents,
+     * or {@code null} if the array to process was {@code null} or empty
      */
     public static Properties splitArrayElementsIntoProperties(
             String[] array, String delimiter, String charsToDelete) {
@@ -1023,6 +1064,7 @@ public abstract class Strings {
         if (Objects.isEmpty(array)) {
             return null;
         }
+
         Properties result = new Properties();
         for (String element : array) {
             if (charsToDelete != null) {
@@ -1038,18 +1080,19 @@ public abstract class Strings {
     }
 
     /**
-     * Tokenize the given String into a String array via a StringTokenizer.
-     * Trims tokens and omits empty tokens.
-     * <p>The given delimiters string is supposed to consist of any number of
+     * Tokenize the given {@code String} into a {@code String} array via a
+     * {@link StringTokenizer}.
+     * <p>Trims tokens and omits empty tokens.
+     * <p>The given {@code delimiters} string can consist of any number of
      * delimiter characters. Each of those characters can be used to separate
      * tokens. A delimiter is always a single character; for multi-character
-     * delimiters, consider using <code>delimitedListToStringArray</code>
-     * @param str the String to tokenize
-     * @param delimiters the delimiter characters, assembled as String
-     * (each of those characters is individually considered as delimiter).
+     * delimiters, consider using {@link #delimitedListToStringArray}.
+     * @param str the {@code String} to tokenize
+     * @param delimiters the delimiter characters, assembled as a {@code String}
+     * (each of the characters is individually considered as a delimiter)
      * @return an array of the tokens
      * @see java.util.StringTokenizer
-     * @see java.lang.String#trim()
+     * @see String#trim()
      * @see #delimitedListToStringArray
      */
     public static String[] tokenizeToStringArray(String str, String delimiters) {
@@ -1057,22 +1100,23 @@ public abstract class Strings {
     }
 
     /**
-     * Tokenize the given String into a String array via a StringTokenizer.
-     * <p>The given delimiters string is supposed to consist of any number of
+     * Tokenize the given {@code String} into a {@code String} array via a
+     * {@link StringTokenizer}.
+     * <p>The given {@code delimiters} string can consist of any number of
      * delimiter characters. Each of those characters can be used to separate
      * tokens. A delimiter is always a single character; for multi-character
-     * delimiters, consider using <code>delimitedListToStringArray</code>
-     * @param str the String to tokenize
-     * @param delimiters the delimiter characters, assembled as String
-     * (each of those characters is individually considered as delimiter)
-     * @param trimTokens trim the tokens via String's <code>trim</code>
+     * delimiters, consider using {@link #delimitedListToStringArray}.
+     * @param str the {@code String} to tokenize
+     * @param delimiters the delimiter characters, assembled as a {@code String}
+     * (each of the characters is individually considered as a delimiter)
+     * @param trimTokens trim the tokens via {@link String#trim()}
      * @param ignoreEmptyTokens omit empty tokens from the result array
      * (only applies to tokens that are empty after trimming; StringTokenizer
      * will not consider subsequent delimiters as token in the first place).
-     * @return an array of the tokens (<code>null</code> if the input String
-     * was <code>null</code>)
+     * @return an array of the tokens ({@code null} if the input {@code String}
+     * was {@code null})
      * @see java.util.StringTokenizer
-     * @see java.lang.String#trim()
+     * @see String#trim()
      * @see #delimitedListToStringArray
      */
     public static String[] tokenizeToStringArray(
@@ -1081,8 +1125,9 @@ public abstract class Strings {
         if (str == null) {
             return null;
         }
+
         StringTokenizer st = new StringTokenizer(str, delimiters);
-        List<String> tokens = new ArrayList<String>();
+        List<String> tokens = new ArrayList<>();
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
             if (trimTokens) {
@@ -1096,11 +1141,13 @@ public abstract class Strings {
     }
 
     /**
-     * Take a String which is a delimited list and convert it to a String array.
-     * <p>A single delimiter can consists of more than one character: It will still
-     * be considered as single delimiter string, rather than as bunch of potential
-     * delimiter characters - in contrast to <code>tokenizeToStringArray</code>.
-     * @param str the input String
+     * Take a {@code String} that is a delimited list and convert it into a
+     * {@code String} array.
+     * <p>A single {@code delimiter} may consist of more than one character,
+     * but it will still be considered as a single delimiter string, rather
+     * than as bunch of potential delimiter characters, in contrast to
+     * {@link #tokenizeToStringArray}.
+     * @param str the input {@code String}
      * @param delimiter the delimiter between elements (this is a single delimiter,
      * rather than a bunch individual delimiter characters)
      * @return an array of the tokens in the list
@@ -1111,15 +1158,17 @@ public abstract class Strings {
     }
 
     /**
-     * Take a String which is a delimited list and convert it to a String array.
-     * <p>A single delimiter can consists of more than one character: It will still
-     * be considered as single delimiter string, rather than as bunch of potential
-     * delimiter characters - in contrast to <code>tokenizeToStringArray</code>.
-     * @param str the input String
+     * Take a {@code String} that is a delimited list and convert it into
+     * a {@code String} array.
+     * <p>A single {@code delimiter} may consist of more than one character,
+     * but it will still be considered as a single delimiter string, rather
+     * than as bunch of potential delimiter characters, in contrast to
+     * {@link #tokenizeToStringArray}.
+     * @param str the input {@code String}
      * @param delimiter the delimiter between elements (this is a single delimiter,
      * rather than a bunch individual delimiter characters)
-     * @param charsToDelete a set of characters to delete. Useful for deleting unwanted
-     * line breaks: e.g. "\r\n\f" will delete all new lines and line feeds in a String.
+     * @param charsToDelete a set of characters to delete; useful for deleting unwanted
+     * line breaks: e.g. "\r\n\f" will delete all new lines and line feeds in a {@code String}
      * @return an array of the tokens in the list
      * @see #tokenizeToStringArray
      */
@@ -1130,7 +1179,8 @@ public abstract class Strings {
         if (delimiter == null) {
             return new String[] {str};
         }
-        List<String> result = new ArrayList<String>();
+
+        List<String> result = new ArrayList<>();
         if ("".equals(delimiter)) {
             for (int i = 0; i < str.length(); i++) {
                 result.add(deleteAny(str.substring(i, i + 1), charsToDelete));
@@ -1152,53 +1202,46 @@ public abstract class Strings {
     }
 
     /**
-     * Convert a CSV list into an array of Strings.
-     * @param str the input String
-     * @return an array of Strings, or the empty array in case of empty input
+     * Convert a comma delimited list (e.g., a row from a CSV file) into an
+     * array of strings.
+     * @param str the input {@code String}
+     * @return an array of strings, or the empty array in case of empty input
      */
     public static String[] commaDelimitedListToStringArray(String str) {
         return delimitedListToStringArray(str, ",");
     }
 
     /**
-     * Convenience method to convert a CSV string list to a set.
-     * Note that this will suppress duplicates.
-     * @param str the input String
-     * @return a Set of String entries in the list
+     * Convert a comma delimited list (e.g., a row from a CSV file) into a set.
+     * <p>Note that this will suppress duplicates, and as of 4.2, the elements in
+     * the returned set will preserve the original order in a {@link LinkedHashSet}.
+     * @param str the input {@code String}
+     * @return a set of {@code String} entries in the list
+     * @see #removeDuplicateStrings(String[])
      */
     public static Set<String> commaDelimitedListToSet(String str) {
-        if (str == null) {
-            return java.util.Collections.emptySet();
+        Set<String> set = new LinkedHashSet<>();
+        String[] tokens = commaDelimitedListToStringArray(str);
+        for (String token : tokens) {
+            set.add(token);
         }
-        Set<String> set = new LinkedHashSet<String>();
-        String[] tokens = split(str);
-        java.util.Collections.addAll(set, tokens);
-        return set;
-    }
-
-    public static Set<String> delimitedListToSet(String str, String delimiters) {
-        if (str == null) {
-            return java.util.Collections.emptySet();
-        }
-        Set<String> set = new LinkedHashSet<String>();
-        String[] tokens = tokenizeToStringArray(str, delimiters);
-        java.util.Collections.addAll(set, tokens);
         return set;
     }
 
     /**
-     * Convenience method to return a Collection as a delimited (e.g. CSV)
-     * String. E.g. useful for <code>toString()</code> implementations.
-     * @param coll the Collection to display
-     * @param delim the delimiter to use (probably a ",")
-     * @param prefix the String to start each element with
-     * @param suffix the String to end each element with
-     * @return the delimited String
+     * Convert a {@link Collection} to a delimited {@code String} (e.g. CSV).
+     * <p>Useful for {@code toString()} implementations.
+     * @param coll the {@code Collection} to convert
+     * @param delim the delimiter to use (typically a ",")
+     * @param prefix the {@code String} to start each element with
+     * @param suffix the {@code String} to end each element with
+     * @return the delimited {@code String}
      */
     public static String collectionToDelimitedString(Collection<?> coll, String delim, String prefix, String suffix) {
-        if (Collections.isEmpty(coll)) {
+        if (com.okta.sdk.lang.Collections.isEmpty(coll)) {
             return "";
         }
+
         StringBuilder sb = new StringBuilder();
         Iterator<?> it = coll.iterator();
         while (it.hasNext()) {
@@ -1211,32 +1254,32 @@ public abstract class Strings {
     }
 
     /**
-     * Convenience method to return a Collection as a delimited (e.g. CSV)
-     * String. E.g. useful for <code>toString()</code> implementations.
-     * @param coll the Collection to display
-     * @param delim the delimiter to use (probably a ",")
-     * @return the delimited String
+     * Convert a {@code Collection} into a delimited {@code String} (e.g. CSV).
+     * <p>Useful for {@code toString()} implementations.
+     * @param coll the {@code Collection} to convert
+     * @param delim the delimiter to use (typically a ",")
+     * @return the delimited {@code String}
      */
     public static String collectionToDelimitedString(Collection<?> coll, String delim) {
         return collectionToDelimitedString(coll, delim, "", "");
     }
 
     /**
-     * Convenience method to return a Collection as a CSV String.
-     * E.g. useful for <code>toString()</code> implementations.
-     * @param coll the Collection to display
-     * @return the delimited String
+     * Convert a {@code Collection} into a delimited {@code String} (e.g., CSV).
+     * <p>Useful for {@code toString()} implementations.
+     * @param coll the {@code Collection} to convert
+     * @return the delimited {@code String}
      */
     public static String collectionToCommaDelimitedString(Collection<?> coll) {
         return collectionToDelimitedString(coll, ",");
     }
 
     /**
-     * Convenience method to return a String array as a delimited (e.g. CSV)
-     * String. E.g. useful for <code>toString()</code> implementations.
+     * Convert a {@code String} array into a delimited {@code String} (e.g. CSV).
+     * <p>Useful for {@code toString()} implementations.
      * @param arr the array to display
-     * @param delim the delimiter to use (probably a ",")
-     * @return the delimited String
+     * @param delim the delimiter to use (typically a ",")
+     * @return the delimited {@code String}
      */
     public static String arrayToDelimitedString(Object[] arr, String delim) {
         if (Objects.isEmpty(arr)) {
@@ -1245,6 +1288,7 @@ public abstract class Strings {
         if (arr.length == 1) {
             return Objects.nullSafeToString(arr[0]);
         }
+
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < arr.length; i++) {
             if (i > 0) {
@@ -1256,13 +1300,40 @@ public abstract class Strings {
     }
 
     /**
-     * Convenience method to return a String array as a CSV String.
-     * E.g. useful for <code>toString()</code> implementations.
+     * Convert a {@code String} array into a comma delimited {@code String}
+     * (i.e., CSV).
+     * <p>Useful for {@code toString()} implementations.
      * @param arr the array to display
-     * @return the delimited String
+     * @return the delimited {@code String}
      */
     public static String arrayToCommaDelimitedString(Object[] arr) {
         return arrayToDelimitedString(arr, ",");
+    }
+
+    /**
+     * Returns a 'cleaned' representation of the specified argument.  'Cleaned' is defined as the following:
+     * <ol>
+     * <li>If the specified <code>String</code> is <code>null</code>, return <code>null</code></li>
+     * <li>If not <code>null</code>, {@link String#trim() trim()} it.</li>
+     * <li>If the trimmed string is equal to the empty String (i.e. &quot;&quot;), return <code>null</code></li>
+     * <li>If the trimmed string is not the empty string, return the trimmed version</li>
+     * </ol>
+     * <p>
+     * Therefore this method always ensures that any given string has trimmed text, and if it doesn't, <code>null</code>
+     * is returned.
+     *
+     * @param s the input String to clean.
+     * @return a populated-but-trimmed String or <code>null</code> otherwise
+     */
+    public static String clean(String s) {
+        if (s == null) {
+            return null;
+        }
+        String value = trimWhitespace(s);
+        if (value == null || "".equals(value)) {
+            return null;
+        }
+        return value;
     }
 
     /**

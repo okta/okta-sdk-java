@@ -31,6 +31,8 @@ public interface CacheManager {
      * will be created with that name and returned.
      *
      * @param name the name of the cache to acquire.
+     * @param <K> type of cache key
+     * @param <V> type of cache value
      * @return the Cache with the given name
      */
     <K, V> Cache<K, V> getCache(String name);

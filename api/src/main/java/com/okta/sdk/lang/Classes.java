@@ -67,6 +67,7 @@ public class Classes {
      * the JRE's <code>ClassNotFoundException</code>.
      *
      * @param fqcn the fully qualified class name to load
+     * @param <T> type of class
      * @return the located class
      * @throws UnknownClassException if the class cannot be found.
      */

@@ -297,6 +297,7 @@ public abstract class Collections {
      *
      * @param collection the Collection to search
      * @param type       the type to look for
+     * @param <T> type type of object to find
      * @return a value of the given type found if there is a clear match,
      * or <code>null</code> if none or more than one such value found
      */
@@ -323,6 +324,7 @@ public abstract class Collections {
      *
      * @param collection the Collection to search
      * @param type       the type to look for
+     * @param <T> type type of object to find
      * @return a value of the given type found or {@code null} if none found.
      */
     @SuppressWarnings("unchecked")
@@ -416,6 +418,13 @@ public abstract class Collections {
      * Marshal the elements from the given enumeration into an array of the given type.
      * Enumeration elements must be assignable to the type of the given array. The array
      * returned will be a different instance than the array given.
+     * @param enumeration source enumeration
+     * @param array the array into which the elements of the list are to
+     *          be stored, if it is big enough; otherwise, a new array of the
+     *          same runtime type is allocated for this purpose.
+     * @param <A> type of array
+     * @param <E> type of enumeration
+     * @return an array with the contents of the enumeration
      */
     public static <A, E extends A> A[] toArray(Enumeration<E> enumeration, A[] array) {
         ArrayList<A> elements = new ArrayList<A>();
@@ -434,6 +443,7 @@ public abstract class Collections {
      * Adapt an enumeration to an iterator.
      *
      * @param enumeration the enumeration
+     * @param <E> type of enumeration
      * @return the iterator
      */
     public static <E> Iterator<E> toIterator(Enumeration<E> enumeration) {

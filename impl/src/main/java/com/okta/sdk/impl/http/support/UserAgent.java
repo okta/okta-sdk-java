@@ -30,7 +30,7 @@ import java.util.jar.JarFile;
 /**
  * This class is in charge of constructing the <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.43">
  * User-Agent http header</a> string that will be sent to Okta in order to describe the current running environment of this Java SDK.
- * <p/>
+ * <p>
  * The form of this string is the concatenation of the following sub-items:
  * <ol>
  *     <li>The okta integration and version separated by a '/'.  If there is no integration being used, this can be omitted
@@ -43,10 +43,10 @@ import java.util.jar.JarFile;
  *     <li>The OS common name and version separated by a '/'.
  *     <li>All other system information included in parentheses
  * </ol>
- * <p/>
+ * <p>
  * The User-Agent value is created when this class is loaded. The string can be obtained just by invoking
  * {@link com.okta.sdk.impl.http.support.UserAgent#getUserAgentString() UserAgent.getUserAgentString()}.
- * <p/>
+ * <p>
  * This is a sample User-Agent string:
  * <i>okta-spring-security/0.7.0 okta-sdk-java/1.0.0 spring/4.0.4.RELEASE java/1.7.0_45 Mac OS X/10.9.2 (spring-security/3.2.0.RELEASE jetty/8.1.5.v20120716)</i>
  *

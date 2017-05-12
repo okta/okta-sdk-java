@@ -28,7 +28,7 @@ import java.lang.reflect.Constructor;
 
 /**
  * This default factory is responsible of creating a {@link RequestAuthenticator} out of a given {@link AuthenticationScheme}
- * </pre>
+ * <p>
  * This implementation returns a {@link SswsAuthenticator} when the authentication scheme is undefined.
  *
  * @since 1.0.0

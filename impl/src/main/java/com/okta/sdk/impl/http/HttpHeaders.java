@@ -123,6 +123,8 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 
     /**
      * Returns {@code HttpHeaders} object that can only be read, not written to.
+     * @param headers source headers
+     * @return readonly copy of the source {@code headers}
      */
     public static HttpHeaders readOnlyHttpHeaders(HttpHeaders headers) {
         return new HttpHeaders(headers, true);

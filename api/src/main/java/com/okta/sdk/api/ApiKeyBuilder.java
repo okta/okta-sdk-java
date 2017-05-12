@@ -18,6 +18,9 @@ package com.okta.sdk.api;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Properties;
+import com.okta.sdk.client.ClientBuilder;
+import com.okta.sdk.client.Clients;
+import com.okta.sdk.client.Client;
 
 /**
  * A <a href="http://en.wikipedia.org/wiki/Builder_pattern">Builder design pattern</a> used to
@@ -131,15 +134,13 @@ public interface ApiKeyBuilder {
      * values are tied to an individual <em>person</em> and should never be shared with anyone or embedded in source
      * code that can be viewed by multiple people.  For example:</p>
      *
-     * <p>
-     * <span color="red"><b>THIS IS AN ANTI-PATTERN! DO NOT DO THIS! THIS IS A SECURITY RISK!</b></span>
-     * <pre color="red">
+     * <span><b>THIS IS AN ANTI-PATTERN! DO NOT DO THIS! THIS IS A SECURITY RISK!</b></span>
+     * <pre>
      * String id = "myRawApiKeyId";
      * String secret = "secretValueThatAnyoneCouldSeeIfTheyCheckedOutMySourceCode";
      * ApiKey apiKey = ApiKeys.builder().setId(id).setSecret(secret).build();
      * Client client = Clients.builder().setApiKey(apiKey).build();
      * </pre>
-     * </p>
      *
      * <p>Because of this, it is recommended to rely on the default location + override/fallback behavior defined in
      * the {@link ApiKeyBuilder documentation above}.  However, if the default environment variable or system property
@@ -200,14 +201,14 @@ public interface ApiKeyBuilder {
     /**
      * Sets the location of the {@code .properties} file to load containing the API Key (Id and secret) used by the
      * Client to communicate with the Okta REST API.
-     * <p/>
+     * <p>
      * You may load files from the filesystem, classpath, or URLs by prefixing the location path with
      * {@code file:}, {@code classpath:}, or {@code url:} respectively.  If no prefix is found, {@code file:}
      * is assumed by default.
      * <h3>File Contents</h3>
-     * <p/>
+     * <p>
      * When the file is loaded, the following name/value pairs are expected to be present by default:
-     * <table>
+     * <table summary="ApiKey properties">
      * <tr>
      * <th>Key</th>
      * <th>Value</th>
@@ -221,7 +222,7 @@ public interface ApiKeyBuilder {
      * <td>The API Key Secret (password) that verifies the paired API Key ID.</td>
      * </tr>
      * </table>
-     * <p/>
+     * <p>
      * Assuming you were using these default property names, your {@code ClientBuilder} usage might look like the
      * following:
      * <pre>
@@ -234,7 +235,7 @@ public interface ApiKeyBuilder {
      * If you want to control the property names used in the file, you may configure them via
      * {@link #setIdPropertyName(String) setIdPropertyName} and
      * {@link #setSecretPropertyName(String) setSecretPropertyName}.
-     * <p/>
+     * <p>
      * For example, if you had a {@code /home/jsmith/.okta/apiKey.properties} file with the following
      * name/value pairs:
      * <pre>

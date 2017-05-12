@@ -16,7 +16,6 @@
 package com.okta.sdk.impl.error;
 
 import com.okta.sdk.error.Error;
-import com.okta.sdk.error.authc.DisabledAccountException;
 import com.okta.sdk.error.authc.OAuthAuthenticationException;
 import com.okta.sdk.lang.Classes;
 import com.okta.sdk.resource.ResourceException;
