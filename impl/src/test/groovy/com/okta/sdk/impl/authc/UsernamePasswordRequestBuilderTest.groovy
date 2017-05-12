@@ -19,17 +19,17 @@ import com.okta.sdk.authc.BasicAuthenticationOptions
 import com.okta.sdk.authc.UsernamePasswordRequests
 import org.testng.annotations.Test
 
-import static org.easymock.EasyMock.createMock
+import static org.mockito.Mockito.*
 import static org.testng.Assert.*
 
 /**
- * @since 1.0.RC5
+ * @since 1.0.0
  */
 class UsernamePasswordRequestBuilderTest {
 
     @Test
     void testAllProperties() {
-        def options = createMock(BasicAuthenticationOptions)
+        def options = mock(BasicAuthenticationOptions)
         def authenticationRequest = UsernamePasswordRequests.builder()
                 .setUsernameOrEmail("usernameOrEmail")
                 .setPassword("myPassword123!")

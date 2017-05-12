@@ -19,38 +19,23 @@ import com.okta.sdk.api.ApiAuthenticationResult
 import com.okta.sdk.http.HttpRequest
 import org.testng.annotations.Test
 
-import static org.easymock.EasyMock.expect
-import static org.powermock.api.easymock.PowerMock.*
+import static org.mockito.Mockito.*
 import static org.testng.Assert.assertEquals
 
 /**
- * @since 1.0.RC9
+ * @since 1.0.0
  */
 class DefaultApiRequestAuthenticatorTest {
 
     @Test
-    void testConstructWithHttpRequest() {
-
-        def httpRequest = createStrictMock(HttpRequest)
-
-        replayAll()
-
-        new DefaultApiRequestAuthenticator(httpRequest)
-
-        verifyAll()
-    }
-
-    @Test
     void testExecuteHttpRequest() {
 
-        def httpRequest = createStrictMock(HttpRequest)
-        def expectedResult = createStrictMock(ApiAuthenticationResult)
+        def httpRequest = mock(HttpRequest)
+        def expectedResult = mock(ApiAuthenticationResult)
 
-        def defaultApiRequestAuthenticator = createPartialMock(DefaultApiRequestAuthenticator, 'execute')
+        def defaultApiRequestAuthenticator = spy(new DefaultApiRequestAuthenticator(httpRequest))
 
-        expect(defaultApiRequestAuthenticator.execute()).andReturn(expectedResult)
-
-        replayAll()
+        doReturn(expectedResult).when(defaultApiRequestAuthenticator).execute()
 
         def actualResult = defaultApiRequestAuthenticator.authenticate(httpRequest)
 

@@ -15,35 +15,27 @@
  */
 package com.okta.sdk.impl.authc.credentials;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import com.okta.sdk.impl.test.RestoreEnvironmentVariables;
+import com.okta.sdk.impl.test.RestoreSystemProperties;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.util.UUID;
 
-import static org.easymock.EasyMock.expect;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static com.okta.sdk.impl.test.RestoreEnvironmentVariables.setEnvironmentVariable;
 
-@PrepareForTest(EnvironmentVariableCredentialsProvider.class)
-public class EnvironmentVariableCredentialsProviderTest extends PowerMockTestCase {
+@Listeners({RestoreSystemProperties.class, RestoreEnvironmentVariables.class})
+public class EnvironmentVariableCredentialsProviderTest {
 
     @Test
     public void environmentVariableCredentialsReturned() {
         String keyId = UUID.randomUUID().toString();
         String secret = UUID.randomUUID().toString();
 
-        String userHome = System.getProperty("user.home");
-
-        mockStatic(System.class);
-
-        expect(System.getProperty("user.home")).andReturn(userHome).once();
-        expect(System.getenv("OKTA_API_KEY_ID")).andReturn(keyId).once();
-        expect(System.getenv("OKTA_API_KEY_SECRET")).andReturn(secret).once();
-
-        replayAll();
+        setEnvironmentVariable("OKTA_API_KEY_ID", keyId);
+        setEnvironmentVariable("OKTA_API_KEY_SECRET", secret);
 
         ClientCredentials clientCredentials = new EnvironmentVariableCredentialsProvider().getClientCredentials();
 
@@ -52,5 +44,4 @@ public class EnvironmentVariableCredentialsProviderTest extends PowerMockTestCas
         assertEquals(clientCredentials.getSecret(), secret);
 
     }
-
 }

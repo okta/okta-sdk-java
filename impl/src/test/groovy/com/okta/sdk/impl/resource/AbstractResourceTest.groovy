@@ -18,11 +18,11 @@ package com.okta.sdk.impl.resource
 import com.okta.sdk.impl.ds.InternalDataStore
 import org.testng.annotations.Test
 
-import static org.easymock.EasyMock.*
+import static org.mockito.Mockito.*
 import static org.testng.Assert.*
 
 /**
- * @since 0.4.1
+ * @since 1.0.0
  */
 class AbstractResourceTest {
 
@@ -33,24 +33,20 @@ class AbstractResourceTest {
     void testNonMaterializedResourceGetDirtyPropertyDoesNotMaterialize() {
 
         def props = ['href': 'http://foo.com/test/123']
-        InternalDataStore ds = createStrictMock(InternalDataStore)
-
-        replay ds
+        InternalDataStore ds = mock(InternalDataStore)
 
         TestResource resource = new TestResource(ds, props)
 
         resource.setName('New Value')
 
         assertEquals 'New Value', resource.getName()
-
-        verify ds
     }
 
     @Test
     void testDirtyPropertiesRetainedAfterMaterialization() {
 
         def props = ['href': 'http://foo.com/test/123']
-        InternalDataStore ds = createStrictMock(InternalDataStore)
+        InternalDataStore ds = mock(InternalDataStore)
 
         def serverResource = new TestResource(ds, [
                 'href': props.href,
@@ -58,9 +54,7 @@ class AbstractResourceTest {
                 'description': 'Old Description'
         ])
 
-        expect(ds.getResource(props.href, TestResource)).andReturn serverResource
-
-        replay ds
+        when(ds.getResource(props.href, TestResource)).thenReturn serverResource
 
         TestResource resource = new TestResource(ds, props)
         resource.setName('New Name')
@@ -70,13 +64,8 @@ class AbstractResourceTest {
 
         assertEquals 'Old Description', description //obtained during materialization
         assertEquals 'New Name', resource.getName() //dirty property retained even after materialization
-
-        verify ds
     }
 
-    /**
-     * @since 1.0.RC4
-     */
     @Test
     void testMapProperty() {
 
@@ -94,7 +83,7 @@ class AbstractResourceTest {
                     linkBaseUrl: "https://api.okta.com/passwordReset"
                 ]
         ]
-        InternalDataStore ds = createStrictMock(InternalDataStore)
+        InternalDataStore ds = mock(InternalDataStore)
 
         def testResource = new TestResource(ds, props)
 

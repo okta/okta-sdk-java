@@ -16,17 +16,14 @@
 package com.okta.sdk.impl.jwt
 
 import com.okta.sdk.error.jwt.InvalidJwtException
-import org.powermock.core.classloader.annotations.PrepareForTest
 import org.testng.annotations.Test
 
-import static org.powermock.api.easymock.PowerMock.createPartialMock
 import static org.testng.Assert.assertEquals
 import static org.testng.Assert.fail
 
 /**
- * @since 1.0.RC9
+ * @since 1.0.0
  */
-@PrepareForTest(JwtWrapper)
 class JwtWrapperTest {
 
     @Test
@@ -41,9 +38,8 @@ class JwtWrapperTest {
 
     @Test
     void testgetJsonHeaderAsMapException() {
-        // Cheating a little here - we don't really need getBase64JwtSignature to be a mocked method
-        // but this will allow us to exercise null conditions in other methods that are not mocked
-        def jwtWrapper = createPartialMock(JwtWrapper, 'getBase64JwtSignature')
+        def jwtWrapper = new JwtWrapper("invalid.jwt.here")
+        setBase64JwtSignature(jwtWrapper, "base64JwtHeader",null)
 
         try {
             jwtWrapper.getJsonHeaderAsMap()
@@ -55,9 +51,9 @@ class JwtWrapperTest {
 
     @Test
     void testGetJsonPayloadAsMapException() {
-        // Cheating a little here - we don't really need getBase64JwtSignature to be a mocked method
-        // but this will allow us to exercise null conditions in other methods that are not mocked
-        def jwtWrapper = createPartialMock(JwtWrapper, 'getBase64JwtSignature')
+
+        def jwtWrapper = new JwtWrapper("invalid.jwt.here")
+        setBase64JwtSignature(jwtWrapper, "base64JsonPayload", null)
 
         try {
             jwtWrapper.getJsonPayloadAsMap()
@@ -65,5 +61,11 @@ class JwtWrapperTest {
         } catch (InvalidJwtException e) {
             assertEquals e.getMessage(), InvalidJwtException.INVALID_JWT_BODY_ENCODING_ERROR
         }
+    }
+
+    private setBase64JwtSignature(JwtWrapper wrapper, String fieldName, String value) {
+        def field = JwtWrapper.class.getDeclaredField(fieldName)
+        field.setAccessible(true)
+        field.set(wrapper, value)
     }
 }

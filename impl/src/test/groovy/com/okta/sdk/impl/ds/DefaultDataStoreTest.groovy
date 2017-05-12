@@ -25,26 +25,22 @@ import com.okta.sdk.query.Options
 import com.okta.sdk.resource.Resource
 import org.testng.annotations.Test
 
-import static org.easymock.EasyMock.createStrictMock
+import static org.mockito.Mockito.*
 import static org.testng.Assert.*
 
 /**
- * @since 1.0.beta
+ * @since 1.0.0
  */
 class DefaultDataStoreTest {
 
 
-
-    /**
-     * @since 1.0.RC4.6
-     */
     @Test
     void testGetResource_Expanded_InvalidArguments() {
-        def requestExecutor = createStrictMock(RequestExecutor)
-        def apiKeyCredentials = createStrictMock(ApiKeyCredentials)
-        def apiKeyResolver = createStrictMock(ApiKeyResolver)
+        def requestExecutor = mock(RequestExecutor)
+        def apiKeyCredentials = mock(ApiKeyCredentials)
+        def apiKeyResolver = mock(ApiKeyResolver)
         def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyCredentials, apiKeyResolver)
-        def emptyOptions = createStrictMock(DefaultOptions)
+        def emptyOptions = mock(DefaultOptions)
         def resourceData = Resource
         def href = "http://api.okta.com/v1/directories/2B6PLkZ8AGvWlziq18JJ62"
 
@@ -72,9 +68,9 @@ class DefaultDataStoreTest {
 
     @Test
     void testApiKeyResolverReturnsCorrectApiKey() {
-        def requestExecutor = createStrictMock(RequestExecutor)
-        def apiKeyForCredentials = createStrictMock(ApiKey)
-        def apiKeyForResolver = createStrictMock(ApiKey)
+        def requestExecutor = mock(RequestExecutor)
+        def apiKeyForCredentials = mock(ApiKey)
+        def apiKeyForResolver = mock(ApiKey)
 
         def apiKeyCredentials = new ApiKeyCredentials(apiKeyForCredentials)
         def apiKeyResolver = new DefaultApiKeyResolver(apiKeyForResolver)
