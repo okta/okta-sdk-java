@@ -33,7 +33,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * describing the same server-side item (i.e, having the very same href). Locks are used to provide thread-safe Map
  * operations.
  *
- * @see {@link DefaultDataStore}
+ * @see DefaultDataStore
  * @since 1.0.0
  */
 public class Enlistment implements Map<String, Object> {

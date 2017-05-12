@@ -93,8 +93,8 @@ public abstract class AbstractPropertyRetriever {
     /**
      * Returns an actual boolean value instead of a possible null Boolean value since desired usage
      * is to have either a true or false.
-     *
-
+     * @param key the identifier
+     * @return a boolean representation of the value (null == false)
      */
     protected boolean getBooleanProperty(String key) {
         return getNullableBooleanProperty(key) == Boolean.TRUE;
@@ -147,6 +147,8 @@ public abstract class AbstractPropertyRetriever {
 
     /**
      * Returns the {@link List} property identified by {@code key}
+     * @param key the identifier
+     * @return a List
      *
      */
     protected List getListProperty(String key) {
@@ -156,7 +158,8 @@ public abstract class AbstractPropertyRetriever {
 
     /**
      * Returns the {@link Set} property identified by {@code key}
-     *
+     * @param key the identifier
+     * @return a Set
      */
     protected Set getSetProperty(String key) {
         Object set = getProperty(key);

@@ -64,6 +64,8 @@ public abstract class AbstractClient implements Client {
      *                             Okta REST resources (can be null)
      * @param authenticationScheme the HTTP authentication scheme to be used when communicating with the Okta API
      *                             server (can be null)
+     * @param requestAuthenticatorFactory factory used to handle creating autentication requests
+     * @param connectionTimeout    connection timeout in seconds
      */
     public AbstractClient(ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
         Assert.notNull(clientCredentials, "clientCredentials argument cannot be null.");

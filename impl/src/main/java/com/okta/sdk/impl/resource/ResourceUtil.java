@@ -28,10 +28,10 @@ public class ResourceUtil {
 
     /**
      * Filters non- string values out of a the {@link Resource} dirty properties
-     * @param resource
+     * @param resource the resource to be filtered
      * @return filtered map
      */
-    public static final Map<String, String> filterNonStringvaluesWithiResourceDirtyProperties(Resource resource){
+    public static final Map<String, String> filterNonStringValuesWithResourceDirtyProperties(Resource resource){
         Map<String, Object> dirtyProperties = ((AbstractResource) resource).dirtyProperties;
         return filterNonStringValues(dirtyProperties);
     }

@@ -46,7 +46,6 @@ public interface Criteria<T extends Criteria<T>> {
      * Indicates the immediately preceding {@code orderBy} clause should indicate ascending order.  This is the default
      * for all {@code orderBy} clauses and is not required to be invoked.  For example, the following are functionally
      * equivalent:
-     * <p>
      * <pre>
      * ...orderByGivenName()
      *
@@ -73,7 +72,6 @@ public interface Criteria<T extends Criteria<T>> {
     /**
      * Indicates the immediately preceding {@code orderBy} clause should indicate descending order.  For example:
      * equivalent:
-     * <p>
      * <pre>
      * ...orderBySurname().descending()
      * </pre>

@@ -20,12 +20,12 @@ import java.util.Arrays;
 
 /**
  * Abstract superclass for Base-N encoders and decoders.
- * <p/>
  * <p>
  * This class is thread-safe.
  * </p>
  *
- * @since 1.0.RC, gratefully imported from the Apache Commons-Codec library.
+ * Gratefully imported from the Apache Commons-Codec library.
+ * @since 1.0.0
  */
 public abstract class BaseNCodec {
 
@@ -109,7 +109,6 @@ public abstract class BaseNCodec {
 
     /**
      * MIME chunk size per RFC 2045 section 6.8.
-     * <p/>
      * <p>
      * The {@value} character limit does not count the trailing CRLF, but counts all other characters, including any
      * equal signs.
@@ -121,7 +120,6 @@ public abstract class BaseNCodec {
 
     /**
      * PEM chunk size per RFC 1421 section 4.3.2.4.
-     * <p/>
      * <p>
      * The {@value} character limit does not count the trailing CRLF, but counts all other characters, including any
      * equal signs.
@@ -239,10 +237,11 @@ public abstract class BaseNCodec {
     }
 
     /**
-     * Ensure that the buffer has room for <code>size</code> bytes
+     * Ensure that the buffer has room for <code>size</code> bytes.
      *
      * @param size    minimum spare space required
      * @param context the context to be used
+     * @return resized byte array if needed
      */
     protected byte[] ensureBufferSize(final int size, final Context context) {
         if ((context.buffer == null) || (context.buffer.length < context.pos + size)) {
@@ -254,7 +253,7 @@ public abstract class BaseNCodec {
     /**
      * Extracts buffered data into the provided byte[] array, starting at position bPos, up to a maximum of bAvail
      * bytes. Returns how many bytes were actually extracted.
-     * <p/>
+     * <p>
      * Package protected for access from I/O streams.
      *
      * @param b       byte[] array to extract the buffered data into.
@@ -446,7 +445,7 @@ public abstract class BaseNCodec {
 
     /**
      * Tests a given byte array to see if it contains any characters within the alphabet or PAD.
-     * <p/>
+     * <p>
      * Intended for use in checking line-ending arrays
      *
      * @param arrayOctet byte array to test
@@ -469,7 +468,7 @@ public abstract class BaseNCodec {
      *
      * @param pArray byte[] array which will later be encoded
      * @return amount of space needed to encoded the supplied array.
-     *         Returns a long since a max-len array will require > Integer.MAX_VALUE
+     *         Returns a long since a max-len array will require &gt; Integer.MAX_VALUE
      */
     public long getEncodedLength(final byte[] pArray) {
         // Calculate non-chunked size - rounded up to allow for padding
