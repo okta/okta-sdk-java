@@ -18,16 +18,16 @@ package com.okta.sdk.impl.ds
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
-import org.easymock.IAnswer
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
 import org.testng.annotations.BeforeTest
 import org.testng.annotations.Test
 
-import static org.easymock.EasyMock.*
-import static org.powermock.api.easymock.PowerMock.replay
+import static org.mockito.Mockito.*
 import static org.testng.Assert.*
 
 /**
- * @since 1.0.RC9
+ * @since 1.0.0
  */
 class JacksonMapMarshallerTest {
 
@@ -62,16 +62,14 @@ class JacksonMapMarshallerTest {
     @Test
     void testMarshalException() {
 
-        def objectMapper = createMock(ObjectMapper)
-        expect(objectMapper.writeValueAsString(null)).andAnswer(new IAnswer<String>() {
+        def objectMapper = mock(ObjectMapper)
+        when(objectMapper.writeValueAsString(null)).then(new Answer<String>() {
             @Override
-            String answer() throws Throwable {
+            String answer(InvocationOnMock invocation) throws Throwable {
                 throw new IOException("kaboom")
             }
         })
         mapMarshaller.setObjectMapper(objectMapper)
-
-        replay objectMapper
 
         try {
             mapMarshaller.marshal(null)
@@ -84,17 +82,15 @@ class JacksonMapMarshallerTest {
     @Test
     void testUnmarshalStringException() {
 
-        def objectMapper = createMock(ObjectMapper)
-        expect(objectMapper.readValue((String)eq("a value"), (TypeReference)isA(TypeReference)))
-            .andAnswer(new IAnswer<Map>() {
+        def objectMapper = mock(ObjectMapper)
+        when(objectMapper.readValue((String)eq("a value"), (TypeReference)isA(TypeReference)))
+            .then(new Answer<Map>() {
                 @Override
-                Map answer() throws Throwable {
+                Map answer(InvocationOnMock invocation) throws Throwable {
                     throw new IOException("kaboom")
                 }
             })
         mapMarshaller.setObjectMapper(objectMapper)
-
-        replay objectMapper
 
         try {
             mapMarshaller.unmarshal("a value")
@@ -107,18 +103,16 @@ class JacksonMapMarshallerTest {
     @Test
     void testUnmarshalInputStreamException() {
 
-        def objectMapper = createMock(ObjectMapper)
-        def inputStream = createMock(InputStream)
-        expect(objectMapper.readValue((InputStream)eq(inputStream), (Class)eq(Object.class)))
-            .andAnswer(new IAnswer<Map>() {
+        def objectMapper = mock(ObjectMapper)
+        def inputStream = mock(InputStream)
+        when(objectMapper.readValue((InputStream)eq(inputStream), (Class)eq(Object.class)))
+            .then(new Answer<Map>() {
                 @Override
-                Map answer() throws Throwable {
+                Map answer(InvocationOnMock invocation) throws Throwable {
                     throw new IOException("kaboom")
                 }
             })
         mapMarshaller.setObjectMapper(objectMapper)
-
-        replay objectMapper
 
         try {
             mapMarshaller.unmarshall(inputStream, null)

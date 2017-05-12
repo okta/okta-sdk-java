@@ -23,7 +23,9 @@ import org.apache.http.HttpResponse
 import org.apache.http.StatusLine
 import org.testng.annotations.Test
 
-import static org.easymock.EasyMock.*
+import static org.mockito.Mockito.*
+import static org.hamcrest.MatcherAssert.*
+import static org.hamcrest.Matchers.*
 import static org.testng.Assert.assertNull
 
 class HttpClientRequestExecutorTest {
@@ -31,24 +33,22 @@ class HttpClientRequestExecutorTest {
     @Test //asserts https://github.com/stormpath/stormpath-sdk-java/issues/124
     void testToSdkResponseWithNullContentString() {
 
-        def apiKeyCredentials = createStrictMock(ApiKeyCredentials)
+        def apiKeyCredentials = mock(ApiKeyCredentials)
 
-        HttpResponse httpResponse = createStrictMock(HttpResponse)
-        StatusLine statusLine = createStrictMock(StatusLine)
-        HttpEntity entity = createStrictMock(HttpEntity)
-        InputStream entityContent = createStrictMock(InputStream)
-        ApiKey apiKey = createMock(ApiKey)
+        HttpResponse httpResponse = mock(HttpResponse)
+        StatusLine statusLine = mock(StatusLine)
+        HttpEntity entity = mock(HttpEntity)
+        InputStream entityContent = mock(InputStream)
+        ApiKey apiKey = mock(ApiKey)
 
-        expect(apiKeyCredentials.getApiKey()).andReturn(apiKey)
-        expect(httpResponse.getStatusLine()).andStubReturn(statusLine)
-        expect(statusLine.getStatusCode()).andStubReturn(200)
-        expect(httpResponse.getAllHeaders()).andStubReturn(null)
-        expect(httpResponse.getEntity()).andStubReturn(entity)
-        expect(entity.getContentEncoding())andStubReturn(null)
-        expect(entity.getContent()).andStubReturn(entityContent)
-        expect(entity.getContentLength()).andStubReturn(-1)
-
-        replay apiKeyCredentials, httpResponse, statusLine, entity, entityContent, apiKey
+        when(apiKeyCredentials.getApiKey()).thenReturn(apiKey)
+        when(httpResponse.getStatusLine()).thenReturn(statusLine)
+        when(statusLine.getStatusCode()).thenReturn(200)
+        when(httpResponse.getAllHeaders()).thenReturn(null)
+        when(httpResponse.getEntity()).thenReturn(entity)
+        when(entity.getContentEncoding()).thenReturn(null)
+        when(entity.getContent()).thenReturn(entityContent)
+        when(entity.getContentLength()).thenReturn(-1l)
 
         def e = new HttpClientRequestExecutor(apiKeyCredentials, null, AuthenticationScheme.SSWS, null, 20000) {
             @Override
@@ -60,8 +60,7 @@ class HttpClientRequestExecutorTest {
         def sdkResponse = e.toSdkResponse(httpResponse)
 
         assertNull sdkResponse.body
-
-        verify apiKeyCredentials, httpResponse, statusLine, entity, entityContent, apiKey
+        assertThat sdkResponse.httpStatus, is(200)
 
     }
 }

@@ -15,37 +15,30 @@
  */
 package com.okta.sdk.impl.config;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import com.okta.sdk.impl.test.RestoreEnvironmentVariables;
+import com.okta.sdk.impl.test.RestoreSystemProperties;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.expect;
-import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
-import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.testng.Assert.assertEquals;
+import static com.okta.sdk.impl.test.RestoreEnvironmentVariables.setEnvironmentVariable;
+import static com.okta.sdk.impl.test.RestoreEnvironmentVariables.clearEnvironmentVariables;
+
 
 /**
  * @since 1.0.RC9
  *
  * NOTE: This *exact* same test was not working in groovy, which is why it's implemented in Java
  */
-@PrepareForTest(EnvironmentVariablesPropertiesSource.class)
-public class EnvironmentVariablesPropertiesSourceTest extends PowerMockTestCase {
+@Listeners({RestoreSystemProperties.class, RestoreEnvironmentVariables.class})
+public class EnvironmentVariablesPropertiesSourceTest {
 
     @Test
     public void testGetProperties() {
 
-        Map<String, String> mockProps = new HashMap<String, String>();
-        mockProps.put("my_special_key", "my_special_value");
-
-        mockStaticPartial(System.class, "getenv");
-        expect(System.getenv()).andReturn(mockProps);
-
-        replayAll();
-
+        setEnvironmentVariable("my_special_key", "my_special_value");
         Map<String, String> props = new EnvironmentVariablesPropertiesSource().getProperties();
 
         assertEquals(props.get("my_special_key"), "my_special_value");
@@ -54,10 +47,7 @@ public class EnvironmentVariablesPropertiesSourceTest extends PowerMockTestCase 
     @Test
     public void testGetPropertiesEmpty() {
 
-        mockStaticPartial(System.class, "getenv");
-        expect(System.getenv()).andReturn(null);
-
-        replayAll();
+        clearEnvironmentVariables();
 
         Map<String, String> props = new EnvironmentVariablesPropertiesSource().getProperties();
 

@@ -22,7 +22,7 @@ import org.testng.annotations.Test
 
 import java.text.SimpleDateFormat
 
-import static org.easymock.EasyMock.*
+import static org.mockito.Mockito.*
 import static org.testng.Assert.*
 
 /**
@@ -30,32 +30,30 @@ import static org.testng.Assert.*
  */
 class BasicRequestAuthenticatorTest {
 
-    private static final String TIMESTAMP_FORMAT = "yyyyMMdd'T'HHmmss'Z'";
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String OKTA_DATE_HEADER = "X-Okta-Date";
-    private static final String TIME_ZONE = "UTC";
+    private static final String TIMESTAMP_FORMAT = "yyyyMMdd'T'HHmmss'Z'"
+    private static final String AUTHORIZATION_HEADER = "Authorization"
+    private static final String OKTA_DATE_HEADER = "X-Okta-Date"
+    private static final String TIME_ZONE = "UTC"
 
     @Test
-    public void test(){
+    void test(){
 
         def id = "fooId"
         def secret = "barKey"
-        String authorizationHeader = com.okta.sdk.impl.util.Base64.encodeBase64String((id + ":" + secret).getBytes("UTF-8"));
+        String authorizationHeader = com.okta.sdk.impl.util.Base64.encodeBase64String((id + ":" + secret).getBytes("UTF-8"))
 
-        def request = createStrictMock(Request)
-        def apiKeyCredentials = createStrictMock(ApiKeyCredentials)
+        def request = mock(Request)
+        def apiKeyCredentials = mock(ApiKeyCredentials)
 
         HttpHeaders headers = new HttpHeaders()
 
         assertNull(headers.get(AUTHORIZATION_HEADER))
 
-        expect(request.getHeaders()).andReturn(headers) times(2)
-        expect(apiKeyCredentials.getId()).andReturn(id)
-        expect(apiKeyCredentials.getSecret()).andReturn(secret)
+        when(request.getHeaders()).thenReturn(headers)
+        when(apiKeyCredentials.getId()).thenReturn(id)
+        when(apiKeyCredentials.getSecret()).thenReturn(secret)
 
-        replay(request, apiKeyCredentials)
-
-        def requestAuthenticator = new BasicRequestAuthenticator(apiKeyCredentials);
+        def requestAuthenticator = new BasicRequestAuthenticator(apiKeyCredentials)
         requestAuthenticator.authenticate(request)
 
         assertEquals(headers.get(AUTHORIZATION_HEADER).size(), 1)
@@ -72,8 +70,6 @@ class BasicRequestAuthenticatorTest {
         } catch(Exception e) {
             fail("Exception validating generated date in header: " + e.getMessage())
         }
-
-        verify(request, apiKeyCredentials)
 
     }
 
