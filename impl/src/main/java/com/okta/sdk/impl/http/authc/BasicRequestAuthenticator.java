@@ -35,7 +35,7 @@ import java.util.SimpleTimeZone;
  * The `Client` gets the request authenticator configured via
  * {@link com.okta.sdk.client.ClientBuilder#setAuthenticationScheme(com.okta.sdk.client.AuthenticationScheme)}
  *
- * @since 0.9.3
+ * @since 1.0.0
  */
 public class BasicRequestAuthenticator implements RequestAuthenticator {
     private static final Logger log = LoggerFactory.getLogger(BasicRequestAuthenticator.class);

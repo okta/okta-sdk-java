@@ -71,9 +71,6 @@ class DefaultClientBuilderTest {
         assertEquals clientBuilder.clientConfiguration.proxyPassword, "bar" // from properties
     }
 
-    /**
-     * @since 1.2.0
-     */
     @Test
     void testConfigureBaseUrlResolver(){
         BaseUrlResolver baseUrlResolver = new BaseUrlResolver() {
@@ -88,9 +85,6 @@ class DefaultClientBuilderTest {
         assertEquals(testClient.dataStore.baseUrlResolver.getBaseUrl(), "test")
     }
 
-    /**
-     * @since 1.2.0
-     */
     @Test
     void testDefaultBaseUrlResolver(){
         assertEquals(client.dataStore.baseUrlResolver.getBaseUrl(), "https://api.okta.com/v42")
@@ -121,9 +115,6 @@ class DefaultClientBuilderTestCustomCredentials{
         assertEquals client.dataStore.apiKey.secret, secret
     }
 
-    /**
-     * @since 1.1.0
-     */
     @Test
     void testCustomClientCredentialsRequireApiKeyResolver(){
         def credentialsId = UUID.randomUUID().toString()

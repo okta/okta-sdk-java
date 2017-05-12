@@ -19,7 +19,7 @@ import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.lang.Assert;
 
 /**
- * @since 1.0.4
+ * @since 1.0.0
  */
 public class DefaultClientCredentialsProviderChain extends ClientCredentialsProviderChain {
 

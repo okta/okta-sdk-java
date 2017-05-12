@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.http.support;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public interface BackoffStrategy {
 

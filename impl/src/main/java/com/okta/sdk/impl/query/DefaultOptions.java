@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public class DefaultOptions<T extends Options> implements Options, Expandable {
 

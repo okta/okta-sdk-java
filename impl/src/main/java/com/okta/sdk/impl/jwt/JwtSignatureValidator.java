@@ -22,7 +22,7 @@ import com.okta.sdk.impl.jwt.signer.JwtSigner;
 import com.okta.sdk.lang.Assert;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class JwtSignatureValidator {
 

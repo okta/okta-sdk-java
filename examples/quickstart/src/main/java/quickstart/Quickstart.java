@@ -33,7 +33,7 @@ import java.util.UUID;
 /**
  * This class demonstrates the code found in the Stormpath Java SDK QuickStart Guide
  *
- * @since 1.0.RC4.6
+ * @since 1.0.0
  */
 public class Quickstart {
 

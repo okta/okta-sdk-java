@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public abstract class AbstractResource extends AbstractPropertyRetriever implements Resource {
 
@@ -67,7 +67,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * @param props the data properties to test
      * @return {@code true} if the specified data map represents a materialized resource data set, {@code false}
      * otherwise.
-     * @since 1.0.RC4.3
      */
     public static boolean isMaterialized(Map<String, ?> props) {
         return props != null && props.get(HREF_PROP_NAME) != null && props.size() > 1;
@@ -78,7 +77,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      *
      * @param props the data properties to test.
      * @return {@code true} if the specified data map contains an href property.
-     * @since 1.1.0
      */
     public static boolean hasHref(Map<String, ?> props) {
         return props != null && props.get(HREF_PROP_NAME) != null;
@@ -145,7 +143,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * Returns {@code true} if the resource doesn't yet have an assigned 'href' property, {@code false} otherwise.
      *
      * @return {@code true} if the resource doesn't yet have an assigned 'href' property, {@code false} otherwise.
-     * @since 0.2
      */
     protected final boolean isNew() {
         //we can't call getHref() in here, otherwise we'll have an infinite loop:
@@ -241,7 +238,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      *
      * @param name the name of the property to check for existence
      * @return {@code true} if this resource has a property with the specified name, {@code false} otherwise.
-     * @since 1.3.0
      */
     public boolean hasProperty(String name) {
         readLock.lock();
@@ -270,7 +266,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     }
 
     /**
-     * @since 0.6.0
      */
     protected Object setProperty(String name, Object value, final boolean dirty) {
         return setProperty(name, value, dirty, false);
@@ -284,14 +279,12 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * and therefore setting the value to null by calling those methods, will take no effect and
      * retain the old/previous value for the property.
      *
-     * @since 1.1.0
      */
     protected void setProperty(Property property, Object value, final boolean dirty, final boolean isNullable) {
         setProperty(property.getName(), value, dirty, isNullable);
     }
 
     /**
-     * @since 1.1.0
      */
     private Object setProperty(String name, Object value, final boolean dirty, final boolean isNullable) {
         writeLock.lock();
@@ -325,7 +318,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     }
 
     /**
-     * @since 0.8
      */
     @SuppressWarnings("unchecked")
     protected <T extends Resource> T getResourceProperty(ResourceReference<T> property) {
@@ -370,7 +362,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     /**
      * Returns the {@link List} property identified by {@code key}
      *
-     * @since 1.3.0
      */
     protected List getListProperty(ListProperty property){
         return getListProperty(property.getName());
@@ -379,7 +370,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     /**
      * Returns the {@link List} property identified by {@code key}
      *
-     * @since 1.3.0
      */
     protected List getListProperty(String key){
         Object list = getProperty(key);
@@ -389,7 +379,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     /**
      * Returns the {@link Set} property identified by {@code key}
      *
-     * @since 1.3.0
      */
     protected Set getSetProperty(String key) {
         Object set = getProperty(key);
@@ -400,7 +389,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     }
 
 //    /**
-//     * @since 0.8
+//
 //     */
 //    @SuppressWarnings("unchecked")
 //    protected <T extends Resource, R extends T> R getSpecificResourceProperty(ResourceReference<T> property, Class<>) {
@@ -434,7 +423,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * @param property
      * @param value
      * @param <T>
-     * @since 0.9
      */
     protected <T extends Resource> void setResourceProperty(ResourceReference<T> property, Resource value) {
         Assert.notNull(property, "Property argument cannot be null.");
@@ -451,7 +439,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      *
      * @param property the property whose value is going to be set to <code>value</code>
      * @param value    the value to be set to <code>property</code>
-     * @since 1.1.0
      */
     protected <T extends Resource> void setMaterializableResourceProperty(ResourceReference<T> property, Resource value) {
         Assert.notNull(property, "Property argument cannot be null.");
@@ -490,7 +477,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      *
      * @param name The name of the property to check for safe printing
      * @return {@code true} if the internal property is safe to print in toString(), {@code false} otherwise.
-     * @since 0.4.1
      */
     protected boolean isPrintableProperty(String name) {
         return true;

@@ -21,7 +21,7 @@ import com.okta.sdk.resource.ResourceException;
 /**
  * Thrown when the Authentication credentials (or access_token for OAuth requests) cannot be found in the {@code httpRequest}.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class InvalidAuthenticationException extends ResourceException {
 

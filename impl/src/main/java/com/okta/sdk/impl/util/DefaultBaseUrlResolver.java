@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.util;
 
 /**
- * @since 1.2.0
+ * @since 1.0.0
  */
 public class DefaultBaseUrlResolver implements BaseUrlResolver {
 

@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.resource;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public class EnumProperty<T extends Enum> extends NonStringProperty<T> {
 
@@ -24,9 +24,6 @@ public class EnumProperty<T extends Enum> extends NonStringProperty<T> {
         super("status", clazz);
     }
 
-    /**
-     * @since 1.0.RC4
-     */
     public EnumProperty(String propertyName, Class<T> clazz) {
         super(propertyName, clazz);
     }

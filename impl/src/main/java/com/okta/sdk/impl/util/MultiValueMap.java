@@ -22,7 +22,7 @@ import java.util.Map;
  * Extension of the {@code Map} interface that stores multiple values.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0.0
  */
 public interface MultiValueMap<K, V> extends Map<K, List<V>> {
 

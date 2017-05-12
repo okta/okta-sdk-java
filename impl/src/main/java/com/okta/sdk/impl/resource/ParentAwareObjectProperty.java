@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.resource;
 
 /**
- * @since 1.2.0
+ * @since 1.0.0
  */
 public class ParentAwareObjectProperty<T, P> extends Property<T> {
 

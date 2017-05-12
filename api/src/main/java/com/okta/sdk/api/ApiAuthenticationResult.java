@@ -47,7 +47,7 @@ import com.okta.sdk.authc.AuthenticationResult;
  * });
  * </pre>
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public interface ApiAuthenticationResult extends AuthenticationResult {
 

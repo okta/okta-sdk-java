@@ -18,7 +18,7 @@ package com.okta.sdk.impl.jwt.signer;
 /**
  * JwtSigner signs an access token using the JWT spec.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public interface JwtSigner {
 

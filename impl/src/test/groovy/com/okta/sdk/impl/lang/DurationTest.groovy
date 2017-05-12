@@ -24,7 +24,7 @@ import static org.testng.Assert.assertEquals
 import static org.testng.Assert.assertTrue
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 class DurationTest {
 

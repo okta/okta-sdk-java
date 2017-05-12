@@ -18,7 +18,7 @@ package com.okta.sdk.impl.ds;
 import com.okta.sdk.impl.http.RestException;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public class MarshalingException extends RestException {
 

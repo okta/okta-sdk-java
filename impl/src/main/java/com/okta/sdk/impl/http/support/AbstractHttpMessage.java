@@ -20,7 +20,7 @@ import com.okta.sdk.impl.http.HttpMessage;
 import java.io.InputStream;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public abstract class AbstractHttpMessage implements HttpMessage {
 

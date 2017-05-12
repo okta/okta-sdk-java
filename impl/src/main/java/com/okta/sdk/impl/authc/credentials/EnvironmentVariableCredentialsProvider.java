@@ -20,7 +20,7 @@ import com.okta.sdk.lang.Strings;
 import java.util.Properties;
 
 /**
- * @since 1.0.4
+ * @since 1.0.0
  */
 public class EnvironmentVariableCredentialsProvider extends AbstractApiKeyCredentialsProvider {
 

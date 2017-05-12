@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
 /**
  * DefaultJwtSigner is the default impl of the JwtSigner interface
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DefaultJwtSigner implements JwtSigner {
 

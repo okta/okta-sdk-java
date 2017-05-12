@@ -17,7 +17,7 @@ package com.okta.sdk.impl.authc.credentials;
 
 /**
  * Credentials to be used when authenticating requests to the Okta API server.
- * @since 1.0.4
+ * @since 1.0.0
  */
 public interface ClientCredentials {
     /**

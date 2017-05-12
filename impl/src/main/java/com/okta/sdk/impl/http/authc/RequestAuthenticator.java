@@ -23,7 +23,7 @@ import com.okta.sdk.impl.http.support.RequestAuthenticationException;
  * the Okta API server will be authenticated.
  *
  * @see com.okta.sdk.client.AuthenticationScheme
- * @since 0.9.3
+ * @since 1.0.0
  */
 public interface RequestAuthenticator {
     String AUTHORIZATION_HEADER = "Authorization";

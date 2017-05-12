@@ -28,7 +28,7 @@ import static com.okta.sdk.impl.test.RestoreEnvironmentVariables.clearEnvironmen
 
 
 /**
- * @since 1.0.RC9
+ * @since 1.0.0
  *
  * NOTE: This *exact* same test was not working in groovy, which is why it's implemented in Java
  */

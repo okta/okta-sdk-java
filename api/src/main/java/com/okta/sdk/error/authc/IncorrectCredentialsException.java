@@ -21,7 +21,7 @@ import com.okta.sdk.resource.ResourceException;
 /**
  * A sub-class of {@link ResourceException} representing an attempt to login using incorrect credentials.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class IncorrectCredentialsException extends ResourceException {
 

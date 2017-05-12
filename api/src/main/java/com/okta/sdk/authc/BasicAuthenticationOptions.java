@@ -18,7 +18,7 @@ package com.okta.sdk.authc;
 /**
  * BasicAuthentication-specific options that may be specified during authentication.
  *
- * @since 1.0.RC5
+ * @since 1.0.0
  */
 public interface BasicAuthenticationOptions<T extends BasicAuthenticationOptions> extends AuthenticationOptions<T> {
 

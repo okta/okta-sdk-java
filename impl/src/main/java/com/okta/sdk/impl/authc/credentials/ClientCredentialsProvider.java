@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.authc.credentials;
 
 /**
- * @since 1.0.4
+ * @since 1.0.0
  */
 public interface ClientCredentialsProvider {
 

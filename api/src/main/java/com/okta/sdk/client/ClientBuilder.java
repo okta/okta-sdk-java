@@ -204,7 +204,7 @@ import com.okta.sdk.cache.CacheManager;
  * references the same exact {@code CacheManager} instance to guarantee cache coherency.</p>
  *
  * @see com.okta.sdk.api.ApiKeyBuilder ApiKeyBuilder
- * @since 1.0.beta
+ * @since 1.0.0
  */
 public interface ClientBuilder {
 
@@ -334,7 +334,6 @@ public interface ClientBuilder {
      *
      * @param timeout connection and socket timeout in milliseconds
      * @return the ClientBuilder instance for method chaining
-     * @since 1.0.RC3
      */
     ClientBuilder setConnectionTimeout(int timeout);
 
@@ -347,7 +346,6 @@ public interface ClientBuilder {
      *
      * @param baseUrl the base URL of the Okta REST API to use.
      * @return the ClientBuilder instance for method chaining
-     * @since 1.0.RC4
      */
     ClientBuilder setBaseUrl(String baseUrl);
 

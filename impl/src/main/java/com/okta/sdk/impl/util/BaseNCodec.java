@@ -36,7 +36,6 @@ public abstract class BaseNCodec {
      * <p/>
      * This class is not itself thread-safe; each thread must allocate its own copy.
      *
-     * @since 1.7
      */
     static class Context {
 
@@ -105,7 +104,6 @@ public abstract class BaseNCodec {
     /**
      * EOF
      *
-     * @since 1.7
      */
     static final int EOF = -1;
 
@@ -520,7 +518,6 @@ public abstract class BaseNCodec {
      *         or {@code null} if the input byte array was {@code null}.
      * @throws NullPointerException Thrown if {@link #UTF_8} is not initialized, which should never happen since it is
      *                              required by the Java platform specification.
-     * @since As of 1.7, throws {@link NullPointerException} instead of UnsupportedEncodingException
      */
     public static String newStringUtf8(final byte[] bytes) {
         return newString(bytes, UTF_8);
@@ -535,7 +532,6 @@ public abstract class BaseNCodec {
      * @throws NullPointerException Thrown if {@link #UTF_8} is not initialized, which should never happen since it is
      *                              required by the Java platform specification.
      * @see <a href="http://download.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
-     * @since As of 1.7, throws {@link NullPointerException} instead of UnsupportedEncodingException
      */
     public static byte[] getBytesUtf8(final String string) {
         return getBytes(string, UTF_8);

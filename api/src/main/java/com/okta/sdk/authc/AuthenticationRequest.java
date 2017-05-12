@@ -73,7 +73,6 @@ public interface AuthenticationRequest<P, C> {
      * Returns the {@link AuthenticationOptions} to be used in this AuthenticationRequest used to customize the response.
      *
      * @return the {@code AuthenticationOptions} that will be used to customize the response.
-     * @since 1.0.RC5
      */
     AuthenticationOptions getResponseOptions();
 

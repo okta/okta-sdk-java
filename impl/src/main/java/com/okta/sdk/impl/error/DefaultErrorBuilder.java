@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DefaultErrorBuilder {
 

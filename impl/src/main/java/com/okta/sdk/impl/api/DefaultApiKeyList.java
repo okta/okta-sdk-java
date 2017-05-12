@@ -25,7 +25,7 @@ import com.okta.sdk.impl.resource.Property;
 import java.util.Map;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DefaultApiKeyList extends AbstractCollectionResource<ApiKey> implements ApiKeyList {
 

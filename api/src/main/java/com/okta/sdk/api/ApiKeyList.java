@@ -20,7 +20,7 @@ import com.okta.sdk.resource.CollectionResource;
 /**
  * A {@link CollectionResource} containing {@link ApiKey} instances.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public interface ApiKeyList extends CollectionResource<ApiKey> {
 }

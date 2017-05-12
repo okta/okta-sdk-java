@@ -23,7 +23,7 @@ import com.okta.sdk.resource.ResourceException;
  * {@link com.okta.sdk.api.ApiKeyStatus#DISABLED disabled}.
  *
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DisabledApiKeyException extends ResourceException {
 

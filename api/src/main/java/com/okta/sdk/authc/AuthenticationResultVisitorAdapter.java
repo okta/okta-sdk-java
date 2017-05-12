@@ -51,7 +51,7 @@ import com.okta.sdk.api.ApiAuthenticationResult;
  *  });
  * </pre>
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class AuthenticationResultVisitorAdapter implements AuthenticationResultVisitor {
 

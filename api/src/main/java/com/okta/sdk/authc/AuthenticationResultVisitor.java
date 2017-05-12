@@ -50,7 +50,7 @@ import com.okta.sdk.api.ApiAuthenticationResult;
  * @see com.okta.sdk.oauth.OAuthAuthenticationResult
  * @see com.okta.sdk.oauth.AccessTokenResult
  * @see com.okta.sdk.authc.AuthenticationResultVisitorAdapter
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public interface AuthenticationResultVisitor {
 

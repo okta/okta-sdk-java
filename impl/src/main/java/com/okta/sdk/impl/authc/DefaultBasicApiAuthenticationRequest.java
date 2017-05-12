@@ -28,7 +28,7 @@ import com.okta.sdk.lang.Assert;
 import java.nio.charset.Charset;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DefaultBasicApiAuthenticationRequest implements AuthenticationRequest<String, String> {
 
@@ -142,9 +142,6 @@ public class DefaultBasicApiAuthenticationRequest implements AuthenticationReque
         throw new UnsupportedOperationException("clear() this operation is not supported ApiAuthenticationRequest..");
     }
 
-    /**
-     * @since 1.0.RC5
-     */
     @Override
     public AuthenticationOptions getResponseOptions() {
         throw new UnsupportedOperationException("getResponseOptions() this operation is not supported in ApiAuthenticationRequest.");

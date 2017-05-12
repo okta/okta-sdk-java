@@ -45,7 +45,6 @@ public abstract class Collections {
      *
      * @param collection the collection to check.
      * @return the collection's size or {@code 0} if the collection is {@code null}.
-     * @since 0.9.2
      */
     public static int size(Collection collection) {
         return collection == null ? 0 : collection.size();
@@ -56,7 +55,6 @@ public abstract class Collections {
      *
      * @param map the map to check
      * @return the map's size or {@code 0} if the map is {@code null}.
-     * @since 0.9.2
      */
     public static int size(Map map) {
         return map == null ? 0 : map.size();
@@ -93,7 +91,6 @@ public abstract class Collections {
      * @param elements the elements to put in the list.
      * @param <T>      the type of elements in the collection
      * @return a new List that contains the specified elements or an empty collection if the elements are null or empty.
-     * @since 1.0.RC3
      */
     public static <T> List<T> toList(T... elements) {
         if (elements == null || elements.length == 0) {
@@ -112,7 +109,6 @@ public abstract class Collections {
      * @param elements the elements to put in the list.
      * @param <T>      the type of elements in the collection
      * @return a new List that contains the specified elements or an empty collection if the elements are null or empty.
-     * @since 1.0.RC3
      */
     public static <T> List<T> toList(Collection<T> elements) {
         if (elements instanceof List) {
@@ -136,7 +132,6 @@ public abstract class Collections {
      * @param elements elements to add to the new set
      * @param <E>      the type of elements in the set
      * @return a new {@link Set} that contains the specified elements or an empty Set if the elements are null or empty.
-     * @since 1.0
      */
     public static <E> Set<E> toSet(E... elements) {
         if (elements == null || elements.length == 0) {

@@ -20,7 +20,7 @@ import org.testng.annotations.Test
 import static org.testng.Assert.*
 
 /**
- * @since 1.0
+ * @since 1.0.0
  */
 class YAMLPropertiesSourceTest {
 

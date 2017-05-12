@@ -19,7 +19,7 @@ import com.okta.sdk.impl.query.Operator;
 import com.okta.sdk.impl.query.SimpleExpression;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public abstract class NonStringProperty<T> extends Property<T> {
 

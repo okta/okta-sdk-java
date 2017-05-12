@@ -28,7 +28,6 @@ public interface ResourceDataRequest extends ResourceMessage {
      * Returns the {@code HttpHeaders HttpHeaders} instance associated with a {@link ResourceDataRequest ResourceDataRequest}
      * @return the {@link HttpHeaders HttpHeaders} instance representing the Http Headers added to a data request.
      *
-     * @since 1.0.RC7
      */
     HttpHeaders getHttpHeaders();
 }

@@ -71,7 +71,7 @@ import java.util.concurrent.TimeUnit;
  * <li>~/okta.yaml</li>
  * </ul>
  *
- * @since 1.0.alpha
+ * @since 1.0.0
  */
 public class DefaultClientBuilder implements ClientBuilder {
 
@@ -231,7 +231,6 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this;
     }
 
-    /* @since 1.0.RC3 */
     @Override
     public ClientBuilder setConnectionTimeout(int timeout) {
         Assert.isTrue(timeout >= 0, "Timeout cannot be a negative number.");
@@ -251,18 +250,12 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this;
     }
 
-    /**
-     * @since 1.1.0
-     */
     public ClientBuilder setApiKeyResolver(ApiKeyResolver apiKeyResolver) {
         Assert.notNull(apiKeyResolver, "apiKeyResolver must not be null.");
         this.clientConfig.setApiKeyResolver(apiKeyResolver);
         return this;
     }
 
-    /**
-     * @since 1.2.0
-     */
     public ClientBuilder setBaseUrlResolver(BaseUrlResolver baseUrlResolver) {
         Assert.notNull(baseUrlResolver, "baseUrlResolver must not be null");
         this.clientConfig.setBaseUrlResolver(baseUrlResolver);

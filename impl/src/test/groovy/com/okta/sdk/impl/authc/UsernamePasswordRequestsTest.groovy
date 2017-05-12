@@ -22,7 +22,7 @@ import static org.testng.Assert.assertNull
 import static org.testng.Assert.assertTrue
 
 /**
- * @since 1.0.RC9
+ * @since 1.0.0
  */
 class UsernamePasswordRequestsTest {
 

@@ -22,7 +22,7 @@ import org.testng.annotations.Test
 import static org.testng.Assert.*
 
 /**
- * @since 1.0.beta
+ * @since 1.0.0
  */
 class ClientApiKeyTest {
 

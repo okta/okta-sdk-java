@@ -29,7 +29,6 @@ public interface Schema extends Resource, Saveable {
      * Returns a paginated list of all the {@link Field fields} defined by this schema.
      *
      * @return The list of fields
-     * @since 1.2.0
      */
     FieldList getFields();
 

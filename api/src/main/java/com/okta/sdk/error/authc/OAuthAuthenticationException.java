@@ -21,7 +21,7 @@ import com.okta.sdk.resource.ResourceException;
 /**
  * A sub-class of {@link com.okta.sdk.resource.ResourceException} representing an attempt fail an oauth authentication.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class OAuthAuthenticationException extends ResourceException {
 

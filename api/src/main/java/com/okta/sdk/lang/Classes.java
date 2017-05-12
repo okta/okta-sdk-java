@@ -32,7 +32,6 @@ public class Classes {
     private static final Logger log = LoggerFactory.getLogger(Classes.class);
 
     /**
-     * @since 0.1
      */
     private static final ClassLoaderAccessor THREAD_CL_ACCESSOR = new ExceptionIgnoringAccessor() {
         @Override
@@ -42,7 +41,6 @@ public class Classes {
     };
 
     /**
-     * @since 0.1
      */
     private static final ClassLoaderAccessor CLASS_CL_ACCESSOR = new ExceptionIgnoringAccessor() {
         @Override
@@ -52,7 +50,6 @@ public class Classes {
     };
 
     /**
-     * @since 0.1
      */
     private static final ClassLoaderAccessor SYSTEM_CL_ACCESSOR = new ExceptionIgnoringAccessor() {
         @Override
@@ -117,7 +114,6 @@ public class Classes {
      * @param name the name of the resource to acquire from the classloader(s).
      * @return the InputStream of the resource found, or <code>null</code> if the resource cannot be found from any
      *         of the three mentioned ClassLoaders.
-     * @since 0.8
      */
     public static InputStream getResourceAsStream(String name) {
 
@@ -193,7 +189,6 @@ public class Classes {
     }
 
     /**
-     * @since 1.0
      */
     private static interface ClassLoaderAccessor {
         <T> Class<T> loadClass(String fqcn);
@@ -201,7 +196,6 @@ public class Classes {
     }
 
     /**
-     * @since 1.0
      */
     private static abstract class ExceptionIgnoringAccessor implements ClassLoaderAccessor {
 

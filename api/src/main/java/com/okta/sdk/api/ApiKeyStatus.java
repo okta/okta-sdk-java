@@ -18,7 +18,7 @@ package com.okta.sdk.api;
 /**
  * Represents the status (usability) of an {@link ApiKey} instance.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public enum ApiKeyStatus {
 

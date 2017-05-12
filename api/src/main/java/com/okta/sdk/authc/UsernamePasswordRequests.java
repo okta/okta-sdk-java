@@ -30,7 +30,7 @@ import com.okta.sdk.lang.Classes;
  * </pre>
  *
  * @see UsernamePasswordRequestBuilder
- * @since 1.0.RC9
+ * @since 1.0.0
  */
 public class UsernamePasswordRequests {
 
@@ -38,7 +38,6 @@ public class UsernamePasswordRequests {
      * Returns a new {@link UsernamePasswordRequestBuilder} instance, used to construct username/password-based {@link AuthenticationRequest}s.
      *
      * @return a new {@link UsernamePasswordRequestBuilder} instance, used to construct username/password-based {@link AuthenticationRequest}s.
-     * @since 1.0.RC5
      */
     public static UsernamePasswordRequestBuilder builder() {
         return (UsernamePasswordRequestBuilder) Classes.newInstance("com.okta.sdk.impl.authc.DefaultUsernamePasswordRequestBuilder");
@@ -59,7 +58,6 @@ public class UsernamePasswordRequests {
      * @return a new {@link BasicAuthenticationOptions} instance, that may be used to customize the {@link com.okta.sdk.authc.AuthenticationResult
      * AuthenticationResult} resource that will be obtained after a successful authentication.
      * @see com.okta.sdk.authc.UsernamePasswordRequestBuilder#withResponseOptions(BasicAuthenticationOptions)
-     * @since 1.0.RC5
      */
     public static BasicAuthenticationOptions options() {
         return (BasicAuthenticationOptions) Classes.newInstance("com.okta.sdk.impl.authc.DefaultBasicAuthenticationOptions");

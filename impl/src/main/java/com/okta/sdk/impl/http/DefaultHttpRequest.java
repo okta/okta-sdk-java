@@ -29,7 +29,7 @@ import java.util.StringTokenizer;
 /**
  * This is the default implementation for {@link HttpRequest} interface.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DefaultHttpRequest implements HttpRequest {
 

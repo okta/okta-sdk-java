@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
 import java.security.spec.KeySpec;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class ApiKeySecretEncryptionService implements EncryptionService {
 

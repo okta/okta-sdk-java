@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * This is a {@link java.util.Map} backed subclass of a {@link Property}.
  *
- * @since 1.0.RC4
+ * @since 1.0.0
  */
 public class MapProperty extends Property<Map> {
 

@@ -68,7 +68,6 @@ public interface HttpRequest {
      * @param parameterName the name of the parameter to look up
      * @return the first available value of the request parameter with the specified name or {@code null} if the
      *         parameter does not exist.
-     * @since 1.0.RC2
      */
     public String getParameter(String parameterName);
 

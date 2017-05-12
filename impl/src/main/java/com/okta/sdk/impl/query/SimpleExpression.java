@@ -19,7 +19,7 @@ import com.okta.sdk.lang.Assert;
 import com.okta.sdk.query.Criterion;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public class SimpleExpression implements Criterion {
 

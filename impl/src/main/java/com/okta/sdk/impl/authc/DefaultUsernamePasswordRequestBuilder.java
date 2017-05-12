@@ -21,7 +21,7 @@ import com.okta.sdk.authc.UsernamePasswordRequestBuilder;
 import com.okta.sdk.lang.Assert;
 
 /**
- * @since 1.0.RC5
+ * @since 1.0.0
  */
 public class DefaultUsernamePasswordRequestBuilder implements UsernamePasswordRequestBuilder {
 

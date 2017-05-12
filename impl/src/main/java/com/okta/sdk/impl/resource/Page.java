@@ -18,7 +18,7 @@ package com.okta.sdk.impl.resource;
 import java.util.Collection;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public interface Page<T> {
 

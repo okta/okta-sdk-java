@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public class QueryString extends TreeMap<String,String> {
 

@@ -21,7 +21,7 @@ import com.okta.sdk.cache.Cache;
  * A disabled implementation that does nothing.  This is useful for a CacheManager implementation to return instead
  * of retuning null.  Non-null guarantees reduce a program's cyclomatic complexity.
  *
- * @since 0.8
+ * @since 1.0.0
  */
 public class DisabledCache<K, V> implements Cache<K, V> {
 

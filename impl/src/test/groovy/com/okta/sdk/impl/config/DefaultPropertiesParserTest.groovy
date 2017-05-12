@@ -77,9 +77,6 @@ class DefaultPropertiesParserTest {
         }
     }
 
-    /**
-     * @since 1.0.RC9
-     */
     @Test
     void testMultiLine() {
 
@@ -94,9 +91,6 @@ class DefaultPropertiesParserTest {
         }
     }
 
-    /**
-     * @since 1.0.RC9
-     */
     @Test
     void testComments() {
 
@@ -113,9 +107,6 @@ class DefaultPropertiesParserTest {
         }
     }
 
-    /**
-     * @since 1.0.RC9
-     */
     @Test
     void testContinuation() {
 

@@ -18,7 +18,7 @@ package com.okta.sdk.impl.http.support;
 import com.okta.sdk.impl.http.RestException;
 
 /**
- * @since 0.9.3
+ * @since 1.0.0
  */
 public class RequestAuthenticationException extends RestException {
 
