@@ -28,16 +28,16 @@ class DefaultErrorTest {
     @Test
     void testGetPropertyDescriptors() {
         def defaultError = new DefaultError(new HashMap<String, Object>())
-        finishTest(defaultError);
+        finishTest(defaultError)
     }
 
-    /*
-     * see https://github.com/okta/okta-sdk-java/pull/770
+    /**
+     * see https://github.com/stormpath/stormpath-sdk-java/pull/770
      */
     @Test
     void testtestGetPropertyDescriptorsDefaultConstructor() {
         def defaultError = new DefaultError()
-        finishTest(defaultError);
+        finishTest(defaultError)
     }
 
     private void finishTest(DefaultError defaultError) {

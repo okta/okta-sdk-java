@@ -304,7 +304,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
              * and makes sure that the property is saved with value=null (but not deleted).
              * e.g. matchingProperty in AccountLinkingPolicy
              */
-            if (isNullable && value == null) { //fix for https://github.com/okta/okta-sdk-java/issues/966
+            if (isNullable && value == null) { //fix for https://github.com/stormpath/stormpath-sdk-java/issues/966
                 this.deletedPropertyNames.add(name);
             } else {
                 if (this.deletedPropertyNames.contains(name)) {
@@ -346,7 +346,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
 
             //replace the existing link object (map with an href) with the newly constructed Resource instance.
             //Don't dirty the instance - we're just swapping out a property that already exists for the materialized version.
-            //let's not materialize internal collection resources, so they are always retrieved from the backend: https://github.com/okta/okta-sdk-java/issues/160
+            //let's not materialize internal collection resources, so they are always retrieved from the backend: https://github.com/stormpath/stormpath-sdk-java/issues/160
             if (!CollectionResource.class.isAssignableFrom(clazz)) {
                 setProperty(key, resource, false);
             }

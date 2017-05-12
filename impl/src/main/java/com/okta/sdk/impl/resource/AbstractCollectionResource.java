@@ -177,7 +177,7 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
         private PaginatedIterator(AbstractCollectionResource<T> resource, boolean firstPageQueryRequired) {
 
             if (firstPageQueryRequired) {
-                //We get a new resource in order to have different iterator instances: issue 62 (https://github.com/okta/okta-sdk-java/issues/62)
+                //We get a new resource in order to have different iterator instances: issue 62 (https://github.com/stormpath/stormpath-sdk-java/issues/62)
                 this.resource = getDataStore().getResource(resource.getHref(), resource.getClass(), resource.queryParams);
                 this.currentPage = this.resource.getCurrentPage();
             } else {
@@ -195,7 +195,7 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
 
             boolean hasNext = currentPageIterator.hasNext();
 
-            //If we have already exhausted the whole collection size there is no need to contact the backend again: https://github.com/okta/okta-sdk-java/issues/161
+            //If we have already exhausted the whole collection size there is no need to contact the backend again
             if (!hasNext && hasNextPage()) {
 
                 //if we're done with the current page, and we've exhausted the page limit (i.e. we've read a

@@ -321,7 +321,8 @@ public class DefaultDataStore implements InternalDataStore {
         if (httpStatus == 201) {
             return ResourceAction.CREATE;
         }
-        //Fix for https://github.com/okta/okta-sdk-java/issues/403
+        // TODO: verify this is an issue with Okta
+        //Fix for https://github.com/stormpath/stormpath-sdk-java/issues/403
         if (httpStatus == 200) {
             return ResourceAction.READ;
         }
@@ -436,7 +437,7 @@ public class DefaultDataStore implements InternalDataStore {
                 Map<String, Object> responseBody = getBody(response);
 
                 if (Collections.isEmpty(responseBody)) {
-                    // Fix for https://github.com/okta/okta-sdk-java/issues/218
+                    // Fix for https://github.com/stormpath/stormpath-sdk-java/issues/218
                     if (response.getHttpStatus() == 202) { //202 means that the request has been accepted for processing, but the processing has not been completed. Therefore we do not have a response body.
                         responseBody = java.util.Collections.emptyMap();
                     } else {

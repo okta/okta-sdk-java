@@ -191,7 +191,7 @@ public class ClientApiKeyBuilder implements ApiKeyBuilder {
     @Override
     public ApiKey build() {
 
-        //Issue 82 heuristics (see: https://github.com/okta/okta-sdk-java/labels/enhancement)
+        // heuristics (see: https://github.com/stormpath/stormpath-sdk-java/issues/82)
 
         //1. Try to load the default api key properties file.  All other config options have higher priority than this:
         Properties props = getDefaultApiKeyFileProperties();

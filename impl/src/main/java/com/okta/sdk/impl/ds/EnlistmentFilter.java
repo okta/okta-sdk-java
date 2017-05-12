@@ -23,13 +23,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Fix for https://github.com/okta/okta-sdk-java/issues/47. Data map is now shared among all Resource
- * instances referencing the same {@code href}.
  *
  * @since 1.0.0
  */
 public class EnlistmentFilter implements Filter {
 
+    /**
+     * Fix for https://github.com/stormpath/stormpath-sdk-java/issues/47. Data map is now shared among all Resource
+     * instances referencing the same {@code href}.
+     */
     private final Map<String, Enlistment> hrefMapStore;
 
     public EnlistmentFilter() {
