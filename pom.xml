@@ -109,11 +109,6 @@
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
-                <artifactId>okta-sdk-api</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-api-swagger-templates</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
@@ -422,13 +417,14 @@
                         <goals>
                             <goal>prepare-agent-integration</goal>
                         </goals>
-                        <configuration>
-                            <excludes>
-                                <!--<exclude>**/main/**/samples/**</exclude>-->
-                            </excludes>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <!-- exclude generated enums coverage -->
+                    <excludes>
+                        <exclude>**/com/okta/sdk/resource/**/*</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
 
