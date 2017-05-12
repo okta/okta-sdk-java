@@ -243,7 +243,7 @@ public class WriteCacheFilter extends AbstractCacheFilter {
     }
 
     /**
-     * Quick fix for <a href="https://github.com/okta/okta-sdk-java/issues/17">Issue #17</a>.
+     * Quick fix for <a href="https://github.com/stormpath/stormpath-sdk-java/issues/17">Issue #17</a>.
      *
      */
     private boolean isDirectlyCacheable(Class<? extends Resource> clazz, Map<String, ?> data) {
