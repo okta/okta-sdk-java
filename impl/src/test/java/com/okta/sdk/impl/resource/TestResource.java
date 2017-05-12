@@ -21,11 +21,11 @@ import java.util.Map;
 
 public class TestResource extends AbstractResource {
 
-    protected TestResource(InternalDataStore dataStore) {
+    public TestResource(InternalDataStore dataStore) {
         super(dataStore);
     }
 
-    protected TestResource(InternalDataStore dataStore, Map<String, Object> properties) {
+    public TestResource(InternalDataStore dataStore, Map<String, Object> properties) {
         super(dataStore, properties);
     }
 
