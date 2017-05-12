@@ -15,8 +15,6 @@
  */
 package com.okta.sdk.impl.ds.cache;
 
-import com.okta.sdk.api.ApiKey;
-import com.okta.sdk.api.ApiKeyList;
 import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.impl.ds.DefaultResourceDataResult;
 import com.okta.sdk.impl.ds.FilterChain;
@@ -25,7 +23,6 @@ import com.okta.sdk.impl.ds.ResourceDataRequest;
 import com.okta.sdk.impl.ds.ResourceDataResult;
 import com.okta.sdk.impl.http.CanonicalUri;
 import com.okta.sdk.impl.http.QueryString;
-import com.okta.sdk.impl.resource.CollectionProperties;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Collections;
@@ -36,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-import static com.okta.sdk.impl.api.ApiKeyParameter.ID;
 
 public class ReadCacheFilter extends AbstractCacheFilter {
 
@@ -73,24 +69,10 @@ public class ReadCacheFilter extends AbstractCacheFilter {
 
         Map<String, ?> data = null;
 
-        if (isApiKeyCollectionQuery(request)) {
-
-            String cacheHref = baseUrlResolver.getBaseUrl() + "/apiKeys/" + query.get(ID.getName());
-            Class<ApiKey> cacheClass = ApiKey.class;
-
-            Map<String, ?> apiKeyData = getCachedValue(cacheHref, cacheClass);
-
-            if (!Collections.isEmpty(apiKeyData)) {
-                data = new CollectionProperties.Builder().setHref(href)
-                                                         .setItemsMap(apiKeyData)
-                                                         .build();
-            }
-        } else {
-            //Prevent an expanded request to obtain a non-expanded resource from the cache
-            String cacheKey = getCacheKey(request);
-            if (! (request.getUri().hasQuery() && request.getUri().getQuery().containsKey("expand") ^ (cacheKey != null && cacheKey.contains("expand=")))) {
-                data = getCachedValue(cacheKey, clazz);
-            }
+        //Prevent an expanded request to obtain a non-expanded resource from the cache
+        String cacheKey = getCacheKey(request);
+        if (! (request.getUri().hasQuery() && request.getUri().getQuery().containsKey("expand") ^ (cacheKey != null && cacheKey.contains("expand=")))) {
+            data = getCachedValue(cacheKey, clazz);
         }
 
         if (Collections.isEmpty(data)) {
@@ -113,11 +95,6 @@ public class ReadCacheFilter extends AbstractCacheFilter {
         return (Map<String, Object>) data;
     }
 
-    private boolean isApiKeyCollectionQuery(ResourceDataRequest request) {
-        return ApiKeyList.class.isAssignableFrom(request.getResourceClass()) &&
-               request.getUri().hasQuery() && request.getUri().getQuery().containsKey(ID.getName());
-    }
-
     private boolean isCacheRetrievalEnabled(ResourceDataRequest request) {
 
         Class<? extends Resource> clazz = request.getResourceClass();
@@ -129,7 +106,7 @@ public class ReadCacheFilter extends AbstractCacheFilter {
 
             //Collection caching is EXPERIMENTAL so it is off by default
             //we do cache ApiKeyList. This is a fix for #216
-            (!CollectionResource.class.isAssignableFrom(clazz) || ApiKeyList.class.isAssignableFrom(clazz) ||
+            (!CollectionResource.class.isAssignableFrom(clazz) ||
                     (CollectionResource.class.isAssignableFrom(clazz) && isCollectionCachingEnabled()));
 
     }

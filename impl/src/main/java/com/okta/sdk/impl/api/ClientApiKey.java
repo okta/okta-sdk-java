@@ -16,8 +16,6 @@
 package com.okta.sdk.impl.api;
 
 import com.okta.sdk.api.ApiKey;
-import com.okta.sdk.api.ApiKeyOptions;
-import com.okta.sdk.api.ApiKeyStatus;
 import com.okta.sdk.lang.Strings;
 
 /**
@@ -52,32 +50,7 @@ public class ClientApiKey implements ApiKey {
     }
 
     @Override
-    public ApiKeyStatus getStatus() {
-        throw new IllegalAccessError(METHOD_ERROR_MESSAGE);
-    }
-
-    @Override
-    public void setStatus(ApiKeyStatus status) {
-        throw new IllegalAccessError(METHOD_ERROR_MESSAGE);
-    }
-
-    @Override
-    public void save(ApiKeyOptions options) {
-        throw new IllegalAccessError(METHOD_ERROR_MESSAGE);
-    }
-
-    @Override
-    public void delete() {
-        throw new IllegalAccessError(METHOD_ERROR_MESSAGE);
-    }
-
-    @Override
     public String getHref() {
-        throw new IllegalAccessError(METHOD_ERROR_MESSAGE);
-    }
-
-    @Override
-    public void save() {
         throw new IllegalAccessError(METHOD_ERROR_MESSAGE);
     }
 

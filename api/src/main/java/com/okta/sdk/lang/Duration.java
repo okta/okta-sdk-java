@@ -69,23 +69,26 @@ public class Duration implements Comparable<Duration>, Cloneable {
         return compareTo(duration) == 0;
     }
 
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        }
-        if (o instanceof Duration) {
-            Duration d = (Duration) o;
-            return this.value == d.value && this.timeUnit.equals(d.timeUnit);
-        }
-        return false;
-    }
-
     public String toString() {
         return value + " " + this.timeUnit.name().toLowerCase(Locale.ENGLISH);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Duration duration = (Duration) o;
+
+        if (value != duration.value) return false;
+        return timeUnit == duration.timeUnit;
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hashCode(value) * 37 + Objects.nullSafeHashCode(timeUnit);
+        int result = (int) (value ^ (value >>> 32));
+        result = 31 * result + (timeUnit != null ? timeUnit.hashCode() : 0);
+        return result;
     }
 
     @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")

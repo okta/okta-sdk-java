@@ -64,10 +64,10 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     /**
      * Creates a new {@code DefaultCache} instance with the specified {@code name}, expected to be unique among all
      * other caches in the parent {@code CacheManager}.
-     * <p/>
+     * <p>
      * This constructor uses a {@link SoftHashMap} instance as the cache's backing map, which is thread-safe and
      * auto-sizes itself based on the application's memory constraints.
-     * <p/>
+     * <p>
      * Finally, the {@link #setTimeToIdle(com.okta.sdk.lang.Duration) timeToIdle} and
      * {@link #setTimeToLive(com.okta.sdk.lang.Duration) timeToLive} settings are both {@code null},
      * indicating that cache entries will live indefinitely (except due to memory constraints as managed by the
@@ -87,7 +87,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * Creates a new {@code DefaultCache} instance with the specified {@code name}, storing entries in the specified
      * {@code backingMap}.  It is expected that the {@code backingMap} implementation be thread-safe and preferrably
      * auto-sizing based on memory constraints (see {@link SoftHashMap} for such an implementation).
-     * <p/>
+     * <p>
      * The {@link #setTimeToIdle(com.okta.sdk.lang.Duration) timeToIdle} and
      * {@link #setTimeToLive(com.okta.sdk.lang.Duration) timeToLive} settings are both {@code null},
      * indicating that cache entries will live indefinitely (except due to memory constraints as managed by the
@@ -107,7 +107,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
     /**
      * Creates a new {@code DefaultCache} instance with the specified {@code name}, storing entries in the specified
      * {@code backingMap}, using the specified {@code timeToLive} and {@code timeToIdle} settings.
-     * <p/>
+     * <p>
      * It is expected that the {@code backingMap} implementation be thread-safe and preferrably
      * auto-sizing based on memory constraints (see {@link SoftHashMap} for such an implementation).
      *

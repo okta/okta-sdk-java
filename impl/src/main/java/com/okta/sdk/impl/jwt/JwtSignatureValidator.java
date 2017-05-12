@@ -37,7 +37,7 @@ public class JwtSignatureValidator {
 
     /**
      * @param jwtWrapper - A wrapper {@link JwtWrapper} instance containing the Json Web Token information.
-     * @throws com.okta.sdk.error.jwt.InvalidJwtException
+     * @throws InvalidJwtException thrown if the JWT is invalid
      */
     public void validate(JwtWrapper jwtWrapper) throws InvalidJwtException {
         Assert.notNull(jwtWrapper, "jwtWrapper cannot be null.");

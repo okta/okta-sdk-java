@@ -31,7 +31,7 @@ package com.okta.sdk.oauth;
  * import static com.okta.sdk.oauth.RequestLocation.*;
  * ...
  *
- * application.authenticateOauth(httpRequest).<b>{@link OAuthApiRequestAuthenticator#inLocation(RequestLocation...) inLocation}</b>(HEADER, BODY, QUERY_PARAM).execute();
+ * application.authenticateOauth(httpRequest).<b>{@code OAuthApiRequestAuthenticator.inLocation(RequestLocation...) inLocation}</b>(HEADER, BODY, QUERY_PARAM).execute();
  * </pre>
  *
  * <p>
@@ -41,8 +41,6 @@ package com.okta.sdk.oauth;
  * </p>
  *
  * @since 1.0.0
- * @see OAuthApiRequestAuthenticator#inLocation(RequestLocation...)
- * @see ResourceRequestAuthenticator#inLocation(RequestLocation...)
  */
 public enum RequestLocation {
 

@@ -73,7 +73,7 @@ public class ReferenceFactory {
         Assert.notNull(resource, "Resource argument cannot be null.");
         Assert.isNull(resource.getHref(), "Resource "+ resourceName +" must be unmaterialized and not have an 'href' property.");
 
-        Map<String, String> reference = ResourceUtil.filterNonStringvaluesWithiResourceDirtyProperties(resource);
+        Map<String, String> reference = ResourceUtil.filterNonStringValuesWithResourceDirtyProperties(resource);
         return reference;
     }
 }

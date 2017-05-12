@@ -60,6 +60,7 @@ public interface DataStore {
      * @param href  the URL of the resource to retrieve
      * @param clazz the {@link Resource} sub-interface to instantiate
      * @param <T>   type parameter indicating the returned value is a {@link Resource} instance.
+     * @param <O>   type of options
      * @param options the {@link Options} sub-interface with the properties to expand
      * @return an instance of the specified class based on the data returned from the specified {@code href} URL.
      */

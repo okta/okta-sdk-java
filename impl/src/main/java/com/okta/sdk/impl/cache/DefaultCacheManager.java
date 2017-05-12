@@ -33,34 +33,34 @@ import java.util.concurrent.TimeUnit;
  * by subclasses that wish to provide different Cache implementations.
  * <h2>Clustering</h2>
  * <b>This implementation DOES NOT SUPPORT CLUSTERING</b>.
- * <p/>
+ * <p>
  * If your application is deployed on multiple hosts, it is
  * <em>strongly</em> recommended that you configure the Okta SDK with a clustered {@code CacheManager}
  * implementation so all of your application instances can utilize the same cache policy and see the same
  * security/identity data.  Some example clusterable caching projects: Hazelcast, Ehcache+Terracotta, Coherence,
  * GigaSpaces, etc.
- * <p/>
+ * <p>
  * <b>This implementation is production-quality, but only recommended for single-node/single-JVM applications.</b>
  * <h2>Time To Idle</h2>
  * Time to Idle is the amount of time a cache entry may be idle - unused (not accessed) - before it will expire and
  * no longer be available.  If a cache entry is not accessed at all after this amount of time, it will be
  * removed from the cache as soon as possible.
- * <p/>
+ * <p>
  * This implementation's {@link #setDefaultTimeToIdle(com.okta.sdk.lang.Duration) defaultTimeToIdle}
  * is {@code null}, which means that cache entries can potentially remain idle indefinitely.  Note however that a
  * cache entry can still be expunged due to other conditions (e.g. memory constraints, Time to Live setting, etc).
- * <p/>
+ * <p>
  * The {@link #setDefaultTimeToIdle(com.okta.sdk.lang.Duration) defaultTimeToIdle} setting is only
  * applied to newly created {@code Cache} instances.  It does not affect already existing {@code Cache}s.
  * <h2>Time to Live</h2>
  * Time to Live is the amount of time a cache entry may exist after first being created before it will expire and no
  * longer be available.  If a cache entry ever becomes older than this amount of time (regardless of how often
  * it is accessed), it will be removed from the cache as soon as possible.
- * <p/>
+ * <p>
  * This implementation's {@link #setDefaultTimeToLive(com.okta.sdk.lang.Duration) defaultTimeToLive}
  * is {@code null}, which means that cache entries could potentially live indefinitely.  Note however that a
  * cache entry can still be expunged due to other conditions (e.g. memory constraints, Time to Idle setting, etc).
- * <p/>
+ * <p>
  * The {@link #setDefaultTimeToLive(com.okta.sdk.lang.Duration) defaultTimeToLive} setting is only
  * applied to newly created {@code Cache} instances.  It does not affect already existing {@code Cache}s.
  * <h2>Thread Safety</h2>
