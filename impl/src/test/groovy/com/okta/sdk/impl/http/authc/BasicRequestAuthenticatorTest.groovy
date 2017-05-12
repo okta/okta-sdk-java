@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*
 import static org.testng.Assert.*
 
 /**
- * @since 0.9.3
+ * @since 1.0.0
  */
 class BasicRequestAuthenticatorTest {
 

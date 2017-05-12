@@ -22,7 +22,7 @@ import com.okta.sdk.impl.http.Response;
 import java.io.InputStream;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public class DefaultResponse extends AbstractHttpMessage implements Response {
 

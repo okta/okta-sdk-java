@@ -20,7 +20,7 @@ import com.okta.sdk.authc.BasicAuthenticationOptions;
 import com.okta.sdk.lang.Assert;
 
 /**
- * @since 1.0.RC5
+ * @since 1.0.0
  */
 public class DefaultUsernamePasswordRequest implements AuthenticationRequest<String, char[]> {
 

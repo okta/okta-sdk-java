@@ -43,7 +43,7 @@ import static com.okta.sdk.impl.api.DefaultApiKeyCriteria.DEFAULT_ENCRYPTION_ITE
 import static com.okta.sdk.impl.api.DefaultApiKeyCriteria.DEFAULT_ENCRYPTION_SIZE;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class ApiKeyQueryFilter implements Filter {
 

@@ -19,7 +19,7 @@ package com.okta.sdk.error.jwt;
  * A sub-class of {@link RuntimeException} representing an attempt to use a <a href="http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html">
  * Json Web Token</a> with an invalid signature.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class InvalidJwtException extends RuntimeException {
 

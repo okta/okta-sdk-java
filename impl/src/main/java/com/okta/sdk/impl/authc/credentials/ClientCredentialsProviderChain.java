@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @since 1.0.4
+ * @since 1.0.0
  */
 public abstract class ClientCredentialsProviderChain implements ClientCredentialsProvider {
 

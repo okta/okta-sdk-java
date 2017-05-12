@@ -30,7 +30,7 @@ import java.util.Map;
  * <p/>
  * <b>WARNING: This API CAN CHANGE AT ANY TIME, WITHOUT NOTICE.  DO NOT DEPEND ON IT.</b>
  *
- * @since 0.2
+ * @since 1.0.0
  */
 public interface InternalDataStore extends DataStore {
 
@@ -47,9 +47,9 @@ public interface InternalDataStore extends DataStore {
      * @param hrefFragment when <code>true</code>, the baseUrl will be appended to the value found in the href key of the properties map.
      *                     If <code>false</code> the href will not be altered and will be kept as-is.
      * @return a resource instance corresponding to the specified clazz.
-     * @since 1.0.RC9
+
      */
-    public <T extends Resource> T instantiate(Class<T> clazz, Map<String, Object> properties, boolean hrefFragment);
+    <T extends Resource> T instantiate(Class<T> clazz, Map<String, Object> properties, boolean hrefFragment);
 
     <T extends Resource> T create(String parentHref, T resource);
 
@@ -57,10 +57,8 @@ public interface InternalDataStore extends DataStore {
 
     <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType);
 
-    /** @since 1.0.RC7 */
     <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType, HttpHeaders customHeaders);
 
-    /** @since 1.0.RC5 */
     <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType, Options options);
 
     <T extends Resource & Saveable> void save(T resource);
@@ -79,9 +77,6 @@ public interface InternalDataStore extends DataStore {
 
     <T extends Resource> T getResource(String href, Class<T> clazz, Criteria criteria);
 
-    /**
-     * @since 1.0.beta
-     */
     <T extends Resource, R extends T> R getResource(String href, Class<T> parent, String childIdProperty, Map<String, Class<? extends R>> stringClassMap);
 
     CacheResolver getCacheResolver();

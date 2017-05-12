@@ -21,7 +21,7 @@ import com.okta.sdk.resource.Saveable;
 import java.util.Map;
 
 /**
- * @since 0.2
+ * @since 1.0.0
  */
 public abstract class AbstractInstanceResource extends AbstractResource implements Saveable {
 
@@ -45,7 +45,6 @@ public abstract class AbstractInstanceResource extends AbstractResource implemen
      * @param props the data properties to test
      * @return {@code true} if the specified data map represents a materialized instance resource data set, {@code
      * false} otherwise.
-     * @since 1.0.RC4.3
      */
     public static boolean isInstanceResource(Map<String, ?> props) {
         return isMaterialized(props) && !props.containsKey(AbstractCollectionResource.ITEMS_PROPERTY_NAME); //collections have 'items'

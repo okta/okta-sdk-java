@@ -79,7 +79,6 @@ public class Caches {
      * behavior.
      *
      * @return a new disabled {@code CacheManager} instance.  All caching
-     * @since 1.0.RC3
      */
     public static CacheManager newDisabledCacheManager() {
         return (CacheManager) Classes.newInstance("com.okta.sdk.impl.cache.DisabledCacheManager");

@@ -16,7 +16,7 @@
 package com.okta.sdk.authc;
 
 /**
- * @since 1.0.RC5
+ * @since 1.0.0
  */
 public interface AuthenticationRequestBuilder<T extends AuthenticationRequestBuilder<T>> {
 

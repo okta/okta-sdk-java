@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * @since 0.1, gratefully imported from the Spring Framework.
+ * @since 1.0.0
  */
 public class HttpHeaders implements MultiValueMap<String, String> {
 
@@ -285,8 +285,8 @@ public class HttpHeaders implements MultiValueMap<String, String> {
      * Set the {@linkplain MediaType media type} of the body, as specified by the {@code Content-Type} header.
      *
      * @param mediaType the media type
-     * @since 0.1
-     * @since 0.4 -> null check
+
+
      */
     public void setContentType(MediaType mediaType) {
         //mediaType will be null when a 204 status is returned.
@@ -497,7 +497,6 @@ public class HttpHeaders implements MultiValueMap<String, String> {
      * Returns the value of the {@code Okta-Request-Id} header.
      *
      * @return the value of the header
-     * @since 1.0.RC9
      */
     public String getOktaRequestId() {
         return getFirst(OKTA_REQUEST_ID);

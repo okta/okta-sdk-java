@@ -30,7 +30,7 @@ import java.io.Reader;
 import java.util.Properties;
 
 /**
- * @since 1.0.4
+ * @since 1.0.0
  */
 public abstract class AbstractApiKeyCredentialsProvider implements ClientCredentialsProvider {
 

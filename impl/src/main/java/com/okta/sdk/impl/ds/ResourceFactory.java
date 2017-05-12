@@ -18,7 +18,7 @@ package com.okta.sdk.impl.ds;
 import com.okta.sdk.resource.Resource;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public interface ResourceFactory {
 

@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.resource;
 
 /**
- * @since 0.9
+ * @since 1.0.0
  */
 public class BooleanProperty extends Property<Boolean> {
 

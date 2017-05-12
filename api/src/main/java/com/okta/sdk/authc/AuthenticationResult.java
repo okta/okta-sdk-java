@@ -58,7 +58,7 @@ import com.okta.sdk.resource.Resource;
  * <p>The visitor patten replaces many if-then-else statements with a type-safe interface to guarantee no conditions
  * will be missed at compile time.</p>
  *
- * @since 0.1
+ * @since 1.0.0
  */
 public interface AuthenticationResult extends Resource {
 
@@ -68,7 +68,6 @@ public interface AuthenticationResult extends Resource {
      *
      * @param visitor the visitor in charge of visiting the concrete authentication result
      * @see AuthenticationResultVisitor
-     * @since 1.0.RC
      */
     void accept(AuthenticationResultVisitor visitor);
 }

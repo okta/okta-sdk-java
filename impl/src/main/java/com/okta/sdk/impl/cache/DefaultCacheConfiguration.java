@@ -21,7 +21,7 @@ import com.okta.sdk.lang.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public class DefaultCacheConfiguration implements CacheConfiguration {
 

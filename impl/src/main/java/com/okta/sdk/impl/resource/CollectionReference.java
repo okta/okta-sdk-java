@@ -20,7 +20,7 @@ import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public class CollectionReference<C extends CollectionResource<T>, T extends Resource> extends ResourceReference<C> {
 

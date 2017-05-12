@@ -22,7 +22,7 @@ import com.okta.sdk.lang.Strings;
 
 /**
  * This implementation represents the api key that is used to authenticate a Tenant in Okta.
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class ClientApiKey implements ApiKey {
 

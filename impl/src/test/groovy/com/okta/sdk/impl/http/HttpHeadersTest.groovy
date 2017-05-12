@@ -27,7 +27,7 @@ import static org.hamcrest.MatcherAssert.*
 import static org.hamcrest.Matchers.*
 
 /**
- * @since 1.0.RC9
+ * @since 1.0.0
  */
 class HttpHeadersTest {
 

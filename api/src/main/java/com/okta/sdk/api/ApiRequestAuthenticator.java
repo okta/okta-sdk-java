@@ -22,7 +22,7 @@ import com.okta.sdk.http.HttpRequest;
  *
  * @see com.okta.sdk.application.Application#authenticateAccount(AuthenticationRequest)
  * @see #authenticate(HttpRequest)
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public interface ApiRequestAuthenticator {
 
@@ -78,7 +78,6 @@ public interface ApiRequestAuthenticator {
      * @throws com.okta.sdk.resource.ResourceException if unable to authenticate the request
      * @see com.okta.sdk.oauth.OAuthApiRequestAuthenticator#authenticate(com.okta.sdk.http.HttpRequest)
      *
-     * @since 1.0.RC4.6
      */
     ApiAuthenticationResult authenticate(HttpRequest httpRequest);
 }

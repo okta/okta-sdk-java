@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class DefaultResourceConverter implements ResourceConverter {
 
@@ -73,7 +73,6 @@ public class DefaultResourceConverter implements ResourceConverter {
         return props;
     }
 
-    //since 0.9.2
     private Object toMapValue(final AbstractResource resource, final String propName, Object value,
                               boolean partialUpdate) {
 
@@ -104,9 +103,6 @@ public class DefaultResourceConverter implements ResourceConverter {
         return value;
     }
 
-    /**
-     * @since 1.0.RC8
-     */
     private Object convertAttributeStatementMappingRulesToMap(Object object){
 
         Set<Object> elementsSet = (Set<Object>) object;

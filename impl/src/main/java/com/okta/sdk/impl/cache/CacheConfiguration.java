@@ -20,7 +20,7 @@ import com.okta.sdk.lang.Duration;
 /**
  * Represents configuration settings for a particular {@link com.okta.sdk.cache.Cache Cache} region.
  *
- * @since 0.8
+ * @since 1.0.0
  */
 public interface CacheConfiguration {
 

@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.api;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public enum ApiKeyParameter {
 

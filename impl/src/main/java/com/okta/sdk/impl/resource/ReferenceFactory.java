@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since 0.9
+ * @since 1.0.0
  */
 public class ReferenceFactory {
 

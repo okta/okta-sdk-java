@@ -210,9 +210,6 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         this.numRetries = numRetries;
     }
 
-    /**
-     * @since 0.3
-     */
     public BackoffStrategy getBackoffStrategy() {
         return this.backoffStrategy;
     }

@@ -21,7 +21,7 @@ import com.okta.sdk.lang.Collections;
 import com.okta.sdk.lang.Strings;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public class DefaultCacheKey {
 

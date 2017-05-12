@@ -20,7 +20,7 @@ import org.testng.annotations.Test
 
 /**
  *
- * @since 0.8
+ * @since 1.0.0
  */
 class QueryStringFactoryTest {
 

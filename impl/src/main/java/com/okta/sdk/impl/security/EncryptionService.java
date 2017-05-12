@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.security;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public interface EncryptionService {
 

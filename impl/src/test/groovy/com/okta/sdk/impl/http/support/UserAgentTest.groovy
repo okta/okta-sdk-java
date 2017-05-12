@@ -19,7 +19,7 @@ import com.okta.sdk.lang.Assert
 import org.testng.annotations.Test
 
 /**
- * @since 1.0.RC3
+ * @since 1.0.0
  */
 class UserAgentTest {
 

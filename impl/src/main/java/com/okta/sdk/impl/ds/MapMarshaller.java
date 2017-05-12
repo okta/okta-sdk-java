@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public interface MapMarshaller {
 

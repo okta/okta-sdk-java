@@ -20,7 +20,7 @@ package com.okta.sdk.authc;
  * A Builder to construct username/password-based {@link AuthenticationRequest}s.
  *
  * @see UsernamePasswordRequests#builder() UsernamePasswordRequests.builder()
- * @since 1.0.RC5
+ * @since 1.0.0
  */
 public interface UsernamePasswordRequestBuilder extends AuthenticationRequestBuilder<UsernamePasswordRequestBuilder> {
 

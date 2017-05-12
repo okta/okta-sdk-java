@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class ApiAuthenticationRequestFactory {
 

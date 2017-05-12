@@ -36,7 +36,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Refactored methods from {@link AbstractResource} to make them common to subclasses.
  *
- * @since 1.2.0
+ * @since 1.0.0
  */
 public abstract class AbstractPropertyRetriever {
 
@@ -57,9 +57,6 @@ public abstract class AbstractPropertyRetriever {
 
     public abstract Object getProperty(String name);
 
-    /**
-     * @since 0.8
-     */
     protected String getString(StringProperty property) {
         return getStringProperty(property.getName());
     }
@@ -73,9 +70,6 @@ public abstract class AbstractPropertyRetriever {
     }
 
 
-    /**
-     * @since 0.8
-     */
     protected int getInt(IntegerProperty property) {
         return getIntProperty(property.getName());
     }
@@ -92,9 +86,6 @@ public abstract class AbstractPropertyRetriever {
         return -1;
     }
 
-    /**
-     * @since 0.9
-     */
     protected boolean getBoolean(BooleanProperty property) {
         return getBooleanProperty(property.getName());
     }
@@ -103,7 +94,7 @@ public abstract class AbstractPropertyRetriever {
      * Returns an actual boolean value instead of a possible null Boolean value since desired usage
      * is to have either a true or false.
      *
-     * @since 0.9
+
      */
     protected boolean getBooleanProperty(String key) {
         return getNullableBooleanProperty(key) == Boolean.TRUE;
@@ -137,9 +128,6 @@ public abstract class AbstractPropertyRetriever {
         return -1;
     }
 
-    /**
-     * @since 0.8
-     */
     protected Date getDateProperty(DateProperty key) {
         Object value = getProperty(key.getName());
         if (value == null) {
@@ -160,7 +148,6 @@ public abstract class AbstractPropertyRetriever {
     /**
      * Returns the {@link List} property identified by {@code key}
      *
-     * @since 1.0.RC8
      */
     protected List getListProperty(String key) {
         Object list = getProperty(key);
@@ -170,23 +157,16 @@ public abstract class AbstractPropertyRetriever {
     /**
      * Returns the {@link Set} property identified by {@code key}
      *
-     * @since 1.0.RC8
      */
     protected Set getSetProperty(String key) {
         Object set = getProperty(key);
         return (Set) set;
     }
 
-    /**
-     * @since 1.0.RC4
-     */
     protected Map getMap(MapProperty mapProperty) {
         return getMapProperty(mapProperty.getName());
     }
 
-    /**
-     * @since 1.0.RC4
-     */
     protected Map getMapProperty(String key) {
         Object value = getProperty(key);
         if (value != null) {
@@ -269,15 +249,11 @@ public abstract class AbstractPropertyRetriever {
      *
      * @param name The name of the property to check for safe printing
      * @return {@code true} if the internal property is safe to print in toString(), {@code false} otherwise.
-     * @since 0.4.1
      */
     protected boolean isPrintableProperty(String name) {
         return true;
     }
 
-    /**
-     * @since 0.8
-     */
     protected void setProperty(Property property, Object value) {
         setProperty(property.getName(), value, true);
     }
@@ -286,14 +262,8 @@ public abstract class AbstractPropertyRetriever {
         setProperty(name, value, true);
     }
 
-    /**
-     * @since 0.6.0
-     */
     protected abstract Object setProperty(String name, Object value, final boolean dirty);
 
-    /**
-     * @since 1.2.0
-     */
     protected abstract Map<String, Object> getInternalProperties();
 
 }

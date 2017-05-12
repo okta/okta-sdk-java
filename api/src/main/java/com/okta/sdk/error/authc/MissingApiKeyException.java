@@ -21,7 +21,7 @@ import com.okta.sdk.resource.ResourceException;
 /**
  * Thrown when the an Authentication Request lacks an ApiKey.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class MissingApiKeyException extends ResourceException {
 

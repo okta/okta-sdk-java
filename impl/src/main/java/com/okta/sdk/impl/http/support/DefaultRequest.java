@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.net.URI;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public class DefaultRequest extends AbstractHttpMessage implements Request {
 

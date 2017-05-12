@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * Utility code to serve classes within resource package
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class ResourceUtil {
 

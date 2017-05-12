@@ -24,7 +24,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class HmacGenerator {
 

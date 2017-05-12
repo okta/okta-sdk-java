@@ -49,7 +49,7 @@ import com.okta.sdk.lang.Classes;
  *     .build();
  * </pre>
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 @SuppressWarnings("unchecked")
 public final class ApiKeys {

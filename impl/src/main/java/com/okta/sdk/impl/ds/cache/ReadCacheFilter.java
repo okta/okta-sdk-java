@@ -44,9 +44,6 @@ public class ReadCacheFilter extends AbstractCacheFilter {
 
     private BaseUrlResolver baseUrlResolver;
 
-    /**
-     * @since 1.2.0
-     */
     public ReadCacheFilter(BaseUrlResolver baseUrlResolver, CacheResolver cacheResolver, boolean collectionCachingEnabled) {
         super(cacheResolver, collectionCachingEnabled);
         Assert.notNull(baseUrlResolver, "baseUrlResolver cannot be null.");

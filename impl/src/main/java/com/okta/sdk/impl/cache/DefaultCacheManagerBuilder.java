@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public class DefaultCacheManagerBuilder implements CacheManagerBuilder {
 

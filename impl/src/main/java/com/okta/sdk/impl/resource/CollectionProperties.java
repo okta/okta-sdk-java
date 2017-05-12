@@ -23,7 +23,7 @@ import java.util.Map;
 import static com.okta.sdk.impl.resource.AbstractCollectionResource.ITEMS_PROPERTY_NAME;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class CollectionProperties extends LinkedHashMap<String, Object> {
 

@@ -50,7 +50,7 @@ import java.util.jar.JarFile;
  * This is a sample User-Agent string:
  * <i>okta-spring-security/0.7.0 okta-sdk-java/1.0.0 spring/4.0.4.RELEASE java/1.7.0_45 Mac OS X/10.9.2 (spring-security/3.2.0.RELEASE jetty/8.1.5.v20120716)</i>
  *
- * @since 1.0.RC3
+ * @since 1.0.0
  */
 public class UserAgent {
 
