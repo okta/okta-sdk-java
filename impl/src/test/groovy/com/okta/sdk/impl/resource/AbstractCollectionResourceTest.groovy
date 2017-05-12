@@ -16,11 +16,10 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.impl.ds.InternalDataStore
+import org.mockito.Mockito
 import org.testng.annotations.Test
 
-import java.util.stream.StreamSupport
-
-import static org.easymock.EasyMock.*
+import static org.mockito.Mockito.*
 import static org.hamcrest.Matchers.*
 import static org.hamcrest.MatcherAssert.*
 
@@ -32,59 +31,47 @@ class AbstractCollectionResourceTest {
     @Test
     void testPagedCollection() {
 
-        InternalDataStore ds = createStrictMock(InternalDataStore)
+        InternalDataStore ds = mock(InternalDataStore)
 
         def page1 = createTestPage(0, 200, "https://example.com/resource?nextPage=1")
         def page2 = createTestPage(200, 200, "https://example.com/resource?nextPage=2")
         def page3 = createTestPage(400, 13, null)
 
         expectPage(page1, ds)
-        expect(ds.getResource("https://example.com/resource?nextPage=1", TestCollectionResource)).andReturn(new TestCollectionResource(ds, page2))
+        when(ds.getResource("https://example.com/resource?nextPage=1", TestCollectionResource)).thenReturn(new TestCollectionResource(ds, page2))
         expectPage(page2, ds)
-        expect(ds.getResource("https://example.com/resource?nextPage=2", TestCollectionResource)).andReturn(new TestCollectionResource(ds, page3))
+        when(ds.getResource("https://example.com/resource?nextPage=2", TestCollectionResource)).thenReturn(new TestCollectionResource(ds, page3))
         expectPage(page3, ds)
 
-        replay ds
-
         verifyCollection(new TestCollectionResource(ds, page1), 413)
-
-        verify ds
     }
 
     @Test
     void testSinglePagedCollection() {
 
-        InternalDataStore ds = createStrictMock(InternalDataStore)
+        InternalDataStore ds = mock(InternalDataStore)
 
         def page1 = createTestPage(0, 13, null)
 
         expectPage(page1, ds)
 
-        replay ds
-
         verifyCollection(new TestCollectionResource(ds, page1), 13)
-
-        verify ds
     }
 
 
     @Test
     void testEmptyLastPagedCollection() {
 
-        InternalDataStore ds = createStrictMock(InternalDataStore)
+        InternalDataStore ds = mock(InternalDataStore)
 
         def page1 = createTestPage(0, 200, "https://example.com/resource?nextPage=1")
         def page2 = createTestPage(200, 0, null)
 
         expectPage(page1, ds)
-        expect(ds.getResource("https://example.com/resource?nextPage=1", TestCollectionResource)).andReturn(new TestCollectionResource(ds, page2))
+        when(ds.getResource("https://example.com/resource?nextPage=1", TestCollectionResource)).thenReturn(new TestCollectionResource(ds, page2))
         expectPage(page2, ds)
 
-        replay ds
-
         verifyCollection(new TestCollectionResource(ds, page1), 200)
-
-        verify ds
     }
 
     def verifyCollection(AbstractCollectionResource collectionResource, int size) {
@@ -99,7 +86,7 @@ class AbstractCollectionResourceTest {
 
     def expectPage(def page, InternalDataStore ds) {
         for (def item : page["items"]) {
-            expect(ds.instantiate(anyObject(TestResource), anyObject())).andReturn(new TestResource(ds, item))
+            when(ds.instantiate(TestResource, item)).thenReturn(new TestResource(ds, item))
         }
     }
 

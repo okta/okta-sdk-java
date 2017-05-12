@@ -15,30 +15,21 @@
  */
 package com.okta.sdk.impl.authc.credentials;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import com.okta.sdk.impl.test.RestoreEnvironmentVariables;
+import com.okta.sdk.impl.test.RestoreSystemProperties;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.expect;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-@PrepareForTest(SystemPropertyFileCredentialsProvider.class)
-public class SystemPropertyFileCredentialsProviderTest extends PowerMockTestCase {
+@Listeners({RestoreSystemProperties.class, RestoreEnvironmentVariables.class})
+public class SystemPropertyFileCredentialsProviderTest {
 
     @Test
     public void credentialsReadFromSystemPropertyFileLocation() {
 
-        String userHome = System.getProperty("user.home");
-
-        mockStatic(System.class);
-
-        expect(System.getProperty("user.home")).andReturn(userHome).anyTimes();
-        expect(System.getProperty("okta.client.apiKey.file")).andReturn("classpath:credentials.txt").anyTimes();
-
-        replayAll();
+        System.setProperty("okta.client.apiKey.file", "classpath:credentials.txt");
 
         ClientCredentials clientCredentials = new SystemPropertyFileCredentialsProvider().getClientCredentials();
 

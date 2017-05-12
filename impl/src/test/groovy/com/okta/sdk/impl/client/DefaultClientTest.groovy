@@ -20,38 +20,52 @@ import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.impl.api.ApiKeyResolver
 import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
+import com.okta.sdk.impl.test.RestoreEnvironmentVariables
+import com.okta.sdk.impl.test.RestoreSecurityManager
+import com.okta.sdk.impl.test.RestoreSystemProperties
 import com.okta.sdk.impl.util.BaseUrlResolver
-import com.okta.sdk.lang.Classes
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.testng.PowerMockTestCase
+import org.testng.annotations.Listeners
 import org.testng.annotations.Test
 
-import static org.easymock.EasyMock.expect
-import static org.powermock.api.easymock.PowerMock.*
+import java.security.Permission
+
+import static org.mockito.Mockito.*
 import static org.testng.Assert.assertEquals
 import static org.testng.Assert.fail
+import static com.okta.sdk.impl.test.RestoreEnvironmentVariables.setEnvironmentVariable;
 
 /**
- * @since 1.0.RC9
+ * @since 1.0.0
  */
-@PrepareForTest(Classes)
-class DefaultClientTest extends PowerMockTestCase {
+
+@Listeners(RestoreSecurityManager.class)
+class DefaultClientTest {
 
     @Test
     void testCreateRequestExecutor() {
 
-        def apiKeyCredentials = createStrictMock(ApiKeyCredentials)
-        def apiKeyResolver = createStrictMock(ApiKeyResolver)
-        def cacheManager = createStrictMock(CacheManager)
-        def requestAuthenticatorFactory = createStrictMock(RequestAuthenticatorFactory)
-        def baseUrlResolver = createStrictMock(BaseUrlResolver)
+        def apiKeyCredentials = mock(ApiKeyCredentials)
+        def apiKeyResolver = mock(ApiKeyResolver)
+        def cacheManager = mock(CacheManager)
+        def requestAuthenticatorFactory = mock(RequestAuthenticatorFactory)
+        def baseUrlResolver = mock(BaseUrlResolver)
 
         def className = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor"
 
-        mockStatic(Classes)
-        expect(Classes.isAvailable(className)).andReturn(false)
+        System.setSecurityManager(new SecurityManager() {
+            @Override
+            void checkPermission(Permission perm) {}
 
-        replayAll()
+            @Override
+            void checkPermission(Permission perm, Object context) {}
+
+            @Override
+            void checkPackageAccess(String pkg) {
+                if ("com.okta.sdk.impl.http.httpclient".equals(pkg)) {
+                    throw new ClassNotFoundException("Thrown intentionally DefaultClientTest.testCreateRequestExecutor()")
+                }
+            }
+        })
 
         try {
             new DefaultClient(apiKeyCredentials, apiKeyResolver, baseUrlResolver, null, cacheManager, AuthenticationScheme.BASIC, requestAuthenticatorFactory, 3600)

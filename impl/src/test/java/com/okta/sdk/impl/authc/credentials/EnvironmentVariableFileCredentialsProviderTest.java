@@ -15,29 +15,22 @@
  */
 package com.okta.sdk.impl.authc.credentials;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import com.okta.sdk.impl.test.RestoreEnvironmentVariables;
+import com.okta.sdk.impl.test.RestoreSystemProperties;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import static org.easymock.EasyMock.expect;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static com.okta.sdk.impl.test.RestoreEnvironmentVariables.setEnvironmentVariable;
 
-@PrepareForTest(EnvironmentVariableFileCredentialsProvider.class)
-public class EnvironmentVariableFileCredentialsProviderTest extends PowerMockTestCase {
+@Listeners({RestoreSystemProperties.class, RestoreEnvironmentVariables.class})
+public class EnvironmentVariableFileCredentialsProviderTest {
 
     @Test
     public void credentialsReadFromEnvirionmentVariableFileLocation() {
-        String userHome = System.getProperty("user.home");
 
-        mockStatic(System.class);
-
-        expect(System.getProperty("user.home")).andReturn(userHome).anyTimes();
-        expect(System.getenv("OKTA_API_KEY_FILE")).andReturn("classpath:credentials.txt").anyTimes();
-
-        replayAll();
+        setEnvironmentVariable("OKTA_API_KEY_FILE", "classpath:credentials.txt");
 
         ClientCredentials clientCredentials = new EnvironmentVariableFileCredentialsProvider().getClientCredentials();
 

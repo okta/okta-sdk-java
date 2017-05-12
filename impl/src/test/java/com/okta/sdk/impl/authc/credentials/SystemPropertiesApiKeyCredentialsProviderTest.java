@@ -15,20 +15,17 @@
  */
 package com.okta.sdk.impl.authc.credentials;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
+import com.okta.sdk.impl.test.RestoreSystemProperties;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.util.UUID;
 
-import static org.easymock.EasyMock.expect;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-@PrepareForTest(SystemPropertiesApiKeyCredentialsProvider.class)
-public class SystemPropertiesApiKeyCredentialsProviderTest extends PowerMockTestCase {
+@Listeners({RestoreSystemProperties.class})
+public class SystemPropertiesApiKeyCredentialsProviderTest {
 
     @Test
     public void systemPropertiesCredentialsReturned() {
@@ -36,15 +33,8 @@ public class SystemPropertiesApiKeyCredentialsProviderTest extends PowerMockTest
         String keyId = UUID.randomUUID().toString();
         String secret = UUID.randomUUID().toString();
 
-        String userHome = System.getProperty("user.home");
-
-        mockStatic(System.class);
-
-        expect(System.getProperty("user.home")).andReturn(userHome).once();
-        expect(System.getProperty("okta.client.apiKey.id")).andReturn(keyId).once();
-        expect(System.getProperty("okta.client.apiKey.secret")).andReturn(secret).once();
-
-        replayAll();
+        System.setProperty("okta.client.apiKey.id", keyId);
+        System.setProperty("okta.client.apiKey.secret", secret);
 
         ClientCredentials clientCredentials = new SystemPropertiesApiKeyCredentialsProvider().getClientCredentials();
 

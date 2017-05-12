@@ -23,13 +23,14 @@ This project includes:
          swing2swt).
   Bean Validation API under The Apache Software License, Version 2.0
   BeanShell under GNU LESSER GENERAL PUBLIC LICENSE
+  Byte Buddy (without dependencies) under The Apache Software License, Version 2.0
+  Byte Buddy Java agent under The Apache Software License, Version 2.0
   classworlds under Apache License, Version 2.0
-  Code Generation Library under ASF 2.0
   Commons CLI under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   Compiler assisted localization library (CAL10N) - API under MIT License
   Default Plexus Container under Apache License, Version 2.0
-  EasyMock under Apache 2
+  EasyMock under MIT License
   FindBugs-jsr305 under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
@@ -39,7 +40,6 @@ This project includes:
   Java Hamcrest under BSD Licence 3
   JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
   JavaMail API jar under CDDL or GPLv2+CE
-  Javassist under MPL 1.1 or LGPL 2.1 or Apache License 2.0
   JCL 1.2 implemented over SLF4J under MIT License
   JCommander under The Apache Software License, Version 2.0
   jmustache under The (New) BSD License
@@ -65,6 +65,7 @@ This project includes:
   Maven Project Builder under The Apache Software License, Version 2.0
   Maven Repository Metadata Model under The Apache Software License, Version 2.0
   Maven Wagon API under The Apache Software License, Version 2.0
+  mockito-core under The MIT License
   Mozilla Rhino under Mozilla Public License, Version 2.0
   null under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   Objenesis under Apache 2
@@ -81,12 +82,6 @@ This project includes:
   OSGi R4 Core Bundle under The Apache Software License, Version 2.0
   Plexus Archiver Component under Apache License, Version 2.0
   Plexus Common Utilities under Apache License, Version 2.0
-  powermock-api-easymock under The Apache Software License, Version 2.0
-  powermock-api-support under The Apache Software License, Version 2.0
-  powermock-core under The Apache Software License, Version 2.0
-  powermock-module-testng under The Apache Software License, Version 2.0
-  powermock-module-testng-common under The Apache Software License, Version 2.0
-  powermock-reflect under The Apache Software License, Version 2.0
   SLF4J API Module under MIT License
   SLF4J Extensions Module under MIT License
   SLF4J Simple Binding under MIT License
