@@ -24,7 +24,7 @@ import com.okta.sdk.resource.ResourceException;
 import java.lang.reflect.Constructor;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class ApiAuthenticationExceptionFactory {
 

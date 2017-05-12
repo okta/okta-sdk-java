@@ -18,7 +18,7 @@ package com.okta.sdk.impl.query;
 import com.okta.sdk.query.StringExpressionFactory;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public class DefaultStringExpressionFactory implements StringExpressionFactory {
 

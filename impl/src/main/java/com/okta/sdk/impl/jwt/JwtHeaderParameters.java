@@ -18,7 +18,7 @@ package com.okta.sdk.impl.jwt;
 /**
  * JwtHeaderParameters exposes the parameters that can be found in a JWT Header.
  *
- * @since 1.0.RC5
+ * @since 1.0.0
  */
 public abstract class JwtHeaderParameters {
 

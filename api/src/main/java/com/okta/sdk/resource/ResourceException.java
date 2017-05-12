@@ -36,7 +36,6 @@ public class ResourceException extends RuntimeException implements Error {
      *
      * @param error the response Error. Cannot be null.
      * @return {@code error.getDeveloperMessage()}
-     * @since 0.9.2
      */
     private static String buildExceptionMessage(Error error) {
         Assert.notNull(error, "Error argument cannot be null.");
@@ -121,7 +120,7 @@ public class ResourceException extends RuntimeException implements Error {
      * </pre>
      *
      * @return the underlying REST {@link Error} resource representation returned from the Okta API server.
-     * @since 0.10
+
      *
         public Error getError() {
         return this.error;

@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.query;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public enum Pagination {
 

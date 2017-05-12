@@ -1271,7 +1271,6 @@ public abstract class Strings {
      * @param string  The string to encode (if null, return null).
      * @param charset The {@link Charset} to encode the <code>String</code>
      * @return the encoded bytes
-     * @since 1.2.1
      */
     private static byte[] getBytes(final String string, final Charset charset) {
         if (string == null) {
@@ -1289,7 +1288,6 @@ public abstract class Strings {
      * @throws NullPointerException Thrown if {@link StandardCharsets#UTF_8} is not initialized, which should never happen since it is
      *                              required by the Java platform specification.
      * @see <a href="http://download.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
-     * @since 1.2.1
      */
     public static byte[] getBytesUtf8(final String string) {
         return getBytes(string, StandardCharsets.UTF_8);

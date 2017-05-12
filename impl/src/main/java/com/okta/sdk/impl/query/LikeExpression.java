@@ -18,7 +18,7 @@ package com.okta.sdk.impl.query;
 import com.okta.sdk.lang.Assert;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public class LikeExpression extends SimpleExpression {
 

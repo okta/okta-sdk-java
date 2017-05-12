@@ -22,7 +22,7 @@ import org.testng.annotations.Test
 import static org.testng.Assert.assertEquals
 
 /**
- * @since 1.0.RC9
+ * @since 1.0.0
  */
 class ApiAuthenticationExceptionFactoryTest {
 

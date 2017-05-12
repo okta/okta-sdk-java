@@ -19,7 +19,7 @@ import com.okta.sdk.api.ApiKey;
 import com.okta.sdk.lang.Assert;
 
 /**
- * @since 1.1.0
+ * @since 1.0.0
  */
 public class DefaultApiKeyResolver implements ApiKeyResolver {
 

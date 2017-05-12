@@ -64,7 +64,7 @@ import com.okta.sdk.query.Criterion;
  * Notice the expansion directive caused the second result to materialize and include the referenced directory
  * (and its properties) in addition to the other account properties.
  *
- * @since 0.8
+ * @since 1.0.0
  */
 public class Expansion implements Criterion {
 

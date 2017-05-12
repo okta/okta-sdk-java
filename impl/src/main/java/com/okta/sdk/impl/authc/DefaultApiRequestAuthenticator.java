@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DefaultApiRequestAuthenticator implements ApiRequestAuthenticator {
 
@@ -58,9 +58,6 @@ public class DefaultApiRequestAuthenticator implements ApiRequestAuthenticator {
         return (ApiAuthenticationResult) result;
     }
 
-    /**
-     * @since 1.0.RC4.6
-     */
     @Override
     public ApiAuthenticationResult authenticate(HttpRequest httpRequest) {
 

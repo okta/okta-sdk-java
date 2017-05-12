@@ -20,7 +20,7 @@ import com.okta.sdk.lang.Assert;
 import java.io.Serializable;
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 public class Order implements Serializable {
 

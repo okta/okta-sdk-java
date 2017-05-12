@@ -23,7 +23,7 @@
  * @see com.okta.sdk.account.Account#getApiKeys() account.getApiKeys()
  * @see com.okta.sdk.account.Account#createApiKey() account.createApiKey()
  * @see com.okta.sdk.application.Application#authenticateAccount(AuthenticationRequest)}
- * @since 1.0.RC
+ * @since 1.0.0
  */
 package com.okta.sdk.api;
 

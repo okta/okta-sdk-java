@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.authc;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class BasicApiAuthenticationToken {
 

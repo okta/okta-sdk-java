@@ -20,7 +20,7 @@ import com.okta.sdk.api.ApiKeyOptions;
 import com.okta.sdk.impl.query.DefaultCriteria;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DefaultApiKeyCriteria extends DefaultCriteria<ApiKeyCriteria, ApiKeyOptions> implements ApiKeyCriteria {
 

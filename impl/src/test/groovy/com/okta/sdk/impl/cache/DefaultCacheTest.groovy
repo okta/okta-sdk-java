@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit
 import static org.testng.Assert.*
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 class DefaultCacheTest {
 

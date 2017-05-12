@@ -21,7 +21,7 @@ import java.util.Map;
  * <p>
  *     This interface defines the method used to create a cache map.
  * </p>
- * @since 1.0.RC
+ * @since 1.0.0
  * @see DefaultCacheMapCreator
  */
 public interface CacheMapCreator {

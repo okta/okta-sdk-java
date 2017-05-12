@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
 /**
  * JwtWrapper encapsulates the value of a jwt token.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class JwtWrapper {
 

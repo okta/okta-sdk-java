@@ -157,7 +157,6 @@ public abstract class AbstractClient implements Client {
      * @param options the {@link Options} sub-interface with the properties to expand
      * @param <T>   type parameter indicating the returned value is a {@link Resource} instance.
      * @return an instance of the specified {@code Class} based on the data returned from the specified {@code href} URL.
-     * @since 1.0.RC4.6
      */
     @Override
     public <T extends Resource, O extends Options> T getResource(String href, Class<T> clazz, O options) {

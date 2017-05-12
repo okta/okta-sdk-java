@@ -40,7 +40,7 @@ package com.okta.sdk.oauth;
  * not considered as secure as the other two locations.
  * </p>
  *
- * @since 1.0.RC
+ * @since 1.0.0
  * @see OAuthApiRequestAuthenticator#inLocation(RequestLocation...)
  * @see ResourceRequestAuthenticator#inLocation(RequestLocation...)
  */

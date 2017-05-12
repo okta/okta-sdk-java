@@ -18,7 +18,7 @@ package com.okta.sdk.impl.resource;
 import java.util.Date;
 
 /**
- * @since 0.9
+ * @since 1.0.0
  */
 public class DateProperty extends Property<Date> {
 

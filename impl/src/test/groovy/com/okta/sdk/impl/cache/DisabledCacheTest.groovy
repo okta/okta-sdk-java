@@ -20,7 +20,7 @@ import org.testng.annotations.Test
 import static org.testng.Assert.assertNull
 
 /**
- * @since 0.8
+ * @since 1.0.0
  */
 class DisabledCacheTest {
 

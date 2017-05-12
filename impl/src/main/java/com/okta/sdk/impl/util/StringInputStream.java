@@ -19,7 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public class StringInputStream extends ByteArrayInputStream {
 

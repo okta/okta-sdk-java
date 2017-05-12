@@ -21,7 +21,7 @@ import com.okta.sdk.query.Options;
 /**
  * Base Authentication-specific options that may be specified during authentication.
  *
- * @since 1.0.RC5
+ * @since 1.0.0
  */
 public interface AuthenticationOptions<T extends AuthenticationOptions> extends Options {
 

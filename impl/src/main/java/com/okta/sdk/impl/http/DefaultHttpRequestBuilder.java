@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * DefaultHttpRequestBuilder
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DefaultHttpRequestBuilder implements HttpRequestBuilder {
 

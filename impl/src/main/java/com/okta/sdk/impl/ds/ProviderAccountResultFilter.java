@@ -19,7 +19,7 @@ package com.okta.sdk.impl.ds;
  * Provider's account creation status (whether it is new or not) is represented as a convenience property
  * ('isNewAccount') in the result based on request/result status.
  *
- * @since 1.0.beta
+ * @since 1.0.0
  */
 public class ProviderAccountResultFilter implements Filter {
 

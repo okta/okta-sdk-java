@@ -28,7 +28,7 @@ import com.okta.sdk.query.Criteria;
  *     .withTenant()
  *     .withAccount();
  * </pre>
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public interface ApiKeyCriteria extends Criteria<ApiKeyCriteria>, ApiKeyOptions<ApiKeyCriteria> {
 }

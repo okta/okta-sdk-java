@@ -20,7 +20,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public class RequestUtils {
 

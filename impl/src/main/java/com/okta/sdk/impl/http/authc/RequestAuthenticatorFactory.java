@@ -21,7 +21,7 @@ import com.okta.sdk.impl.authc.credentials.ClientCredentials;
 /**
  * Factory interface to create {@link RequestAuthenticator}s out of {@link AuthenticationScheme}s.
  *
- * @since 0.9.3
+ * @since 1.0.0
  */
 public interface RequestAuthenticatorFactory {
 

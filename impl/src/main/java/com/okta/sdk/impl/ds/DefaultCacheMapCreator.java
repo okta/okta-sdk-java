@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DefaultCacheMapCreator implements CacheMapCreator {
 

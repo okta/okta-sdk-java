@@ -33,7 +33,7 @@ import com.okta.sdk.resource.Saveable;
  * @see #getId()
  * @see #getSecret()
  * @see #getAccount()
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public interface ApiKey extends Resource, Saveable, Deletable {
     // temporarily extending com.okta.sdk.client.ApiKey before deleting it in 1.0 final

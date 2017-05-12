@@ -76,7 +76,7 @@ import static com.okta.sdk.impl.http.HttpHeaders.OKTA_AGENT;
 import static com.okta.sdk.impl.http.HttpHeaders.OKTA_CLIENT_REQUEST_ID;
 
 /**
- * @since 0.1
+ * @since 1.0.0
  */
 public class DefaultDataStore implements InternalDataStore {
 
@@ -114,35 +114,20 @@ public class DefaultDataStore implements InternalDataStore {
     private final ApiKeyResolver apiKeyResolver;
     private final BaseUrlResolver baseUrlResolver;
 
-    /**
-     * @since 1.0.RC3
-     */
     public static final String USER_AGENT_STRING = UserAgent.getUserAgentString();
 
-    /**
-     * @since 1.1.0
-     */
     public DefaultDataStore(RequestExecutor requestExecutor, ApiKeyCredentials apiKeyCredentials, ApiKeyResolver apiKeyResolver) {
         this(requestExecutor, DEFAULT_API_VERSION, apiKeyCredentials, apiKeyResolver);
     }
 
-    /**
-     * @since 1.1.0
-     */
     public DefaultDataStore(RequestExecutor requestExecutor, int apiVersion, ApiKeyCredentials apiKeyCredentials, ApiKeyResolver apiKeyResolver) {
         this(requestExecutor, "https://" + DEFAULT_SERVER_HOST + "/v" + apiVersion, apiKeyCredentials, apiKeyResolver);
     }
 
-    /**
-     * @since 1.1.0
-     */
     public DefaultDataStore(RequestExecutor requestExecutor, String baseUrl, ApiKeyCredentials apiKeyCredentials, ApiKeyResolver apiKeyResolver) {
         this(requestExecutor, new DefaultBaseUrlResolver(baseUrl), apiKeyCredentials, apiKeyResolver, new DisabledCacheManager());
     }
 
-    /**
-     * @since 1.2.0
-     */
     public DefaultDataStore(RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, CacheManager cacheManager) {
         Assert.notNull(baseUrlResolver, "baseUrlResolver cannot be null");
         Assert.notNull(requestExecutor, "RequestExecutor cannot be null.");
@@ -366,13 +351,11 @@ public class DefaultDataStore implements InternalDataStore {
         return save(parentHref, resource, null, returnType, null, true);
     }
 
-    /** @since 1.0.RC7 */
     @Override
     public <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType, HttpHeaders requestHeaders) {
         return save(parentHref, resource, requestHeaders, returnType, null, true);
     }
 
-    /** @since 1.0.RC5 */
     @Override
     public <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType, Options options) {
         QueryString qs = toQueryString(parentHref, options);
@@ -502,9 +485,6 @@ public class DefaultDataStore implements InternalDataStore {
         doDelete(resource, propertyName);
     }
 
-    /**
-     * @since 1.0.RC7
-     */
     private String buildCanonicalBodyQueryParams(Map<String, Object> bodyData){
         StringBuilder builder = new StringBuilder();
         Map<String, Object> treeMap = new TreeMap<String, Object>(bodyData);
@@ -563,25 +543,19 @@ public class DefaultDataStore implements InternalDataStore {
        Resource Caching
        ===================================================================== */
 
-    /**
-     * @since 0.8
-     */
     public boolean isCachingEnabled() {
         return this.cacheManager != null && !(this.cacheManager instanceof DisabledCacheManager);
     }
 
     /**
      * @return the Base URL (i.e. https://api.stormpaht.com/v1) at which the current SDK instance is connected to.
-     * @since 1.1.0
+
      */
     @Override
     public String getBaseUrl() {
         return this.baseUrlResolver.getBaseUrl();
     }
 
-    /**
-     * @since 1.0.beta
-     */
     private Response execute(Request request) throws ResourceException {
 
         applyDefaultRequestHeaders(request);
@@ -655,9 +629,6 @@ public class DefaultDataStore implements InternalDataStore {
         return DefaultCanonicalUri.create(href, queryParams);
     }
 
-    /**
-     * @since 0.8
-     */
     protected String ensureFullyQualified(String href) {
         String value = href;
         if (!isFullyQualified(href)) {

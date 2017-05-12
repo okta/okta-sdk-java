@@ -62,7 +62,6 @@ public interface DataStore {
      * @param <T>   type parameter indicating the returned value is a {@link Resource} instance.
      * @param options the {@link Options} sub-interface with the properties to expand
      * @return an instance of the specified class based on the data returned from the specified {@code href} URL.
-     * @since 1.0.RC4.6
      */
     <T extends Resource, O extends Options> T getResource(String href, Class<T> clazz, O options);
 
@@ -70,7 +69,6 @@ public interface DataStore {
      * Returns the ApiKey used to authenticate HTTPS requests sent to the Okta API server.
      *
      * @return the ApiKey used to authenticate HTTPS requests sent to the Okta API server.
-     * @since 1.0.RC3
      */
     ApiKey getApiKey();
 
@@ -78,7 +76,6 @@ public interface DataStore {
      * Returns the CacheManager used to improve data store performance.
      *
      * @return the CacheManager used to improve data store performance.
-     * @since 1.0.RC3
      */
     CacheManager getCacheManager();
 

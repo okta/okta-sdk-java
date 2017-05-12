@@ -77,16 +77,10 @@ public class ClientConfiguration {
         this.apiKeySecret = apiKeySecret;
     }
 
-    /**
-     * @since 1.1.0
-     */
     public ApiKeyResolver getApiKeyResolver() {
         return apiKeyResolver;
     }
 
-    /**
-     * @since 1.1.0
-     */
     public void setApiKeyResolver(ApiKeyResolver apiKeyResolver) {
         this.apiKeyResolver = apiKeyResolver;
     }
@@ -212,16 +206,10 @@ public class ClientConfiguration {
         this.proxyUsername = proxyUsername;
     }
 
-    /**
-     * @since 1.2.0
-     */
     public BaseUrlResolver getBaseUrlResolver() {
         return baseUrlResolver;
     }
 
-    /**
-     * @since 1.2.0
-     */
     public void setBaseUrlResolver(BaseUrlResolver baseUrlResolver) {
         this.baseUrlResolver = baseUrlResolver;
     }

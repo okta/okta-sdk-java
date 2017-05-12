@@ -20,7 +20,7 @@ import com.okta.sdk.query.Options;
 /**
  * ApiKey-specific options that may be specified when retrieving {@link ApiKey} resources.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public interface ApiKeyOptions<T> extends Options {
 

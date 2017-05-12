@@ -19,7 +19,7 @@ import com.okta.sdk.api.ApiKey;
 import com.okta.sdk.lang.Assert;
 
 /**
- * @since 1.0.4
+ * @since 1.0.0
  */
 public class ApiKeyCredentials implements ClientCredentials {
 

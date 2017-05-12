@@ -85,14 +85,11 @@ public class WriteCacheFilter extends AbstractCacheFilter {
         Class<? extends Resource> clazz = result.getResourceClass();
 
         return
-            //@since 1.0.RC3: Check if the response is an actual Resource (meaning, that it has an href property)
+            //@since 1.0.0
             AbstractResource.isMaterialized(result.getData());
     }
 
 
-    /**
-     * @since 0.8
-     */
     @SuppressWarnings("unchecked")
     private void cache(Class<? extends Resource> clazz, Map<String, ?> data, QueryString queryString) {
 
@@ -211,9 +208,6 @@ public class WriteCacheFilter extends AbstractCacheFilter {
         return resourceData;
     }
 
-    /**
-     * @since 0.8
-     */
     private <T extends Resource> Property getPropertyDescriptor(Class<T> clazz, String propertyName) {
 //        clazz = SubtypeDispatchingResourceFactory.getImplementationClass(clazz, propertyName); // FIXME
 
@@ -221,9 +215,6 @@ public class WriteCacheFilter extends AbstractCacheFilter {
         return descriptors.get(propertyName);
     }
 
-    /**
-     * @since 0.8
-     */
     @SuppressWarnings("unchecked")
     private <T extends Resource> Map<String, Property> getPropertyDescriptors(Class<T> clazz) {
         Class<T> implClass = DefaultResourceFactory.getImplementationClass(clazz);
@@ -254,7 +245,6 @@ public class WriteCacheFilter extends AbstractCacheFilter {
     /**
      * Quick fix for <a href="https://github.com/okta/okta-sdk-java/issues/17">Issue #17</a>.
      *
-     * @since 0.8.1
      */
     private boolean isDirectlyCacheable(Class<? extends Resource> clazz, Map<String, ?> data) {
 
@@ -263,9 +253,6 @@ public class WriteCacheFilter extends AbstractCacheFilter {
                 (CollectionResource.class.isAssignableFrom(clazz) && isCollectionCachingEnabled()));
     }
 
-    /**
-     * @since 0.8
-     */
     @SuppressWarnings("unchecked")
     private void uncache(String cacheKey, Class<? extends Resource> resourceType) {
         Assert.hasText(cacheKey, "cacheKey cannot be null or empty.");

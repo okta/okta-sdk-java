@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * @since 0.2
+ * @since 1.0.0
  */
 public abstract class AbstractCollectionResource<T extends Resource> extends AbstractResource implements CollectionResource<T> {
 
@@ -76,7 +76,6 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
      * @param props the data properties to test
      * @return {@code true} if the specified data map represents a materialized collection resource data set, {@code
      * false} otherwise.
-     * @since 1.0.RC4.3
      */
     public static boolean isCollectionResource(Map<String,?> props) {
         return isMaterialized(props) && (props.get(ITEMS_PROPERTY_NAME) instanceof Iterable);
@@ -90,7 +89,6 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
         return getNextPageHref() != null;
     }
 
-    /** @since 1.0.RC4.4 */
     @Override
     public T single() {
         Iterator<T> iterator = iterator();

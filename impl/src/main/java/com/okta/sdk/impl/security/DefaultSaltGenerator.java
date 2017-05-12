@@ -20,7 +20,7 @@ import com.okta.sdk.impl.util.Base64;
 import java.security.SecureRandom;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DefaultSaltGenerator implements SaltGenerator {
 

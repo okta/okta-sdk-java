@@ -56,7 +56,6 @@ public interface HttpRequestBuilder {
      * @return the builder instance for method chaining.
      * @throws IllegalArgumentException if the name or value arguments are {@code null}.
      *
-     * @since 1.0.RC4.6
      */
     public HttpRequestBuilder addHeader(String name, String[] value) throws IllegalArgumentException;
 
@@ -68,7 +67,6 @@ public interface HttpRequestBuilder {
      * @return the builder instance for method chaining.
      * @throws IllegalArgumentException if the name or value arguments are {@code null}.
      *
-     * @since 1.0.RC4.6
      */
     public HttpRequestBuilder addParameter(String name, String[] value) throws IllegalArgumentException;
 

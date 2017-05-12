@@ -30,7 +30,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Properties;
 
-/** @since 1.0.RC */
+/**
+ * @since 1.0.0
+ */
 public class ClientApiKeyBuilder implements ApiKeyBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(ClientApiKeyBuilder.class);

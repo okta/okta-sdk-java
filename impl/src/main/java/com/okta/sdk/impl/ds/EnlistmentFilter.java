@@ -26,7 +26,7 @@ import java.util.Map;
  * Fix for https://github.com/okta/okta-sdk-java/issues/47. Data map is now shared among all Resource
  * instances referencing the same {@code href}.
  *
- * @since 1.0.RC3
+ * @since 1.0.0
  */
 public class EnlistmentFilter implements Filter {
 

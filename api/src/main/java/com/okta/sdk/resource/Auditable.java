@@ -28,7 +28,6 @@ public interface Auditable {
      * Returns the Resource's created date.
      *
      * @return the Resource's created date.
-     * @since 1.0
      */
     Date getCreatedAt();
 
@@ -36,7 +35,6 @@ public interface Auditable {
      * Returns the Resource's last modification date.
      *
      * @return the Resource's last modification date.
-     * @since 1.0
      */
     Date getModifiedAt();
 }

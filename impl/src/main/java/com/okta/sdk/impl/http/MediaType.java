@@ -33,7 +33,8 @@ import java.util.Map;
 import java.util.TreeSet;
 
 /**
- * @since 0.1, borrowed from the Spring Framework.
+ * Borrowed from the Spring Framework.
+ * @since 1.0.0
  */
 public class MediaType implements Comparable<MediaType> {
 

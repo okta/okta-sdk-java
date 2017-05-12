@@ -21,7 +21,7 @@ import com.okta.sdk.resource.Resource;
 import java.util.Map;
 
 /**
- * @since 1.0.RC
+ * @since 1.0.0
  * @see CacheMapCreatorFactory
  */
 public class DefaultCacheMapInitializer implements CacheMapInitializer {

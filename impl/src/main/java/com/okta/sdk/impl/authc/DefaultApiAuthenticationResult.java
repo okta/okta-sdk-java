@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @since 1.0.beta
+ * @since 1.0.0
  */
 public class DefaultApiAuthenticationResult extends AbstractResource implements ApiAuthenticationResult {
 

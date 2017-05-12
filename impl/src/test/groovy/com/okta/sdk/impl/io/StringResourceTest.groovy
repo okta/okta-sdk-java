@@ -22,7 +22,7 @@ import java.nio.charset.Charset
 import static org.testng.Assert.*
 
 /**
- * @since 1.0.RC9
+ * @since 1.0.0
  */
 class StringResourceTest {
 

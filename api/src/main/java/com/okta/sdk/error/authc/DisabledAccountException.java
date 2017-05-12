@@ -22,7 +22,7 @@ import com.okta.sdk.resource.ResourceException;
  * A sub-class of {@link ResourceException} representing an attempt to login to a {@link AccountStatus#DISABLED disabled}
  * or {@link AccountStatus#UNVERIFIED unverified} {@link com.okta.sdk.account.Account Account}.
  *
- * @since 1.0.RC
+ * @since 1.0.0
  */
 public class DisabledAccountException extends ResourceException {
 
