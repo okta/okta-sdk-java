@@ -23,6 +23,7 @@ import com.okta.sdk.impl.ds.FilterChain;
 import com.okta.sdk.impl.ds.ResourceAction;
 import com.okta.sdk.impl.ds.ResourceDataRequest;
 import com.okta.sdk.impl.ds.ResourceDataResult;
+import com.okta.sdk.impl.http.CanonicalUri;
 import com.okta.sdk.impl.http.QueryString;
 import com.okta.sdk.impl.resource.AbstractInstanceResource;
 import com.okta.sdk.impl.resource.AbstractResource;
@@ -38,6 +39,7 @@ import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
 
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -70,7 +72,7 @@ public class WriteCacheFilter extends AbstractCacheFilter {
         ResourceDataResult result = chain.filter(request);
 
         if (isCacheable(request, result)) {
-            cache(result.getResourceClass(), result.getData(), result.getUri().getQuery());
+            cache(result.getResourceClass(), result.getData(), result.getUri());
         }
 
         return result;
@@ -91,31 +93,28 @@ public class WriteCacheFilter extends AbstractCacheFilter {
 
 
     @SuppressWarnings("unchecked")
-    private void cache(Class<? extends Resource> clazz, Map<String, ?> data, QueryString queryString) {
+    private void cache(Class<? extends Resource> clazz, Map<String, ?> data, CanonicalUri uri) {
 
         Assert.notEmpty(data, "Resource data cannot be null or empty.");
-        String href = (String) data.get(AbstractResource.HREF_PROP_NAME);
+        String href = uri.getAbsolutePath();
 
         if (isDirectlyCacheable(clazz, data)) {
-            Assert.notNull(href, "Resource data must contain an '" + AbstractResource.HREF_PROP_NAME + "' attribute.");
-            Assert.isTrue(data.size() > 1, "Resource data must be materialized to be cached (need more than just an '" +
-                                           AbstractResource.HREF_PROP_NAME + "' attribute).");
+            Assert.notNull(href, "Resource data must contain an 'href' attribute.");
+            Assert.isTrue(data.size() > 1, "Resource data must be materialized to be cached " +
+                    "(need more than just an 'href' attribute)."); // TODO: this likely is not valid for Okta
         }
 
         //create a map to reflect the resource's canonical representation - this is what will be cached:
-        Map<String, Object> cacheValue = cacheMapInitializer.initialize(clazz, data, queryString);
+        Map<String, Object> cacheValue = cacheMapInitializer.initialize(clazz, data, uri.getQuery());
 
         for (Map.Entry<String, ?> entry : data.entrySet()) {
 
             String name = entry.getKey();
             Object value = entry.getValue();
 
-            Map<String, ?> nested;
+            if (value instanceof Map) {
 
-            if (value instanceof Map && (nested = (Map<String, ?>) value).containsKey(AbstractResource.HREF_PROP_NAME)) {
-
-                Assert.notNull(nested.get(AbstractResource.HREF_PROP_NAME),
-                               "Resource references must have an '" + AbstractResource.HREF_PROP_NAME + "' attribute.");
+                Map<String, ?> nested = (Map<String, ?>) value;
 
                 if (AbstractResource.isMaterialized(nested)) {
                     //If there is more than one attribute (more than just 'href') it is not just a simple reference
@@ -186,7 +185,7 @@ public class WriteCacheFilter extends AbstractCacheFilter {
 
         if (isDirectlyCacheable(clazz, cacheValue)) {
             Cache cache = getCache(clazz);
-            String cacheKey = getCacheKey(href, queryString, clazz);
+            String cacheKey = getCacheKey(href, uri.getQuery(), clazz);
             cache.put(cacheKey, cacheValue);
         }
     }

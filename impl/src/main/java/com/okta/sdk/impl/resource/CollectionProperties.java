@@ -29,7 +29,7 @@ public class CollectionProperties extends LinkedHashMap<String, Object> {
 
     private CollectionProperties(Builder builder) {
 
-        put(AbstractResource.HREF_PROP_NAME, builder.href);
+//        put(AbstractResource.HREF_PROP_NAME, builder.href);
         put(ITEMS_PROPERTY_NAME, builder.itemsMapList);
     }
 

@@ -19,6 +19,7 @@ import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.ReferenceFactory;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Collections;
+import com.okta.sdk.lang.Strings;
 import com.okta.sdk.resource.Resource;
 
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class DefaultResourceConverter implements ResourceConverter {
         Assert.notNull(resource, "resource cannot be null.");
 
         boolean updateBoth = false;
-        if (resource.getHref() != null && resource.getHref().matches(".*\\/api\\/v1\\/users\\/\\w*$")) {
+        if (resource.getResourceHref() != null && resource.getResourceHref().matches(".*\\/api\\/v1\\/users\\/\\w*$")) {
             updateBoth = true;
         }
         return toMap(resource, true, updateBoth);
@@ -83,7 +84,7 @@ public class DefaultResourceConverter implements ResourceConverter {
             //if the property is a reference, don't write the entire object - just the href will do:
             //TODO need to change this to write the entire object because this code defeats the purpose of entity expansion
             //     when this code gets called (returning the reference instead of the whole object that is returned from Okta)
-            if(AbstractResource.hasHref((Map) value)) {
+            if(Strings.hasText(resource.getResourceHref())) {
                 return this.referenceFactory.createReference(propName, (Map) value);
             }
             else{
@@ -92,7 +93,7 @@ public class DefaultResourceConverter implements ResourceConverter {
         }
 
         if (value instanceof Resource) {
-            if(((Resource)value).getHref() != null) {
+            if(((Resource)value).getResourceHref() != null) {
                 return this.referenceFactory.createReference(propName, (Resource) value);
             }
             else{

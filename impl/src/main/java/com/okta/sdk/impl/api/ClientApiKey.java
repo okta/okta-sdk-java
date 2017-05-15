@@ -50,11 +50,6 @@ public class ClientApiKey implements ApiKey {
     }
 
     @Override
-    public String getHref() {
-        throw new IllegalAccessError(METHOD_ERROR_MESSAGE);
-    }
-
-    @Override
     public String toString() {
         return getId(); //never ever print the secret
     }
