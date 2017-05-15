@@ -39,7 +39,7 @@ public class SystemPropertiesApiKeyCredentialsProviderTest {
         ClientCredentials clientCredentials = new SystemPropertiesApiKeyCredentialsProvider().getClientCredentials();
 
         assertNotNull(clientCredentials);
-        assertEquals(clientCredentials.getId(), keyId);
+        assertEquals(clientCredentials.getBaseHref(), keyId);
         assertEquals(clientCredentials.getSecret(), secret);
 
     }

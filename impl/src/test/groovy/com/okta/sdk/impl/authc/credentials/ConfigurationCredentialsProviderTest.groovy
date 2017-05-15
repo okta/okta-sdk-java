@@ -35,7 +35,7 @@ class ConfigurationCredentialsProviderTest {
 
         ClientCredentials clientCredentials = new ConfigurationCredentialsProvider(clientConfiguration).getClientCredentials()
 
-        assertEquals(clientCredentials.getId(), keyId)
+        assertEquals(clientCredentials.getBaseHref(), keyId)
         assertEquals(clientCredentials.getSecret(), secret)
 
     }
