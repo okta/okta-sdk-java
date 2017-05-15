@@ -104,7 +104,7 @@ newUser.getProfile().setLastName("NewLast");
 userApiClient.updateUser(newUser);
 
 // Delete (for Users this is the same as deactivate)
-userApiClient.deleteUser(newUser.getBaseHref());
+userApiClient.deleteUser(newUser.getBaseUrl());
 ```
 
 ### Paging
