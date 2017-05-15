@@ -34,16 +34,12 @@ public class Default{{classname}} extends AbstractInstanceResource implements {{
 
     private final Map<String, Property> propertyDescriptors = createPropertyDescriptorMap({{#vars}}{{name}}Property{{^-last}}, {{/-last}}{{/vars}});
 
-    private final InternalDataStore dataStore;
-
     public Default{{classname}}(InternalDataStore dataStore) {
         super(dataStore);
-        this.dataStore = dataStore;
     }
 
     public Default{{classname}}(InternalDataStore dataStore, Map<String, Object> properties) {
         super(dataStore, properties);
-        this.dataStore = dataStore;
     }
 
     @Override
