@@ -76,11 +76,4 @@ class ClientApiKeyTest {
         assertFalse(apiKey.equals(apiKey4))
         assertFalse(apiKey.equals("anything"))
     }
-
-    @Test(expectedExceptions = IllegalAccessError)
-    void testGetHref() {
-        def apiKey = new ClientApiKey("fooId", "barSecret")
-        apiKey.getHref()
-    }
-
 }

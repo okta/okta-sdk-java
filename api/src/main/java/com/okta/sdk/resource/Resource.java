@@ -20,5 +20,6 @@ package com.okta.sdk.resource;
  */
 public interface Resource {
 
-    String getHref();
+    String getResourceHref();
+    void setResourceHref(String href);
 }

@@ -70,7 +70,7 @@ public class Quickstart {
 //        );
 //
 //        Application application = applications.iterator().next();
-//        log.info("Application: " + application.getHref() + ", " + application.getName());
+//        log.info("Application: " + application.getResourceHref() + ", " + application.getName());
 //
 //        // Create a User Account
 //
@@ -101,7 +101,7 @@ public class Quickstart {
 //        AccountList accounts = application.getAccounts(queryParams);
 //        account = accounts.iterator().next();
 //
-//        log.info("Found Account: " + account.getHref() + ", " + account.getEmail());
+//        log.info("Found Account: " + account.getResourceHref() + ", " + account.getEmail());
 //
 //        // Authenticate a User Account
 //

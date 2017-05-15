@@ -19,14 +19,21 @@ import com.okta.sdk.api.ApiKey
 import com.okta.sdk.impl.api.ApiKeyResolver
 import com.okta.sdk.impl.api.DefaultApiKeyResolver
 import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials
+import com.okta.sdk.impl.http.HttpHeaders
 import com.okta.sdk.impl.http.RequestExecutor
+import com.okta.sdk.impl.http.Response
 import com.okta.sdk.impl.query.DefaultOptions
+import com.okta.sdk.impl.resource.TestResource
+import com.okta.sdk.impl.util.StringInputStream
 import com.okta.sdk.query.Options
 import com.okta.sdk.resource.Resource
+import org.mockito.Mockito
 import org.testng.annotations.Test
 
 import static org.mockito.Mockito.*
 import static org.testng.Assert.*
+import static org.hamcrest.Matchers.*
+import static org.hamcrest.MatcherAssert.*
 
 /**
  * @since 1.0.0
@@ -81,4 +88,27 @@ class DefaultDataStoreTest {
         assertEquals(defaultDataStore.getApiKey(), apiKeyForResolver)
 
     }
+
+    @Test
+    void testSetHrefOnGetResource() {
+
+        def resourceHref = "https://api.okta.com/v1/testResource"
+        def requestExecutor = mock(RequestExecutor)
+        def apiKeyCredentials = mock(ApiKeyCredentials)
+        def apiKeyResolver = mock(ApiKeyResolver)
+        def response = mock(Response)
+        def responseBody = '{"name": "jcoder"}'
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyCredentials, apiKeyResolver)
+
+        when(requestExecutor.executeRequest(Mockito.any())).thenReturn(response)
+        when(response.hasBody()).thenReturn(true)
+        when(response.getBody()).thenReturn(new StringInputStream(responseBody))
+        when(response.getHeaders()).thenReturn(new HttpHeaders())
+
+        def testResource = defaultDataStore.getResource(resourceHref, TestResource)
+        assertThat testResource.resourceHref, is(resourceHref)
+
+
+    }
+
 }

@@ -28,31 +28,18 @@ public class ReferenceFactory {
 
     public ReferenceFactory(){}
 
-    public Map<String, String> createReference(Map map) {
-        Assert.isTrue(!map.isEmpty() && map.containsKey(AbstractResource.HREF_PROP_NAME),
-                "Reference resource must have an 'href' property.");
-        String href = String.valueOf(map.get(AbstractResource.HREF_PROP_NAME));
-
-        Map<String, String> reference = new HashMap<>(1);
-        reference.put(AbstractResource.HREF_PROP_NAME, href);
-
-        return reference;
-    }
-
     public Map<String, String> createReference(String resourceName, Map map) {
-        Assert.isTrue(!map.isEmpty() && map.containsKey(AbstractResource.HREF_PROP_NAME),
-                "'" + resourceName + "' resource must have an 'href' property.");
-        String href = String.valueOf(map.get(AbstractResource.HREF_PROP_NAME));
+//        Assert.isTrue(!map.isEmpty() && map.containsKey(AbstractResource.HREF_PROP_NAME),
+//                "'" + resourceName + "' resource must have an 'href' property.");
+//        String href = String.valueOf(map.get(AbstractResource.HREF_PROP_NAME));
 
         Map<String, String> reference = new HashMap<>(1);
-        reference.put(AbstractResource.HREF_PROP_NAME, href);
+//        reference.put(AbstractResource.HREF_PROP_NAME, href);
 
         return reference;
     }
 
     public Map<String, String> createUnmaterializedReference(String resourceName, Map map) {
-        Assert.isTrue(!map.containsKey(AbstractResource.HREF_PROP_NAME),
-                "'" + resourceName + "' resource must be unmaterialized and not have an 'href' property.");
         Map<String, String> reference = new HashMap<>();
             reference.putAll(map);
         return reference;
@@ -60,18 +47,18 @@ public class ReferenceFactory {
 
     public Map<String, String> createReference(String resourceName, Resource resource) {
         Assert.notNull(resource, "Resource argument cannot be null.");
-        String href = resource.getHref();
+        String href = resource.getResourceHref();
         Assert.hasText(href,  "'" + resourceName + "' resource must have an 'href' property.");
 
         Map<String, String> reference = new HashMap<>(1);
-        reference.put(AbstractResource.HREF_PROP_NAME, href);
+//        reference.put(AbstractResource.HREF_PROP_NAME, href); // TODO
 
         return reference;
     }
 
     public Map<String, String> createUnmaterializedReference (String resourceName, Resource resource){
         Assert.notNull(resource, "Resource argument cannot be null.");
-        Assert.isNull(resource.getHref(), "Resource "+ resourceName +" must be unmaterialized and not have an 'href' property.");
+        Assert.isNull(resource.getResourceHref(), "Resource "+ resourceName +" must be unmaterialized and not have an 'href' property.");
 
         Map<String, String> reference = ResourceUtil.filterNonStringValuesWithResourceDirtyProperties(resource);
         return reference;
