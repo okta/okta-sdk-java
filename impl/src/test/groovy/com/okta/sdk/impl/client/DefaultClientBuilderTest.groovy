@@ -46,7 +46,7 @@ class DefaultClientBuilderTest {
     @Test
     void testConfigureApiKey() {
         // remove key.txt from src/test/resources and this test will fail
-        assertEquals client.dataStore.apiKey.baseHref, "12"
+        assertEquals client.dataStore.apiKey.baseUrl, "12"
         assertEquals client.dataStore.apiKey.secret, "13"
     }
 
@@ -118,7 +118,7 @@ class DefaultClientBuilderTestCustomCredentials{
 
         ClientCredentials customCredentials = new ClientCredentials() {
             @Override
-            String getBaseHref() {
+            String getBaseUrl() {
                 return credentialsId
             }
 
@@ -149,7 +149,7 @@ class DefaultClientBuilderTestCustomCredentials{
 
         ClientCredentials customCredentials = new ClientCredentials() {
             @Override
-            String getBaseHref() {
+            String getBaseUrl() {
                 return credentialsId
             }
 
@@ -170,7 +170,7 @@ class DefaultClientBuilderTestCustomCredentials{
         builder.setApiKeyResolver(apiKeyResolver)
         def testClient = builder.build()
 
-        assertEquals testClient.dataStore.apiKey.baseHref, keyId
+        assertEquals testClient.dataStore.apiKey.baseUrl, keyId
         assertEquals testClient.dataStore.apiKey.secret, keySecret
     }
 }

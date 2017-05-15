@@ -25,7 +25,7 @@ public interface ClientCredentials {
      *
      * @return the ID that uniquely identifies these Client Credentials among all others.
      */
-    String getBaseHref();
+    String getBaseUrl();
     /**
      * Returns the client credentials plaintext secret - a very secret, very private value that should never be disclosed to anyone
      * other than the actual account holder.  The secret value is mostly used for computing HMAC digests, but can also
