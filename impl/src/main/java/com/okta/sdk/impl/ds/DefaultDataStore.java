@@ -146,7 +146,7 @@ public class DefaultDataStore implements InternalDataStore {
 
         this.filters = new ArrayList<Filter>();
 
-        this.filters.add(new EnlistmentFilter());
+//        this.filters.add(new EnlistmentFilter()); // FIXME: cannot support this yet
 
         if(clientCredentials instanceof ApiKeyCredentials) {
             this.filters.add(new DecryptApiKeySecretFilter((ApiKeyCredentials) clientCredentials));

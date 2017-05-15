@@ -142,7 +142,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * @return {@code true} if the resource doesn't yet have an assigned 'href' property, {@code false} otherwise.
      */
     protected final boolean isNew() {
-        String href = String.valueOf(getResourceHref());
+        String href = getResourceHref();
         return !Strings.hasText(href);
     }
 
