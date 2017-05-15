@@ -47,7 +47,7 @@ class ClientApiKeyTest {
     @Test
     void testConstructor() {
         def apiKey = new ClientApiKey("fooId", "barSecret");
-        org.testng.Assert.assertEquals(apiKey.getBaseHref(), "fooId")
+        org.testng.Assert.assertEquals(apiKey.getBaseUrl(), "fooId")
         org.testng.Assert.assertEquals(apiKey.getSecret(), "barSecret")
     }
 
