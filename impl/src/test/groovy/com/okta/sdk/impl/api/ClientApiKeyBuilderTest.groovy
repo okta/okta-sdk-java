@@ -56,7 +56,7 @@ class ClientApiKeyBuilderTest {
     void testBuildWithManuallyConfiguredIdAndSecret() {
         def builder = new NoDefaultsClientApiKeyBuilder()
         def apiKey = builder.setId('foo').setSecret('bar').build()
-        assertEquals apiKey.id, 'foo'
+        assertEquals apiKey.baseHref, 'foo'
         assertEquals apiKey.secret, 'bar'
     }
 
@@ -86,7 +86,7 @@ class ClientApiKeyBuilderTest {
 
         def apiKey = builder.build();
 
-        assertEquals apiKey.id, 'b'
+        assertEquals apiKey.baseHref, 'b'
         assertEquals apiKey.secret, 'bs'
     }
 
@@ -118,7 +118,7 @@ class ClientApiKeyBuilderTest {
 
         def apiKey = builder.build();
 
-        assertEquals apiKey.id, 'c'
+        assertEquals apiKey.baseHref, 'c'
         assertEquals apiKey.secret, 'cs'
     }
 
@@ -151,7 +151,7 @@ class ClientApiKeyBuilderTest {
 
         def apiKey = builder.setFileLocation('whatever').build()
 
-        assertEquals apiKey.id, 'foo'
+        assertEquals apiKey.baseHref, 'foo'
         assertEquals apiKey.secret, 'bar'
     }
 
@@ -198,7 +198,7 @@ class ClientApiKeyBuilderTest {
 
         def apiKey = builder.setInputStream(is).build()
 
-        assertEquals apiKey.id, 'foo'
+        assertEquals apiKey.baseHref, 'foo'
         assertEquals apiKey.secret, 'bar'
     }
 
@@ -234,7 +234,7 @@ class ClientApiKeyBuilderTest {
 
         def apiKey = builder.setReader(reader).build()
 
-        assertEquals apiKey.id, 'foo'
+        assertEquals apiKey.baseHref, 'foo'
         assertEquals apiKey.secret, 'bar'
     }
 
@@ -271,7 +271,7 @@ class ClientApiKeyBuilderTest {
 
         def apiKey = builder.setProperties(props).build()
 
-        assertEquals apiKey.id, 'foo'
+        assertEquals apiKey.baseHref, 'foo'
         assertEquals apiKey.secret, 'bar'
     }
 
@@ -284,7 +284,7 @@ class ClientApiKeyBuilderTest {
 
         def apiKey = builder.setProperties(props).setIdPropertyName('foo').setSecretPropertyName('bar').build()
 
-        assertEquals apiKey.id, 'foo'
+        assertEquals apiKey.baseHref, 'foo'
         assertEquals apiKey.secret, 'bar'
     }
 

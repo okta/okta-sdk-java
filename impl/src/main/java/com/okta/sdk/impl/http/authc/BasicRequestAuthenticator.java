@@ -65,7 +65,7 @@ public class BasicRequestAuthenticator implements RequestAuthenticator {
 
         request.getHeaders().set(OKTA_DATE_HEADER, timestamp);
 
-        String authorizationHeader = apiKeyCredentials.getId() + ":" + apiKeyCredentials.getSecret();
+        String authorizationHeader = apiKeyCredentials.getBaseHref() + ":" + apiKeyCredentials.getSecret();
         byte[] valueBytes;
         try {
             valueBytes = authorizationHeader.getBytes("UTF-8");

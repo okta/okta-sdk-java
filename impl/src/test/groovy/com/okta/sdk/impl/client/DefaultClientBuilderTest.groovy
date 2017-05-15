@@ -22,13 +22,9 @@ import com.okta.sdk.impl.api.ClientApiKey
 import com.okta.sdk.impl.api.DefaultApiKeyResolver
 import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials
 import com.okta.sdk.impl.authc.credentials.ClientCredentials
-import com.okta.sdk.impl.cache.DefaultCache
 import com.okta.sdk.impl.util.BaseUrlResolver
-import com.okta.sdk.lang.Duration
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
-
-import java.util.concurrent.TimeUnit
 
 import static org.testng.Assert.*
 
@@ -50,7 +46,7 @@ class DefaultClientBuilderTest {
     @Test
     void testConfigureApiKey() {
         // remove key.txt from src/test/resources and this test will fail
-        assertEquals client.dataStore.apiKey.id, "12"
+        assertEquals client.dataStore.apiKey.baseHref, "12"
         assertEquals client.dataStore.apiKey.secret, "13"
     }
 
@@ -111,7 +107,7 @@ class DefaultClientBuilderTestCustomCredentials{
 
     @Test
     void testConfigureCredentials() {
-        assertEquals client.dataStore.apiKey.id, id
+        assertEquals client.dataStore.apiKey.getBaseHref, id
         assertEquals client.dataStore.apiKey.secret, secret
     }
 
@@ -122,7 +118,7 @@ class DefaultClientBuilderTestCustomCredentials{
 
         ClientCredentials customCredentials = new ClientCredentials() {
             @Override
-            String getId() {
+            String getBaseHref() {
                 return credentialsId
             }
 
@@ -153,7 +149,7 @@ class DefaultClientBuilderTestCustomCredentials{
 
         ClientCredentials customCredentials = new ClientCredentials() {
             @Override
-            String getId() {
+            String getBaseHref() {
                 return credentialsId
             }
 
@@ -174,7 +170,7 @@ class DefaultClientBuilderTestCustomCredentials{
         builder.setApiKeyResolver(apiKeyResolver)
         def testClient = builder.build()
 
-        assertEquals testClient.dataStore.apiKey.id, keyId
+        assertEquals testClient.dataStore.apiKey.baseHref, keyId
         assertEquals testClient.dataStore.apiKey.secret, keySecret
     }
 }

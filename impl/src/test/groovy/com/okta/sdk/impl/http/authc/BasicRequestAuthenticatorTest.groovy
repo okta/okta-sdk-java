@@ -50,7 +50,7 @@ class BasicRequestAuthenticatorTest {
         assertNull(headers.get(AUTHORIZATION_HEADER))
 
         when(request.getHeaders()).thenReturn(headers)
-        when(apiKeyCredentials.getId()).thenReturn(id)
+        when(apiKeyCredentials.getBaseHref()).thenReturn(id)
         when(apiKeyCredentials.getSecret()).thenReturn(secret)
 
         def requestAuthenticator = new BasicRequestAuthenticator(apiKeyCredentials)
