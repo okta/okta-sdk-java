@@ -15,16 +15,12 @@
  */
 package com.okta.sdk.api;
 
-import com.okta.sdk.resource.Deletable;
-import com.okta.sdk.resource.Resource;
-import com.okta.sdk.resource.Saveable;
-
 /**
- * An ApiKey is a secure random username/password pair (called an {@link #getId() id} and
+ * An ApiKey is a secure random username/password pair (called an {@link #getBaseHref() id} and
  * {@link #getSecret() secret}) that can be used by the account to make secure requests
  * to an API service.
  *
- * @see #getId()
+ * @see #getBaseHref()
  * @see #getSecret()
  * @since 1.0.0
  */
@@ -35,7 +31,7 @@ public interface ApiKey {
      *
      * @return the ApiKey ID that uniquely identifies this ApiKey among all others.
      */
-    String getId();
+    String getBaseHref();
 
     /**
      * Returns the ApiKey plaintext secret - a very secret, very private value that should never be disclosed to anyone

@@ -28,7 +28,7 @@ public class ClientApiKey implements ApiKey {
 
     private final String secret;
 
-    private static final String METHOD_ERROR_MESSAGE = "This method is not accessible from a client api key. Only getId() and getSecret() are available from this instance.";
+    private static final String METHOD_ERROR_MESSAGE = "This method is not accessible from a client api key. Only getBaseHref() and getSecret() are available from this instance.";
 
     public ClientApiKey(String id, String secret) {
         if (!Strings.hasText(id)) {
@@ -41,7 +41,7 @@ public class ClientApiKey implements ApiKey {
         this.secret = secret;
     }
 
-    public String getId() {
+    public String getBaseHref() {
         return id;
     }
 
@@ -51,7 +51,7 @@ public class ClientApiKey implements ApiKey {
 
     @Override
     public String toString() {
-        return getId(); //never ever print the secret
+        return getBaseHref(); //never ever print the secret
     }
 
     @Override

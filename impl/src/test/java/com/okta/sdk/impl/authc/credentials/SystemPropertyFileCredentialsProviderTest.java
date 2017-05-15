@@ -34,7 +34,7 @@ public class SystemPropertyFileCredentialsProviderTest {
         ClientCredentials clientCredentials = new SystemPropertyFileCredentialsProvider().getClientCredentials();
 
         assertNotNull(clientCredentials);
-        assertEquals(clientCredentials.getId(), "1234");
+        assertEquals(clientCredentials.getBaseHref(), "1234");
         assertEquals(clientCredentials.getSecret(), "5678");
 
     }

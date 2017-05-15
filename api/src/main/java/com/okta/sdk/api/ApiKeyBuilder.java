@@ -118,7 +118,7 @@ public interface ApiKeyBuilder {
      * Allows specifying the client's API Key {@code id} value directly instead of relying on the
      * default location + override/fallback behavior defined in the {@link ApiKeyBuilder documentation above}.
      *
-     * @param id the {@link com.okta.sdk.api.ApiKey#getId() ApiKey id} to use when communicating with Okta.
+     * @param id the {@link com.okta.sdk.api.ApiKey#getBaseHref() ApiKey id} to use when communicating with Okta.
      * @return the ApiKeyBuilder instance for method chaining.
      * @see ClientBuilder#setApiKey(com.okta.sdk.api.ApiKey)
      */
@@ -154,7 +154,7 @@ public interface ApiKeyBuilder {
      * Client client = {@link Clients Clients}.builder().setApiKey(apiKey).build();
      * </pre>
      *
-     * @param secret the {@link com.okta.sdk.api.ApiKey#getId() ApiKey id} to use when communicating with Okta.
+     * @param secret the {@link com.okta.sdk.api.ApiKey#getBaseHref() ApiKey id} to use when communicating with Okta.
      * @return the ApiKeyBuilder instance for method chaining.
      * @see #setId(String)
      * @see ClientBuilder#setApiKey(com.okta.sdk.api.ApiKey)

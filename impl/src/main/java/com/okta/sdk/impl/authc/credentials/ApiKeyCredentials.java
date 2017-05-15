@@ -31,8 +31,8 @@ public class ApiKeyCredentials implements ClientCredentials {
     }
 
     @Override
-    public String getId() {
-        return apiKey.getId();
+    public String getBaseHref() {
+        return apiKey.getBaseHref();
     }
 
     @Override
