@@ -68,7 +68,7 @@ class DefaultClientTest {
         })
 
         try {
-            new DefaultClient(apiKeyCredentials, apiKeyResolver, baseUrlResolver, null, cacheManager, AuthenticationScheme.BASIC, requestAuthenticatorFactory, 3600)
+            new DefaultClient(apiKeyCredentials, apiKeyResolver, baseUrlResolver, null, cacheManager, AuthenticationScheme.SSWS, requestAuthenticatorFactory, 3600)
             fail("shouldn't be here")
         } catch (Exception e) {
             assertEquals e.getMessage(), "Unable to find the '" + className +
