@@ -54,7 +54,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             if (property.isEnum) {
                 propertyType = "EnumProperty";
                 propertyTypeMethod = "getEnumProperty";
-                property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatype + ".class");
+                property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatypeWithEnum + ".class");
                 property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
             }
             else if(property.isListContainer) {

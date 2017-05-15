@@ -17,8 +17,13 @@ package com.okta.sdk.impl.resource
 
 import com.okta.sdk.impl.ds.InternalDataStore
 import com.okta.sdk.lang.Classes
+import com.okta.sdk.resource.Resource
+import org.mockito.Mockito
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
 import org.testng.annotations.Test
 
+import java.lang.reflect.Method
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.regex.Matcher
@@ -26,56 +31,230 @@ import java.util.regex.Pattern
 
 import static org.hamcrest.MatcherAssert.*
 import static org.hamcrest.Matchers.*
+import static org.mockito.Mockito.*
 
 
 /**
- * Reflection based tests for basic getter and setter methods on generated code.
+ * Reflection based tests for basic getter and setter methods on generated code.  These tests provide very basic
+ * coverage and do NOT test anything specific.
  */
 class GeneratedResourceTest {
 
+    /**
+     * Sets values via setter methods then validates the value was set by using the corresponding getter method.
+     */
     @Test
     void testGetterAndSetters() {
 
-        DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+        InternalDataStore dataStore = createMockDataStore()
 
         Arrays.stream(getClasses("com.okta.sdk.impl.resource"))
-//            .filter { clazz -> clazz.superclass != null && clazz.superclass.simpleName == "AbstractResource"}
             .filter { clazz -> clazz.superclass != null}
             .filter { clazz -> clazz.superclass == AbstractInstanceResource}
             .filter { clazz -> !clazz.name.contains("Test")}
             .filter { clazz -> !clazz.name.contains("Abstract")}
-//            .filter { clazz -> clazz.isAssignableFrom(AbstractResource) }
             .forEach { clazz ->
 
-                def resource = (AbstractResource) Classes.instantiate(clazz.getDeclaredConstructor(InternalDataStore, Map), null, null)
-                    resource.getPropertyDescriptors()
-                        .forEach { key, property ->
-                            if (property instanceof StringProperty) {
-                                resource.setProperty(property, "value for: get${camelize(key, false)}")
-                            }
-                            else if (property instanceof IntegerProperty) {
-                                resource.setProperty(property, 42)
-                            }
-                            else if (property instanceof DateProperty) {
-                                resource.setProperty(property, "2001-07-04T12:08:56.235-0700")
-                            }
-                        }
+                def resource = (AbstractResource) Classes.instantiate(
+                        clazz.getDeclaredConstructor(InternalDataStore, Map), dataStore, null)
 
-                        Arrays.stream(clazz.getDeclaredMethods())
-                            .filter { it.name.startsWith("get") }
-                            .forEach {
-                                if (it.returnType == String) {
-                                    assertThat it.invoke(resource), equalToObject("value for: ${it.name}".toString())
-                                }
-                                else if (it.returnType == Integer){
-                                    assertThat it.invoke(resource), equalToObject(42)
-                                }
-                                else if (it.returnType == Date) {
-                                    assertThat it.invoke(resource), equalToObject(df1.parse("2001-07-04T12:08:56.235-0700"))
-                                }
-
-                            }
+                setViaSetter(resource)
+                validateViaGetter(clazz, resource, true)
             }
+    }
+
+    /**
+     * Sets values via property methods then validates the value was set by using the corresponding getter method.
+     */
+    @Test
+    void testPropertySetThenGetters() {
+
+        InternalDataStore dataStore = createMockDataStore()
+
+        Arrays.stream(getClasses("com.okta.sdk.impl.resource"))
+                .filter { clazz -> clazz.superclass != null}
+                .filter { clazz -> clazz.superclass == AbstractInstanceResource}
+                .filter { clazz -> !clazz.name.contains("Test")}
+                .filter { clazz -> !clazz.name.contains("Abstract")}
+                .forEach { clazz ->
+
+                    def resource = (AbstractResource) Classes.instantiate(
+                            clazz.getDeclaredConstructor(InternalDataStore, Map), dataStore, null)
+
+                    setViaProperty(resource)
+                    validateViaGetter(clazz, resource, true)
+                }
+    }
+
+    /**
+     * Tests calling Resource(InternalDataStore) does NOT throw an exception and the internal properties
+     * results in an empty map.
+     */
+    @Test
+    void testConstructorsDoNotThrowException() {
+        InternalDataStore dataStore = createMockDataStore()
+
+        Arrays.stream(getClasses("com.okta.sdk.impl.resource"))
+                .filter { clazz -> clazz.superclass != null}
+                .filter { clazz -> clazz.superclass == AbstractInstanceResource}
+                .filter { clazz -> !clazz.name.contains("Test")}
+                .filter { clazz -> !clazz.name.contains("Abstract")}
+                .forEach { clazz ->
+
+                    // just make sure this doesn't throw an exception.
+                    def resource = (AbstractResource) Classes.instantiate(clazz.getDeclaredConstructor(InternalDataStore), dataStore)
+                    assertThat resource.getInternalProperties(), anEmptyMap()
+                }
+
+    }
+
+    void validateViaGetter(Class clazz, Resource resource, boolean withSettersOnly = true) {
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+
+        Arrays.stream(clazz.getDeclaredMethods())
+                .filter { it.name.startsWith("get") }
+                .filter { !withSettersOnly || setterFromGetter(clazz, it) != null }
+                .forEach {
+            def result = it.invoke(resource)
+            if (it.returnType == String) {
+                assertThat it.invoke(resource), equalToObject("value for: ${it.name}".toString())
+            }
+            else if (it.returnType == Integer){
+                assertThat it.invoke(resource), equalToObject(42)
+            }
+            else if (it.returnType == Date) {
+                assertThat it.invoke(resource), equalToObject(df.parse("2001-07-04T12:08:56.235-0700"))
+            }
+            else if (it.returnType == Map) {
+                assertThat it.invoke(resource), instanceOf(Map)
+            }
+            else if (it.returnType == List && !withSettersOnly) { // TODO: Lists are only being set via property right now
+                assertThat it.invoke(resource), instanceOf(List)
+            }
+            else if (it.returnType.interfaces.contains(Resource)) {
+                assertThat "method ${it.toString()} returned null value.", result, notNullValue()
+            }
+            else if (it.returnType.isEnum()) {
+                assertThat "method ${it.toString()} returned null value.", result, notNullValue()
+            }
+        }
+    }
+
+    static void setViaProperty(def resource) {
+        resource.getPropertyDescriptors()
+                .forEach { key, property ->
+            if (property instanceof StringProperty) {
+                resource.setProperty(property, "value for: get${camelize(key, false)}")
+            }
+            else if (property instanceof IntegerProperty) {
+                resource.setProperty(property, 42)
+            }
+            else if (property instanceof DateProperty) {
+                resource.setProperty(property, "2001-07-04T12:08:56.235-0700")
+            }
+            else if (property instanceof MapProperty) {
+                resource.setProperty(property, [one: "two"])
+            }
+            else if (property instanceof ResourceReference) {
+                resource.setProperty(property, [one: "two"])
+            }
+            else if (property instanceof BooleanProperty) {
+                resource.setProperty(property, true)
+            }
+            else if (property instanceof EnumProperty) {
+                def value = property.type.getEnumConstants()[0]
+                resource.setProperty(property, value.name())
+            }
+        }
+        resource.materialize()
+    }
+
+    ///////////////////////
+    // Test Util methods //
+    ///////////////////////
+
+    static Method setterFromGetter(Class clazz, Method method) {
+        try {
+            return clazz.getMethod(method.name.replaceFirst("get", "set"), method.returnType)
+        }
+        catch (NoSuchMethodException e) {
+            // ignored
+        }
+        return null
+    }
+
+    static Method setterFromProperty(AbstractResource resource, Property property) {
+        try {
+            def methodName = "set${camelize(property.name, false)}"
+            return resource.class.getMethod(methodName, property.getType())
+        }
+        catch (NoSuchMethodException e) {
+            // ignored
+        }
+        return null
+    }
+
+    static void setViaSetter(AbstractResource resource) {
+        resource.getPropertyDescriptors()
+                .forEach { key, property ->
+
+            def method = setterFromProperty(resource, property)
+            if (method != null) {
+                def value = null
+
+                if (property instanceof StringProperty) {
+                    value = "value for: get${camelize(key, false)}".toString()
+                } else if (property instanceof IntegerProperty) {
+                    value = 42
+                } else if (property instanceof DateProperty) {
+                    value = "2001-07-04T12:08:56.235-0700"
+                } else if (property instanceof MapProperty) {
+                    value = [one: "two"]
+                } else if (property instanceof ResourceReference) {
+                    value = mock(property.getType())
+                } else if (property instanceof BooleanProperty) {
+                    value = true
+                } else if (property instanceof ListProperty) {
+                    value = new ArrayList()
+                } else if (property instanceof EnumProperty) {
+                     value = property.type.getEnumConstants()[0]
+                }
+
+                method.invoke(resource, value)
+            }
+
+        }
+        resource.materialize()
+    }
+
+    InternalDataStore createMockDataStore() {
+        InternalDataStore dataStore = mock(InternalDataStore)
+        when(dataStore.getResource(Mockito.nullable(String), Mockito.any(Class.class)))
+                .then(new Answer<Object>() {
+            @Override
+            Object answer(InvocationOnMock invocation) throws Throwable {
+                def clazz = (Class)invocation.arguments[1]
+                def resource = (AbstractResource) Classes.instantiate(
+                        clazz.getDeclaredConstructor(InternalDataStore, Map), dataStore, [three: "four"])
+                return resource
+
+            }
+        })
+
+        when(dataStore.instantiate(Mockito.any(Class.class), Mockito.any(Map)))
+                .then(new Answer<Object>() {
+            @Override
+            Object answer(InvocationOnMock invocation) throws Throwable {
+                def clazz = (Class)invocation.arguments[0]
+                clazz = Classes.forName("com.okta.sdk.impl.resource.Default${clazz.simpleName}")
+                def resource = (AbstractResource) Classes.instantiate(
+                        clazz.getDeclaredConstructor(InternalDataStore, Map), dataStore, [three: "four"])
+                return resource
+            }
+        })
+
+        return dataStore
     }
 
     /**
