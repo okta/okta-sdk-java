@@ -55,7 +55,7 @@ class DefaultClientBuilderTest {
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
         assertEquals clientBuilder.clientConfiguration.baseUrl, "https://api.okta.com/v42"
         assertEquals clientBuilder.clientConfiguration.connectionTimeout, 10
-        assertEquals clientBuilder.clientConfiguration.authenticationScheme, AuthenticationScheme.BASIC
+        assertEquals clientBuilder.clientConfiguration.authenticationScheme, AuthenticationScheme.SSWS
     }
 
     @Test
