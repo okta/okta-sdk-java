@@ -116,7 +116,7 @@ public class WriteCacheFilter extends AbstractCacheFilter {
 
                 Map<String, ?> nested = (Map<String, ?>) value;
 
-                if (AbstractResource.isMaterialized(nested)) {
+                if (AbstractResource.isMaterialized(nested) && false) { // FIXME: cannot cache submodels yet
                     //If there is more than one attribute (more than just 'href') it is not just a simple reference
                     //anymore - it has been materialized to its full set of attributes.  Because we have a full
                     //materialized resource, we need to recursively cache it (and any of its referenced materialized

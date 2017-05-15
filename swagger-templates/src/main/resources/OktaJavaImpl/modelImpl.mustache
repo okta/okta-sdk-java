@@ -29,10 +29,10 @@ import java.util.Map;
 public class Default{{classname}} extends AbstractInstanceResource implements {{classname}} {
 
 {{#vars}}
-    private final {{vendorExtensions.propertyType}}{{#vendorExtensions.typeClassExtra}}<{{{datatypeWithEnum}}}>{{/vendorExtensions.typeClassExtra}} {{name}}Property = new {{vendorExtensions.propertyType}}("{{baseName}}"{{vendorExtensions.constructorTypeExtra}});
+    private final static {{vendorExtensions.propertyType}}{{#vendorExtensions.typeClassExtra}}<{{{datatypeWithEnum}}}>{{/vendorExtensions.typeClassExtra}} {{name}}Property = new {{vendorExtensions.propertyType}}("{{baseName}}"{{vendorExtensions.constructorTypeExtra}});
 {{/vars}}
 
-    private final Map<String, Property> propertyDescriptors = createPropertyDescriptorMap({{#vars}}{{name}}Property{{^-last}}, {{/-last}}{{/vars}});
+    private final static Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap({{#vars}}{{name}}Property{{^-last}}, {{/-last}}{{/vars}});
 
     public Default{{classname}}(InternalDataStore dataStore) {
         super(dataStore);
@@ -44,7 +44,7 @@ public class Default{{classname}} extends AbstractInstanceResource implements {{
 
     @Override
     public Map<String, Property> getPropertyDescriptors() {
-        return propertyDescriptors;
+        return PROPERTY_DESCRIPTORS;
     }
 
 {{#vars}}

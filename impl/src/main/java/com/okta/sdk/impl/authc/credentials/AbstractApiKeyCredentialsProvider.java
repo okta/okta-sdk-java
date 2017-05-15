@@ -46,7 +46,7 @@ public abstract class AbstractApiKeyCredentialsProvider implements ClientCredent
 
         Properties props = loadProperties();
 
-        String id = getPropertyValue(props, DEFAULT_ID_PROPERTY_NAME);
+        String id = getPropertyValue(props, DEFAULT_ID_PROPERTY_NAME); // TODO: remove this
         String secret = getPropertyValue(props, DEFAULT_SECRET_PROPERTY_NAME);
 
         ApiKey apiKey = createApiKey(id, secret);
