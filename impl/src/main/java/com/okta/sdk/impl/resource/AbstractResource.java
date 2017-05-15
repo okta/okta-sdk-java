@@ -34,12 +34,12 @@ import java.util.Set;
  */
 public abstract class AbstractResource extends AbstractPropertyRetriever implements Resource {
 
-    public static final String HREF_PROP_NAME = "href";
     protected final Map<String, Object> dirtyProperties;  //Protected by read/write lock
     protected final Set<String> deletedPropertyNames;     //Protected by read/write lock
     protected final ReferenceFactory referenceFactory;
     private final InternalDataStore dataStore;
     protected Map<String, Object> properties;       //Protected by read/write lock
+    private String href = null;
     protected volatile boolean dirty;
     private volatile boolean materialized;
 
@@ -69,17 +69,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * otherwise.
      */
     public static boolean isMaterialized(Map<String, ?> props) {
-        return props != null && props.get(HREF_PROP_NAME) != null && props.size() > 1;
-    }
-
-    /**
-     * Returns {@code true} if the specified data map contains an href property.
-     *
-     * @param props the data properties to test.
-     * @return {@code true} if the specified data map contains an href property.
-     */
-    public static boolean hasHref(Map<String, ?> props) {
-        return props != null && props.get(HREF_PROP_NAME) != null;
+        return props != null && props.size() > 1;
     }
 
     protected static Map<String, Property> createPropertyDescriptorMap(Property... props) {
@@ -106,8 +96,11 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
                 }
                 // Don't consider this resource materialized if it is only a reference.  A reference is any object that
                 // has only one 'href' property.
-                boolean hrefOnly = this.properties.size() == 1 && this.properties.containsKey(HREF_PROP_NAME);
-                this.materialized = !hrefOnly;
+
+                // TODO: validate this flow
+//                boolean hrefOnly = this.properties.size() == 1 && this.properties.containsKey(HREF_PROP_NAME);
+//                this.materialized = !hrefOnly;
+                this.materialized = this.properties.size() > 0;
             } else {
                 this.materialized = false;
             }
@@ -116,8 +109,12 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         }
     }
 
-    public String getHref() {
-        return getStringProperty(HREF_PROP_NAME);
+    public String getResourceHref() {
+        return this.href;
+    }
+
+    public void setResourceHref(String href) {
+        this.href = href;
     }
 
     protected final InternalDataStore getDataStore() {
@@ -145,12 +142,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * @return {@code true} if the resource doesn't yet have an assigned 'href' property, {@code false} otherwise.
      */
     protected final boolean isNew() {
-        //we can't call getHref() in here, otherwise we'll have an infinite loop:
-        Object prop = readProperty(HREF_PROP_NAME);
-        if (prop == null) {
-            return true;
-        }
-        String href = String.valueOf(prop);
+        String href = String.valueOf(getResourceHref());
         return !Strings.hasText(href);
     }
 
@@ -158,7 +150,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         if (this.materialized) {
             return;
         }
-        AbstractResource resource = dataStore.getResource(getHref(), getClass());
+        AbstractResource resource = dataStore.getResource(getResourceHref(), getClass());
         writeLock.lock();
         try {
             if (this.properties != resource.properties) {
@@ -209,7 +201,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     }
 
     public Object getProperty(String name) {
-        if (!HREF_PROP_NAME.equals(name)) {
             //not the href/id, must be a property that requires materialization:
             if (!isNew() && !isMaterialized()) {
 
@@ -228,7 +219,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
                     materialize();
                 }
             }
-        }
 
         return readProperty(name);
     }
@@ -438,7 +428,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      */
     protected <T extends Resource> void setMaterializableResourceProperty(ResourceReference<T> property, Resource value) {
         Assert.notNull(property, "Property argument cannot be null.");
-        Assert.isNull(value.getHref(), "Resource must not have an 'href' property ");
+        Assert.isNull(value.getResourceHref(), "Resource must not have an 'href' property ");
         if (((AbstractResource) value).isMaterialized()) {
             setResourceProperty(property, value);
         } else {

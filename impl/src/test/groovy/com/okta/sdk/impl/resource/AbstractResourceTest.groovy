@@ -43,30 +43,6 @@ class AbstractResourceTest {
     }
 
     @Test
-    void testDirtyPropertiesRetainedAfterMaterialization() {
-
-        def props = ['href': 'http://foo.com/test/123']
-        InternalDataStore ds = mock(InternalDataStore)
-
-        def serverResource = new TestResource(ds, [
-                'href': props.href,
-                'name': 'Old Name',
-                'description': 'Old Description'
-        ])
-
-        when(ds.getResource(props.href, TestResource)).thenReturn serverResource
-
-        TestResource resource = new TestResource(ds, props)
-        resource.setName('New Name')
-
-        //get the description, which hasn't been set locally - this will force materialization:
-        String description = resource.getDescription()
-
-        assertEquals 'Old Description', description //obtained during materialization
-        assertEquals 'New Name', resource.getName() //dirty property retained even after materialization
-    }
-
-    @Test
     void testMapProperty() {
 
         def props =[

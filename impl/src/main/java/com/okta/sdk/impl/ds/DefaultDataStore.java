@@ -97,8 +97,7 @@ public class DefaultDataStore implements InternalDataStore {
                                                      DefaultOptions.class.getName() + " instances.";
 
     public static final String HREF_REQD_MSG = "'save' may only be called on objects that have already been " +
-                                               "persisted and have an existing " + AbstractResource.HREF_PROP_NAME +
-                                               " attribute.";
+                                               "persisted and have an existing 'href' attribute.";
 
     private static final boolean COLLECTION_CACHING_ENABLED = false; //EXPERIMENTAL - set to true only while developing.
 
@@ -230,7 +229,12 @@ public class DefaultDataStore implements InternalDataStore {
 
     public <T extends Resource> T getResource(String href, Class<T> clazz, Map<String, Object> queryParameters) {
         ResourceDataResult result = getResourceData(href, clazz, queryParameters);
-        return instantiate(clazz, result.getData(), result.getUri().getQuery());
+        T resource = instantiate(clazz, result.getData(), result.getUri().getQuery());
+
+        resource.setResourceHref(href);
+
+        return resource;
+
     }
 
     /**
@@ -360,7 +364,7 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public <T extends Resource & Saveable> void save(T resource) {
-        String href = resource.getHref();
+        String href = resource.getResourceHref();
         Assert.hasText(href, HREF_REQD_MSG);
         save(href, resource, null, resource.getClass(), null, false);
     }
@@ -368,7 +372,7 @@ public class DefaultDataStore implements InternalDataStore {
     @Override
     public <T extends Resource & Saveable> void save(T resource, Options options) {
         Assert.notNull(options, "options argument cannot be null.");
-        String href = resource.getHref();
+        String href = resource.getResourceHref();
         Assert.hasText(href, HREF_REQD_MSG);
         QueryString qs = toQueryString(href, options);
         save(href, resource, null, resource.getClass(), qs, false);
@@ -376,8 +380,8 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public <T extends Resource & Saveable, R extends Resource> R save(T resource, Class<? extends R> returnType) {
-        Assert.hasText(resource.getHref(), HREF_REQD_MSG);
-        return save(resource.getHref(), resource, null, returnType, null, false);
+        Assert.hasText(resource.getResourceHref(), HREF_REQD_MSG);
+        return save(resource.getResourceHref(), resource, null, returnType, null, false);
     }
 
     private QueryString toQueryString(String href, Options options) {
@@ -532,7 +536,7 @@ public class DefaultDataStore implements InternalDataStore {
         Assert.notNull(resource, "resource argument cannot be null.");
         Assert.isInstanceOf(AbstractResource.class, resource, "Resource argument must be an AbstractResource.");
 
-        doDelete(resource.getHref(), resource.getClass(), possiblyNullPropertyName);
+        doDelete(resource.getResourceHref(), resource.getClass(), possiblyNullPropertyName);
     }
 
     /* =====================================================================

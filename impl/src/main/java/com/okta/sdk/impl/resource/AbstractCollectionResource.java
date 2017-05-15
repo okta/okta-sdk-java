@@ -178,7 +178,7 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
 
             if (firstPageQueryRequired) {
                 //We get a new resource in order to have different iterator instances: issue 62 (https://github.com/stormpath/stormpath-sdk-java/issues/62)
-                this.resource = getDataStore().getResource(resource.getHref(), resource.getClass(), resource.queryParams);
+                this.resource = getDataStore().getResource(resource.getResourceHref(), resource.getClass(), resource.queryParams);
                 this.currentPage = this.resource.getCurrentPage();
             } else {
                 this.resource = resource;

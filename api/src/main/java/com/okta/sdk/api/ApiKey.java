@@ -28,7 +28,7 @@ import com.okta.sdk.resource.Saveable;
  * @see #getSecret()
  * @since 1.0.0
  */
-public interface ApiKey extends Resource {
+public interface ApiKey {
 
     /**
      * Returns the ApiKey ID that uniquely identifies this ApiKey among all others.
