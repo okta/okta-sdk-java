@@ -32,16 +32,13 @@ public class EnvironmentVariableCredentialsProviderTest {
 
     @Test
     public void environmentVariableCredentialsReturned() {
-        String keyId = UUID.randomUUID().toString();
         String secret = UUID.randomUUID().toString();
 
-        setEnvironmentVariable("OKTA_API_KEY_ID", keyId);
         setEnvironmentVariable("OKTA_API_KEY_SECRET", secret);
 
         ClientCredentials clientCredentials = new EnvironmentVariableCredentialsProvider().getClientCredentials();
 
         assertNotNull(clientCredentials);
-        assertEquals(clientCredentials.getBaseUrl(), keyId);
         assertEquals(clientCredentials.getSecret(), secret);
 
     }

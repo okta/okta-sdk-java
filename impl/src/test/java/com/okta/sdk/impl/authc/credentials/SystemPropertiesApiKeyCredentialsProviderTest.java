@@ -31,16 +31,13 @@ public class SystemPropertiesApiKeyCredentialsProviderTest {
     @Test
     public void systemPropertiesCredentialsReturned() {
 
-        String keyId = UUID.randomUUID().toString();
         String secret = UUID.randomUUID().toString();
 
-        System.setProperty("okta.client.apiKey.id", keyId);
         System.setProperty("okta.client.apiKey.secret", secret);
 
         ClientCredentials clientCredentials = new SystemPropertiesApiKeyCredentialsProvider().getClientCredentials();
 
         assertNotNull(clientCredentials);
-        assertEquals(clientCredentials.getBaseUrl(), keyId);
         assertEquals(clientCredentials.getSecret(), secret);
 
     }
