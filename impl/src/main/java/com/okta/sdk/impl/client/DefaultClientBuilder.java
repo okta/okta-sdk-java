@@ -27,7 +27,6 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.authc.credentials.ClientCredentialsProvider;
-import com.okta.sdk.impl.authc.credentials.DefaultClientCredentialsProviderChain;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.JSONPropertiesSource;
 import com.okta.sdk.impl.config.OptionalPropertiesSource;
@@ -280,19 +279,10 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         ClientCredentialsResolver clientCredentialsResolver = this.clientConfig.getClientCredentialsResolver();
 
-        ClientCredentials clientCredentials;
-
         if (this.clientCredentials != null) {
-            clientCredentials = this.clientCredentials;
-        } else {
-            ClientCredentialsProvider clientCredentialsProvider = new DefaultClientCredentialsProviderChain(clientConfig);
-            clientCredentials = clientCredentialsProvider.getClientCredentials();
-        }
-
-        this.clientCredentials = clientCredentials;
-
-        if (clientCredentialsResolver == null) {
-            clientCredentialsResolver = new DefaultClientCredentialsResolver(clientCredentials);
+            clientCredentialsResolver = new DefaultClientCredentialsResolver(this.clientCredentials);
+        } else if (this.clientConfig != null) {
+            clientCredentialsResolver = new DefaultClientCredentialsResolver(clientConfig);
         }
 
             BaseUrlResolver baseUrlResolver = this.clientConfig.getBaseUrlResolver();
