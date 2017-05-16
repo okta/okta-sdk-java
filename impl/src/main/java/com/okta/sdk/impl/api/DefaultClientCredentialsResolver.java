@@ -35,7 +35,6 @@ public class DefaultClientCredentialsResolver implements ClientCredentialsResolv
 
         // FIXME: clean this up, move it out into a different class
         this(new ClientCredentials() {
-            @Override
             public String getBaseUrl() {
                 return null;
             }

@@ -114,7 +114,7 @@ class DefaultClientBuilderTestCustomCredentials{
         def credentialsSecret = UUID.randomUUID().toString()
 
         ClientCredentials customCredentials = new ClientCredentials() {
-            @Override
+
             String getBaseUrl() {
                 return credentialsId
             }
@@ -145,7 +145,7 @@ class DefaultClientBuilderTestCustomCredentials{
         def credentialsSecret = UUID.randomUUID().toString()
 
         ClientCredentials customCredentials = new ClientCredentials() {
-            @Override
+
             String getBaseUrl() {
                 return credentialsId
             }

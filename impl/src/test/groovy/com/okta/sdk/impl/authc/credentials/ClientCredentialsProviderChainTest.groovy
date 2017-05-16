@@ -148,7 +148,7 @@ public class ClientCredentialsProviderChainTest {
 
         return new ClientCredentials() {
 
-            @Override
+
             String getBaseUrl() {
                 return id
             }

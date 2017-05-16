@@ -25,16 +25,6 @@ import static org.testng.Assert.*
 class TokenClientCredentialsTest {
 
     @Test
-    void testConstructorIdNull() {
-        try {
-            new TokenClientCredentials(null, "secret");
-            fail("Should have thrown due to null id.")
-        } catch (IllegalArgumentException ex) {
-            assertEquals(ex.getMessage(), "API key id cannot be null or empty.")
-        }
-    }
-
-    @Test
     void testConstructorSecretNull() {
         try {
             new TokenClientCredentials("id", null);
