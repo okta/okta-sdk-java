@@ -44,7 +44,6 @@ class DefaultClientBuilderTest {
     @Test
     void testConfigureApiKey() {
         // remove key.txt from src/test/resources and this test will fail
-        assertEquals client.dataStore.getClientCredentials().baseUrl, "12"
         assertEquals client.dataStore.getClientCredentials().getCredentials(), "13"
     }
 

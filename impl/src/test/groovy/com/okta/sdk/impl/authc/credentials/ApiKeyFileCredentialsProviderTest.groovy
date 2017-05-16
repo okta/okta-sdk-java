@@ -31,7 +31,6 @@ public class ApiKeyFileCredentialsProviderTest {
         ClientCredentials clientCredentials = credentialsProvider.getClientCredentials();
 
         assertNotNull(clientCredentials);
-        assertEquals(clientCredentials.baseUrl, "1234")
         assertEquals(clientCredentials.credentials, "5678")
 
     }

@@ -27,16 +27,13 @@ class ConfigurationCredentialsProviderTest {
     @Test
     public void configuredCredentialsReturned() {
 
-        String keyId = UUID.randomUUID().toString()
         String secret = UUID.randomUUID().toString()
 
         ClientConfiguration clientConfiguration = new ClientConfiguration()
-        clientConfiguration.setApiKeyId(keyId)
         clientConfiguration.setApiKeySecret(secret)
 
         ClientCredentials clientCredentials = new ConfigurationCredentialsProvider(clientConfiguration).getClientCredentials()
 
-        assertEquals(clientCredentials.getBaseUrl(), keyId)
         assertEquals(clientCredentials.getCredentials(), secret)
 
     }

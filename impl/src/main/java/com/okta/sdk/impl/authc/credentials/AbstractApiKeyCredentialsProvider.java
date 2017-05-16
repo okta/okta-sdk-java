@@ -46,29 +46,14 @@ public abstract class AbstractApiKeyCredentialsProvider implements ClientCredent
 
         Properties props = loadProperties();
 
-        String id = getPropertyValue(props, DEFAULT_ID_PROPERTY_NAME); // TODO: remove this
         String secret = getPropertyValue(props, DEFAULT_SECRET_PROPERTY_NAME);
 
-        return new TokenClientCredentials(id, secret);
+        return createClientCredentials(secret);
     }
 
     protected abstract Properties loadProperties();
 
-    protected ClientCredentials createApiKey(String id, String secret) {
-
-        if (!Strings.hasText(id)) {
-            String msg = "Unable to find an API Key 'id', either from explicit configuration (for example, " +
-                    "TODO" + ".setApiKeyId) or from fallback locations:\n\n" +
-                    "1) system property okta.client.apiKey.id\n" +
-                    "2) resource file path or URL specified by system property okta.client.apiKey.file\n" +
-                    "3) resource file path or URL specified by environment variable OKTA_API_KEY_FILE\n" +
-                    "4) environment variable OKTA_API_KEY_ID\n" +
-                    "5) default apiKey.properties file location " + DEFAULT_API_KEY_PROPERTIES_FILE_LOCATION +
-                    ".\n\n" +
-                    "Please ensure you manually configure an API Key ID or ensure that it exists in one of these " +
-                    "fallback locations.";
-            throw new IllegalStateException(msg);
-        }
+    protected ClientCredentials createClientCredentials(String secret) {
 
         if (!Strings.hasText(secret)) {
             String msg = "Unable to find an API Key 'secret', either from explicit configuration (for example, " +
@@ -84,7 +69,7 @@ public abstract class AbstractApiKeyCredentialsProvider implements ClientCredent
             throw new IllegalStateException(msg);
         }
 
-        return new TokenClientCredentials(id, secret);
+        return new TokenClientCredentials(secret);
     }
 
 
