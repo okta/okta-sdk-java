@@ -35,7 +35,6 @@ import java.util.Map;
  */
 public class ClientConfiguration {
 
-    private String apiKeyFile;
     private String apiKeySecret;
     private ClientCredentialsResolver clientCredentialsResolver;
     private boolean cacheManagerEnabled;
@@ -51,14 +50,6 @@ public class ClientConfiguration {
     private String proxyUsername;
     private String proxyPassword;
     private BaseUrlResolver baseUrlResolver;
-
-    public String getApiKeyFile() {
-        return apiKeyFile;
-    }
-
-    public void setApiKeyFile(String apiKeyFile) {
-        this.apiKeyFile = apiKeyFile;
-    }
 
     public String getApiKeySecret() {
         return apiKeySecret;
@@ -208,7 +199,6 @@ public class ClientConfiguration {
     @Override
     public String toString() {
         return "ClientConfiguration{" +
-                "apiKeyFile='" + apiKeyFile + '\'' +
                 ", apiKeySecret='" + apiKeySecret + '\'' +
                 ", cacheManagerTtl=" + cacheManagerTtl +
                 ", cacheManagerTti=" + cacheManagerTti +
