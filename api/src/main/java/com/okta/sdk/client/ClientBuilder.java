@@ -208,8 +208,6 @@ import com.okta.sdk.cache.CacheManager;
  */
 public interface ClientBuilder {
 
-    String DEFAULT_CLIENT_API_KEY_FILE_PROPERTY_NAME = "okta.client.apiKey.file";
-    String DEFAULT_CLIENT_API_KEY_ID_PROPERTY_NAME = "okta.client.apiKey.id";
     String DEFAULT_CLIENT_API_KEY_SECRET_PROPERTY_NAME = "okta.client.apiKey.secret";
     String DEFAULT_CLIENT_CACHE_MANAGER_ENABLED_PROPERTY_NAME = "okta.client.cacheManager.enabled";
     String DEFAULT_CLIENT_CACHE_MANAGER_TTL_PROPERTY_NAME = "okta.client.cacheManager.defaultTtl";
