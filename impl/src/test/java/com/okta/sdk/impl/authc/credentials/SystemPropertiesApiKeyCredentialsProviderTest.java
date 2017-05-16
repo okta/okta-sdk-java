@@ -38,7 +38,7 @@ public class SystemPropertiesApiKeyCredentialsProviderTest {
         ClientCredentials clientCredentials = new SystemPropertiesApiKeyCredentialsProvider().getClientCredentials();
 
         assertNotNull(clientCredentials);
-        assertEquals(clientCredentials.getSecret(), secret);
+        assertEquals(clientCredentials.getCredentials(), secret);
 
     }
 

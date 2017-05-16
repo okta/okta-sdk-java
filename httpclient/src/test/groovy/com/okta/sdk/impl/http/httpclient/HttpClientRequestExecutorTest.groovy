@@ -39,7 +39,7 @@ class HttpClientRequestExecutorTest {
         HttpEntity entity = mock(HttpEntity)
         InputStream entityContent = mock(InputStream)
 
-        when(clientCredentials.getSecret()).thenReturn("token-foo")
+        when(clientCredentials.getCredentials()).thenReturn("token-foo")
         when(httpResponse.getStatusLine()).thenReturn(statusLine)
         when(statusLine.getStatusCode()).thenReturn(200)
         when(httpResponse.getAllHeaders()).thenReturn(null)

@@ -36,6 +36,6 @@ public class EnvironmentVariableFileCredentialsProviderTest {
         ClientCredentials clientCredentials = new EnvironmentVariableFileCredentialsProvider().getClientCredentials();
 
         assertNotNull(clientCredentials);
-        assertEquals(clientCredentials.getSecret(), "5678");
+        assertEquals(clientCredentials.getCredentials(), "5678");
     }
 }
