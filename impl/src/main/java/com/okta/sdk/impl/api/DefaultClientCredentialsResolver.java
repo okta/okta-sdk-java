@@ -30,16 +30,7 @@ public class DefaultClientCredentialsResolver implements ClientCredentialsResolv
     }
 
     public DefaultClientCredentialsResolver(final ClientConfiguration clientConfiguration) {
-//        Assert.notNull(clientConfiguration, "clientConfiguration must not be null.");
-
-        // FIXME: clean this up, move it out into a different class
-        this(new ClientCredentials<String>() {
-
-            @Override
-            public String getCredentials() {
-                return clientConfiguration.getApiKeySecret();
-            }
-        });
+        this(new TokenClientCredentials(clientConfiguration.getApiKeySecret()));
     }
 
     @Override
