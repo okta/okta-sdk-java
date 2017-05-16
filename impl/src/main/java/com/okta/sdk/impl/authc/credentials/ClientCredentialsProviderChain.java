@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.impl.authc.credentials;
 
+import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.sdk.authc.credentials.ClientCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

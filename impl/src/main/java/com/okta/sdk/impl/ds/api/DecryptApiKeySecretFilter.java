@@ -15,9 +15,7 @@
  */
 package com.okta.sdk.impl.ds.api;
 
-import com.okta.sdk.api.ApiKey;
-import com.okta.sdk.impl.api.ApiKeyParameter;
-import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials;
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.ds.DefaultResourceDataResult;
 import com.okta.sdk.impl.ds.Filter;
 import com.okta.sdk.impl.ds.FilterChain;
@@ -37,18 +35,18 @@ import java.util.Map;
  */
 public class DecryptApiKeySecretFilter implements Filter {
 
-    private static String ENCRYPTION_KEY_SALT = ApiKeyParameter.ENCRYPTION_KEY_SALT.getName();
-    private static String ENCRYPTION_KEY_SIZE = ApiKeyParameter.ENCRYPTION_KEY_SIZE.getName();
-    private static String ENCRYPTION_KEY_ITERATIONS = ApiKeyParameter.ENCRYPTION_KEY_ITERATIONS.getName();
-    private static String ENCRYPTION_METADATA = ApiKeyParameter.ENCRYPTION_METADATA.getName();
+//    private static String ENCRYPTION_KEY_SALT = ApiKeyParameter.ENCRYPTION_KEY_SALT.getName();
+//    private static String ENCRYPTION_KEY_SIZE = ApiKeyParameter.ENCRYPTION_KEY_SIZE.getName();
+//    private static String ENCRYPTION_KEY_ITERATIONS = ApiKeyParameter.ENCRYPTION_KEY_ITERATIONS.getName();
+//    private static String ENCRYPTION_METADATA = ApiKeyParameter.ENCRYPTION_METADATA.getName();
 
-    private final ApiKeyCredentials apiKeyCredentials;
+    private final ClientCredentials clientCredentials;
 
     private final String SECRET_PROPERTY_NAME = "secret";
 
-    public DecryptApiKeySecretFilter(ApiKeyCredentials apiKeyCredentials) {
-        Assert.notNull(apiKeyCredentials);
-        this.apiKeyCredentials = apiKeyCredentials;
+    public DecryptApiKeySecretFilter(ClientCredentials clientCredentials) {
+        Assert.notNull(clientCredentials);
+        this.clientCredentials = clientCredentials;
     }
 
     @Override
@@ -62,52 +60,52 @@ public class DecryptApiKeySecretFilter implements Filter {
 
         Class<? extends Resource> clazz = result.getResourceClass();
 
-        if (!(ApiKey.class.isAssignableFrom(clazz))) {
+        if (!(ClientCredentials.class.isAssignableFrom(clazz))) {
             return result;
         }
 
         Map<String, Object> data = result.getData();
 
-        return new DefaultResourceDataResult(result.getAction(), result.getUri(), clazz, clone(data));
+        return new DefaultResourceDataResult(result.getAction(), result.getUri(), clazz, null);//clone(data)); // FIXME: fix clone method
     }
 
-    private Map<String, Object> clone(Map<String, Object> input) {
-
-        if (!input.containsKey(ENCRYPTION_METADATA)) {
-            return input;
-        }
-
-        @SuppressWarnings("unchecked")
-        Map<String, Object> metadata = (Map<String, Object>) input.get(ENCRYPTION_METADATA);
-
-        byte[] base64Salt = ((String) metadata.get(ENCRYPTION_KEY_SALT)).getBytes();
-        Integer iterations = (Integer) metadata.get(ENCRYPTION_KEY_ITERATIONS);
-        Integer size = (Integer) metadata.get(ENCRYPTION_KEY_SIZE);
-
-        EncryptionService service = new ApiKeySecretEncryptionService.Builder().setPassword(apiKeyCredentials.getSecret().toCharArray()).setKeySize(size)
-                .setIterations(iterations).setBase64Salt(base64Salt).build();
-
-        String encryptedSecret = (String) input.get(SECRET_PROPERTY_NAME);
-
-        Map<String, Object> clonedData = new LinkedHashMap<String, Object>();
-
-        for (Map.Entry<String, Object> entry : input.entrySet()) {
-
-            String key = entry.getKey();
-
-            if (key.equals(ENCRYPTION_METADATA)) {
-                continue;
-            }
-
-            if (key.equals(SECRET_PROPERTY_NAME)) {
-                clonedData.put(key, service.decryptBase64String(encryptedSecret));
-                continue;
-            }
-
-            clonedData.put(key, entry.getValue());
-        }
-
-        return clonedData;
-    }
+//    private Map<String, Object> clone(Map<String, Object> input) {
+//
+//        if (!input.containsKey(ENCRYPTION_METADATA)) {
+//            return input;
+//        }
+//
+//        @SuppressWarnings("unchecked")
+//        Map<String, Object> metadata = (Map<String, Object>) input.get(ENCRYPTION_METADATA);
+//
+//        byte[] base64Salt = ((String) metadata.get(ENCRYPTION_KEY_SALT)).getBytes();
+//        Integer iterations = (Integer) metadata.get(ENCRYPTION_KEY_ITERATIONS);
+//        Integer size = (Integer) metadata.get(ENCRYPTION_KEY_SIZE);
+//
+//        EncryptionService service = new ApiKeySecretEncryptionService.Builder().setPassword(apiKeyCredentials.getSecret().toCharArray()).setKeySize(size)
+//                .setIterations(iterations).setBase64Salt(base64Salt).build();
+//
+//        String encryptedSecret = (String) input.get(SECRET_PROPERTY_NAME);
+//
+//        Map<String, Object> clonedData = new LinkedHashMap<String, Object>();
+//
+//        for (Map.Entry<String, Object> entry : input.entrySet()) {
+//
+//            String key = entry.getKey();
+//
+//            if (key.equals(ENCRYPTION_METADATA)) {
+//                continue;
+//            }
+//
+//            if (key.equals(SECRET_PROPERTY_NAME)) {
+//                clonedData.put(key, service.decryptBase64String(encryptedSecret));
+//                continue;
+//            }
+//
+//            clonedData.put(key, entry.getValue());
+//        }
+//
+//        return clonedData;
+//    }
 
 }

@@ -15,15 +15,12 @@
  */
 package com.okta.sdk.impl.ds;
 
-import com.okta.sdk.api.ApiKey;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.http.HttpMethod;
-import com.okta.sdk.impl.api.ApiKeyResolver;
-import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials;
-import com.okta.sdk.impl.authc.credentials.ClientCredentials;
+import com.okta.sdk.impl.api.ClientCredentialsResolver;
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.cache.DisabledCacheManager;
-import com.okta.sdk.impl.ds.api.DecryptApiKeySecretFilter;
 import com.okta.sdk.impl.ds.cache.CacheResolver;
 import com.okta.sdk.impl.ds.cache.DefaultCacheResolver;
 import com.okta.sdk.impl.ds.cache.ReadCacheFilter;
@@ -109,28 +106,27 @@ public class DefaultDataStore implements InternalDataStore {
     private final ResourceConverter resourceConverter;
     private final QueryStringFactory queryStringFactory;
     private final List<Filter> filters;
-    private final ApiKeyResolver apiKeyResolver;
+    private final ClientCredentialsResolver clientCredentialsResolver;
     private final BaseUrlResolver baseUrlResolver;
 
     public static final String USER_AGENT_STRING = UserAgent.getUserAgentString();
 
-    public DefaultDataStore(RequestExecutor requestExecutor, ApiKeyCredentials apiKeyCredentials, ApiKeyResolver apiKeyResolver) {
-        this(requestExecutor, DEFAULT_API_VERSION, apiKeyCredentials, apiKeyResolver);
+    public DefaultDataStore(RequestExecutor requestExecutor, ClientCredentialsResolver clientCredentialsResolver) {
+        this(requestExecutor, DEFAULT_API_VERSION, clientCredentialsResolver);
     }
 
-    public DefaultDataStore(RequestExecutor requestExecutor, int apiVersion, ApiKeyCredentials apiKeyCredentials, ApiKeyResolver apiKeyResolver) {
-        this(requestExecutor, "https://" + DEFAULT_SERVER_HOST + "/v" + apiVersion, apiKeyCredentials, apiKeyResolver);
+    public DefaultDataStore(RequestExecutor requestExecutor, int apiVersion, ClientCredentialsResolver clientCredentialsResolver) {
+        this(requestExecutor, "https://" + DEFAULT_SERVER_HOST + "/v" + apiVersion, clientCredentialsResolver);
     }
 
-    public DefaultDataStore(RequestExecutor requestExecutor, String baseUrl, ApiKeyCredentials apiKeyCredentials, ApiKeyResolver apiKeyResolver) {
-        this(requestExecutor, new DefaultBaseUrlResolver(baseUrl), apiKeyCredentials, apiKeyResolver, new DisabledCacheManager());
+    public DefaultDataStore(RequestExecutor requestExecutor, String baseUrl, ClientCredentialsResolver clientCredentialsResolver) {
+        this(requestExecutor, new DefaultBaseUrlResolver(baseUrl), clientCredentialsResolver, new DisabledCacheManager());
     }
 
-    public DefaultDataStore(RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, CacheManager cacheManager) {
+    public DefaultDataStore(RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentialsResolver clientCredentialsResolver, CacheManager cacheManager) {
         Assert.notNull(baseUrlResolver, "baseUrlResolver cannot be null");
         Assert.notNull(requestExecutor, "RequestExecutor cannot be null.");
-        Assert.notNull(clientCredentials, "clientCredentials cannot be null.");
-        Assert.notNull(apiKeyResolver, "apiKeyResolver cannot be null.");
+        Assert.notNull(clientCredentialsResolver, "clientCredentialsResolver cannot be null.");
         Assert.notNull(cacheManager, "CacheManager cannot be null.  Use the DisabledCacheManager if you wish to turn off caching.");
         this.requestExecutor = requestExecutor;
         this.baseUrlResolver = baseUrlResolver;
@@ -139,7 +135,7 @@ public class DefaultDataStore implements InternalDataStore {
         this.mapMarshaller = new JacksonMapMarshaller();
         this.queryStringFactory = new QueryStringFactory();
         this.cacheResolver = new DefaultCacheResolver(this.cacheManager, new DefaultCacheRegionNameResolver());
-        this.apiKeyResolver = apiKeyResolver;
+        this.clientCredentialsResolver = clientCredentialsResolver;
 
         ReferenceFactory referenceFactory = new ReferenceFactory();
         this.resourceConverter = new DefaultResourceConverter(referenceFactory);
@@ -148,9 +144,9 @@ public class DefaultDataStore implements InternalDataStore {
 
 //        this.filters.add(new EnlistmentFilter()); // FIXME: cannot support this yet
 
-        if(clientCredentials instanceof ApiKeyCredentials) {
-            this.filters.add(new DecryptApiKeySecretFilter((ApiKeyCredentials) clientCredentials));
-        }
+//        if(clientCredentials instanceof ApiKeyCredentials) { // FIXME: add this back in
+//            this.filters.add(new DecryptApiKeySecretFilter((ApiKeyCredentials) clientCredentials));
+//        }
 
         if (isCachingEnabled()) {
             this.filters.add(new ReadCacheFilter(this.baseUrlResolver, this.cacheResolver, COLLECTION_CACHING_ENABLED));
@@ -166,8 +162,8 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     @Override
-    public ApiKey getApiKey() {
-        return this.apiKeyResolver.getApiKey();
+    public ClientCredentials getClientCredentials() {
+        return this.clientCredentialsResolver.getClientCredentials();
     }
 
     @Override

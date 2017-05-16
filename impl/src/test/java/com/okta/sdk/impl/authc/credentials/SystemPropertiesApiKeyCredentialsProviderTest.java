@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.impl.authc.credentials;
 
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.test.RestoreSystemProperties;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;

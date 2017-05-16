@@ -13,28 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.api;
+package com.okta.sdk.authc.credentials;
 
 /**
- * An ApiKey is a secure random username/password pair (called an {@link #getBaseUrl() id} and
- * {@link #getSecret() secret}) that can be used by the account to make secure requests
- * to an API service.
- *
- * @see #getBaseUrl()
- * @see #getSecret()
+ * Credentials to be used when authenticating requests to the Okta API server.
  * @since 1.0.0
  */
-public interface ApiKey {
-
+public interface ClientCredentials {
     /**
-     * Returns the ApiKey ID that uniquely identifies this ApiKey among all others.
+     * Returns the ID that uniquely identifies these Client Credentials among all others.
      *
-     * @return the ApiKey ID that uniquely identifies this ApiKey among all others.
+     * @return the ID that uniquely identifies these Client Credentials among all others.
      */
     String getBaseUrl();
-
     /**
-     * Returns the ApiKey plaintext secret - a very secret, very private value that should never be disclosed to anyone
+     * Returns the client credentials plaintext secret - a very secret, very private value that should never be disclosed to anyone
      * other than the actual account holder.  The secret value is mostly used for computing HMAC digests, but can also
      * be used as a password for password-based key derivation and encryption.
      *
@@ -45,7 +38,7 @@ public interface ApiKey {
      * Please use this method with caution and only when necessary to ensure your API users' secrets remain
      * secure.
      *
-     * @return the ApiKey plaintext secret
+     * @return the client credentials plaintext secret
      */
     String getSecret();
 }

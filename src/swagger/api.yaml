@@ -51,7 +51,7 @@
       "description": "SSWS {API Token}",
       "in": "header",
       "name": "Authorization",
-      "type": "apiKey"
+      "type": "clientCredentials"
     }
   },
   "paths": {

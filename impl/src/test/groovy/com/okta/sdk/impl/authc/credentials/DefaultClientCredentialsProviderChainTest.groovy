@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.impl.authc.credentials
 
+import com.okta.sdk.authc.credentials.ClientCredentialsProvider
 import com.okta.sdk.impl.config.ClientConfiguration
 import org.testng.annotations.Test
 

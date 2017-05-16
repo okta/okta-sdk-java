@@ -22,12 +22,12 @@ import static org.testng.Assert.*
 /**
  * @since 1.0.0
  */
-class ClientApiKeyTest {
+class TokenClientCredentialsTest {
 
     @Test
     void testConstructorIdNull() {
         try {
-            new ClientApiKey(null, "secret");
+            new TokenClientCredentials(null, "secret");
             fail("Should have thrown due to null id.")
         } catch (IllegalArgumentException ex) {
             assertEquals(ex.getMessage(), "API key id cannot be null or empty.")
@@ -37,7 +37,7 @@ class ClientApiKeyTest {
     @Test
     void testConstructorSecretNull() {
         try {
-            new ClientApiKey("id", null);
+            new TokenClientCredentials("id", null);
             fail("Should have thrown due to null secret.")
         } catch (IllegalArgumentException ex) {
             assertEquals(ex.getMessage(), "API key secret cannot be null or empty.")
@@ -46,29 +46,29 @@ class ClientApiKeyTest {
 
     @Test
     void testConstructor() {
-        def apiKey = new ClientApiKey("fooId", "barSecret");
+        def apiKey = new TokenClientCredentials("fooId", "barSecret");
         org.testng.Assert.assertEquals(apiKey.getBaseUrl(), "fooId")
         org.testng.Assert.assertEquals(apiKey.getSecret(), "barSecret")
     }
 
     @Test
     void testToString() {
-        def apiKey = new ClientApiKey("fooId", "barSecret");
+        def apiKey = new TokenClientCredentials("fooId", "barSecret");
         org.testng.Assert.assertEquals(apiKey.toString(), "fooId")
     }
 
     @Test
     void testHashCode() {
-        def apiKey = new ClientApiKey("fooId", "barSecret");
+        def apiKey = new TokenClientCredentials("fooId", "barSecret");
         org.testng.Assert.assertEquals(apiKey.hashCode(), 97614977)
     }
 
     @Test
     void testEquals() {
-        def apiKey = new ClientApiKey("fooId", "barSecret");
-        def apiKey2 = new ClientApiKey("fooId", "barSecret");
-        def apiKey3 = new ClientApiKey("fooId", "nope");
-        def apiKey4 = new ClientApiKey("nope", "barSecret");
+        def apiKey = new TokenClientCredentials("fooId", "barSecret");
+        def apiKey2 = new TokenClientCredentials("fooId", "barSecret");
+        def apiKey3 = new TokenClientCredentials("fooId", "nope");
+        def apiKey4 = new TokenClientCredentials("nope", "barSecret");
 
         assertTrue(apiKey.equals(apiKey))
         assertTrue(apiKey.equals(apiKey2))

@@ -16,10 +16,8 @@
 package com.okta.sdk.impl.http.authc;
 
 import com.okta.sdk.client.AuthenticationScheme;
-import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials;
-import com.okta.sdk.impl.authc.credentials.ClientCredentials;
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.http.support.RequestAuthenticationException;
-import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,18 +45,15 @@ public class DefaultRequestAuthenticatorFactory implements RequestAuthenticatorF
     @SuppressWarnings("unchecked")
     public RequestAuthenticator create(AuthenticationScheme scheme, ClientCredentials clientCredentials) {
 
-        Assert.isInstanceOf(ApiKeyCredentials.class, clientCredentials, "clientCredentials must be of type ApiKeyCredentials.");
-        ApiKeyCredentials apiKeyCredentials = (ApiKeyCredentials) clientCredentials;
-
         if (scheme == null) {
             //By default, this factory creates a digest authentication when a scheme is not defined
-            return new SswsAuthenticator(apiKeyCredentials);
+            return new SswsAuthenticator(clientCredentials);
         }
 
         try {
             Class requestAuthenticatorClass = Classes.forName(scheme.getRequestAuthenticatorClassName());
-            Constructor<RequestAuthenticator> ctor = Classes.getConstructor(requestAuthenticatorClass, ApiKeyCredentials.class);
-            return Classes.instantiate(ctor, apiKeyCredentials);
+            Constructor<RequestAuthenticator> ctor = Classes.getConstructor(requestAuthenticatorClass, ClientCredentials.class);
+            return Classes.instantiate(ctor, clientCredentials);
         } catch (RuntimeException ex) {
             String errormessage = "There was an error instantiating " + scheme.getRequestAuthenticatorClassName();
             log.error(errormessage, ex);

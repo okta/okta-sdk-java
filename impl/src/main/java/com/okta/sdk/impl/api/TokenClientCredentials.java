@@ -15,14 +15,14 @@
  */
 package com.okta.sdk.impl.api;
 
-import com.okta.sdk.api.ApiKey;
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.lang.Strings;
 
 /**
  * This implementation represents the api key that is used to authenticate a Tenant in Okta.
  * @since 1.0.0
  */
-public class ClientApiKey implements ApiKey {
+public class TokenClientCredentials implements ClientCredentials {
 
     private final String id;
 
@@ -30,7 +30,7 @@ public class ClientApiKey implements ApiKey {
 
     private static final String METHOD_ERROR_MESSAGE = "This method is not accessible from a client api key. Only getBaseUrl() and getSecret() are available from this instance.";
 
-    public ClientApiKey(String id, String secret) {
+    public TokenClientCredentials(String id, String secret) {
         if (!Strings.hasText(id)) {
             throw new IllegalArgumentException("API key id cannot be null or empty.");
         }
@@ -64,8 +64,8 @@ public class ClientApiKey implements ApiKey {
         if (o == this) {
             return true;
         }
-        if (o instanceof ClientApiKey) {
-            ClientApiKey other = (ClientApiKey)o;
+        if (o instanceof TokenClientCredentials) {
+            TokenClientCredentials other = (TokenClientCredentials)o;
             return (id != null ? id.equals(other.id) : other.id == null) &&
                     (secret != null ? secret.equals(other.secret) : other.secret == null);
         }

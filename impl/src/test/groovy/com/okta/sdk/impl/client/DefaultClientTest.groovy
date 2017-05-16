@@ -17,12 +17,9 @@ package com.okta.sdk.impl.client
 
 import com.okta.sdk.cache.CacheManager
 import com.okta.sdk.client.AuthenticationScheme
-import com.okta.sdk.impl.api.ApiKeyResolver
-import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials
+import com.okta.sdk.impl.api.ClientCredentialsResolver
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
-import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import com.okta.sdk.impl.test.RestoreSecurityManager
-import com.okta.sdk.impl.test.RestoreSystemProperties
 import com.okta.sdk.impl.util.BaseUrlResolver
 import org.testng.annotations.Listeners
 import org.testng.annotations.Test
@@ -32,7 +29,6 @@ import java.security.Permission
 import static org.mockito.Mockito.*
 import static org.testng.Assert.assertEquals
 import static org.testng.Assert.fail
-import static com.okta.sdk.impl.test.RestoreEnvironmentVariables.setEnvironmentVariable;
 
 /**
  * @since 1.0.0
@@ -44,8 +40,7 @@ class DefaultClientTest {
     @Test
     void testCreateRequestExecutor() {
 
-        def apiKeyCredentials = mock(ApiKeyCredentials)
-        def apiKeyResolver = mock(ApiKeyResolver)
+        def apiKeyResolver = mock(ClientCredentialsResolver)
         def cacheManager = mock(CacheManager)
         def requestAuthenticatorFactory = mock(RequestAuthenticatorFactory)
         def baseUrlResolver = mock(BaseUrlResolver)
@@ -68,7 +63,7 @@ class DefaultClientTest {
         })
 
         try {
-            new DefaultClient(apiKeyCredentials, apiKeyResolver, baseUrlResolver, null, cacheManager, AuthenticationScheme.SSWS, requestAuthenticatorFactory, 3600)
+            new DefaultClient(apiKeyResolver, baseUrlResolver, null, cacheManager, AuthenticationScheme.SSWS, requestAuthenticatorFactory, 3600)
             fail("shouldn't be here")
         } catch (Exception e) {
             assertEquals e.getMessage(), "Unable to find the '" + className +

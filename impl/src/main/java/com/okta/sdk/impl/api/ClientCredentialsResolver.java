@@ -15,13 +15,14 @@
  */
 package com.okta.sdk.impl.api;
 
-import com.okta.sdk.api.ApiKey;
+
+import com.okta.sdk.authc.credentials.ClientCredentials;
 
 /**
  * @since 1.0.0
  */
-public interface ApiKeyResolver {
+public interface ClientCredentialsResolver {
 
-    ApiKey getApiKey();
+    ClientCredentials getClientCredentials();
 
 }
