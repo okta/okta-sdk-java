@@ -32,8 +32,8 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
         if ("okta.client.apiKey.id".equals(dottedPropertyName)) {
             return "OKTA_API_KEY_ID";
         }
-        if ("okta.client.apiKey.secret".equals(dottedPropertyName)) {
-            return "OKTA_API_KEY_SECRET";
+        if ("okta.client.apiKey.token".equals(dottedPropertyName)) {
+            return "OKTA_API_KEY_TOKEN";
         }
         if ("okta.client.apiKey.file".equals(dottedPropertyName)) {
             return "OKTA_API_KEY_FILE";
@@ -67,8 +67,8 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
         if ("OKTA_API_KEY_ID".equals(envVarName)) {
             return "okta.client.apiKey.id";
         }
-        if ("OKTA_API_KEY_SECRET".equals(envVarName)) {
-            return "okta.client.apiKey.secret";
+        if ("OKTA_API_KEY_TOKEN".equals(envVarName)) {
+            return "okta.client.apiKey.token";
         }
         if ("OKTA_API_KEY_FILE".equals(envVarName)) {
             return "okta.client.apiKey.file";

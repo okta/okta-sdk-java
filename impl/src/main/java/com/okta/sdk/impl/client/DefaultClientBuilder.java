@@ -119,8 +119,8 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         // check to see if property value is null before setting value
         // if != null, allow it to override previously set values
-        if (props.get(DEFAULT_CLIENT_API_KEY_SECRET_PROPERTY_NAME) != null) {
-            clientConfig.setApiKeySecret(props.get(DEFAULT_CLIENT_API_KEY_SECRET_PROPERTY_NAME));
+        if (props.get(DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME) != null) {
+            clientConfig.setApiToken(props.get(DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME));
         }
 
         if (props.get(DEFAULT_CLIENT_CACHE_MANAGER_ENABLED_PROPERTY_NAME) != null) {

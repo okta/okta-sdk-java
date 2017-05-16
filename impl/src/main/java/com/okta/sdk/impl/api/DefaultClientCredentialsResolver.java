@@ -30,7 +30,7 @@ public class DefaultClientCredentialsResolver implements ClientCredentialsResolv
     }
 
     public DefaultClientCredentialsResolver(final ClientConfiguration clientConfiguration) {
-        this(new TokenClientCredentials(clientConfiguration.getApiKeySecret()));
+        this(new TokenClientCredentials(clientConfiguration.getApiToken()));
     }
 
     @Override
