@@ -45,7 +45,7 @@ class DefaultClientBuilderTest {
     void testConfigureApiKey() {
         // remove key.txt from src/test/resources and this test will fail
         assertEquals client.dataStore.getClientCredentials().baseUrl, "12"
-        assertEquals client.dataStore.getClientCredentials().secret, "13"
+        assertEquals client.dataStore.getClientCredentials().getCredentials(), "13"
     }
 
     @Test
@@ -105,7 +105,7 @@ class DefaultClientBuilderTestCustomCredentials{
     @Test
     void testConfigureCredentials() {
         assertEquals client.dataStore.getClientCredentials.getBaseHref, id
-        assertEquals client.dataStore.getClientCredentials.secret, secret
+        assertEquals client.dataStore.getClientCredentials.getCredentials, secret
     }
 
     @Test
@@ -113,14 +113,14 @@ class DefaultClientBuilderTestCustomCredentials{
         def credentialsId = UUID.randomUUID().toString()
         def credentialsSecret = UUID.randomUUID().toString()
 
-        ClientCredentials customCredentials = new ClientCredentials() {
+        ClientCredentials customCredentials = new ClientCredentials<String>() {
 
             String getBaseUrl() {
                 return credentialsId
             }
 
             @Override
-            String getSecret() {
+            String getCredentials() {
                 return credentialsSecret
             }
         }
@@ -141,17 +141,11 @@ class DefaultClientBuilderTestCustomCredentials{
 
     @Test
     void testCustomClientCredentialsAllowedWithApiKeyResolver(){
-        def credentialsId = UUID.randomUUID().toString()
         def credentialsSecret = UUID.randomUUID().toString()
 
-        ClientCredentials customCredentials = new ClientCredentials() {
-
-            String getBaseUrl() {
-                return credentialsId
-            }
-
+        ClientCredentials customCredentials = new ClientCredentials<String>() {
             @Override
-            String getSecret() {
+            String getCredentials() {
                 return credentialsSecret
             }
         }
@@ -167,7 +161,6 @@ class DefaultClientBuilderTestCustomCredentials{
         builder.setApiKeyResolver(apiKeyResolver)
         def testClient = builder.build()
 
-        assertEquals testClient.dataStore.clientCredentials.baseUrl, keyId
-        assertEquals testClient.dataStore.clientCredentials.secret, keySecret
+        assertEquals testClient.dataStore.clientCredentials.credentials, keySecret
     }
 }

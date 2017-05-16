@@ -32,7 +32,7 @@ public class ApiKeyFileCredentialsProviderTest {
 
         assertNotNull(clientCredentials);
         assertEquals(clientCredentials.baseUrl, "1234")
-        assertEquals(clientCredentials.secret, "5678")
+        assertEquals(clientCredentials.credentials, "5678")
 
     }
 

@@ -39,7 +39,7 @@ public class EnvironmentVariableCredentialsProviderTest {
         ClientCredentials clientCredentials = new EnvironmentVariableCredentialsProvider().getClientCredentials();
 
         assertNotNull(clientCredentials);
-        assertEquals(clientCredentials.getSecret(), secret);
+        assertEquals(clientCredentials.getCredentials(), secret);
 
     }
 }
