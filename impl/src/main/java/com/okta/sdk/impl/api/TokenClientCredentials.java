@@ -24,22 +24,15 @@ import com.okta.sdk.lang.Strings;
  */
 public class TokenClientCredentials implements ClientCredentials<String> {
 
-    private final String id;
-
     private final String secret;
 
     private static final String METHOD_ERROR_MESSAGE = "This method is not accessible from a client api key. Only getBaseUrl() and getCredentials() are available from this instance.";
 
-    public TokenClientCredentials(String id, String secret) {
+    public TokenClientCredentials(String secret) {
         if (!Strings.hasText(secret)) {
             throw new IllegalArgumentException("API key secret cannot be null or empty.");
         }
-        this.id = id;
         this.secret = secret;
-    }
-
-    public String getBaseUrl() {
-        return id;
     }
 
     public String getCredentials() {
@@ -48,13 +41,9 @@ public class TokenClientCredentials implements ClientCredentials<String> {
 
     @Override
     public String toString() {
-        return getBaseUrl(); //never ever print the secret
+        return "<TokenClientCredentials>"; //never ever print the secret
     }
 
-    @Override
-    public int hashCode() {
-        return this.id != null ? id.hashCode() : 0;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -63,8 +52,7 @@ public class TokenClientCredentials implements ClientCredentials<String> {
         }
         if (o instanceof TokenClientCredentials) {
             TokenClientCredentials other = (TokenClientCredentials)o;
-            return (id != null ? id.equals(other.id) : other.id == null) &&
-                    (secret != null ? secret.equals(other.secret) : other.secret == null);
+            return (secret != null ? secret.equals(other.secret) : other.secret == null);
         }
 
         return false;

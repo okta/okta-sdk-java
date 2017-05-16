@@ -48,9 +48,7 @@ public class ClientCredentialsProviderChainTest {
 
         ClientCredentials returned = chain.getClientCredentials()
 
-        assertEquals(firstCredentials.baseUrl, returned.baseUrl)
         assertEquals(firstCredentials.credentials, returned.credentials)
-        assertNotEquals(secondCredentials.baseUrl, returned.baseUrl)
         assertNotEquals(secondCredentials.credentials, returned.credentials)
 
 
@@ -86,7 +84,6 @@ public class ClientCredentialsProviderChainTest {
 
         ClientCredentials returned = chain.getClientCredentials()
 
-        assertEquals(thirdCredentials.baseUrl, returned.baseUrl)
         assertEquals(thirdCredentials.credentials, returned.credentials)
 
     }
@@ -143,15 +140,9 @@ public class ClientCredentialsProviderChainTest {
 
     private static ClientCredentials buildClientCredentials() {
 
-        String id = UUID.randomUUID().toString();
         String secret = UUID.randomUUID().toString();
 
         return new ClientCredentials() {
-
-
-            String getBaseUrl() {
-                return id
-            }
 
             @Override
             String getCredentials() {

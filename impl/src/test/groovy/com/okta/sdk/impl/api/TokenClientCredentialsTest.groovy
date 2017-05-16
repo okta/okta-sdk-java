@@ -27,7 +27,7 @@ class TokenClientCredentialsTest {
     @Test
     void testConstructorSecretNull() {
         try {
-            new TokenClientCredentials("id", null);
+            new TokenClientCredentials(null);
             fail("Should have thrown due to null secret.")
         } catch (IllegalArgumentException ex) {
             assertEquals(ex.getMessage(), "API key secret cannot be null or empty.")
@@ -36,34 +36,25 @@ class TokenClientCredentialsTest {
 
     @Test
     void testConstructor() {
-        def apiKey = new TokenClientCredentials("fooId", "barSecret");
-        org.testng.Assert.assertEquals(apiKey.getBaseUrl(), "fooId")
+        def apiKey = new TokenClientCredentials("barSecret");
         org.testng.Assert.assertEquals(apiKey.getCredentials(), "barSecret")
     }
 
     @Test
     void testToString() {
-        def apiKey = new TokenClientCredentials("fooId", "barSecret");
-        org.testng.Assert.assertEquals(apiKey.toString(), "fooId")
-    }
-
-    @Test
-    void testHashCode() {
-        def apiKey = new TokenClientCredentials("fooId", "barSecret");
-        org.testng.Assert.assertEquals(apiKey.hashCode(), 97614977)
+        def apiKey = new TokenClientCredentials( "barSecret");
+        org.testng.Assert.assertEquals(apiKey.toString(), "<TokenClientCredentials>")
     }
 
     @Test
     void testEquals() {
-        def apiKey = new TokenClientCredentials("fooId", "barSecret");
-        def apiKey2 = new TokenClientCredentials("fooId", "barSecret");
-        def apiKey3 = new TokenClientCredentials("fooId", "nope");
-        def apiKey4 = new TokenClientCredentials("nope", "barSecret");
+        def apiKey = new TokenClientCredentials("barSecret");
+        def apiKey2 = new TokenClientCredentials("barSecret");
+        def apiKey3 = new TokenClientCredentials("nope");
 
         assertTrue(apiKey.equals(apiKey))
         assertTrue(apiKey.equals(apiKey2))
         assertFalse(apiKey.equals(apiKey3))
-        assertFalse(apiKey.equals(apiKey4))
         assertFalse(apiKey.equals("anything"))
     }
 }
