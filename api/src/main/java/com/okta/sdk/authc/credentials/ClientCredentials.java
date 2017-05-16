@@ -21,12 +21,6 @@ package com.okta.sdk.authc.credentials;
  */
 public interface ClientCredentials {
     /**
-     * Returns the ID that uniquely identifies these Client Credentials among all others.
-     *
-     * @return the ID that uniquely identifies these Client Credentials among all others.
-     */
-    String getBaseUrl();
-    /**
      * Returns the client credentials plaintext secret - a very secret, very private value that should never be disclosed to anyone
      * other than the actual account holder.  The secret value is mostly used for computing HMAC digests, but can also
      * be used as a password for password-based key derivation and encryption.
