@@ -47,11 +47,11 @@ class DefaultEnvVarNameConverterTest {
     void testPropNameForApiKeySecretEnvVar() {
         def factory = new DefaultEnvVarNameConverter()
 
-        def name = 'OKTA_API_KEY_SECRET'
+        def name = 'OKTA_API_KEY_TOKEN'
 
         def propName = factory.toDottedPropertyName(name);
 
-        assertEquals propName, 'okta.client.apiKey.secret'
+        assertEquals propName, 'okta.client.apiKey.token'
     }
 
     @Test

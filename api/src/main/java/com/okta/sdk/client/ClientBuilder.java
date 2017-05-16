@@ -60,11 +60,11 @@ import com.okta.sdk.cache.CacheManager;
  *         previously discovered value.  The {@code okta.client.apiKey.file} system property String can be an
  *         absolute file path, or it can be a URL or a classpath value by using the {@code url:} or
  *         {@code classpath:} prefixes respectively.</li>
- *     <li>The system properties {@code okta.client.apiKey.id} and {@code okta.client.apiKey.secret}.  If either of
+ *     <li>The system properties {@code okta.client.apiKey.id} and {@code okta.client.apiKey.token}.  If either of
  *         these values are present, they override any previously discovered values.</li>
  * </ol>
  *
- * <p><b>SECURITY NOTICE:</b> While the {@code okta.client.apiKey.secret} system property may be used to represent your
+ * <p><b>SECURITY NOTICE:</b> While the {@code okta.client.apiKey.token} system property may be used to represent your
  * API Key Secret as mentioned above, this is not recommended: process listings on a machine will expose process
  * arguments (like system properties) and expose the secret value to anyone that can read process listings.  As
  * always, secret values should never be exposed to anyone other than the person that owns the API Key.</p>
@@ -208,7 +208,7 @@ import com.okta.sdk.cache.CacheManager;
  */
 public interface ClientBuilder {
 
-    String DEFAULT_CLIENT_API_KEY_SECRET_PROPERTY_NAME = "okta.client.apiKey.secret";
+    String DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME = "okta.client.apiKey.token";
     String DEFAULT_CLIENT_CACHE_MANAGER_ENABLED_PROPERTY_NAME = "okta.client.cacheManager.enabled";
     String DEFAULT_CLIENT_CACHE_MANAGER_TTL_PROPERTY_NAME = "okta.client.cacheManager.defaultTtl";
     String DEFAULT_CLIENT_CACHE_MANAGER_TTI_PROPERTY_NAME = "okta.client.cacheManager.defaultTti";
