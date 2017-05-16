@@ -36,7 +36,6 @@ import java.util.Map;
 public class ClientConfiguration {
 
     private String apiKeyFile;
-    private String apiKeyId;
     private String apiKeySecret;
     private ClientCredentialsResolver clientCredentialsResolver;
     private boolean cacheManagerEnabled;
@@ -59,14 +58,6 @@ public class ClientConfiguration {
 
     public void setApiKeyFile(String apiKeyFile) {
         this.apiKeyFile = apiKeyFile;
-    }
-
-    public String getApiKeyId() {
-        return apiKeyId;
-    }
-
-    public void setApiKeyId(String apiKeyId) {
-        this.apiKeyId = apiKeyId;
     }
 
     public String getApiKeySecret() {
@@ -218,7 +209,6 @@ public class ClientConfiguration {
     public String toString() {
         return "ClientConfiguration{" +
                 "apiKeyFile='" + apiKeyFile + '\'' +
-                ", apiKeyId='" + apiKeyId + '\'' +
                 ", apiKeySecret='" + apiKeySecret + '\'' +
                 ", cacheManagerTtl=" + cacheManagerTtl +
                 ", cacheManagerTti=" + cacheManagerTti +

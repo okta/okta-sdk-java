@@ -37,11 +37,6 @@ public class ConfigurationCredentialsProvider extends AbstractApiKeyCredentialsP
     protected Properties loadProperties() {
         Properties props = new Properties();
 
-        String keyId = clientConfiguration.getApiKeyId();
-        if (Strings.hasText(keyId)) {
-            props.put(DEFAULT_ID_PROPERTY_NAME, keyId);
-        }
-
         String secret = clientConfiguration.getApiKeySecret();
         if (Strings.hasText(secret)) {
             props.put(DEFAULT_SECRET_PROPERTY_NAME, secret);
