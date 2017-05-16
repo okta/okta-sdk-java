@@ -17,7 +17,7 @@ package com.okta.sdk.impl.http.httpclient
 
 import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.Proxy
-import com.okta.sdk.impl.authc.credentials.ClientCredentials
+import com.okta.sdk.authc.credentials.ClientCredentials
 import com.okta.sdk.impl.http.Request
 import com.okta.sdk.impl.http.RequestExecutor
 import com.okta.sdk.impl.http.Response

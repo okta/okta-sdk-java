@@ -15,9 +15,9 @@
  */
 package com.okta.sdk.impl.authc.credentials;
 
-import com.okta.sdk.api.ApiKey;
-import com.okta.sdk.api.ApiKeyBuilder;
-import com.okta.sdk.impl.api.ClientApiKey;
+import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.sdk.authc.credentials.ClientCredentialsProvider;
+import com.okta.sdk.impl.api.TokenClientCredentials;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.lang.Strings;
@@ -49,18 +49,16 @@ public abstract class AbstractApiKeyCredentialsProvider implements ClientCredent
         String id = getPropertyValue(props, DEFAULT_ID_PROPERTY_NAME); // TODO: remove this
         String secret = getPropertyValue(props, DEFAULT_SECRET_PROPERTY_NAME);
 
-        ApiKey apiKey = createApiKey(id, secret);
-
-        return new ApiKeyCredentials(apiKey);
+        return new TokenClientCredentials(id, secret);
     }
 
     protected abstract Properties loadProperties();
 
-    protected ApiKey createApiKey(String id, String secret) {
+    protected ClientCredentials createApiKey(String id, String secret) {
 
         if (!Strings.hasText(id)) {
             String msg = "Unable to find an API Key 'id', either from explicit configuration (for example, " +
-                    ApiKeyBuilder.class.getSimpleName() + ".setApiKeyId) or from fallback locations:\n\n" +
+                    "TODO" + ".setApiKeyId) or from fallback locations:\n\n" +
                     "1) system property okta.client.apiKey.id\n" +
                     "2) resource file path or URL specified by system property okta.client.apiKey.file\n" +
                     "3) resource file path or URL specified by environment variable OKTA_API_KEY_FILE\n" +
@@ -74,7 +72,7 @@ public abstract class AbstractApiKeyCredentialsProvider implements ClientCredent
 
         if (!Strings.hasText(secret)) {
             String msg = "Unable to find an API Key 'secret', either from explicit configuration (for example, " +
-                    ApiKeyBuilder.class.getSimpleName() + ".setApiKeySecret) or from fallback locations:\n\n" +
+                    "TODO" + ".setApiKeySecret) or from fallback locations:\n\n" +
                     "1) system property okta.client.apiKey.secret\n" +
                     "2) resource file path or URL specified by system property okta.client.apiKey.file\n" +
                     "3) resource file path or URL specified by environment variable OKTA_API_KEY_FILE\n" +
@@ -86,7 +84,7 @@ public abstract class AbstractApiKeyCredentialsProvider implements ClientCredent
             throw new IllegalStateException(msg);
         }
 
-        return new ClientApiKey(id, secret);
+        return new TokenClientCredentials(id, secret);
     }
 
 

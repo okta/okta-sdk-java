@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.client;
 
-import com.okta.sdk.api.ApiKey;
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 
 /**
@@ -222,7 +222,6 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_PROXY_HOST_PROPERTY_NAME = "okta.client.proxy.host";
     String DEFAULT_CLIENT_PROXY_USERNAME_PROPERTY_NAME = "okta.client.proxy.username";
     String DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME = "okta.client.proxy.password";
-    String DEFAULT_OKTA_ENABLED_PROPERTY_NAME = "okta.enabled";
 
     /**
      * Allows specifying an {@code ApiKey} instance directly instead of relying on the
@@ -233,9 +232,8 @@ public interface ClientBuilder {
      *
      * @param apiKey the ApiKey to use to authenticate requests to the Okta API server.
      * @return the ClientBuilder instance for method chaining.
-     * @see com.okta.sdk.api.ApiKeyBuilder
      */
-    ClientBuilder setApiKey(ApiKey apiKey);
+    ClientBuilder setClientCredentials(ClientCredentials clientCredentials);
 
     /**
      * Sets the HTTP proxy to be used when communicating with the Okta API server.  For example:

@@ -15,14 +15,13 @@
  */
 package com.okta.sdk.impl.client;
 
-import com.okta.sdk.api.ApiKey;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.Proxy;
 import com.okta.sdk.ds.DataStore;
-import com.okta.sdk.impl.api.ApiKeyResolver;
-import com.okta.sdk.impl.authc.credentials.ClientCredentials;
+import com.okta.sdk.impl.api.ClientCredentialsResolver;
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.ds.DefaultDataStore;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.http.RequestExecutor;
@@ -54,9 +53,7 @@ public abstract class AbstractClient implements Client {
      * Instantiates a new Client instance that will communicate with the Okta REST API.  See the class-level
      * JavaDoc for a usage example.
      *
-     * @param clientCredentials    the Okta account credentials that will be used to authenticate the client with
-     *                             Okta's API server
-     * @param apiKeyResolver       Okta API Key resolver
+     * @param clientCredentialsResolver       Okta API Key resolver
      * @param baseUrlResolver      Okta base URL resolver
      * @param proxy                the HTTP proxy to be used when communicating with the Okta API server (can be
      *                             null)
@@ -67,23 +64,22 @@ public abstract class AbstractClient implements Client {
      * @param requestAuthenticatorFactory factory used to handle creating autentication requests
      * @param connectionTimeout    connection timeout in seconds
      */
-    public AbstractClient(ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
-        Assert.notNull(clientCredentials, "clientCredentials argument cannot be null.");
-        Assert.notNull(apiKeyResolver, "apiKeyResolver argument cannot be null.");
+    public AbstractClient(ClientCredentialsResolver clientCredentialsResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
+        Assert.notNull(clientCredentialsResolver, "clientCredentialsResolver argument cannot be null.");
         Assert.notNull(baseUrlResolver, "baseUrlResolver argument cannot be null.");
         Assert.isTrue(connectionTimeout >= 0, "connectionTimeout cannot be a negative number.");
-        RequestExecutor requestExecutor = createRequestExecutor(clientCredentials, proxy, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
-        this.dataStore = createDataStore(requestExecutor, baseUrlResolver, clientCredentials, apiKeyResolver, cacheManager);
+        RequestExecutor requestExecutor = createRequestExecutor(clientCredentialsResolver.getClientCredentials(), proxy, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
+        this.dataStore = createDataStore(requestExecutor, baseUrlResolver, clientCredentialsResolver, cacheManager);
     }
 
 
-    protected InternalDataStore createDataStore(RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, CacheManager cacheManager) {
-        return new DefaultDataStore(requestExecutor, baseUrlResolver, clientCredentials, apiKeyResolver, cacheManager);
+    protected InternalDataStore createDataStore(RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentialsResolver clientCredentialsResolver, CacheManager cacheManager) {
+        return new DefaultDataStore(requestExecutor, baseUrlResolver, clientCredentialsResolver, cacheManager);
     }
 
     @Override
-    public ApiKey getApiKey() {
-        return this.dataStore.getApiKey();
+    public ClientCredentials getClientCredentials() {
+        return this.dataStore.getClientCredentials();
     }
 
     @Override

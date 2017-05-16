@@ -15,10 +15,8 @@
  */
 package com.okta.sdk.impl.ds
 
-import com.okta.sdk.api.ApiKey
-import com.okta.sdk.impl.api.ApiKeyResolver
-import com.okta.sdk.impl.api.DefaultApiKeyResolver
-import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials
+import com.okta.sdk.authc.credentials.ClientCredentials
+import com.okta.sdk.impl.api.ClientCredentialsResolver
 import com.okta.sdk.impl.http.HttpHeaders
 import com.okta.sdk.impl.http.RequestExecutor
 import com.okta.sdk.impl.http.Response
@@ -44,9 +42,8 @@ class DefaultDataStoreTest {
     @Test
     void testGetResource_Expanded_InvalidArguments() {
         def requestExecutor = mock(RequestExecutor)
-        def apiKeyCredentials = mock(ApiKeyCredentials)
-        def apiKeyResolver = mock(ApiKeyResolver)
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyCredentials, apiKeyResolver)
+        def apiKeyResolver = mock(ClientCredentialsResolver)
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
         def emptyOptions = mock(DefaultOptions)
         def resourceData = Resource
         def href = "http://api.okta.com/v1/directories/2B6PLkZ8AGvWlziq18JJ62"
@@ -76,17 +73,15 @@ class DefaultDataStoreTest {
     @Test
     void testApiKeyResolverReturnsCorrectApiKey() {
         def requestExecutor = mock(RequestExecutor)
-        def apiKeyForCredentials = mock(ApiKey)
-        def apiKeyForResolver = mock(ApiKey)
+        def clientCredentialsResolver = mock(ClientCredentialsResolver)
+        def clientCredentials = mock(ClientCredentials)
 
-        def apiKeyCredentials = new ApiKeyCredentials(apiKeyForCredentials)
-        def apiKeyResolver = new DefaultApiKeyResolver(apiKeyForResolver)
+        when(clientCredentialsResolver.getClientCredentials()).thenReturn(clientCredentials)
 
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyCredentials, apiKeyResolver)
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", clientCredentialsResolver)
 
-        assertNotEquals(defaultDataStore.getApiKey(), apiKeyForCredentials)
-        assertEquals(defaultDataStore.getApiKey(), apiKeyForResolver)
-
+        assertEquals(defaultDataStore.getClientCredentials(), clientCredentials)
+        assertNotEquals(defaultDataStore.getClientCredentials(), clientCredentialsResolver)
     }
 
     @Test
@@ -94,11 +89,10 @@ class DefaultDataStoreTest {
 
         def resourceHref = "https://api.okta.com/v1/testResource"
         def requestExecutor = mock(RequestExecutor)
-        def apiKeyCredentials = mock(ApiKeyCredentials)
-        def apiKeyResolver = mock(ApiKeyResolver)
+        def apiKeyResolver = mock(ClientCredentialsResolver)
         def response = mock(Response)
         def responseBody = '{"name": "jcoder"}'
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyCredentials, apiKeyResolver)
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
 
         when(requestExecutor.executeRequest(Mockito.any())).thenReturn(response)
         when(response.hasBody()).thenReturn(true)

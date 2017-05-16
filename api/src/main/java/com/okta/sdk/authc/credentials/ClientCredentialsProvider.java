@@ -13,25 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.impl.api;
-
-import com.okta.sdk.api.ApiKey;
-import com.okta.sdk.lang.Assert;
+package com.okta.sdk.authc.credentials;
 
 /**
  * @since 1.0.0
  */
-public class DefaultApiKeyResolver implements ApiKeyResolver {
+public interface ClientCredentialsProvider {
 
-    private ApiKey apiKey;
+    ClientCredentials getClientCredentials();
 
-    public DefaultApiKeyResolver(ApiKey apiKey) {
-        Assert.notNull(apiKey, "apiKey must not be null.");
-        this.apiKey = apiKey;
-    }
-
-    @Override
-    public ApiKey getApiKey() {
-        return apiKey;
-    }
 }

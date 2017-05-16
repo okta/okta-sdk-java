@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.ds;
 
-import com.okta.sdk.api.ApiKey;
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.query.Options;
 import com.okta.sdk.resource.Resource;
@@ -67,11 +67,11 @@ public interface DataStore {
     <T extends Resource, O extends Options> T getResource(String href, Class<T> clazz, O options);
 
     /**
-     * Returns the ApiKey used to authenticate HTTPS requests sent to the Okta API server.
+     * Returns the ClientCredentials used to authenticate HTTPS requests sent to the Okta API server.
      *
-     * @return the ApiKey used to authenticate HTTPS requests sent to the Okta API server.
+     * @return the ClientCredentials used to authenticate HTTPS requests sent to the Okta API server.
      */
-    ApiKey getApiKey();
+    ClientCredentials getClientCredentials();
 
     /**
      * Returns the CacheManager used to improve data store performance.

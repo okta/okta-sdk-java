@@ -19,8 +19,7 @@ package {{package}};
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Proxy;
-import com.okta.sdk.impl.api.ApiKeyResolver;
-import com.okta.sdk.impl.authc.credentials.ClientCredentials;
+import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 
@@ -49,9 +48,7 @@ public class {{classname}} extends AbstractClient implements {{interfaceClassnam
     * Instantiates a new Client instance that will communicate with the Okta REST API.  See the class-level
     * JavaDoc for a usage example.
     *
-    * @param clientCredentials           the Okta account credentials that will be used to authenticate the client with
-    *                                    Okta's API server
-    * @param apiKeyResolver              Okta API Key resolver
+    * @param clientCredentialsResolver   Okta API Key resolver
     * @param baseUrlResolver             Okta base URL resolver
     * @param proxy                       the HTTP proxy to be used when communicating with the Okta API server (can be
     *                                    null)
@@ -61,8 +58,8 @@ public class {{classname}} extends AbstractClient implements {{interfaceClassnam
     * @param requestAuthenticatorFactory
     * @param connectionTimeout
     */
-    public DefaultClient(ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
-        super(clientCredentials, apiKeyResolver, baseUrlResolver, proxy, cacheManager, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
+    public DefaultClient(ClientCredentialsResolver clientCredentialsResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
+        super(clientCredentialsResolver, baseUrlResolver, proxy, cacheManager, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
     }
 
   {{#operation}}{{^vendorExtensions.moved}}
