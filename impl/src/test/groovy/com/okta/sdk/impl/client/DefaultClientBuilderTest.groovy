@@ -114,10 +114,6 @@ class DefaultClientBuilderTestCustomCredentials{
 
         ClientCredentials customCredentials = new ClientCredentials<String>() {
 
-            String getBaseUrl() {
-                return credentialsId
-            }
-
             @Override
             String getCredentials() {
                 return credentialsSecret
