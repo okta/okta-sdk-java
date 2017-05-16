@@ -26,7 +26,6 @@ import com.okta.sdk.client.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.authc.credentials.ClientCredentials;
-import com.okta.sdk.authc.credentials.ClientCredentialsProvider;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.JSONPropertiesSource;
 import com.okta.sdk.impl.config.OptionalPropertiesSource;
@@ -120,13 +119,6 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         // check to see if property value is null before setting value
         // if != null, allow it to override previously set values
-        if (props.get(DEFAULT_CLIENT_API_KEY_FILE_PROPERTY_NAME) != null) {
-            String apiKeyFile = props.get(DEFAULT_CLIENT_API_KEY_FILE_PROPERTY_NAME);
-            // remove backslashes that can end up in file when it's written programmatically, e.g. in a test
-            apiKeyFile = apiKeyFile.replace("\\:", ":");
-            clientConfig.setApiKeyFile(apiKeyFile);
-        }
-
         if (props.get(DEFAULT_CLIENT_API_KEY_SECRET_PROPERTY_NAME) != null) {
             clientConfig.setApiKeySecret(props.get(DEFAULT_CLIENT_API_KEY_SECRET_PROPERTY_NAME));
         }
