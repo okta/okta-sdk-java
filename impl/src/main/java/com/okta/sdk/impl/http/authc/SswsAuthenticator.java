@@ -34,6 +34,6 @@ public class SswsAuthenticator implements RequestAuthenticator {
 
     @Override
     public void authenticate(Request request) throws RequestAuthenticationException {
-        request.getHeaders().set(AUTHORIZATION_HEADER, AUTHENTICATION_SCHEME + " " + clientCredentials.getSecret());
+        request.getHeaders().set(AUTHORIZATION_HEADER, AUTHENTICATION_SCHEME + " " + clientCredentials.getCredentials());
     }
 }

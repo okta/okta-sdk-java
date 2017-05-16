@@ -38,7 +38,7 @@ class TokenClientCredentialsTest {
     void testConstructor() {
         def apiKey = new TokenClientCredentials("fooId", "barSecret");
         org.testng.Assert.assertEquals(apiKey.getBaseUrl(), "fooId")
-        org.testng.Assert.assertEquals(apiKey.getSecret(), "barSecret")
+        org.testng.Assert.assertEquals(apiKey.getCredentials(), "barSecret")
     }
 
     @Test

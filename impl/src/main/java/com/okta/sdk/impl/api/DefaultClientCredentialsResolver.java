@@ -17,7 +17,6 @@ package com.okta.sdk.impl.api;
 
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.config.ClientConfiguration;
-import com.okta.sdk.lang.Assert;
 
 /**
  * @since 1.0.0
@@ -34,13 +33,10 @@ public class DefaultClientCredentialsResolver implements ClientCredentialsResolv
 //        Assert.notNull(clientConfiguration, "clientConfiguration must not be null.");
 
         // FIXME: clean this up, move it out into a different class
-        this(new ClientCredentials() {
-            public String getBaseUrl() {
-                return null;
-            }
+        this(new ClientCredentials<String>() {
 
             @Override
-            public String getSecret() {
+            public String getCredentials() {
                 return clientConfiguration.getApiKeySecret();
             }
         });

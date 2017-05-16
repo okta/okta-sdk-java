@@ -82,7 +82,7 @@ public class DecryptApiKeySecretFilter implements Filter {
 //        Integer iterations = (Integer) metadata.get(ENCRYPTION_KEY_ITERATIONS);
 //        Integer size = (Integer) metadata.get(ENCRYPTION_KEY_SIZE);
 //
-//        EncryptionService service = new ApiKeySecretEncryptionService.Builder().setPassword(apiKeyCredentials.getSecret().toCharArray()).setKeySize(size)
+//        EncryptionService service = new ApiKeySecretEncryptionService.Builder().setPassword(apiKeyCredentials.getCredentials().toCharArray()).setKeySize(size)
 //                .setIterations(iterations).setBase64Salt(base64Salt).build();
 //
 //        String encryptedSecret = (String) input.get(SECRET_PROPERTY_NAME);

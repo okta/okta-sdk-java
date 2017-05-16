@@ -19,7 +19,7 @@ package com.okta.sdk.authc.credentials;
  * Credentials to be used when authenticating requests to the Okta API server.
  * @since 1.0.0
  */
-public interface ClientCredentials {
+public interface ClientCredentials<T> {
     /**
      * Returns the client credentials plaintext secret - a very secret, very private value that should never be disclosed to anyone
      * other than the actual account holder.  The secret value is mostly used for computing HMAC digests, but can also
@@ -34,5 +34,5 @@ public interface ClientCredentials {
      *
      * @return the client credentials plaintext secret
      */
-    String getSecret();
+    T getCredentials();
 }
