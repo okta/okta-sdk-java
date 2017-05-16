@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.impl.client;
 
-import com.okta.sdk.api.ApiKey;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.cache.CacheManagerBuilder;
@@ -24,11 +23,10 @@ import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Proxy;
-import com.okta.sdk.impl.api.ApiKeyResolver;
-import com.okta.sdk.impl.api.DefaultApiKeyResolver;
-import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials;
-import com.okta.sdk.impl.authc.credentials.ClientCredentials;
-import com.okta.sdk.impl.authc.credentials.ClientCredentialsProvider;
+import com.okta.sdk.impl.api.ClientCredentialsResolver;
+import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
+import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.sdk.authc.credentials.ClientCredentialsProvider;
 import com.okta.sdk.impl.authc.credentials.DefaultClientCredentialsProviderChain;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.JSONPropertiesSource;
@@ -77,7 +75,6 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
 
-    private ApiKey apiKey;
     private Proxy proxy;
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
@@ -204,13 +201,6 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
-    public ClientBuilder setApiKey(ApiKey apiKey) {
-        Assert.notNull(apiKey, "apiKey cannot be null.");
-        this.apiKey = apiKey;
-        return this;
-    }
-
-    @Override
     public ClientBuilder setProxy(Proxy proxy) {
         if (proxy == null) {
             throw new IllegalArgumentException("proxy argument cannot be null.");
@@ -238,21 +228,22 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this;
     }
 
-    public ClientBuilder setRequestAuthenticatorFactory(RequestAuthenticatorFactory factory) {
-        Assert.notNull(factory, "factory argument cannot be null");
-        this.clientConfig.setRequestAuthenticatorFactory(factory);
-        return this;
-    }
-
+    @Override
     public ClientBuilder setClientCredentials(ClientCredentials clientCredentials) {
         Assert.isInstanceOf(ClientCredentials.class, clientCredentials);
         this.clientCredentials = clientCredentials;
         return this;
     }
 
-    public ClientBuilder setApiKeyResolver(ApiKeyResolver apiKeyResolver) {
-        Assert.notNull(apiKeyResolver, "apiKeyResolver must not be null.");
-        this.clientConfig.setApiKeyResolver(apiKeyResolver);
+    public ClientBuilder setRequestAuthenticatorFactory(RequestAuthenticatorFactory factory) {
+        Assert.notNull(factory, "factory argument cannot be null");
+        this.clientConfig.setRequestAuthenticatorFactory(factory);
+        return this;
+    }
+
+    public ClientBuilder setApiKeyResolver(ClientCredentialsResolver clientCredentialsResolver) {
+        Assert.notNull(clientCredentialsResolver, "clientCredentialsResolver must not be null.");
+        this.clientConfig.setClientCredentialsResolver(clientCredentialsResolver);
         return this;
     }
 
@@ -291,14 +282,12 @@ public class DefaultClientBuilder implements ClientBuilder {
                     this.clientConfig.getProxyUsername(), this.clientConfig.getProxyPassword());
         }
 
-        ApiKeyResolver apiKeyResolver = this.clientConfig.getApiKeyResolver();
+        ClientCredentialsResolver clientCredentialsResolver = this.clientConfig.getClientCredentialsResolver();
 
         ClientCredentials clientCredentials;
 
         if (this.clientCredentials != null) {
             clientCredentials = this.clientCredentials;
-        } else if (this.apiKey != null) {
-            clientCredentials = new ApiKeyCredentials(this.apiKey);
         } else {
             ClientCredentialsProvider clientCredentialsProvider = new DefaultClientCredentialsProviderChain(clientConfig);
             clientCredentials = clientCredentialsProvider.getClientCredentials();
@@ -306,9 +295,8 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         this.clientCredentials = clientCredentials;
 
-        if (apiKeyResolver == null) {
-            Assert.isInstanceOf(ApiKeyCredentials.class, clientCredentials, "An ApiKeyResolver must be configured for ClientCredentials other than ApiKeyCredentials.");
-            apiKeyResolver = new DefaultApiKeyResolver(((ApiKeyCredentials) clientCredentials).getApiKey());
+        if (clientCredentialsResolver == null) {
+            clientCredentialsResolver = new DefaultClientCredentialsResolver(clientCredentials);
         }
 
             BaseUrlResolver baseUrlResolver = this.clientConfig.getBaseUrlResolver();
@@ -318,7 +306,7 @@ public class DefaultClientBuilder implements ClientBuilder {
             baseUrlResolver = new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl());
         }
 
-        return new DefaultClient(clientCredentials, apiKeyResolver, baseUrlResolver, this.proxy, this.cacheManager,
+        return new DefaultClient(clientCredentialsResolver, baseUrlResolver, this.proxy, this.cacheManager,
                 this.clientConfig.getAuthenticationScheme(), this.clientConfig.getRequestAuthenticatorFactory(), this.clientConfig.getConnectionTimeout());
     }
 

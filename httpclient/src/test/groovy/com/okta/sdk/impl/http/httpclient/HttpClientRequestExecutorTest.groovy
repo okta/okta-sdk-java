@@ -15,9 +15,8 @@
  */
 package com.okta.sdk.impl.http.httpclient
 
-import com.okta.sdk.api.ApiKey
+import com.okta.sdk.authc.credentials.ClientCredentials
 import com.okta.sdk.client.AuthenticationScheme
-import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials
 import org.apache.http.HttpEntity
 import org.apache.http.HttpResponse
 import org.apache.http.StatusLine
@@ -33,15 +32,14 @@ class HttpClientRequestExecutorTest {
     @Test //asserts https://github.com/stormpath/stormpath-sdk-java/issues/124
     void testToSdkResponseWithNullContentString() {
 
-        def apiKeyCredentials = mock(ApiKeyCredentials)
+        def clientCredentials = mock(ClientCredentials)
 
         HttpResponse httpResponse = mock(HttpResponse)
         StatusLine statusLine = mock(StatusLine)
         HttpEntity entity = mock(HttpEntity)
         InputStream entityContent = mock(InputStream)
-        ApiKey apiKey = mock(ApiKey)
 
-        when(apiKeyCredentials.getApiKey()).thenReturn(apiKey)
+        when(clientCredentials.getSecret()).thenReturn("token-foo")
         when(httpResponse.getStatusLine()).thenReturn(statusLine)
         when(statusLine.getStatusCode()).thenReturn(200)
         when(httpResponse.getAllHeaders()).thenReturn(null)
@@ -50,7 +48,7 @@ class HttpClientRequestExecutorTest {
         when(entity.getContent()).thenReturn(entityContent)
         when(entity.getContentLength()).thenReturn(-1l)
 
-        def e = new HttpClientRequestExecutor(apiKeyCredentials, null, AuthenticationScheme.SSWS, null, 20000) {
+        def e = new HttpClientRequestExecutor(clientCredentials, null, AuthenticationScheme.SSWS, null, 20000) {
             @Override
             protected byte[] toBytes(HttpEntity he) throws IOException {
                 return null

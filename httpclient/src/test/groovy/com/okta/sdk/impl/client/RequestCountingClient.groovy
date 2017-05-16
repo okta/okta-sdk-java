@@ -18,9 +18,8 @@ package com.okta.sdk.impl.client
 import com.okta.sdk.cache.CacheManager
 import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.Proxy
-import com.okta.sdk.impl.api.ApiKeyResolver
-import com.okta.sdk.impl.authc.credentials.ClientCredentials
-import com.okta.sdk.impl.authc.credentials.ApiKeyCredentials
+import com.okta.sdk.authc.credentials.ClientCredentials
+import com.okta.sdk.impl.api.ClientCredentialsResolver
 import com.okta.sdk.impl.ds.InternalDataStore
 import com.okta.sdk.impl.http.Request
 import com.okta.sdk.impl.http.RequestExecutor
@@ -42,12 +41,12 @@ public class RequestCountingClient extends DefaultClient {
 
     private AtomicInteger count = new AtomicInteger();
 
-    public RequestCountingClient(ApiKeyCredentials apiKeyCredentials, ApiKeyResolver apiKeyResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, int connectionTimeout) {
-        super(apiKeyCredentials, apiKeyResolver, baseUrlResolver, proxy, cacheManager, authenticationScheme, null, connectionTimeout)
+    public RequestCountingClient(ClientCredentialsResolver apiKeyResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, int connectionTimeout) {
+        super(apiKeyResolver, baseUrlResolver, proxy, cacheManager, authenticationScheme, null, connectionTimeout)
     }
 
     @Override
-    protected InternalDataStore createDataStore(final RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentials clientCredentials, ApiKeyResolver apiKeyResolver, CacheManager cacheManager) {
+    protected InternalDataStore createDataStore(final RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentialsResolver apiKeyResolver, CacheManager cacheManager) {
 
         RequestExecutor countingExecutor = new RequestExecutor() {
             @Override

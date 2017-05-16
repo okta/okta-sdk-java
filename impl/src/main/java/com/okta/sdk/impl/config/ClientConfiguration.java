@@ -17,7 +17,7 @@ package com.okta.sdk.impl.config;
 
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.client.AuthenticationScheme;
-import com.okta.sdk.impl.api.ApiKeyResolver;
+import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 
@@ -38,7 +38,7 @@ public class ClientConfiguration {
     private String apiKeyFile;
     private String apiKeyId;
     private String apiKeySecret;
-    private ApiKeyResolver apiKeyResolver;
+    private ClientCredentialsResolver clientCredentialsResolver;
     private boolean cacheManagerEnabled;
     private long cacheManagerTtl;
     private long cacheManagerTti;
@@ -77,12 +77,12 @@ public class ClientConfiguration {
         this.apiKeySecret = apiKeySecret;
     }
 
-    public ApiKeyResolver getApiKeyResolver() {
-        return apiKeyResolver;
+    public ClientCredentialsResolver getClientCredentialsResolver() {
+        return clientCredentialsResolver;
     }
 
-    public void setApiKeyResolver(ApiKeyResolver apiKeyResolver) {
-        this.apiKeyResolver = apiKeyResolver;
+    public void setClientCredentialsResolver(ClientCredentialsResolver clientCredentialsResolver) {
+        this.clientCredentialsResolver = clientCredentialsResolver;
     }
 
     public AuthenticationScheme getAuthenticationScheme() {
