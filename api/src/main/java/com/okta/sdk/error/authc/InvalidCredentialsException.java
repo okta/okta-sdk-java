@@ -19,13 +19,13 @@ import com.okta.sdk.error.Error;
 import com.okta.sdk.resource.ResourceException;
 
 /**
- * Thrown when the an Authentication Request lacks an ApiKey.
+ *  A sub-class of {@link ResourceException} representing an attempt to login using an malformed credentials.
  *
  * @since 1.0.0
  */
-public class MissingApiKeyException extends ResourceException {
+public class InvalidCredentialsException extends ResourceException {
 
-    public MissingApiKeyException(Error error) {
+    public InvalidCredentialsException(Error error) {
         super(error);
     }
 }

@@ -44,7 +44,7 @@ public class Quickstart {
         // Instantiate a builder for your Client. If needed, settings like Proxy and Caching can be defined here.
         ClientBuilder builder = Clients.builder();
 
-        // No need to define anything else; build the Client instance. The ApiKey information will be automatically sought
+        // No need to define anything else; build the Client instance. The ClientCredential information will be automatically found
         // in pre-defined locations.
         Client client = builder.build();
 

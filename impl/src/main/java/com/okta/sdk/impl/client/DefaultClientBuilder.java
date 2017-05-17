@@ -246,7 +246,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this;
     }
 
-    public ClientBuilder setApiKeyResolver(ClientCredentialsResolver clientCredentialsResolver) {
+    public ClientBuilder setClientCredentialsResolver(ClientCredentialsResolver clientCredentialsResolver) {
         Assert.notNull(clientCredentialsResolver, "clientCredentialsResolver must not be null.");
         this.clientConfig.setClientCredentialsResolver(clientCredentialsResolver);
         return this;
