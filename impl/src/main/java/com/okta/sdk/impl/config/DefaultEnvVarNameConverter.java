@@ -25,32 +25,12 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
         Assert.hasText(dottedPropertyName, "dottedPropertyName argument cannot be null or empty.");
         dottedPropertyName = Strings.trimWhitespace(dottedPropertyName);
 
-        //special cases (camel case):
-        if ("okta.client.baseUrl".equals(dottedPropertyName)) {
-            return "OKTA_CLIENT_BASEURL";
-        }
-        if ("okta.client.apiKey.id".equals(dottedPropertyName)) {
-            return "OKTA_API_KEY_ID";
-        }
-        if ("okta.client.apiKey.token".equals(dottedPropertyName)) {
-            return "OKTA_API_KEY_TOKEN";
-        }
-        if ("okta.client.apiKey.file".equals(dottedPropertyName)) {
-            return "OKTA_API_KEY_FILE";
-        }
-        if ("okta.client.authenticationScheme".equals(dottedPropertyName)) {
-            return "OKTA_AUTHENTICATION_SCHEME";
-        }
-
         StringBuilder sb = new StringBuilder();
 
         for(char c : dottedPropertyName.toCharArray()) {
             if (c == '.') {
                 sb.append('_');
                 continue;
-            }
-            if (Character.isUpperCase(c)) {
-                sb.append('_');
             }
             sb.append(Character.toUpperCase(c));
         }
@@ -64,32 +44,14 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
         envVarName = Strings.trimWhitespace(envVarName);
 
         //special cases (camel case):
-        if ("OKTA_API_KEY_ID".equals(envVarName)) {
-            return "okta.client.apiKey.id";
+        if ("OKTA_APICLIENT_TOKEN".equals(envVarName)) {
+            return "okta.apiClient.token";
         }
-        if ("OKTA_API_KEY_TOKEN".equals(envVarName)) {
-            return "okta.client.apiKey.token";
+        if ("OKTA_APICLIENT_AUTHENTICATIONSCHEME".equals(envVarName)) {
+            return "okta.apiClient.authenticationScheme";
         }
-        if ("OKTA_API_KEY_FILE".equals(envVarName)) {
-            return "okta.client.apiKey.file";
-        }
-        if ("OKTA_AUTHENTICATION_SCHEME".equals(envVarName)) {
-            return "okta.client.authenticationScheme";
-        }
-        if ("OKTA_CLIENT_BASEURL".equals(envVarName)) {
-            return "okta.client.baseUrl";
-        }
-        if ("OKTA_WEB_VERIFYEMAIL_ENABLED".equals((envVarName))) {
-            return "okta.web.verifyEmail.enabled";
-        }
-        if ("OKTA_WEB_FORGOTPASSWORD_ENABLED".equals((envVarName))) {
-            return "okta.web.forgotPassword.enabled";
-        }
-        if ("OKTA_WEB_CHANGEPASSWORD_ENABLED".equals((envVarName))) {
-            return "okta.web.changePassword.enabled";
-        }
-        if ("OKTA_WEB_IDSITE_ENABLED".equals((envVarName))) {
-            return "okta.web.idSite.enabled";
+        if ("OKTA_APICLIENT_ORGURL".equals(envVarName)) {
+            return "okta.apiClient.orgUrl";
         }
 
         //default cases:

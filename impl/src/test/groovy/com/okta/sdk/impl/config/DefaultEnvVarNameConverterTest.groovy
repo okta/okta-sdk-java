@@ -29,7 +29,7 @@ class DefaultEnvVarNameConverterTest {
 
         def envVarName = factory.toEnvVarName(name);
 
-        assertEquals envVarName, 'OKTA_API_KEY_ID'
+        assertEquals envVarName, 'OKTA_CLIENT_APIKEY_ID'
     }
 
     @Test
@@ -40,39 +40,39 @@ class DefaultEnvVarNameConverterTest {
 
         def propName = factory.toDottedPropertyName(name);
 
-        assertEquals propName, 'okta.client.apiKey.id'
+        assertEquals propName, 'okta.api.key.id'
     }
 
     @Test
     void testPropNameForApiKeySecretEnvVar() {
         def factory = new DefaultEnvVarNameConverter()
 
-        def name = 'OKTA_API_KEY_TOKEN'
+        def name = 'OKTA_APICLIENT_TOKEN'
 
         def propName = factory.toDottedPropertyName(name);
 
-        assertEquals propName, 'okta.client.apiKey.token'
+        assertEquals propName, 'okta.apiClient.token'
     }
 
     @Test
     void testPropNameForApiKeyFileEnvVar() {
         def factory = new DefaultEnvVarNameConverter()
 
-        def name = 'OKTA_API_KEY_FILE'
+        def name = 'OKTA_CONFIG_FILE'
 
         def propName = factory.toDottedPropertyName(name);
 
-        assertEquals propName, 'okta.client.apiKey.file'
+        assertEquals propName, 'okta.config.file'
     }
 
     @Test
     void testPropNameForNormalEnvVar() {
         def factory = new DefaultEnvVarNameConverter()
 
-        def name = 'OKTA_AUTHENTICATION_SCHEME'
+        def name = 'OKTA_APICLIENT_AUTHENTICATIONSCHEME'
 
         def propName = factory.toDottedPropertyName(name);
 
-        assertEquals propName, 'okta.client.authenticationScheme'
+        assertEquals propName, 'okta.apiClient.authenticationScheme'
     }
 }

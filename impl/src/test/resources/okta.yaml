@@ -15,7 +15,7 @@
 #
 
 okta:
-  client:
+  apiClient:
     proxy:
       host: "proxyyaml"
       username: "fooyaml"
