@@ -27,9 +27,13 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.config.ClientConfiguration;
+import com.okta.sdk.impl.config.DefaultEnvVarNameConverter;
+import com.okta.sdk.impl.config.EnvVarNameConverter;
+import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
 import com.okta.sdk.impl.config.OptionalPropertiesSource;
 import com.okta.sdk.impl.config.PropertiesSource;
 import com.okta.sdk.impl.config.ResourcePropertiesSource;
+import com.okta.sdk.impl.config.SystemPropertiesSource;
 import com.okta.sdk.impl.config.YAMLPropertiesSource;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.io.ClasspathResource;
@@ -72,40 +76,56 @@ import java.util.concurrent.TimeUnit;
 public class DefaultClientBuilder implements ClientBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
+    private static final EnvVarNameConverter envVarNameConverter = new DefaultEnvVarNameConverter();
 
     private Proxy proxy;
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
 
-    private static final String USER_HOME = System.getProperty("user.home") + File.separatorChar;
-    private static final String OKTA_PROPERTIES = "okta.yaml";
+    public static final  String ENVVARS_TOKEN  = "envvars";
+    public static final  String SYSPROPS_TOKEN = "sysprops";
+    private static final String OKTA_YAML      = "okta.yaml";
+    private static final String USER_HOME      = System.getProperty("user.home") + File.separatorChar;
+
     private static final String[] DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS = {
-            ClasspathResource.SCHEME_PREFIX + "com/okta/sdk/config/" + OKTA_PROPERTIES,
-            ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
-            USER_HOME + ".okta" + File.separatorChar + "default.yaml",
-            USER_HOME + OKTA_PROPERTIES
+                                                 ClasspathResource.SCHEME_PREFIX + "com/okta/sdk/config/" + OKTA_YAML,
+                                                 ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
+                                                 USER_HOME + ".okta" + File.separatorChar + "default.yaml",
+                                                 ENVVARS_TOKEN,
+                                                 SYSPROPS_TOKEN
     };
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
 
     public DefaultClientBuilder() {
-        Collection<PropertiesSource> sources = new ArrayList<PropertiesSource>();
-        ResourceFactory resourceFactory = new DefaultResourceFactory();
+        this(new DefaultResourceFactory());
+    }
+
+    DefaultClientBuilder(ResourceFactory resourceFactory) {
+        Collection<PropertiesSource> sources = new ArrayList<>();
 
         for (String location : DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS) {
-            Resource resource = resourceFactory.createResource(location);
 
-            PropertiesSource wrappedSource;
-            if (Strings.endsWithIgnoreCase(location, ".yaml") ||
-                    Strings.endsWithIgnoreCase(location, ".yml")) {
-                wrappedSource = new YAMLPropertiesSource(resource);
+            if (ENVVARS_TOKEN.equalsIgnoreCase(location)) {
+                sources.add(EnvironmentVariablesPropertiesSource.oktaFilteredPropertiesSource());
+            }
+            else if (SYSPROPS_TOKEN.equalsIgnoreCase(location)) {
+                sources.add(SystemPropertiesSource.oktaFilteredPropertiesSource());
             }
             else {
-                wrappedSource = new ResourcePropertiesSource(resource);
-            }
+                Resource resource = resourceFactory.createResource(location);
 
-            PropertiesSource propertiesSource = new OptionalPropertiesSource(wrappedSource);
-            sources.add(propertiesSource);
+                PropertiesSource wrappedSource;
+                if (Strings.endsWithIgnoreCase(location, ".yaml") ||
+                        Strings.endsWithIgnoreCase(location, ".yml")) {
+                    wrappedSource = new YAMLPropertiesSource(resource);
+                } else {
+                    wrappedSource = new ResourcePropertiesSource(resource);
+                }
+
+                PropertiesSource propertiesSource = new OptionalPropertiesSource(wrappedSource);
+                sources.add(propertiesSource);
+            }
         }
 
         Map<String, String> props = new LinkedHashMap<>();
@@ -117,19 +137,19 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         // check to see if property value is null before setting value
         // if != null, allow it to override previously set values
-        if (props.get(DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME) != null) {
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME))) {
             clientConfig.setApiToken(props.get(DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME));
         }
 
-        if (props.get(DEFAULT_CLIENT_CACHE_MANAGER_ENABLED_PROPERTY_NAME) != null) {
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_MANAGER_ENABLED_PROPERTY_NAME))) {
             clientConfig.setCacheManagerEnabled(Boolean.valueOf(props.get(DEFAULT_CLIENT_CACHE_MANAGER_ENABLED_PROPERTY_NAME)));
         }
 
-        if (props.get(DEFAULT_CLIENT_CACHE_MANAGER_TTL_PROPERTY_NAME) != null) {
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_MANAGER_TTL_PROPERTY_NAME))) {
             clientConfig.setCacheManagerTtl(Long.valueOf(props.get(DEFAULT_CLIENT_CACHE_MANAGER_TTL_PROPERTY_NAME)));
         }
 
-        if (props.get(DEFAULT_CLIENT_CACHE_MANAGER_TTI_PROPERTY_NAME) != null) {
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_MANAGER_TTI_PROPERTY_NAME))) {
             clientConfig.setCacheManagerTti(Long.valueOf(props.get(DEFAULT_CLIENT_CACHE_MANAGER_TTI_PROPERTY_NAME)));
         }
 
@@ -141,10 +161,10 @@ public class DefaultClientBuilder implements ClientBuilder {
                 String cacheTti = props.get(DEFAULT_CLIENT_CACHE_MANAGER_CACHES_PROPERTY_NAME + "." + cacheClass + ".tti");
                 String cacheTtl = props.get(DEFAULT_CLIENT_CACHE_MANAGER_CACHES_PROPERTY_NAME + "." + cacheClass + ".ttl");
                 CacheConfigurationBuilder cacheBuilder = Caches.forResource(Classes.forName(cacheClass));
-                if (cacheTti != null) {
+                if (Strings.hasText(cacheTti)) {
                     cacheBuilder.withTimeToIdle(Long.valueOf(cacheTti), TimeUnit.SECONDS);
                 }
-                if (cacheTtl != null) {
+                if (Strings.hasText(cacheTtl)) {
                     cacheBuilder.withTimeToLive(Long.valueOf(cacheTtl), TimeUnit.SECONDS);
                 }
                 if (!clientConfig.getCacheManagerCaches().containsKey(cacheClass)) {
@@ -153,34 +173,34 @@ public class DefaultClientBuilder implements ClientBuilder {
             }
         }
 
-        if (props.get(DEFAULT_CLIENT_BASE_URL_PROPERTY_NAME) != null) {
-            String baseUrl = props.get(DEFAULT_CLIENT_BASE_URL_PROPERTY_NAME);
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME))) {
+            String baseUrl = props.get(DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME);
             // remove backslashes that can end up in file when it's written programmatically, e.g. in a test
             baseUrl = baseUrl.replace("\\:", ":");
             clientConfig.setBaseUrl(baseUrl);
         }
 
-        if (props.get(DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME) != null) {
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME))) {
             clientConfig.setConnectionTimeout(Integer.valueOf(props.get(DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME)));
         }
 
-        if (props.get(DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME) != null) {
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME))) {
             clientConfig.setAuthenticationScheme(Enum.valueOf(AuthenticationScheme.class, props.get(DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME)));
         }
 
-        if (props.get(DEFAULT_CLIENT_PROXY_PORT_PROPERTY_NAME) != null) {
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_PROXY_PORT_PROPERTY_NAME))) {
             clientConfig.setProxyPort(Integer.valueOf(props.get(DEFAULT_CLIENT_PROXY_PORT_PROPERTY_NAME)));
         }
 
-        if (props.get(DEFAULT_CLIENT_PROXY_HOST_PROPERTY_NAME) != null) {
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_PROXY_HOST_PROPERTY_NAME))) {
             clientConfig.setProxyHost(props.get(DEFAULT_CLIENT_PROXY_HOST_PROPERTY_NAME));
         }
 
-        if (props.get(DEFAULT_CLIENT_PROXY_USERNAME_PROPERTY_NAME) != null) {
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_PROXY_USERNAME_PROPERTY_NAME))) {
             clientConfig.setProxyUsername(props.get(DEFAULT_CLIENT_PROXY_USERNAME_PROPERTY_NAME));
         }
 
-        if (props.get(DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME) != null) {
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME))) {
             clientConfig.setProxyPassword(props.get(DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME));
         }
     }
@@ -269,16 +289,17 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         ClientCredentialsResolver clientCredentialsResolver = this.clientConfig.getClientCredentialsResolver();
 
-        if (this.clientCredentials != null) {
+        if (clientCredentialsResolver == null && this.clientCredentials != null) {
             clientCredentialsResolver = new DefaultClientCredentialsResolver(this.clientCredentials);
-        } else if (this.clientConfig != null) {
+        }
+        else if (clientCredentialsResolver == null) {
             clientCredentialsResolver = new DefaultClientCredentialsResolver(clientConfig);
         }
 
-            BaseUrlResolver baseUrlResolver = this.clientConfig.getBaseUrlResolver();
+        BaseUrlResolver baseUrlResolver = this.clientConfig.getBaseUrlResolver();
 
         if (baseUrlResolver == null) {
-            Assert.notNull(this.clientConfig.getBaseUrl(), "Okta base url must not be null.");
+            Assert.notNull(this.clientConfig.getBaseUrl(), "Okta org url must not be null.");
             baseUrlResolver = new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl());
         }
 

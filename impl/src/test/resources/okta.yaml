@@ -17,7 +17,7 @@
 okta:
   apiClient:
     token: 13
-    baseUrl: https://api.okta.com/v42
+    orgUrl: https://api.okta.com/v42
     connectionTimeout: 10
     proxy:
       host: "proxyyaml"

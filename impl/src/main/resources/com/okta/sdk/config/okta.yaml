@@ -14,16 +14,18 @@
 # limitations under the License.
 #
 
-okta.client.clientCredentials.file:
-okta.client.clientCredentials.id:
-okta.client.clientCredentials.secret:
-okta.client.cacheManager.enabled: true
-okta.client.cacheManager.defaultTtl: 300
-okta.client.cacheManager.defaultTti: 300
-okta.client.baseUrl: https://dev-259824.oktapreview.com
-okta.client.connectionTimeout: 30
-okta.client.authenticationScheme: SSWS
-okta.client.proxy.port:
-okta.client.proxy.host:
-okta.client.proxy.username:
-okta.client.proxy.password:
+okta:
+  apiClient:
+    token:
+    connectionTimeout: 30
+    authenticationScheme: SSWS
+    cacheManager:
+      enabled: true
+      defaultTtl: 300
+      defaultTti: 300
+    baseUrl:
+    proxy:
+      port:
+      host:
+      username:
+      password:
