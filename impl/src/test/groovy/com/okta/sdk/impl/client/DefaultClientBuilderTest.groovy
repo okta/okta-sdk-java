@@ -17,38 +17,34 @@ package com.okta.sdk.impl.client
 
 import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.Clients
-import com.okta.sdk.impl.api.TokenClientCredentials
-import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
-import com.okta.sdk.authc.credentials.ClientCredentials
+import com.okta.sdk.impl.io.DefaultResourceFactory
+import com.okta.sdk.impl.io.Resource
+import com.okta.sdk.impl.io.ResourceFactory
 import com.okta.sdk.impl.util.BaseUrlResolver
-import org.testng.annotations.BeforeMethod
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
 import org.testng.annotations.Test
 
 import static org.testng.Assert.*
+import static org.mockito.Mockito.*
 
 class DefaultClientBuilderTest {
 
-    def builder, client
-
-    @BeforeMethod
-    void before() {
-        builder = Clients.builder()
-        client = builder.build()
-    }
-
     @Test
     void testBuilder() {
-        assertTrue(builder instanceof DefaultClientBuilder)
+        assertTrue(Clients.builder() instanceof DefaultClientBuilder)
     }
 
     @Test
     void testConfigureApiKey() {
         // remove key.txt from src/test/resources and this test will fail
+        def client = new DefaultClientBuilder(noDefaultYamlResourceFactory()).build()
         assertEquals client.dataStore.getClientCredentials().getCredentials(), "13"
     }
 
     @Test
     void testConfigureBaseProperties() {
+        def builder = new DefaultClientBuilder(noDefaultYamlResourceFactory())
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
         assertEquals clientBuilder.clientConfiguration.baseUrl, "https://api.okta.com/v42"
         assertEquals clientBuilder.clientConfiguration.connectionTimeout, 10
@@ -57,6 +53,7 @@ class DefaultClientBuilderTest {
 
     @Test
     void testConfigureProxy() {
+        def builder = Clients.builder()
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
         assertEquals clientBuilder.clientConfiguration.proxyHost, "proxyyaml" // from yaml
         assertEquals clientBuilder.clientConfiguration.proxyPort, 9009 // from yaml
@@ -80,82 +77,25 @@ class DefaultClientBuilderTest {
 
     @Test
     void testDefaultBaseUrlResolver(){
+        def client = new DefaultClientBuilder(noDefaultYamlResourceFactory()).build()
         assertEquals(client.dataStore.baseUrlResolver.getBaseUrl(), "https://api.okta.com/v42")
     }
-}
 
-class DefaultClientBuilderTestCustomCredentials{
-
-    def builder, client, clientCredentials, id, secret
-
-    @BeforeMethod
-    void before() {
-
-        id = UUID.randomUUID().toString()
-        secret = UUID.randomUUID().toString()
-
-        clientCredentials = new TokenClientCredentials(id, secret)
-
-        builder = new DefaultClientBuilder()
-        builder.setClientCredentials(clientCredentials)
-        client = builder.build()
-    }
-
-    @Test
-    void testConfigureCredentials() {
-        assertEquals client.dataStore.getClientCredentials.getBaseHref, id
-        assertEquals client.dataStore.getClientCredentials.getCredentials, secret
-    }
-
-    @Test
-    void testCustomClientCredentialsRequireApiKeyResolver(){
-        def credentialsId = UUID.randomUUID().toString()
-        def credentialsSecret = UUID.randomUUID().toString()
-
-        ClientCredentials customCredentials = new ClientCredentials<String>() {
-
+    static ResourceFactory noDefaultYamlResourceFactory() {
+        def resourceFactory = spy(new DefaultResourceFactory())
+        doAnswer(new Answer<Resource>() {
             @Override
-            String getCredentials() {
-                return credentialsSecret
+            Resource answer(InvocationOnMock invocation) throws Throwable {
+                if (invocation.arguments[0].toString().endsWith("default.yaml")) {
+                    return mock(Resource)
+                }
+                else {
+                    return invocation.callRealMethod()
+                }
             }
-        }
+        })
+        .when(resourceFactory).createResource(anyString())
 
-
-        builder = new DefaultClientBuilder()
-        builder.setClientCredentials(customCredentials)
-
-        try {
-            client = builder.build()
-            fail("Builder should require ClientCredentialsResolver if non-ApiKeyCredentials are supplied")
-        }
-        catch(Exception ex){
-            assertTrue(ex.getMessage().contains("An ClientCredentialsResolver must be configured for ClientCredentials other than ApiKeyCredentials."))
-        }
-
-    }
-
-    @Test
-    void testCustomClientCredentialsAllowedWithApiKeyResolver(){
-        def credentialsSecret = UUID.randomUUID().toString()
-
-        ClientCredentials customCredentials = new ClientCredentials<String>() {
-            @Override
-            String getCredentials() {
-                return credentialsSecret
-            }
-        }
-
-        def keyId = UUID.randomUUID().toString()
-        def keySecret = UUID.randomUUID().toString()
-
-        def apiKey = new TokenClientCredentials(keyId, keySecret)
-        def apiKeyResolver = new DefaultClientCredentialsResolver(apiKey)
-
-        builder = new DefaultClientBuilder()
-        builder.setClientCredentials(customCredentials)
-        builder.setApiKeyResolver(apiKeyResolver)
-        def testClient = builder.build()
-
-        assertEquals testClient.dataStore.clientCredentials.credentials, keySecret
+        return resourceFactory
     }
 }

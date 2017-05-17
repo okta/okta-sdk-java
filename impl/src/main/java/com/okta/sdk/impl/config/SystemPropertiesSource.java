@@ -49,4 +49,22 @@ public class SystemPropertiesSource implements PropertiesSource {
 
         return properties;
     }
+
+    public static PropertiesSource oktaFilteredPropertiesSource() {
+        return new OktaFilteredSystemPropertiesSource();
+    }
+
+    private static class OktaFilteredSystemPropertiesSource extends FilteredPropertiesSource {
+
+        private OktaFilteredSystemPropertiesSource() {
+            super(new EnvironmentVariablesPropertiesSource(),
+                    (key, value) -> {
+                            if (key.startsWith("okta.")) {
+                                return new String[]{key, value};
+                            }
+                            return null;
+                    }
+            );
+        }
+    }
 }
