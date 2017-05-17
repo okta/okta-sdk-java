@@ -16,8 +16,6 @@
 package com.okta.swagger.codegen;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.swagger.codegen.CliOption;
-import io.swagger.codegen.CodegenConstants;
 import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenParameter;
@@ -34,7 +32,6 @@ import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
-import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
@@ -51,15 +48,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
-        implements BeanValidationFeatures, PerformBeanValidationFeatures, GzipFeatures
-{
+public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen {
 
     private final String codeGenName;
-
 
     static final String MEDIA_TYPE = "mediaType";
 
@@ -88,20 +81,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         invokerPackage = "com.okta.sdk.invoker";
         apiPackage = "com.okta.sdk.client";
 
-        cliOptions.add(CliOption.newBoolean(PARCELABLE_MODEL, "Whether to generate models for Android that implement Parcelable with the okhttp-gson library."));
-        cliOptions.add(CliOption.newBoolean(USE_BEANVALIDATION, "Use BeanValidation API annotations"));
-        cliOptions.add(CliOption.newBoolean(PERFORM_BEANVALIDATION, "Perform BeanValidation"));
-        cliOptions.add(CliOption.newBoolean(USE_GZIP_FEATURE, "Send gzip-encoded requests"));
-
-        supportedLibraries.put("okhttp-gson", "HTTP client: OkHttp 2.7.5. JSON processing: Gson 2.6.2. Enable Parcelable modles on Android using '-DparcelableModel=true'. Enable gzip request encoding using '-DuseGzipFeature=true'.");
-
-        CliOption libraryOption = new CliOption(CodegenConstants.LIBRARY, "library template (sub-template) to use");
-        libraryOption.setEnum(supportedLibraries);
-        // set okhttp-gson as the default
-        libraryOption.setDefault("okhttp-gson");
-        cliOptions.add(libraryOption);
-        setLibrary("okhttp-gson");
-
         apiTemplateFiles.clear();
         modelTemplateFiles.clear();
 
@@ -126,7 +105,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         // we want to move any operations defined by the 'x-okta-links' vendor extension to the model
         Map<String, Model> modelMap = swagger.getDefinitions().entrySet().stream()
                 .filter(e -> e.getValue().getVendorExtensions().containsKey("x-okta-links"))
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
 
         modelMap.forEach((k, model) -> {
@@ -200,10 +179,10 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         return outputFolder + "/" + apiPackage().replace('.', File.separatorChar);
     }
 
+    @Override
     public String modelFileFolder() {
         return outputFolder + "/" + modelPackage().replace('.', File.separatorChar);
     }
-
 
     @Override
     public CodegenType getTag() {
@@ -218,77 +197,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
     @Override
     public String getHelp() {
         return "Generates a Java client library.";
-    }
-
-    @Override
-    public void processOpts() {
-        super.processOpts();
-
-        if (additionalProperties.containsKey(PARCELABLE_MODEL)) {
-            this.setParcelableModel(Boolean.valueOf(additionalProperties.get(PARCELABLE_MODEL).toString()));
-        }
-        // put the boolean value back to PARCELABLE_MODEL in additionalProperties
-        additionalProperties.put(PARCELABLE_MODEL, parcelableModel);
-
-        if (additionalProperties.containsKey(USE_BEANVALIDATION)) {
-            this.setUseBeanValidation(convertPropertyToBooleanAndWriteBack(USE_BEANVALIDATION));
-        }
-
-        if (additionalProperties.containsKey(PERFORM_BEANVALIDATION)) {
-            this.setPerformBeanValidation(convertPropertyToBooleanAndWriteBack(PERFORM_BEANVALIDATION));
-        }
-
-        if (additionalProperties.containsKey(USE_GZIP_FEATURE)) {
-            this.setUseGzipFeature(convertPropertyToBooleanAndWriteBack(USE_GZIP_FEATURE));
-        }
-    }
-
-    /**
-     *  Prioritizes consumes mime-type list by moving json-vendor and json mime-types up front, but 
-     *  otherwise preserves original consumes definition order. 
-     *  [application/vnd...+json,... application/json, ..as is..]  
-     *  
-     * @param consumes consumes mime-type list
-     * @return 
-     */
-    static List<Map<String, String>> prioritizeContentTypes(List<Map<String, String>> consumes) {
-        if ( consumes.size() <= 1 )
-            return consumes;
-        
-        List<Map<String, String>> prioritizedContentTypes = new ArrayList<>(consumes.size());
-        
-        List<Map<String, String>> jsonVendorMimeTypes = new ArrayList<>(consumes.size());
-        List<Map<String, String>> jsonMimeTypes = new ArrayList<>(consumes.size());
-        
-        for ( Map<String, String> consume : consumes) {
-            if ( isJsonVendorMimeType(consume.get(MEDIA_TYPE))) {
-                jsonVendorMimeTypes.add(consume);
-            }
-            else if ( isJsonMimeType(consume.get(MEDIA_TYPE))) {
-                jsonMimeTypes.add(consume);
-            }
-            else
-                prioritizedContentTypes.add(consume);
-            
-            consume.put("hasMore", "true");
-        }
-        
-        prioritizedContentTypes.addAll(0, jsonMimeTypes);
-        prioritizedContentTypes.addAll(0, jsonVendorMimeTypes);
-        
-        prioritizedContentTypes.get(prioritizedContentTypes.size()-1).put("hasMore", null);
-        
-        return prioritizedContentTypes;
-    }
-    
-    private static boolean isMultipartType(List<Map<String, String>> consumes) {
-        Map<String, String> firstType = consumes.get(0);
-        if (firstType != null) {
-            if ("multipart/form-data".equals(firstType.get(MEDIA_TYPE))) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -382,47 +290,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         return co;
     }
 
-
-    public void setParcelableModel(boolean parcelableModel) {
-        this.parcelableModel = parcelableModel;
-    }
-
-    public void setUseBeanValidation(boolean useBeanValidation) {
-        this.useBeanValidation = useBeanValidation;
-    }
-
-    public void setPerformBeanValidation(boolean performBeanValidation) {
-        this.performBeanValidation = performBeanValidation;
-    }
-
-    public void setUseGzipFeature(boolean useGzipFeature) {
-        this.useGzipFeature = useGzipFeature;
-    }
-
-    final private static Pattern JSON_MIME_PATTERN = Pattern.compile("(?i)application\\/json(;.*)?");
-    final private static Pattern JSON_VENDOR_MIME_PATTERN = Pattern.compile("(?i)application\\/vnd.(.*)+json(;.*)?"); 
-
-    /**
-     * Check if the given MIME is a JSON MIME.
-     * JSON MIME examples:
-     *   application/json
-     *   application/json; charset=UTF8
-     *   APPLICATION/JSON
-     */
-    static boolean isJsonMimeType(String mime) {
-        return mime != null && ( JSON_MIME_PATTERN.matcher(mime).matches());
-    }
-
-    /**
-     * Check if the given MIME is a JSON Vendor MIME.
-     * JSON MIME examples:
-     *   application/vnd.mycompany+json
-     *   application/vnd.mycompany.resourceA.version1+json
-     */
-    static boolean isJsonVendorMimeType(String mime) {
-        return mime != null && JSON_VENDOR_MIME_PATTERN.matcher(mime).matches();
-    }
-
     @Override
     public String toApiName(String name) {
         if (name.length() == 0) {
@@ -464,7 +331,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         swagger.getDefinitions()
                 .forEach((key, model) -> {
                     if (model != null && model.getProperties() != null) {
-                        System.out.println("Model: "+ key);
                         listModels.putAll(processListsFromProperties(model.getProperties().values()));
                     }
                 });
@@ -505,9 +371,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen
         }
         return result;
     }
-
-
-    //FIXME, these methods are the keys to dealing with generating lists
 
     @Override
     public String getTypeDeclaration(Property p) {
