@@ -136,7 +136,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
     }
 
     /**
-     * Creates a new {@code HttpClientRequestExecutor} using the specified {@code ApiKey} and optional {@code Proxy}
+     * Creates a new {@code HttpClientRequestExecutor} using the specified {@code ClientCredentials} and optional {@code Proxy}
      * configuration.
      * @param clientCredentials the Okta account API Key that will be used to authenticate the client with Okta's API sever
      * @param proxy the HTTP proxy to be used when communicating with the Okta API server (can be null)

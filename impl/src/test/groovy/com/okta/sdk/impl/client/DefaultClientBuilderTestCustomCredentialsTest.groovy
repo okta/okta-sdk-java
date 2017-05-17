@@ -48,7 +48,7 @@ class DefaultClientBuilderTestCustomCredentialsTest {
 
         builder = new DefaultClientBuilder()
         builder.setClientCredentials(customCredentials)
-        builder.setApiKeyResolver(apiKeyResolver)
+        builder.setClientCredentialsResolver(apiKeyResolver)
         def testClient = builder.build()
 
         assertEquals testClient.dataStore.clientCredentials.credentials, keySecret
