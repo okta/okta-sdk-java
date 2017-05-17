@@ -26,11 +26,9 @@ public class TokenClientCredentials implements ClientCredentials<String> {
 
     private final String secret;
 
-    private static final String METHOD_ERROR_MESSAGE = "This method is not accessible from a client api key. Only getBaseUrl() and getCredentials() are available from this instance.";
-
     public TokenClientCredentials(String secret) {
         if (!Strings.hasText(secret)) {
-            throw new IllegalArgumentException("API key secret cannot be null or empty.");
+            throw new IllegalArgumentException("API token cannot be null or empty.");
         }
         this.secret = secret;
     }

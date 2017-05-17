@@ -27,7 +27,6 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.config.ClientConfiguration;
-import com.okta.sdk.impl.config.JSONPropertiesSource;
 import com.okta.sdk.impl.config.OptionalPropertiesSource;
 import com.okta.sdk.impl.config.PropertiesSource;
 import com.okta.sdk.impl.config.ResourcePropertiesSource;
@@ -40,6 +39,7 @@ import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import com.okta.sdk.lang.Assert;
+import com.okta.sdk.lang.Strings;
 import io.jsonwebtoken.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,11 +78,11 @@ public class DefaultClientBuilder implements ClientBuilder {
     private ClientCredentials clientCredentials;
 
     private static final String USER_HOME = System.getProperty("user.home") + File.separatorChar;
-    private static final String OKTA_PROPERTIES = "okta.properties";
+    private static final String OKTA_PROPERTIES = "okta.yaml";
     private static final String[] DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS = {
             ClasspathResource.SCHEME_PREFIX + "com/okta/sdk/config/" + OKTA_PROPERTIES,
             ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
-            USER_HOME + ".okta" + File.separatorChar + OKTA_PROPERTIES,
+            USER_HOME + ".okta" + File.separatorChar + "default.yaml",
             USER_HOME + OKTA_PROPERTIES
     };
 
@@ -94,20 +94,18 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         for (String location : DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS) {
             Resource resource = resourceFactory.createResource(location);
-            PropertiesSource propertiesSource = new OptionalPropertiesSource(new ResourcePropertiesSource(resource));
-            sources.add(propertiesSource);
-            // if location is a .properties file and it's not the first one, look for JSON and YAML equivalents
-            if (!location.equals(DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS[0]) && location.endsWith(".properties")) {
-                String jsonFile = location.replace(".properties", ".json");
-                resource = resourceFactory.createResource(jsonFile);
-                PropertiesSource jsonSource = new OptionalPropertiesSource(new JSONPropertiesSource(resource));
-                sources.add(jsonSource);
 
-                String yamlFile = location.replace(".properties", ".yaml");
-                resource = resourceFactory.createResource(yamlFile);
-                PropertiesSource yamlSource = new OptionalPropertiesSource(new YAMLPropertiesSource(resource));
-                sources.add(yamlSource);
+            PropertiesSource wrappedSource;
+            if (Strings.endsWithIgnoreCase(location, ".yaml") ||
+                    Strings.endsWithIgnoreCase(location, ".yml")) {
+                wrappedSource = new YAMLPropertiesSource(resource);
             }
+            else {
+                wrappedSource = new ResourcePropertiesSource(resource);
+            }
+
+            PropertiesSource propertiesSource = new OptionalPropertiesSource(wrappedSource);
+            sources.add(propertiesSource);
         }
 
         Map<String, String> props = new LinkedHashMap<>();

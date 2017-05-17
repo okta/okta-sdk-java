@@ -59,7 +59,7 @@ class DefaultClientBuilderTest {
     void testConfigureProxy() {
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
         assertEquals clientBuilder.clientConfiguration.proxyHost, "proxyyaml" // from yaml
-        assertEquals clientBuilder.clientConfiguration.proxyPort, 9999 // from json
+        assertEquals clientBuilder.clientConfiguration.proxyPort, 9009 // from yaml
         assertEquals clientBuilder.clientConfiguration.proxyUsername, "fooyaml" // from yaml
         assertEquals clientBuilder.clientConfiguration.proxyPassword, "bar" // from properties
     }
