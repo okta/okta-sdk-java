@@ -33,4 +33,28 @@ public class EnvironmentVariablesPropertiesSource implements PropertiesSource {
 
         return java.util.Collections.emptyMap();
     }
+
+    public static PropertiesSource oktaFilteredPropertiesSource() {
+        return new OktaFilteredEnvironmentPropertiesSource();
+    }
+
+    private static class OktaFilteredEnvironmentPropertiesSource extends FilteredPropertiesSource {
+
+        private static final EnvVarNameConverter envVarNameConverter = new DefaultEnvVarNameConverter();
+
+        private OktaFilteredEnvironmentPropertiesSource() {
+            super(new EnvironmentVariablesPropertiesSource(),
+                    (key, value) -> {
+                        if (key.startsWith("OKTA_")) {
+                            //we want to convert env var naming convention to dotted property convention
+                            //to allow overrides.  Overrides work based on overriding identically-named keys:
+                            key = envVarNameConverter.toDottedPropertyName(key);
+                            return new String[]{key, value};
+                        } else {
+                            return null;
+                        }
+                    }
+            );
+        }
+    }
 }
