@@ -1,6 +1,6 @@
 {
   "okta": {
-    "client": {
+    "apiClient": {
       "proxy": {
         "port": 9999,
         "host": "proxyhost"
