@@ -30,7 +30,7 @@ class TokenClientCredentialsTest {
             new TokenClientCredentials(null);
             fail("Should have thrown due to null secret.")
         } catch (IllegalArgumentException ex) {
-            assertEquals(ex.getMessage(), "API key secret cannot be null or empty.")
+            assertEquals(ex.getMessage(), "API token cannot be null or empty.")
         }
     }
 
