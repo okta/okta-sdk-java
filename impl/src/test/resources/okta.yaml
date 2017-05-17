@@ -16,6 +16,12 @@
 
 okta:
   apiClient:
+    token: 13
+    baseUrl: https://api.okta.com/v42
+    connectionTimeout: 10
     proxy:
       host: "proxyyaml"
+      port: 9009
       username: "fooyaml"
+      password: bar
+    authenticationScheme: SSWS

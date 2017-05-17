@@ -38,4 +38,9 @@ public class ClasspathResource extends AbstractResource {
     public InputStream getInputStream() throws IOException {
         return Classes.getResourceAsStream(getLocation());
     }
+
+    @Override
+    public String toString() {
+        return SCHEME_PREFIX + getLocation();
+    }
 }
