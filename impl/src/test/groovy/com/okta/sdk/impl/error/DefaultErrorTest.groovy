@@ -41,12 +41,12 @@ class DefaultErrorTest {
     }
 
     private void finishTest(DefaultError defaultError) {
-        assertEquals defaultError.propertyDescriptors.keySet().size(), 5
+        assertEquals defaultError.getPropertyDescriptors().keySet().size(), 5
         [
             DefaultError.STATUS, DefaultError.CODE, DefaultError.DEV_MESSAGE,
             DefaultError.MESSAGE, DefaultError.MORE_INFO
         ].each {
-            assertTrue defaultError.propertyDescriptors.keySet().contains(it.name)
+            assertTrue defaultError.getPropertyDescriptors().keySet().contains(it.name)
         }
     }
 }

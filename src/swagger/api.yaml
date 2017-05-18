@@ -9018,7 +9018,8 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-oktaDynamicSchema": "true"
     },
     "UserStatusMediationPolicyRuleCondition": {
       "properties": {

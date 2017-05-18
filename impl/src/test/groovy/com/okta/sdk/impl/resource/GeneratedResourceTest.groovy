@@ -187,7 +187,7 @@ class GeneratedResourceTest {
     static Method setterFromProperty(AbstractResource resource, Property property) {
         try {
             def methodName = "set${camelize(property.name, false)}"
-            return resource.class.getMethod(methodName, property.getType())
+            return resource.getClass().getMethod(methodName, property.getType())
         }
         catch (NoSuchMethodException e) {
             // ignored

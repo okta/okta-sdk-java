@@ -16,6 +16,7 @@
 import com.okta.sdk.resource.Deletable;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.Saveable;
+import java.util.Map;
 {{#serializableModel}}
 import java.io.Serializable;
 {{/serializableModel}}
@@ -25,7 +26,7 @@ import java.io.Serializable;
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
-public interface {{classname}} extends Resource, Saveable, Deletable {
+public interface {{classname}} extends Resource, Saveable{{#vendorExtensions.x-oktaDynamicSchema}}, Map<String, Object>{{/vendorExtensions.x-oktaDynamicSchema}} {
 
 {{#vars}}
     {{#vendorExtensions.extraAnnotation}}
