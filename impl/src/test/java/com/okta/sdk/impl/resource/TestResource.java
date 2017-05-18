@@ -17,9 +17,10 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.impl.ds.InternalDataStore;
 
+import java.util.Collections;
 import java.util.Map;
 
-public class TestResource extends AbstractResource {
+public class TestResource extends AbstractInstanceResource {
 
     public TestResource(InternalDataStore dataStore) {
         super(dataStore);
@@ -31,7 +32,7 @@ public class TestResource extends AbstractResource {
 
     @Override
     public Map<String, Property> getPropertyDescriptors() {
-        throw new UnsupportedOperationException("Not implemented.");
+        return Collections.emptyMap();
     }
 
     public String getName() {
