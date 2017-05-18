@@ -90,7 +90,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     private static final String[] DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS = {
                                                  ClasspathResource.SCHEME_PREFIX + "com/okta/sdk/config/" + OKTA_YAML,
                                                  ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
-                                                 USER_HOME + ".okta" + File.separatorChar + "default.yaml",
+                                                 USER_HOME + ".okta" + File.separatorChar + OKTA_YAML,
                                                  ENVVARS_TOKEN,
                                                  SYSPROPS_TOKEN
     };

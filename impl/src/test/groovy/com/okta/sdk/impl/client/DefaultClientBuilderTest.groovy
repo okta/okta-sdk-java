@@ -86,7 +86,7 @@ class DefaultClientBuilderTest {
         doAnswer(new Answer<Resource>() {
             @Override
             Resource answer(InvocationOnMock invocation) throws Throwable {
-                if (invocation.arguments[0].toString().endsWith("default.yaml")) {
+                if (invocation.arguments[0].toString().endsWith("/.okta/okta.yaml")) {
                     return mock(Resource)
                 }
                 else {
