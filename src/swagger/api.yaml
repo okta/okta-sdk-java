@@ -51,7 +51,7 @@
       "description": "SSWS {API Token}",
       "in": "header",
       "name": "Authorization",
-      "type": "clientCredentials"
+      "type": "apiKey"
     }
   },
   "paths": {
@@ -397,7 +397,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}": {
+    "/api/v1/apps/{appId}": {
       "delete": {
         "consumes": [
           "application/json"
@@ -406,7 +406,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           }
@@ -436,7 +436,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -474,7 +474,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -508,7 +508,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/catalog/groups": {
+    "/api/v1/apps/{appId}/catalog/groups": {
       "get": {
         "consumes": [
           "application/json"
@@ -517,7 +517,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -568,7 +568,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/catalog/users": {
+    "/api/v1/apps/{appId}/catalog/users": {
       "get": {
         "consumes": [
           "application/json"
@@ -577,7 +577,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -628,7 +628,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/connector": {
+    "/api/v1/apps/{appId}/connector": {
       "get": {
         "consumes": [
           "application/json"
@@ -637,7 +637,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           }
@@ -670,7 +670,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -704,7 +704,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/connector/test": {
+    "/api/v1/apps/{appId}/connector/test": {
       "post": {
         "consumes": [
           "application/json"
@@ -713,7 +713,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -747,7 +747,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/credentials/keys": {
+    "/api/v1/apps/{appId}/credentials/keys": {
       "get": {
         "consumes": [
           "application/json"
@@ -756,7 +756,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           }
@@ -785,7 +785,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/credentials/keys/generate": {
+    "/api/v1/apps/{appId}/credentials/keys/generate": {
       "post": {
         "consumes": [
           "application/json"
@@ -794,7 +794,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -827,7 +827,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/credentials/keys/{keyId}": {
+    "/api/v1/apps/{appId}/credentials/keys/{keyId}": {
       "get": {
         "consumes": [
           "application/json"
@@ -836,7 +836,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -868,7 +868,54 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/groups": {
+    "/api/v1/apps/{appId}/credentials/keys/{keyId}/clone": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "cloneKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "keyId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "targetAid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/groups": {
       "get": {
         "consumes": [
           "application/json"
@@ -877,7 +924,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -928,7 +975,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/groups/{groupId}": {
+    "/api/v1/apps/{appId}/groups/{groupId}": {
       "delete": {
         "consumes": [
           "application/json"
@@ -937,7 +984,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -973,7 +1020,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1017,7 +1064,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1057,7 +1104,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/lifecycle/activate": {
+    "/api/v1/apps/{appId}/lifecycle/activate": {
       "post": {
         "consumes": [
           "application/json"
@@ -1066,7 +1113,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           }
@@ -1089,7 +1136,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/lifecycle/deactivate": {
+    "/api/v1/apps/{appId}/lifecycle/deactivate": {
       "post": {
         "consumes": [
           "application/json"
@@ -1098,7 +1145,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           }
@@ -1121,7 +1168,122 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/user/imported/schema": {
+    "/api/v1/apps/{appId}/servercertificate": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listCertificates",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/UploadedCertificateMetadata"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/servercertificate/{certificateId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "deleteCertificate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "certificateId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getCertificate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "certificateId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UploadedCertificateMetadata"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/user/imported/schema": {
       "get": {
         "consumes": [
           "application/json"
@@ -1130,7 +1292,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           }
@@ -1156,7 +1318,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/user/schemas": {
+    "/api/v1/apps/{appId}/user/schemas": {
       "get": {
         "consumes": [
           "application/json"
@@ -1165,7 +1327,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           }
@@ -1194,7 +1356,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/user/schemas/{schemaId}": {
+    "/api/v1/apps/{appId}/user/schemas/{schemaId}": {
       "get": {
         "consumes": [
           "application/json"
@@ -1203,7 +1365,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1242,7 +1404,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1282,7 +1444,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/user/types": {
+    "/api/v1/apps/{appId}/user/types": {
       "get": {
         "consumes": [
           "application/json"
@@ -1291,7 +1453,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1325,7 +1487,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/user/types/effective": {
+    "/api/v1/apps/{appId}/user/types/effective": {
       "get": {
         "consumes": [
           "application/json"
@@ -1334,7 +1496,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1370,7 +1532,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/user/types/groups": {
+    "/api/v1/apps/{appId}/user/types/groups": {
       "get": {
         "consumes": [
           "application/json"
@@ -1379,7 +1541,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1410,7 +1572,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/user/types/{typeId}": {
+    "/api/v1/apps/{appId}/user/types/{typeId}": {
       "get": {
         "consumes": [
           "application/json"
@@ -1419,7 +1581,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1463,7 +1625,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1508,7 +1670,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/users": {
+    "/api/v1/apps/{appId}/users": {
       "get": {
         "consumes": [
           "application/json"
@@ -1517,7 +1679,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1585,7 +1747,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1619,7 +1781,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/users/{userId}": {
+    "/api/v1/apps/{appId}/users/{userId}": {
       "delete": {
         "consumes": [
           "application/json"
@@ -1628,7 +1790,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1664,7 +1826,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1708,7 +1870,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1755,7 +1917,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1795,7 +1957,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/users/{userId}/credentials/cyclePassword": {
+    "/api/v1/apps/{appId}/users/{userId}/credentials/cyclePassword": {
       "post": {
         "consumes": [
           "application/json"
@@ -1804,7 +1966,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1833,7 +1995,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/users/{userId}/lifecycle/activate": {
+    "/api/v1/apps/{appId}/users/{userId}/lifecycle/activate": {
       "post": {
         "consumes": [
           "application/json"
@@ -1842,7 +2004,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1871,7 +2033,7 @@
         ]
       }
     },
-    "/api/v1/apps/{id}/users/{userId}/lifecycle/deactivate": {
+    "/api/v1/apps/{appId}/users/{userId}/lifecycle/deactivate": {
       "post": {
         "consumes": [
           "application/json"
@@ -1880,7 +2042,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "appId",
             "required": true,
             "type": "string"
           },
@@ -1897,168 +2059,6 @@
         "responses": {
           "200": {
             "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "App"
-        ]
-      }
-    },
-    "/api/v1/apps/{instanceId}/servercertificate": {
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "listCertificates",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instanceId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "items": {
-                "$ref": "#/definitions/UploadedCertificateMetadata"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "App"
-        ]
-      }
-    },
-    "/api/v1/apps/{instanceId}/servercertificate/{certificateId}": {
-      "delete": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "deleteCertificate",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instanceId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "certificateId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "App"
-        ]
-      },
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "getCertificate",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instanceId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "certificateId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/UploadedCertificateMetadata"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "App"
-        ]
-      }
-    },
-    "/api/v1/apps/{sourceAppInstanceId}/credentials/keys/{keyId}/clone": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "cloneKey",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "sourceAppInstanceId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "keyId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "targetAid",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/JsonWebKeyRSAMediated"
-            }
           }
         },
         "security": [
@@ -2259,18 +2259,16 @@
         ]
       }
     },
-    "/api/v1/groups/rules/{id}": {
+    "/api/v1/groups/rules/{ruleId}": {
       "delete": {
         "consumes": [
           "application/json"
         ],
-        "description": "Removes a specific group rule by id from your organization",
         "operationId": "deleteRule",
         "parameters": [
           {
-            "description": "id of a group rule",
             "in": "path",
-            "name": "id",
+            "name": "ruleId",
             "required": true,
             "type": "string"
           },
@@ -2293,7 +2291,6 @@
             "api_token": []
           }
         ],
-        "summary": "Delete a group Rule",
         "tags": [
           "Group"
         ]
@@ -2302,13 +2299,11 @@
         "consumes": [
           "application/json"
         ],
-        "description": "Fetches a specific group rule by id from your organization",
         "operationId": "getRule",
         "parameters": [
           {
-            "description": "id of a group rule",
             "in": "path",
-            "name": "id",
+            "name": "ruleId",
             "required": true,
             "type": "string"
           }
@@ -2329,7 +2324,6 @@
             "api_token": []
           }
         ],
-        "summary": "Get Group Rule",
         "tags": [
           "Group"
         ]
@@ -2342,7 +2336,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "ruleId",
             "required": true,
             "type": "string"
           },
@@ -2376,18 +2370,16 @@
         ]
       }
     },
-    "/api/v1/groups/rules/{id}/lifecycle/activate": {
+    "/api/v1/groups/rules/{ruleId}/lifecycle/activate": {
       "post": {
         "consumes": [
           "application/json"
         ],
-        "description": "Activates a specific group rule by id from your organization",
         "operationId": "activateRule",
         "parameters": [
           {
-            "description": "id of a group rule",
             "in": "path",
-            "name": "id",
+            "name": "ruleId",
             "required": true,
             "type": "string"
           }
@@ -2405,24 +2397,21 @@
             "api_token": []
           }
         ],
-        "summary": "Activate a group Rule",
         "tags": [
           "Group"
         ]
       }
     },
-    "/api/v1/groups/rules/{id}/lifecycle/deactivate": {
+    "/api/v1/groups/rules/{ruleId}/lifecycle/deactivate": {
       "post": {
         "consumes": [
           "application/json"
         ],
-        "description": "Deactivates a specific group rule by id from your organization",
         "operationId": "deactivateRule",
         "parameters": [
           {
-            "description": "id of a group rule",
             "in": "path",
-            "name": "id",
+            "name": "ruleId",
             "required": true,
             "type": "string"
           }
@@ -2440,24 +2429,21 @@
             "api_token": []
           }
         ],
-        "summary": "Deactivate a group Rule",
         "tags": [
           "Group"
         ]
       }
     },
-    "/api/v1/groups/{id}": {
+    "/api/v1/groups/{groupId}": {
       "delete": {
         "consumes": [
           "application/json"
         ],
-        "description": "Removes a group with `OKTA_GROUP` type from your organization.",
         "operationId": "deleteGroup",
         "parameters": [
           {
-            "description": "id of the group to delete",
             "in": "path",
-            "name": "id",
+            "name": "groupId",
             "required": true,
             "type": "string"
           }
@@ -2475,7 +2461,6 @@
             "api_token": []
           }
         ],
-        "summary": "Remove Group",
         "tags": [
           "Group"
         ]
@@ -2484,13 +2469,11 @@
         "consumes": [
           "application/json"
         ],
-        "description": "Fetches a specific group by `id` from your organization",
         "operationId": "getGroup",
         "parameters": [
           {
-            "description": "id of a group",
             "in": "path",
-            "name": "id",
+            "name": "groupId",
             "required": true,
             "type": "string"
           },
@@ -2516,7 +2499,6 @@
             "api_token": []
           }
         ],
-        "summary": "Get Group",
         "tags": [
           "Group"
         ]
@@ -2525,13 +2507,11 @@
         "consumes": [
           "application/json"
         ],
-        "description": "Updates the profile for a group with `OKTA_GROUP` type from your organization.",
         "operationId": "updateGroup",
         "parameters": [
           {
-            "description": "id of the group to update",
             "in": "path",
-            "name": "id",
+            "name": "groupId",
             "required": true,
             "type": "string"
           },
@@ -2560,36 +2540,31 @@
             "api_token": []
           }
         ],
-        "summary": "Update Group",
         "tags": [
           "Group"
         ]
       }
     },
-    "/api/v1/groups/{id}/apps": {
+    "/api/v1/groups/{groupId}/apps": {
       "get": {
         "consumes": [
           "application/json"
         ],
-        "description": "Enumerates all [applications](apps.html#application-model) that are assigned to a group. See [Application Group Operations](apps.html#application-group-operations)",
         "operationId": "listApps",
         "parameters": [
           {
-            "description": "id of the group",
             "in": "path",
-            "name": "id",
+            "name": "groupId",
             "required": true,
             "type": "string"
           },
           {
-            "description": "Specifies the pagination cursor for the next page of apps",
             "in": "query",
             "name": "after",
             "type": "string"
           },
           {
             "default": -1,
-            "description": "Specifies the number of app results for a page",
             "format": "int32",
             "in": "query",
             "name": "limit",
@@ -2615,13 +2590,12 @@
             "api_token": []
           }
         ],
-        "summary": "List Assigned Applications",
         "tags": [
           "Group"
         ]
       }
     },
-    "/api/v1/groups/{id}/catalog/apps": {
+    "/api/v1/groups/{groupId}/catalog/apps": {
       "get": {
         "consumes": [
           "application/json"
@@ -2630,7 +2604,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "groupId",
             "required": true,
             "type": "string"
           },
@@ -2681,7 +2655,7 @@
         ]
       }
     },
-    "/api/v1/groups/{id}/stats": {
+    "/api/v1/groups/{groupId}/stats": {
       "get": {
         "consumes": [
           "application/json"
@@ -2690,7 +2664,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "groupId",
             "required": true,
             "type": "string"
           }
@@ -2716,30 +2690,26 @@
         ]
       }
     },
-    "/api/v1/groups/{id}/users": {
+    "/api/v1/groups/{groupId}/users": {
       "get": {
         "consumes": [
           "application/json"
         ],
-        "description": "Enumerates all [users](#users.html) that are a member of a group.",
         "operationId": "listGroupUsers",
         "parameters": [
           {
-            "description": "id of the group",
             "in": "path",
-            "name": "id",
+            "name": "groupId",
             "required": true,
             "type": "string"
           },
           {
-            "description": "Specifies the pagination cursor for the next page of users",
             "in": "query",
             "name": "after",
             "type": "string"
           },
           {
             "default": -1,
-            "description": "Specifies the number of user results in a page",
             "format": "int32",
             "in": "query",
             "name": "limit",
@@ -2765,13 +2735,12 @@
             "api_token": []
           }
         ],
-        "summary": "List Group Members",
         "tags": [
           "Group"
         ]
       }
     },
-    "/api/v1/groups/{id}/users/{userId}": {
+    "/api/v1/groups/{groupId}/users/{userId}": {
       "delete": {
         "consumes": [
           "application/json"
@@ -2780,7 +2749,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "groupId",
             "required": true,
             "type": "string"
           },
@@ -2816,7 +2785,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "groupId",
             "required": true,
             "type": "string"
           },
@@ -3018,7 +2987,7 @@
         ]
       }
     },
-    "/api/v1/idps/credentials/keys/{id}": {
+    "/api/v1/idps/credentials/keys/{keyId}": {
       "delete": {
         "consumes": [
           "application/json"
@@ -3027,7 +2996,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "keyId",
             "required": true,
             "type": "string"
           }
@@ -3057,7 +3026,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "keyId",
             "required": true,
             "type": "string"
           }
@@ -3090,7 +3059,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "keyId",
             "required": true,
             "type": "string"
           },
@@ -3124,7 +3093,7 @@
         ]
       }
     },
-    "/api/v1/idps/tx/{id}": {
+    "/api/v1/idps/tx/{transactionId}": {
       "get": {
         "consumes": [
           "application/json"
@@ -3133,7 +3102,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "transactionId",
             "required": true,
             "type": "string"
           }
@@ -3159,7 +3128,7 @@
         ]
       }
     },
-    "/api/v1/idps/tx/{id}/cancel": {
+    "/api/v1/idps/tx/{transactionId}/cancel": {
       "post": {
         "consumes": [
           "application/json"
@@ -3168,7 +3137,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "transactionId",
             "required": true,
             "type": "string"
           }
@@ -3191,7 +3160,7 @@
         ]
       }
     },
-    "/api/v1/idps/tx/{id}/lifecycle/confirm/{userId}": {
+    "/api/v1/idps/tx/{transactionId}/lifecycle/confirm/{userId}": {
       "post": {
         "consumes": [
           "application/json"
@@ -3200,7 +3169,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "transactionId",
             "required": true,
             "type": "string"
           },
@@ -3240,7 +3209,7 @@
         ]
       }
     },
-    "/api/v1/idps/tx/{id}/lifecycle/provision": {
+    "/api/v1/idps/tx/{transactionId}/lifecycle/provision": {
       "post": {
         "consumes": [
           "application/json"
@@ -3249,7 +3218,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "transactionId",
             "required": true,
             "type": "string"
           },
@@ -3283,7 +3252,7 @@
         ]
       }
     },
-    "/api/v1/idps/tx/{id}/source": {
+    "/api/v1/idps/tx/{transactionId}/source": {
       "get": {
         "consumes": [
           "application/json"
@@ -3292,7 +3261,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "transactionId",
             "required": true,
             "type": "string"
           }
@@ -3318,7 +3287,7 @@
         ]
       }
     },
-    "/api/v1/idps/tx/{id}/target": {
+    "/api/v1/idps/tx/{transactionId}/target": {
       "get": {
         "consumes": [
           "application/json"
@@ -3327,7 +3296,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "transactionId",
             "required": true,
             "type": "string"
           }
@@ -3353,7 +3322,7 @@
         ]
       }
     },
-    "/api/v1/idps/tx/{id}/users": {
+    "/api/v1/idps/tx/{transactionId}/users": {
       "get": {
         "consumes": [
           "application/json"
@@ -3362,7 +3331,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "transactionId",
             "required": true,
             "type": "string"
           }
@@ -3391,7 +3360,7 @@
         ]
       }
     },
-    "/api/v1/idps/{id}": {
+    "/api/v1/idps/{idpId}": {
       "delete": {
         "consumes": [
           "application/json"
@@ -3400,7 +3369,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           }
@@ -3430,7 +3399,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           }
@@ -3463,7 +3432,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           },
@@ -3497,7 +3466,7 @@
         ]
       }
     },
-    "/api/v1/idps/{id}/credentials/keys": {
+    "/api/v1/idps/{idpId}/credentials/keys": {
       "get": {
         "consumes": [
           "application/json"
@@ -3506,7 +3475,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           }
@@ -3535,7 +3504,7 @@
         ]
       }
     },
-    "/api/v1/idps/{id}/credentials/keys/generate": {
+    "/api/v1/idps/{idpId}/credentials/keys/generate": {
       "post": {
         "consumes": [
           "application/json"
@@ -3544,7 +3513,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           },
@@ -3577,7 +3546,7 @@
         ]
       }
     },
-    "/api/v1/idps/{id}/credentials/keys/{keyId}": {
+    "/api/v1/idps/{idpId}/credentials/keys/{keyId}": {
       "get": {
         "consumes": [
           "application/json"
@@ -3586,7 +3555,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           },
@@ -3618,7 +3587,7 @@
         ]
       }
     },
-    "/api/v1/idps/{id}/lifecycle/activate": {
+    "/api/v1/idps/{idpId}/lifecycle/activate": {
       "post": {
         "consumes": [
           "application/json"
@@ -3627,7 +3596,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           }
@@ -3653,7 +3622,7 @@
         ]
       }
     },
-    "/api/v1/idps/{id}/lifecycle/deactivate": {
+    "/api/v1/idps/{idpId}/lifecycle/deactivate": {
       "post": {
         "consumes": [
           "application/json"
@@ -3662,7 +3631,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           }
@@ -3688,7 +3657,7 @@
         ]
       }
     },
-    "/api/v1/idps/{id}/metadata.xml": {
+    "/api/v1/idps/{idpId}/metadata.xml": {
       "get": {
         "consumes": [
           "application/json"
@@ -3697,7 +3666,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           }
@@ -3720,7 +3689,7 @@
         ]
       }
     },
-    "/api/v1/idps/{id}/users": {
+    "/api/v1/idps/{idpId}/users": {
       "get": {
         "consumes": [
           "application/json"
@@ -3729,7 +3698,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           },
@@ -3780,7 +3749,7 @@
         ]
       }
     },
-    "/api/v1/idps/{id}/users/{userId}": {
+    "/api/v1/idps/{idpId}/users/{userId}": {
       "delete": {
         "consumes": [
           "application/json"
@@ -3789,7 +3758,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           },
@@ -3825,7 +3794,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "idpId",
             "required": true,
             "type": "string"
           },
@@ -4054,7 +4023,7 @@
         ]
       }
     },
-    "/api/v1/policies/{id}": {
+    "/api/v1/policies/{policyId}": {
       "delete": {
         "consumes": [
           "application/json"
@@ -4063,7 +4032,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           }
@@ -4093,7 +4062,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           },
@@ -4140,7 +4109,7 @@
           },
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           }
@@ -4166,7 +4135,7 @@
         ]
       }
     },
-    "/api/v1/policies/{id}/lifecycle/activate": {
+    "/api/v1/policies/{policyId}/lifecycle/activate": {
       "post": {
         "consumes": [
           "application/json"
@@ -4175,7 +4144,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           }
@@ -4198,7 +4167,7 @@
         ]
       }
     },
-    "/api/v1/policies/{id}/lifecycle/deactivate": {
+    "/api/v1/policies/{policyId}/lifecycle/deactivate": {
       "post": {
         "consumes": [
           "application/json"
@@ -4207,7 +4176,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           }
@@ -4230,7 +4199,7 @@
         ]
       }
     },
-    "/api/v1/policies/{id}/rules": {
+    "/api/v1/policies/{policyId}/rules": {
       "get": {
         "consumes": [
           "application/json"
@@ -4239,7 +4208,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           }
@@ -4272,7 +4241,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           },
@@ -4312,7 +4281,7 @@
         ]
       }
     },
-    "/api/v1/policies/{id}/rules/{ruleid}": {
+    "/api/v1/policies/{policyId}/rules/{ruleId}": {
       "delete": {
         "consumes": [
           "application/json"
@@ -4321,13 +4290,13 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "ruleid",
+            "name": "ruleId",
             "required": true,
             "type": "string"
           }
@@ -4357,13 +4326,13 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "ruleid",
+            "name": "ruleId",
             "required": true,
             "type": "string"
           }
@@ -4396,13 +4365,13 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "ruleid",
+            "name": "ruleId",
             "required": true,
             "type": "string"
           },
@@ -4436,7 +4405,7 @@
         ]
       }
     },
-    "/api/v1/policies/{id}/rules/{ruleid}/lifecycle/activate": {
+    "/api/v1/policies/{policyId}/rules/{ruleId}/lifecycle/activate": {
       "post": {
         "consumes": [
           "application/json"
@@ -4445,13 +4414,13 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "ruleid",
+            "name": "ruleId",
             "required": true,
             "type": "string"
           }
@@ -4474,7 +4443,7 @@
         ]
       }
     },
-    "/api/v1/policies/{id}/rules/{ruleid}/lifecycle/deactivate": {
+    "/api/v1/policies/{policyId}/rules/{ruleId}/lifecycle/deactivate": {
       "post": {
         "consumes": [
           "application/json"
@@ -4483,13 +4452,13 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "policyId",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
-            "name": "ruleid",
+            "name": "ruleId",
             "required": true,
             "type": "string"
           }
@@ -4859,18 +4828,16 @@
         ]
       }
     },
-    "/api/v1/users/{id}": {
+    "/api/v1/users/{userId}": {
       "delete": {
         "consumes": [
           "application/json"
         ],
-        "description": "Deletes a user permanently.  This operation can only be performed on users that have a `DEPROVISIONED` status.  **This action cannot be recovered!**",
         "operationId": "deactivateOrDeleteUser",
         "parameters": [
           {
-            "description": "id of user",
             "in": "path",
-            "name": "id",
+            "name": "userId",
             "required": true,
             "type": "string"
           }
@@ -4888,7 +4855,6 @@
             "api_token": []
           }
         ],
-        "summary": "Delete User",
         "tags": [
           "User"
         ]
@@ -4901,7 +4867,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "userId",
             "required": true,
             "type": "string"
           }
@@ -4942,7 +4908,7 @@
           },
           {
             "in": "path",
-            "name": "id",
+            "name": "userId",
             "required": true,
             "type": "string"
           }
@@ -4971,7 +4937,6 @@
         "consumes": [
           "application/json"
         ],
-        "description": "Update a user's profile and/or credentials using strict-update semantics.",
         "operationId": "updateUser",
         "parameters": [
           {
@@ -4983,9 +4948,8 @@
             }
           },
           {
-            "description": "id of user to update",
             "in": "path",
-            "name": "id",
+            "name": "userId",
             "required": true,
             "type": "string"
           }
@@ -5006,24 +4970,21 @@
             "api_token": []
           }
         ],
-        "summary": "Update User",
         "tags": [
           "User"
         ]
       }
     },
-    "/api/v1/users/{id}/appLinks": {
+    "/api/v1/users/{userId}/appLinks": {
       "get": {
         "consumes": [
           "application/json"
         ],
-        "description": "Fetches appLinks for all direct or indirect (via group membership) assigned applications.",
         "operationId": "listAppLinks",
         "parameters": [
           {
-            "description": "id of user",
             "in": "path",
-            "name": "id",
+            "name": "userId",
             "required": true,
             "type": "string"
           },
@@ -5053,13 +5014,12 @@
             "api_token": []
           }
         ],
-        "summary": "Get Assigned App Links",
         "tags": [
           "User"
         ]
       }
     },
-    "/api/v1/users/{id}/catalog/apps": {
+    "/api/v1/users/{userId}/catalog/apps": {
       "get": {
         "consumes": [
           "application/json"
@@ -5068,7 +5028,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "userId",
             "required": true,
             "type": "string"
           },
@@ -5119,12 +5079,11 @@
         ]
       }
     },
-    "/api/v1/users/{id}/credentials/change_password": {
+    "/api/v1/users/{userId}/credentials/change_password": {
       "post": {
         "consumes": [
           "application/json"
         ],
-        "description": "Changes a user's password by validating the user's current password.  This operation can only be performed on users in `STAGED`, `ACTIVE`, `PASSWORD_EXPIRED`, or `RECOVERY` status that have a valid [password credential](#password-object)",
         "operationId": "changePassword",
         "parameters": [
           {
@@ -5136,9 +5095,8 @@
             }
           },
           {
-            "description": "id of user",
             "in": "path",
-            "name": "id",
+            "name": "userId",
             "required": true,
             "type": "string"
           }
@@ -5159,18 +5117,16 @@
             "api_token": []
           }
         ],
-        "summary": "Change Password",
         "tags": [
           "User"
         ]
       }
     },
-    "/api/v1/users/{id}/credentials/change_recovery_question": {
+    "/api/v1/users/{userId}/credentials/change_recovery_question": {
       "post": {
         "consumes": [
           "application/json"
         ],
-        "description": "Changes a user's recovery question & answer credential by validating the user's current password.  This operation can only be performed on users in **STAGED**, **ACTIVE** or **RECOVERY** `status` that have a valid [password credential](#password-object)",
         "operationId": "changeRecoveryQuestion",
         "parameters": [
           {
@@ -5182,9 +5138,8 @@
             }
           },
           {
-            "description": "id of user",
             "in": "path",
-            "name": "id",
+            "name": "userId",
             "required": true,
             "type": "string"
           }
@@ -5205,18 +5160,16 @@
             "api_token": []
           }
         ],
-        "summary": "Change Recovery Question",
         "tags": [
           "User"
         ]
       }
     },
-    "/api/v1/users/{id}/credentials/forgot_password": {
+    "/api/v1/users/{userId}/credentials/forgot_password": {
       "post": {
         "consumes": [
           "application/json"
         ],
-        "description": "Generates a one-time token (OTT) that can be used to reset a user's password.  The user will be required to validate their security question's answer when visiting the reset link.  This operation can only be performed on users with a valid [recovery question credential](#recovery-question-object) and have an `ACTIVE` status.",
         "operationId": "forgotPasswordWithRecoveryAnswer",
         "parameters": [
           {
@@ -5228,9 +5181,8 @@
             }
           },
           {
-            "description": "id of user",
             "in": "path",
-            "name": "id",
+            "name": "userId",
             "required": true,
             "type": "string"
           },
@@ -5251,658 +5203,6 @@
             "schema": {
               "$ref": "#/definitions/BaseCredentialsObject"
             }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Forgot Password",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/groups": {
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Fetches the groups of which the user is a member.",
-        "operationId": "listUserGroups",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "after",
-            "type": "string"
-          },
-          {
-            "default": -1,
-            "format": "int32",
-            "in": "query",
-            "name": "limit",
-            "type": "integer"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "items": {
-                "$ref": "#/definitions/UserGroup"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Get Member Groups",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/activate": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Activates a user.  This operation can only be performed on users with a `STAGED` status.  Activation of a user is an asynchronous operation.  The user will have the `transitioningToStatus` property with a value of `ACTIVE` during activation to indicate that the user hasn't completed the asynchronous operation.  The user will have a status of `ACTIVE` when the activation process is complete.",
-        "operationId": "activateUser",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "default": true,
-            "description": "Sends an activation email to the user if true",
-            "in": "query",
-            "name": "sendEmail",
-            "required": true,
-            "type": "boolean"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/ActivationToken"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Activate User",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/deactivate": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Deactivates a user.  This operation can only be performed on users that do not have a `DEPROVISIONED` status.  Deactivation of a user is an asynchronous operation.  The user will have the `transitioningToStatus` property with a value of `DEPROVISIONED` during deactivation to indicate that the user hasn't completed the asynchronous operation.  The user will have a status of `DEPROVISIONED` when the deactivation process is complete.",
-        "operationId": "lifecycleDeactivateUser",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Deactivate User",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/forgot_password": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "forgotPassword",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "default": true,
-            "in": "query",
-            "name": "sendEmail",
-            "required": true,
-            "type": "boolean"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/ResetPasswordToken"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/reset_factors": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "This operation resets all factors for the specified user. All MFA factor enrollments returned to the unenrolled state. The user's status remains ACTIVE. This link is present only if the user is currently enrolled in one or more MFA factors.",
-        "operationId": "resetAllFactors",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Reset Factors",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/suspend": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Suspends a user.  This operation can only be performed on users with an `ACTIVE` status.  The user will have a status of `SUSPENDED` when the process is complete.",
-        "operationId": "suspendUser",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Suspend User",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/unlock": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Unlocks a user with a `LOCKED_OUT` status and returns them to `ACTIVE` status.  Users will be able to login with their current password.",
-        "operationId": "unlockUser",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Unlock User",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/lifecycle/unsuspend": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Unsuspends a user and returns them to the `ACTIVE` state.  This operation can only be performed on users that have a `SUSPENDED` status.",
-        "operationId": "unsuspendUser",
-        "parameters": [
-          {
-            "description": "id of user",
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Unsuspend User",
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/roles": {
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "listAssignedRoles",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "expand",
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "items": {
-                "$ref": "#/definitions/MediationRoleAssignment"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      },
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "assignRoleToUser",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/MediationRoleAssignment"
-            }
-          },
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/MediationRoleAssignment"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/roles/{roleId}": {
-      "delete": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "unassignRoleFromUser",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "roleId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      },
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "getRoleForUser",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "roleId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/MediationRoleAssignment"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/roles/{roleId}/targets/groups": {
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "listGroupTargetsForRole",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "roleId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "after",
-            "type": "string"
-          },
-          {
-            "default": -1,
-            "format": "int32",
-            "in": "query",
-            "name": "limit",
-            "type": "integer"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "items": {
-                "$ref": "#/definitions/UserGroup"
-              },
-              "type": "array"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/roles/{roleId}/targets/groups/{groupId}": {
-      "delete": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "removeGroupTargetFromRole",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "roleId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "groupId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      },
-      "put": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "addGroupTargetToRole",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "roleId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "groupId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/users/{id}/sessions": {
-      "delete": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "clearUserSessions",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
           }
         },
         "security": [
@@ -6489,6 +5789,635 @@
             "schema": {
               "$ref": "#/definitions/FactorVerificationResponse"
             }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/groups": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listUserGroups",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/UserGroup"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/lifecycle/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "activateUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": true,
+            "in": "query",
+            "name": "sendEmail",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ActivationToken"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/lifecycle/deactivate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "lifecycleDeactivateUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/lifecycle/forgot_password": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "forgotPassword",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": true,
+            "in": "query",
+            "name": "sendEmail",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordToken"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/lifecycle/reset_factors": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "resetAllFactors",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/lifecycle/suspend": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "suspendUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/lifecycle/unlock": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "unlockUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/lifecycle/unsuspend": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "unsuspendUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/roles": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listAssignedRoles",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/MediationRoleAssignment"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "assignRoleToUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MediationRoleAssignment"
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationRoleAssignment"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/roles/{roleId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "unassignRoleFromUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "getRoleForUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MediationRoleAssignment"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/roles/{roleId}/targets/groups": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "listGroupTargetsForRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/UserGroup"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/roles/{roleId}/targets/groups/{groupId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "removeGroupTargetFromRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "addGroupTargetToRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "roleId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/sessions": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "clearUserSessions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         },
         "security": [
@@ -8858,7 +8787,7 @@
         {
           "arguments": [
             {
-              "dest": "id",
+              "dest": "userId",
               "src": "id"
             }
           ],
