@@ -39,6 +39,19 @@ public abstract class AbstractInstanceResource extends AbstractResource implemen
     }
 
     /**
+     * Basic delete support method that simply calls, {@code dataStore.delete(this)}.  This can be exposed from child
+     * classes when needed.
+     */
+    protected void delete() {
+        writeLock.lock();
+        try {
+            getDataStore().delete(this);
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    /**
      * Returns {@code true} if the specified data map represents a materialized instance resource data set, {@code
      * false} otherwise.
      *

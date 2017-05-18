@@ -100,7 +100,7 @@ class DefaultDataStoreTest {
         when(response.getHeaders()).thenReturn(new HttpHeaders())
 
         def testResource = defaultDataStore.getResource(resourceHref, TestResource)
-        assertThat testResource.resourceHref, is(resourceHref)
+        assertThat testResource.getResourceHref(), is(resourceHref)
 
 
     }
