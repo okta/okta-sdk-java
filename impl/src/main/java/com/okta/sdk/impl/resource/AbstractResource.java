@@ -36,7 +36,7 @@ import java.util.Set;
 /**
  * @since 1.0.0
  */
-public abstract class AbstractResource extends AbstractPropertyRetriever implements Resource, Map<String, Object> {
+public abstract class AbstractResource extends AbstractPropertyRetriever implements Resource {
 
     protected final Map<String, Object> dirtyProperties;  //Protected by read/write lock
     protected final Set<String> deletedPropertyNames;     //Protected by read/write lock
@@ -512,8 +512,11 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         return properties;
     }
 
-    
-    @Override
+
+    /* --------------------------------------------------------------------------------------
+        Map methods: child classes can implement Map<String, Object> to expose these methods
+       -------------------------------------------------------------------------------------- */
+
     public int size() {
         readLock.lock();
         try {
@@ -527,17 +530,14 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         }
     }
 
-    @Override
     public boolean isEmpty() {
         return this.size() <= 0;
     }
 
-    @Override
     public boolean containsKey(Object key) {
         return this.keySet().contains(key);
     }
 
-    @Override
     public boolean containsValue(Object value) {
         for(Map.Entry<String, Object> entry: this.entrySet()) {
             if(entry.getValue().equals(value)) {
@@ -547,18 +547,15 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         return false;
     }
 
-    @Override
     public Object get(Object key) {
         Assert.isInstanceOf(String.class, key);
         return getProperty(key.toString());
     }
 
-    @Override
     public Object put(String key, Object value) {
         return setProperty(key, value, true);
     }
 
-    @Override
     public Object remove(Object key) {
         Assert.isInstanceOf(String.class, key);
         writeLock.lock();
@@ -572,7 +569,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         }
     }
 
-    @Override
     public void putAll(Map<? extends String, ?> m) {
         if (Collections.isEmpty(m)) {
             return;
@@ -588,7 +584,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         }
     }
 
-    @Override
     public void clear() {
 
         writeLock.lock();
@@ -609,7 +604,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         }
     }
 
-    @Override
     public Set<String> keySet() {
         if(!isMaterialized()) {
             writeLock.lock();
@@ -631,7 +625,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         }
     }
 
-    @Override
     public Collection<Object> values() {
         Set<String> keySet = this.keySet();
         Collection<Object> values = new ArrayList<>(keySet.size());
@@ -641,7 +634,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         return java.util.Collections.unmodifiableCollection(values);
     }
 
-    @Override
     public Set<Map.Entry<String, Object>> entrySet() {
         Set<String> keySet = this.keySet();
         readLock.lock();
