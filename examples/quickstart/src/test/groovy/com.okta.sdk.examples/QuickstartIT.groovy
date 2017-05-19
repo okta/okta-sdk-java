@@ -32,14 +32,13 @@ class QuickstartIT {
     private static final Logger log = LoggerFactory.getLogger(QuickstartIT)
 
 
-    @Test(enabled = false)
+    @Test()
     void testCode() {
         try {
             String[] args={}
             Quickstart.main(args)
-            assert true
         } catch(Exception e){
-            fail()
+            fail("Quick start threw exception", e)
         }
     }
 }
