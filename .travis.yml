@@ -4,8 +4,9 @@ jdk:
 before_install:
 - source ./src/ci/before_install.sh
 script:
--  mvn install
+- test -z $OKTA_APICLIENT_ORGURL || mvn install
+- test -n $OKTA_APICLIENT_ORGURL || mvn install -DskipITs
 env:
   global:
-    - secure: "q7u1TTagfTJa4LGtZvDTvxUXtCtX4DGD7Ysi6Vx/snJrMAE2Upyg/2ub3ngnOa0cP19c62N/1BA0sG8hqmccsL0UOy93EvGvT2Bdkr3VlUEcgYagyMxsBVS4l5OMsHxPW3Fv5DOHFtYLfVxCfMvsoUxGpMwMO/72YpG4g38T3ic="
-    - secure: "C1QI6K+KlWhAooAYDrxfIHdoEXp/j2iqyaNazrc2AV/L3Q3urtoUOtePgZk0SfjcmmhDBnjn7XJF71YWE0W4Q+r0OIG9tDRQLjQhVRcNnxbAAtV2b9nZ8gZJQKiq7r+QQi28c0jAIYBzCbjPDCIK5ztpE/DqrohELB3jtUU+6WA="
+  - secure: Q9E3wkD3V7i/dm4CtSrMymSdOH2sDAjL/x8GLon12xpURFkaGtcWuhzt+8HEZZpOWJPnBvaz4LsfPTy2EtBlb2TGJlMsks4VESy0dmD6qGtO0Ftga21n/AeifaVgSzZPWzMAF9W/Xj8q6JmCBkni9B7zwH7i4hhDRDlEiNFRzjk=
+  - secure: GtZR6YIU14tIyolMBloLP9LB/Y0djW4xe16GvpjgEjx9UmhpGyAQS7lItfMgMrsYuFEORD2LDLUJVMAIThVsU7XtjJSgGILt+DGCqcyJu2k6MPvDvflSx6Hp1IVuxHMmbx1tsaDXFx/MX7SbUCcwazIgtLdETmWNcUItBL7JNYo=
