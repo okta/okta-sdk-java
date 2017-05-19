@@ -6,5 +6,6 @@ before_install:
 script:
 -  mvn install
 env:
-  - secure: "q7u1TTagfTJa4LGtZvDTvxUXtCtX4DGD7Ysi6Vx/snJrMAE2Upyg/2ub3ngnOa0cP19c62N/1BA0sG8hqmccsL0UOy93EvGvT2Bdkr3VlUEcgYagyMxsBVS4l5OMsHxPW3Fv5DOHFtYLfVxCfMvsoUxGpMwMO/72YpG4g38T3ic="
-  - secure: "C1QI6K+KlWhAooAYDrxfIHdoEXp/j2iqyaNazrc2AV/L3Q3urtoUOtePgZk0SfjcmmhDBnjn7XJF71YWE0W4Q+r0OIG9tDRQLjQhVRcNnxbAAtV2b9nZ8gZJQKiq7r+QQi28c0jAIYBzCbjPDCIK5ztpE/DqrohELB3jtUU+6WA="
+  global:
+    - secure: "q7u1TTagfTJa4LGtZvDTvxUXtCtX4DGD7Ysi6Vx/snJrMAE2Upyg/2ub3ngnOa0cP19c62N/1BA0sG8hqmccsL0UOy93EvGvT2Bdkr3VlUEcgYagyMxsBVS4l5OMsHxPW3Fv5DOHFtYLfVxCfMvsoUxGpMwMO/72YpG4g38T3ic="
+    - secure: "C1QI6K+KlWhAooAYDrxfIHdoEXp/j2iqyaNazrc2AV/L3Q3urtoUOtePgZk0SfjcmmhDBnjn7XJF71YWE0W4Q+r0OIG9tDRQLjQhVRcNnxbAAtV2b9nZ8gZJQKiq7r+QQi28c0jAIYBzCbjPDCIK5ztpE/DqrohELB3jtUU+6WA="
