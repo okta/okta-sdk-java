@@ -20,7 +20,7 @@ import com.okta.sdk.impl.ds.InternalDataStore;
 import java.util.Collections;
 import java.util.Map;
 
-public class TestResource extends AbstractInstanceResource {
+public class TestResource extends AbstractInstanceResource implements Map<String, Object> {
 
     public TestResource(InternalDataStore dataStore) {
         super(dataStore);
