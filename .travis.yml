@@ -4,7 +4,8 @@ jdk:
 before_install:
 - source ./src/ci/before_install.sh
 script:
-- mvn install
+- test -z $OKTA_APICLIENT_ORGURL || mvn install
+- test -n $OKTA_APICLIENT_ORGURL || mvn install -DskipITs
 env:
   global:
   - secure: Q9E3wkD3V7i/dm4CtSrMymSdOH2sDAjL/x8GLon12xpURFkaGtcWuhzt+8HEZZpOWJPnBvaz4LsfPTy2EtBlb2TGJlMsks4VESy0dmD6qGtO0Ftga21n/AeifaVgSzZPWzMAF9W/Xj8q6JmCBkni9B7zwH7i4hhDRDlEiNFRzjk=
