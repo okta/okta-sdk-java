@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * This class demonstrates the code found in the Stormpath Java SDK QuickStart Guide
+ * This class demonstrates the code found in the Okta Java SDK QuickStart Guide
  *
  * @since 1.0.0
  */
