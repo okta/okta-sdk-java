@@ -20,15 +20,32 @@ import com.okta.sdk.client.Clients
 import com.okta.sdk.impl.io.DefaultResourceFactory
 import com.okta.sdk.impl.io.Resource
 import com.okta.sdk.impl.io.ResourceFactory
+import com.okta.sdk.impl.test.RestoreEnvironmentVariables
+import com.okta.sdk.impl.test.RestoreSystemProperties
 import com.okta.sdk.impl.util.BaseUrlResolver
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
+import org.testng.annotations.Listeners
 import org.testng.annotations.Test
 
 import static org.testng.Assert.*
 import static org.mockito.Mockito.*
 
+@Listeners([RestoreSystemProperties, RestoreEnvironmentVariables])
 class DefaultClientBuilderTest {
+
+    /**
+     * This method MUST be called from each test in order to work with with the Listeners defined above.
+     * If this method is invoked with an @BeforeMethod annotation the Listener will be invoked before and after this
+     * method as well.
+     */
+    void clearOktaEnvAndSysProps() {
+        System.clearProperty("okta.apiClient.token")
+        System.clearProperty("okta.apiClient.orgUrl")
+
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_APICLIENT_TOKEN", null)
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_APICLIENT_ORGURL", null)
+    }
 
     @Test
     void testBuilder() {
@@ -37,6 +54,7 @@ class DefaultClientBuilderTest {
 
     @Test
     void testConfigureApiKey() {
+        clearOktaEnvAndSysProps()
         // remove key.txt from src/test/resources and this test will fail
         def client = new DefaultClientBuilder(noDefaultYamlResourceFactory()).build()
         assertEquals client.dataStore.getClientCredentials().getCredentials(), "13"
@@ -44,6 +62,7 @@ class DefaultClientBuilderTest {
 
     @Test
     void testConfigureBaseProperties() {
+        clearOktaEnvAndSysProps()
         def builder = new DefaultClientBuilder(noDefaultYamlResourceFactory())
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
         assertEquals clientBuilder.clientConfiguration.baseUrl, "https://api.okta.com/v42"
@@ -53,6 +72,7 @@ class DefaultClientBuilderTest {
 
     @Test
     void testConfigureProxy() {
+        clearOktaEnvAndSysProps()
         def builder = Clients.builder()
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
         assertEquals clientBuilder.clientConfiguration.proxyHost, "proxyyaml" // from yaml
@@ -77,6 +97,7 @@ class DefaultClientBuilderTest {
 
     @Test
     void testDefaultBaseUrlResolver(){
+        clearOktaEnvAndSysProps()
         def client = new DefaultClientBuilder(noDefaultYamlResourceFactory()).build()
         assertEquals(client.dataStore.baseUrlResolver.getBaseUrl(), "https://api.okta.com/v42")
     }
