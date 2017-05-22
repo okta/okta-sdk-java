@@ -118,6 +118,14 @@
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
+            <!-- Examples -->
+            <dependency>
+                <groupId>com.okta.sdk</groupId>
+                <artifactId>okta-sdk-examples-quickstart</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- Logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -133,6 +141,7 @@
                 <artifactId>logback-classic</artifactId>
                 <version>1.2.2</version>
             </dependency>
+
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
@@ -423,6 +432,7 @@
                     <!-- exclude generated enums coverage -->
                     <excludes>
                         <exclude>**/com/okta/sdk/resource/**/*</exclude>
+                        <exclude>**/quickstart/**/*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
