@@ -15,14 +15,18 @@
  */
 package quickstart;
 
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
+import com.okta.sdk.resource.PasswordCredential;
 import com.okta.sdk.resource.User;
+import com.okta.sdk.resource.UserCredentials;
 import com.okta.sdk.resource.UserGroup;
 import com.okta.sdk.resource.UserGroupProfile;
 
 import com.okta.sdk.resource.UserList;
+import com.okta.sdk.resource.UserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,45 +59,31 @@ public class Quickstart {
 
         System.out.println("Group: '"+ group.getId()+ "' was last updated on: "+ group.getLastUpdated());
 
-//        UserList users = client.getUsers();
-//
+        UserList users = client.listUsers();
+
+        // get the first user in the collection
+        System.out.println("First user: "+ users.iterator().next().getProfile().getEmail());
+
+        // or loop through all of them
 //        int ii = 0;
 //        for (User user : users) {
 //            System.out.println("["+ ii++ +"] User: " + user.getProfile().getEmail());
 //        }
 
 
-//
-//        // Retrieve your application
-//        ApplicationList applications = tenant.getApplications(
-//                Applications.where(Applications.name().eqIgnoreCase(APPLICATION_NAME))
-//        );
-//
-//        Application application = applications.iterator().next();
-//        log.info("Application: " + application.getResourceHref() + ", " + application.getName());
-//
 //        // Create a User Account
-//
-//        //Create the account object
-//        Account account = client.instantiate(Account.class);
-//
-//        //Set the account properties
-//        account.setGivenName("Joe")
-//                .setSurname("Quickstart_Stormtrooper")
-//                .setUsername("tk421")  // optional, defaults to email if unset
-//                .setEmail("tk421@stormpath.com")
-//                .setPassword("Changeme1");
-//        CustomData customData = account.getCustomData();
-//        customData.put("favoriteColor", "white");
-//
-//        // Create the account using the existing Application object
-//        account = application.createAccount(account);
-//
-//        // Print account details
-//
-//        log.info("Given Name: " + account.getGivenName());
-//        log.info("Favorite Color: " + account.getCustomData().get("favoriteColor"));
-//
+//        User user = client.instantiate(User.class);
+//        UserProfile userProfile = user.getProfile();
+//        userProfile.setFirstName("Joe");
+//        userProfile.setLastName("Code");
+//        userProfile.setEmail("joe.coder+" + UUID.randomUUID().toString() + "example.com");
+////        userProfile.put("userProperty", "userValue");
+//        user.setCredentials(client.instantiate(UserCredentials.class));
+//        user.getCredentials().setPassword(client.instantiate(PasswordCredential.class));
+//        client.createUser(user);
+
+//        client.listUsers();
+
 //        // Search for a User Account
 //
 //        Map<String, Object> queryParams = new HashMap<String, Object>();

@@ -26,11 +26,7 @@ import java.io.Serializable;
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
-public interface {{classname}} extends Resource, Saveable {
-
-{{!
-// FIXME: This breaks the IT, so need to add better tests before this is enabled
-// {{#vendorExtensions.x-oktaDynamicSchema } }, Map<String, Object>{{/vendorExtensions.x-oktaDynamicSchema}}
+public interface {{classname}} extends Resource, Saveable{{#vendorExtensions.x-oktaDynamicSchema}}, Map<String, Object>{{/vendorExtensions.x-oktaDynamicSchema}} {
 
 {{#vars}}
     {{#vendorExtensions.extraAnnotation}}
