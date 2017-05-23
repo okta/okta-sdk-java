@@ -172,7 +172,7 @@ public class WriteCacheFilter extends AbstractCacheFilter {
                             //we pass 'null' in as the querystring param because the querystring is only valid for
                             //the top-most item being cached - we don't want to propagate it for nested resources because the nested
                             //resource wasn't acquired w/ that query string.
-                            cache(itemType, referenceData, null);
+//                            cache(itemType, referenceData, null); // TODO: we cannot cache anything with a null url
                             element = toCanonicalReference(null, referenceData);
                         }
                     }
