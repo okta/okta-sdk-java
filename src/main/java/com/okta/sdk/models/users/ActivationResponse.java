@@ -22,6 +22,11 @@ public class ActivationResponse extends ApiObject {
     private String activationUrl;
 
     /**
+     * Activation token
+     */
+    private String activationToken;
+
+    /**
      * Returns the activationUrl.
      * @return {@link String}
      */
@@ -36,4 +41,21 @@ public class ActivationResponse extends ApiObject {
     public void setActivationUrl(String val) {
         this.activationUrl = val;
     }
+
+    /**
+     * Returns the activationToken
+     * @return {@link String}
+     */
+    public String getActivationToken() {
+        return activationToken;
+    }
+
+    /**
+     * Sets the activationToken
+     * @param val {@link String}
+     */
+    public void setActivationToken(String val) {
+        this.activationToken = val;
+    }
+
 }
