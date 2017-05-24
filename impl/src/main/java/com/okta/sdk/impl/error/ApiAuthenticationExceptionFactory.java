@@ -18,6 +18,7 @@ package com.okta.sdk.impl.error;
 import com.okta.sdk.error.Error;
 import com.okta.sdk.error.authc.OAuthAuthenticationException;
 import com.okta.sdk.lang.Classes;
+import com.okta.sdk.lang.Strings;
 import com.okta.sdk.resource.ResourceException;
 
 import java.lang.reflect.Constructor;
@@ -29,9 +30,7 @@ public class ApiAuthenticationExceptionFactory {
 
     public static final int AUTH_EXCEPTION_STATUS = 401;
 
-    public static final int AUTH_EXCEPTION_CODE = 401;
-
-    public static final String MORE_INFO = "http://docs.okta.com/java/quickstart";
+    public static final String AUTH_EXCEPTION_CODE = "401";
 
     private static final String DEFAULT_DEVELOPER_MESSAGE = "Authentication with a valid API Key is required.";
 
@@ -39,8 +38,7 @@ public class ApiAuthenticationExceptionFactory {
 
     public static ResourceException newApiAuthenticationException(Class<? extends ResourceException> clazz) {
 
-        Error error = DefaultErrorBuilder.status(AUTH_EXCEPTION_STATUS).code(AUTH_EXCEPTION_CODE).moreInfo(MORE_INFO)
-                .developerMessage(DEFAULT_DEVELOPER_MESSAGE).message(DEFAULT_CLIENT_MESSAGE).build();
+        Error error = DefaultErrorBuilder.status(AUTH_EXCEPTION_STATUS).code(AUTH_EXCEPTION_CODE).message(DEFAULT_CLIENT_MESSAGE).build();
 
         Constructor<? extends ResourceException> constructor = Classes.getConstructor(clazz, Error.class);
 
@@ -49,8 +47,11 @@ public class ApiAuthenticationExceptionFactory {
 
     public static ResourceException newApiAuthenticationException(Class<? extends ResourceException> clazz, String message) {
 
-        Error error = DefaultErrorBuilder.status(AUTH_EXCEPTION_STATUS).code(AUTH_EXCEPTION_CODE).moreInfo(MORE_INFO)
-                .developerMessage(message).message(DEFAULT_CLIENT_MESSAGE).build();
+        if (Strings.isEmpty(message)) {
+            message = DEFAULT_CLIENT_MESSAGE;
+        }
+
+        Error error = DefaultErrorBuilder.status(AUTH_EXCEPTION_STATUS).code(AUTH_EXCEPTION_CODE).message(getOrDefaultErrorMessage(message)).build();
 
 
         Constructor<? extends ResourceException> constructor = getConstructorFromClass(clazz);
@@ -58,14 +59,13 @@ public class ApiAuthenticationExceptionFactory {
         return Classes.instantiate(constructor, error);
     }
 
-    public static ResourceException newOAuthException(Class<? extends OAuthAuthenticationException> clazz, String oauthError) {
+    public static ResourceException newOAuthException(Class<? extends OAuthAuthenticationException> clazz, String message) {
 
-        Error error = DefaultErrorBuilder.status(AUTH_EXCEPTION_STATUS).code(AUTH_EXCEPTION_CODE).moreInfo(MORE_INFO)
-                .developerMessage(oauthError).message(DEFAULT_CLIENT_MESSAGE).build();
+        Error error = DefaultErrorBuilder.status(AUTH_EXCEPTION_STATUS).code(AUTH_EXCEPTION_CODE).message(getOrDefaultErrorMessage(message)).build();
 
         Constructor<? extends ResourceException> constructor = getConstructorFromClass(clazz);
 
-        return Classes.instantiate(constructor, error, oauthError);
+        return Classes.instantiate(constructor, error, message);
     }
 
     private static Constructor<? extends ResourceException> getConstructorFromClass(Class<? extends ResourceException> clazz) {
@@ -73,6 +73,13 @@ public class ApiAuthenticationExceptionFactory {
             return Classes.getConstructor(clazz, Error.class, String.class);
         }
         return Classes.getConstructor(clazz, Error.class);
+    }
+
+    private static String getOrDefaultErrorMessage(String nullableErrorMessage) {
+        if (Strings.isEmpty(nullableErrorMessage)) {
+            nullableErrorMessage = DEFAULT_CLIENT_MESSAGE;
+        }
+        return nullableErrorMessage;
     }
 
 }

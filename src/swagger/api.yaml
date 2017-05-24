@@ -8785,13 +8785,24 @@
       "type": "object",
       "x-okta-links": [
         {
+          "alias": "listGroups",
           "arguments": [
             {
               "dest": "userId",
               "src": "id"
             }
           ],
-          "operationId": "getUserGroups"
+          "operationId": "listUserGroups"
+        },
+        {
+          "alias": "activate",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "activateUser"
         }
       ]
     },
@@ -8867,13 +8878,14 @@
       "type": "object",
       "x-okta-links": [
         {
+          "alias": "listUsers",
           "arguments": [
             {
-              "dest": "id",
+              "dest": "groupId",
               "src": "id"
             }
           ],
-          "operationId": "getGroupUsers"
+          "operationId": "listGroupUsers"
         }
       ]
     },
@@ -8947,8 +8959,7 @@
           "type": "string"
         }
       },
-      "type": "object",
-      "x-oktaDynamicSchema": "true"
+      "type": "object"
     },
     "UserStatusMediationPolicyRuleCondition": {
       "properties": {

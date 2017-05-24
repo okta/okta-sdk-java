@@ -569,7 +569,7 @@ public class DefaultDataStore implements InternalDataStore {
             String requestId = response.getHeaders().getOktaRequestId();
 
             if (Strings.hasText(requestId)) {
-                body.put(DefaultError.REQUEST_ID.getName(), requestId);
+                body.put(DefaultError.ERROR_ID.getName(), requestId);
             }
 
             com.okta.sdk.error.Error error = new DefaultError(body);

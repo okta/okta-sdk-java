@@ -28,7 +28,7 @@ public class DefaultErrorBuilder {
 
     private final Map<String, Object> errorProperties;
 
-    public DefaultErrorBuilder(Integer status) {
+    public DefaultErrorBuilder(int status) {
         Assert.notNull(status, "status cannot be null.");
         errorProperties = new HashMap<String, Object>();
         errorProperties.put(DefaultError.STATUS.getName(), status);
@@ -38,7 +38,8 @@ public class DefaultErrorBuilder {
         return new DefaultErrorBuilder(status);
     }
 
-    public DefaultErrorBuilder code(Integer code) {
+
+    public DefaultErrorBuilder code(String code) {
         this.errorProperties.put(DefaultError.CODE.getName(), code);
         return this;
     }
@@ -48,18 +49,13 @@ public class DefaultErrorBuilder {
         return this;
     }
 
-    public DefaultErrorBuilder developerMessage(String developerMessage) {
-        this.errorProperties.put(DefaultError.DEV_MESSAGE.getName(), developerMessage);
+    public DefaultErrorBuilder causes(Map<String, String> causes) {
+        this.errorProperties.put(DefaultError.CAUSES.getName(), causes);
         return this;
     }
 
-    public DefaultErrorBuilder moreInfo(String moreInfo) {
-        this.errorProperties.put(DefaultError.MORE_INFO.getName(), moreInfo);
-        return this;
-    }
-
-    public DefaultErrorBuilder requestId(String requestId) {
-        this.errorProperties.put(DefaultError.REQUEST_ID.getName(), requestId);
+    public DefaultErrorBuilder errorId(String requestId) {
+        this.errorProperties.put(DefaultError.ERROR_ID.getName(), requestId);
         return this;
     }
 

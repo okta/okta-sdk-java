@@ -37,12 +37,10 @@ class ApiAuthenticationExceptionFactoryTest {
 
         assertEquals r.code, ApiAuthenticationExceptionFactory.AUTH_EXCEPTION_CODE
         assertEquals r.status, ApiAuthenticationExceptionFactory.AUTH_EXCEPTION_STATUS
-        assertEquals r.moreInfo, ApiAuthenticationExceptionFactory.MORE_INFO
         assertEquals r.message,
             "HTTP " + ApiAuthenticationExceptionFactory.AUTH_EXCEPTION_CODE +
             ", Okta " + ApiAuthenticationExceptionFactory.AUTH_EXCEPTION_STATUS +
-            " (" + ApiAuthenticationExceptionFactory.MORE_INFO + "): " + devMessage
-        assertEquals r.developerMessage, devMessage
+            " (" + devMessage + ")"
     }
     @Test
     void testOAuthAuthenticationException() {
@@ -53,13 +51,10 @@ class ApiAuthenticationExceptionFactoryTest {
 
         assertEquals r.code, ApiAuthenticationExceptionFactory.AUTH_EXCEPTION_CODE
         assertEquals r.status, ApiAuthenticationExceptionFactory.AUTH_EXCEPTION_STATUS
-        assertEquals r.moreInfo, ApiAuthenticationExceptionFactory.MORE_INFO
         assertEquals r.message,
             "HTTP " + ApiAuthenticationExceptionFactory.AUTH_EXCEPTION_CODE +
             ", Okta " + ApiAuthenticationExceptionFactory.AUTH_EXCEPTION_STATUS +
-            " (" + ApiAuthenticationExceptionFactory.MORE_INFO + "): " + devMessage
-
-        assertEquals r.developerMessage, devMessage
+            " (" + devMessage + ")"
     }
 
 }

@@ -73,7 +73,7 @@ public class Default{{classname}} extends AbstractInstanceResource implements {{
   * @return {{returnType}}
   {{/returnType}}
   */
-  public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}}) {
+  public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}}) {
   {{#vendorExtensions.fromModelPathParams}}{{#.}}
     {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();
   {{/.}}{{/vendorExtensions.fromModelPathParams}}
