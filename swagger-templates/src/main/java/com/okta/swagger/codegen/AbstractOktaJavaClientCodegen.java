@@ -15,6 +15,8 @@
  */
 package com.okta.swagger.codegen;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
@@ -35,20 +37,25 @@ import io.swagger.models.Swagger;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
+import io.swagger.util.Json;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen {
 
@@ -130,18 +137,36 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 swagger.getDefinitions(),
                                 swagger);
 
+                        JsonNode aliasNode = n.get("alias");
+                        if (aliasNode != null) {
+                            cgOperation.vendorExtensions.put("alias", aliasNode.textValue());
+                        }
+
                         // now any params that match the models we need to use the model value directly
                         // for example if the path contained {id} we would call getId() instead
+
+                        Map<String, String> argMap = new LinkedHashMap<>();
+                        ArrayNode argNodeList = (ArrayNode)  n.get("arguments");
+
+                        if (argNodeList != null) {
+                            for (Iterator argNodeIter=argNodeList.iterator(); argNodeIter.hasNext();) {
+                                JsonNode argNode = (JsonNode) argNodeIter.next();
+                                String src = argNode.get("src").textValue();
+                                String dest = argNode.get("dest").textValue();
+                                argMap.put(dest, src); // reverse lookup
+                            }
+                        }
 
                         List<CodegenParameter> cgParamAllList = new ArrayList<>();
                         List<CodegenParameter> cgParamModelList = new ArrayList<>();
 
-
                         cgOperation.pathParams.forEach(param -> {
-                            if (model.getProperties().containsKey(param.paramName)) {
+
+                            if (argMap.containsKey(param.paramName)) {
                                 cgParamModelList.add(param);
 
-                                CodegenProperty cgProperty = fromProperty(param.paramName, model.getProperties().get(param.paramName));
+                                String srcPropName = argMap.get(param.paramName);
+                                CodegenProperty cgProperty = fromProperty(srcPropName, model.getProperties().get(srcPropName));
                                 param.vendorExtensions.put("fromModel", cgProperty);
                             }
                             else {

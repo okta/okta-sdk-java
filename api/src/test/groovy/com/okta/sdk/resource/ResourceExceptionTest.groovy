@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.resource
 
+import com.okta.sdk.error.ErrorCause
 import org.testng.annotations.Test
 
 import static org.testng.Assert.assertEquals
@@ -34,24 +35,21 @@ class ResourceExceptionTest {
                 return 400
             }
 
-            int getCode() {
-                return 2000
+            String getCode() {
+                return "I2000"
             }
 
             String getMessage() {
                 return 'foo'
             }
 
-            String getDeveloperMessage() {
-                return 'bar'
-            }
-
-            String getMoreInfo() {
-                return 'someUrl'
+            @Override
+            List<ErrorCause> getCauses() {
+                return null
             }
 
             @Override
-            String getRequestId() {
+            String getId() {
                 return  null
             }
         }
@@ -59,14 +57,9 @@ class ResourceExceptionTest {
         def ex = new ResourceException(error)
 
         assertEquals ex.status, 400
-        assertEquals ex.code, 2000
-        assertEquals ex.message, 'HTTP 400, Okta 2000 (someUrl): bar'
-        assertEquals ex.developerMessage, 'bar'
-        assertEquals ex.moreInfo, 'someUrl'
-        assertEquals ex.requestId, null
-        //Re-enable for Issue #32:
-        //assertSame ex.error, error
-        //assertSame ex.error.message, error.message
+        assertEquals ex.code, "I2000"
+        assertEquals ex.message, 'HTTP 400, Okta I2000 (foo)'
+        assertEquals ex.id, null
     }
 
 

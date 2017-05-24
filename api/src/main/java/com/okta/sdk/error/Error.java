@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.error;
 
+import java.util.List;
+
 /**
  * @since 0.5.0
  */
@@ -22,13 +24,11 @@ public interface Error {
 
     int getStatus();
 
-    int getCode();
+    String getCode();
 
     String getMessage();
 
-    String getDeveloperMessage();
+    String getId();
 
-    String getMoreInfo();
-
-    String getRequestId();
+    List<ErrorCause> getCauses();
 }

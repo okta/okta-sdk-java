@@ -16,8 +16,12 @@
 package com.okta.sdk.resource;
 
 import com.okta.sdk.error.Error;
+import com.okta.sdk.error.ErrorCause;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Strings;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @since 0.5.0
@@ -41,16 +45,15 @@ public class ResourceException extends RuntimeException implements Error {
         Assert.notNull(error, "Error argument cannot be null.");
         StringBuilder sb = new StringBuilder();
         sb.append("HTTP ").append(error.getStatus())
-                .append(", Okta ").append(error.getCode())
-                .append(" (").append(error.getMoreInfo()).append(")");
+          .append(", Okta ").append(error.getCode())
+          .append(" (").append(error.getMessage()).append(")");
 
-        String requestId = error.getRequestId();
+        String errorId = error.getId();
 
-        if (Strings.hasText(requestId)) {
-            sb.append(", RequestId ").append(error.getRequestId());
+        if (Strings.hasText(errorId)) {
+            sb.append(", ErrorId ").append(errorId);
         }
-
-        return sb.append(": ").append(error.getDeveloperMessage()).toString();
+        return sb.toString();
     }
 
     public ResourceException(Error error) {
@@ -69,28 +72,19 @@ public class ResourceException extends RuntimeException implements Error {
      * @return the code of the error
      */
     @Override
-    public int getCode() {
+    public String getCode() {
         return error.getCode();
     }
 
-    @Override
-    public String getDeveloperMessage() {
-        return error.getDeveloperMessage();
-    }
 
-    /**
-     * More information about the error is described in the Okta Error Codes documentation
-     * Check http://docs.okta.com/errors/ for the list of Okta Error Codes
-     * @return the URI to the error documentation
-     */
     @Override
-    public String getMoreInfo() {
-        return error.getMoreInfo();
+    public String getId() {
+        return error.getId();
     }
 
     @Override
-    public String getRequestId() {
-        return error.getRequestId();
+    public List<ErrorCause> getCauses() {
+        return error.getCauses();
     }
 
     public Error getOktaError() {

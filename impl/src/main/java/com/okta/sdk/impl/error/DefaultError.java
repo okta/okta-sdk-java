@@ -16,12 +16,18 @@
 package com.okta.sdk.impl.error;
 
 import com.okta.sdk.error.Error;
+import com.okta.sdk.error.ErrorCause;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.IntegerProperty;
+import com.okta.sdk.impl.resource.ListProperty;
+import com.okta.sdk.impl.resource.MapProperty;
 import com.okta.sdk.impl.resource.Property;
 import com.okta.sdk.impl.resource.StringProperty;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,14 +38,13 @@ public class DefaultError extends AbstractResource implements Error, Serializabl
     static final long serialVersionUID = 42L;
 
     static final IntegerProperty STATUS = new IntegerProperty("status");
-    static final IntegerProperty CODE = new IntegerProperty("code");
-    static final StringProperty MESSAGE = new StringProperty("message");
-    static final StringProperty DEV_MESSAGE = new StringProperty("developerMessage");
-    static final StringProperty MORE_INFO = new StringProperty("moreInfo");
-    public static final StringProperty REQUEST_ID = new StringProperty("requestId");
+    static final StringProperty CODE = new StringProperty("errorCode");
+    static final StringProperty MESSAGE = new StringProperty("errorSummary");
+    static final ListProperty CAUSES = new ListProperty("errorCauses");
+    public static final StringProperty ERROR_ID = new StringProperty("errorId");
 
     private static final Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(
-            STATUS, CODE, MESSAGE, DEV_MESSAGE, MORE_INFO
+            STATUS, CODE, MESSAGE, CAUSES, ERROR_ID
     );
 
     public DefaultError(Map<String, Object> body) {
@@ -67,11 +72,11 @@ public class DefaultError extends AbstractResource implements Error, Serializabl
     }
 
     @Override
-    public int getCode() {
-        return getInt(CODE);
+    public String getCode() {
+        return getString(CODE);
     }
 
-    public DefaultError setCode(int code) {
+    public DefaultError setCode(String code) {
         setProperty(CODE, code);
         return this;
     }
@@ -87,33 +92,28 @@ public class DefaultError extends AbstractResource implements Error, Serializabl
     }
 
     @Override
-    public String getDeveloperMessage() {
-        return getString(DEV_MESSAGE);
+    public String getId() {
+       return getString(ERROR_ID);
     }
 
-    public DefaultError setDeveloperMessage(String message) {
-        setProperty(DEV_MESSAGE, message);
+    public DefaultError setId(String requestId) {
+        setProperty(ERROR_ID, requestId);
         return this;
     }
 
     @Override
-    public String getMoreInfo() {
-        return getString(MORE_INFO);
+    public List<ErrorCause> getCauses() {
+        List<ErrorCause> results = new ArrayList<>();
+        Object rawProp = getProperty(CAUSES.getName());
+        if (rawProp instanceof List) {
+            ((List<Map<String, Object>>) rawProp).forEach(causeMap ->
+                    results.add(new DefaultErrorCause(getDataStore(), causeMap)));
+        }
+        return Collections.unmodifiableList(results);
     }
 
-    public DefaultError setMoreInfo(String moreInfo) {
-        setProperty(MORE_INFO, moreInfo);
-        return this;
-    }
-
-    @Override
-    public String getRequestId() {
-       return getString(REQUEST_ID);
-    }
-
-
-    public DefaultError setRequestId(String requestId) {
-        setProperty(REQUEST_ID, requestId);
+    public DefaultError setCauses(Map<String, String> causes) {
+        setProperty(CAUSES, causes);
         return this;
     }
 
