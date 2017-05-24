@@ -40,7 +40,7 @@ package com.okta.sdk.oauth;
  * not considered as secure as the other two locations.
  * </p>
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public enum RequestLocation {
 

@@ -23,7 +23,7 @@ package com.okta.sdk.lang;
  * @param <T> the type of the input to the function
  * @param <R> the type of the result of the function
  * @see <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html">JDK 8 Function</a>
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface Function<T, R> {
 

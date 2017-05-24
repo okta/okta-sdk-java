@@ -41,7 +41,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DefaultDateExpressionFactory implements DateExpressionFactory {
 

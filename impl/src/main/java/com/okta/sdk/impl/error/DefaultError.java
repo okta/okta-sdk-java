@@ -25,7 +25,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DefaultError extends AbstractResource implements Error, Serializable {
 

@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class Classes {
 

@@ -18,7 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.sdk.lang.Assert;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public abstract class Property<T> {
 

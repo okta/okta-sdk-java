@@ -204,7 +204,7 @@ import com.okta.sdk.cache.CacheManager;
  * references the same exact {@code CacheManager} instance to guarantee cache coherency.</p>
  *
  * @see com.okta.sdk.api.ApiKeyBuilder ApiKeyBuilder
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface ClientBuilder {
 

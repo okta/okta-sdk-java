@@ -40,7 +40,7 @@ import static org.testng.Assert.*
 /**
  * Test for the {@link HttpRequestBuilder} class that uses utility methods in {@link HttpRequests} class
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 class HttpRequestBuilderTest {
 

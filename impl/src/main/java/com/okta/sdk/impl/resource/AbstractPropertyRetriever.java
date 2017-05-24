@@ -36,7 +36,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Refactored methods from {@link AbstractResource} to make them common to subclasses.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public abstract class AbstractPropertyRetriever {
 

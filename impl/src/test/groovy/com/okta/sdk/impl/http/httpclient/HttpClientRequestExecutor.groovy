@@ -30,7 +30,7 @@ import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
  *
  * {@code RequestExecutor} stub to allow a AbstractClient to be instantiated in a unit test.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class HttpClientRequestExecutor implements RequestExecutor {
 

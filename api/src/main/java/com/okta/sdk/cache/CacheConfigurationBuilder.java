@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  * @see #withTimeToIdle(long, java.util.concurrent.TimeUnit)
  * @see Caches#forResource(Class)
  * @see Caches#named(String)
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface CacheConfigurationBuilder {
 

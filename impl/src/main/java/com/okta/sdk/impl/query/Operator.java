@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.query;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public enum Operator {
 

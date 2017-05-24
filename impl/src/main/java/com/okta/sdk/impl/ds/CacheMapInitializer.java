@@ -24,7 +24,7 @@ import java.util.Map;
  * <p>
  *     Interface used to define the method to initialize a cache map. Used in the {@link DefaultDataStore}.
  * </p>
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface CacheMapInitializer {
 

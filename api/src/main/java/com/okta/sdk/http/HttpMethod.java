@@ -20,7 +20,7 @@ package com.okta.sdk.http;
  * <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html">Hypertext Transfer Protocol -- HTTP/1.1</a>
  * specification.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public enum HttpMethod {
 

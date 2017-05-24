@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger
  *
  * This implementation DOES NOT count HTTP redirects since the default RequestExecutor will execute them transparently.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class RequestCountingClient extends DefaultClient {
 

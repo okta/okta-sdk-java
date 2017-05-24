@@ -20,7 +20,7 @@ import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Strings;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class ResourceException extends RuntimeException implements Error {
 

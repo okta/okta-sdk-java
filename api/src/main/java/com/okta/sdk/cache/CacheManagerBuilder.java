@@ -52,7 +52,7 @@ import java.util.concurrent.TimeUnit;
  * see the same cached security/identity data.  Some example clustered caching solutions: Hazelcast,
  * Ehcache+Terracotta, Memcache, Redis, Coherence, GigaSpaces, etc.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface CacheManagerBuilder {
 

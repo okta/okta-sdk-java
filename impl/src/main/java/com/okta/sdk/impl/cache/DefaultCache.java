@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * <h2>Thread Safety</h2>
  * This implementation is thread-safe <em>only</em> if the backing map is thread-safe.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DefaultCache<K, V> implements Cache<K, V> {
 

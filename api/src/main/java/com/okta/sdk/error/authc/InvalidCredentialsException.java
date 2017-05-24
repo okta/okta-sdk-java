@@ -21,7 +21,7 @@ import com.okta.sdk.resource.ResourceException;
 /**
  *  A sub-class of {@link ResourceException} representing an attempt to login using an malformed credentials.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class InvalidCredentialsException extends ResourceException {
 

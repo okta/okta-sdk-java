@@ -18,7 +18,7 @@ package com.okta.sdk.impl.ds;
 import com.okta.sdk.resource.Resource;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface CacheRegionNameResolver {
 

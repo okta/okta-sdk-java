@@ -21,7 +21,7 @@ import com.okta.sdk.resource.Saveable;
 import java.util.Map;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public abstract class AbstractInstanceResource extends AbstractResource implements Saveable {
 
