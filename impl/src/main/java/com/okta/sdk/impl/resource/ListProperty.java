@@ -33,7 +33,7 @@ package com.okta.sdk.impl.resource;
 import java.util.List;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class ListProperty extends Property<List> {
 

@@ -29,7 +29,7 @@ import com.okta.sdk.lang.Classes;
  * <p>See the {@link ClientBuilder ClientBuilder} JavaDoc for extensive documentation on client configuration.</p>
  *
  * @see ClientBuilder
- * @since 1.0.0
+ * @since 0.5.0
  */
 public final class Clients {
 

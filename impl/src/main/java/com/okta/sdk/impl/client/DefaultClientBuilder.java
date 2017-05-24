@@ -71,7 +71,7 @@ import java.util.concurrent.TimeUnit;
  * <li>~/okta.yaml</li>
  * </ul>
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DefaultClientBuilder implements ClientBuilder {
 

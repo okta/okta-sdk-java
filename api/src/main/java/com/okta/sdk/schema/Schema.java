@@ -21,7 +21,7 @@ import com.okta.sdk.resource.Saveable;
 /**
  * Schema represents the {@link Resource} schema configuration used to determine which fields in an editable resource are required..
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface Schema extends Resource, Saveable {
 

@@ -38,7 +38,7 @@ import static org.testng.Assert.assertSame
 /**
  * Test for ListProperty class
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 class ListPropertyTest {
 

@@ -20,7 +20,7 @@ import com.okta.sdk.resource.CollectionResource;
 /**
  * A {@link CollectionResource} containing {@link Field} instances.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface FieldList extends CollectionResource<Field> {
 

@@ -19,7 +19,7 @@ package com.okta.sdk.resource;
  * A {@code CollectionResource} is a first-class {@link Resource} that contains a collection of
  * other {@link Resource} instances.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface CollectionResource<T extends Resource> extends Resource, Iterable<T> {
 

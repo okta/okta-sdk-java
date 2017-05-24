@@ -16,7 +16,7 @@
 package com.okta.sdk.resource;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface Saveable {
 

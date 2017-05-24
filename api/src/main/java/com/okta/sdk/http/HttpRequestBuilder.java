@@ -27,7 +27,7 @@ import java.util.Map;
  *
  * @see HttpRequest
  * @see HttpRequests
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface HttpRequestBuilder {
 

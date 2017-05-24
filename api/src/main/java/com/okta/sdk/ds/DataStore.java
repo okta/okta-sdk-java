@@ -25,7 +25,7 @@ import com.okta.sdk.resource.Resource;
  * for converting SDK objects (Account, Directory, Group instances, etc) into REST HTTP requests, executing those
  * requests, and converting REST HTTP responses back into SDK objects.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface DataStore {
 

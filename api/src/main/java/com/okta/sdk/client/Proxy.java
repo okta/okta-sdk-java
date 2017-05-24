@@ -18,7 +18,7 @@ package com.okta.sdk.client;
 /**
  * HTTP proxy server communication settings, used if the Okta SDK Client must communicate through an HTTP Proxy.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class Proxy {
 

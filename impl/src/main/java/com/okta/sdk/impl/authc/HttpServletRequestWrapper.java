@@ -18,7 +18,7 @@ package com.okta.sdk.impl.authc;
 import java.util.Map;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface HttpServletRequestWrapper {
 

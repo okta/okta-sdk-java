@@ -22,7 +22,7 @@ import com.okta.sdk.cache.CacheManager;
  * A disabled implementation that does nothing.  This alleviates a CacheManager user (component) from ever needing to
  * check for null.  Non-null guarantees reduce a program's cyclomatic complexity and simplify testing.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DisabledCacheManager implements CacheManager {
 

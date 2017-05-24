@@ -31,7 +31,7 @@ import java.io.OutputStream;
  * report that it is repeatable and will reset the stream on all subsequent
  * attempts to write out the request.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 class RepeatableInputStreamEntity extends BasicHttpEntity {
 

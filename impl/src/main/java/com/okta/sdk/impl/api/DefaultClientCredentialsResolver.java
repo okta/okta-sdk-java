@@ -19,7 +19,7 @@ import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.config.ClientConfiguration;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DefaultClientCredentialsResolver implements ClientCredentialsResolver {
 

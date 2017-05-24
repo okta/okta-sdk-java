@@ -25,7 +25,7 @@ import java.util.Comparator;
  *
  * @author Keith Donald
  * @author Juergen Hoeller
- * @since 1.0.0
+ * @since 0.5.0
  */
 @SuppressWarnings("serial")
 public class InvertibleComparator<T> implements Comparator<T>, Serializable {

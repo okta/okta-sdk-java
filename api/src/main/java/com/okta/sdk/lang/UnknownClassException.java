@@ -19,7 +19,7 @@ package com.okta.sdk.lang;
  * A <code>RuntimeException</code> equivalent of the JDK's
  * <code>ClassNotFoundException</code>, to maintain a RuntimeException paradigm.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class UnknownClassException extends RuntimeException {
 

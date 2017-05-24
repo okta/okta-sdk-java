@@ -48,9 +48,9 @@ import java.util.jar.JarFile;
  * {@link com.okta.sdk.impl.http.support.UserAgent#getUserAgentString() UserAgent.getUserAgentString()}.
  * <p>
  * This is a sample User-Agent string:
- * <i>okta-spring-security/0.7.0 okta-sdk-java/1.0.0 spring/4.0.4.RELEASE java/1.7.0_45 Mac OS X/10.9.2 (spring-security/3.2.0.RELEASE jetty/8.1.5.v20120716)</i>
+ * <i>okta-spring-security/0.7.0 okta-sdk-java/0.5.0 spring/4.0.4.RELEASE java/1.7.0_45 Mac OS X/10.9.2 (spring-security/3.2.0.RELEASE jetty/8.1.5.v20120716)</i>
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class UserAgent {
 

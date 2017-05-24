@@ -22,7 +22,7 @@ import com.okta.sdk.resource.Saveable;
 /**
  * A Field represents the configuration of an editable {@link Resource} field, it determines if its required or not.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface Field extends Resource, Saveable, Deletable {
 

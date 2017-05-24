@@ -53,7 +53,7 @@ import com.okta.sdk.resource.Resource;
  * <p><em>The above TTL and TTI times are just examples showing API usage - the times themselves are not
  * recommendations.  Choose TTL and TTI times based on your application requirements.</em></p>
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class Caches {
 

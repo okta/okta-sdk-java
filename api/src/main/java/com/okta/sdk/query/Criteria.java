@@ -19,7 +19,7 @@ package com.okta.sdk.query;
  * A Criteria instance represents one or more {@link Criterion} (conditions) that are used to customize query
  * results.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface Criteria<T extends Criteria<T>> {
 

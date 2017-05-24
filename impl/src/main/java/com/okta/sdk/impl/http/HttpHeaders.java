@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class HttpHeaders implements MultiValueMap<String, String> {
 

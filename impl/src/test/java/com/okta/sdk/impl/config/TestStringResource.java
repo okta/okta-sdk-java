@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class TestStringResource implements Resource {
 

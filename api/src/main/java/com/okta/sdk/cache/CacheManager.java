@@ -22,7 +22,7 @@ package com.okta.sdk.cache;
  * cache framework's main Manager component (e.g. JCache, Ehcache, Hazelcast, JCS, OSCache, JBossCache, TerraCotta,
  * Coherence, GigaSpaces, etc, etc), allowing a Okta SDK user to configure any cache mechanism they choose.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface CacheManager {
 

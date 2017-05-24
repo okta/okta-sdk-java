@@ -25,7 +25,7 @@ import static org.testng.Assert.fail
 /**
  * This integration test validates that the example code in the JSDK Quickstart Guide (http://docs.stormpath.com/java/quickstart) works
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 class QuickstartIT {
 

@@ -21,7 +21,7 @@ import com.okta.sdk.impl.query.Operator;
 import com.okta.sdk.impl.query.SimpleExpression;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class StringProperty extends Property<String> {
 

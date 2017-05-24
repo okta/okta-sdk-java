@@ -20,7 +20,7 @@ import com.okta.sdk.lang.Assert;
 /**
  * A collection-specific {@link Expansion} that adds pagination capabilities.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class CollectionExpansion extends Expansion {
 

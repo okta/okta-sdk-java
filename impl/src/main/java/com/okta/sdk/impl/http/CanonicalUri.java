@@ -19,7 +19,7 @@ package com.okta.sdk.impl.http;
  * A canonical representation of a <a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI)</a>
  * suitable for the SDK's needs.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface CanonicalUri {
 

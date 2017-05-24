@@ -24,7 +24,7 @@ import java.util.TimeZone;
 /**
  * Utility class to create UTC-based dates and perform time conversions from UTC to other {@link TimeZone timezones} and vice versa
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class Instants {
 

@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.net.URI;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface Request extends HttpMessage {
 

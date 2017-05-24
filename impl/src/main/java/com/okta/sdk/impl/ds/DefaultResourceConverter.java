@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DefaultResourceConverter implements ResourceConverter {
 

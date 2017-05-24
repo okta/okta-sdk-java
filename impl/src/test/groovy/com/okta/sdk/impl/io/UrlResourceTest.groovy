@@ -21,7 +21,7 @@ import static org.testng.Assert.assertEquals
 import static org.testng.Assert.assertNotNull
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 class UrlResourceTest {
 

@@ -70,7 +70,7 @@ import java.util.concurrent.TimeUnit;
  * @see #setDefaultTimeToIdleSeconds(long)
  * @see #setDefaultTimeToLive(com.okta.sdk.lang.Duration)
  * @see #setDefaultTimeToLiveSeconds(long)
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DefaultCacheManager implements CacheManager {
 

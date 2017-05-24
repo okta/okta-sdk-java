@@ -25,7 +25,7 @@ import java.util.Arrays;
  * </p>
  *
  * Gratefully imported from the Apache Commons-Codec library.
- * @since 1.0.0
+ * @since 0.5.0
  */
 public abstract class BaseNCodec {
 
