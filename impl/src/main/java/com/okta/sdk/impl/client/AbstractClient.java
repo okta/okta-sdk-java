@@ -43,7 +43,7 @@ import java.lang.reflect.Constructor;
  * time one needs to instantiate or look up a Resource.</p>
  *
  * @see <a href="http://www.okta.com/docs/quickstart/connect">Communicating with Okta: Get your API Key</a>
- * @since 1.0.0
+ * @since 0.5.0
  */
 public abstract class AbstractClient implements Client {
 

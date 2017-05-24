@@ -37,7 +37,7 @@ import java.util.UUID;
 /**
  * This class demonstrates the code found in the Okta Java SDK QuickStart Guide
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class Quickstart {
 

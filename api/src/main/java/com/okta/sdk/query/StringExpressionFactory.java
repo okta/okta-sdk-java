@@ -18,7 +18,7 @@ package com.okta.sdk.query;
 /**
  * An {@code StringExpressionFactory} creates String conditions (equals, startsWith, etc) for specific resource properties.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface StringExpressionFactory {
 

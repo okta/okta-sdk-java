@@ -30,7 +30,7 @@ import java.util.Map;
  * <p>
  * <b>WARNING: This API CAN CHANGE AT ANY TIME, WITHOUT NOTICE.  DO NOT DEPEND ON IT.</b>
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface InternalDataStore extends DataStore {
 

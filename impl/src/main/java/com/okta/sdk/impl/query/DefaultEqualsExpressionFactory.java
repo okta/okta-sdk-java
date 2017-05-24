@@ -18,7 +18,7 @@ package com.okta.sdk.impl.query;
 import com.okta.sdk.query.EqualsExpressionFactory;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DefaultEqualsExpressionFactory implements EqualsExpressionFactory {
 

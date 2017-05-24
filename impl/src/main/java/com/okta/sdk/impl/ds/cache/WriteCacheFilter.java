@@ -87,7 +87,7 @@ public class WriteCacheFilter extends AbstractCacheFilter {
         Class<? extends Resource> clazz = result.getResourceClass();
 
         return
-            //@since 1.0.0
+            //@since 0.5.0
             AbstractResource.isMaterialized(result.getData());
     }
 

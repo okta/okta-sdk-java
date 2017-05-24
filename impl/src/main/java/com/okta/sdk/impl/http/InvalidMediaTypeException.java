@@ -7,7 +7,7 @@ import com.okta.sdk.impl.util.InvalidMimeTypeException;
  * encountering an invalid media type specification String.
  *
  * @author Juergen Hoeller
- * @since 1.0.0
+ * @since 0.5.0
  */
 @SuppressWarnings("serial")
 public class InvalidMediaTypeException extends IllegalArgumentException {

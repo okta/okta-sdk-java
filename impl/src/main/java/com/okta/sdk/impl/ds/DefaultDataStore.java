@@ -72,7 +72,7 @@ import static com.okta.sdk.impl.http.HttpHeaders.OKTA_AGENT;
 import static com.okta.sdk.impl.http.HttpHeaders.OKTA_CLIENT_REQUEST_ID;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DefaultDataStore implements InternalDataStore {
 

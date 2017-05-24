@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * A {@code Criterion} is an individual condition (restriction) to apply to a {@link Criteria} query.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface Criterion extends Serializable {
 

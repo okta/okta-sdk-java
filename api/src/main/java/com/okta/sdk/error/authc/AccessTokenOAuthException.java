@@ -21,7 +21,7 @@ import com.okta.sdk.resource.ResourceException;
 /**
  * A sub-class of {@link ResourceException} representing an attempt to login via {@code OAuth} using an invalid {@code accessToken}.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class AccessTokenOAuthException extends OAuthAuthenticationException {
 

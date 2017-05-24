@@ -21,7 +21,7 @@ import com.okta.sdk.resource.ResourceException;
 /**
  * A sub-class of {@link ResourceException} representing an authentication scheme not supported by Okta.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 
 public class UnsupportedAuthenticationSchemeException extends ResourceException {

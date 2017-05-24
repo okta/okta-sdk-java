@@ -26,7 +26,7 @@ import com.okta.sdk.lang.Assert;
  * There are currently two authentication schemes available: <a href="http://docs.okta.com/rest/product-guide/#authentication-basic">HTTP
  * Basic Authentication</a>, and SSWS (Okta session bearer token).
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public enum AuthenticationScheme {
 

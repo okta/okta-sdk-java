@@ -71,7 +71,7 @@ import java.util.Random;
  * <a href="http://hc.apache.org/httpcomponents-client-ga">Apache HttpClient</a> implementation to
  * execute http requests.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class HttpClientRequestExecutor implements RequestExecutor {
 

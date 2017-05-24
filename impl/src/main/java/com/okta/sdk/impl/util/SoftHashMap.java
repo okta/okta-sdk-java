@@ -46,7 +46,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * <p>
  * This implementation is thread-safe and usable in concurrent environments.
  *
- * @since 1.0.0
+ * @since 0.5.0
  * @see SoftReference
  * @see <a href="http://shiro.apache.org">Apache Shiro</a>
  */

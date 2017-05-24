@@ -19,7 +19,7 @@ package com.okta.sdk.impl.api;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 
 /**
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface ClientCredentialsResolver {
 

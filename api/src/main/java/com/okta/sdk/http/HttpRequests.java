@@ -28,7 +28,7 @@ import java.lang.reflect.Constructor;
  * authenticated (presumably to assert an identity for calls to your REST API)
  * </p>
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public final class HttpRequests {
 

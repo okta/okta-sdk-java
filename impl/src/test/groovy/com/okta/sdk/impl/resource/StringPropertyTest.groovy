@@ -22,7 +22,7 @@ import static org.testng.Assert.assertSame
 
 /**
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 class StringPropertyTest {
 

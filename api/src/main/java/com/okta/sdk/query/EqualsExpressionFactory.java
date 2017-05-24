@@ -18,7 +18,7 @@ package com.okta.sdk.query;
 /**
  * An {@code EqualsExpressionFactory} creates {@code equals} {@link Criterion} for specific resource properties.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface EqualsExpressionFactory {
 

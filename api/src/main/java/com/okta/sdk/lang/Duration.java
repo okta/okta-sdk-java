@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * A duration is a scalar value paired with a unit of time. For example, 10 milliseconds and 50 minutes are both
  * durations (scalar + unit of time).
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class Duration implements Comparable<Duration>, Cloneable {
 

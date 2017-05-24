@@ -29,7 +29,7 @@ import java.lang.reflect.Constructor;
  * <p>
  * This implementation returns a {@link SswsAuthenticator} when the authentication scheme is undefined.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class DefaultRequestAuthenticatorFactory implements RequestAuthenticatorFactory {
 

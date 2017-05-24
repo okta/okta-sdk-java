@@ -21,7 +21,7 @@ import com.okta.sdk.resource.ResourceException;
 /**
  * Thrown when the an Authentication Request lacks a ClientCredentials.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public class MissingCredentialsException extends ResourceException {
 

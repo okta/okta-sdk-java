@@ -43,7 +43,7 @@ import java.util.Map;
 /**
  * Responsible for creating Apache HttpClient 4 request objects.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 class HttpClientRequestFactory {
 

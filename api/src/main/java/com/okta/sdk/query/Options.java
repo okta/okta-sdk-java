@@ -19,7 +19,7 @@ package com.okta.sdk.query;
  * An {@code Options} instance represents one or more customizations to apply when retrieving
  * {@link com.okta.sdk.resource.Resource Resource}s.
  *
- * @since 1.0.0
+ * @since 0.5.0
  */
 public interface Options {
 
