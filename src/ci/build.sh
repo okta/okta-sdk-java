@@ -26,7 +26,6 @@ echo "REPO_SLUG: ${REPO_SLUG}"
 echo "PULL_REQUEST: ${PULL_REQUEST}"
 echo "BRANCH: ${BRANCH}"
 echo "IS_RELEASE: ${IS_RELEASE}"
-echo "IS_RELEASE: ${IS_RELEASE}"
 echo "RUN_ITS: ${RUN_ITS}"
 
 # all the prep is done, lets run the build!
