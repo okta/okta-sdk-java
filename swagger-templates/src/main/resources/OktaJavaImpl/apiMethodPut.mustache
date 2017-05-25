@@ -17,8 +17,6 @@
     {{bodyParam.paramName}}.save();
     return {{bodyParam.paramName}};
 {{/bodyParam}}{{^bodyParam}}
-    //Map<String, Object> queryArgs = new LinkedHashMap<>();{{#queryParams}}
-    // queryArgs.put("{{paramName}}", {{paramName}});{{/queryParams}}
-    String href = "{{{vendorExtensions.hrefFiltered}}}";
+
     getDataStore().create(href, new VoidResource(getDataStore()));
 {{/bodyParam}}

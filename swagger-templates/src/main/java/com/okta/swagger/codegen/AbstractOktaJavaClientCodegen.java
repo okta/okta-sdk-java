@@ -34,6 +34,7 @@ import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
+import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
@@ -98,17 +99,24 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         vendorExtensions.put("basePath", swagger.getBasePath());
         super.preprocessSwagger(swagger);
         addListModels(swagger);
+        removeListAfterAndLimit(swagger);
         moveOperationsToSingleClient(swagger);
+        handleOktaLinkedOperations(swagger);
 
-        // TODO: https://github.com/okta/openapi/issues/23
-        swagger.getPaths().values().forEach(path ->
-                path.getOperations().forEach(operation ->
-                    operation.getParameters().stream()
-                            .filter(param -> "body".equals(param.getName())).forEach(param ->
-                                param.setRequired(true)
-                            )
-                        ));
+    }
 
+    public void removeListAfterAndLimit(Swagger swagger) {
+        swagger.getPaths().forEach((pathName, path) ->
+           path.getOperations().forEach(operation ->
+               operation.getParameters().removeIf(param ->
+                       !param.getRequired() &&
+                               (("limit".equals(param.getName())) ||
+                                ("after".equals(param.getName()))))
+           )
+        );
+    }
+
+    private void handleOktaLinkedOperations(Swagger swagger) {
         // we want to move any operations defined by the 'x-okta-links' vendor extension to the model
         Map<String, Model> modelMap = swagger.getDefinitions().entrySet().stream()
                 .filter(e -> e.getValue().getVendorExtensions().containsKey("x-okta-links"))

@@ -43,6 +43,13 @@ public class QueryString extends TreeMap<String,String> {
         }
     }
 
+    public String put(String key, Object value) {
+        if (value != null) {
+            return super.put(key, value.toString());
+        }
+        return null;
+    }
+
     public String toString() {
         return toString(false);
     }
@@ -108,6 +115,21 @@ public class QueryString extends TreeMap<String,String> {
             //no equals sign, it's just a key:
             qs.put(kv, null);
         }
+    }
+
+    /**
+     * Build an href with query string. Only appends it queryArgs is NOT empty.
+     * @param href URL path
+     * @param qs query string to append to href
+     * @return href + query string if query string is NOT empty, otherwise, just returns the href
+     */
+    public static String buildHref(String href, QueryString qs) {
+        StringBuilder sb = new StringBuilder(href);
+        String query = qs.toString();
+        if (!Strings.isEmpty(query)) {
+            sb.append('?').append(query);
+        }
+        return sb.toString();
     }
 
 }
