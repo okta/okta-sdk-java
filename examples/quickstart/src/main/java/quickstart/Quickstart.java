@@ -15,22 +15,23 @@
  */
 package quickstart;
 
-import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
+import com.okta.sdk.resource.ActivationToken;
+import com.okta.sdk.resource.InputUserWithGroupIds;
 import com.okta.sdk.resource.PasswordCredential;
+import com.okta.sdk.resource.ResourceException;
 import com.okta.sdk.resource.User;
 import com.okta.sdk.resource.UserCredentials;
 import com.okta.sdk.resource.UserGroup;
-import com.okta.sdk.resource.UserGroupProfile;
 
 import com.okta.sdk.resource.UserList;
 import com.okta.sdk.resource.UserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,72 +46,72 @@ public class Quickstart {
 
     public static void main(String[] args) {
 
-        // Instantiate a builder for your Client. If needed, settings like Proxy and Caching can be defined here.
-        ClientBuilder builder = Clients.builder();
+        try {
+            // Instantiate a builder for your Client. If needed, settings like Proxy and Caching can be defined here.
+            ClientBuilder builder = Clients.builder();
 
-        // No need to define anything else; build the Client instance. The ClientCredential information will be automatically found
-        // in pre-defined locations.
-        Client client = builder.build();
+            // No need to define anything else; build the Client instance. The ClientCredential information will be automatically found
+            // in pre-defined locations.
+            Client client = builder.build();
 
-        UserGroup group = client.instantiate(UserGroup.class);
-        group.getProfile().setName("my-user-group-"+ UUID.randomUUID().toString());
+            UserGroup group = client.instantiate(UserGroup.class);
+            group.getProfile().setName("my-user-group-" + UUID.randomUUID().toString());
 
-        group = client.createGroup(group);
+            group = client.createGroup(group);
 
-        System.out.println("Group: '"+ group.getId()+ "' was last updated on: "+ group.getLastUpdated());
+            println("Group: '" + group.getId() + "' was last updated on: " + group.getLastUpdated());
 
-        UserList users = client.listUsers();
+            UserList users = client.listUsers();
 
-        // get the first user in the collection
-        System.out.println("First user: "+ users.iterator().next().getProfile().getEmail());
+            // get the first user in the collection
+            println("First user: " + users.iterator().next().getProfile().getEmail());
 
-        // or loop through all of them
+            // or loop through all of them
 //        int ii = 0;
 //        for (User user : users) {
-//            System.out.println("["+ ii++ +"] User: " + user.getProfile().getEmail());
+//            println("["+ ii++ +"] User: " + user.getProfile().getEmail());
 //        }
 
 
-//        // Create a User Account
-//        User user = client.instantiate(User.class);
-//        UserProfile userProfile = user.getProfile();
-//        userProfile.setFirstName("Joe");
-//        userProfile.setLastName("Code");
-//        userProfile.setEmail("joe.coder+" + UUID.randomUUID().toString() + "example.com");
-////        userProfile.put("userProperty", "userValue");
-//        user.setCredentials(client.instantiate(UserCredentials.class));
-//        user.getCredentials().setPassword(client.instantiate(PasswordCredential.class));
-//        client.createUser(user);
+            // Create a User Account
+            String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
+            InputUserWithGroupIds user = client.instantiate(InputUserWithGroupIds.class); // FIXME: this needs to be a 'User' not a 'InputUserWithGroupIds'
+            UserProfile userProfile = user.getProfile();
+            userProfile.setFirstName("Joe");
+            userProfile.setLastName("Coder");
+            userProfile.setLogin(email);
+            userProfile.setEmail(email);
+//          userProfile.put("userProperty", "userValue");
+            user.setCredentials(client.instantiate(UserCredentials.class));
+            user.getCredentials().setPassword(client.instantiate(PasswordCredential.class));
+            List<String> groupIds = Collections.singletonList(group.getId());
+            user.setGroupIds(groupIds);
 
-//        client.listUsers();
+            User createdUser = client.createUser(user, false, false);
 
-//        // Search for a User Account
-//
-//        Map<String, Object> queryParams = new HashMap<String, Object>();
-//        queryParams.put("email", "tk421@stormpath.com");
-//        AccountList accounts = application.getAccounts(queryParams);
-//        account = accounts.iterator().next();
-//
-//        log.info("Found Account: " + account.getResourceHref() + ", " + account.getEmail());
-//
-//        // Authenticate a User Account
-//
-//        String usernameOrEmail = "tk421@stormpath.com";
-//        String rawPassword = "Changeme1";
-//
-//        // Create an authentication request using the credentials
-//        AuthenticationRequest request = UsernamePasswordRequests.builder()
-//                .setUsernameOrEmail(usernameOrEmail)
-//                .setPassword(rawPassword)
-//                .build();
-//
-//        //Now let's authenticate the account with the application:
-//        try {
-//            AuthenticationResult result = application.authenticateAccount(request);
-//            account = result.getAccount();
-//            log.info("Authenticated Account: " + account.getUsername() + ", Email: " + account.getEmail());
-//        } catch (ResourceException ex) {
-//            log.error(ex.getMessage());
-//        }
+            println("User created with ID: " + createdUser.getId());
+
+            // activate the new user
+            ActivationToken activationToken = createdUser.activate(false);
+            // if you don't want Okta to email the user, you can grab the activation url/token and add it to your custom flow
+            String activationUrl = activationToken.getActivationUrl();
+
+            // you can iterate through the users too
+//            client.listUsers();
+        }
+        catch (ResourceException e) {
+
+            // we can get the user friendly message from the Exception
+            println(e.getMessage());
+
+            // and you can get the details too
+            e.getCauses().forEach( cause -> println("\t" + cause.getSummary()));
+            throw e;
+        }
+    }
+
+    private static void println(String message) {
+        System.out.println(message);
+        System.out.flush();
     }
 }
