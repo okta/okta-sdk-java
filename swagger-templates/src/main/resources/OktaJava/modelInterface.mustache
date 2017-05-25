@@ -37,6 +37,7 @@ public interface {{classname}} extends Resource, Saveable{{#vendorExtensions.x-o
 {{^isReadOnly}}
     public {{classname}} {{setter}}({{{datatypeWithEnum}}} {{name}});
 {{/isReadOnly}}
+
 {{#isEnum}}
     {{^isContainer}}
         {{>modelInnerEnum}}

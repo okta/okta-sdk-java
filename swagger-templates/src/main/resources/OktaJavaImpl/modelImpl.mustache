@@ -18,6 +18,7 @@ import com.okta.sdk.resource.*;
 
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.resource.*;
+import com.okta.sdk.impl.http.QueryString;
 
 import java.util.Map;
 
@@ -77,9 +78,67 @@ public class Default{{classname}} extends AbstractInstanceResource implements {{
   {{#vendorExtensions.fromModelPathParams}}{{#.}}
     {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();
   {{/.}}{{/vendorExtensions.fromModelPathParams}}
+
+  {{>queryPartial}}
   {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
   }
-{{/.}}{{/vendorExtensions.operations}}
+
+  {{#vendorExtensions.hasOptional}}
+      /**
+      * {{summary}}
+      * {{notes}}
+      {{#vendorExtensions.nonOptionalParams}}
+          * @param {{paramName}} {{description}} (required)
+      {{/vendorExtensions.nonOptionalParams}}
+      {{#returnType}}
+          * @return {{returnType}}
+      {{/returnType}}
+      */
+      @Override
+      public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
+      {{>queryPartialRequired}}
+      {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+      }
+{{/vendorExtensions.hasOptional}}{{/.}}{{/vendorExtensions.operations}}
+
+
+
+
+
+{{#operation}}{{^vendorExtensions.moved}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#allParams}}
+        * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+    {{/allParams}}
+    {{#returnType}}
+        * @return {{returnType}}
+    {{/returnType}}
+    */
+    @Override
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
+    {{>queryPartial}}
+    {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+    }
+
+    {{#vendorExtensions.hasOptional}}
+        /**
+        * {{summary}}
+        * {{notes}}
+        {{#vendorExtensions.nonOptionalParams}}
+            * @param {{paramName}} {{description}} (required)
+        {{/vendorExtensions.nonOptionalParams}}
+        {{#returnType}}
+            * @return {{returnType}}
+        {{/returnType}}
+        */
+        @Override
+        public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
+        {{>queryPartialRequired}}
+        {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+        }
+    {{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 
 {{/model}}{{/models}}
 }
