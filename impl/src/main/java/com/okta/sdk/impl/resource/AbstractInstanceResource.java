@@ -16,6 +16,7 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.impl.ds.InternalDataStore;
+import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.Saveable;
 
 import java.util.Map;
@@ -23,7 +24,7 @@ import java.util.Map;
 /**
  * @since 0.5.0
  */
-public abstract class AbstractInstanceResource extends AbstractResource implements Saveable {
+public abstract class AbstractInstanceResource<R extends Resource> extends AbstractResource implements Saveable<R> {
 
     protected AbstractInstanceResource(InternalDataStore dataStore) {
         super(dataStore);
@@ -34,8 +35,9 @@ public abstract class AbstractInstanceResource extends AbstractResource implemen
     }
 
     @Override
-    public void save() {
+    public R save() {
         getDataStore().save(this);
+        return (R) this;
     }
 
     /**

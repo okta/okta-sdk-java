@@ -13,10 +13,17 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{#bodyParam}}
-    {{bodyParam.paramName}}.save();
-    return {{bodyParam.paramName}};
-{{/bodyParam}}{{^bodyParam}}
+{{#vendorExtensions.bodyIsSelf}}
+    getDataStore().save(this);
+    {{#returnType}}return this;{{/returnType}}
+{{/vendorExtensions.bodyIsSelf}}
 
+{{^vendorExtensions.bodyIsSelf}}
+{{#bodyParam}}
+    getDataStore().save({{bodyParam.paramName}});
+    {{#returnType}}return {{/returnType}} {{bodyParam.paramName}};
+{{/bodyParam}}{{^bodyParam}}
     getDataStore().create(href, new VoidResource(getDataStore()));
+    {{#returnType}}return this;{{/returnType}}
 {{/bodyParam}}
+{{/vendorExtensions.bodyIsSelf}}

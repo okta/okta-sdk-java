@@ -359,14 +359,14 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     @Override
-    public <T extends Resource & Saveable> void save(T resource) {
+    public <T extends Resource> void save(T resource) {
         String href = resource.getResourceHref();
         Assert.hasText(href, HREF_REQD_MSG);
         save(href, resource, null, resource.getClass(), null, false);
     }
 
     @Override
-    public <T extends Resource & Saveable> void save(T resource, Options options) {
+    public <T extends Resource> void save(T resource, Options options) {
         Assert.notNull(options, "options argument cannot be null.");
         String href = resource.getResourceHref();
         Assert.hasText(href, HREF_REQD_MSG);
@@ -375,7 +375,7 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     @Override
-    public <T extends Resource & Saveable, R extends Resource> R save(T resource, Class<? extends R> returnType) {
+    public <T extends Resource, R extends Resource> R save(T resource, Class<? extends R> returnType) {
         Assert.hasText(resource.getResourceHref(), HREF_REQD_MSG);
         return save(resource.getResourceHref(), resource, null, returnType, null, false);
     }

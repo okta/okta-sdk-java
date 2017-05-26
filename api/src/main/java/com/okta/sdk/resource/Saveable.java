@@ -18,8 +18,8 @@ package com.okta.sdk.resource;
 /**
  * @since 0.5.0
  */
-public interface Saveable {
+public interface Saveable<R extends Resource> {
 
-    void save();
+    R save();
 
 }
