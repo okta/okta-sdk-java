@@ -19,10 +19,12 @@ import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.ActivationToken;
+import com.okta.sdk.resource.GroupBuilder;
 import com.okta.sdk.resource.InputUserWithGroupIds;
 import com.okta.sdk.resource.PasswordCredential;
 import com.okta.sdk.resource.ResourceException;
 import com.okta.sdk.resource.User;
+import com.okta.sdk.resource.UserBuilder;
 import com.okta.sdk.resource.UserCredentials;
 import com.okta.sdk.resource.UserGroup;
 
@@ -54,50 +56,57 @@ public class Quickstart {
             // in pre-defined locations.
             Client client = builder.build();
 
-            UserGroup group = client.instantiate(UserGroup.class);
-            group.getProfile().setName("my-user-group-" + UUID.randomUUID().toString());
 
-            group = client.createGroup(group);
+            // Create a group
+            UserGroup group = GroupBuilder.INSTANCE
+                    .setName("my-user-group-" + UUID.randomUUID().toString())
+                    .setDescription("Quickstart created Group")
+                    .buildAndCreate(client);
 
             println("Group: '" + group.getId() + "' was last updated on: " + group.getLastUpdated());
 
+
+            // Create a User Account
+            String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
+
+            User user = UserBuilder.INSTANCE
+                .setEmail(email)
+                .setFirstName("Joe")
+                .setLastName("Coder")
+                .setPassword("Password1")
+                .setSecurityQuestion("Favorite security question?")
+                .setSecurityQuestionAnswer("None of them!")
+//                .putProfileProperty("customProp", "Custom Value!")
+                .addGroupId(group.getId())
+                .buildAndCreate(client);
+
+            String userId = user.getId();
+            println("User created with ID: " + userId);
+
+            // activate the new user
+            ActivationToken activationToken = user.activate(false);
+            // if you don't want Okta to email the user, you can grab the activation url/token and add it to your custom flow
+            String activationUrl = activationToken.getActivationUrl();
+
+            // You can look up user by ID
+            println("User lookup by ID: "+ client.getUser(userId).getProfile().getLogin());
+
+            // or by Email
+            println("User lookup by Email: "+ client.getUser(email).getProfile().getLogin());
+
+
+            // get the list of users
             UserList users = client.listUsers();
 
             // get the first user in the collection
             println("First user: " + users.iterator().next().getProfile().getEmail());
 
-            // or loop through all of them
+            // or loop through all of them (paging is automatic)
 //        int ii = 0;
 //        for (User user : users) {
 //            println("["+ ii++ +"] User: " + user.getProfile().getEmail());
 //        }
 
-
-            // Create a User Account
-            String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
-            InputUserWithGroupIds user = client.instantiate(InputUserWithGroupIds.class); // FIXME: this needs to be a 'User' not a 'InputUserWithGroupIds'
-            UserProfile userProfile = user.getProfile();
-            userProfile.setFirstName("Joe");
-            userProfile.setLastName("Coder");
-            userProfile.setLogin(email);
-            userProfile.setEmail(email);
-//          userProfile.put("userProperty", "userValue");
-            user.setCredentials(client.instantiate(UserCredentials.class));
-            user.getCredentials().setPassword(client.instantiate(PasswordCredential.class));
-            List<String> groupIds = Collections.singletonList(group.getId());
-            user.setGroupIds(groupIds);
-
-            User createdUser = client.createUser(user, false, false);
-
-            println("User created with ID: " + createdUser.getId());
-
-            // activate the new user
-            ActivationToken activationToken = createdUser.activate(false);
-            // if you don't want Okta to email the user, you can grab the activation url/token and add it to your custom flow
-            String activationUrl = activationToken.getActivationUrl();
-
-            // you can iterate through the users too
-//            client.listUsers();
         }
         catch (ResourceException e) {
 
