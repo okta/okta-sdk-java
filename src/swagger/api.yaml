@@ -1,19 +1,3 @@
-#
-# Copyright 2017 Okta
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
 {
   "swagger": "2.0",
   "info": {
@@ -6441,7 +6425,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "Agent": {
       "properties": {
@@ -6452,7 +6439,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "AppFeature": {
       "properties": {
@@ -6469,7 +6459,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "AppInstanceMediationPolicyRuleCondition": {
       "properties": {
@@ -6486,7 +6479,10 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "AppLink": {
       "properties": {
@@ -6521,7 +6517,10 @@
           "type": "integer"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "AppUser": {
       "properties": {
@@ -6628,7 +6627,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "AuthProvider": {
       "properties": {
@@ -6649,7 +6651,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "AuthProviderMediationPolicyRuleCondition": {
       "properties": {
@@ -6669,11 +6674,17 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "BaseCredentialsObject": {
       "properties": {},
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "CVDAppUserProfile": {
       "properties": {
@@ -6731,7 +6742,10 @@
           "$ref": "#/definitions/PasswordCredential"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "ClientMediationPolicyCondition": {
       "properties": {
@@ -6742,7 +6756,10 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "ConnectorSettings": {
       "properties": {
@@ -6774,7 +6791,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "CredentialsClient": {
       "properties": {
@@ -6785,7 +6805,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "CredentialsSigning": {
       "properties": {
@@ -6793,7 +6816,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "CredentialsTrust": {
       "properties": {
@@ -6807,7 +6833,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "DeviceMediationPolicyRuleCondition": {
       "properties": {
@@ -6822,7 +6851,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "DeviceMediationPolicyRuleConditionPlatform": {
       "properties": {
@@ -6839,7 +6871,10 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "EmbeddedObject": {
       "properties": {
@@ -7142,7 +7177,10 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "GroupAppAssignment": {
       "properties": {
@@ -7196,7 +7234,10 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "GroupMembershipMediationActions": {
       "properties": {
@@ -7315,7 +7356,10 @@
     },
     "HashedPassword": {
       "properties": {},
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "IdpAppUser": {
       "properties": {
@@ -7359,7 +7403,10 @@
           "type": "object"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "IdpCredentials": {
       "properties": {
@@ -7373,7 +7420,10 @@
           "$ref": "#/definitions/CredentialsTrust"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "IdpTargetUser": {
       "properties": {
@@ -7391,7 +7441,10 @@
           "type": "object"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "IdpTransaction": {
       "properties": {
@@ -7441,7 +7494,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "IdpTransaction$Idp": {
       "properties": {
@@ -7469,7 +7525,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "IdpTrust": {
       "properties": {
@@ -7523,7 +7582,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "InputUserWithGroupIds": {
       "properties": {
@@ -7601,7 +7663,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "IpTrustMediationPolicyRuleCondition": {
       "properties": {
@@ -7614,7 +7679,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "JsonNode": {
       "properties": {},
@@ -7739,7 +7807,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "MediationPolicy": {
       "properties": {
@@ -7789,7 +7860,10 @@
           "type": "boolean"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "MediationPolicyRule": {
       "properties": {
@@ -7833,11 +7907,17 @@
           "type": "boolean"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "MediationPolicyRuleActions": {
       "properties": {},
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "MediationPolicyRuleConditions": {
       "properties": {
@@ -7881,7 +7961,10 @@
           "$ref": "#/definitions/UserMediationPolicyRuleCondition"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "MediationRoleAssignment": {
       "properties": {
@@ -7952,7 +8035,10 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "OrgCustomSmsMediationTemplate": {
       "properties": {
@@ -7994,7 +8080,10 @@
           "$ref": "#/definitions/HashedPassword"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "PeopleMediationPolicyRuleCondition": {
       "properties": {
@@ -8005,7 +8094,10 @@
           "$ref": "#/definitions/UserMediationPolicyRuleCondition"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "Policy": {
       "properties": {
@@ -8022,7 +8114,10 @@
           "$ref": "#/definitions/PolicySubject"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "PolicyAccountLink": {
       "properties": {
@@ -8041,7 +8136,10 @@
           "$ref": "#/definitions/PolicyAccountLinkFilter"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "PolicyAccountLinkFilter": {
       "properties": {
@@ -8049,7 +8147,10 @@
           "$ref": "#/definitions/PolicyAccountLinkFilterGroups"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "PolicyAccountLinkFilterGroups": {
       "properties": {
@@ -8060,7 +8161,10 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "PolicyCallout": {
       "properties": {
@@ -8071,7 +8175,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "PolicySubject": {
       "properties": {
@@ -8094,7 +8201,10 @@
           "$ref": "#/definitions/PolicyUserNameTemplate"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "PolicyUserNameTemplate": {
       "properties": {
@@ -8102,7 +8212,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "ProfileDefinition": {
       "properties": {
@@ -8180,7 +8293,10 @@
           "$ref": "#/definitions/ProtocolValidation"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "Protocol$Endpoint": {
       "properties": {
@@ -8234,7 +8350,10 @@
           "$ref": "#/definitions/ProtocolAlgorithmTypeSignature"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "ProtocolAlgorithmTypeSignature": {
       "properties": {
@@ -8252,7 +8371,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "ProtocolAlgorithms": {
       "properties": {
@@ -8263,7 +8385,10 @@
           "$ref": "#/definitions/ProtocolAlgorithmType"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "ProtocolEndpoint": {
       "properties": {
@@ -8290,7 +8415,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "ProtocolEndpointsList": {
       "properties": {
@@ -8313,7 +8441,10 @@
           "$ref": "#/definitions/ProtocolEndpoint"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "ProtocolSettings": {
       "properties": {
@@ -8321,7 +8452,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "ProtocolValidation": {
       "properties": {
@@ -8334,7 +8468,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "Provisioning": {
       "properties": {
@@ -8356,7 +8493,10 @@
           "type": "boolean"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "ProvisioningGroups": {
       "properties": {
@@ -8385,7 +8525,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Idp"
+      ]
     },
     "PublicAppInstance": {
       "properties": {
@@ -8458,7 +8601,10 @@
           "$ref": "#/definitions/PublicAppInstanceVisibility"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceAccessibility": {
       "properties": {
@@ -8472,7 +8618,10 @@
           "type": "boolean"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceCredentials": {
       "properties": {
@@ -8495,7 +8644,10 @@
           "$ref": "#/definitions/PublicAppInstanceCredentialsUsernameTemplate"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceCredentialsSigning": {
       "properties": {
@@ -8512,7 +8664,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceCredentialsUsernameTemplate": {
       "properties": {
@@ -8526,7 +8681,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceLicensing": {
       "properties": {
@@ -8534,7 +8692,10 @@
           "type": "integer"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceSettings": {
       "properties": {
@@ -8554,7 +8715,10 @@
           "$ref": "#/definitions/PublicSignOnModeMediated"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceSettingsNotifications": {
       "properties": {
@@ -8562,7 +8726,10 @@
           "$ref": "#/definitions/PublicAppInstanceSettingsNotificationsVpn"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceSettingsNotificationsVpn": {
       "properties": {
@@ -8576,7 +8743,10 @@
           "$ref": "#/definitions/PublicAppInstanceSettingsNotificationsVpnNetwork"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceSettingsNotificationsVpnNetwork": {
       "properties": {
@@ -8596,7 +8766,10 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceVisibility": {
       "properties": {
@@ -8613,7 +8786,10 @@
           "$ref": "#/definitions/PublicAppInstanceVisibilityHide"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicAppInstanceVisibilityHide": {
       "properties": {
@@ -8624,7 +8800,10 @@
           "type": "boolean"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "PublicSchema": {
       "properties": {
@@ -8648,7 +8827,10 @@
     },
     "PublicSignOnModeMediated": {
       "properties": {},
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "App"
+      ]
     },
     "RecoveryQuestionCredential": {
       "properties": {
@@ -8656,7 +8838,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "ResetPasswordToken": {
       "properties": {
@@ -8664,7 +8849,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "Schema": {
       "properties": {
@@ -8803,7 +8991,108 @@
             }
           ],
           "operationId": "activateUser"
+        },
+        {
+          "alias": "addToGroup",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "addUserToGroup"
+        },
+        {
+          "alias": "deactivate",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "lifecycleDeactivateUser"
+        },
+        {
+          "alias": "suspend",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "suspendUser"
+        },
+        {
+          "alias": "unsuspend",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "unsuspendUser"
+        },
+        {
+          "alias": "unlock",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "unlockUser"
+        },
+        {
+          "alias": "forgotPassword",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "forgotPassword"
+        },
+        {
+          "alias": "resetFactors",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "resetAllFactors"
+        },
+        {
+          "alias": "save",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            },
+            {
+              "dest": "body",
+              "self": true
+            }
+          ],
+          "operationId": "updateUser"
+        },
+        {
+          "alias": "delete",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            },
+            {
+              "dest": "body",
+              "self": true
+            }
+          ],
+          "operationId": "deactivateOrDeleteUser"
         }
+      ],
+      "x-okta-tags": [
+        "User"
       ]
     },
     "UserCredentials": {
@@ -8819,7 +9108,10 @@
           "$ref": "#/definitions/RecoveryQuestionCredential"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "UserFactor": {
       "properties": {},
@@ -8887,6 +9179,9 @@
           ],
           "operationId": "listGroupUsers"
         }
+      ],
+      "x-okta-tags": [
+        "Group"
       ]
     },
     "UserGroupProfile": {
@@ -8898,7 +9193,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Group"
+      ]
     },
     "UserGroupStats": {
       "properties": {
@@ -8919,7 +9217,10 @@
           "type": "integer"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Group"
+      ]
     },
     "UserMediationPolicyRuleCondition": {
       "properties": {
@@ -8936,7 +9237,10 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "UserProfile": {
       "properties": {
@@ -8959,7 +9263,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "UserStatusMediationPolicyRuleCondition": {
       "properties": {
@@ -8976,7 +9283,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Policy"
+      ]
     },
     "Verify": {
       "properties": {

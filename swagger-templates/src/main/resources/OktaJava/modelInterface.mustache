@@ -13,9 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-import com.okta.sdk.resource.Deletable;
 import com.okta.sdk.resource.Resource;
-import com.okta.sdk.resource.Saveable;
 import java.util.Map;
 {{#serializableModel}}
 import java.io.Serializable;
@@ -26,7 +24,7 @@ import java.io.Serializable;
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
-public interface {{classname}} extends Resource, Saveable{{#vendorExtensions.x-oktaDynamicSchema}}, Map<String, Object>{{/vendorExtensions.x-oktaDynamicSchema}} {
+public interface {{classname}} extends Resource{{#vendorExtensions.x-oktaDynamicSchema}}, Map<String, Object>{{/vendorExtensions.x-oktaDynamicSchema}} {
 
 {{#vars}}
     {{#vendorExtensions.extraAnnotation}}
@@ -53,18 +51,59 @@ public interface {{classname}} extends Resource, Saveable{{#vendorExtensions.x-o
 {{/vars}}
 
 {{#vendorExtensions.operations}}{{#.}}
-  /**
-  * {{summary}}
-  * {{notes}}
-  {{#vendorExtensions.allParams}}
-  * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
-  {{/vendorExtensions.allParams}}
-  {{#returnType}}
-  * @return {{returnType}}
-  {{/returnType}}
-  */
-  public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}});
-{{/.}}{{/vendorExtensions.operations}}
-{{/model}}{{/models}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#vendorExtensions.allParams}}
+    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+    {{/vendorExtensions.allParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}});
+
+{{#vendorExtensions.hasOptional}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#vendorExtensions.nonOptionalParams}}
+    * @param {{paramName}} {{description}} (required)
+    {{/vendorExtensions.nonOptionalParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
+
+{{/vendorExtensions.hasOptional}}{{/.}}{{/vendorExtensions.operations}}
+
+{{#operation}}{{^vendorExtensions.moved}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#allParams}}
+    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+    {{/allParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
+
+{{#vendorExtensions.hasOptional}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#vendorExtensions.nonOptionalParams}}
+    * @param {{paramName}} {{description}} (required)
+    {{/vendorExtensions.nonOptionalParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
+{{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 }
 
+{{/model}}{{/models}}

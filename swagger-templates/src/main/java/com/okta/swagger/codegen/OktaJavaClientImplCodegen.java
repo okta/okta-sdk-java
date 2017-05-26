@@ -127,11 +127,11 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                 co.vendorExtensions.put("dsMethod", "save");
             }
 
-            if (co.allParams.size() == 2 &&
-                co.bodyParam != null) { // TODO clean this up
-                    co.vendorExtensions.put("isSimpleUpdate", true);
-                    co.vendorExtensions.put("resource", co.bodyParam);
-            }
+//            if (co.allParams.size() == 2 &&
+//                co.bodyParam != null) { // TODO clean this up
+//                    co.vendorExtensions.put("isSimpleUpdate", true);
+//                    co.vendorExtensions.put("resource", co.bodyParam);
+//            }
         }
 
         if ("post".equals(httpMethod) ) {
@@ -139,11 +139,11 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             co.vendorExtensions.put("dsMethod", "create");
             co.vendorExtensions.put("isPost", true);
 
-            if (co.allParams.size() == 1 &&
-                co.bodyParam != null) {
-                    co.vendorExtensions.put("isSimpleCreate", true);
-                    co.vendorExtensions.put("resource", co.bodyParam);
-            }
+//            if (co.allParams.size() == 1 &&
+//                co.bodyParam != null) {
+//                    co.vendorExtensions.put("isSimpleCreate", true);
+//                    co.vendorExtensions.put("resource", co.bodyParam);
+//            }
         }
 
         if ("get".equals(httpMethod)) {

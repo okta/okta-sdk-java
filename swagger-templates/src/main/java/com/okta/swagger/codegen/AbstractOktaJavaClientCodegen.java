@@ -159,9 +159,18 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         if (argNodeList != null) {
                             for (Iterator argNodeIter=argNodeList.iterator(); argNodeIter.hasNext();) {
                                 JsonNode argNode = (JsonNode) argNodeIter.next();
-                                String src = argNode.get("src").textValue();
-                                String dest = argNode.get("dest").textValue();
-                                argMap.put(dest, src); // reverse lookup
+
+                                if (argNode.has("src")) {
+                                    String src = argNode.get("src").textValue();
+                                    String dest = argNode.get("dest").textValue();
+                                    argMap.put(dest, src); // reverse lookup
+                                }
+
+                                if (argNode.has("self")) {
+                                    String dest = argNode.get("dest").textValue();
+                                    argMap.put(dest, "this"); // reverse lookup
+                                }
+
                             }
                         }
 
@@ -171,18 +180,53 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         cgOperation.pathParams.forEach(param -> {
 
                             if (argMap.containsKey(param.paramName)) {
+
+                                String paramName = argMap.get(param.paramName);
                                 cgParamModelList.add(param);
 
-                                String srcPropName = argMap.get(param.paramName);
-                                CodegenProperty cgProperty = fromProperty(srcPropName, model.getProperties().get(srcPropName));
+                                CodegenProperty cgProperty = fromProperty(paramName, model.getProperties().get(paramName));
                                 param.vendorExtensions.put("fromModel", cgProperty);
+
                             }
                             else {
                                 cgParamAllList.add(param);
                             }
                         });
+
+                        for (Iterator<CodegenParameter> iter = cgOperation.bodyParams.iterator(); iter.hasNext();) {
+                            CodegenParameter bodyParam = iter.next();
+                            if (argMap.containsKey(bodyParam.paramName)) {
+                                cgOperation.vendorExtensions.put("bodyIsSelf", true);
+                                iter.remove();
+                            }
+                        }
+
+//                        if (cgOperation.getHasBodyParam()) {
+//                            CodegenParameter bodyParam = cgOperation.bodyParam;
+//                            if (argMap.containsKey(bodyParam.paramName)) {
+//                                bodyParam.paramName = "WTF";
+//                                bodyParam.vendorExtensions.put("self", true);
+//                            }
+//                        }
+
+
+//                        // mark the last param
+//                        if (!cgParamModelList.isEmpty()) {
+//                            CodegenParameter param = cgParamModelList.get(cgParamModelList.size()-1);
+//                            param.hasMore = false;
+//                        }
+
                         cgParamAllList.addAll(cgOperation.queryParams);
                         cgParamAllList.addAll(cgOperation.bodyParams);
+
+                        // set all params to have more
+                        cgParamAllList.forEach(param -> param.hasMore = true);
+
+                        // then grab the last one and mark it as the last
+                        if (!cgParamAllList.isEmpty()) {
+                            CodegenParameter param = cgParamAllList.get(cgParamAllList.size()-1);
+                            param.hasMore = false;
+                        }
 
                         cgOperation.vendorExtensions.put("allParams", cgParamAllList);
                         cgOperation.vendorExtensions.put("fromModelPathParams", cgParamModelList);
