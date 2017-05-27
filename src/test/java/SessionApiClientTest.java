@@ -23,7 +23,7 @@ public class SessionApiClientTest {
     private SessionApiClient sessionApiClient;
 
     private UserApiClient getUserClient(String description) throws Exception {
-        Map<String, String> customHeaders = new HashMap<>();
+        Map<String, String> customHeaders = new HashMap<String, String>();
         customHeaders.put("x-test-description", description);
         TestConfig.MockOkta testConfig = Util.parseTestConfig().getMockOkta();
         return new UserApiClient(
@@ -36,7 +36,7 @@ public class SessionApiClientTest {
     }
 
     private AuthApiClient getAuthClient(String description) throws Exception {
-        Map<String, String> customHeaders = new HashMap<>();
+        Map<String, String> customHeaders = new HashMap<String, String>();
         customHeaders.put("x-test-description", description);
         TestConfig.MockOkta testConfig = Util.parseTestConfig().getMockOkta();
         return new AuthApiClient(
@@ -49,7 +49,7 @@ public class SessionApiClientTest {
     }
 
     private SessionApiClient getSessionClient(String description) throws Exception {
-        Map<String, String> customHeaders = new HashMap<>();
+        Map<String, String> customHeaders = new HashMap<String, String>();
         customHeaders.put("x-test-description", description);
         TestConfig.MockOkta testConfig = Util.parseTestConfig().getMockOkta();
         return new SessionApiClient(
