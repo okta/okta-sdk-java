@@ -231,6 +231,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         cgOperation.vendorExtensions.put("allParams", cgParamAllList);
                         cgOperation.vendorExtensions.put("fromModelPathParams", cgParamModelList);
 
+                        addOptionalExtension(cgOperation, cgParamAllList);
+
                         operations.add(cgOperation);
                         model.getVendorExtensions().put("operations", operations);
 
@@ -350,10 +352,17 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 swagger);
 
         // mark the operation as having optional params, so we can take advantage of it in the template
-        if (co.allParams.parallelStream().anyMatch(param -> !param.required)) {
+        addOptionalExtension(co, co.allParams);
+
+        return co;
+    }
+
+    private void addOptionalExtension(CodegenOperation co, List<CodegenParameter> params) {
+
+        if (params.parallelStream().anyMatch(param -> !param.required)) {
             co.vendorExtensions.put("hasOptional", true);
 
-            List<CodegenParameter> nonOptionalParams = co.allParams.stream()
+            List<CodegenParameter> nonOptionalParams = params.stream()
                     .filter(param -> param.required)
                     .map(CodegenParameter::copy)
                     .collect(Collectors.toList());
@@ -363,8 +372,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 param.hasMore = false;
                 co.vendorExtensions.put("nonOptionalParams", nonOptionalParams);
             }
+
+            // remove the noOptionalParams if we have trimmed down the list.
+            if (co.vendorExtensions.get("nonOptionalParams") != null && nonOptionalParams.isEmpty()) {
+                co.vendorExtensions.remove("nonOptionalParams");
+            }
         }
-        return co;
     }
 
     @Override
