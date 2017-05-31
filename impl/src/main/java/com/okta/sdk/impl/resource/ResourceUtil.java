@@ -27,6 +27,17 @@ import java.util.Map;
 public class ResourceUtil {
 
     /**
+     * Filters non- string values out of a the {@link Resource} properties
+     * @param resource the resource to be filtered
+     * @return filtered map
+     */
+    public static final Map<String, String> filterNonStringValuesWithResource(Resource resource){
+        Map<String, Object> properties = ((AbstractResource) resource).properties;
+        properties.putAll(((AbstractResource) resource).dirtyProperties);
+        return filterNonStringValues(properties);
+    }
+
+    /**
      * Filters non- string values out of a the {@link Resource} dirty properties
      * @param resource the resource to be filtered
      * @return filtered map

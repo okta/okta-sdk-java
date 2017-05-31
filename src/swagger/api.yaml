@@ -7630,6 +7630,16 @@
             }
           ],
           "operationId": "handleIdpTransaction"
+        },
+        {
+          "alias": "doIdpTransactionJit",
+          "arguments": [
+            {
+              "dest": "transactionId",
+              "src": "id"
+            }
+          ],
+          "operationId": "doIdpTransactionJit"
         }
       ],
       "x-okta-tags": [
@@ -8002,6 +8012,16 @@
             }
           ],
           "operationId": "deleteKey"
+        },
+        {
+          "alias": "updateKey",
+          "arguments": [
+            {
+              "dest": "keyId",
+              "src": "kid"
+            }
+          ],
+          "operationId": "updateKey"
         }
       ]
     },
@@ -9358,6 +9378,16 @@
             }
           ],
           "operationId": "updateAppUser"
+        },
+        {
+          "alias": "upsertAppUserWithDefaults",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "upsertAppUserWithDefaults"
         }
       ],
       "x-okta-tags": [
@@ -10155,6 +10185,26 @@
             }
           ],
           "operationId": "addUserToGroup"
+        },
+        {
+          "alias": "updateFactor",
+          "arguments": [
+            {
+              "dest": "userFactorId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateFactor"
+        },
+        {
+          "alias": "updateFactorDevice",
+          "arguments": [
+            {
+              "dest": "userFactorId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateFactorDevice"
         }
       ],
       "x-okta-tags": [
@@ -10309,6 +10359,16 @@
             }
           ],
           "operationId": "listGroupUsers"
+        },
+        {
+          "alias": "addUserToGroup",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "addUserToGroup"
         }
       ],
       "x-okta-tags": [

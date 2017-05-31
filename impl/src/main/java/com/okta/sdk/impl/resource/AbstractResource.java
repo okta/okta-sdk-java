@@ -99,6 +99,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
                 } else {
                     this.properties = properties;
                 }
+                setResourceHref(getSelfHref(properties));
                 // Don't consider this resource materialized if it is only a reference.  A reference is any object that
                 // has only one 'href' property.
 
@@ -112,6 +113,22 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         } finally {
             writeLock.unlock();
         }
+    }
+
+    private String getSelfHref(Map<String, Object> properties) {
+        Map<String, Object> links = getMapValue(properties, "_links");
+        Map<String, Object> self = getMapValue(links, "self");
+        if (!Collections.isEmpty(self)) {
+            return (String) self.get("href");
+        }
+        return null;
+    }
+
+    private Map<String, Object> getMapValue(Map<String, Object> properties, String key) {
+        if (!Collections.isEmpty(properties)) {
+            return (Map<String, Object>) properties.get(key);
+        }
+        return null;
     }
 
     public String getResourceHref() {
@@ -431,14 +448,14 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * @param value    the value to be set to <code>property</code>
      * @param <T>      the type of Resource returned
      */
-    protected <T extends Resource> void setMaterializableResourceProperty(ResourceReference<T> property, Resource value) {
+    protected <T extends Resource> void setMaterializableResourceProperty(ResourceReference<T> property, Resource value, boolean dirtyOnly) {
         Assert.notNull(property, "Property argument cannot be null.");
         Assert.isNull(value.getResourceHref(), "Resource must not have an 'href' property ");
         if (((AbstractResource) value).isMaterialized()) {
             setResourceProperty(property, value);
         } else {
             String name = property.getName();
-            Map<String, String> reference = this.referenceFactory.createUnmaterializedReference(name, value);
+            Map<String, String> reference = this.referenceFactory.createUnmaterializedReference(name, value, dirtyOnly);
             setProperty(name, reference);
         }
     }
