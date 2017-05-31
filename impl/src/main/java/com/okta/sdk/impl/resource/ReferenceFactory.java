@@ -56,11 +56,12 @@ public class ReferenceFactory {
         return reference;
     }
 
-    public Map<String, String> createUnmaterializedReference (String resourceName, Resource resource){
+    public Map<String, String> createUnmaterializedReference (String resourceName, Resource resource, boolean dirtyOnly){
         Assert.notNull(resource, "Resource argument cannot be null.");
         Assert.isNull(resource.getResourceHref(), "Resource "+ resourceName +" must be unmaterialized and not have an 'href' property.");
 
-        Map<String, String> reference = ResourceUtil.filterNonStringValuesWithResourceDirtyProperties(resource);
+        Map<String, String> reference = dirtyOnly ? ResourceUtil.filterNonStringValuesWithResourceDirtyProperties(resource)
+                                                  : ResourceUtil.filterNonStringValuesWithResource(resource);
         return reference;
     }
 }

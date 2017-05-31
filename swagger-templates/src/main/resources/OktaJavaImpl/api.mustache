@@ -31,7 +31,7 @@ import {{vendorExtensions.overrideApiPackage}}.*;
 {{/imports}}
 import com.okta.sdk.impl.client.AbstractClient;
 import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.impl.resource.VoidResource;
+import com.okta.sdk.impl.resource.DefaultVoidResource;
 
 import java.util.LinkedHashMap;
 {{^fullJavaUtil}}
@@ -86,7 +86,7 @@ import java.util.Map;
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{path}}")
+            comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
 
 {{>queryPartial}}{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
@@ -107,7 +107,7 @@ import java.util.Map;
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{path}}")
+            comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
 
 {{>queryPartialRequired}}

@@ -64,7 +64,7 @@ public interface {{classname}} extends Resource{{#vendorExtensions.x-oktaDynamic
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{path}}")
+            comments = "{{httpMethod}} - {{path}}")
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}});
 
 {{#vendorExtensions.hasOptional}}
@@ -81,7 +81,7 @@ public interface {{classname}} extends Resource{{#vendorExtensions.x-oktaDynamic
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{path}}")
+            comments = "{{httpMethod}} - {{path}}")
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
 
 {{/vendorExtensions.hasOptional}}{{/.}}{{/vendorExtensions.operations}}
@@ -100,7 +100,7 @@ public interface {{classname}} extends Resource{{#vendorExtensions.x-oktaDynamic
     @javax.annotation.Generated(
         value    = "{{generatorClass}}",
         date     = "{{generatedDate}}",
-        comments = "{{path}}")
+        comments = "{{httpMethod}} - {{path}}")
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
 
 {{#vendorExtensions.hasOptional}}
@@ -117,7 +117,7 @@ public interface {{classname}} extends Resource{{#vendorExtensions.x-oktaDynamic
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{path}}")
+            comments = "{{httpMethod}} - {{path}}")
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
 {{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 }

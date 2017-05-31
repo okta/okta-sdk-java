@@ -42,7 +42,7 @@ import com.okta.sdk.impl.query.DefaultCriteria;
 import com.okta.sdk.impl.query.DefaultOptions;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.ReferenceFactory;
-import com.okta.sdk.impl.resource.VoidResource;
+import com.okta.sdk.resource.VoidResource;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import com.okta.sdk.impl.util.StringInputStream;
@@ -54,7 +54,6 @@ import com.okta.sdk.query.Options;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.ResourceException;
-import com.okta.sdk.resource.Saveable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -360,7 +359,11 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public <T extends Resource> void save(T resource) {
-        String href = resource.getResourceHref();
+        save(resource.getResourceHref(), resource);
+    }
+
+    @Override
+    public <T extends Resource> void save(String href, T resource) {
         Assert.hasText(href, HREF_REQD_MSG);
         save(href, resource, null, resource.getClass(), null, false);
     }
@@ -399,7 +402,7 @@ public class DefaultDataStore implements InternalDataStore {
 
         final CanonicalUri uri = canonicalize(href, qs);
         final AbstractResource abstractResource = (AbstractResource) resource;
-        final Map<String, Object> props = resourceConverter.convert(abstractResource);
+        final Map<String, Object> props = resourceConverter.convert(abstractResource, false); // TODO: Okta doesn't have great support for updating just dirty props so always include clean and dirty props
 
         FilterChain chain = new DefaultFilterChain(this.filters, new FilterChain() {
             @Override
@@ -423,7 +426,7 @@ public class DefaultDataStore implements InternalDataStore {
 
                 // if this is an Okta user, we must use a PUT and not a POST
                 HttpMethod method = HttpMethod.POST;
-                if (href.matches(".*\\/api\\/v1\\/users\\/\\w*$") && !create) {
+                if (!create) {
                     method = HttpMethod.PUT;
                 }
                 Request request = new DefaultRequest(method, href, qs, httpHeaders, body, length);
@@ -504,6 +507,12 @@ public class DefaultDataStore implements InternalDataStore {
     private void doDelete(String resourceHref, Class resourceClass, final String possiblyNullPropertyName) {
 
         Assert.hasText(resourceHref, "This resource does not have an href value, therefore it cannot be deleted.");
+
+        // if this URL is a partial, then we MUST add the baseUrl
+        if (resourceHref.startsWith("/") ) {
+            resourceHref = qualify(resourceHref);
+        }
+
         final String requestHref;
         if (Strings.hasText(possiblyNullPropertyName)) { //delete just that property, not the entire resource:
             requestHref = resourceHref + "/" + possiblyNullPropertyName;

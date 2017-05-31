@@ -42,24 +42,19 @@ public class DefaultResourceConverter implements ResourceConverter {
     }
 
     @Override
-    public Map<String, Object> convert(AbstractResource resource) {
+    public Map<String, Object> convert(AbstractResource resource, boolean dirtOnly) {
         Assert.notNull(resource, "resource cannot be null.");
 
-        boolean updateBoth = false;
-        if (resource.getResourceHref() != null && resource.getResourceHref().matches(".*\\/api\\/v1\\/users\\/\\w*$")) {
-            updateBoth = true;
-        }
-        return toMap(resource, true, updateBoth);
+        return toMap(resource, dirtOnly);
     }
 
-    private LinkedHashMap<String, Object> toMap(final AbstractResource resource, boolean partialUpdate, boolean updateBoth) {
+    private LinkedHashMap<String, Object> toMap(final AbstractResource resource, boolean partialUpdate) {
 
         Set<String> propNames = new HashSet<>();
 
-        if (partialUpdate || updateBoth) {
-            propNames.addAll(resource.getUpdatedPropertyNames());
-        }
-        if (!partialUpdate || updateBoth) {
+        propNames.addAll(resource.getUpdatedPropertyNames());
+
+        if (!partialUpdate) {
             propNames.addAll(resource.getPropertyNames());
         }
 
@@ -74,8 +69,7 @@ public class DefaultResourceConverter implements ResourceConverter {
         return props;
     }
 
-    private Object toMapValue(final AbstractResource resource, final String propName, Object value,
-                              boolean partialUpdate) {
+    private Object toMapValue(final AbstractResource resource, final String propName, Object value, boolean dirtyOnly) {
 
         if (value instanceof Map) {
             //Since defaultModel is a map, the DataStore thinks it is a Resource. This causes the code to crash later one as Resources
@@ -97,7 +91,7 @@ public class DefaultResourceConverter implements ResourceConverter {
                 return this.referenceFactory.createReference(propName, (Resource) value);
             }
             else{
-                return this.referenceFactory.createUnmaterializedReference(propName, (Resource) value);
+                return this.referenceFactory.createUnmaterializedReference(propName, (Resource) value, dirtyOnly);
             }
         }
 
@@ -107,7 +101,7 @@ public class DefaultResourceConverter implements ResourceConverter {
     private Object convertAttributeStatementMappingRulesToMap(Object object){
 
         Set<Object> elementsSet = (Set<Object>) object;
-        Map<String, List<Object>> map = new HashMap<String, List<Object>>();
+        Map<String, List<Object>> map = new HashMap<>();
 
         List<Object> list = Collections.toList(elementsSet.toArray());
 

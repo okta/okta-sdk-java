@@ -21,6 +21,6 @@ import java.util.Map;
 
 public interface ResourceConverter {
 
-    Map<String,Object> convert(AbstractResource resource);
+    Map<String,Object> convert(AbstractResource resource, boolean dirtOnly);
 
 }

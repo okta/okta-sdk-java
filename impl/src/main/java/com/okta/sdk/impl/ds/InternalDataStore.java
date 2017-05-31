@@ -63,6 +63,8 @@ public interface InternalDataStore extends DataStore {
 
     <T extends Resource> void save(T resource);
 
+    <T extends Resource> void save(String href, T resource);
+
     <T extends Resource> void save(T resource, Options options);
 
     <T extends Resource, R extends Resource> R save(T resource, Class<? extends R> returnType);
