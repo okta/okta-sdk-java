@@ -15,42 +15,34 @@ import static org.hamcrest.Matchers.is
  * Tests for /api/v1/groups
  * @since 0.5.0
  */
-class GroupsIT {
+class GroupsIT implements CrudTestSupport {
 
-    @Test
-    void basicCrudTest() {
-
-        Client client = Clients.builder().build()
-
-        // get the size of initial list of users
-        int preCount = getCount(client)
-
-        // Create a group
-        UserGroup group = GroupBuilder.INSTANCE
+    @Override
+    def create(Client client) {
+        return GroupBuilder.INSTANCE
                 .setName("my-user-group-" + UUID.randomUUID().toString())
                 .setDescription("IT created Group")
                 .buildAndCreate(client)
-        def groupId = group.id
-
-        // get the count of users after adding
-        int count = getCount(client)
-        assertThat count, is(preCount + 1)
-
-        // update the group
-        group.profile.description = "IT created Group - Updated"
-        group.updateGroup(group) // TODO: this needs a body link
-
-        count = getCount(client)
-        assertThat count, is(preCount + 1)
-
-        // delete the user
-        group.deleteGroup()
-
-        count = getCount(client)
-        assertThat count, is(preCount)
     }
 
-    int getCount(Client client) {
-        return client.listGroups().iterator().size()
+    @Override
+    def read(Client client, String id) {
+        return client.getGroup(id)
+    }
+
+    @Override
+    void update(Client client, def group) {
+        group.profile.description = "IT created Group - Updated"
+        group.updateGroup(group) // TODO: this needs a body link
+    }
+
+    @Override
+    void delete(Client client, def group) {
+        group.deleteGroup()
+    }
+
+    @Override
+    Iterator getResourceCollectionIterator(Client client) {
+        return client.listGroups().iterator()
     }
 }
