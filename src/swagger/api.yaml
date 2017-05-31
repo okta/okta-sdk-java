@@ -1,19 +1,3 @@
-#
-# Copyright 2017 Okta
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
 {
   "swagger": "2.0",
   "info": {
@@ -6747,7 +6731,39 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-operations": [
+        {
+          "alias": "addSchemaToType",
+          "arguments": [
+            {
+              "dest": "typeId",
+              "src": "id"
+            }
+          ],
+          "operationId": "addSchemaToType"
+        },
+        {
+          "alias": "listSchemasForType",
+          "arguments": [
+            {
+              "dest": "typeId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listSchemasForType"
+        },
+        {
+          "alias": "updateSchemaByType",
+          "arguments": [
+            {
+              "dest": "schemaId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateSchemaByType"
+        }
+      ]
     },
     "ChangePasswordCredentials": {
       "properties": {
@@ -7182,7 +7198,8 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-operations": []
     },
     "GrantTypeMediationPolicyRuleCondition": {
       "properties": {
@@ -7351,7 +7368,49 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-operations": [
+        {
+          "alias": "deleteRule",
+          "arguments": [
+            {
+              "dest": "ruleId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteRule"
+        },
+        {
+          "alias": "updateRule",
+          "arguments": [
+            {
+              "dest": "ruleId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateRule"
+        },
+        {
+          "alias": "activateRule",
+          "arguments": [
+            {
+              "dest": "ruleId",
+              "src": "id"
+            }
+          ],
+          "operationId": "activateRule"
+        },
+        {
+          "alias": "deactivateRule",
+          "arguments": [
+            {
+              "dest": "ruleId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deactivateRule"
+        }
+      ]
     },
     "GroupMembershipMediationUserCondition": {
       "properties": {
@@ -7511,33 +7570,84 @@
         }
       },
       "type": "object",
+      "x-okta-operations": [
+        {
+          "alias": "confirmIdpTransactionUser",
+          "arguments": [
+            {
+              "dest": "transactionId",
+              "src": "id"
+            }
+          ],
+          "operationId": "confirmIdpTransactionUser"
+        },
+        {
+          "alias": "listIdpTransactionMatchedUsers",
+          "arguments": [
+            {
+              "dest": "transactionId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listIdpTransactionMatchedUsers"
+        },
+        {
+          "alias": "cancelIdpTransaction",
+          "arguments": [
+            {
+              "dest": "transactionId",
+              "src": "id"
+            }
+          ],
+          "operationId": "cancelIdpTransaction"
+        },
+        {
+          "alias": "getIdpTransactionTargetUser",
+          "arguments": [
+            {
+              "dest": "transactionId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getIdpTransactionTargetUser"
+        },
+        {
+          "alias": "getIdpTransactionSourceUser",
+          "arguments": [
+            {
+              "dest": "transactionId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getIdpTransactionSourceUser"
+        },
+        {
+          "alias": "handleIdpTransaction",
+          "arguments": [
+            {
+              "dest": "transactionId",
+              "src": "id"
+            }
+          ],
+          "operationId": "handleIdpTransaction"
+        }
+      ],
       "x-okta-tags": [
         "Idp"
       ]
     },
-    "IdpTransaction$Idp": {
-      "properties": {
-        "id": {
-          "readOnly": true
-        },
-        "name": {
-          "readOnly": true
-        },
-        "type": {
-          "readOnly": true
-        }
-      },
-      "type": "object"
-    },
     "IdpTransactionIdp": {
       "properties": {
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "name": {
+          "readOnly": true,
           "type": "string"
         },
         "type": {
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -7599,6 +7709,118 @@
         }
       },
       "type": "object",
+      "x-okta-operations": [
+        {
+          "alias": "getIdpAppUser",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getIdpAppUser"
+        },
+        {
+          "alias": "unlinkAppUser",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "unlinkAppUser"
+        },
+        {
+          "alias": "activateIdpAppInstance",
+          "arguments": [
+            {
+              "dest": "idpId",
+              "src": "id"
+            }
+          ],
+          "operationId": "activateIdpAppInstance"
+        },
+        {
+          "alias": "getSigningKey",
+          "arguments": [
+            {
+              "dest": "keyId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getSigningKey"
+        },
+        {
+          "alias": "getServiceProviderMetadata",
+          "arguments": [
+            {
+              "dest": "idpId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getServiceProviderMetadata"
+        },
+        {
+          "alias": "updateTrust",
+          "arguments": [
+            {
+              "dest": "idpId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateTrust"
+        },
+        {
+          "alias": "deleteTrust",
+          "arguments": [
+            {
+              "dest": "idpId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteTrust"
+        },
+        {
+          "alias": "generateSigningKey",
+          "arguments": [
+            {
+              "dest": "idpId",
+              "src": "id"
+            }
+          ],
+          "operationId": "generateSigningKey"
+        },
+        {
+          "alias": "listSigningKeys",
+          "arguments": [
+            {
+              "dest": "idpId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listSigningKeys"
+        },
+        {
+          "alias": "deactivateIdpAppInstance",
+          "arguments": [
+            {
+              "dest": "idpId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deactivateIdpAppInstance"
+        },
+        {
+          "alias": "listIdpAppUsers",
+          "arguments": [
+            {
+              "dest": "idpId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listIdpAppUsers"
+        }
+      ],
       "x-okta-tags": [
         "Idp"
       ]
@@ -7769,7 +7991,19 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-operations": [
+        {
+          "alias": "deleteKey",
+          "arguments": [
+            {
+              "dest": "keyId",
+              "src": "kid"
+            }
+          ],
+          "operationId": "deleteKey"
+        }
+      ]
     },
     "Link": {
       "properties": {
@@ -7877,6 +8111,118 @@
         }
       },
       "type": "object",
+      "x-okta-operations": [
+        {
+          "alias": "updatePolicy",
+          "arguments": [
+            {
+              "dest": "policyId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updatePolicy"
+        },
+        {
+          "alias": "deletePolicy",
+          "arguments": [
+            {
+              "dest": "policyId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deletePolicy"
+        },
+        {
+          "alias": "activatePolicy",
+          "arguments": [
+            {
+              "dest": "policyId",
+              "src": "id"
+            }
+          ],
+          "operationId": "activatePolicy"
+        },
+        {
+          "alias": "deactivatePolicy",
+          "arguments": [
+            {
+              "dest": "policyId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deactivatePolicy"
+        },
+        {
+          "alias": "getPolicyRules",
+          "arguments": [
+            {
+              "dest": "policyId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getPolicyRules"
+        },
+        {
+          "alias": "addPolicyRule",
+          "arguments": [
+            {
+              "dest": "policyId",
+              "src": "id"
+            }
+          ],
+          "operationId": "addPolicyRule"
+        },
+        {
+          "alias": "getPolicyRule",
+          "arguments": [
+            {
+              "dest": "ruleId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getPolicyRule"
+        },
+        {
+          "alias": "updatePolicyRule",
+          "arguments": [
+            {
+              "dest": "ruleId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updatePolicyRule"
+        },
+        {
+          "alias": "deletePolicyRule",
+          "arguments": [
+            {
+              "dest": "ruleId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deletePolicyRule"
+        },
+        {
+          "alias": "activatePolicyRule",
+          "arguments": [
+            {
+              "dest": "ruleId",
+              "src": "id"
+            }
+          ],
+          "operationId": "activatePolicyRule"
+        },
+        {
+          "alias": "deactivatePolicyRule",
+          "arguments": [
+            {
+              "dest": "ruleId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deactivatePolicyRule"
+        }
+      ],
       "x-okta-tags": [
         "Policy"
       ]
@@ -8088,7 +8434,39 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-operations": [
+        {
+          "alias": "updateCustomSmsTemplate",
+          "arguments": [
+            {
+              "dest": "templateId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateCustomSmsTemplate"
+        },
+        {
+          "alias": "partialUpdateCustomSmsTemplate",
+          "arguments": [
+            {
+              "dest": "templateId",
+              "src": "id"
+            }
+          ],
+          "operationId": "partialUpdateCustomSmsTemplate"
+        },
+        {
+          "alias": "deleteOrgCustomSmsTemplate",
+          "arguments": [
+            {
+              "dest": "templateId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteOrgCustomSmsTemplate"
+        }
+      ]
     },
     "PasswordCredential": {
       "properties": {
@@ -8314,28 +8692,6 @@
         "Idp"
       ]
     },
-    "Protocol$Endpoint": {
-      "properties": {
-        "binding": {
-          "readOnly": true
-        },
-        "url": {
-          "readOnly": true
-        }
-      },
-      "type": "object"
-    },
-    "Protocol$EndpointsList": {
-      "properties": {
-        "authorization": {
-          "readOnly": true
-        },
-        "token": {
-          "readOnly": true
-        }
-      },
-      "type": "object"
-    },
     "ProtocolAlgorithmType": {
       "properties": {
         "digest": {
@@ -8409,6 +8765,7 @@
     "ProtocolEndpoint": {
       "properties": {
         "binding": {
+          "readOnly": true,
           "type": "string"
         },
         "destination": {
@@ -8428,6 +8785,7 @@
           "type": "string"
         },
         "url": {
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -8442,7 +8800,8 @@
           "$ref": "#/definitions/ProtocolEndpoint"
         },
         "authorization": {
-          "$ref": "#/definitions/ProtocolEndpoint"
+          "$ref": "#/definitions/ProtocolEndpoint",
+          "readOnly": true
         },
         "metadata": {
           "$ref": "#/definitions/ProtocolEndpoint"
@@ -8454,7 +8813,8 @@
           "$ref": "#/definitions/ProtocolEndpoint"
         },
         "token": {
-          "$ref": "#/definitions/ProtocolEndpoint"
+          "$ref": "#/definitions/ProtocolEndpoint",
+          "readOnly": true
         }
       },
       "type": "object",
@@ -8618,6 +8978,388 @@
         }
       },
       "type": "object",
+      "x-okta-operations": [
+        {
+          "alias": "listGroupCatalogForApp",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listGroupCatalogForApp"
+        },
+        {
+          "alias": "getConnectorSettings",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getConnectorSettings"
+        },
+        {
+          "alias": "upsertConnectorSettings",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "upsertConnectorSettings"
+        },
+        {
+          "alias": "testConnectorSettings",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "testConnectorSettings"
+        },
+        {
+          "alias": "cloneKey",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "cloneKey"
+        },
+        {
+          "alias": "listCertificates",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listCertificates"
+        },
+        {
+          "alias": "deleteCertificate",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteCertificate"
+        },
+        {
+          "alias": "getCertificate",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getCertificate"
+        },
+        {
+          "alias": "listUserCatalogForApp",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listUserCatalogForApp"
+        },
+        {
+          "alias": "deleteGroupAppAssignment",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteGroupAppAssignment"
+        },
+        {
+          "alias": "getGroupAppAssignment",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getGroupAppAssignment"
+        },
+        {
+          "alias": "upsertGroupAppAssignment",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "upsertGroupAppAssignment"
+        },
+        {
+          "alias": "deactivateAppInstance",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deactivateAppInstance"
+        },
+        {
+          "alias": "getImportedSchema",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getImportedSchema"
+        },
+        {
+          "alias": "listTypesForAppInstance",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listTypesForAppInstance"
+        },
+        {
+          "alias": "getEffectiveType",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getEffectiveType"
+        },
+        {
+          "alias": "getGroupAppAssignmentUserType",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getGroupAppAssignmentUserType"
+        },
+        {
+          "alias": "listAppUsers",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listAppUsers"
+        },
+        {
+          "alias": "deleteAppUser",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteAppUser"
+        },
+        {
+          "alias": "getAppUser",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getAppUser"
+        },
+        {
+          "alias": "upsertAppUser",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "upsertAppUser"
+        },
+        {
+          "alias": "activateAppUser",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "activateAppUser"
+        },
+        {
+          "alias": "deleteAppInstance",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteAppInstance"
+        },
+        {
+          "alias": "updateAppInstance",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateAppInstance"
+        },
+        {
+          "alias": "generateKey",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "generateKey"
+        },
+        {
+          "alias": "listGroupAppAssignments",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listGroupAppAssignments"
+        },
+        {
+          "alias": "activateAppInstance",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "activateAppInstance"
+        },
+        {
+          "alias": "listSchemas",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listSchemas"
+        },
+        {
+          "alias": "updateSchema",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateSchema"
+        },
+        {
+          "alias": "resetSyncedPassword",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "resetSyncedPassword"
+        },
+        {
+          "alias": "listAppKeys",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listAppKeys"
+        },
+        {
+          "alias": "getSchema",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getSchema"
+        },
+        {
+          "alias": "updateType",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateType"
+        },
+        {
+          "alias": "deactivateAppUser",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deactivateAppUser"
+        },
+        {
+          "alias": "getAppKey",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getAppKey"
+        },
+        {
+          "alias": "getType",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getType"
+        },
+        {
+          "alias": "createAppUser",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "createAppUser"
+        },
+        {
+          "alias": "updateAppUser",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateAppUser"
+        }
+      ],
       "x-okta-tags": [
         "App"
       ]
@@ -8899,7 +9641,8 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-operations": []
     },
     "User": {
       "properties": {
@@ -8987,7 +9730,342 @@
         }
       },
       "type": "object",
-      "x-okta-links": [
+      "x-okta-crud": [
+        {
+          "alias": "create",
+          "arguments": [
+            {
+              "dest": "body",
+              "self": true
+            }
+          ],
+          "operationId": "createUser"
+        },
+        {
+          "alias": "read",
+          "arguments": [],
+          "operationId": "getUser"
+        },
+        {
+          "alias": "update",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            },
+            {
+              "dest": "body",
+              "self": true
+            }
+          ],
+          "operationId": "updateUser"
+        },
+        {
+          "alias": "delete",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            },
+            {
+              "dest": "body",
+              "self": true
+            }
+          ],
+          "operationId": "deactivateOrDeleteUser"
+        }
+      ],
+      "x-okta-operations": [
+        {
+          "alias": "listFactorsCatalog",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listFactorsCatalog"
+        },
+        {
+          "alias": "activateFactorDevice",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "activateFactorDevice"
+        },
+        {
+          "alias": "generateQRCodeImage",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "generateQRCodeImage"
+        },
+        {
+          "alias": "resendCode",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "resendCode"
+        },
+        {
+          "alias": "deactivateOrDeleteUser",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deactivateOrDeleteUser"
+        },
+        {
+          "alias": "updateUserWithDefaults",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateUserWithDefaults"
+        },
+        {
+          "alias": "listAppLinks",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listAppLinks"
+        },
+        {
+          "alias": "listUserCatalogApps",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listUserCatalogApps"
+        },
+        {
+          "alias": "changeRecoveryQuestion",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "changeRecoveryQuestion"
+        },
+        {
+          "alias": "forgotPasswordWithRecoveryAnswer",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "forgotPasswordWithRecoveryAnswer"
+        },
+        {
+          "alias": "listUserFactors",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listUserFactors"
+        },
+        {
+          "alias": "enrollFactor",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "enrollFactor"
+        },
+        {
+          "alias": "preAuth",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "preAuth"
+        },
+        {
+          "alias": "resetFactor",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "resetFactor"
+        },
+        {
+          "alias": "getFactor",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getFactor"
+        },
+        {
+          "alias": "getFactorDevice",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getFactorDevice"
+        },
+        {
+          "alias": "cancelFactorTransaction",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "cancelFactorTransaction"
+        },
+        {
+          "alias": "getFactorTransactionStatus",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getFactorTransactionStatus"
+        },
+        {
+          "alias": "authenticate",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "authenticate"
+        },
+        {
+          "alias": "clearUserSessions",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "clearUserSessions"
+        },
+        {
+          "alias": "updateUser",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateUser"
+        },
+        {
+          "alias": "changePassword",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "changePassword"
+        },
+        {
+          "alias": "listAssignedRoles",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listAssignedRoles"
+        },
+        {
+          "alias": "assignRoleToUser",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "assignRoleToUser"
+        },
+        {
+          "alias": "unassignRoleFromUser",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "unassignRoleFromUser"
+        },
+        {
+          "alias": "getRoleForUser",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getRoleForUser"
+        },
+        {
+          "alias": "listGroupTargetsForRole",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listGroupTargetsForRole"
+        },
+        {
+          "alias": "removeGroupTargetFromRole",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "removeGroupTargetFromRole"
+        },
+        {
+          "alias": "addGroupTargetToRole",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "addGroupTargetToRole"
+        },
         {
           "alias": "listGroups",
           "arguments": [
@@ -9007,16 +10085,6 @@
             }
           ],
           "operationId": "activateUser"
-        },
-        {
-          "alias": "addToGroup",
-          "arguments": [
-            {
-              "dest": "userId",
-              "src": "id"
-            }
-          ],
-          "operationId": "addUserToGroup"
         },
         {
           "alias": "deactivate",
@@ -9079,32 +10147,14 @@
           "operationId": "resetAllFactors"
         },
         {
-          "alias": "save",
+          "alias": "addToGroup",
           "arguments": [
             {
               "dest": "userId",
               "src": "id"
-            },
-            {
-              "dest": "body",
-              "self": true
             }
           ],
-          "operationId": "updateUser"
-        },
-        {
-          "alias": "delete",
-          "arguments": [
-            {
-              "dest": "userId",
-              "src": "id"
-            },
-            {
-              "dest": "body",
-              "self": true
-            }
-          ],
-          "operationId": "deactivateOrDeleteUser"
+          "operationId": "addUserToGroup"
         }
       ],
       "x-okta-tags": [
@@ -9130,7 +10180,12 @@
       ]
     },
     "UserFactor": {
-      "properties": {},
+      "properties": {
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
       "type": "object"
     },
     "UserGroup": {
@@ -9184,7 +10239,67 @@
         }
       },
       "type": "object",
-      "x-okta-links": [
+      "x-okta-operations": [
+        {
+          "alias": "listCatalogApps",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listCatalogApps"
+        },
+        {
+          "alias": "getUserGroupStats",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getUserGroupStats"
+        },
+        {
+          "alias": "listApps",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listApps"
+        },
+        {
+          "alias": "removeUserFromGroup",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            }
+          ],
+          "operationId": "removeUserFromGroup"
+        },
+        {
+          "alias": "updateGroup",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateGroup"
+        },
+        {
+          "alias": "deleteGroup",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteGroup"
+        },
         {
           "alias": "listUsers",
           "arguments": [

@@ -117,14 +117,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     }
 
     private void handleOktaLinkedOperations(Swagger swagger) {
-        // we want to move any operations defined by the 'x-okta-links' vendor extension to the model
+        // we want to move any operations defined by the 'x-okta-operations' vendor extension to the model
         Map<String, Model> modelMap = swagger.getDefinitions().entrySet().stream()
-                .filter(e -> e.getValue().getVendorExtensions().containsKey("x-okta-links"))
+                .filter(e -> e.getValue().getVendorExtensions().containsKey("x-okta-operations"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
 
         modelMap.forEach((k, model) -> {
-            List<ObjectNode> linkNodes = (List<ObjectNode>) model.getVendorExtensions().get("x-okta-links");
+            List<ObjectNode> linkNodes = (List<ObjectNode>) model.getVendorExtensions().get("x-okta-operations");
             linkNodes.forEach(n -> {
                 String operationId = n.get("operationId").textValue();
 
@@ -163,7 +163,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 if (argNode.has("src")) {
                                     String src = argNode.get("src").textValue();
                                     String dest = argNode.get("dest").textValue();
-                                    argMap.put(dest, src); // reverse lookup
+                                    if (src != null) {
+                                        argMap.put(dest, src); // reverse lookup
+                                    }
                                 }
 
                                 if (argNode.has("self")) {
@@ -184,8 +186,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 String paramName = argMap.get(param.paramName);
                                 cgParamModelList.add(param);
 
-                                CodegenProperty cgProperty = fromProperty(paramName, model.getProperties().get(paramName));
-                                param.vendorExtensions.put("fromModel", cgProperty);
+                                if (model.getProperties() != null) {
+                                    CodegenProperty cgProperty = fromProperty(paramName, model.getProperties().get(paramName));
+                                    param.vendorExtensions.put("fromModel", cgProperty);
+                                } else {
+                                    System.err.println("Model '"+ model.getTitle() +"' has no properties");
+                                }
 
                             }
                             else {
