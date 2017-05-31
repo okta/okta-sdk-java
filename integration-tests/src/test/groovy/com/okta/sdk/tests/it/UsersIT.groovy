@@ -1,11 +1,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.client.Clients
-import com.okta.sdk.resource.User
 import com.okta.sdk.resource.UserBuilder
-import org.testng.annotations.Test
-import org.testng.collections.Lists
 
 import static org.hamcrest.MatcherAssert.*
 import static org.hamcrest.Matchers.*
@@ -14,19 +10,13 @@ import static org.hamcrest.Matchers.*
  * Tests for /api/v1/users
  * @since 0.5.0
  */
-class UsersIT {
+class UsersIT implements CrudTestSupport {
 
-    @Test
-    void basicCrudTest() {
+    def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
 
-        Client client = Clients.builder().build()
-
-        // get the size of initial list of users
-        int preUserCount = getUserCount(client)
-
-        // create a user
-        String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
-        User user = UserBuilder.INSTANCE
+    @Override
+    def create(Client client) {
+        return UserBuilder.INSTANCE
                 .setEmail(email)
                 .setFirstName("Joe")
                 .setLastName("Code")
@@ -34,27 +24,26 @@ class UsersIT {
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
                 .buildAndCreate(client)
-        def userId = user.id
-
-        // get the count of users after adding
-        int userCount = getUserCount(client)
-        assertThat userCount, is(preUserCount + 1)
-
-        // update the user name
-        user.profile.lastName = "Coder"
-        user.updateUser(user) // TODO: this needs a body link
-
-        userCount = getUserCount(client)
-        assertThat userCount, is(preUserCount + 1)
-
-        // delete the user
-        user.deactivateOrDeleteUser()
-
-        userCount = getUserCount(client)
-        assertThat userCount, is(preUserCount)
     }
 
-    int getUserCount(Client client) {
-        return client.listUsers().iterator().size()
+    @Override
+    def read(Client client, String id) {
+        return client.getUser(id)
+    }
+
+    @Override
+    void update(Client client, def user) {
+        user.profile.lastName = "Coder"
+        user.updateUser(user) // TODO: this needs a body link
+    }
+
+    @Override
+    void delete(Client client, def user) {
+        user.deactivateOrDeleteUser()
+    }
+
+    @Override
+    Iterator getResourceCollectionIterator(Client client) {
+        return client.listUsers().iterator()
     }
 }
