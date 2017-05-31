@@ -41,9 +41,11 @@ import java.util.List;
 import java.util.Map;
 {{/fullJavaUtil}}
 
-{{>generatedAnnotation}}
 {{#operations}}
-public class {{classname}} extends AbstractClient implements {{interfaceClassname}} {
+    @javax.annotation.Generated(
+            value = "{{generatorClass}}",
+            date  = "{{generatedDate}}")
+    public class {{classname}} extends AbstractClient implements {{interfaceClassname}} {
 
     /**
     * Instantiates a new Client instance that will communicate with the Okta REST API.  See the class-level
@@ -59,43 +61,58 @@ public class {{classname}} extends AbstractClient implements {{interfaceClassnam
     * @param requestAuthenticatorFactory
     * @param connectionTimeout
     */
-    public DefaultClient(ClientCredentialsResolver clientCredentialsResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
+    public DefaultClient(ClientCredentialsResolver clientCredentialsResolver,
+                         BaseUrlResolver baseUrlResolver,
+                         Proxy proxy,
+                         CacheManager cacheManager,
+                         AuthenticationScheme authenticationScheme,
+                         RequestAuthenticatorFactory requestAuthenticatorFactory,
+                         int connectionTimeout) {
         super(clientCredentialsResolver, baseUrlResolver, proxy, cacheManager, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
     }
 
-  {{#operation}}{{^vendorExtensions.moved}}
-  /**
-   * {{summary}}
-   * {{notes}}
-   {{#allParams}}
-   * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
-   {{/allParams}}
-   {{#returnType}}
-   * @return {{returnType}}
-   {{/returnType}}
-   */
-  @Override
-  public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
-  {{>queryPartial}}
-{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
-  }
+{{#operation}}{{^vendorExtensions.moved}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#allParams}}
+    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+    {{/allParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    @Override
+    @javax.annotation.Generated(
+            value    = "{{generatorClass}}",
+            date     = "{{generatedDate}}",
+            comments = "{{path}}")
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
 
-  {{#vendorExtensions.hasOptional}}
-  /**
-  * {{summary}}
-  * {{notes}}
-  {{#vendorExtensions.nonOptionalParams}}
-  * @param {{paramName}} {{description}} (required)
-  {{/vendorExtensions.nonOptionalParams}}
-  {{#returnType}}
-  * @return {{returnType}}
-  {{/returnType}}
-  */
-  @Override
-  public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
+{{>queryPartial}}{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+    }
+
+{{#vendorExtensions.hasOptional}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#vendorExtensions.nonOptionalParams}}
+    * @param {{paramName}} {{description}} (required)
+    {{/vendorExtensions.nonOptionalParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    @Override
+    @javax.annotation.Generated(
+            value    = "{{generatorClass}}",
+            date     = "{{generatedDate}}",
+            comments = "{{path}}")
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
+
 {{>queryPartialRequired}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
-      }
+    }
 {{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 
 }

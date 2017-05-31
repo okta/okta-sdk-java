@@ -13,9 +13,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-    {{^queryParams.isEmpty}}QueryString queryArgs = new QueryString();{{#queryParams}}
-    queryArgs.put("{{baseName}}", {{paramName}});{{#defaultValue}}
-    queryArgs.putIfAbsent("{{baseName}}", "{{defaultValue}}");{{/defaultValue}}{{/queryParams}}
+{{^queryParams.isEmpty}}        QueryString queryArgs = new QueryString();{{#queryParams}}
+        queryArgs.put("{{baseName}}", {{paramName}});{{#defaultValue}}
+        queryArgs.putIfAbsent("{{baseName}}", "{{defaultValue}}");{{/defaultValue}}{{/queryParams}}
 
-    String href = QueryString.buildHref("{{{vendorExtensions.hrefFiltered}}}", queryArgs);{{/queryParams.isEmpty}}
-    {{#queryParams.isEmpty}}String href = "{{{vendorExtensions.hrefFiltered}}}";{{/queryParams.isEmpty}}
+        String href = QueryString.buildHref("{{{vendorExtensions.hrefFiltered}}}", queryArgs);{{/queryParams.isEmpty}}
+{{#queryParams.isEmpty}}        String href = "{{{vendorExtensions.hrefFiltered}}}";
+{{/queryParams.isEmpty}}
