@@ -13,17 +13,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{#vendorExtensions.bodyIsSelf}}
-    getDataStore().save(this);
-    {{#returnType}}return this;{{/returnType}}
-{{/vendorExtensions.bodyIsSelf}}
-
-{{^vendorExtensions.bodyIsSelf}}
-{{#bodyParam}}
-    getDataStore().save({{bodyParam.paramName}});
-    {{#returnType}}return {{/returnType}} {{bodyParam.paramName}};
-{{/bodyParam}}{{^bodyParam}}
-    getDataStore().create(href, new VoidResource(getDataStore()));
-    {{#returnType}}return this;{{/returnType}}
-{{/bodyParam}}
-{{/vendorExtensions.bodyIsSelf}}
+{{#vendorExtensions.bodyIsSelf}}        getDataStore().save(this);
+        {{#returnType}}return this;{{/returnType}}{{/vendorExtensions.bodyIsSelf}}{{^vendorExtensions.bodyIsSelf}}{{#bodyParam}}
+        getDataStore().save({{bodyParam.paramName}});
+        {{#returnType}}return {{/returnType}} {{bodyParam.paramName}};{{/bodyParam}}{{^bodyParam}}
+        getDataStore().create(href, new VoidResource(getDataStore()));
+        {{#returnType}}return this;{{/returnType}}{{/bodyParam}}{{/vendorExtensions.bodyIsSelf}}

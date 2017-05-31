@@ -26,7 +26,10 @@ import java.util.Map;
 /**
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
-{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
+{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
+@javax.annotation.Generated(
+        value = "{{generatorClass}}",
+        date  = "{{generatedDate}}")
 public class Default{{classname}} extends AbstractInstanceResource<{{classname}}> implements {{classname}} {
 
 {{#vars}}
@@ -51,7 +54,7 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
 {{#vars}}
 
     public {{{datatypeWithEnum}}} {{getter}}() {
-    return {{#vendorExtensions.forceCast}}({{{datatypeWithEnum}}}){{/vendorExtensions.forceCast}} {{vendorExtensions.propertyTypeMethod}}({{name}}Property);
+        return {{#vendorExtensions.forceCast}}({{{datatypeWithEnum}}}){{/vendorExtensions.forceCast}} {{vendorExtensions.propertyTypeMethod}}({{name}}Property);
     }
     {{^isReadOnly}}
 
@@ -64,42 +67,47 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
 {{/vars}}
 
 {{#vendorExtensions.operations}}{{#.}}
-  /**
-  * {{summary}}
-  * {{notes}}
-  {{#vendorExtensions.allParams}}
-  * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
-  {{/vendorExtensions.allParams}}
-  {{#returnType}}
-  * @return {{returnType}}
-  {{/returnType}}
-  */
-  @Override
-  public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}}) {
-  {{#vendorExtensions.fromModelPathParams}}{{#.}}
-    {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();
-  {{/.}}{{/vendorExtensions.fromModelPathParams}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#vendorExtensions.allParams}}
+    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
+    {{/vendorExtensions.allParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    @Override
+    @javax.annotation.Generated(
+          value    = "{{generatorClass}}",
+          date     = "{{generatedDate}}",
+          comments = "{{path}}")
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}}) {
 
+{{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
 {{>queryPartial}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
-  }
+    }
 
 {{#vendorExtensions.hasOptional}}
-      /**
-      * {{summary}}
-      * {{notes}}
-      {{#vendorExtensions.nonOptionalParams}}
-      * @param {{paramName}} {{description}} (required)
-      {{/vendorExtensions.nonOptionalParams}}
-      {{#returnType}}
-      * @return {{returnType}}
-      {{/returnType}}
-      */
-      @Override
-      public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
-  {{#vendorExtensions.fromModelPathParams}}{{#.}}
-      {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();
-  {{/.}}{{/vendorExtensions.fromModelPathParams}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#vendorExtensions.nonOptionalParams}}
+    * @param {{paramName}} {{description}} (required)
+    {{/vendorExtensions.nonOptionalParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    @Override
+    @javax.annotation.Generated(
+          value    = "{{generatorClass}}",
+          date     = "{{generatedDate}}",
+          comments = "{{path}}")
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
+
+{{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
 {{>queryPartialRequired}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
       }
@@ -117,7 +125,12 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
     {{/returnType}}
     */
     @Override
+    @javax.annotation.Generated(
+            value    = "{{generatorClass}}",
+            date     = "{{generatedDate}}",
+            comments = "{{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
+
 {{>queryPartial}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
     }
@@ -134,10 +147,15 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
     {{/returnType}}
     */
     @Override
+    @javax.annotation.Generated(
+            value    = "{{generatorClass}}",
+            date     = "{{generatedDate}}",
+            comments = "{{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
+
 {{>queryPartialRequired}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
-        }
+    }
     {{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 
 {{/model}}{{/models}}

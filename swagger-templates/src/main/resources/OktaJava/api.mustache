@@ -24,7 +24,6 @@ import {{modelPackage}}.*;
 import java.util.LinkedHashMap;
 import com.okta.sdk.ds.DataStore;
 
-{{>generatedAnnotation}}
 {{#operations}}
 /**
 * The {@code Client} is the main entry point to the Okta Java SDK.  A JVM project wishing to
@@ -58,6 +57,8 @@ import com.okta.sdk.ds.DataStore;
 * @see DataStore
 * @since 0.5.0
 */
+@javax.annotation.Generated(value = "{{generatorClass}}",
+                            date  = "{{generatedDate}}")
 public interface {{classname}} extends DataStore {
 
     /**
@@ -79,6 +80,10 @@ public interface {{classname}} extends DataStore {
     * @return {{returnType}}
     {{/returnType}}
     */
+    @javax.annotation.Generated(
+            value    = "{{generatorClass}}",
+            date     = "{{generatedDate}}",
+            comments = "{{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
 
     {{#vendorExtensions.hasOptional}}
@@ -92,6 +97,10 @@ public interface {{classname}} extends DataStore {
     * @return {{returnType}}
     {{/returnType}}
     */
+    @javax.annotation.Generated(
+            value    = "{{generatorClass}}",
+            date     = "{{generatedDate}}",
+            comments = "{{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
 {{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 }
