@@ -145,6 +145,7 @@ public class DefaultUserBuilder implements UserBuilder {
             if (Strings.hasText(securityQuestion)) {
                 RecoveryQuestionCredential question = client.instantiate(RecoveryQuestionCredential.class);
                 question.setQuestion(securityQuestion);
+                question.setAnswer(securityQuestionAnswer);
                 credentials.setRecoveryQuestion(question);
             }
 

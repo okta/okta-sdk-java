@@ -9622,6 +9622,9 @@
     },
     "RecoveryQuestionCredential": {
       "properties": {
+        "answer": {
+          "type": "string"
+        },
         "question": {
           "type": "string"
         }
