@@ -71,6 +71,10 @@ public class DefaultResourceConverter implements ResourceConverter {
 
     private Object toMapValue(final AbstractResource resource, final String propName, Object value, boolean dirtyOnly) {
 
+        if (value instanceof AbstractResource) {
+            return toMap((AbstractResource)value, dirtyOnly);
+        }
+
         if (value instanceof Map) {
             //Since defaultModel is a map, the DataStore thinks it is a Resource. This causes the code to crash later one as Resources
             //do need to have an href property
@@ -84,17 +88,6 @@ public class DefaultResourceConverter implements ResourceConverter {
             else{
                 return this.referenceFactory.createUnmaterializedReference(propName, (Map) value);
             }
-        }
-
-        if (value instanceof AbstractResource) {
-
-            return toMap((AbstractResource)value, dirtyOnly);
-//            if(((Resource)value).getResourceHref() != null) {
-//                return this.referenceFactory.createReference(propName, (Resource) value);
-//            }
-//            else{
-//                return this.referenceFactory.createUnmaterializedReference(propName, (Resource) value, dirtyOnly);
-//            }
         }
 
         return value;
