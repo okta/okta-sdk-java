@@ -29,7 +29,7 @@ import java.util.Map;
  *
  * During application initialization all the properties found in the pre-defined locations that are
  * defined by the user will be added here in the order defined in {@link com.okta.sdk.impl.client.DefaultClientBuilder}.
- * Unset values will use default values from {@code com/okta/sdk/config/okta.properties}.
+ * Unset values will use default values from {@code com/okta/sdk/config/okta.yaml}.
  *
  * @since 0.5.0
  */

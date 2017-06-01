@@ -40,11 +40,11 @@ class DefaultClientBuilderTest {
      * method as well.
      */
     void clearOktaEnvAndSysProps() {
-        System.clearProperty("okta.apiClient.token")
-        System.clearProperty("okta.apiClient.orgUrl")
+        System.clearProperty("okta.client.token")
+        System.clearProperty("okta.client.orgUrl")
 
-        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_APICLIENT_TOKEN", null)
-        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_APICLIENT_ORGURL", null)
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_TOKEN", null)
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_ORGURL", null)
     }
 
     @Test

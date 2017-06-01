@@ -55,16 +55,16 @@ import com.okta.sdk.cache.CacheManager;
  *         {@code classpath:} prefixes respectively.</li>
  *     <li>The environment variables {@code OKTA_API_KEY_ID} and {@code OKTA_API_KEY_SECRET}.  If either of
  *         these values are present, they override any previously discovered value.</li>
- *     <li>A properties file that exists at the file path or URL specified by the {@code okta.apiClient.file}
+ *     <li>A properties file that exists at the file path or URL specified by the {@code okta.client.file}
  *         system property.  If this file exists and any values are present, the values override any
- *         previously discovered value.  The {@code okta.apiClient.file} system property String can be an
+ *         previously discovered value.  The {@code okta.client.file} system property String can be an
  *         absolute file path, or it can be a URL or a classpath value by using the {@code url:} or
  *         {@code classpath:} prefixes respectively.</li>
- *     <li>The system properties {@code okta.apiClient.id} and {@code okta.apiClient.token}.  If either of
+ *     <li>The system properties {@code okta.client.id} and {@code okta.client.token}.  If either of
  *         these values are present, they override any previously discovered values.</li>
  * </ol>
  *
- * <p><b>SECURITY NOTICE:</b> While the {@code okta.apiClient.token} system property may be used to represent your
+ * <p><b>SECURITY NOTICE:</b> While the {@code okta.client.token} system property may be used to represent your
  * API Key Secret as mentioned above, this is not recommended: process listings on a machine will expose process
  * arguments (like system properties) and expose the secret value to anyone that can read process listings.  As
  * always, secret values should never be exposed to anyone other than the person that owns the API Key.</p>
@@ -208,18 +208,18 @@ import com.okta.sdk.cache.CacheManager;
  */
 public interface ClientBuilder {
 
-    String DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME = "okta.apiClient.token";
-    String DEFAULT_CLIENT_CACHE_MANAGER_ENABLED_PROPERTY_NAME = "okta.apiClient.cacheManager.enabled";
-    String DEFAULT_CLIENT_CACHE_MANAGER_TTL_PROPERTY_NAME = "okta.apiClient.cacheManager.defaultTtl";
-    String DEFAULT_CLIENT_CACHE_MANAGER_TTI_PROPERTY_NAME = "okta.apiClient.cacheManager.defaultTti";
-    String DEFAULT_CLIENT_CACHE_MANAGER_CACHES_PROPERTY_NAME = "okta.apiClient.cacheManager.caches";
-    String DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME = "okta.apiClient.orgUrl";
-    String DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME = "okta.apiClient.connectionTimeout";
-    String DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME = "okta.apiClient.authenticationScheme";
-    String DEFAULT_CLIENT_PROXY_PORT_PROPERTY_NAME = "okta.apiClient.proxy.port";
-    String DEFAULT_CLIENT_PROXY_HOST_PROPERTY_NAME = "okta.apiClient.proxy.host";
-    String DEFAULT_CLIENT_PROXY_USERNAME_PROPERTY_NAME = "okta.apiClient.proxy.username";
-    String DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME = "okta.apiClient.proxy.password";
+    String DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME = "okta.client.token";
+    String DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME = "okta.client.cache.enabled";
+    String DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME = "okta.client.cache.defaultTtl";
+    String DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME = "okta.client.cache.defaultTti";
+    String DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME = "okta.client.cache.caches";
+    String DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME = "okta.client.orgUrl";
+    String DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME = "okta.client.connectionTimeout";
+    String DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME = "okta.client.authenticationScheme";
+    String DEFAULT_CLIENT_PROXY_PORT_PROPERTY_NAME = "okta.client.proxy.port";
+    String DEFAULT_CLIENT_PROXY_HOST_PROPERTY_NAME = "okta.client.proxy.host";
+    String DEFAULT_CLIENT_PROXY_USERNAME_PROPERTY_NAME = "okta.client.proxy.username";
+    String DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME = "okta.client.proxy.password";
 
     /**
      * Allows specifying an {@code ApiKey} instance directly instead of relying on the

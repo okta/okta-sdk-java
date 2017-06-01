@@ -15,11 +15,11 @@
 #
 
 okta:
-  apiClient:
+  client:
     token:
     connectionTimeout: 30
     authenticationScheme: SSWS
-    cacheManager:
+    cache:
       enabled: true
       defaultTtl: 300
       defaultTti: 300
