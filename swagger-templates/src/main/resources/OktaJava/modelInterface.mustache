@@ -24,7 +24,7 @@ import java.io.Serializable;
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
-public interface {{classname}} extends Resource{{#vendorExtensions.x-oktaDynamicSchema}}, Map<String, Object>{{/vendorExtensions.x-oktaDynamicSchema}} {
+public interface {{classname}} extends Resource{{#vendorExtensions.x-okta-extensible}}, Map<String, Object>{{/vendorExtensions.x-okta-extensible}} {
 
 {{#vars}}
     {{#vendorExtensions.extraAnnotation}}
