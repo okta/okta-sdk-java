@@ -17,7 +17,7 @@
 
 
 # deploy snapshot from ONLY this branch
-SNAPSHOT_BRANCH="new-deal"
+SNAPSHOT_BRANCH="master"
 
 # Get the slug from the TRAVIS var, or parse the 'origin' remote
 REPO_SLUG=${REPO_SLUG:-${TRAVIS_REPO_SLUG:-$(git remote get-url origin | sed 's_.*\:__; s_.*github.com/__; s_\.git__')}}
