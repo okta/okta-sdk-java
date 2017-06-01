@@ -47,18 +47,24 @@ echo "RUN_ITS: ${RUN_ITS}"
 # all the prep is done, lets run the build!
 MVN_CMD="mvn -s src/ci/settings.xml"
 
-# run 'mvn deploy' if we can
-if [ "$DEPLOY" = true ] ; then
-    echo "Deploying SNAPSHOT build"
-    $MVN_CMD deploy
+# if this build was triggered via a cron job, just scan the dependencies
+if [ "$TRAVIS_EVENT_TYPE" = "cron" ] ; then
+    echo "Running TRAVIS CRON task"
+    $MVN_CMD dependency-check:aggregate -Powasp
 else
-    # else try to run the ITs if possible (for someone who has push access to the repo
-    if [ "$RUN_ITS" = true ] ; then
-        echo "Running mvn install"
-        $MVN_CMD install
+    # run 'mvn deploy' if we can
+    if [ "$DEPLOY" = true ] ; then
+        echo "Deploying SNAPSHOT build"
+        $MVN_CMD deploy
     else
-        # fall back to running an install and skip the ITs
-        echo "Skipping ITs, likely this build is a pull request from a fork"
-        $MVN_CMD install -DskipITs
+        # else try to run the ITs if possible (for someone who has push access to the repo
+        if [ "$RUN_ITS" = true ] ; then
+            echo "Running mvn install"
+            $MVN_CMD install
+        else
+            # fall back to running an install and skip the ITs
+            echo "Skipping ITs, likely this build is a pull request from a fork"
+            $MVN_CMD install -DskipITs
+        fi
     fi
 fi
