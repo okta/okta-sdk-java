@@ -44,14 +44,14 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
         envVarName = Strings.trimWhitespace(envVarName);
 
         //special cases (camel case):
-        if ("OKTA_APICLIENT_TOKEN".equals(envVarName)) {
-            return "okta.apiClient.token";
+        if ("OKTA_CLIENT_TOKEN".equals(envVarName)) {
+            return "okta.client.token";
         }
-        if ("OKTA_APICLIENT_AUTHENTICATIONSCHEME".equals(envVarName)) {
-            return "okta.apiClient.authenticationScheme";
+        if ("OKTA_CLIENT_AUTHENTICATIONSCHEME".equals(envVarName)) {
+            return "okta.client.authenticationScheme";
         }
-        if ("OKTA_APICLIENT_ORGURL".equals(envVarName)) {
-            return "okta.apiClient.orgUrl";
+        if ("OKTA_CLIENT_ORGURL".equals(envVarName)) {
+            return "okta.client.orgUrl";
         }
 
         //default cases:

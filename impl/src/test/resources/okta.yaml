@@ -15,7 +15,7 @@
 #
 
 okta:
-  apiClient:
+  client:
     token: 13
     orgUrl: https://api.okta.com/v42
     connectionTimeout: 10

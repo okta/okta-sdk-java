@@ -14,7 +14,7 @@ There are a few ways to configure the client, but the easiest way is to create a
 
 ``` yaml
 okta:
-  apiClient:
+  client:
     token: <your-api-token>
     orgUrl: https://dev-123456.oktapreview.com
 ```
