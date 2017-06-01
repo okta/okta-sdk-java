@@ -1,6 +1,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.User
 import com.okta.sdk.resource.UserBuilder
 
 import static org.hamcrest.MatcherAssert.*
@@ -34,12 +35,12 @@ class UsersIT implements CrudTestSupport {
     @Override
     void update(Client client, def user) {
         user.profile.lastName = "Coder"
-        user.updateUser(user) // TODO: this needs a body link
+        user.update()
     }
 
     @Override
     void delete(Client client, def user) {
-        user.deactivateOrDeleteUser()
+        user.delete()
     }
 
     @Override

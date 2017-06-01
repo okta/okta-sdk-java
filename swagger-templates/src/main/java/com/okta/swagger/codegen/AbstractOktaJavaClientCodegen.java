@@ -116,15 +116,28 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         );
     }
 
+    private void addAllIfNotNull(List<ObjectNode> destList, List<ObjectNode> srcList) {
+        if (srcList != null) {
+            destList.addAll(srcList);
+        }
+    }
+
     private void handleOktaLinkedOperations(Swagger swagger) {
-        // we want to move any operations defined by the 'x-okta-operations' vendor extension to the model
+        // we want to move any operations defined by the 'x-okta-operations' or 'x-okta-crud' vendor extension to the model
         Map<String, Model> modelMap = swagger.getDefinitions().entrySet().stream()
-                .filter(e -> e.getValue().getVendorExtensions().containsKey("x-okta-operations"))
+                .filter(e -> e.getValue().getVendorExtensions().containsKey("x-okta-operations")
+                        || e.getValue().getVendorExtensions().containsKey("x-okta-crud"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
 
         modelMap.forEach((k, model) -> {
-            List<ObjectNode> linkNodes = (List<ObjectNode>) model.getVendorExtensions().get("x-okta-operations");
+            List<ObjectNode> linkNodes = new ArrayList<>();
+
+            addAllIfNotNull(linkNodes, (List<ObjectNode>) model.getVendorExtensions().get("x-okta-operations"));
+            addAllIfNotNull(linkNodes, (List<ObjectNode>) model.getVendorExtensions().get("x-okta-crud"));
+
+            Map<String, CodegenOperation> operationMap = new HashMap<>();
+
             linkNodes.forEach(n -> {
                 String operationId = n.get("operationId").textValue();
 
@@ -136,8 +149,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                         Operation operation = operationEntry.get().getValue();
 
-                        List<CodegenOperation> operations = (List<CodegenOperation>) model.getVendorExtensions().getOrDefault("operations", new ArrayList<CodegenOperation>());
-
                         CodegenOperation cgOperation = fromOperation(
                                 pathName,
                                 operationEntry.get().getKey().name().toLowerCase(),
@@ -145,67 +156,80 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 swagger.getDefinitions(),
                                 swagger);
 
+                        boolean canLinkMethod = true;
+
                         JsonNode aliasNode = n.get("alias");
                         if (aliasNode != null) {
-                            cgOperation.vendorExtensions.put("alias", aliasNode.textValue());
+                            String alias = aliasNode.textValue();
+                            cgOperation.vendorExtensions.put("alias", alias);
+
+                            if ("update".equals(alias)) {
+                                model.getVendorExtensions().put("saveable", true);
+                            } else if ("delete".equals(alias)) {
+                                model.getVendorExtensions().put("deletable", true);
+                            }
+                            else if ("read".equals(alias) || "create".equals(alias)) {
+                                canLinkMethod = false;
+                            }
                         }
 
-                        // now any params that match the models we need to use the model value directly
-                        // for example if the path contained {id} we would call getId() instead
+                        // we do NOT link read or create methods, those need to be on the parent object
+                        if (canLinkMethod) {
 
-                        Map<String, String> argMap = new LinkedHashMap<>();
-                        ArrayNode argNodeList = (ArrayNode)  n.get("arguments");
+                            // now any params that match the models we need to use the model value directly
+                            // for example if the path contained {id} we would call getId() instead
 
-                        if (argNodeList != null) {
-                            for (Iterator argNodeIter=argNodeList.iterator(); argNodeIter.hasNext();) {
-                                JsonNode argNode = (JsonNode) argNodeIter.next();
+                            Map<String, String> argMap = new LinkedHashMap<>();
+                            ArrayNode argNodeList = (ArrayNode) n.get("arguments");
 
-                                if (argNode.has("src")) {
-                                    String src = argNode.get("src").textValue();
-                                    String dest = argNode.get("dest").textValue();
-                                    if (src != null) {
-                                        argMap.put(dest, src); // reverse lookup
+                            if (argNodeList != null) {
+                                for (Iterator argNodeIter = argNodeList.iterator(); argNodeIter.hasNext(); ) {
+                                    JsonNode argNode = (JsonNode) argNodeIter.next();
+
+                                    if (argNode.has("src")) {
+                                        String src = argNode.get("src").textValue();
+                                        String dest = argNode.get("dest").textValue();
+                                        if (src != null) {
+                                            argMap.put(dest, src); // reverse lookup
+                                        }
+                                    }
+
+                                    if (argNode.has("self")) {
+                                        String dest = argNode.get("dest").textValue();
+                                        argMap.put(dest, "this"); // reverse lookup
                                     }
                                 }
-
-                                if (argNode.has("self")) {
-                                    String dest = argNode.get("dest").textValue();
-                                    argMap.put(dest, "this"); // reverse lookup
-                                }
-
                             }
-                        }
 
-                        List<CodegenParameter> cgParamAllList = new ArrayList<>();
-                        List<CodegenParameter> cgParamModelList = new ArrayList<>();
+                            List<CodegenParameter> cgParamAllList = new ArrayList<>();
+                            List<CodegenParameter> cgParamModelList = new ArrayList<>();
 
-                        cgOperation.pathParams.forEach(param -> {
+                            cgOperation.pathParams.forEach(param -> {
 
-                            if (argMap.containsKey(param.paramName)) {
+                                if (argMap.containsKey(param.paramName)) {
 
-                                String paramName = argMap.get(param.paramName);
-                                cgParamModelList.add(param);
+                                    String paramName = argMap.get(param.paramName);
+                                    cgParamModelList.add(param);
 
-                                if (model.getProperties() != null) {
-                                    CodegenProperty cgProperty = fromProperty(paramName, model.getProperties().get(paramName));
-                                    param.vendorExtensions.put("fromModel", cgProperty);
+                                    if (model.getProperties() != null) {
+                                        CodegenProperty cgProperty = fromProperty(paramName, model.getProperties().get(paramName));
+                                        param.vendorExtensions.put("fromModel", cgProperty);
+                                    } else {
+                                        System.err.println("Model '" + model.getTitle() + "' has no properties");
+                                    }
+
                                 } else {
-                                    System.err.println("Model '"+ model.getTitle() +"' has no properties");
+                                    cgParamAllList.add(param);
                                 }
+                            });
 
+                            for (Iterator<CodegenParameter> iter = cgOperation.bodyParams.iterator(); iter.hasNext(); ) {
+                                CodegenParameter bodyParam = iter.next();
+                                if (argMap.containsKey(bodyParam.paramName)) {
+                                    cgOperation.vendorExtensions.put("bodyIsSelf", true);
+                                    iter.remove();
+                                }
                             }
-                            else {
-                                cgParamAllList.add(param);
-                            }
-                        });
-
-                        for (Iterator<CodegenParameter> iter = cgOperation.bodyParams.iterator(); iter.hasNext();) {
-                            CodegenParameter bodyParam = iter.next();
-                            if (argMap.containsKey(bodyParam.paramName)) {
-                                cgOperation.vendorExtensions.put("bodyIsSelf", true);
-                                iter.remove();
-                            }
-                        }
 
 //                        if (cgOperation.getHasBodyParam()) {
 //                            CodegenParameter bodyParam = cgOperation.bodyParam;
@@ -222,32 +246,34 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 //                            param.hasMore = false;
 //                        }
 
-                        cgParamAllList.addAll(cgOperation.queryParams);
-                        cgParamAllList.addAll(cgOperation.bodyParams);
+                            cgParamAllList.addAll(cgOperation.queryParams);
+                            cgParamAllList.addAll(cgOperation.bodyParams);
 
-                        // set all params to have more
-                        cgParamAllList.forEach(param -> param.hasMore = true);
+                            // set all params to have more
+                            cgParamAllList.forEach(param -> param.hasMore = true);
 
-                        // then grab the last one and mark it as the last
-                        if (!cgParamAllList.isEmpty()) {
-                            CodegenParameter param = cgParamAllList.get(cgParamAllList.size()-1);
-                            param.hasMore = false;
+                            // then grab the last one and mark it as the last
+                            if (!cgParamAllList.isEmpty()) {
+                                CodegenParameter param = cgParamAllList.get(cgParamAllList.size() - 1);
+                                param.hasMore = false;
+                            }
+
+                            cgOperation.vendorExtensions.put("allParams", cgParamAllList);
+                            cgOperation.vendorExtensions.put("fromModelPathParams", cgParamModelList);
+
+                            addOptionalExtension(cgOperation, cgParamAllList);
+
+                            operationMap.put(cgOperation.operationId, cgOperation);
+
+                            // mark the operation as moved so we do NOT add it to the client
+                            operation.getVendorExtensions().put("moved", true);
+
                         }
-
-                        cgOperation.vendorExtensions.put("allParams", cgParamAllList);
-                        cgOperation.vendorExtensions.put("fromModelPathParams", cgParamModelList);
-
-                        addOptionalExtension(cgOperation, cgParamAllList);
-
-                        operations.add(cgOperation);
-                        model.getVendorExtensions().put("operations", operations);
-
-                        // mark the operation as moved so we do NOT add it to the client
-                        operation.getVendorExtensions().put("moved", true);
-
                     }
                 });
             });
+
+            model.getVendorExtensions().put("operations", operationMap.values());
         });
     }
 
