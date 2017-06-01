@@ -18,6 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.sdk.resource.Resource;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -32,7 +33,7 @@ public class ResourceUtil {
      * @return filtered map
      */
     public static final Map<String, String> filterNonStringValuesWithResource(Resource resource){
-        Map<String, Object> properties = ((AbstractResource) resource).properties;
+        Map<String, Object> properties = new LinkedHashMap<>(((AbstractResource) resource).properties);
         properties.putAll(((AbstractResource) resource).dirtyProperties);
         return filterNonStringValues(properties);
     }

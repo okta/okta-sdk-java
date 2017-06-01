@@ -86,13 +86,15 @@ public class DefaultResourceConverter implements ResourceConverter {
             }
         }
 
-        if (value instanceof Resource) {
-            if(((Resource)value).getResourceHref() != null) {
-                return this.referenceFactory.createReference(propName, (Resource) value);
-            }
-            else{
-                return this.referenceFactory.createUnmaterializedReference(propName, (Resource) value, dirtyOnly);
-            }
+        if (value instanceof AbstractResource) {
+
+            return toMap((AbstractResource)value, dirtyOnly);
+//            if(((Resource)value).getResourceHref() != null) {
+//                return this.referenceFactory.createReference(propName, (Resource) value);
+//            }
+//            else{
+//                return this.referenceFactory.createUnmaterializedReference(propName, (Resource) value, dirtyOnly);
+//            }
         }
 
         return value;
