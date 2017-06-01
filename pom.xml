@@ -46,7 +46,7 @@
 
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
         <jersey.version>2.22.2</jersey.version>
-        <jackson.version>2.7.0</jackson.version>
+        <jackson.version>2.8.8</jackson.version>
         <jodatime.version>2.7</jodatime.version>
         <snakeyaml.version>1.17</snakeyaml.version>
         <jjwt.version>0.6.0</jjwt.version>
@@ -200,6 +200,23 @@
                 <scope>test</scope>
             </dependency>
 
+            <!-- transitive dependency versions updated due to owasp scan -->
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -504,6 +521,16 @@
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.7.9</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>1.4.5</version>
+                    <inherited>false</inherited>
+                    <configuration>
+                        <suppressionFile>${root.dir}/src/owasp-suppression.xml</suppressionFile>
+                        <name>OWASP Dependency Check</name>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -519,6 +546,45 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <!--  NOTE: this plugin config will return false positives, usage will require
+                  human interpretation (and should NOT be used to fail builds)
+            -->
+            <id>owasp</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <configuration>
+                            <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>aggregate</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                </plugins>
+            </reporting>
         </profile>
     </profiles>
 </project>
