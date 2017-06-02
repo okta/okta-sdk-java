@@ -1,15 +1,16 @@
-Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License. You may obtain a copy of the License at:
+Copyright 2017 Okta
 
-http://www.apache.org/licenses/LICENSE-2.0
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on
-an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied. See the License for the
-specific language governing permissions and limitations
-under the License.
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 This project includes:
   Apache Commons Codec under The Apache Software License, Version 2.0
@@ -96,3 +97,16 @@ This project includes:
   testng under Apache  Version 2.0, January 2004
   XML Pull Parsing API under Public Domain
 
+
+This project also includes modified code based on the following copyrights:
+- Request, Response, and Signature functions were based on those in the
+  Amazon AWS SDK for Java, Copyright 2010-2012 Amazon.com, Inc. or its
+  affiliates.  Apache 2.0 licensed.
+- com.okta.sdk.impl.util.BaseNCodec, com.okta.sdk.impl.util.Base64, Copyright ASF. Apache 2.0 licensed.
+- *Util classes, HttpHeaders, com.okta.sdk.lang.CompoundComparator,
+  com.okta.sdk.lang.InvertibleComparator, com.okta.sdk.http.InvalidMediaTypeException,
+  com.okta.sdk.http.InvalidMimeTypeException, com.okta.sdk.http.MediaType,
+  com.okta.sdk.http.MimeType, com.okta.sdk.http.MimeTypes classes and functions from the
+  Spring Framework project (http://www.springframework.org).  Copyright
+  2002-2017 SpringSource, Pivotal, and original authors.  Apache 2.0 licensed.
+- Code from https://github.com/stormpath/stormpath-sdk-java, Copyright 2015 Stormpath. Apache 2.0 licensed.
