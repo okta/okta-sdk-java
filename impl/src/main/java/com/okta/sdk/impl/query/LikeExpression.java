@@ -22,6 +22,8 @@ import com.okta.sdk.lang.Assert;
  */
 public class LikeExpression extends SimpleExpression {
 
+    private static final long serialVersionUID = 42L;
+
     private final MatchLocation matchLocation;
 
     public LikeExpression(String propertyName, Object value) {

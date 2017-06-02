@@ -22,6 +22,8 @@ import java.util.Map;
 
 public class LinkedCaseInsensitiveMap<V> extends LinkedHashMap<String, V> {
 
+    private static final long serialVersionUID = 42L;
+
     private final Map<String, String> caseInsensitiveKeys;
 
     private final Locale locale;

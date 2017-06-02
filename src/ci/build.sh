@@ -55,16 +55,16 @@ else
     # run 'mvn deploy' if we can
     if [ "$DEPLOY" = true ] ; then
         echo "Deploying SNAPSHOT build"
-        $MVN_CMD deploy
+        $MVN_CMD deploy -Pci
     else
         # else try to run the ITs if possible (for someone who has push access to the repo
         if [ "$RUN_ITS" = true ] ; then
             echo "Running mvn install"
-            $MVN_CMD install
+            $MVN_CMD install -Pci
         else
             # fall back to running an install and skip the ITs
             echo "Skipping ITs, likely this build is a pull request from a fork"
-            $MVN_CMD install -DskipITs
+            $MVN_CMD install -DskipITs -Pci
         fi
     fi
 fi

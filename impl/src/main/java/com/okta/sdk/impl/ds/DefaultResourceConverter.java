@@ -92,15 +92,4 @@ public class DefaultResourceConverter implements ResourceConverter {
 
         return value;
     }
-
-    private Object convertAttributeStatementMappingRulesToMap(Object object){
-
-        Set<Object> elementsSet = (Set<Object>) object;
-        Map<String, List<Object>> map = new HashMap<>();
-
-        List<Object> list = Collections.toList(elementsSet.toArray());
-
-        map.put("items", list);
-        return map;
-    }
 }

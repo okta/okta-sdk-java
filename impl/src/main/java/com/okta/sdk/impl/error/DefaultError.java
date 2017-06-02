@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * @since 0.5.0
  */
-public class DefaultError extends AbstractResource implements Error, Serializable {
+public class DefaultError extends AbstractResource implements Error {
 
     static final long serialVersionUID = 42L;
 

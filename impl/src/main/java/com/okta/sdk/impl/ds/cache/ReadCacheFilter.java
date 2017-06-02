@@ -38,12 +38,8 @@ public class ReadCacheFilter extends AbstractCacheFilter {
 
     private static final Logger cacheLog = LoggerFactory.getLogger(DataStore.class.getName() + "-cache");
 
-    private BaseUrlResolver baseUrlResolver;
-
-    public ReadCacheFilter(BaseUrlResolver baseUrlResolver, CacheResolver cacheResolver, boolean collectionCachingEnabled) {
+    public ReadCacheFilter(CacheResolver cacheResolver, boolean collectionCachingEnabled) {
         super(cacheResolver, collectionCachingEnabled);
-        Assert.notNull(baseUrlResolver, "baseUrlResolver cannot be null.");
-        this.baseUrlResolver = baseUrlResolver;
     }
 
     @Override
@@ -63,8 +59,8 @@ public class ReadCacheFilter extends AbstractCacheFilter {
     private ResourceDataResult getCachedResourceData(ResourceDataRequest request) {
 
         final CanonicalUri uri = request.getUri();
-        final String href = uri.getAbsolutePath();
-        final QueryString query = uri.getQuery();
+//        final String href = uri.getAbsolutePath();
+//        final QueryString query = uri.getQuery();
         final Class<? extends Resource> clazz = request.getResourceClass();
 
         Map<String, ?> data = null;
@@ -84,10 +80,6 @@ public class ReadCacheFilter extends AbstractCacheFilter {
         }
 
         return new DefaultResourceDataResult(request.getAction(), uri, clazz, coerce(data));
-    }
-
-    private int getValue(QueryString query, String propName, int defaultValue) {
-        return query.containsKey(propName) ? Integer.valueOf(query.get(propName)) : defaultValue;
     }
 
     @SuppressWarnings("unchecked")

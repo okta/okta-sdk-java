@@ -63,6 +63,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -148,7 +149,7 @@ public class DefaultDataStore implements InternalDataStore {
 //        }
 
         if (isCachingEnabled()) {
-            this.filters.add(new ReadCacheFilter(this.baseUrlResolver, this.cacheResolver, COLLECTION_CACHING_ENABLED));
+            this.filters.add(new ReadCacheFilter(this.cacheResolver, COLLECTION_CACHING_ENABLED));
             this.filters.add(new WriteCacheFilter(this.baseUrlResolver, this.cacheResolver, COLLECTION_CACHING_ENABLED, referenceFactory));
         }
 
@@ -607,7 +608,7 @@ public class DefaultDataStore implements InternalDataStore {
 
         // Get runtime headers from http client
         Map<String, List<String>> headerMap = HttpHeadersHolder.get();
-        String oktaAgentHeaderName = OKTA_AGENT.toLowerCase();
+        String oktaAgentHeaderName = OKTA_AGENT.toLowerCase(Locale.ENGLISH);
         if (headerMap != null && headerMap.get(oktaAgentHeaderName) != null) {
             List<String> oktaAgents = headerMap.get(oktaAgentHeaderName);
             if (oktaAgents != null && oktaAgents.size() > 0) {
@@ -673,14 +674,5 @@ public class DefaultDataStore implements InternalDataStore {
         }
         sb.append(href);
         return sb.toString();
-    }
-
-    private static String toString(InputStream is) {
-        try {
-            return new Scanner(is, "UTF-8").useDelimiter("\\A").next();
-        } catch (java.util.NoSuchElementException e) {
-            log.trace("Response body input stream did not contain any content.", e);
-            return null;
-        }
     }
 }

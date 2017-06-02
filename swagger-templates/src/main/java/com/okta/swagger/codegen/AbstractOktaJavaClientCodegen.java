@@ -502,7 +502,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             Property inner = ap.getItems();
             if (inner == null) {
                 // mimic super behavior
-                LOGGER.warn(ap.getName() + "(array property) does not have a proper inner type defined");
+                LOGGER.warn("{} (array property) does not have a proper inner type defined", ap.getName());
                 return null;
             }
 

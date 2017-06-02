@@ -42,7 +42,7 @@ public abstract class AbstractPropertyRetriever {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractPropertyRetriever.class);
 
-    private static final DateFormat dateFormatter = new ISO8601DateFormat();
+    private final DateFormat dateFormatter = new ISO8601DateFormat();
 
     protected final Lock readLock;
 
@@ -97,7 +97,7 @@ public abstract class AbstractPropertyRetriever {
      * @return a boolean representation of the value (null == false)
      */
     protected boolean getBooleanProperty(String key) {
-        return getNullableBooleanProperty(key) == Boolean.TRUE;
+        return Boolean.TRUE.equals(getNullableBooleanProperty(key));
     }
 
     protected Boolean getNullableBoolean(BooleanProperty property) {
@@ -232,6 +232,8 @@ public abstract class AbstractPropertyRetriever {
                 getInternalProperties().put(name, instance);
 
                 return instance;
+            } catch (RuntimeException e) {
+                throw e;
             } catch (Exception e) {
                 throw new IllegalArgumentException("Unable to create instace", e);
             } finally {

@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -303,6 +304,8 @@ public class UserAgent {
                 }
             }
 
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e){
             //there was a problem obtaining the WildFly version
         }
@@ -334,9 +337,12 @@ public class UserAgent {
                 return version;
             }
 
-            JarFile jarFile = new JarFile(jarPath);
-            Enumeration<JarEntry> enumeration = jarFile.entries();
-            String pomPropertiesPath = null;
+            Enumeration<JarEntry> enumeration;
+            String pomPropertiesPath;
+            try (JarFile jarFile = new JarFile(jarPath)) {
+                enumeration = jarFile.entries();
+            }
+            pomPropertiesPath = null;
             while (enumeration.hasMoreElements()) {
                 JarEntry entry = enumeration.nextElement();
                 if (entry.getName().endsWith("pom.properties")) {
@@ -345,15 +351,18 @@ public class UserAgent {
                 }
             }
             if (pomPropertiesPath != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getResourceAsStream("/" + pomPropertiesPath)));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.startsWith("version=")) {
-                        version = line.split("=")[1];
-                        break;
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getResourceAsStream("/" + pomPropertiesPath), StandardCharsets.UTF_8))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        if (line.startsWith("version=")) {
+                            version = line.split("=")[1];
+                            break;
+                        }
                     }
                 }
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             //Either the jar file or the internal "pom.properties" file could not be read, there is nothing we can do...
         }
@@ -428,7 +437,9 @@ public class UserAgent {
             version = version.substring(version.indexOf(" "), version.indexOf("\n")).trim();
             return version;
 
-        }catch (Exception e) {
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
             //there was a problem obtaining the WebSphere version
         }
         //returning null so we can identify in the User-Agent String that we are not properly handling some WebSphere version
@@ -446,7 +457,9 @@ public class UserAgent {
             Object version = versionClass.newInstance();
             Method method = versionClass.getDeclaredMethod("getReleaseBuildVersion");
             return (String) method.invoke(version);
-        }catch (Exception e) {
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
             //there was a problem obtaining the WebLogic version
         }
         //returning null so we can identify in the User-Agent String that we are not properly handling some WebLogic version

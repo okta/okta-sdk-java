@@ -27,6 +27,8 @@ import static com.okta.sdk.impl.resource.AbstractCollectionResource.ITEMS_PROPER
  */
 public class CollectionProperties extends LinkedHashMap<String, Object> {
 
+    private static final long serialVersionUID = 42L;
+
     private CollectionProperties(Builder builder) {
 
 //        put(AbstractResource.HREF_PROP_NAME, builder.href);
@@ -35,14 +37,7 @@ public class CollectionProperties extends LinkedHashMap<String, Object> {
 
     public static class Builder {
 
-        private String href;
         private final List<Map<String, ?>> itemsMapList = new LinkedList<Map<String, ?>>();
-
-
-        public Builder setHref(String href) {
-            this.href = href;
-            return this;
-        }
 
         public Builder setItemsMap(Map<String, ?> itemsMap) {
             itemsMapList.add(itemsMap);

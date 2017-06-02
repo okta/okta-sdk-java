@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @since 0.5.0
@@ -38,11 +39,11 @@ public class Version {
         BufferedReader reader = null;
         try {
             inputStream = clazz.getResourceAsStream(filePath);
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line = null;
+            reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            String line;
             do {
                 line = reader.readLine();
-            } while (line.startsWith("#") || line.isEmpty());
+            } while (line != null && (line.startsWith("#") || line.isEmpty()));
             return line;
         } catch (IOException e) {
             throw new RuntimeException("Unable to obtain version from [" + filePath + "].");

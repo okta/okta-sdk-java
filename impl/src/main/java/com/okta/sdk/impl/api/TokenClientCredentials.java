@@ -42,6 +42,10 @@ public class TokenClientCredentials implements ClientCredentials<String> {
         return "<TokenClientCredentials>"; //never ever print the secret
     }
 
+    @Override
+    public int hashCode() {
+        return secret != null ? secret.hashCode() : 0;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -24,6 +24,8 @@ import com.okta.sdk.lang.Assert;
  */
 public class CollectionExpansion extends Expansion {
 
+    private static final long serialVersionUID = 42L;
+
     private final int limit;
     private final int offset;
 

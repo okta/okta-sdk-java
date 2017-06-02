@@ -34,8 +34,6 @@ public class JacksonMapMarshaller implements MapMarshaller {
 
     private ObjectMapper objectMapper;
 
-    private boolean prettyPrint = false;
-
     public JacksonMapMarshaller() {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);
@@ -54,7 +52,7 @@ public class JacksonMapMarshaller implements MapMarshaller {
     }
 
     public void setPrettyPrint(boolean prettyPrint) {
-        this.objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        this.objectMapper.configure(SerializationFeature.INDENT_OUTPUT, prettyPrint);
     }
 
     @Override
