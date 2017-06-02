@@ -13,12 +13,22 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-
-import com.okta.sdk.resource.*;
-
+import com.okta.sdk.impl.resource.AbstractInstanceResource;
+import com.okta.sdk.impl.resource.Property;
+import com.okta.sdk.impl.resource.ResourceReference;
 import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.impl.resource.*;
 import com.okta.sdk.impl.http.QueryString;
+
+{{! TODO: add these programatically when needed }}
+import com.okta.sdk.impl.resource.BooleanProperty;
+import com.okta.sdk.impl.resource.IntegerProperty;
+import com.okta.sdk.impl.resource.StringProperty;
+import com.okta.sdk.impl.resource.ListProperty;
+import com.okta.sdk.impl.resource.DateProperty;
+import com.okta.sdk.impl.resource.EnumProperty;
+import com.okta.sdk.impl.resource.MapProperty;
+import com.okta.sdk.impl.resource.DefaultVoidResource;
+import com.okta.sdk.resource.VoidResource;
 
 import java.util.Map;
 

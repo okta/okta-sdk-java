@@ -1,7 +1,7 @@
 <FindBugsFilter>
 
     <!-- FIXME remove before release-->
-    <Match><Package name="com.okta.sdk.impl.resource"/></Match>
+    <Match><Package name="~com\.okta\.sdk\.impl\.resource.*"/></Match>
 
     <!-- This class needs work for the next release -->
     <Match><Class name="com.okta.sdk.impl.ds.cache.WriteCacheFilter"/></Match>

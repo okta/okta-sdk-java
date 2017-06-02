@@ -561,9 +561,10 @@
                             <exclude>**/LinkedCaseInsensitiveMap</exclude>
                             <exclude>**/com/okta/sdk/impl/util/MimeType.java</exclude>
                             <!-- generated resources -->
-                            <exclude>**/com/okta/sdk/resource/*.java</exclude>
+                            <exclude>**/com/okta/sdk/resource/**/*.java</exclude>
                             <exclude>**/com/okta/sdk/client/Client.java</exclude>
                             <exclude>**/com/okta/sdk/impl/resource/Default*.java</exclude>
+                            <exclude>**/com/okta/sdk/impl/resource/**/Default*.java</exclude>
                             <exclude>**/com/okta/sdk/impl/client/DefaultClient.java</exclude>
 
                             <!-- caching needs a little work -->

@@ -34,6 +34,7 @@ import io.swagger.models.Swagger;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
+import io.swagger.parser.SwaggerException;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,11 +44,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen {
@@ -65,6 +68,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected boolean useBeanValidation = false;
     protected boolean performBeanValidation = false;
     protected boolean useGzipFeature = false;
+
+    protected Map<String, String> modelTagMap = new HashMap<>();
 
     public AbstractOktaJavaClientCodegen(String codeGenName, String relativeTemplateDir, String modelPackage) {
         super();
@@ -91,10 +96,38 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         vendorExtensions.put("basePath", swagger.getBasePath());
         super.preprocessSwagger(swagger);
         addListModels(swagger);
+        buildModelTagMap(swagger);
         removeListAfterAndLimit(swagger);
         moveOperationsToSingleClient(swagger);
         handleOktaLinkedOperations(swagger);
+    }
 
+    protected void buildModelTagMap(Swagger swagger) {
+
+        swagger.getDefinitions().forEach((key, definition) -> {
+            Object tags = definition.getVendorExtensions().get("x-okta-tags");
+            if (tags != null) {
+                // if tags is NOT null, then assume it is an array
+                if (tags instanceof List) {
+                    if (!((List) tags).isEmpty()) {
+                        String packageName = tagToPackageName(((List) tags).get(0).toString());
+                        addToModelTagMap(key, packageName);
+                        definition.getVendorExtensions().put("x-okta-package", packageName);
+                    }
+                }
+                else {
+                    throw new SwaggerException("Model: "+ key + " contains 'x-okta-tags' that is NOT a List.");
+                }
+            }
+        });
+    }
+
+    protected void addToModelTagMap(String modelName, String packageName) {
+        modelTagMap.put(modelName, packageName);
+    }
+
+    protected String tagToPackageName(String tag) {
+        return camelize(tag, true);
     }
 
     public void removeListAfterAndLimit(Swagger swagger) {
@@ -303,6 +336,24 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     }
 
     @Override
+    public String toModelFilename(String name) {
+        if (modelTagMap.containsKey(name)) {
+            return modelTagMap.get(name) +"/"+ super.toModelFilename(name);
+        }
+        return super.toModelFilename(name);
+    }
+
+    @Override
+    public String toModelImport(String name) {
+        if (modelTagMap.containsKey(name)) {
+            return modelPackage() +"."+ modelTagMap.get(name) +"."+ name;
+        }
+        return super.toModelImport(name);
+    }
+
+
+
+    @Override
     public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
        CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
         // super add these imports, and we don't want that dependency
@@ -311,15 +362,73 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         if (model.getVendorExtensions().containsKey("x-baseType")) {
             String baseType = (String) model.getVendorExtensions().get("x-baseType");
             codegenModel.vendorExtensions.put("baseType", toModelName(baseType));
+            codegenModel.imports.add(toModelName(baseType));
+        }
+
+        Collection<CodegenOperation> operations = (Collection<CodegenOperation>) codegenModel.vendorExtensions.get("operations");
+        if (operations != null) {
+            operations.forEach(op -> {
+                    if (op.returnType != null) {
+                        codegenModel.imports.add(op.returnType);
+                    }
+                    if (op.allParams != null) {
+                        op.allParams.stream()
+                            .filter(param -> needToImport(param.dataType))
+                            .forEach(param -> codegenModel.imports.add(param.dataType));
+                    }
+            });
         }
 
        return codegenModel;
     }
 
     @Override
+    public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
+
+        Map<String, Object> resultMap = super.postProcessOperations(objs);
+
+        List<Map<String, String>> imports = (List<Map<String, String>>) objs.get("imports");
+        Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
+        List<CodegenOperation> codegenOperations = (List<CodegenOperation>) operations.get("operation");
+
+        // find all of the list return values
+        Set<String> listImports = new HashSet<>();
+        codegenOperations.stream()
+                .filter(cgOp -> cgOp.returnType != null)
+                .filter(cgOp -> cgOp.returnType.matches(".+List$"))
+                .forEach(cgOp -> listImports.add(toModelImport(cgOp.returnType)));
+
+        // add each one as an import
+        listImports.forEach(className -> {
+            Map<String, String> listImport = new LinkedHashMap<>();
+            listImport.put("import", className);
+            imports.add(listImport);
+        });
+
+        return resultMap;
+    }
+
+
+    @Override
     public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
         super.postProcessModelProperty(model, property);
         if(!BooleanUtils.toBoolean(model.isEnum)) {
+
+            String datatype = property.datatype;
+            if (datatype != null
+                    && datatype.matches(".+List$")
+                    && needToImport(datatype)) {
+                model.imports.add(datatype);
+            }
+
+            String type = property.complexType;
+            if (type == null) {
+                type = property.baseType;
+            }
+
+            if (needToImport(type)) {
+                model.imports.add(type);
+            }
 
             // super add these imports, and we don't want that dependency
             model.imports.remove("ApiModelProperty");
@@ -439,13 +548,13 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             properties.add(getArrayPropertyFromOperation(path.getPatch()));
             properties.add(getArrayPropertyFromOperation(path.getPut()));
 
-            listModels.putAll(processListsFromProperties(properties));
+            listModels.putAll(processListsFromProperties(properties, null));
         }
 
         swagger.getDefinitions()
                 .forEach((key, model) -> {
                     if (model != null && model.getProperties() != null) {
-                        listModels.putAll(processListsFromProperties(model.getProperties().values()));
+                        listModels.putAll(processListsFromProperties(model.getProperties().values(), model));
                     }
                 });
 
@@ -453,7 +562,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     }
 
-    private Map<String, Model> processListsFromProperties(Collection<Property> properties) {
+    private Map<String, Model> processListsFromProperties(Collection<Property> properties, Model baseModel) {
 
         Map<String, Model> result = new LinkedHashMap<>();
 
@@ -474,6 +583,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         model.setName(modelName);
                         model.setAllowEmptyValue(false);
                         model.setDescription("Collection List for " + baseName);
+                        if (baseModel != null) {
+                            model.setVendorExtensions(new HashMap<>(baseModel.getVendorExtensions()));
+                        }
                         model.setVendorExtension("x-isResourceList", true);
                         model.setVendorExtension("x-baseType", baseName);
                         model.setType(modelName);

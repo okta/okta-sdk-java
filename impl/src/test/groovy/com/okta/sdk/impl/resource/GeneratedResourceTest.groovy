@@ -247,7 +247,7 @@ class GeneratedResourceTest {
             @Override
             Object answer(InvocationOnMock invocation) throws Throwable {
                 def clazz = (Class)invocation.arguments[0]
-                clazz = Classes.forName("com.okta.sdk.impl.resource.Default${clazz.simpleName}")
+                clazz = Classes.forName("${clazz.package.name.replace("sdk.resource", "sdk.impl.resource")}.Default${clazz.simpleName}")
                 def resource = (AbstractResource) Classes.instantiate(
                         clazz.getDeclaredConstructor(InternalDataStore, Map), dataStore, [three: "four"])
                 return resource

@@ -18,14 +18,14 @@ package quickstart;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
-import com.okta.sdk.resource.ActivationToken;
 import com.okta.sdk.resource.GroupBuilder;
 import com.okta.sdk.resource.ResourceException;
-import com.okta.sdk.resource.User;
 import com.okta.sdk.resource.UserBuilder;
-import com.okta.sdk.resource.UserGroup;
 
 import com.okta.sdk.resource.UserList;
+import com.okta.sdk.resource.group.UserGroup;
+import com.okta.sdk.resource.user.ActivationToken;
+import com.okta.sdk.resource.user.User;
 
 import java.util.UUID;
 
