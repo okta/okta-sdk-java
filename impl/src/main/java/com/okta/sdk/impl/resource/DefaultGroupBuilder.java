@@ -17,8 +17,8 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.GroupBuilder;
-import com.okta.sdk.resource.UserGroup;
-import com.okta.sdk.resource.UserGroupProfile;
+import com.okta.sdk.resource.group.UserGroup;
+import com.okta.sdk.resource.group.UserGroupProfile;
 
 public class DefaultGroupBuilder implements GroupBuilder {
 

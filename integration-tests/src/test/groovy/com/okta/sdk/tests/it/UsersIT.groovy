@@ -16,7 +16,6 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.User
 import com.okta.sdk.resource.UserBuilder
 
 import static org.hamcrest.MatcherAssert.*

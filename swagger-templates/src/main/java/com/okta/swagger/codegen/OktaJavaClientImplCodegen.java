@@ -44,6 +44,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
         apiTemplateFiles.put("api.mustache", ".java");
     }
+
     @Override
     public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
         super.postProcessModelProperty(model, property);
@@ -101,6 +102,15 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
         }
     }
+
+    @Override
+    public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
+        CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
+        codegenModel.imports.add(toModelName(codegenModel.classname)); // The 'Default' gets added in the template
+        return codegenModel;
+    }
+
+
 
     public CodegenOperation fromOperation(String path,
                                           String httpMethod,
@@ -177,13 +187,19 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     }
 
     @Override
+    protected void addToModelTagMap(String modelName, String packageName) {
+        modelTagMap.put(modelName, packageName);
+        modelTagMap.put("Default" + modelName, packageName); // Also add the 'Default' impl
+    }
+
+    @Override
     public String toApiName(String name) {
         return "Default" + super.toApiName(name);
     }
 
     @Override
     public String toModelFilename(String name) {
-        return "Default" + super.toModelDocFilename(name);
+        return super.toModelFilename("Default" + name);
     }
 
     @Override
@@ -202,11 +218,16 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     }
 
     public String toModelImport(String name) {
+
         if ("".equals(modelPackage())) {
             return name;
-        } else {
-            return overrideModelPackage + "." + name;
         }
+
+        if (modelTagMap.containsKey(name)) {
+            return overrideModelPackage +"."+ modelTagMap.get(name) +"."+ name;
+        }
+
+        return overrideModelPackage + "." + name;
     }
 
 }

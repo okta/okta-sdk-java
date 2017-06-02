@@ -18,9 +18,6 @@ package com.okta.sdk.tests.it
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.GroupBuilder
-import com.okta.sdk.resource.User
-import com.okta.sdk.resource.UserBuilder
-import com.okta.sdk.resource.UserGroup
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat

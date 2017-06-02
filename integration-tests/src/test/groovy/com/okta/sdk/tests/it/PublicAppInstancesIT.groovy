@@ -16,10 +16,8 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.PublicAppInstance
-import com.okta.sdk.resource.PublicAppInstanceSettings
-import com.okta.sdk.resource.PublicAppInstanceVisibility
-import com.okta.sdk.resource.UserBuilder
+import com.okta.sdk.resource.app.PublicAppInstance
+import com.okta.sdk.resource.app.PublicAppInstanceSettings
 
 /**
  * Tests for /api/v1/apps
