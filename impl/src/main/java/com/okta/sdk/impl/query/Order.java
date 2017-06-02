@@ -24,6 +24,8 @@ import java.io.Serializable;
  */
 public class Order implements Serializable {
 
+    private static final long serialVersionUID = 42L;
+
     private final String propertyName;
     private final boolean ascending;
 

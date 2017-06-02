@@ -43,17 +43,14 @@ public class FilteredPropertiesSource implements PropertiesSource {
 
         if (!Collections.isEmpty(props)) {
 
-            Set<String> keys = props.keySet();
-
-            for(String key : keys) {
-                String value = props.get(key);
+            props.forEach((key, value) -> {
                 String[] evaluated = filter.map(key, value);
                 if (evaluated != null) {
                     Assert.isTrue(2 == evaluated.length,
-                                  "Filter returned string array must have a length of 2 (key/value pair)");
+                            "Filter returned string array must have a length of 2 (key/value pair)");
                     retained.put(evaluated[0], evaluated[1]);
                 }
-            }
+            });
         }
 
         return retained;

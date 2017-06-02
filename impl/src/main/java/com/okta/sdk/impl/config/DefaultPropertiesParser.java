@@ -119,11 +119,11 @@ public class DefaultPropertiesParser implements PropertiesParser {
         return index > 0 && s.charAt(index - 1) == ESCAPE_TOKEN;
     }
 
-    //Protected to access in a test case - NOT considered part of Shiro's public API
-    protected static String[] splitKeyValue(String keyValueLine) {
+    //Protected to access in a test case - NOT considered part of the public API
+    private static String[] splitKeyValue(String keyValueLine) {
         String line = Strings.clean(keyValueLine);
         if (line == null) {
-            return null;
+            return new String[0];
         }
         StringBuilder keyBuffer = new StringBuilder();
         StringBuilder valueBuffer = new StringBuilder();

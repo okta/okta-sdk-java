@@ -1,0 +1,55 @@
+<FindBugsFilter>
+
+    <!-- FIXME remove before release-->
+    <Match><Package name="com.okta.sdk.impl.resource"/></Match>
+
+    <!-- This class needs work for the next release -->
+    <Match><Class name="com.okta.sdk.impl.ds.cache.WriteCacheFilter"/></Match>
+
+    <!-- Copied from Spring -->
+    <Match><Class name="com.okta.sdk.lang.Strings"/></Match>
+    <Match><Class name="com.okta.sdk.lang.InvertibleComparator"/></Match>
+    <Match><Class name="com.okta.sdk.lang.Objects"/></Match>
+    <Match><Class name="com.okta.sdk.impl.http.MediaType"/></Match>
+    <Match><Class name="com.okta.sdk.impl.util.MimeType"/></Match>
+    <Match><Class name="~com\.okta\.sdk\.impl\.util\.Mime.*"/></Match>
+
+    <!-- Copied from Common Codec -->
+    <Match><Class name="~com\.okta\.sdk\.impl\.util\.BaseN.*"/></Match>
+
+    <!-- A method with a dead local store false positive (medium priority). -->
+    <Match>
+        <Class name="com.okta.sdk.impl.util.SoftHashMap" />
+        <Method name="trimStrongReferencesIfNecessary" />
+        <Bug pattern="RV_RETURN_VALUE_IGNORED" />
+    </Match>
+
+    <!-- That is the point of this method -->
+    <Match>
+        <Class name="com.okta.sdk.impl.resource.AbstractPropertyRetriever" />
+        <Method name="getNullableBooleanProperty" />
+        <Bug pattern="NP_BOOLEAN_RETURN_NULL" />
+    </Match>
+
+    <!-- Cleaner this way -->
+    <Match>
+        <Class name="~com\.okta\.sdk\.impl\.ds\.JacksonMapMarshaller.*" />
+        <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON" />
+    </Match>
+
+    <Match>
+        <Class name="com.okta.sdk.impl.io.FileResource"/>
+        <Method name="getInputStream"/>
+        <Bug pattern="PATH_TRAVERSAL_IN" />
+    </Match>
+
+    <!-- doesn't need to be SecureRandom: only used in backoff strategy, not for crypto -->
+    <Match>
+        <Class name="com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor" />
+        <Bug pattern="PREDICTABLE_RANDOM" />
+    </Match>
+
+    <!-- Quickstart is formatted as an example, so there is dead code and hardcoded passwords -->
+    <Match><Class name="quickstart.Quickstart"/></Match>
+
+</FindBugsFilter>

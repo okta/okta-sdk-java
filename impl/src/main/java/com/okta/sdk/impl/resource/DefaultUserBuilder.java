@@ -129,6 +129,9 @@ public class DefaultUserBuilder implements UserBuilder {
         userProfile.setFirstName(firstName);
         userProfile.setLastName(lastName);
         userProfile.setEmail(email);
+        userProfile.setSecondEmail(secondEmail);
+        userProfile.setMobilePhone(mobilePhone);
+
         if (Strings.hasText(login)) {
             userProfile.setLogin(login);
         }

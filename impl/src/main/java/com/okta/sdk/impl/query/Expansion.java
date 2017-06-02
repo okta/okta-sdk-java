@@ -67,6 +67,8 @@ import com.okta.sdk.query.Criterion;
  */
 public class Expansion implements Criterion {
 
+    private static final long serialVersionUID = 42L;
+
     private final String name; //name of the link property to expand
 
     public Expansion(String name) {

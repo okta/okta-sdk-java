@@ -114,8 +114,8 @@ public class DefaultDateExpressionFactory implements DateExpressionFactory {
 
     @Override
     public Criterion in(Date begin, Duration duration) {
-        Assert.isTrue(begin instanceof Date, "begin needs to be a valid Date object");
-        Assert.isTrue(duration instanceof Duration, "duration needs to be a valid Duration object");
+        Assert.notNull(begin, "begin needs to be a valid Date object");
+        Assert.notNull(duration, "duration needs to be a valid Duration object");
         DateTime beginDateTime = new DateTime(begin);
         Date endDate = this.calculateDateFromDuration(begin, duration);
         Assert.isTrue(begin.before(endDate), "begin date needs to be earlier than end date" );

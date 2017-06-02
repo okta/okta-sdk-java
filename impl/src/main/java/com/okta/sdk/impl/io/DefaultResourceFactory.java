@@ -17,6 +17,8 @@ package com.okta.sdk.impl.io;
 
 import com.okta.sdk.lang.Assert;
 
+import java.util.Locale;
+
 public class DefaultResourceFactory implements ResourceFactory {
 
     @Override
@@ -27,7 +29,7 @@ public class DefaultResourceFactory implements ResourceFactory {
             return new ClasspathResource(location);
         }
 
-        String lcase = location.toLowerCase();
+        String lcase = location.toLowerCase(Locale.ENGLISH); // just looking for the prefix with the toLowerCase
 
         if (location.startsWith(UrlResource.SCHEME_PREFIX) || lcase.startsWith("http:") || lcase.startsWith("https:")) {
             return new UrlResource(location);

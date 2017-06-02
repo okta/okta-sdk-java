@@ -359,7 +359,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      *
      * @param <V> the type of value that is stored in the cache.
      */
-    public static class Entry<V> implements Serializable {
+    public static class Entry<V> {
 
         private final V value;
         private final long creationTimeMillis;

@@ -18,6 +18,7 @@ package com.okta.sdk.impl.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.Locale;
 
 /**
  * @since 0.5.0
@@ -32,7 +33,7 @@ public class RequestUtils {
      * @return true if the specified URI is using a non-standard port, false otherwise
      */
     public static boolean isDefaultPort(URI uri) {
-        String scheme = uri.getScheme().toLowerCase();
+        String scheme = uri.getScheme().toLowerCase(Locale.ENGLISH);
         int port = uri.getPort();
         return port <= 0 || (port == 80 && scheme.equals("http")) || (port == 443 && scheme.equals("https"));
     }

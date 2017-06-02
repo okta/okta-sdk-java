@@ -29,6 +29,8 @@ import java.util.TreeMap;
  */
 public class QueryString extends TreeMap<String,String> {
 
+    private static final long serialVersionUID = 42L;
+
     public QueryString(){}
 
     public QueryString(Map<String,?> source) {

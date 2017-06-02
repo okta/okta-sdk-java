@@ -23,6 +23,8 @@ import com.okta.sdk.query.Criterion;
  */
 public class SimpleExpression implements Criterion {
 
+    private static final long serialVersionUID = 42L;
+
     private final String propertyName;
     private final Object value;
     private final Operator op;
