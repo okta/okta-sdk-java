@@ -22,9 +22,6 @@ import com.okta.sdk.impl.ds.ResourceAction;
 import com.okta.sdk.impl.ds.ResourceDataRequest;
 import com.okta.sdk.impl.ds.ResourceDataResult;
 import com.okta.sdk.impl.http.CanonicalUri;
-import com.okta.sdk.impl.http.QueryString;
-import com.okta.sdk.impl.util.BaseUrlResolver;
-import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Collections;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
@@ -87,6 +84,7 @@ public class ReadCacheFilter extends AbstractCacheFilter {
         return (Map<String, Object>) data;
     }
 
+    @SuppressWarnings("PMD.UselessParentheses")
     private boolean isCacheRetrievalEnabled(ResourceDataRequest request) {
 
         Class<? extends Resource> clazz = request.getResourceClass();
@@ -98,8 +96,9 @@ public class ReadCacheFilter extends AbstractCacheFilter {
 
             //Collection caching is EXPERIMENTAL so it is off by default
             //we do cache ApiKeyList. This is a fix for #216
-            (!CollectionResource.class.isAssignableFrom(clazz) ||
-                    (CollectionResource.class.isAssignableFrom(clazz) && isCollectionCachingEnabled()));
+            !CollectionResource.class.isAssignableFrom(clazz)
+            || (CollectionResource.class.isAssignableFrom(clazz)
+                && isCollectionCachingEnabled());
 
     }
 }

@@ -20,7 +20,6 @@ import com.okta.sdk.lang.Collections;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class FilteredPropertiesSource implements PropertiesSource {
 

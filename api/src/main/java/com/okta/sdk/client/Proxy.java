@@ -113,10 +113,10 @@ public class Proxy {
         if (obj instanceof Proxy) {
             Proxy p = (Proxy) obj;
             return (host != null ? host.equals(p.getHost()) : p.getHost() == null) &&
-                    (port == p.getPort()) &&
+                    port == p.getPort() &&
                     (username != null ? username.equals(p.getUsername()) : p.getUsername() == null) &&
                     (password != null ? password.equals(p.getPassword()) : p.getPassword() == null) &&
-                    (authenticationRequired == p.authenticationRequired);
+                    authenticationRequired == p.authenticationRequired;
         }
         return false;
     }

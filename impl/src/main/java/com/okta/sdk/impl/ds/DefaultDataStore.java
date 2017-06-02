@@ -15,11 +15,11 @@
  */
 package com.okta.sdk.impl.ds;
 
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.http.HttpMethod;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
-import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.cache.DisabledCacheManager;
 import com.okta.sdk.impl.ds.cache.CacheResolver;
 import com.okta.sdk.impl.ds.cache.DefaultCacheResolver;
@@ -42,7 +42,6 @@ import com.okta.sdk.impl.query.DefaultCriteria;
 import com.okta.sdk.impl.query.DefaultOptions;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.ReferenceFactory;
-import com.okta.sdk.resource.VoidResource;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import com.okta.sdk.impl.util.StringInputStream;
@@ -54,10 +53,10 @@ import com.okta.sdk.query.Options;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.ResourceException;
+import com.okta.sdk.resource.VoidResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -65,7 +64,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.TreeMap;
 
 import static com.okta.sdk.impl.http.HttpHeaders.OKTA_AGENT;
@@ -618,15 +616,13 @@ public class DefaultDataStore implements InternalDataStore {
         } else {
             request.getHeaders().set("User-Agent", USER_AGENT_STRING);
         }
-        if (request.getHeaders().getContentType() == null) {
-            if (request.getBody() != null) {
-                // We only add the default content type (application/json) if a content type is not already in the request
-                request.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-            }
+        if (request.getHeaders().getContentType() == null && request.getBody() != null) {
+            // We only add the default content type (application/json) if a content type is not already in the request
+            request.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         }
 
         List<String> clientRequestId;
-        if (headerMap != null && ((clientRequestId = headerMap.get(OKTA_CLIENT_REQUEST_ID)) != null)) {
+        if (headerMap != null && (clientRequestId = headerMap.get(OKTA_CLIENT_REQUEST_ID)) != null) {
             request.getHeaders().put(OKTA_CLIENT_REQUEST_ID, clientRequestId);
         }
     }

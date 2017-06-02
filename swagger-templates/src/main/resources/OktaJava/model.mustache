@@ -21,11 +21,6 @@ package {{package}};
 import {{import}};
 {{/imports}}
 
-{{#serializableModel}}
-import java.io.Serializable;
-{{/serializableModel}}
-
-
 {{#models}}
 {{#model}}
 {{#vendorExtensions.x-isResourceList}}{{>modelListResourceInterface}}{{/vendorExtensions.x-isResourceList}}{{^vendorExtensions.x-isResourceList}}

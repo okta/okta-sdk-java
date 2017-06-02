@@ -24,7 +24,6 @@ import com.okta.sdk.impl.ds.ResourceAction;
 import com.okta.sdk.impl.ds.ResourceDataRequest;
 import com.okta.sdk.impl.ds.ResourceDataResult;
 import com.okta.sdk.impl.http.CanonicalUri;
-import com.okta.sdk.impl.http.QueryString;
 import com.okta.sdk.impl.resource.AbstractInstanceResource;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.ArrayProperty;
@@ -39,7 +38,6 @@ import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
 
 import java.lang.reflect.Field;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

@@ -62,13 +62,13 @@ public class DefaultResponse extends AbstractHttpMessage implements Response {
     @Override
     public boolean isServerError() {
         int status = getHttpStatus();
-        return (status >= 500 && status < 600);
+        return status >= 500 && status < 600;
     }
 
     @Override
     public boolean isClientError() {
         int status = getHttpStatus();
-        return (status >= 400 && status < 500);
+        return status >= 400 && status < 500;
     }
 
     @Override

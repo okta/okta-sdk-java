@@ -541,7 +541,7 @@ public class HttpHeaders implements MultiValueMap<String, String> {
             simpleDateFormat.setTimeZone(GMT);
             try {
                 return simpleDateFormat.parse(headerValue).getTime();
-            } catch (ParseException e) {
+            } catch (ParseException e) { // NOPMD
                 // ignore
             }
         }

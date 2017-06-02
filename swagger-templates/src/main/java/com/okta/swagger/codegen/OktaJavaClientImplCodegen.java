@@ -157,12 +157,6 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         }
 
         // pre interpolate the resource href
-
-        // this gets a little tricky, if the vendor extension 'fromModel' is set, we need to use a method name
-        if (co.vendorExtensions.containsKey("fromModel") ) {
-            String f = null;
-        }
-
         co.vendorExtensions.put("hrefFiltered", co.path
                 .replaceAll("\\{", "\" + ")
                 .replaceAll("\\}", "+ \""));

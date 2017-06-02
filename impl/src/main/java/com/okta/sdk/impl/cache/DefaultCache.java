@@ -20,7 +20,6 @@ import com.okta.sdk.impl.util.SoftHashMap;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Duration;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;

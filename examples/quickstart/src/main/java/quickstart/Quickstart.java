@@ -20,21 +20,13 @@ import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.ActivationToken;
 import com.okta.sdk.resource.GroupBuilder;
-import com.okta.sdk.resource.InputUserWithGroupIds;
-import com.okta.sdk.resource.PasswordCredential;
 import com.okta.sdk.resource.ResourceException;
 import com.okta.sdk.resource.User;
 import com.okta.sdk.resource.UserBuilder;
-import com.okta.sdk.resource.UserCredentials;
 import com.okta.sdk.resource.UserGroup;
 
 import com.okta.sdk.resource.UserList;
-import com.okta.sdk.resource.UserProfile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -42,9 +34,8 @@ import java.util.UUID;
  *
  * @since 0.5.0
  */
+@SuppressWarnings("PMD.UnusedLocalVariable")
 public class Quickstart {
-
-    private static final Logger log = LoggerFactory.getLogger(Quickstart.class);
 
     public static void main(String[] args) {
 

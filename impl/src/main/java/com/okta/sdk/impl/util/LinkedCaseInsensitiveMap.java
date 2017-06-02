@@ -28,7 +28,6 @@ public class LinkedCaseInsensitiveMap<V> extends LinkedHashMap<String, V> {
 
     private final Locale locale;
 
-
     /**
      * Create a new LinkedCaseInsensitiveMap for the default Locale.
      * @see java.lang.String#toLowerCase()
@@ -93,7 +92,8 @@ public class LinkedCaseInsensitiveMap<V> extends LinkedHashMap<String, V> {
 
     @Override
     public boolean containsKey(Object key) {
-        return (key instanceof String && this.caseInsensitiveKeys.containsKey(convertKey((String) key)));
+        return key instanceof String
+                && this.caseInsensitiveKeys.containsKey(convertKey((String) key));
     }
 
     @Override

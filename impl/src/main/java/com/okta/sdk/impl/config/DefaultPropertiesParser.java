@@ -140,9 +140,8 @@ public class DefaultPropertiesParser implements PropertiesParser {
                     keyBuffer.append(c);
                 }
             } else {
-                if (valueBuffer.length() == 0 && isKeyValueSeparatorChar(c) && !isCharEscaped(line, i)) {
-                    //swallow the separator chars before we start building the value
-                } else {
+                //swallow the separator chars before we start building the value
+                if (!(valueBuffer.length() == 0 && isKeyValueSeparatorChar(c) && !isCharEscaped(line, i))) {
                     valueBuffer.append(c);
                 }
             }

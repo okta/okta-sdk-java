@@ -24,9 +24,6 @@ import io.swagger.codegen.CodegenParameter;
 import io.swagger.codegen.CodegenProperty;
 import io.swagger.codegen.CodegenType;
 import io.swagger.codegen.languages.AbstractJavaCodegen;
-import io.swagger.codegen.languages.features.BeanValidationFeatures;
-import io.swagger.codegen.languages.features.GzipFeatures;
-import io.swagger.codegen.languages.features.PerformBeanValidationFeatures;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
@@ -34,15 +31,12 @@ import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
-import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
-import io.swagger.util.Json;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,8 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen {
 
@@ -110,8 +102,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
            path.getOperations().forEach(operation ->
                operation.getParameters().removeIf(param ->
                        !param.getRequired() &&
-                               (("limit".equals(param.getName())) ||
-                                ("after".equals(param.getName()))))
+                               ("limit".equals(param.getName()) ||
+                                "after".equals(param.getName())))
            )
         );
     }

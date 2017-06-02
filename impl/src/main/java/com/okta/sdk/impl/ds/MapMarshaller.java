@@ -15,8 +15,6 @@
  */
 package com.okta.sdk.impl.ds;
 
-import com.okta.sdk.impl.http.Link;
-
 import java.io.InputStream;
 import java.util.Map;
 
