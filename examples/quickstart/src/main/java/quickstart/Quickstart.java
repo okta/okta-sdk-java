@@ -68,8 +68,10 @@ public class Quickstart {
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
 //                .putProfileProperty("customProp", "Custom Value!")
-                .addGroupId(group.getId())
                 .buildAndCreate(client);
+
+            // add user to the newly created group
+            user.addToGroup(group.getId());
 
             String userId = user.getId();
             println("User created with ID: " + userId);

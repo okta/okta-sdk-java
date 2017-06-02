@@ -44,10 +44,6 @@ public interface UserBuilder {
 
     UserBuilder setSecondEmail(String secondEmail);
 
-    UserBuilder setGroupIds(Set<String> groupIds);
-
-    UserBuilder addGroupId(String groupId);
-
     UserBuilder setProfileProperties(Map<String, Object> profileProperties);
 
     UserBuilder putAllProfileProperties(Map<String, Object> profileProperties);

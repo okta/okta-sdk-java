@@ -45,12 +45,12 @@ class GroupsIT implements CrudTestSupport {
     @Override
     void update(Client client, def group) {
         group.profile.description = "IT created Group - Updated"
-        group.updateGroup(group) // TODO: this needs a body link
+        group.update()
     }
 
     @Override
     void delete(Client client, def group) {
-        group.deleteGroup()
+        group.delete()
     }
 
     @Override

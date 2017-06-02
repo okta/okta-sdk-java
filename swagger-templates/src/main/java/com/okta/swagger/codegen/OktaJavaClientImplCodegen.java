@@ -23,8 +23,6 @@ import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
 import org.apache.commons.lang3.BooleanUtils;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
@@ -172,18 +170,6 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                 .replaceAll("\\}", "+ \""));
 
         return co;
-    }
-
-    @Override
-    public void preprocessSwagger(Swagger swagger) {
-        super.preprocessSwagger(swagger);
-
-        // TODO: need a better way of handling this
-        List<String> profileContainers = Arrays.asList("User", "UserGroup", "InputUserWithGroupIds");
-
-        profileContainers.forEach(profileContainer ->
-            swagger.getDefinitions().get(profileContainer).getProperties().get("profile").getVendorExtensions().put(CREATE_NESTED_KEY, true)
-        );
     }
 
     @Override
