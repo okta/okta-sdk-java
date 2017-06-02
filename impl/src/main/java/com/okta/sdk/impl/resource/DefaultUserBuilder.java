@@ -19,16 +19,13 @@ package com.okta.sdk.impl.resource;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.lang.Strings;
 import com.okta.sdk.resource.UserBuilder;
-import com.okta.sdk.resource.user.InputUserWithGroupIds;
 import com.okta.sdk.resource.user.PasswordCredential;
 import com.okta.sdk.resource.user.RecoveryQuestionCredential;
 import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserCredentials;
 import com.okta.sdk.resource.user.UserProfile;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,7 +41,6 @@ public class DefaultUserBuilder implements UserBuilder {
     private String firstName;
     private String lastName;
     private String mobilePhone;
-    private Set<String> groupIds = new LinkedHashSet<>();
     private Map<String, Object> customProfileAttributes = new LinkedHashMap<>();
 
     public UserBuilder setPassword(String password) {
@@ -92,19 +88,6 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
-    public UserBuilder setGroupIds(Set<String> groupIds) {
-
-        this.groupIds.clear();
-        this.groupIds.addAll(groupIds);
-        return this;
-    }
-
-    public UserBuilder addGroupId(String groupId) {
-
-        groupIds.add(groupId);
-        return this;
-    }
-
     public UserBuilder setProfileProperties(Map<String, Object> profileProperties) {
 
         this.customProfileAttributes.clear();
@@ -122,9 +105,10 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
-    private InputUserWithGroupIds build(Client client) {
+    private User build(Client client) {
 
-        InputUserWithGroupIds user = client.instantiate(InputUserWithGroupIds.class);
+        User user = client.instantiate(User.class);
+        user.setProfile(client.instantiate(UserProfile.class));
         UserProfile userProfile = user.getProfile();
         userProfile.setFirstName(firstName);
         userProfile.setLastName(lastName);
@@ -138,8 +122,8 @@ public class DefaultUserBuilder implements UserBuilder {
         else {
             userProfile.setLogin(email);
         }
-//          userProfile.put("userProperty", "userValue");
-//        userProfile.putAll(customProfileAttributes);
+
+        userProfile.putAll(customProfileAttributes);
 
         if (Strings.hasText(password) || Strings.hasText(securityQuestion)) {
             UserCredentials credentials = client.instantiate(UserCredentials.class);
@@ -158,9 +142,6 @@ public class DefaultUserBuilder implements UserBuilder {
                 credentials.setPassword(passwordCredential);
             }
         }
-
-        // groupIds
-        user.setGroupIds(new ArrayList<>(groupIds));
 
         return user;
     }

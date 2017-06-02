@@ -436,7 +436,10 @@ public class DefaultDataStore implements InternalDataStore {
                 if (Collections.isEmpty(responseBody)) {
                     // Fix for https://github.com/stormpath/stormpath-sdk-java/issues/218
                     // Okta response with 200 for deactivate requests (i.e. /api/v1/apps/<id>/lifecycle/deactivate)
-                    if (response.getHttpStatus() == 202 || response.getHttpStatus() == 200) { //202 means that the request has been accepted for processing, but the processing has not been completed. Therefore we do not have a response body.
+                    if (response.getHttpStatus() == 202
+                            || response.getHttpStatus() == 200
+                            || response.getHttpStatus() == 204) {
+                        //202 means that the request has been accepted for processing, but the processing has not been completed. Therefore we do not have a response body.
                         responseBody = java.util.Collections.emptyMap();
                     } else {
                         throw new IllegalStateException("Unable to obtain resource data from the API server.");
