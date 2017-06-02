@@ -297,16 +297,16 @@ public class UserAgent {
         try {
             if (Classes.isAvailable(WEB_SERVER_WILDFLY_CLASS)) {
                 Package wildFlyPkg = Classes.forName(WEB_SERVER_WILDFLY_CLASS).getPackage();
-                if (wildFlyPkg != null) {
-                    if (Strings.hasText(wildFlyPkg.getImplementationTitle()) && wildFlyPkg.getImplementationTitle().contains("WildFly")) {
+                if (wildFlyPkg != null
+                    && Strings.hasText(wildFlyPkg.getImplementationTitle()) && wildFlyPkg.getImplementationTitle().contains("WildFly")) {
                         return WEB_SERVER_WILDFLY_ID + VERSION_SEPARATOR + wildFlyPkg.getImplementationVersion() + ENTRY_SEPARATOR;
-                    }
                 }
+
             }
 
         } catch (RuntimeException e) {
             throw e;
-        } catch (Exception e){
+        } catch (Exception e){ //NOPMD
             //there was a problem obtaining the WildFly version
         }
         return null;
@@ -363,7 +363,7 @@ public class UserAgent {
             }
         } catch (RuntimeException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (Exception e) { //NOPMD
             //Either the jar file or the internal "pom.properties" file could not be read, there is nothing we can do...
         }
         return version;
@@ -439,7 +439,7 @@ public class UserAgent {
 
         } catch (RuntimeException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (Exception e) { //NOPMD
             //there was a problem obtaining the WebSphere version
         }
         //returning null so we can identify in the User-Agent String that we are not properly handling some WebSphere version
@@ -459,7 +459,7 @@ public class UserAgent {
             return (String) method.invoke(version);
         } catch (RuntimeException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (Exception e) { //NOPMD
             //there was a problem obtaining the WebLogic version
         }
         //returning null so we can identify in the User-Agent String that we are not properly handling some WebLogic version

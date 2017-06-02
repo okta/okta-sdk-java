@@ -33,6 +33,6 @@ public interface CollectionResource<T extends Resource> extends Resource, Iterab
      * @return the single unique resource that is expect to be contained within this list.
      * @throws java.lang.IllegalStateException if this list contains either zero or more than one element.
      */
-    public T single();
+    T single();
 
 }

@@ -32,7 +32,7 @@ public interface HttpRequest {
      * @return the request's headers.  Never null.
      * @see #getHeader(String)
      */
-    public Map<String, String[]> getHeaders();
+    Map<String, String[]> getHeaders();
 
     /**
      * Returns the first available value for the request header with the specified name, or {@code null} if the header
@@ -45,21 +45,21 @@ public interface HttpRequest {
      * @return the first available value for the request header with the specified name, or {@code null} if the header
      *         does not exist.
      */
-    public String getHeader(String headerName);
+    String getHeader(String headerName);
 
     /**
      * Returns the request method.
      *
      * @return the request method.
      */
-    public HttpMethod getMethod();
+    HttpMethod getMethod();
 
     /**
      * Returns the request parameters.
      *
      * @return the request parameters.
      */
-    public Map<String, String[]> getParameters();
+    Map<String, String[]> getParameters();
 
     /**
      * Returns the first available value of the request parameter with the specified name or {@code null} if the
@@ -69,13 +69,13 @@ public interface HttpRequest {
      * @return the first available value of the request parameter with the specified name or {@code null} if the
      *         parameter does not exist.
      */
-    public String getParameter(String parameterName);
+    String getParameter(String parameterName);
 
     /**
      * Returns the request query parameter String, or {@code null} if there is no URI query parameter component.
      *
      * @return the request query parameter String, or {@code null} if there is no URI query parameter component.
      */
-    public String getQueryParameters();
+    String getQueryParameters();
 
 }

@@ -17,7 +17,6 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.impl.ds.Enlistment;
 import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.impl.http.QueryString;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Collections;
 import com.okta.sdk.lang.Strings;

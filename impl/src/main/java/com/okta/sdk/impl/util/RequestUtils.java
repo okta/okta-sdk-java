@@ -32,10 +32,13 @@ public class RequestUtils {
      * @param uri true if the specified URI uses a standard port
      * @return true if the specified URI is using a non-standard port, false otherwise
      */
+    @SuppressWarnings("PMD.UselessParentheses")
     public static boolean isDefaultPort(URI uri) {
         String scheme = uri.getScheme().toLowerCase(Locale.ENGLISH);
         int port = uri.getPort();
-        return port <= 0 || (port == 80 && scheme.equals("http")) || (port == 443 && scheme.equals("https"));
+        return port <= 0
+                || (port == 80 && scheme.equals("http"))
+                || (port == 443 && scheme.equals("https"));
     }
 
     public static String encodeUrl(String value, boolean path, boolean canonical) {

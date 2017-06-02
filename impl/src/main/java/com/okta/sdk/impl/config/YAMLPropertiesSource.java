@@ -17,10 +17,7 @@ package com.okta.sdk.impl.config;
 
 import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Classes;
 import com.okta.sdk.lang.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -31,7 +28,6 @@ import java.util.Map;
 
 public class YAMLPropertiesSource implements PropertiesSource {
 
-    private static final Logger log = LoggerFactory.getLogger(YAMLPropertiesSource.class);
     private final Resource resource;
 
     public YAMLPropertiesSource(Resource resource) {

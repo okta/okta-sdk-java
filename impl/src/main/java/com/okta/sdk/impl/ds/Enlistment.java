@@ -16,8 +16,6 @@
 package com.okta.sdk.impl.ds;
 
 import com.okta.sdk.lang.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -37,8 +35,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @since 0.5.0
  */
 public class Enlistment implements Map<String, Object> {
-
-    private static final Logger log = LoggerFactory.getLogger(Enlistment.class);
 
     protected final Map<String, Object> backingMap;  //Protected by read/write lock
     protected final Lock readLock;

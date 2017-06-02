@@ -18,14 +18,10 @@ package com.okta.sdk.impl.ds;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.ReferenceFactory;
 import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Collections;
 import com.okta.sdk.lang.Strings;
-import com.okta.sdk.resource.Resource;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 

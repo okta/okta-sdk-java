@@ -32,8 +32,6 @@ public class ApiAuthenticationExceptionFactory {
 
     public static final String AUTH_EXCEPTION_CODE = "401";
 
-    private static final String DEFAULT_DEVELOPER_MESSAGE = "Authentication with a valid API Key is required.";
-
     private static final String DEFAULT_CLIENT_MESSAGE = "Authentication Required";
 
     public static ResourceException newApiAuthenticationException(Class<? extends ResourceException> clazz) {

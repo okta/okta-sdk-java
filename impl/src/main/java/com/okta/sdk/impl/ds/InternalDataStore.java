@@ -21,7 +21,6 @@ import com.okta.sdk.impl.http.HttpHeaders;
 import com.okta.sdk.query.Criteria;
 import com.okta.sdk.query.Options;
 import com.okta.sdk.resource.Resource;
-import com.okta.sdk.resource.Saveable;
 
 import java.util.Map;
 

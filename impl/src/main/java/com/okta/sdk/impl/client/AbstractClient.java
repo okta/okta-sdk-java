@@ -19,7 +19,6 @@ import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.Proxy;
-import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.ds.DefaultDataStore;
@@ -36,11 +35,8 @@ import java.lang.reflect.Constructor;
 
 /**
  * The default {@link Client} implementation.
- * <h3>DataStore API</h3>
- * <p>As of 0.8, this class implements the {@link
- * DataStore} interface, but this implementation merely acts as a wrapper to the underlying 'real' {@code DataStore}
- * instance. This is a convenience mechanism to eliminate the constant need to call {@code client.getDataStore()} every
- * time one needs to instantiate or look up a Resource.</p>
+ * This is a convenience mechanism to eliminate the constant need to call {@code client.getDataStore()} every
+ * time one needs to instantiate or look up a Resource.
  *
  * @see <a href="http://www.okta.com/docs/quickstart/connect">Communicating with Okta: Get your API Key</a>
  * @since 0.5.0

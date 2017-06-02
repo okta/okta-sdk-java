@@ -22,16 +22,16 @@ import java.util.Map;
  */
 public interface HttpServletRequestWrapper {
 
-    public Class getHttpServletRequestClass();
+    Class getHttpServletRequestClass();
 
-    public Object getHttpServletRequest();
+    Object getHttpServletRequest();
 
-    public String getHeader(String headerName);
+    String getHeader(String headerName);
 
-    public String getMethod();
+    String getMethod();
 
-    public Map<String, String[]> getParameterMap();
+    Map<String, String[]> getParameterMap();
     
-    public String getParameter(String parameterName);
+    String getParameter(String parameterName);
 
 }

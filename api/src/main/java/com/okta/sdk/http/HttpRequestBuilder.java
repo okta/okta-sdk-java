@@ -38,7 +38,7 @@ public interface HttpRequestBuilder {
      * @return the builder instance for method chaining.
      * @throws IllegalArgumentException if the method argument is {@code null}.
      */
-    public HttpRequestBuilder headers(Map<String, String[]> headers) throws IllegalArgumentException;
+    HttpRequestBuilder headers(Map<String, String[]> headers) throws IllegalArgumentException;
 
     /**
      * Sets the request parameters that will be present in the resulting request instance.
@@ -46,7 +46,7 @@ public interface HttpRequestBuilder {
      * @param parameters the request parameters that will be present in the resulting request instance.
      * @return the builder instance for method chaining.
      */
-    public HttpRequestBuilder parameters(Map<String, String[]> parameters);
+    HttpRequestBuilder parameters(Map<String, String[]> parameters);
 
     /**
      * Adds a request header that will be part of the headers map in the resulting request instance.
@@ -57,7 +57,7 @@ public interface HttpRequestBuilder {
      * @throws IllegalArgumentException if the name or value arguments are {@code null}.
      *
      */
-    public HttpRequestBuilder addHeader(String name, String[] value) throws IllegalArgumentException;
+    HttpRequestBuilder addHeader(String name, String[] value) throws IllegalArgumentException;
 
     /**
      * Adds a request parameter that will be part of the parameters map in the resulting request instance.
@@ -68,7 +68,7 @@ public interface HttpRequestBuilder {
      * @throws IllegalArgumentException if the name or value arguments are {@code null}.
      *
      */
-    public HttpRequestBuilder addParameter(String name, String[] value) throws IllegalArgumentException;
+    HttpRequestBuilder addParameter(String name, String[] value) throws IllegalArgumentException;
 
     /**
      * Sets the query parameters that will be present in the resulting request instance.
@@ -76,12 +76,12 @@ public interface HttpRequestBuilder {
      * @param queryParameters the query parameters that will be present in the resulting request instance.
      * @return the builder instance for method chaining.
      */
-    public HttpRequestBuilder queryParameters(String queryParameters);
+    HttpRequestBuilder queryParameters(String queryParameters);
 
     /**
      * Returns a new {@code HttpRequest} instance reflecting the current builder state.
      *
      * @return a new {@code HttpRequest} instance reflecting the current builder state.
      */
-    public HttpRequest build();
+    HttpRequest build();
 }

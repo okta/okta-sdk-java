@@ -20,11 +20,9 @@ import com.okta.sdk.error.ErrorCause;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.IntegerProperty;
 import com.okta.sdk.impl.resource.ListProperty;
-import com.okta.sdk.impl.resource.MapProperty;
 import com.okta.sdk.impl.resource.Property;
 import com.okta.sdk.impl.resource.StringProperty;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

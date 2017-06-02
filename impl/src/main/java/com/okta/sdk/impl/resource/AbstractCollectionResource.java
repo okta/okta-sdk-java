@@ -19,8 +19,6 @@ import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.lang.Classes;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -37,8 +35,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 0.5.0
  */
 public abstract class AbstractCollectionResource<T extends Resource> extends AbstractResource implements CollectionResource<T> {
-
-    private final Logger log = LoggerFactory.getLogger(AbstractCollectionResource.class);
 
     public static final StringProperty NEXT_PAGE = new StringProperty("nextPage");
     public static final String ITEMS_PROPERTY_NAME = "items";
@@ -78,7 +74,8 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
      * false} otherwise.
      */
     public static boolean isCollectionResource(Map<String,?> props) {
-        return isMaterialized(props) && (props.get(ITEMS_PROPERTY_NAME) instanceof Iterable);
+        return isMaterialized(props)
+                && props.get(ITEMS_PROPERTY_NAME) instanceof Iterable;
     }
 
     private String getNextPageHref() {
@@ -139,19 +136,19 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
             }
         }
 
-        return new DefaultPage<T>(items);
+        return new DefaultPage<>(items);
     }
 
 
     @Override
     public Iterator<T> iterator() {
         //firstPageQueryRequired ensures that newly obtained collection resources don't need to query unnecessarily
-        return new PaginatedIterator<T>(this, firstPageQueryRequired.getAndSet(true));
+        return new PaginatedIterator<>(this, firstPageQueryRequired.getAndSet(true));
     }
 
     private Collection<T> toResourceList(Collection vals, Class<T> itemType) {
 
-        List<T> list = new ArrayList<T>(vals.size());
+        List<T> list = new ArrayList<>(vals.size());
 
         for (Object o : vals) {
             Map<String, Object> properties = (Map<String, Object>) o;

@@ -326,13 +326,13 @@ public class HttpClientRequestExecutor implements RequestExecutor {
             } finally {
                 try {
                     httpResponse.getEntity().getContent().close();
-                } catch (Throwable ignored) {
+                } catch (Throwable ignored) { // NOPMD
                 }
             }
         }
     }
 
-    private boolean isRedirect(org.apache.http.HttpResponse response) {
+    private boolean isRedirect(HttpResponse response) {
         int status = response.getStatusLine().getStatusCode();
         return (status == HttpStatus.SC_MOVED_PERMANENTLY ||
                 status == HttpStatus.SC_MOVED_TEMPORARILY ||

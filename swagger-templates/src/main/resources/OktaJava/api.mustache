@@ -84,7 +84,7 @@ public interface {{classname}} extends DataStore {
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
 
     {{#vendorExtensions.hasOptional}}
     /**
@@ -101,7 +101,7 @@ public interface {{classname}} extends DataStore {
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
 {{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 }
 {{/operations}}

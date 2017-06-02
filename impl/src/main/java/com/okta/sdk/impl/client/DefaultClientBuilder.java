@@ -27,8 +27,6 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.config.ClientConfiguration;
-import com.okta.sdk.impl.config.DefaultEnvVarNameConverter;
-import com.okta.sdk.impl.config.EnvVarNameConverter;
 import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
 import com.okta.sdk.impl.config.OptionalPropertiesSource;
 import com.okta.sdk.impl.config.PropertiesSource;
@@ -76,7 +74,6 @@ import java.util.concurrent.TimeUnit;
 public class DefaultClientBuilder implements ClientBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
-    private static final EnvVarNameConverter envVarNameConverter = new DefaultEnvVarNameConverter();
 
     private Proxy proxy;
     private CacheManager cacheManager;

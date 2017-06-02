@@ -21,7 +21,6 @@ import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Strings;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @since 0.5.0
