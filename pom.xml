@@ -251,6 +251,7 @@
                 <configuration>
                     <fileName>THIRD-PARTY-NOTICES</fileName>
                     <generateChildNotices>false</generateChildNotices>
+                    <noticeTemplate>${root.dir}/src/license/NOTICE.template</noticeTemplate>
                     <licenseMapping>
                         <mapping>src/license/mapping.xml</mapping>
                     </licenseMapping>
