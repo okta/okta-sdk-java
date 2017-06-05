@@ -24,7 +24,6 @@ import com.okta.sdk.resource.UserBuilder;
 
 import com.okta.sdk.resource.UserList;
 import com.okta.sdk.resource.group.UserGroup;
-import com.okta.sdk.resource.user.ActivationToken;
 import com.okta.sdk.resource.user.User;
 
 import java.util.UUID;
@@ -44,9 +43,8 @@ public class Quickstart {
             ClientBuilder builder = Clients.builder();
 
             // No need to define anything else; build the Client instance. The ClientCredential information will be automatically found
-            // in pre-defined locations.
+            // in pre-defined locations: i.e. ~/.okta/okta.yaml
             Client client = builder.build();
-
 
             // Create a group
             UserGroup group = GroupBuilder.INSTANCE
@@ -67,19 +65,14 @@ public class Quickstart {
                 .setPassword("Password1")
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
-//                .putProfileProperty("customProp", "Custom Value!")
-                .buildAndCreate(client);
+                .putProfileProperty("division", "Seven") // key/value pairs predefined in the user profile schema
+                .buildAndCreate(client, true);
 
             // add user to the newly created group
             user.addToGroup(group.getId());
 
             String userId = user.getId();
             println("User created with ID: " + userId);
-
-            // activate the new user
-            ActivationToken activationToken = user.activate(false);
-            // if you don't want Okta to email the user, you can grab the activation url/token and add it to your custom flow
-            String activationUrl = activationToken.getActivationUrl();
 
             // You can look up user by ID
             println("User lookup by ID: "+ client.getUser(userId).getProfile().getLogin());
@@ -92,13 +85,13 @@ public class Quickstart {
             UserList users = client.listUsers();
 
             // get the first user in the collection
-            println("First user: " + users.iterator().next().getProfile().getEmail());
+            println("First user in collection: " + users.iterator().next().getProfile().getEmail());
 
             // or loop through all of them (paging is automatic)
-//        int ii = 0;
-//        for (User user : users) {
-//            println("["+ ii++ +"] User: " + user.getProfile().getEmail());
-//        }
+//            int ii = 0;
+//            for (User tmpUser : users) {
+//                println("["+ ii++ +"] User: " + tmpUser.getProfile().getEmail());
+//            }
 
         }
         catch (ResourceException e) {
