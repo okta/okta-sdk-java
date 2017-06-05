@@ -22,7 +22,7 @@ import com.okta.sdk.cache.CacheManager;
  * A <a href="http://en.wikipedia.org/wiki/Builder_pattern">Builder design pattern</a> used to
  * construct {@link com.okta.sdk.client.Client} instances.
  *
- * <p>The {@code ClientBuilder} is used to construct Client instances with Okta API Key,
+ * <p>The {@code ClientBuilder} is used to construct Client instances with Okta credentials,
  * Proxy and Cache configuration.  Understanding caching is extremely important when creating a Client instance, so
  * please ensure you read the <em>Caching</em> section below.</p>
  *
@@ -38,30 +38,21 @@ import com.okta.sdk.cache.CacheManager;
  * <ul>
  *   <li>Automatically enable a simple in-memory {@link CacheManager} for enhanced performance (but please read
  *       the <em>Caching</em> section below for effects/warnings).</li>
- *   <li>Automatically attempt to find your API Key values in a number of default/conventional locations and then use
+ *   <li>Automatically attempt to find your API credentials values in a number of default/conventional locations and then use
  *       the discovered values. Without any other configuration, the following locations will be each be checked,
  *       in order:</li>
  * </ul>
  *
  * <ol>
- *     <li>The default apiKey.properties file location of
- *         <code>System.getProperty("user.home") + "/.okta/apiKey.properties"</code> as
- *         recommended/documented in the <a href="https://docs.okta.com/java/quickstart/">Okta Java
- *         Quickstart</a>.</li>
- *     <li>A properties file that exists at the file path or URL specified by the {@code OKTA_API_KEY_FILE}
- *         variable.  If this file exists and contains either the apiKey id or secret properties, these values
- *         override any values found in the default apiKey.properties file.  The {@code OKTA_API_KEY_FILE}
- *         String can be an absolute file path, or it can be a URL or a classpath value by using the {@code url:} or
- *         {@code classpath:} prefixes respectively.</li>
- *     <li>The environment variables {@code OKTA_API_KEY_ID} and {@code OKTA_API_KEY_SECRET}.  If either of
+ *     <li>The environment variable {@code OKTA_CLIENT_TOKEN}.  If either of
  *         these values are present, they override any previously discovered value.</li>
- *     <li>A properties file that exists at the file path or URL specified by the {@code okta.client.file}
+ *     <li>A yaml file that exists at the file path or URL specified by the {@code okta.client.file}
  *         system property.  If this file exists and any values are present, the values override any
  *         previously discovered value.  The {@code okta.client.file} system property String can be an
  *         absolute file path, or it can be a URL or a classpath value by using the {@code url:} or
- *         {@code classpath:} prefixes respectively.</li>
- *     <li>The system properties {@code okta.client.id} and {@code okta.client.token}.  If either of
- *         these values are present, they override any previously discovered values.</li>
+ *         {@code classpath:} prefixes respectively. Default value is {code ~/.okta/okta.yaml}. </li>
+ *     <li>The system properties {@code okta.client.token}.  If this value is present, it will override any
+ *     previously discovered values.</li>
  * </ol>
  *
  * <p><b>SECURITY NOTICE:</b> While the {@code okta.client.token} system property may be used to represent your
@@ -79,17 +70,14 @@ import com.okta.sdk.cache.CacheManager;
  * need to explicitly configure your API Key.  For example:</p>
  *
  * <pre>
- * ApiKey apiKey = {@link com.okta.sdk.api.ApiKeys ApiKeys}.builder()
- *                 //specific configuration
- *                 .{@link #build build()};
+ * ClientCredentials clientCredentials = new TokenClientCredentials("apiToken");
  *
- * Client client = {@link Clients Clients}.builder().setApiKey(apiKey).build();
+ * Client client = {@link Clients Clients}.builder().setClientCredentials(clientCredentials).build();
  * </pre>
- *
- * <p>See the {@link com.okta.sdk.api.ApiKeyBuilder ApiKeyBuilder} JavaDoc for specific API Key configuration
- * options.</p>
- *
+ * *
  * <h3>Caching</h3>
+ *
+ * NOTE: Caching support is currently in Alpha status.
  *
  * <p>By default, a simple production-grade in-memory {@code CacheManager} will be enabled when the Client instance is
  * created.  This {@code CacheManager} implementation has the following characteristics:</p>
@@ -203,7 +191,6 @@ import com.okta.sdk.cache.CacheManager;
  * <p>If you must have multiple {@code Client} instances in your application, you should ensure that each client
  * references the same exact {@code CacheManager} instance to guarantee cache coherency.</p>
  *
- * @see com.okta.sdk.api.ApiKeyBuilder ApiKeyBuilder
  * @since 0.5.0
  */
 public interface ClientBuilder {
@@ -225,10 +212,9 @@ public interface ClientBuilder {
      * Allows specifying an {@code ApiKey} instance directly instead of relying on the
      * default location + override/fallback behavior defined in the {@link ClientBuilder documentation above}.
      *
-     * <p>Consider using an {@link com.okta.sdk.api.ApiKeyBuilder ApiKeyBuilder} to construct your
-     * {@code ApiKey} instance.</p>
+     * Currently you should use a com.okta.sdk.impl.api.TokenClientCredentials (if you are NOT using an okta.yaml file)
      *
-     * @param apiKey the ApiKey to use to authenticate requests to the Okta API server.
+     * @param clientCredentials the token to use to authenticate requests to the Okta API server.
      * @return the ClientBuilder instance for method chaining.
      */
     ClientBuilder setClientCredentials(ClientCredentials clientCredentials);

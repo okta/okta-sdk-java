@@ -28,29 +28,13 @@ import com.okta.sdk.ds.DataStore;
 * communicate with the Okta REST API service must build a {@code Client} instance.  After obtaining
 * a {@code Client instance}, the REST API may be used by making simple Java calls on objects returned from
 * the Client (or any children objects obtained therein).
-* <p/>
+* <p>
 * For example:
 * <pre>
-* String path = System.getProperty("user.home") + "/.okta/<a href="http://www.okta.com/docs/get-api-key">clientCredentials.properties</a>";
-* Client client = {@link Clients Clients}.{@link com.okta.sdk.client.Clients#builder() builder()}
-*     .{@link com.okta.sdk.client.ClientBuilder#setApiKey(ApiKey) setApiKey}({@link ApiKeys ApiKeys}.builder()
-*         .setFileLocation(path)
-*         .build())
-*     .build();
+* Client client = Clients.builder().build();
 *
-* ApplicationList applications = client.getApplications();
-*
-* System.out.println("My Applications: ");
-*
-* for (Application application : applications) {
-*     System.out.println(application);
-* }
+* client.getUser(userId)
 * </pre>
-* <h3>DataStore API</h3>
-* As of 0.8, this interface extends {@link DataStore}, but the actual class implementation will merely act as a
-* wrapper to its internal 'real' {@code DataStore} instance.  This is a convenience mechanism to eliminate the constant need to
-* call {@code client.getDataStore()} every time one needs to instantiate or look up a Resource.
-*
 * @see <a href="http://www.okta.com/docs/quickstart/connect">Communicating with Okta: Get your API Key</a>
 * @see DataStore
 * @since 0.5.0
