@@ -1,9 +1,14 @@
-[<img src="https://devforum.okta.com/uploads/oktadev/original/1X/bf54a16b5fda189e4ad2706fb57cbb7a1e5b8deb.png" align="right" style="width:256px;"/>](https://devforum.okta.com/)
+[<img src="https://devforum.okta.com/uploads/oktadev/original/1X/bf54a16b5fda189e4ad2706fb57cbb7a1e5b8deb.png" align="right" width="256px"/>](https://devforum.okta.com/)
 [![Maven Central](https://img.shields.io/maven-central/v/com.okta.sdk/okta-sdk-api.svg)]()
 
 # okta-sdk-java
 
-This SDK is in EA, so all existing features are supported by Okta in a production setting
+This SDK is in EA, so all existing features are supported by Okta in a production setting.
+
+This version of the Okta Java SDK supports CRUD (Create, Read, Update, Delete) operations for the following resource:
+- User
+- Group
+- Group Membership Rules
 
 # Usage
 

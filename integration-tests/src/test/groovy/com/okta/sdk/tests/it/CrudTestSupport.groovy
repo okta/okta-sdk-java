@@ -32,6 +32,8 @@ trait CrudTestSupport {
 
         Client client = Clients.builder().build()
 
+        preTestSetup(client)
+
         // get the size of initial list
         int preCount = getCount(client)
 
@@ -53,6 +55,10 @@ trait CrudTestSupport {
 
         count = getCount(client)
         assertThat count, is(preCount)
+    }
+
+    void preTestSetup(Client client) {
+
     }
 
     // create
