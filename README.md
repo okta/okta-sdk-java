@@ -1,14 +1,46 @@
+[<img src="https://devforum.okta.com/uploads/oktadev/original/1X/bf54a16b5fda189e4ad2706fb57cbb7a1e5b8deb.png" align="right" style="width:256px;"/>](https://devforum.okta.com/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.okta.sdk/okta-sdk-api.svg)]()
+
 # okta-sdk-java
 
 This SDK is in EA, so all existing features are supported by Okta in a production setting
 
-To build and install:
+# Usage
 
-1. Clone the repo
-2. Navigate to the repo directory. It should contain pom.xml
-3. Build with tests `mvn install`
+## Dependencies
 
-### Client configuration
+The only compile time dependency you will need is `okta-sdk-api`.  You will also need to add the implementation dependencies too: `okta-sdk-impl` and `okta-sdk-httpclient`.
+
+``` xml
+<dependency>
+    <groupId>com.okta.sdk</groupId>
+    <artifactId>okta-sdk-api</artifactId>
+    <version>${okta.version}</version>
+</dependency>
+<dependency>
+    <groupId>com.okta.sdk</groupId>
+    <artifactId>okta-sdk-impl</artifactId>
+    <version>${okta.version}</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>com.okta.sdk</groupId>
+    <artifactId>okta-sdk-httpclient</artifactId>
+    <version>${okta.version}</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
+## SNAPSHOT Dependencies
+
+Snapshots are deployed off of the 'master' branch to OSSRH and can be consumed using the following repository configured for Apache Maven or Gradle:
+```
+https://oss.sonatype.org/content/repositories/snapshots/
+```
+
+
+
+## Client configuration
 
 There are a few ways to configure the client, but the easiest way is to create a `~/.okta/okta.yaml`file and set the `token` and `orgUrl` values:
 
@@ -19,7 +51,7 @@ okta:
     orgUrl: https://dev-123456.oktapreview.com
 ```
 
-### Creating a Client
+## Creating a Client
 
  Once you create your `okta.yaml` file, you can create a client with a couple of lines:
 
@@ -32,31 +64,79 @@ ClientBuilder builder = Clients.builder();
 Client client = builder.build();
 ```
 
-### Client CRUD Operations
+## Client CRUD Operations
 
 The client is used to perform CRUD operations against Okta's management APIs. 
 
+Create a group:
 ```java
 
-// Create a new group
-UserGroup group = client.instantiate(UserGroup.class);
-
-// set the name
-group.getProfile().setName("my-user-group");
-
-// save it
-group = client.createGroup(group);
+UserGroup group = GroupBuilder.INSTANCE
+        .setName("my-user-group-" + UUID.randomUUID().toString())
+        .setDescription("Quickstart created Group")
+        .buildAndCreate(client);
 
 // print a couple of the attributes
-System.out.println("Group: '"+ group.getId()+ "' was last updated on: "+ group.getLastUpdated());
+println("Group: '" + group.getId() + "' was last updated on: " + group.getLastUpdated());
 
-// list all users (pageing is handled automatically)
+```
+
+
+Create a User Account:
+
+``` java
+String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
+
+User user = UserBuilder.INSTANCE
+    .setEmail(email)
+    .setFirstName("Joe")
+    .setLastName("Coder")
+    .setPassword("Password1")
+    .setSecurityQuestion("Favorite security question?")
+    .setSecurityQuestionAnswer("None of them!")
+    .putProfileProperty("division", "Seven") // key/value pairs predefined in the user profile schema
+    .buildAndCreate(client, true);
+
+String userId = user.getId();
+println("User created with ID: " + userId);
+```
+
+Add user to the newly created group:
+``` java 
+user.addToGroup(group.getId());
+```
+
+User lookup by ID or email:
+``` java
+// You can look up user by ID
+println("User lookup by ID: "+ client.getUser(userId).getProfile().getLogin());
+
+// or by Email
+println("User lookup by Email: "+ client.getUser(email).getProfile().getLogin());
+```
+
+## Paging
+
+Paging is handled automatically when iterating over a any collection.
+
+``` java
+// get the list of users
 UserList users = client.listUsers();
 
 // get the first user in the collection
-System.out.println("First user: "+ users.iterator().next().getProfile().getEmail());
+println("First user in collection: " + users.iterator().next().getProfile().getEmail());
+
+// or loop through all of them (paging is automatic)
+int ii = 0;
+for (User tmpUser : users) {
+    println("["+ ii++ +"] User: " + tmpUser.getProfile().getEmail());
+}
 ```
 
-### Paging
+## Build this Project
 
-Paging is handled automatically when iterating over a any collection.
+To build and install:
+
+1. Clone the repo
+2. Navigate to the repo directory. It should contain pom.xml
+3. Build with tests `mvn install`
