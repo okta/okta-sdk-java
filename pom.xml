@@ -591,8 +591,13 @@
         </profile>
         <profile>
             <id>ci</id>
+            <!-- Build the javadoc and scan the code for issues -->
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>findbugs-maven-plugin</artifactId>
