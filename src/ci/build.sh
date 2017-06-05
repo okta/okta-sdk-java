@@ -56,6 +56,9 @@ else
     if [ "$DEPLOY" = true ] ; then
         echo "Deploying SNAPSHOT build"
         $MVN_CMD deploy -Pci
+
+        # also deploy the javadocs to the site
+        $MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs
     else
         # else try to run the ITs if possible (for someone who has push access to the repo
         if [ "$RUN_ITS" = true ] ; then
