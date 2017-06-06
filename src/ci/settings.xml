@@ -20,6 +20,11 @@
             <username>${env.OSSRH_USERNAME}</username>
             <password>${env.OSSRH_SECRET}</password>
         </server>
+        <server>
+            <id>sonatype-nexus-staging</id>
+            <username>${env.OSSRH_USERNAME}</username>
+            <password>${env.OSSRH_SECRET}</password>
+        </server>
     </servers>
     <profiles>
         <profile>
