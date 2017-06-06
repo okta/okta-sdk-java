@@ -415,24 +415,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>1.9.5</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <mavenExecutorId>forked-path</mavenExecutorId>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <arguments>-DskipTests -Pdocs,okta-signature</arguments>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <executions>
@@ -463,6 +445,31 @@
 
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <configuration>
+                        <!-- do not update upstream, with a pending release. -->
+                        <pushChanges>false</pushChanges>
+                        <localCheckout>true</localCheckout>
+                        <!-- scan with OWASP plugin before release -->
+                        <preparationGoals>clean verify dependency-check:aggregate</preparationGoals>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <!-- This configuration copied from apache:apache:7 parent pom -->
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <goals>deploy</goals>
+                        <mavenExecutorId>forked-path</mavenExecutorId>
+                        <arguments>-Pdocs,okta-signature</arguments>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.scm</groupId>
+                            <artifactId>maven-scm-provider-gitexe</artifactId>
+                            <version>1.9.5</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -517,6 +524,7 @@
                     <inherited>false</inherited>
                     <configuration>
                         <suppressionFile>${root.dir}/src/owasp-suppression.xml</suppressionFile>
+                        <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
                         <name>OWASP Dependency Check</name>
                     </configuration>
                 </plugin>
@@ -637,9 +645,6 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <configuration>
-                            <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
-                        </configuration>
                         <executions>
                             <execution>
                                 <goals>
