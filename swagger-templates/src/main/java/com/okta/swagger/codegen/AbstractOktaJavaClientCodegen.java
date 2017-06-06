@@ -548,13 +548,13 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             properties.add(getArrayPropertyFromOperation(path.getPatch()));
             properties.add(getArrayPropertyFromOperation(path.getPut()));
 
-            listModels.putAll(processListsFromProperties(properties, null));
+            listModels.putAll(processListsFromProperties(properties, null, swagger));
         }
 
         swagger.getDefinitions()
                 .forEach((key, model) -> {
                     if (model != null && model.getProperties() != null) {
-                        listModels.putAll(processListsFromProperties(model.getProperties().values(), model));
+                        listModels.putAll(processListsFromProperties(model.getProperties().values(), model, swagger));
                     }
                 });
 
@@ -562,7 +562,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     }
 
-    private Map<String, Model> processListsFromProperties(Collection<Property> properties, Model baseModel) {
+    private Map<String, Model> processListsFromProperties(Collection<Property> properties, Model baseModel, Swagger swagger) {
 
         Map<String, Model> result = new LinkedHashMap<>();
 
@@ -583,9 +583,16 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         model.setName(modelName);
                         model.setAllowEmptyValue(false);
                         model.setDescription("Collection List for " + baseName);
-                        if (baseModel != null) {
-                            model.setVendorExtensions(new HashMap<>(baseModel.getVendorExtensions()));
+
+                        if (baseModel == null) {
+                            baseModel = swagger.getDefinitions().get(baseName);
                         }
+
+                        // only add the tags from the base model
+                        if (baseModel.getVendorExtensions().containsKey("x-okta-tags")) {
+                            model.setVendorExtension("x-okta-tags", baseModel.getVendorExtensions().get("x-okta-tags"));
+                        }
+
                         model.setVendorExtension("x-isResourceList", true);
                         model.setVendorExtension("x-baseType", baseName);
                         model.setType(modelName);

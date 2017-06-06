@@ -22,9 +22,9 @@ import com.okta.sdk.resource.GroupBuilder;
 import com.okta.sdk.resource.ResourceException;
 import com.okta.sdk.resource.UserBuilder;
 
-import com.okta.sdk.resource.UserList;
 import com.okta.sdk.resource.group.UserGroup;
 import com.okta.sdk.resource.user.User;
+import com.okta.sdk.resource.user.UserList;
 
 import java.util.UUID;
 
