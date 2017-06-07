@@ -20,25 +20,25 @@ set -e
 COMMON_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/common.sh"
 source "${COMMON_SCRIPT}"
 
-OLD_VERSION="$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)"
-NEW_VERSION="${OLD_VERSION/-SNAPSHOT}"
-TAG_NAME="okta-sdk-root-${NEW_VERSION}" # default release plugin tag format
-
 # TODO: we must use our local maven settings file as this script is NOT ready for triggered by travis
 # GPG agent configuration needed to sign artifacts
 MVN_CMD="mvn"
 
-# Update pom versions, tag, update to new dev version
-${MVN_CMD} release:prepare --batch-mode
+# the release plugin uses this dir to cut the release
+cd target/checkout
 
-# stage the release artifacts
-${MVN_CMD} release:perform
+NEW_VERSION="$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)"
+TAG_NAME="okta-sdk-root-${NEW_VERSION}" # default release plugin tag format
 
-# the release plugin does not create signed tags, so update the existing tag
-git tag ${TAG_NAME} -f -s -m "${TAG_NAME}"
+# publish once to the versioned dir
+$MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs -Djavadoc.version.dir=''
+# and again to the unversioned dir
+$MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs -Djavadoc.version.dir="${NEW_VERSION}/"
+
+git push origin ${TAG_NAME}
+
+#notify for new release
+send_tag_notification "${TAG_NAME}"
 
 echo
-echo "Tag '${TAG_NAME}' has been created"
-echo "Visit https://oss.sonatype.org/#stagingRepositories to release the artifacts. (Be sure to test them first)"
-echo "Once released run: ./src/ci/finalize-release.sh"
-
+echo "You will still need to merge your local master to origin/master"
