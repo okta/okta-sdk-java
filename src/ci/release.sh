@@ -22,6 +22,7 @@ source "${COMMON_SCRIPT}"
 
 OLD_VERSION="$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)"
 NEW_VERSION="${OLD_VERSION/-SNAPSHOT}"
+TAG_NAME="okta-sdk-root-${NEW_VERSION}" # default release plugin tag format
 
 # TODO: we must use our local maven settings file as this script is NOT ready for triggered by travis
 # GPG agent configuration needed to sign artifacts
@@ -33,10 +34,13 @@ ${MVN_CMD} release:prepare --batch-mode
 # stage the release artifacts
 ${MVN_CMD} release:perform
 
+# the release plugin does not create signed tags, so update the existing tag
+git tag ${TAG_NAME} -f -s -m "${TAG_NAME}"
+
 # publish once to the versioned dir
 $MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs -Djavadoc.version.dir=''
 # and again to the unversioned dir
 $MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs -Djavadoc.version.dir="${NEW_VERSION}/"
 
 #notify for new release
-send_tag_notification "okta-sdk-root-${NEW_VERSION}"
+send_tag_notification "${TAG_NAME}"
