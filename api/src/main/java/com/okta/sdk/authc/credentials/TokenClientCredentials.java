@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.impl.api;
+package com.okta.sdk.authc.credentials;
 
-import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.lang.Strings;
 
 /**

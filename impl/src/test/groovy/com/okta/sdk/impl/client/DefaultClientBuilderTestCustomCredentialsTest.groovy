@@ -17,7 +17,7 @@ package com.okta.sdk.impl.client
 
 import com.okta.sdk.authc.credentials.ClientCredentials
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
-import com.okta.sdk.impl.api.TokenClientCredentials
+import com.okta.sdk.authc.credentials.TokenClientCredentials
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
