@@ -305,7 +305,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
-    public ClientBuilder setBaseUrl(String baseUrl) {
+    public ClientBuilder setOrgUrl(String baseUrl) {
         if (baseUrl == null) {
             throw new IllegalArgumentException("baseUrl argument cannot be null.");
         }
