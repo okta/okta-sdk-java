@@ -16,6 +16,7 @@
 package com.okta.sdk.impl.api;
 
 import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.impl.config.ClientConfiguration;
 
 /**

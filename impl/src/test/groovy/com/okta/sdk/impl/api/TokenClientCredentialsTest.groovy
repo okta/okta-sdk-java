@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.impl.api
 
+import com.okta.sdk.authc.credentials.TokenClientCredentials
 import org.testng.annotations.Test
 
 import static org.testng.Assert.*
