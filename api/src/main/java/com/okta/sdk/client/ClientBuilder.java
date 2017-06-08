@@ -330,7 +330,7 @@ public interface ClientBuilder {
      * @param baseUrl the base URL of the Okta REST API to use.
      * @return the ClientBuilder instance for method chaining
      */
-    ClientBuilder setBaseUrl(String baseUrl);
+    ClientBuilder setOrgUrl(String baseUrl);
 
     /**
      * Constructs a new {@link Client} instance based on the ClientBuilder's current configuration state.
