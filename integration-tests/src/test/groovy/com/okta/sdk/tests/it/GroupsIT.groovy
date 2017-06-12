@@ -16,12 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.client.Clients
-import com.okta.sdk.resource.GroupBuilder
-import org.testng.annotations.Test
-
-import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.is
+import com.okta.sdk.resource.group.GroupBuilder
 
 /**
  * Tests for /api/v1/groups

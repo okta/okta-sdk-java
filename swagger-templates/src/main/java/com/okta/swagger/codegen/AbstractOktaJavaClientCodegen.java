@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -60,7 +61,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     static final String MEDIA_TYPE = "mediaType";
 
     @SuppressWarnings("hiding")
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractOktaJavaClientCodegen.class);
+    private final Logger log = LoggerFactory.getLogger(AbstractOktaJavaClientCodegen.class);
 
     public static final String PARCELABLE_MODEL = "parcelableModel";
 
@@ -70,6 +71,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected boolean useGzipFeature = false;
 
     protected Map<String, String> modelTagMap = new HashMap<>();
+    protected Set<String> enumList = new HashSet<>();
 
     public AbstractOktaJavaClientCodegen(String codeGenName, String relativeTemplateDir, String modelPackage) {
         super();
@@ -95,11 +97,21 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     public void preprocessSwagger(Swagger swagger) {
         vendorExtensions.put("basePath", swagger.getBasePath());
         super.preprocessSwagger(swagger);
+        tagEnums(swagger);
         addListModels(swagger);
         buildModelTagMap(swagger);
         removeListAfterAndLimit(swagger);
         moveOperationsToSingleClient(swagger);
         handleOktaLinkedOperations(swagger);
+    }
+
+    protected void tagEnums(Swagger swagger) {
+        swagger.getDefinitions().forEach((name, model) -> {
+            assert model instanceof ModelImpl : "Model MUST be an instance of ModelImpl";
+            if (((ModelImpl) model).getEnum() != null) {
+                enumList.add(name);
+            }
+        });
     }
 
     protected void buildModelTagMap(Swagger swagger) {
@@ -127,7 +139,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     }
 
     protected String tagToPackageName(String tag) {
-        return camelize(tag, true);
+        return tag.replaceAll("(.)(\\p{Upper})", "$1.$2").toLowerCase(Locale.ENGLISH);
     }
 
     public void removeListAfterAndLimit(Swagger swagger) {
@@ -613,7 +625,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             Property inner = ap.getItems();
             if (inner == null) {
                 // mimic super behavior
-                LOGGER.warn("{} (array property) does not have a proper inner type defined", ap.getName());
+                log.warn("{} (array property) does not have a proper inner type defined", ap.getName());
                 return null;
             }
 

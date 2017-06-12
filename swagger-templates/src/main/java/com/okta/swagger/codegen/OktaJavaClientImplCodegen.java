@@ -36,11 +36,18 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
         modelTemplateFiles.put("model.mustache", ".java");
         overrideModelPackage = "com.okta.sdk.resource";
-        apiPackage         = "com.okta.sdk.impl.client";
+        apiPackage           = "com.okta.sdk.impl.client";
         vendorExtensions().put("overrideModelPackage", overrideModelPackage);
         vendorExtensions().put("overrideApiPackage", "com.okta.sdk.client");
 
         apiTemplateFiles.put("api.mustache", ".java");
+    }
+
+    @Override
+    public void preprocessSwagger(Swagger swagger) {
+        super.preprocessSwagger(swagger);
+        // Enum based definitions are created by OktaJavaClientApiCodegen, so they need to be removed here
+        enumList.forEach(enumEntry -> swagger.getDefinitions().remove(enumEntry));
     }
 
     @Override
@@ -52,7 +59,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             String propertyTypeMethod;
             boolean forceCast = false;
 
-            if (property.isEnum) {
+            if (property.isEnum || enumList.contains(property.datatype)) {
                 propertyType = "EnumProperty";
                 propertyTypeMethod = "getEnumProperty";
                 property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatypeWithEnum + ".class");

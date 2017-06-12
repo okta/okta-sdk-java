@@ -29,7 +29,7 @@
       "name": "Apache-2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.0.1"
+    "version": "0.1.0"
   },
   "externalDocs": {
     "description": "Find more info here",
@@ -103,7 +103,7 @@
             "description": "Success",
             "schema": {
               "items": {
-                "$ref": "#/definitions/UserGroup"
+                "$ref": "#/definitions/Group"
               },
               "type": "array"
             }
@@ -131,7 +131,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserGroup"
+              "$ref": "#/definitions/Group"
             }
           }
         ],
@@ -142,7 +142,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/UserGroup"
+              "$ref": "#/definitions/Group"
             }
           }
         },
@@ -189,7 +189,7 @@
             "description": "Success",
             "schema": {
               "items": {
-                "$ref": "#/definitions/GroupMembershipMediationRule"
+                "$ref": "#/definitions/GroupRule"
               },
               "type": "array"
             }
@@ -217,7 +217,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GroupMembershipMediationRule"
+              "$ref": "#/definitions/GroupRule"
             }
           }
         ],
@@ -228,7 +228,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/GroupMembershipMediationRule"
+              "$ref": "#/definitions/GroupRule"
             }
           }
         },
@@ -299,7 +299,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/GroupMembershipMediationRule"
+              "$ref": "#/definitions/GroupRule"
             }
           }
         },
@@ -329,7 +329,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GroupMembershipMediationRule"
+              "$ref": "#/definitions/GroupRule"
             }
           }
         ],
@@ -340,7 +340,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/GroupMembershipMediationRule"
+              "$ref": "#/definitions/GroupRule"
             }
           }
         },
@@ -474,7 +474,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/UserGroup"
+              "$ref": "#/definitions/Group"
             }
           }
         },
@@ -504,7 +504,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UserGroup"
+              "$ref": "#/definitions/Group"
             }
           }
         ],
@@ -515,7 +515,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/UserGroup"
+              "$ref": "#/definitions/Group"
             }
           }
         },
@@ -534,7 +534,7 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "getUserGroupStats",
+        "operationId": "getGroupStats",
         "parameters": [
           {
             "in": "path",
@@ -550,7 +550,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/UserGroupStats"
+              "$ref": "#/definitions/GroupStats"
             }
           }
         },
@@ -619,7 +619,7 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "removeUserFromGroup",
+        "operationId": "removeGroupUser",
         "parameters": [
           {
             "in": "path",
@@ -1018,7 +1018,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/ChangePasswordCredentials"
+              "$ref": "#/definitions/ChangePasswordRequest"
             }
           },
           {
@@ -1128,7 +1128,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/BaseCredentialsObject"
+              "$ref": "#/definitions/ForgotPasswordResponse"
             }
           }
         },
@@ -1176,7 +1176,7 @@
             "description": "Success",
             "schema": {
               "items": {
-                "$ref": "#/definitions/UserGroup"
+                "$ref": "#/definitions/Group"
               },
               "type": "array"
             }
@@ -1220,7 +1220,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/ActivationToken"
+              "$ref": "#/definitions/UserActivationToken"
             }
           }
         },
@@ -1239,7 +1239,7 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "lifecycleDeactivateUser",
+        "operationId": "deactivateUser",
         "parameters": [
           {
             "in": "path",
@@ -1463,7 +1463,7 @@
             "description": "Success",
             "schema": {
               "items": {
-                "$ref": "#/definitions/MediationRoleAssignment"
+                "$ref": "#/definitions/Role"
               },
               "type": "array"
             }
@@ -1482,14 +1482,14 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "assignRoleToUser",
+        "operationId": "addRoleToUser",
         "parameters": [
           {
             "in": "body",
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/MediationRoleAssignment"
+              "$ref": "#/definitions/Role"
             }
           },
           {
@@ -1506,7 +1506,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/MediationRoleAssignment"
+              "$ref": "#/definitions/Role"
             }
           }
         },
@@ -1525,7 +1525,7 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "unassignRoleFromUser",
+        "operationId": "removeRoleFromUser",
         "parameters": [
           {
             "in": "path",
@@ -1583,7 +1583,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/MediationRoleAssignment"
+              "$ref": "#/definitions/Role"
             }
           }
         },
@@ -1637,7 +1637,7 @@
             "description": "Success",
             "schema": {
               "items": {
-                "$ref": "#/definitions/UserGroup"
+                "$ref": "#/definitions/Group"
               },
               "type": "array"
             }
@@ -1741,20 +1741,6 @@
     }
   },
   "definitions": {
-    "ActivationToken": {
-      "properties": {
-        "activationToken": {
-          "type": "string"
-        },
-        "activationUrl": {
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "User"
-      ]
-    },
     "AppLink": {
       "properties": {
         "appAssignmentId": {
@@ -1793,34 +1779,13 @@
         "User"
       ]
     },
-    "AssignUserToGroupsMediationAction": {
-      "properties": {
-        "groupIds": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "AuthProvider": {
+    "AuthenticationProvider": {
       "properties": {
         "name": {
-          "readOnly": true,
           "type": "string"
         },
         "type": {
-          "enum": [
-            "orn:okta:authn:provider:directory:activedirectory",
-            "orn:okta:authn:provider:federation",
-            "orn:okta:authn:provider:directory:ldap",
-            "orn:okta:authn:provider:okta",
-            "orn:okta:authn:provider:social",
-            "orn:okta:authn:provider:okta:import"
-          ],
-          "readOnly": true,
-          "type": "string"
+          "$ref": "#/definitions/AuthenticationProviderType"
         }
       },
       "type": "object",
@@ -1828,14 +1793,18 @@
         "User"
       ]
     },
-    "BaseCredentialsObject": {
-      "properties": {},
-      "type": "object",
-      "x-okta-tags": [
-        "User"
-      ]
+    "AuthenticationProviderType": {
+      "enum": [
+        "ACTIVE_DIRECTORY",
+        "FEDERATION",
+        "LDAP",
+        "OKTA",
+        "SOCIAL",
+        "IMPORT"
+      ],
+      "type": "string"
     },
-    "ChangePasswordCredentials": {
+    "ChangePasswordRequest": {
       "properties": {
         "newPassword": {
           "$ref": "#/definitions/PasswordCredential"
@@ -1866,87 +1835,164 @@
           "type": "object"
         },
         "status": {
-          "enum": [
-            "PENDING_ACTIVATION",
-            "ACTIVE",
-            "INACTIVE"
-          ],
+          "$ref": "#/definitions/FactorDeviceStatus",
+          "readOnly": true
+        }
+      },
+      "type": "object"
+    },
+    "FactorDeviceStatus": {
+      "enum": [
+        "PENDING_ACTIVATION",
+        "ACTIVE",
+        "INACTIVE"
+      ],
+      "type": "string"
+    },
+    "ForgotPasswordResponse": {
+      "properties": {
+        "resetPasswordUrl": {
           "type": "string"
         }
       },
-      "type": "object"
+      "x-okta-tags": [
+        "User"
+      ]
     },
-    "GroupMembershipMediationActions": {
+    "Group": {
       "properties": {
-        "assignUserToGroups": {
-          "$ref": "#/definitions/AssignUserToGroupsMediationAction"
-        }
-      },
-      "type": "object"
-    },
-    "GroupMembershipMediationConditions": {
-      "properties": {
-        "expression": {
-          "$ref": "#/definitions/GroupMembershipMediationExpressionCondition"
+        "_embedded": {
+          "additionalProperties": {
+            "$ref": "#/definitions/EmbeddedObject"
+          },
+          "readOnly": true,
+          "type": "object"
         },
-        "groups": {
-          "$ref": "#/definitions/GroupMembershipMediationGroupCondition"
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/LinksUnion"
+          },
+          "readOnly": true,
+          "type": "object"
         },
-        "people": {
-          "$ref": "#/definitions/GroupMembershipMediationPeopleCondition"
+        "created": {
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
         },
-        "users": {
-          "$ref": "#/definitions/GroupMembershipMediationUserCondition"
-        }
-      },
-      "type": "object"
-    },
-    "GroupMembershipMediationExpressionCondition": {
-      "properties": {
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "lastMembershipUpdated": {
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "objectClass": {
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "profile": {
+          "$ref": "#/definitions/GroupProfile"
+        },
         "type": {
-          "type": "string"
-        },
-        "value": {
+          "readOnly": true,
           "type": "string"
         }
       },
-      "type": "object"
-    },
-    "GroupMembershipMediationGroupCondition": {
-      "properties": {
-        "exclude": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+      "type": "object",
+      "x-okta-crud": [
+        {
+          "alias": "update",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            },
+            {
+              "dest": "body",
+              "self": true
+            }
+          ],
+          "operationId": "updateGroup"
         },
-        "include": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        {
+          "alias": "delete",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteGroup"
+        }
+      ],
+      "x-okta-operations": [
+        {
+          "alias": "getStats",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getGroupStats"
+        },
+        {
+          "alias": "removeUser",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            }
+          ],
+          "operationId": "removeGroupUser"
+        },
+        {
+          "alias": "listUsers",
+          "arguments": [
+            {
+              "dest": "groupId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listGroupUsers"
+        }
+      ],
+      "x-okta-tags": [
+        "Group"
+      ]
+    },
+    "GroupProfile": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Group"
+      ]
     },
-    "GroupMembershipMediationPeopleCondition": {
-      "properties": {
-        "groups": {
-          "$ref": "#/definitions/GroupMembershipMediationGroupCondition"
-        },
-        "users": {
-          "$ref": "#/definitions/GroupMembershipMediationUserCondition"
-        }
-      },
-      "type": "object"
-    },
-    "GroupMembershipMediationRule": {
+    "GroupRule": {
       "properties": {
         "actions": {
-          "$ref": "#/definitions/GroupMembershipMediationActions"
+          "$ref": "#/definitions/GroupRuleAction"
         },
         "conditions": {
-          "$ref": "#/definitions/GroupMembershipMediationConditions"
+          "$ref": "#/definitions/GroupRuleConditions"
         },
         "created": {
           "type": "string"
@@ -1961,12 +2007,8 @@
           "type": "string"
         },
         "status": {
-          "enum": [
-            "ACTIVE",
-            "INACTIVE",
-            "INVALID"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/GroupRuleStatus",
+          "readOnly": true
         },
         "type": {
           "type": "string"
@@ -2020,9 +2062,71 @@
           ],
           "operationId": "deactivateRule"
         }
+      ],
+      "x-okta-tags": [
+        "GroupRule"
       ]
     },
-    "GroupMembershipMediationUserCondition": {
+    "GroupRuleAction": {
+      "properties": {
+        "assignUserToGroups": {
+          "$ref": "#/definitions/GroupRuleGroupAssignment"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "GroupRule"
+      ]
+    },
+    "GroupRuleConditions": {
+      "properties": {
+        "expression": {
+          "$ref": "#/definitions/GroupRuleExpression"
+        },
+        "groups": {
+          "$ref": "#/definitions/GroupRuleGroupCondition"
+        },
+        "people": {
+          "$ref": "#/definitions/GroupRulePeopleCondition"
+        },
+        "users": {
+          "$ref": "#/definitions/GroupRuleUserCondition"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "GroupRule"
+      ]
+    },
+    "GroupRuleExpression": {
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "GroupRule"
+      ]
+    },
+    "GroupRuleGroupAssignment": {
+      "properties": {
+        "groupIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "GroupRule"
+      ]
+    },
+    "GroupRuleGroupCondition": {
       "properties": {
         "exclude": {
           "items": {
@@ -2037,7 +2141,76 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "GroupRule"
+      ]
+    },
+    "GroupRulePeopleCondition": {
+      "properties": {
+        "groups": {
+          "$ref": "#/definitions/GroupRuleGroupCondition"
+        },
+        "users": {
+          "$ref": "#/definitions/GroupRuleUserCondition"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "GroupRule"
+      ]
+    },
+    "GroupRuleStatus": {
+      "enum": [
+        "ACTIVE",
+        "INACTIVE",
+        "INVALID"
+      ],
+      "type": "string"
+    },
+    "GroupRuleUserCondition": {
+      "properties": {
+        "exclude": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "GroupRule"
+      ]
+    },
+    "GroupStats": {
+      "properties": {
+        "_links": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Link"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "appsCount": {
+          "type": "integer"
+        },
+        "groupPushMappingsCount": {
+          "type": "integer"
+        },
+        "usersCount": {
+          "type": "integer"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Group"
+      ]
     },
     "HashedPassword": {
       "properties": {},
@@ -2085,7 +2258,43 @@
       "properties": {},
       "type": "object"
     },
-    "MediationRoleAssignment": {
+    "PasswordCredential": {
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
+    },
+    "RecoveryQuestionCredential": {
+      "properties": {
+        "answer": {
+          "type": "string"
+        },
+        "question": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
+    },
+    "ResetPasswordToken": {
+      "properties": {
+        "resetPasswordUrl": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
+    },
+    "Role": {
       "properties": {
         "_embedded": {
           "additionalProperties": {
@@ -2124,16 +2333,8 @@
           "type": "string"
         },
         "type": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "PasswordCredential": {
-      "properties": {
-        "hash": {
-          "$ref": "#/definitions/HashedPassword"
+          "$ref": "#/definitions/RoleType",
+          "readOnly": true
         }
       },
       "type": "object",
@@ -2141,30 +2342,12 @@
         "User"
       ]
     },
-    "RecoveryQuestionCredential": {
-      "properties": {
-        "answer": {
-          "type": "string"
-        },
-        "question": {
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "User"
-      ]
-    },
-    "ResetPasswordToken": {
-      "properties": {
-        "resetPasswordUrl": {
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "User"
-      ]
+    "RoleType": {
+      "enum": [
+        "ACTIVE",
+        "INACTIVE"
+      ],
+      "type": "string"
     },
     "User": {
       "properties": {
@@ -2218,18 +2401,8 @@
           "$ref": "#/definitions/UserProfile"
         },
         "status": {
-          "enum": [
-            "STAGED",
-            "PROVISIONED",
-            "ACTIVE",
-            "RECOVERY",
-            "PASSWORD_EXPIRED",
-            "LOCKED_OUT",
-            "DEPROVISIONED",
-            "SUSPENDED"
-          ],
-          "readOnly": true,
-          "type": "string"
+          "$ref": "#/definitions/UserStatus",
+          "readOnly": true
         },
         "statusChanged": {
           "format": "date-time",
@@ -2237,18 +2410,8 @@
           "type": "string"
         },
         "transitioningToStatus": {
-          "enum": [
-            "STAGED",
-            "PROVISIONED",
-            "ACTIVE",
-            "RECOVERY",
-            "PASSWORD_EXPIRED",
-            "LOCKED_OUT",
-            "DEPROVISIONED",
-            "SUSPENDED"
-          ],
-          "readOnly": true,
-          "type": "string"
+          "$ref": "#/definitions/UserStatus",
+          "readOnly": true
         }
       },
       "type": "object",
@@ -2349,44 +2512,44 @@
           "operationId": "forgotPasswordWithRecoveryAnswer"
         },
         {
-          "alias": "listAssignedRoles",
+          "alias": "listRoles",
           "arguments": [
             {
               "dest": "userId",
               "src": "id"
             }
           ],
-          "operationId": "listAssignedRoles"
+          "operationId": "listUserRoles"
         },
         {
-          "alias": "assignRoleToUser",
+          "alias": "addRole",
           "arguments": [
             {
               "dest": "userId",
               "src": "id"
             }
           ],
-          "operationId": "assignRoleToUser"
+          "operationId": "addRoleToUser"
         },
         {
-          "alias": "unassignRoleFromUser",
+          "alias": "removeRole",
           "arguments": [
             {
               "dest": "userId",
               "src": "id"
             }
           ],
-          "operationId": "unassignRoleFromUser"
+          "operationId": "removeRoleFromUser"
         },
         {
-          "alias": "getRoleForUser",
+          "alias": "getRole",
           "arguments": [
             {
               "dest": "userId",
               "src": "id"
             }
           ],
-          "operationId": "getRoleForUser"
+          "operationId": "getUserRole"
         },
         {
           "alias": "listGroupTargetsForRole",
@@ -2446,7 +2609,7 @@
               "src": "id"
             }
           ],
-          "operationId": "lifecycleDeactivateUser"
+          "operationId": "deactivateUser"
         },
         {
           "alias": "suspend",
@@ -2513,14 +2676,27 @@
         "User"
       ]
     },
+    "UserActivationToken": {
+      "properties": {
+        "activationToken": {
+          "type": "string"
+        },
+        "activationUrl": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "User"
+      ]
+    },
     "UserCredentials": {
       "properties": {
         "password": {
           "$ref": "#/definitions/PasswordCredential"
         },
         "provider": {
-          "$ref": "#/definitions/AuthProvider",
-          "readOnly": true
+          "$ref": "#/definitions/AuthenticationProvider"
         },
         "recovery_question": {
           "$ref": "#/definitions/RecoveryQuestionCredential"
@@ -2529,157 +2705,6 @@
       "type": "object",
       "x-okta-tags": [
         "User"
-      ]
-    },
-    "UserGroup": {
-      "properties": {
-        "_embedded": {
-          "additionalProperties": {
-            "$ref": "#/definitions/EmbeddedObject"
-          },
-          "readOnly": true,
-          "type": "object"
-        },
-        "_links": {
-          "additionalProperties": {
-            "$ref": "#/definitions/LinksUnion"
-          },
-          "readOnly": true,
-          "type": "object"
-        },
-        "created": {
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "id": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "lastMembershipUpdated": {
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "lastUpdated": {
-          "format": "date-time",
-          "readOnly": true,
-          "type": "string"
-        },
-        "objectClass": {
-          "items": {
-            "type": "string"
-          },
-          "readOnly": true,
-          "type": "array"
-        },
-        "profile": {
-          "$ref": "#/definitions/UserGroupProfile"
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-crud": [
-        {
-          "alias": "update",
-          "arguments": [
-            {
-              "dest": "groupId",
-              "src": "id"
-            },
-            {
-              "dest": "body",
-              "self": true
-            }
-          ],
-          "operationId": "updateGroup"
-        },
-        {
-          "alias": "delete",
-          "arguments": [
-            {
-              "dest": "groupId",
-              "src": "id"
-            }
-          ],
-          "operationId": "deleteGroup"
-        }
-      ],
-      "x-okta-operations": [
-        {
-          "alias": "getUserGroupStats",
-          "arguments": [
-            {
-              "dest": "groupId",
-              "src": "id"
-            }
-          ],
-          "operationId": "getUserGroupStats"
-        },
-        {
-          "alias": "removeUserFromGroup",
-          "arguments": [
-            {
-              "dest": "groupId",
-              "src": "id"
-            }
-          ],
-          "operationId": "removeUserFromGroup"
-        },
-        {
-          "alias": "listUsers",
-          "arguments": [
-            {
-              "dest": "groupId",
-              "src": "id"
-            }
-          ],
-          "operationId": "listGroupUsers"
-        }
-      ],
-      "x-okta-tags": [
-        "Group"
-      ]
-    },
-    "UserGroupProfile": {
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Group"
-      ]
-    },
-    "UserGroupStats": {
-      "properties": {
-        "_links": {
-          "additionalProperties": {
-            "$ref": "#/definitions/Link"
-          },
-          "readOnly": true,
-          "type": "object"
-        },
-        "appsCount": {
-          "type": "integer"
-        },
-        "groupPushMappingsCount": {
-          "type": "integer"
-        },
-        "usersCount": {
-          "type": "integer"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Group"
       ]
     },
     "UserProfile": {
@@ -2708,6 +2733,19 @@
       "x-okta-tags": [
         "User"
       ]
+    },
+    "UserStatus": {
+      "enum": [
+        "STAGED",
+        "PROVISIONED",
+        "ACTIVE",
+        "RECOVERY",
+        "PASSWORD_EXPIRED",
+        "LOCKED_OUT",
+        "DEPROVISIONED",
+        "SUSPENDED"
+      ],
+      "type": "string"
     }
   }
 }

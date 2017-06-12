@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.resource;
+package com.okta.sdk.resource.group;
 
 import com.okta.sdk.client.Client;
 import com.okta.sdk.lang.Classes;
-import com.okta.sdk.resource.group.UserGroup;
 
 public interface GroupBuilder {
 
@@ -27,6 +26,6 @@ public interface GroupBuilder {
 
     GroupBuilder setDescription(String description);
 
-    UserGroup buildAndCreate(Client client);
+    Group buildAndCreate(Client client);
 
 }
