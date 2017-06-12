@@ -16,10 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.UserBuilder
-
-import static org.hamcrest.MatcherAssert.*
-import static org.hamcrest.Matchers.*
+import com.okta.sdk.resource.user.UserBuilder
 
 /**
  * Tests for /api/v1/users

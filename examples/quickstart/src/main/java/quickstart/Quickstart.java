@@ -18,11 +18,11 @@ package quickstart;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
-import com.okta.sdk.resource.GroupBuilder;
+import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.ResourceException;
-import com.okta.sdk.resource.UserBuilder;
+import com.okta.sdk.resource.user.UserBuilder;
 
-import com.okta.sdk.resource.group.UserGroup;
+import com.okta.sdk.resource.group.Group;
 import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserList;
 
@@ -47,7 +47,7 @@ public class Quickstart {
             Client client = builder.build();
 
             // Create a group
-            UserGroup group = GroupBuilder.INSTANCE
+            Group group = GroupBuilder.INSTANCE
                     .setName("my-user-group-" + UUID.randomUUID().toString())
                     .setDescription("Quickstart created Group")
                     .buildAndCreate(client);

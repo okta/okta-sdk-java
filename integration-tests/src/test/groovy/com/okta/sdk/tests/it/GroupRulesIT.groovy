@@ -16,21 +16,22 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.AssignUserToGroupsMediationAction
-import com.okta.sdk.resource.GroupBuilder
-import com.okta.sdk.resource.GroupMembershipMediationActions
-import com.okta.sdk.resource.GroupMembershipMediationConditions
-import com.okta.sdk.resource.GroupMembershipMediationExpressionCondition
-import com.okta.sdk.resource.GroupMembershipMediationRule
-import com.okta.sdk.resource.group.UserGroup
+import com.okta.sdk.resource.GroupRuleStatus
+import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.group.Group
+import com.okta.sdk.resource.group.rule.GroupRule
+import com.okta.sdk.resource.group.rule.GroupRuleAction
+import com.okta.sdk.resource.group.rule.GroupRuleConditions
+import com.okta.sdk.resource.group.rule.GroupRuleExpression
+import com.okta.sdk.resource.group.rule.GroupRuleGroupAssignment
 
 /**
  * Tests for /api/v1/groups/rules
  * @since 0.5.0
  */
-class GroupMembershipMediationRulesIT implements CrudTestSupport {
+class GroupRulesIT implements CrudTestSupport {
 
-    UserGroup group
+    Group group
 
     void preTestSetup(Client client) {
         group = GroupBuilder.INSTANCE
@@ -42,17 +43,17 @@ class GroupMembershipMediationRulesIT implements CrudTestSupport {
     @Override
     def create(Client client) {
 
-        GroupMembershipMediationRule rule = client.instantiate(GroupMembershipMediationRule)
+        GroupRule rule = client.instantiate(GroupRule)
         rule.setName("rule+" + UUID.randomUUID().toString() )
         rule.setType("group_rule")
-        rule.setStatus(GroupMembershipMediationRule.StatusEnum.ACTIVE)
+        rule.setStatus(GroupRuleStatus.ACTIVE)
 
-        rule.setConditions(client.instantiate(GroupMembershipMediationConditions))
-        rule.getConditions().setExpression(client.instantiate(GroupMembershipMediationExpressionCondition))
+        rule.setConditions(client.instantiate(GroupRuleConditions))
+        rule.getConditions().setExpression(client.instantiate(GroupRuleExpression))
         rule.getConditions().getExpression().setValue("user.firstName==\"Joe\"")
 
-        rule.setActions(client.instantiate(GroupMembershipMediationActions))
-        rule.getActions().setAssignUserToGroups(client.instantiate(AssignUserToGroupsMediationAction))
+        rule.setActions(client.instantiate(GroupRuleAction))
+        rule.getActions().setAssignUserToGroups(client.instantiate(GroupRuleGroupAssignment))
         rule.getActions().getAssignUserToGroups().setGroupIds(Collections.singletonList(group.id))
 
         return client.createRule(rule)

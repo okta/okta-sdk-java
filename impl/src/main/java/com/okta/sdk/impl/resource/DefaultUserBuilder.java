@@ -18,7 +18,7 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.client.Client;
 import com.okta.sdk.lang.Strings;
-import com.okta.sdk.resource.UserBuilder;
+import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.user.PasswordCredential;
 import com.okta.sdk.resource.user.RecoveryQuestionCredential;
 import com.okta.sdk.resource.user.User;
@@ -27,7 +27,6 @@ import com.okta.sdk.resource.user.UserProfile;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class DefaultUserBuilder implements UserBuilder {
 
@@ -138,7 +137,6 @@ public class DefaultUserBuilder implements UserBuilder {
 
             if (Strings.hasText(password)) {
                 PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
-                passwordCredential.setHash(null); // TODO
                 credentials.setPassword(passwordCredential);
             }
         }

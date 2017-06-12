@@ -16,9 +16,9 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.GroupBuilder;
-import com.okta.sdk.resource.group.UserGroup;
-import com.okta.sdk.resource.group.UserGroupProfile;
+import com.okta.sdk.resource.group.GroupBuilder;
+import com.okta.sdk.resource.group.Group;
+import com.okta.sdk.resource.group.GroupProfile;
 
 public class DefaultGroupBuilder implements GroupBuilder {
 
@@ -38,10 +38,10 @@ public class DefaultGroupBuilder implements GroupBuilder {
     }
 
     @Override
-    public UserGroup buildAndCreate(Client client) {
+    public Group buildAndCreate(Client client) {
 
-        UserGroup group = client.instantiate(UserGroup.class);
-        group.setProfile(client.instantiate(UserGroupProfile.class));
+        Group group = client.instantiate(Group.class);
+        group.setProfile(client.instantiate(GroupProfile.class));
         group.getProfile()
                 .setName(name)
                 .setDescription(description);

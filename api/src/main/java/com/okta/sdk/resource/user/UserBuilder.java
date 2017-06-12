@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.resource;
+package com.okta.sdk.resource.user;
 
 import com.okta.sdk.client.Client;
 import com.okta.sdk.lang.Classes;
-import com.okta.sdk.resource.user.User;
 
 import java.util.Map;
-import java.util.Set;
 
 public interface UserBuilder {
 
