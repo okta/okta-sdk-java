@@ -60,6 +60,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     static final String MEDIA_TYPE = "mediaType";
 
+    static final String X_OPENAPI_V3_SCHEMA_REF = "x-openapi-v3-schema-ref";
+
     @SuppressWarnings("hiding")
     private final Logger log = LoggerFactory.getLogger(AbstractOktaJavaClientCodegen.class);
 
@@ -404,14 +406,21 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         List<CodegenOperation> codegenOperations = (List<CodegenOperation>) operations.get("operation");
 
         // find all of the list return values
-        Set<String> listImports = new HashSet<>();
+        Set<String> importsToAdd = new HashSet<>();
         codegenOperations.stream()
                 .filter(cgOp -> cgOp.returnType != null)
                 .filter(cgOp -> cgOp.returnType.matches(".+List$"))
-                .forEach(cgOp -> listImports.add(toModelImport(cgOp.returnType)));
+                .forEach(cgOp -> importsToAdd.add(toModelImport(cgOp.returnType)));
+
+        // the params might have imports too
+        codegenOperations.stream()
+                .filter(cgOp -> cgOp.allParams != null)
+                .forEach(cgOp -> cgOp.allParams.stream()
+                        .filter(cgParam -> cgParam.isEnum)
+                        .forEach(cgParam -> importsToAdd.add(toModelImport(cgParam.dataType))));
 
         // add each one as an import
-        listImports.forEach(className -> {
+        importsToAdd.forEach(className -> {
             Map<String, String> listImport = new LinkedHashMap<>();
             listImport.put("import", className);
             imports.add(listImport);
@@ -495,6 +504,16 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 operation,
                 definitions,
                 swagger);
+
+        // scan params for X_OPENAPI_V3_SCHEMA_REF, and _correct_ the param
+        co.allParams.forEach(param -> {
+            if (param.vendorExtensions.containsKey(X_OPENAPI_V3_SCHEMA_REF)) {
+                String enumDef = param.vendorExtensions.get(X_OPENAPI_V3_SCHEMA_REF).toString().replaceFirst(".*/","");
+                param.isEnum = true;
+                param.enumName = enumDef;
+                param.dataType = enumDef;
+            }
+        });
 
         // mark the operation as having optional params, so we can take advantage of it in the template
         addOptionalExtension(co, co.allParams);

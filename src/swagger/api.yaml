@@ -174,7 +174,6 @@
             "type": "integer"
           },
           {
-            "default": "",
             "description": "Specifies the pagination cursor for the next page of rules",
             "in": "query",
             "name": "after",
@@ -879,47 +878,6 @@
           "User"
         ]
       },
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "updateUserWithDefaults",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      },
       "put": {
         "consumes": [
           "application/json"
@@ -1097,7 +1055,7 @@
         "consumes": [
           "application/json"
         ],
-        "operationId": "forgotPasswordWithRecoveryAnswer",
+        "operationId": "forgotPassword",
         "parameters": [
           {
             "in": "body",
@@ -1266,12 +1224,12 @@
         ]
       }
     },
-    "/api/v1/users/{userId}/lifecycle/forgot_password": {
+    "/api/v1/users/{userId}/lifecycle/expire_password": {
       "post": {
         "consumes": [
           "application/json"
         ],
-        "operationId": "forgotPassword",
+        "operationId": "expirePassword",
         "parameters": [
           {
             "in": "path",
@@ -1280,10 +1238,9 @@
             "type": "string"
           },
           {
-            "default": true,
+            "default": false,
             "in": "query",
-            "name": "sendEmail",
-            "required": true,
+            "name": "tempPassword",
             "type": "boolean"
           }
         ],
@@ -1294,7 +1251,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/ResetPasswordToken"
+              "$ref": "#/definitions/TempPassword"
             }
           }
         },
@@ -1328,6 +1285,52 @@
         "responses": {
           "200": {
             "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/users/{userId}/lifecycle/reset_password": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "operationId": "resetPassword",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "provider",
+            "type": "string",
+            "x-openapi-v3-schema-ref": "#/definitions/AuthenticationProviderType"
+          },
+          {
+            "in": "query",
+            "name": "sendEmail",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResetPasswordToken"
+            }
           }
         },
         "security": [
@@ -1556,45 +1559,6 @@
         "tags": [
           "User"
         ]
-      },
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "getRoleForUser",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "userId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "roleId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Role"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "User"
-        ]
       }
     },
     "/api/v1/users/{userId}/roles/{roleId}/targets/groups": {
@@ -1802,7 +1766,10 @@
         "SOCIAL",
         "IMPORT"
       ],
-      "type": "string"
+      "type": "string",
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "ChangePasswordRequest": {
       "properties": {
@@ -1818,37 +1785,6 @@
         "User"
       ]
     },
-    "EmbeddedObject": {
-      "properties": {
-        "key": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "FactorDevice": {
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "links": {
-          "type": "object"
-        },
-        "status": {
-          "$ref": "#/definitions/FactorDeviceStatus",
-          "readOnly": true
-        }
-      },
-      "type": "object"
-    },
-    "FactorDeviceStatus": {
-      "enum": [
-        "PENDING_ACTIVATION",
-        "ACTIVE",
-        "INACTIVE"
-      ],
-      "type": "string"
-    },
     "ForgotPasswordResponse": {
       "properties": {
         "resetPasswordUrl": {
@@ -1863,14 +1799,14 @@
       "properties": {
         "_embedded": {
           "additionalProperties": {
-            "$ref": "#/definitions/EmbeddedObject"
+            "type": "object"
           },
           "readOnly": true,
           "type": "object"
         },
         "_links": {
           "additionalProperties": {
-            "$ref": "#/definitions/LinksUnion"
+            "type": "object"
           },
           "readOnly": true,
           "type": "object"
@@ -2166,7 +2102,10 @@
         "INACTIVE",
         "INVALID"
       ],
-      "type": "string"
+      "type": "string",
+      "x-okta-tags": [
+        "GroupRule"
+      ]
     },
     "GroupRuleUserCondition": {
       "properties": {
@@ -2192,7 +2131,7 @@
       "properties": {
         "_links": {
           "additionalProperties": {
-            "$ref": "#/definitions/Link"
+            "type": "object"
           },
           "readOnly": true,
           "type": "object"
@@ -2211,52 +2150,6 @@
       "x-okta-tags": [
         "Group"
       ]
-    },
-    "HashedPassword": {
-      "properties": {},
-      "type": "object",
-      "x-okta-tags": [
-        "User"
-      ]
-    },
-    "Link": {
-      "properties": {
-        "hints": {
-          "additionalProperties": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "type": "object"
-        },
-        "href": {
-          "type": "string"
-        },
-        "method": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "rel": {
-          "type": "string"
-        },
-        "templated": {
-          "type": "boolean"
-        },
-        "title": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "LinksUnion": {
-      "properties": {},
-      "type": "object"
     },
     "PasswordCredential": {
       "properties": {
@@ -2325,16 +2218,12 @@
           "type": "string"
         },
         "status": {
-          "enum": [
-            "ACTIVE",
-            "INACTIVE"
-          ],
-          "readOnly": true,
-          "type": "string"
+          "$ref": "#/definitions/RoleStatus",
+          "readOnly": true
         },
         "type": {
-          "$ref": "#/definitions/RoleType",
-          "readOnly": true
+          "readOnly": true,
+          "type": "string"
         }
       },
       "type": "object",
@@ -2342,12 +2231,25 @@
         "User"
       ]
     },
-    "RoleType": {
+    "RoleStatus": {
       "enum": [
         "ACTIVE",
         "INACTIVE"
       ],
-      "type": "string"
+      "type": "string",
+      "x-okta-tags": [
+        "User"
+      ]
+    },
+    "TempPassword": {
+      "properties": {
+        "tempPassword": {
+          "type": "string"
+        }
+      },
+      "x-okta-tags": [
+        "User"
+      ]
     },
     "User": {
       "properties": {
@@ -2360,7 +2262,7 @@
         },
         "_links": {
           "additionalProperties": {
-            "$ref": "#/definitions/Link"
+            "type": "object"
           },
           "readOnly": true,
           "type": "object"
@@ -2462,16 +2364,6 @@
       ],
       "x-okta-operations": [
         {
-          "alias": "updateUserWithDefaults",
-          "arguments": [
-            {
-              "dest": "userId",
-              "src": "id"
-            }
-          ],
-          "operationId": "updateUserWithDefaults"
-        },
-        {
           "alias": "listAppLinks",
           "arguments": [
             {
@@ -2502,14 +2394,14 @@
           "operationId": "changeRecoveryQuestion"
         },
         {
-          "alias": "forgotPasswordWithRecoveryAnswer",
+          "alias": "forgotPassword",
           "arguments": [
             {
               "dest": "userId",
               "src": "id"
             }
           ],
-          "operationId": "forgotPasswordWithRecoveryAnswer"
+          "operationId": "forgotPassword"
         },
         {
           "alias": "listRoles",
@@ -2519,7 +2411,7 @@
               "src": "id"
             }
           ],
-          "operationId": "listUserRoles"
+          "operationId": "listAssignedRoles"
         },
         {
           "alias": "addRole",
@@ -2540,16 +2432,6 @@
             }
           ],
           "operationId": "removeRoleFromUser"
-        },
-        {
-          "alias": "getRole",
-          "arguments": [
-            {
-              "dest": "userId",
-              "src": "id"
-            }
-          ],
-          "operationId": "getUserRole"
         },
         {
           "alias": "listGroupTargetsForRole",
@@ -2630,6 +2512,26 @@
             }
           ],
           "operationId": "unsuspendUser"
+        },
+        {
+          "alias": "resetPassword",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "resetPassword"
+        },
+        {
+          "alias": "expirePassword",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "expirePassword"
         },
         {
           "alias": "unlock",
@@ -2745,7 +2647,10 @@
         "DEPROVISIONED",
         "SUSPENDED"
       ],
-      "type": "string"
+      "type": "string",
+      "x-okta-tags": [
+        "User"
+      ]
     }
   }
 }
