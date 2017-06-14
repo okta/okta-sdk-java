@@ -16,7 +16,6 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.GroupRuleStatus
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.rule.GroupRule
@@ -24,6 +23,7 @@ import com.okta.sdk.resource.group.rule.GroupRuleAction
 import com.okta.sdk.resource.group.rule.GroupRuleConditions
 import com.okta.sdk.resource.group.rule.GroupRuleExpression
 import com.okta.sdk.resource.group.rule.GroupRuleGroupAssignment
+import com.okta.sdk.resource.group.rule.GroupRuleStatus
 
 /**
  * Tests for /api/v1/groups/rules
