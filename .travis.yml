@@ -3,8 +3,8 @@ jdk:
 - oraclejdk8
 before_install:
 - source ./src/ci/before_install.sh
-# mimic what travis does when building a maven project
-- mvn install dependency:resolve dependency:resolve-plugins -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+# mimic what travis tries to do when building a maven project
+- mvn dependency:resolve dependency:resolve-plugins -B -V
 script:
 - "./src/ci/build.sh"
 env:
