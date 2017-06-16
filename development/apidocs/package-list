@@ -10,5 +10,6 @@ com.okta.sdk.oauth
 com.okta.sdk.query
 com.okta.sdk.resource
 com.okta.sdk.resource.group
+com.okta.sdk.resource.group.rule
 com.okta.sdk.resource.user
 com.okta.sdk.schema
