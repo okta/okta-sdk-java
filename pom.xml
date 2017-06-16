@@ -56,6 +56,8 @@
         <!-- Test Dependencies: Only required for testing when building the SDK.  Not required by SDK users at runtime: -->
         <groovy.version>2.4.7</groovy.version>
 
+        <github.site.url>scm:git:git@github.com:okta/okta-sdk-java.git</github.site.url>
+
         <!-- real base dir -->
         <root.dir>${session.executionRootDirectory}</root.dir>
 
@@ -621,6 +623,9 @@
         <profile>
             <id>ci</id>
             <!-- Build the javadoc and scan the code for issues -->
+            <properties>
+                <github.site.url>scm:git:https://github.com/okta/okta-sdk-java.git</github.site.url>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -748,7 +753,7 @@
                             <checkinComment>Publishing javadoc for ${project.artifactId}:${project.version}</checkinComment>
                             <content>${gh-pages.dir}</content>
                             <skipDeletedFiles>true</skipDeletedFiles>
-                            <pubScmUrl>scm:git:git@github.com:okta/okta-sdk-java.git</pubScmUrl>
+                            <pubScmUrl>${github.site.url}</pubScmUrl>
                             <scmBranch>gh-pages</scmBranch> <!-- branch with static site -->
                             <checkoutDirectory>${project.build.directory}/scmpublish-checkout-javadoc</checkoutDirectory>
                         </configuration>
