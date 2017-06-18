@@ -39,6 +39,5 @@ git tag ${TAG_NAME} -f -s -m "${TAG_NAME}"
 
 echo
 echo "Tag '${TAG_NAME}' has been created"
-echo "Visit https://oss.sonatype.org/#stagingRepositories to release the artifacts. (Be sure to test them first)"
-echo "Once released run: ./src/ci/finalize-release.sh"
+echo "To complete release run: ./src/ci/finalize-release.sh"
 

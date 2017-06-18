@@ -30,15 +30,18 @@ cd target/checkout
 NEW_VERSION="$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)"
 TAG_NAME="okta-sdk-root-${NEW_VERSION}" # default release plugin tag format
 
+#Release
+$MVN_CMD mvn org.sonatype.plugins:nexus-staging-maven-plugin:release
+
 # publish once to the versioned dir
 $MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs -Djavadoc.version.dir=''
 # and again to the unversioned dir
 $MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs -Djavadoc.version.dir="${NEW_VERSION}/"
 
+cd ../..
+
+git push origin $(git rev-parse --abbrev-ref HEAD)
 git push origin ${TAG_NAME}
 
 #notify for new release
 send_tag_notification "${TAG_NAME}"
-
-echo
-echo "You will still need to merge your local master to origin/master"
