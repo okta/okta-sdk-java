@@ -56,6 +56,8 @@
         <!-- Test Dependencies: Only required for testing when building the SDK.  Not required by SDK users at runtime: -->
         <groovy.version>2.4.7</groovy.version>
 
+        <github.api.key>${env.GH_API_KEY}</github.api.key>
+
         <!-- real base dir -->
         <root.dir>${session.executionRootDirectory}</root.dir>
 
@@ -748,7 +750,7 @@
                             <checkinComment>Publishing javadoc for ${project.artifactId}:${project.version}</checkinComment>
                             <content>${gh-pages.dir}</content>
                             <skipDeletedFiles>true</skipDeletedFiles>
-                            <pubScmUrl>scm:git:git@github.com:okta/okta-sdk-java.git</pubScmUrl>
+                            <pubScmUrl>scm:git:https://${github.api.key}@github.com/okta/okta-sdk-java.git</pubScmUrl>
                             <scmBranch>gh-pages</scmBranch> <!-- branch with static site -->
                             <checkoutDirectory>${project.build.directory}/scmpublish-checkout-javadoc</checkoutDirectory>
                         </configuration>
