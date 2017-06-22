@@ -4,7 +4,7 @@
 
     <groupId>com.okta</groupId>
     <artifactId>okta-sdk</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.5-legacy-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
