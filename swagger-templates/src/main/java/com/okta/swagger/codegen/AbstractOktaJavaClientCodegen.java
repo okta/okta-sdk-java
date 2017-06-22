@@ -541,6 +541,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             if (co.vendorExtensions.get("nonOptionalParams") != null && nonOptionalParams.isEmpty()) {
                 co.vendorExtensions.remove("nonOptionalParams");
             }
+
+            // remove th body parameter if it was optional
+            if (co.bodyParam != null && !co.bodyParam.required) {
+                co.vendorExtensions.put("optionalBody", true);
+            }
         }
     }
 

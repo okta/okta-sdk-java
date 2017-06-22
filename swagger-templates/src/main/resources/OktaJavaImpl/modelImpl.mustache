@@ -119,7 +119,7 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
 {{>queryPartialRequired}}
-{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{#vendorExtensions.optionalBody}}{{>apiMethodPostNoBody}}{{/vendorExtensions.optionalBody}}{{^vendorExtensions.optionalBody}}{{>apiMethodPost}}{{/vendorExtensions.optionalBody}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
       }
 {{/vendorExtensions.hasOptional}}{{/.}}{{/vendorExtensions.operations}}
 
@@ -164,7 +164,7 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
 
 {{>queryPartialRequired}}
-{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{#vendorExtensions.optionalBody}}{{>apiMethodPostNoBody}}{{/vendorExtensions.optionalBody}}{{^vendorExtensions.optionalBody}}{{>apiMethodPost}}{{/vendorExtensions.optionalBody}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
     }
     {{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 

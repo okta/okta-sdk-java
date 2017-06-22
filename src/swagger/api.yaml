@@ -29,7 +29,7 @@
       "name": "Apache-2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.1.0"
+    "version": "0.3.0"
   },
   "externalDocs": {
     "description": "Find more info here",
@@ -515,41 +515,6 @@
             "description": "Success",
             "schema": {
               "$ref": "#/definitions/Group"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "tags": [
-          "Group"
-        ]
-      }
-    },
-    "/api/v1/groups/{groupId}/stats": {
-      "get": {
-        "consumes": [
-          "application/json"
-        ],
-        "operationId": "getGroupStats",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "groupId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/GroupStats"
             }
           }
         },
@@ -1060,7 +1025,6 @@
           {
             "in": "body",
             "name": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/UserCredentials"
             }
@@ -1708,33 +1672,43 @@
     "AppLink": {
       "properties": {
         "appAssignmentId": {
+          "readOnly": true,
           "type": "string"
         },
         "appInstanceId": {
+          "readOnly": true,
           "type": "string"
         },
         "appName": {
+          "readOnly": true,
           "type": "string"
         },
         "credentialsSetup": {
+          "readOnly": true,
           "type": "boolean"
         },
         "hidden": {
+          "readOnly": true,
           "type": "boolean"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "label": {
+          "readOnly": true,
           "type": "string"
         },
         "linkUrl": {
+          "readOnly": true,
           "type": "string"
         },
         "logoUrl": {
+          "readOnly": true,
           "type": "string"
         },
         "sortOrder": {
+          "readOnly": true,
           "type": "integer"
         }
       },
@@ -1788,6 +1762,7 @@
     "ForgotPasswordResponse": {
       "properties": {
         "resetPasswordUrl": {
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -1874,16 +1849,6 @@
       ],
       "x-okta-operations": [
         {
-          "alias": "getStats",
-          "arguments": [
-            {
-              "dest": "groupId",
-              "src": "id"
-            }
-          ],
-          "operationId": "getGroupStats"
-        },
-        {
           "alias": "removeUser",
           "arguments": [
             {
@@ -1931,12 +1896,17 @@
           "$ref": "#/definitions/GroupRuleConditions"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "id": {
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "name": {
@@ -2019,14 +1989,8 @@
         "expression": {
           "$ref": "#/definitions/GroupRuleExpression"
         },
-        "groups": {
-          "$ref": "#/definitions/GroupRuleGroupCondition"
-        },
         "people": {
           "$ref": "#/definitions/GroupRulePeopleCondition"
-        },
-        "users": {
-          "$ref": "#/definitions/GroupRuleUserCondition"
         }
       },
       "type": "object",
@@ -2127,30 +2091,6 @@
         "GroupRule"
       ]
     },
-    "GroupStats": {
-      "properties": {
-        "_links": {
-          "additionalProperties": {
-            "type": "object"
-          },
-          "readOnly": true,
-          "type": "object"
-        },
-        "appsCount": {
-          "type": "integer"
-        },
-        "groupPushMappingsCount": {
-          "type": "integer"
-        },
-        "usersCount": {
-          "type": "integer"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Group"
-      ]
-    },
     "PasswordCredential": {
       "properties": {
         "value": {
@@ -2179,6 +2119,7 @@
     "ResetPasswordToken": {
       "properties": {
         "resetPasswordUrl": {
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -2244,6 +2185,7 @@
     "TempPassword": {
       "properties": {
         "tempPassword": {
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -2544,16 +2486,6 @@
           "operationId": "unlockUser"
         },
         {
-          "alias": "forgotPassword",
-          "arguments": [
-            {
-              "dest": "userId",
-              "src": "id"
-            }
-          ],
-          "operationId": "forgotPassword"
-        },
-        {
           "alias": "resetFactors",
           "arguments": [
             {
@@ -2581,9 +2513,11 @@
     "UserActivationToken": {
       "properties": {
         "activationToken": {
+          "readOnly": true,
           "type": "string"
         },
         "activationUrl": {
+          "readOnly": true,
           "type": "string"
         }
       },
