@@ -352,7 +352,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     @Override
     public String toModelFilename(String name) {
         if (modelTagMap.containsKey(name)) {
-            return modelTagMap.get(name) +"/"+ super.toModelFilename(name);
+            String tag = modelTagMap.get(name);
+            return tag.replaceAll("\\.","/") +"/"+ super.toModelFilename(name);
         }
         return super.toModelFilename(name);
     }
