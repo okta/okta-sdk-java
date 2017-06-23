@@ -20,7 +20,9 @@ import com.okta.sdk.lang.Classes;
 
 public interface GroupBuilder {
 
-    GroupBuilder INSTANCE = Classes.newInstance("com.okta.sdk.impl.resource.DefaultGroupBuilder");
+    static GroupBuilder instance() {
+        return Classes.newInstance("com.okta.sdk.impl.resource.DefaultGroupBuilder");
+    }
 
     GroupBuilder setName(String name);
 

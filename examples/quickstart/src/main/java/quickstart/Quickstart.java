@@ -47,7 +47,7 @@ public class Quickstart {
             Client client = builder.build();
 
             // Create a group
-            Group group = GroupBuilder.INSTANCE
+            Group group = GroupBuilder.instance()
                     .setName("my-user-group-" + UUID.randomUUID().toString())
                     .setDescription("Quickstart created Group")
                     .buildAndCreate(client);
@@ -58,7 +58,7 @@ public class Quickstart {
             // Create a User Account
             String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
 
-            User user = UserBuilder.INSTANCE
+            User user = UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName("Joe")
                 .setLastName("Coder")

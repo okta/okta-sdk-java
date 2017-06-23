@@ -26,7 +26,7 @@ class GroupsIT implements CrudTestSupport {
 
     @Override
     def create(Client client) {
-        return GroupBuilder.INSTANCE
+        return GroupBuilder.instance()
                 .setName("my-user-group-" + UUID.randomUUID().toString())
                 .setDescription("IT created Group")
                 .buildAndCreate(client)

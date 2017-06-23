@@ -28,7 +28,7 @@ class UsersIT implements CrudTestSupport {
 
     @Override
     def create(Client client) {
-        return UserBuilder.INSTANCE
+        return UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName("Joe")
                 .setLastName("Code")

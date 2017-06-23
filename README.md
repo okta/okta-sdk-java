@@ -77,7 +77,7 @@ The client is used to perform CRUD operations against Okta's management APIs.
 Create a group:
 ```java
 
-UserGroup group = GroupBuilder.INSTANCE
+UserGroup group = GroupBuilder.instance()
         .setName("my-user-group-" + UUID.randomUUID().toString())
         .setDescription("Quickstart created Group")
         .buildAndCreate(client);
@@ -93,7 +93,7 @@ Create a User Account:
 ``` java
 String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
 
-User user = UserBuilder.INSTANCE
+User user = UserBuilder.instance()
     .setEmail(email)
     .setFirstName("Joe")
     .setLastName("Coder")

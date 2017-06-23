@@ -34,7 +34,7 @@ class GroupRulesIT implements CrudTestSupport {
     Group group
 
     void preTestSetup(Client client) {
-        group = GroupBuilder.INSTANCE
+        group = GroupBuilder.instance()
                 .setName("my-user-group-" + UUID.randomUUID().toString())
                 .setDescription("IT created Group")
                 .buildAndCreate(client)
