@@ -15,13 +15,15 @@
 }}
 import java.util.Map;
 import com.okta.sdk.resource.Resource;
+import com.okta.sdk.resource.Deletable;
+import com.okta.sdk.resource.Saveable;
 
 {{#models}}{{#model}}
 /**
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
-public interface {{classname}} extends Resource{{#vendorExtensions.x-okta-extensible}}, Map<String, Object>{{/vendorExtensions.x-okta-extensible}} {
+public interface {{classname}} extends Resource{{#vendorExtensions.x-okta-extensible}}, Map<String, Object>{{/vendorExtensions.x-okta-extensible}}{{#vendorExtensions.deletable}}, Deletable{{/vendorExtensions.deletable}} {
 
 {{#vars}}
     {{#vendorExtensions.extraAnnotation}}
