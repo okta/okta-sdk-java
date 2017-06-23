@@ -30,8 +30,8 @@ cd target/checkout
 NEW_VERSION="$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)"
 TAG_NAME="okta-sdk-root-${NEW_VERSION}" # default release plugin tag format
 
-#Release
-$MVN_CMD mvn org.sonatype.plugins:nexus-staging-maven-plugin:release
+##Release
+#$MVN_CMD org.sonatype.plugins:nexus-staging-maven-plugin:release
 
 # publish once to the versioned dir
 $MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs -Djavadoc.version.dir=''
