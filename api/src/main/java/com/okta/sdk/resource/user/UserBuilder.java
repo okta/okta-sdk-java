@@ -22,7 +22,9 @@ import java.util.Map;
 
 public interface UserBuilder {
 
-    UserBuilder INSTANCE = Classes.newInstance("com.okta.sdk.impl.resource.DefaultUserBuilder");
+    static UserBuilder instance() {
+        return Classes.newInstance("com.okta.sdk.impl.resource.DefaultUserBuilder");
+    }
 
     UserBuilder setPassword(String password);
 
