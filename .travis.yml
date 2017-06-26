@@ -5,6 +5,8 @@ before_install:
 - source ./src/ci/before_install.sh
 script:
 - "./src/ci/build.sh"
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -f coverage/target/site/jacoco-aggregate/jacoco.xml
 env:
   global:
   - secure: gEPSKNn+1LIYhA9r7+mv+jSVtCNsj2OjW8CKKsUoLpYGPseFUbkmjQw8O8fXWfdzDWloTvoIIL8W8+ZwnQuzVnDWY6IzsEiAm5SrHxr6MK0B5xK+0QKUBcAkjgiCCtlAAbCVGpFb6lLt4nw+HDNHu9kGXpB0TERUK7R5dWnUn9s=

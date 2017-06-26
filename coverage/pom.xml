@@ -45,6 +45,10 @@
             <groupId>com.okta.sdk</groupId>
             <artifactId>okta-sdk-examples-quickstart</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.okta.sdk</groupId>
+            <artifactId>okta-sdk-integration-tests</artifactId>
+        </dependency>
 
     </dependencies>
 
