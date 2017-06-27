@@ -51,7 +51,6 @@ class GroupRuleIT implements ClientProvider {
                 .setPassword(password)
                 .buildAndCreate(client, true)
         registerForCleanup(user)
-
         validateUser(user, firstName, lastName, email)
 
         Group group = GroupBuilder.instance()
@@ -80,8 +79,7 @@ class GroupRuleIT implements ClientProvider {
         rule.activate()
 
         // Delay is needed as there is some time between activating the rule and triggering it
-        sleep(30000)
-        assertUserInGroup(user, group)
+        assertUserInGroup(user, group, 30, 1000)
 
         // 3. List group rules
         assertPresent(client.listRules(), rule)
@@ -95,7 +93,7 @@ class GroupRuleIT implements ClientProvider {
         rule.activate()
 
         // Triggering the updated rule will remove the user from group
-        sleep(10000)
-        assertUserNotInGroup(user, group)
+        assertUserInGroup(user, group, 10, 1000, false)
     }
+
 }

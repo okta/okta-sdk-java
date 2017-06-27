@@ -24,6 +24,7 @@ import com.okta.sdk.resource.group.rule.GroupRuleList
 import com.okta.sdk.resource.user.Role
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserList
+import org.testng.Assert
 
 import java.util.stream.Collectors
 import java.util.stream.StreamSupport
@@ -104,6 +105,22 @@ class Util {
         assertThat "User was not found in group.", StreamSupport.stream(group.listUsers().spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()
+    }
+
+    static void assertUserInGroup(User user, Group group, int times, int delayInMilliseconds, boolean present=true) {
+        for (int ii=0; ii<times; ii++) {
+
+            sleep(delayInMilliseconds)
+
+            if (present == StreamSupport.stream(group.listUsers().spliterator(), false)
+                    .filter{ listUser -> listUser.id == user.id}
+                    .findFirst().isPresent()) {
+                return
+            }
+        }
+
+        if (present) Assert.fail("User not found in group")
+        if (!present) Assert.fail("User found in group")
     }
 
     static void assertUserNotInGroup(User user, Group group) {
