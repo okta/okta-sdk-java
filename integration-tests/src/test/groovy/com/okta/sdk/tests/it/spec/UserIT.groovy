@@ -15,12 +15,16 @@
  */
 package com.okta.sdk.tests.it.spec
 
+import com.okta.sdk.resource.group.Group
+import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.AuthenticationProviderType
 import com.okta.sdk.resource.user.ChangePasswordRequest
 import com.okta.sdk.resource.user.ForgotPasswordResponse
 import com.okta.sdk.resource.user.PasswordCredential
 import com.okta.sdk.resource.user.RecoveryQuestionCredential
+import com.okta.sdk.resource.user.ResetPasswordToken
 import com.okta.sdk.resource.user.Role
+import com.okta.sdk.resource.user.TempPassword
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.resource.user.UserCredentials
@@ -36,42 +40,10 @@ import static com.okta.sdk.tests.it.util.Util.*
 
 class UserIT implements ClientProvider {
 
-    @Test(enabled = false)
-    @Scenario("user-profile-update")
-    @TestResources(users = "joe.coder@example.com")
-    void profileUpdateTest() {
-
-        User password = 'Abcd1234'
-        def firstName = 'Joe'
-        def lastName = 'Coder'
-        def email = 'joe.coder@example.com'
-
-        // 1. Create a user with password & recovery question
-        def user = UserBuilder.instance()
-                .setEmail(email)
-                .setFirstName(firstName)
-                .setLastName(lastName)
-                .setPassword(password)
-                .buildAndCreate(client, false)
-
-        registerForCleanup(user)
-
-        validateUser(user, firstName, lastName, email)
-
-        // 2. Update the user profile
-        def originalLastUpdated = user.lastUpdated
-        sleep(1000)
-        user.getProfile().put("nickName", "Batman")
-        user.update()
-
-        assertThat(user.lastUpdated, greaterThan(originalLastUpdated))
-        assertThat(user.profile.get("nickName"), equalTo("Batman"))
-    }
-
     @Test
     @Scenario("user-activate")
     @TestResources(users = "john-activate@example.com")
-    void userActivateTeset() {
+    void userActivateTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
@@ -193,6 +165,205 @@ class UserIT implements ClientProvider {
         ForgotPasswordResponse response = user.forgotPassword(false, userCredentials)
 
         assertThat response.getResetPasswordUrl(), nullValue()
+    }
 
+    @Test
+    @Scenario("user-expire-password")
+    @TestResources(users = "john-expire-password@example.com")
+    void expirePasswordTest() {
+
+        def password = 'Abcd1234'
+        def firstName = 'John'
+        def lastName = 'Expire-Password'
+        def email = 'john-expire-password@example.com'
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password)
+                .buildAndCreate(client, true)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Expire the user's password with tempPassword=true
+        TempPassword tempPassword = user.expirePassword(true)
+        assertThat tempPassword.getTempPassword(), notNullValue()
+    }
+
+
+    @Test
+    @Scenario("user-get-reset-password-url")
+    @TestResources(users = "john-get-reset-password-url@example.com")
+    void resetPasswordUrlTest() {
+
+        def password = 'Abcd1234'
+        def firstName = 'John'
+        def lastName = 'Get-Reset-Password-URL'
+        def email = 'john-get-reset-password-url@example.com'
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password)
+                .buildAndCreate(client, true)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Get the reset password link
+        ResetPasswordToken token = user.resetPassword(null, false)
+        assertThat token.getResetPasswordUrl(), notNullValue()
+    }
+
+    @Test
+    @Scenario("user-get")
+    @TestResources(users = "john-get-user@example.com")
+    void getUserTest() {
+
+        def password = 'Abcd1234'
+        def firstName = 'John'
+        def lastName = 'Get-User'
+        def email = 'john-get-user@example.com'
+
+        // 1. Create a user
+        User createUser = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password)
+                .buildAndCreate(client, false)
+        registerForCleanup(createUser)
+        validateUser(createUser, firstName, lastName, email)
+
+        // 2. Get the user by user ID
+        User user = client.getUser(createUser.id)
+        validateUser(user, createUser)
+
+        // 3. Get the user by user login
+        User userByLogin = client.getUser(createUser.profile.getLogin())
+        validateUser(userByLogin, createUser)
+    }
+
+    @Test(enabled = false)
+    @Scenario("user-group-target-role")
+    @TestResources(
+            users = "john-group-target@example.com",
+            groups = ["Group-Target User Admin Test Group",
+                      "Group-Target Test Group"])
+    void groupTargetRoleTest() {
+
+        def password = 'Abcd1234'
+        def firstName = 'John'
+        def lastName = 'Group-Target'
+        def email = 'john-group-target@example.com'
+        def groupName = 'Group-Target Test Group'
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password)
+                .buildAndCreate(client, true)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        Group group = GroupBuilder.instance()
+            .setName(groupName)
+            .buildAndCreate(client)
+        registerForCleanup(group)
+        validateGroup(group, groupName)
+
+        // 2. Assign USER_ADMIN role to the user
+        Role role = user.addRole(client.instantiate(Role)
+            .setType('USER_ADMIN'))
+
+        // 3. Add Group Target to User Admin Role
+        user.addGroupTargetToRole(role.id, group.id)
+
+        // 4. List Group Targets for Role
+        assertGroupTargetPresent(user, group, role)
+
+        // 5. Remove Group Target from Admin User Role and verify removed
+        // Note: Don’t remove the last group target from a role assignment, as this causes an exception.
+        // To get around this, create a new group and add this group target to user admin role
+
+        def adminGroupName = "Group-Target User Admin Test Group"
+        deleteGroup(adminGroupName, client)
+
+        Group adminGroup = GroupBuilder.instance()
+            .setName(adminGroupName)
+            .buildAndCreate(client)
+        registerForCleanup(adminGroup)
+        validateGroup(adminGroup, adminGroupName)
+
+        user.addGroupTargetToRole(role.id, adminGroup.id)
+        user.removeGroupTargetFromRole(role.id, adminGroup.id)
+
+        assertGroupTargetPresent(user, group, role)
+    }
+
+    @Test
+    @Scenario("user-profile-update")
+    @TestResources(users = "john-profile-update@example.com")
+    void userProfileUpdate() {
+
+        def password = 'Abcd1234'
+        def firstName = 'John'
+        def lastName = 'Profile-Update'
+        def email = 'john-profile-update@example.com'
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password)
+                .buildAndCreate(client, false)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        def originalLastUpdated = user.lastUpdated
+
+        // 2. Update the user profile and verify that profile was updated
+        // Need to wait 1 second here as that is the minimum time resolution of the 'lastUpdated' field
+        sleep(1000)
+        user.profile.put("nickName", "Batman")
+        user.update()
+        assertThat(user.lastUpdated, greaterThan(originalLastUpdated))
+        User updatedUser = client.getUser(user.id)
+        assertThat(updatedUser.profile.get("nickName"), equalTo("Batman"))
+    }
+
+    @Test
+    @Scenario("user-suspend")
+    @TestResources(users = "john-suspend@example.com")
+    void userSuspendTest() {
+
+        def password = 'Abcd1234'
+        def firstName = 'John'
+        def lastName = 'Suspend'
+        def email = 'john-suspend@example.com'
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password)
+                .buildAndCreate(client, true)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Suspend the user and verify user in list of suspended users
+        user.suspend()
+        assertPresent(client.listUsers(null, 'status eq \"SUSPENDED\"', null, null, null), user)
+
+        // 3. Unsuspend the user and verify user in list of active users
+        user.unsuspend()
+        assertPresent(client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null), user)
     }
 }
