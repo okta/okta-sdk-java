@@ -15,6 +15,12 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.okta.sdk.resource.CollectionResource
+import com.okta.sdk.resource.Resource
+import com.okta.sdk.resource.group.Group
+import com.okta.sdk.resource.group.GroupList
+import com.okta.sdk.resource.group.rule.GroupRule
+import com.okta.sdk.resource.group.rule.GroupRuleList
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserList
 
@@ -41,6 +47,58 @@ class Util {
         assertThat(user, equalTo(expectedUser))
     }
 
+    static void  validateGroup(Group group, Group expectedGroup) {
+        validateGroup(group, expectedGroup.profile.name)
+    }
+
+    static void  validateGroup(Group group, String groupName) {
+
+        assertThat(group.profile.name, equalTo(groupName))
+        assertThat(group.type, equalTo("OKTA_GROUP"))
+    }
+
+    static void  validateGroup(Group group, String groupName, String description) {
+
+        validateGroup(group, groupName)
+        assertThat(group.profile.description, equalTo(description))
+    }
+
+    static void assertGroupPresent(GroupList results, Group expectedGroup) {
+
+        List<Group> groupsFound = StreamSupport.stream(results.spliterator(), false)
+                .filter {group -> group.id == expectedGroup.id}
+                .collect(Collectors.toList())
+
+        assertThat(groupsFound, hasSize(1))
+    }
+
+    static <T extends Resource, C extends CollectionResource<T>> void assertPresent(C results, T expected) {
+
+        List<T> resourcesFound = StreamSupport.stream(results.spliterator(), false)
+                .filter {listItem -> listItem.id == expected.id}
+                .collect(Collectors.toList())
+
+        assertThat(resourcesFound, hasSize(1))
+    }
+
+    static <T extends Resource, C extends CollectionResource<T>> void assertNotPresent(C results, T expected) {
+
+        List<T> resourcesFound = StreamSupport.stream(results.spliterator(), false)
+                .filter {listItem -> listItem.id == expected.id}
+                .collect(Collectors.toList())
+
+        assertThat(resourcesFound, hasSize(0))
+    }
+
+    static void assertRulePresent(GroupRuleList results, GroupRule expectedRule) {
+
+        List<GroupRule> groupsFound = StreamSupport.stream(results.spliterator(), false)
+                .filter {group -> group.id == expectedRule.id}
+                .collect(Collectors.toList())
+
+        assertThat(groupsFound, hasSize(1))
+    }
+
     static void assertUserPresent(UserList results, expectedUser) {
 
         List<User> usersFound = StreamSupport.stream(results.spliterator(), false)
@@ -48,6 +106,18 @@ class Util {
                 .collect(Collectors.toList())
 
         assertThat(usersFound, hasSize(1))
+    }
+
+    static void assertUserInGroup(User user, Group group) {
+        assertThat "User was not found in group.", StreamSupport.stream(group.listUsers().spliterator(), false)
+                .filter{ listUser -> listUser.id == user.id}
+                .findFirst().isPresent()
+    }
+
+    static void assertUserNotInGroup(User user, Group group) {
+        assertThat "User was found in group.", !StreamSupport.stream(group.listUsers().spliterator(), false)
+                .filter{ listUser -> listUser.id == user.id}
+                .findFirst().isPresent()
     }
 
     static def ignoring = { Class<? extends Throwable> catchMe, Closure callMe ->

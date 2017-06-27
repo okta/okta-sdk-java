@@ -29,6 +29,7 @@ public @interface TestResources {
 
     String[] users() default {};
 
-    // TODO: figure out what to do for other resources like groups
-    //String[] groups() default {};
+    String[] groups() default {};
+
+    String[] rules() default {};
 }
