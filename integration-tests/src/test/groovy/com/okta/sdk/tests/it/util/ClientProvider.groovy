@@ -20,12 +20,15 @@ import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.GroupList
+import com.okta.sdk.resource.group.rule.GroupRule
 import com.okta.sdk.resource.group.rule.GroupRuleList
 import com.okta.sdk.resource.group.rule.GroupRuleStatus
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserStatus
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.testng.Assert
 import org.testng.IHookCallBack
 import org.testng.IHookable
@@ -39,6 +42,8 @@ import org.testng.annotations.Listeners
  */
 @Listeners(ClientProvider)
 trait ClientProvider implements IHookable {
+
+    private Logger log = LoggerFactory.getLogger(ClientProvider)
 
     private ThreadLocal<Client> threadLocal = new ThreadLocal<>()
     private List<Deletable> toBeDeleted = []
@@ -134,22 +139,20 @@ trait ClientProvider implements IHookable {
 
     @AfterMethod
     void clean() {
-        boolean exceptionThrown = false
         // delete them in reverse order so dependencies are resolved
         toBeDeleted.reverse().each { deletable ->
             try {
                 if (deletable instanceof User) {
                     deletable.deactivate()
                 }
+                else if (deletable instanceof GroupRule) {
+                    deletable.deactivate()
+                }
                 deletable.delete()
             }
             catch (Exception e) {
-                System.err.println("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run")
-                e.printStackTrace()
+                log.debug("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run", e)
             }
-        }
-        if (exceptionThrown) {
-            Assert.fail("Exception thrown during cleanup, see above exceptions")
         }
     }
 

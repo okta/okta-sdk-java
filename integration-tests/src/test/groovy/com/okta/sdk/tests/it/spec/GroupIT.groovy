@@ -93,9 +93,6 @@ class GroupIT implements ClientProvider {
 
         // 2. Search the group by name
         assertPresent(client.listGroups(groupName, null, null), group)
-
-        // 3. Delete the group
-        group.delete()
     }
 
     @Test
@@ -119,9 +116,6 @@ class GroupIT implements ClientProvider {
         group.update()
 
         validateGroup(group, groupNameUpdated, 'Description updated')
-
-        // 3. Delete the group
-        group.delete()
     }
 
     @Test
