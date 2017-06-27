@@ -19,6 +19,9 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
+import com.okta.sdk.resource.group.GroupList
+import com.okta.sdk.resource.group.rule.GroupRuleList
+import com.okta.sdk.resource.group.rule.GroupRuleStatus
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserStatus
 import com.okta.sdk.tests.Scenario
@@ -38,7 +41,7 @@ import org.testng.annotations.Listeners
 trait ClientProvider implements IHookable {
 
     private ThreadLocal<Client> threadLocal = new ThreadLocal<>()
-    private Collection<Deletable> toBeDeleted = []
+    private List<Deletable> toBeDeleted = []
 
     Client getClient() {
         Client client = threadLocal.get()
@@ -69,6 +72,14 @@ trait ClientProvider implements IHookable {
                 deleteUser(email, client)
             }
 
+            testResources.groups().each {groupName ->
+                deleteGroup(groupName, client)
+            }
+
+            testResources.rules().each {ruleName ->
+                deleteRule(ruleName, client)
+            }
+
             // run the tests
             callBack.runTestMethod(testResult)
         }
@@ -96,10 +107,36 @@ trait ClientProvider implements IHookable {
         }
     }
 
+    void deleteGroup(String groupName, Client client) {
+        Util.ignoring(ResourceException) {
+            GroupList groups = client.listGroups(groupName, null, null)
+            groups.each {group ->
+                if (groupName.equals(group.profile.name)) {
+                    group.delete()
+                }
+            }
+        }
+    }
+
+    void deleteRule(String ruleName, Client client) {
+        Util.ignoring(ResourceException) {
+            GroupRuleList rules = client.listRules()
+            rules.each {rule ->
+                if (ruleName.equals(rule.name)) {
+                    if (rule.status == GroupRuleStatus.ACTIVE) {
+                        rule.deactivate()
+                    }
+                    rule.delete()
+                }
+            }
+        }
+    }
+
     @AfterMethod
     void clean() {
         boolean exceptionThrown = false
-        toBeDeleted.each {deletable ->
+        // delete them in reverse order so dependencies are resolved
+        toBeDeleted.reverse().each { deletable ->
             try {
                 if (deletable instanceof User) {
                     deletable.deactivate()

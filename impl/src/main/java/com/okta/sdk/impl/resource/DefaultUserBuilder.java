@@ -137,7 +137,7 @@ public class DefaultUserBuilder implements UserBuilder {
 
             if (Strings.hasText(password)) {
                 PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
-                credentials.setPassword(passwordCredential);
+                credentials.setPassword(passwordCredential.setValue(password));
             }
         }
 
