@@ -21,6 +21,7 @@ import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupList
 import com.okta.sdk.resource.group.rule.GroupRule
 import com.okta.sdk.resource.group.rule.GroupRuleList
+import com.okta.sdk.resource.user.Role
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserList
 
@@ -90,22 +91,13 @@ class Util {
         assertThat(resourcesFound, hasSize(0))
     }
 
-    static void assertRulePresent(GroupRuleList results, GroupRule expectedRule) {
+    static void assertGroupTargetPresent(User user, Group group, Role role) {
+        def groupTargets = user.listGroupTargetsForRole(role.id)
 
-        List<GroupRule> groupsFound = StreamSupport.stream(results.spliterator(), false)
-                .filter {group -> group.id == expectedRule.id}
-                .collect(Collectors.toList())
-
-        assertThat(groupsFound, hasSize(1))
-    }
-
-    static void assertUserPresent(UserList results, expectedUser) {
-
-        List<User> usersFound = StreamSupport.stream(results.spliterator(), false)
-                .filter {user -> user.id == expectedUser.id}
-                .collect(Collectors.toList())
-
-        assertThat(usersFound, hasSize(1))
+        assertThat "GroupTarget Present not found in User role",
+                StreamSupport.stream(groupTargets.spliterator(), false)
+                    .filter{ groupTarget -> groupTarget.profile.name == group.profile.name}
+                    .findFirst().isPresent()
     }
 
     static void assertUserInGroup(User user, Group group) {
