@@ -22,12 +22,12 @@ import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
-import com.okta.sdk.tests.it.util.ClientProvider
+import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.*
 
-class GroupRuleIT implements ClientProvider {
+class GroupRuleIT extends ITSupport {
 
     @Test
     @Scenario("group-rule-operations")

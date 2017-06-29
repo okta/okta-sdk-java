@@ -21,16 +21,14 @@ import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
-import com.okta.sdk.tests.it.util.ClientProvider
+import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.*
-import static org.hamcrest.MatcherAssert.*
-import static org.hamcrest.Matchers.*
 
-class GroupIT implements ClientProvider {
+class GroupIT extends ITSupport {
 
-    @Test
+    @Test(enabled = false)
     @Scenario("group-get-and-stats")
     @TestResources(groups="Get Test Group")
     void getGroupAndStatsTest() {

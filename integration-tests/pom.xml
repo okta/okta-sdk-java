@@ -52,11 +52,90 @@
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Guice is an optional dependency of TestNG, and needed when
+             introspecting test methods form a @BeforeSuite
+             NOTE: it should NOT be used directly in this test harness
+         -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>4.1.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
-        <plugins>
-        </plugins>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>package.json</include>
+                </includes>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>package.json</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
     </build>
+
+    <profiles>
+        <profile>
+            <!-- This profile configures the Node.js based test-server -->
+            <id>sdk-test-server</id>
+            <properties>
+                <node.version>v8.1.2</node.version>
+                <yarn.version>v0.27.1</yarn.version>
+                <node.install.directory>${project.build.directory}/node-${node.version}</node.install.directory>
+                <okta.use.testServer>true</okta.use.testServer>
+                <okta.testServer.ref>help-with-debug</okta.testServer.ref>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <okta.use.testServer>${okta.use.testServer}</okta.use.testServer>
+                                <okta.testServer.bin>node_modules/.bin/okta-sdk-test-server</okta.testServer.bin>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>1.4</version>
+                        <configuration>
+                            <nodeVersion>${node.version}</nodeVersion>
+                            <yarnVersion>${yarn.version}</yarnVersion>
+                            <installDirectory>${node.install.directory}</installDirectory>
+                            <workingDirectory>${project.build.testOutputDirectory}</workingDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>install node and yarn</id>
+                                <goals>
+                                    <goal>install-node-and-yarn</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>yarn install</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>yarn</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

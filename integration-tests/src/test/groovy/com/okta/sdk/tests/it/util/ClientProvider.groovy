@@ -15,8 +15,10 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
+import com.okta.sdk.lang.Strings
 import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.GroupList
@@ -29,7 +31,6 @@ import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.testng.Assert
 import org.testng.IHookCallBack
 import org.testng.IHookable
 import org.testng.ITestResult
@@ -48,12 +49,28 @@ trait ClientProvider implements IHookable {
     private ThreadLocal<Client> threadLocal = new ThreadLocal<>()
     private List<Deletable> toBeDeleted = []
 
-    Client getClient() {
+    Client getClient(String scenarioId = null) {
         Client client = threadLocal.get()
         if (client == null) {
-            client = Clients.builder().build()
+            threadLocal.set(buildClient(scenarioId))
         }
-        return client
+        return threadLocal.get()
+    }
+
+    private isRunningWithTestServer() {
+        return Strings.hasText(System.getProperty(TestServer.TEST_SERVER_BASE_URL))
+    }
+
+    private Client buildClient(String scenarioId = null) {
+
+        String testServerBaseUrl = System.getProperty(TestServer.TEST_SERVER_BASE_URL)
+        if (isRunningWithTestServer()) {
+            return Clients.builder()
+                    .setOrgUrl(testServerBaseUrl + scenarioId)
+                    .setClientCredentials(new TokenClientCredentials("00ICU812"))
+                    .build()
+        }
+        return Clients.builder().build()
     }
 
     @Override
@@ -66,25 +83,27 @@ trait ClientProvider implements IHookable {
 
         try {
             // setup the scenario
+            String scenarioId = null
             if (scenario != null) {
-                threadLocal.set(null)
+                if (scenario != null) scenarioId = scenario.value()
             }
 
-            Client client = getClient()
+            Client client = getClient(scenarioId)
 
-            // delete any users that may collide with the test that is about to run
-            testResources.users().each {email ->
-                deleteUser(email, client)
+            if (!isRunningWithTestServer()) {
+                // delete any users that may collide with the test that is about to run
+                testResources.users().each { email ->
+                    deleteUser(email, client)
+                }
+
+                testResources.groups().each { groupName ->
+                    deleteGroup(groupName, client)
+                }
+
+                testResources.rules().each { ruleName ->
+                    deleteRule(ruleName, client)
+                }
             }
-
-            testResources.groups().each {groupName ->
-                deleteGroup(groupName, client)
-            }
-
-            testResources.rules().each {ruleName ->
-                deleteRule(ruleName, client)
-            }
-
             // run the tests
             callBack.runTestMethod(testResult)
         }
@@ -139,19 +158,20 @@ trait ClientProvider implements IHookable {
 
     @AfterMethod
     void clean() {
-        // delete them in reverse order so dependencies are resolved
-        toBeDeleted.reverse().each { deletable ->
-            try {
-                if (deletable instanceof User) {
-                    deletable.deactivate()
+        if (!isRunningWithTestServer()) {
+            // delete them in reverse order so dependencies are resolved
+            toBeDeleted.reverse().each { deletable ->
+                try {
+                    if (deletable instanceof User) {
+                        deletable.deactivate()
+                    } else if (deletable instanceof GroupRule) {
+                        deletable.deactivate()
+                    }
+                    deletable.delete()
                 }
-                else if (deletable instanceof GroupRule) {
-                    deletable.deactivate()
+                catch (Exception e) {
+                    log.debug("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run", e)
                 }
-                deletable.delete()
-            }
-            catch (Exception e) {
-                log.debug("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run", e)
             }
         }
     }

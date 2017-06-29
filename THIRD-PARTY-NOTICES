@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 This project includes:
+  AOP alliance under Public Domain
   Apache Commons Codec under The Apache Software License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
   Apache Felix Bundle Repository under The Apache Software License, Version 2.0
@@ -33,6 +34,7 @@ This project includes:
   Default Plexus Container under Apache License, Version 2.0
   EasyMock under MIT License
   FindBugs-jsr305 under The Apache Software License, Version 2.0
+  Google Guice - Core Library under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
@@ -41,6 +43,7 @@ This project includes:
   Java Hamcrest under BSD Licence 3
   JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
   JavaMail API jar under CDDL or GPLv2+CE
+  javax.inject under The Apache Software License, Version 2.0
   JCL 1.2 implemented over SLF4J under MIT License
   JCommander under The Apache Software License, Version 2.0
   jmustache under The (New) BSD License
