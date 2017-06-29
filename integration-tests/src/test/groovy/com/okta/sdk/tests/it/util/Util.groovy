@@ -19,11 +19,8 @@ import com.okta.sdk.resource.CollectionResource
 import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupList
-import com.okta.sdk.resource.group.rule.GroupRule
-import com.okta.sdk.resource.group.rule.GroupRuleList
 import com.okta.sdk.resource.user.Role
 import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserList
 import org.testng.Assert
 
 import java.util.stream.Collectors
@@ -132,6 +129,17 @@ class Util {
     static def ignoring = { Class<? extends Throwable> catchMe, Closure callMe ->
         try {
             callMe.call()
+        } catch(e) {
+            if (!e.class.isAssignableFrom(catchMe)) {
+                throw e
+            }
+        }
+    }
+
+    static def expect = { Class<? extends Throwable> catchMe, Closure callMe ->
+        try {
+            callMe.call()
+            Assert.fail("Expected ${catchMe.getClass().getName()} to be thrown.")
         } catch(e) {
             if (!e.class.isAssignableFrom(catchMe)) {
                 throw e

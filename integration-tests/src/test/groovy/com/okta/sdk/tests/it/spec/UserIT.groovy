@@ -252,6 +252,15 @@ class UserIT implements ClientProvider {
         // 3. Get the user by user login
         User userByLogin = client.getUser(createUser.profile.getLogin())
         validateUser(userByLogin, createUser)
+
+        // 3. delete the user
+        user.deactivate()
+        user.delete()
+
+        // 4. get user expect 404
+        expect(ResourceException) {
+            client.getUser(email)
+        }
     }
 
     @Test(enabled = false)
