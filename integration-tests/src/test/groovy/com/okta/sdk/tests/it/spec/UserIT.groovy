@@ -56,7 +56,8 @@ class UserIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, false)
+                .setActive(false)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
@@ -82,7 +83,8 @@ class UserIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, true)
+                .setActive(true)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
@@ -117,7 +119,8 @@ class UserIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, true)
+                .setActive(true)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
@@ -144,7 +147,8 @@ class UserIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, true)
+                .setActive(true)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
@@ -183,7 +187,8 @@ class UserIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, true)
+                .setActive(true)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
@@ -209,7 +214,8 @@ class UserIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, true)
+                .setActive(true)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
@@ -234,7 +240,8 @@ class UserIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, false)
+                .setActive(false)
+                .buildAndCreate(client)
         registerForCleanup(createUser)
         validateUser(createUser, firstName, lastName, email)
 
@@ -267,7 +274,8 @@ class UserIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, true)
+                .setActive(false)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
@@ -322,7 +330,8 @@ class UserIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, false)
+                .setActive(false)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
@@ -354,7 +363,8 @@ class UserIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, true)
+                .setActive(true)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 

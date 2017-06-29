@@ -40,6 +40,9 @@ public class DefaultUserBuilder implements UserBuilder {
     private String firstName;
     private String lastName;
     private String mobilePhone;
+    private Boolean active;
+    private Boolean provider;
+
     private Map<String, Object> customProfileAttributes = new LinkedHashMap<>();
 
     public UserBuilder setPassword(String password) {
@@ -87,6 +90,16 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
+    public UserBuilder setActive(Boolean active) {
+        this.active = active;
+        return this;
+    }
+
+    public UserBuilder setProvider(Boolean provider) {
+        this.provider = provider;
+        return this;
+    }
+
     public UserBuilder setProfileProperties(Map<String, Object> profileProperties) {
 
         this.customProfileAttributes.clear();
@@ -109,11 +122,11 @@ public class DefaultUserBuilder implements UserBuilder {
         User user = client.instantiate(User.class);
         user.setProfile(client.instantiate(UserProfile.class));
         UserProfile userProfile = user.getProfile();
-        userProfile.setFirstName(firstName);
-        userProfile.setLastName(lastName);
-        userProfile.setEmail(email);
-        userProfile.setSecondEmail(secondEmail);
-        userProfile.setMobilePhone(mobilePhone);
+        if (Strings.hasText(firstName)) userProfile.setFirstName(firstName);
+        if (Strings.hasText(lastName)) userProfile.setLastName(lastName);
+        if (Strings.hasText(email)) userProfile.setEmail(email);
+        if (Strings.hasText(secondEmail)) userProfile.setSecondEmail(secondEmail);
+        if (Strings.hasText(mobilePhone)) userProfile.setMobilePhone(mobilePhone);
 
         if (Strings.hasText(login)) {
             userProfile.setLogin(login);
@@ -146,12 +159,7 @@ public class DefaultUserBuilder implements UserBuilder {
 
 
     @Override
-    public User buildAndCreate(Client client, boolean active) {
-        return client.createUser(build(client), active, false);
-    }
-
-    @Override
     public User buildAndCreate(Client client) {
-        return this.buildAndCreate(client, false);
+        return client.createUser(build(client), active, provider);
     }
 }

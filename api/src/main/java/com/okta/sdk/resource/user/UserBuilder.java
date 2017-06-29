@@ -44,6 +44,10 @@ public interface UserBuilder {
 
     UserBuilder setSecondEmail(String secondEmail);
 
+    UserBuilder setActive(Boolean active);
+
+    UserBuilder setProvider(Boolean provider);
+
     UserBuilder setProfileProperties(Map<String, Object> profileProperties);
 
     UserBuilder putAllProfileProperties(Map<String, Object> profileProperties);
@@ -51,5 +55,4 @@ public interface UserBuilder {
     UserBuilder putProfileProperty(String key, Object value);
 
     User buildAndCreate(Client client);
-    User buildAndCreate(Client client, boolean active);
 }

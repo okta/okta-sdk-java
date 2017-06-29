@@ -102,7 +102,8 @@ User user = UserBuilder.instance()
     .setSecurityQuestion("Favorite security question?")
     .setSecurityQuestionAnswer("None of them!")
     .putProfileProperty("division", "Seven") // key/value pairs predefined in the user profile schema
-    .buildAndCreate(client, true);
+    .setActive(true)
+    .buildAndCreate(client);
 
 String userId = user.getId();
 println("User created with ID: " + userId);
