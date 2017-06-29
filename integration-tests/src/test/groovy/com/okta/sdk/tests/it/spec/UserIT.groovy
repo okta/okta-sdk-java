@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.tests.it.spec
 
+import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.AuthenticationProviderType
@@ -31,14 +32,14 @@ import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserList
 import com.okta.sdk.tests.TestResources
 import com.okta.sdk.tests.Scenario
-import com.okta.sdk.tests.it.util.ClientProvider
+import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static org.hamcrest.Matchers.*
 import static org.hamcrest.MatcherAssert.*
 import static com.okta.sdk.tests.it.util.Util.*
 
-class UserIT implements ClientProvider {
+class UserIT extends ITSupport {
 
     @Test
     @Scenario("user-activate")
