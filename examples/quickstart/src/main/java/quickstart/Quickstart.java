@@ -66,7 +66,8 @@ public class Quickstart {
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
                 .putProfileProperty("division", "Seven") // key/value pairs predefined in the user profile schema
-                .buildAndCreate(client, true);
+                .setActive(true)
+                .buildAndCreate(client);
 
             // add user to the newly created group
             user.addToGroup(group.getId());

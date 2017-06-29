@@ -49,7 +49,8 @@ class GroupRuleIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, true)
+                .setActive(true)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 

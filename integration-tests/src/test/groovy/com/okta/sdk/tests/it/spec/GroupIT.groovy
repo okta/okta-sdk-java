@@ -136,7 +136,8 @@ class GroupIT implements ClientProvider {
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password)
-                .buildAndCreate(client, false)
+                .setActive(false)
+                .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 

@@ -16,6 +16,7 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.client.Client;
+import com.okta.sdk.lang.Strings;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.group.Group;
 import com.okta.sdk.resource.group.GroupProfile;
@@ -42,9 +43,8 @@ public class DefaultGroupBuilder implements GroupBuilder {
 
         Group group = client.instantiate(Group.class);
         group.setProfile(client.instantiate(GroupProfile.class));
-        group.getProfile()
-                .setName(name)
-                .setDescription(description);
+        group.getProfile().setName(name);
+        if (Strings.hasText(description)) group.getProfile().setDescription(description);
 
         return client.createGroup(group);
     }
