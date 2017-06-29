@@ -15,7 +15,6 @@
 }}
 {{^queryParams.isEmpty}}        QueryString queryArgs = new QueryString();{{#queryParams}}
         queryArgs.put("{{baseName}}", {{paramName}});{{#defaultValue}}
-        queryArgs.putIfAbsent("{{baseName}}", "{{defaultValue}}");{{/defaultValue}}{{/queryParams}}
 
         String href = QueryString.buildHref("{{{vendorExtensions.hrefFiltered}}}", queryArgs);{{/queryParams.isEmpty}}
 {{#queryParams.isEmpty}}        String href = "{{{vendorExtensions.hrefFiltered}}}";
