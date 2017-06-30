@@ -23,6 +23,7 @@ import org.testng.annotations.BeforeSuite
 abstract class ITSupport implements ClientProvider {
 
     public static final USE_TEST_SERVER = "okta.use.testServer"
+    public static final TEST_SERVER_ALL_SCENARIOS = "okta.testServer.allScenarios"
 
     private TestServer testServer
 
@@ -34,14 +35,18 @@ abstract class ITSupport implements ClientProvider {
 
         if (useTestServer) {
             List<String> scenarios = []
-            context.getAllTestMethods().each {testMethod ->
-                Scenario scenario = testMethod.getConstructorOrMethod().getMethod().getAnnotation(Scenario)
-                if (scenario != null) {
-                    scenarios.add(scenario.value())
+
+            // if TEST_SERVER_ALL_SCENARIOS is set, we need to run all of them
+            if (!Boolean.getBoolean(TEST_SERVER_ALL_SCENARIOS)) {
+                context.getAllTestMethods().each { testMethod ->
+                    Scenario scenario = testMethod.getConstructorOrMethod().getMethod().getAnnotation(Scenario)
+                    if (scenario != null) {
+                        scenarios.add(scenario.value())
+                    }
                 }
             }
 
-            testServer = new TestServer().start(scenarios, System.getProperty("okta.testServer.bin", "node_modules/.bin/okta-sdk-test-server"))
+            testServer = new TestServer().start(scenarios, System.getProperty("okta.testServer.bin", "node_modules/.bin/okta-sdk-test-server"), Boolean.getBoolean("okta.testServer.verbose"))
         }
     }
 

@@ -88,6 +88,10 @@ class TestServer {
                         "The test-server output can be found in: ${testServerLogFile.absolutePath}"
                 throw new TestNGException(message)
             }
+        } else if (process != null) {
+            String message = "okta-sdk-test-server quit unexpectedly with exit status: ${process.exitValue()}" + testServerLogFile.text
+
+            throw new TestNGException(message)
         }
     }
 }
