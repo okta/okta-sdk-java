@@ -14,7 +14,7 @@
     limitations under the License.
 }}
 {{^queryParams.isEmpty}}        QueryString queryArgs = new QueryString();{{#queryParams}}
-        queryArgs.put("{{baseName}}", {{paramName}});{{#defaultValue}}
+        if ({{paramName}} != null) queryArgs.put("{{baseName}}", {{paramName}});{{/queryParams}}
 
         String href = QueryString.buildHref("{{{vendorExtensions.hrefFiltered}}}", queryArgs);{{/queryParams.isEmpty}}
 {{#queryParams.isEmpty}}        String href = "{{{vendorExtensions.hrefFiltered}}}";
