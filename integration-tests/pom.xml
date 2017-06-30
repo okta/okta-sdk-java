@@ -93,7 +93,9 @@
                 <yarn.version>v0.27.1</yarn.version>
                 <node.install.directory>${project.build.directory}/node-${node.version}</node.install.directory>
                 <okta.use.testServer>true</okta.use.testServer>
-                <okta.testServer.ref>help-with-debug</okta.testServer.ref>
+                <okta.testServer.ref>more-debugging</okta.testServer.ref>
+                <okta.testServer.verbose>false</okta.testServer.verbose>
+                <okta.testServer.allScenarios>false</okta.testServer.allScenarios>
             </properties>
             <build>
                 <plugins>
@@ -104,6 +106,7 @@
                             <systemPropertyVariables>
                                 <okta.use.testServer>${okta.use.testServer}</okta.use.testServer>
                                 <okta.testServer.bin>node_modules/.bin/okta-sdk-test-server</okta.testServer.bin>
+                                <okta.testServer.verbose>${okta.testServer.verbose}</okta.testServer.verbose>
                             </systemPropertyVariables>
                         </configuration>
                     </plugin>
