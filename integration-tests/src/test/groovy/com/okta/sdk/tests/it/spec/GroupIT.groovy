@@ -70,9 +70,6 @@ class GroupIT extends ITSupport {
 
         // 2. List all groups and find the group created
         assertGroupPresent(client.listGroups(), createdGroup)
-
-        // 3. Delete the group
-        createdGroup.delete()
     }
 
     @Test
@@ -126,7 +123,7 @@ class GroupIT extends ITSupport {
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'With-Group'
-        def email = 'jjohn-with-group@example.com'
+        def email = 'john-with-group@example.com'
 
         // 1. Create a user and a group
         def user = UserBuilder.instance()
