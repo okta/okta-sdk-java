@@ -411,8 +411,11 @@ public class DefaultDataStore implements InternalDataStore {
                 if (req.getHttpHeaders().getContentType() != null && req.getHttpHeaders().getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED)){
                     bodyString = buildCanonicalBodyQueryParams(req.getData());
                 } else {
-
-                    bodyString = mapMarshaller.marshal(req.getData());
+                    if (resource instanceof VoidResource) {
+                        bodyString = "";
+                    } else {
+                        bodyString = mapMarshaller.marshal(req.getData());
+                    }
                 }
                 StringInputStream body = new StringInputStream(bodyString);
                 long length = body.available();
