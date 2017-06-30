@@ -134,13 +134,13 @@ class UserIT extends ITSupport {
 
     @Test
     @Scenario("user-change-recovery-question")
-    @TestResources(users = "john-change-recover-qyestion@example.com")
+    @TestResources(users = "john-change-recovery-question@example.com")
     void changeRecoveryQuestionTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Change-Recovery-Question'
-        def email = 'john-change-recover-qyestion@example.com'
+        def email = 'john-change-recovery-question@example.com'
 
         // 1. Create a user with password & recovery question
         User user = UserBuilder.instance()
@@ -167,7 +167,7 @@ class UserIT extends ITSupport {
         // 3. Update the user password through updated recovery question
         userCredentials.password.value = '1234Abcd'
         userCredentials.recoveryQuestion.answer = 'forty two'
-        ForgotPasswordResponse response = user.forgotPassword(false, userCredentials)
+        ForgotPasswordResponse response = user.forgotPassword(null, userCredentials)
 
         assertThat response.getResetPasswordUrl(), nullValue()
     }
