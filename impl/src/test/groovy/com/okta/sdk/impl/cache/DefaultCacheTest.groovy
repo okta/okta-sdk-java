@@ -223,7 +223,7 @@ class DefaultCacheTest {
     @Test
     void testTimeToLiveAndTimeToIdle() {
 
-        def cache = new DefaultCache('foo', [:], new Duration(50, TimeUnit.MILLISECONDS), new Duration(20, TimeUnit.MILLISECONDS))
+        def cache = new DefaultCache('foo', [:], new Duration(100, TimeUnit.MILLISECONDS), new Duration(40, TimeUnit.MILLISECONDS))
 
         def key = 'key'
         def value = 'value'
@@ -238,17 +238,17 @@ class DefaultCacheTest {
         //each time we access after sleeping 15 seconds, we should always acquire the value since the last
         //access timestamp is being updated, preventing expunging due to idle.
 
-        Thread.sleep(10)
+        Thread.sleep(20)
         found = cache.get(key)
         assertEquals(found, value)
         assertEquals 1, cache.size()
 
-        Thread.sleep(10)
+        Thread.sleep(20)
         found = cache.get(key)
         assertEquals(found, value)
         assertEquals 1, cache.size()
 
-        Thread.sleep(10)
+        Thread.sleep(20)
         found = cache.get(key)
         assertEquals(found, value)
         assertEquals 1, cache.size()
@@ -256,8 +256,8 @@ class DefaultCacheTest {
         //Now we need to ensure that no matter how frequently the value is used (not idle), we still need to remove
         //the value if older than the TTL
 
-        //10 + 10 + 10 = 30.  Add another 30 millis, and we'll be ~ 60 millis, which is older than the TTL of 50 above.
-        Thread.sleep(30)
+        //20 + 20 + 20 = 60.  Add another 50 millis, and we'll be ~ 110 millis, which is older than the TTL of 100 above.
+        Thread.sleep(50)
 
         found = cache.get(key)
         assertNull found

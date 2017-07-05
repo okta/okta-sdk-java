@@ -19,6 +19,8 @@ import com.okta.sdk.cache.Cache;
 import com.okta.sdk.impl.util.SoftHashMap;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +35,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 0.5.0
  */
 public class DefaultCache<K, V> implements Cache<K, V> {
+
+    private final Logger logger = LoggerFactory.getLogger(DefaultCache.class);
 
     /**
      * Backing map instance that stores the cache entries.
@@ -168,6 +172,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
             if (sinceCreation.isGreaterThan(ttl)) {
                 map.remove(key);
                 missCount.incrementAndGet(); //count an expired TTL as a miss
+                logger.trace("Removing {} from cache due to TTL, sinceCreation: {}", key, sinceCreation);
                 return null;
             }
         }
@@ -177,6 +182,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
             if (sinceLastAccess.isGreaterThan(tti)) {
                 map.remove(key);
                 missCount.incrementAndGet(); //count an expired TTI as a miss
+                logger.trace("Removing {} from cache due to TTI, sinceLastAccess: {}", key, sinceLastAccess);
                 return null;
             }
         }
