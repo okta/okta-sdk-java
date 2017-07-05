@@ -80,7 +80,7 @@ class GroupRuleIT extends ITSupport {
         rule.activate()
 
         // Delay is needed as there is some time between activating the rule and triggering it
-        assertUserInGroup(user, group, 60, 1000)
+        assertUserInGroup(user, group, 120, 1000)
 
         // 3. List group rules
         assertPresent(client.listRules(), rule)
