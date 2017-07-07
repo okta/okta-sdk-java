@@ -15,28 +15,23 @@
 # limitations under the License.
 #
 
-JAVA_PACKAGE=jdk-8u131-linux-x64
+# Travis uses an older version of Java8 by default
+JAVA_VERSION=8u131-zulu
 MVN_VERSION=3.5.0
 
-# Travis uses an older version of Java8 by default
-wget --no-cookies \
-     --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-     http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/${JAVA_PACKAGE}.tar.gz
-mkdir ../java
-tar -zxf ${JAVA_PACKAGE}.tar.gz -C ../java
-rm ${JAVA_PACKAGE}.tar.gz
-export JAVA_HOME="$(pwd)/../java/$(ls ../java)"
+# use sdkman to manage installations
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+sdk install java ${JAVA_VERSION} < /dev/null
+sdk install maven ${MVN_VERSION} < /dev/null
+export JAVA_HOME="${HOME}/.sdkman/candidates/java/current"
+export M2_HOME="${HOME}/.sdkman/candidates/java/current"
+export PATH=$M2_HOME/bin:${JAVA_HOME}/bin:$PATH
 
 #Using xmllint is faster than invoking maven
 export ARTIFACT_VERSION="$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)"
 export IS_RELEASE="$([ ${ARTIFACT_VERSION/SNAPSHOT} == $ARTIFACT_VERSION ] && [ $TRAVIS_BRANCH == 'master' ] && echo 'true')"
-
-#Install newer Maven since Travis uses 3.2 by default
-wget http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/${MVN_VERSION}/binaries/apache-maven-${MVN_VERSION}-bin.zip
-unzip -qq apache-maven-${MVN_VERSION}-bin.zip -d ..
-rm apache-maven-${MVN_VERSION}-bin.zip
-export M2_HOME=$PWD/../apache-maven-${MVN_VERSION}
-export PATH=$M2_HOME/bin:${JAVA_HOME}/bin:$PATH
 
 info "Build configuration:"
 echo "Version:             $ARTIFACT_VERSION"
