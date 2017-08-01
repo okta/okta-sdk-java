@@ -18,9 +18,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
+        <groupId>com.okta</groupId>
+        <artifactId>okta-parent</artifactId>
+        <version>1</version>
+        <relativePath>../okta-java-parent</relativePath>
     </parent>
 
     <groupId>com.okta.sdk</groupId>
@@ -31,19 +32,9 @@
     <name>Okta Java SDK</name>
     <description>Okta SDK for Java</description>
     <url>https://github.com/okta/oktasdk-java</url>
-    <organization>
-        <name>Okta</name>
-        <url>http://developer.okta.com/</url>
-    </organization>
     <inceptionYear>2017</inceptionYear>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jdk.version>1.8</jdk.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <testng.version>6.9.10</testng.version>
-
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
         <jersey.version>2.22.2</jersey.version>
         <jackson.version>2.8.8</jackson.version>
@@ -51,40 +42,9 @@
         <snakeyaml.version>1.17</snakeyaml.version>
         <jjwt.version>0.6.0</jjwt.version>
 
-        <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
-
-        <!-- Test Dependencies: Only required for testing when building the SDK.  Not required by SDK users at runtime: -->
-        <groovy.version>2.4.7</groovy.version>
-
-        <github.api.key>${env.GH_API_KEY}</github.api.key>
-
-        <!-- real base dir -->
-        <root.dir>${session.executionRootDirectory}</root.dir>
-
+        <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
 
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>https://github.com/okta/oktasdk-java/blob/master/LICENSE</url>
-        </license>
-    </licenses>
-    
-    <developers>
-        <developer>
-            <name>Okta</name>
-            <email>oktauploader@okta.com</email>
-            <organization>Okta</organization>
-            <organizationUrl>https://www.okta.com</organizationUrl>
-        </developer>
-    </developers>
-    
-    <scm>
-        <connection>scm:git:git://github.com/okta/oktasdk-java.git</connection>
-        <developerConnection>scm:git:ssh://github.com:okta/oktasdk-java.git</developerConnection>
-        <url>http://github.com/okta/oktasdk-java/tree/master</url>
-      <tag>HEAD</tag>
-  </scm>
 
     <modules>
         <module>swagger-templates</module>
@@ -237,7 +197,6 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>${groovy.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -252,253 +211,17 @@
         </dependency>
     </dependencies>
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.jasig.maven</groupId>
-                <artifactId>maven-notice-plugin</artifactId>
-                <version>1.0.6.1</version>
-                <inherited>false</inherited>
-                <configuration>
-                    <fileName>THIRD-PARTY-NOTICES</fileName>
-                    <generateChildNotices>false</generateChildNotices>
-                    <noticeTemplate>${root.dir}/src/license/NOTICE.template</noticeTemplate>
-                    <licenseMapping>
-                        <mapping>src/license/mapping.xml</mapping>
-                    </licenseMapping>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <aggregate>true</aggregate>
-                    <skipExistingHeaders>true</skipExistingHeaders>
-                    <header>${root.dir}/src/license/header.txt</header>
-                    <headerDefinitions>
-                        <headerDefinition>${root.dir}/src/license/header_format.xml</headerDefinition>
-                    </headerDefinitions>
-                    <properties>
-                        <organization.name>${project.organization.name}</organization.name>
-                    </properties>
-                    <excludes>
-                        <exclude>**/*.txt</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
-                <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <!-- For unit tests: -->
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.5</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-all</artifactId>
-                        <version>${groovy.version}</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>addSources</goal>
-                            <goal>addTestSources</goal>
-                            <goal>generateStubs</goal>
-                            <goal>compile</goal>
-                            <goal>testGenerateStubs</goal>
-                            <goal>testCompile</goal>
-                            <goal>removeStubs</goal>
-                            <goal>removeTestStubs</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.20</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.20</version>
-                <configuration>
-                    <includes>
-                        <include>**/*IT.java</include>
-                        <include>**/*IT.groovy</include>
-                        <include>**/*ITCase.java</include>
-                        <include>**/*ITCase.groovy</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/*ManualIT.java</exclude>
-                        <exclude>**/*ManualIT.groovy</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven-enforcer-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>enforce-banned-dependencies</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <bannedDependencies>
-                                    <excludes>
-                                        <exclude>commons-logging</exclude>
-                                    </excludes>
-                                </bannedDependencies>
-                            </rules>
-                            <fail>true</fail>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <message>You are running an older version of Maven. The Okta Java SDK requires
-                                        at least Maven 3.3.9
-                                    </message>
-                                    <version>[3.3.9,)</version>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>sonatype-nexus-staging</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>prepare-agent</id>
-                        <phase>process-test-classes</phase>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>prepare-agent-integration</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>prepare-agent-integration</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- exclude generated enums coverage -->
-                    <excludes>
-                        <exclude>**/com/okta/sdk/resource/**/*</exclude>
-                        <exclude>**/quickstart/**/*</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5.3</version>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
                     <configuration>
-                        <!-- do not update upstream, with a pending release. -->
-                        <pushChanges>false</pushChanges>
-                        <localCheckout>true</localCheckout>
-                        <!-- scan with OWASP plugin before release -->
-                        <preparationGoals>clean verify dependency-check:aggregate</preparationGoals>
-                        <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <!-- This configuration copied from apache:apache:7 parent pom -->
-                        <useReleaseProfile>false</useReleaseProfile>
-                        <goals>deploy</goals>
-                        <mavenExecutorId>forked-path</mavenExecutorId>
-                        <arguments>-Pdocs,okta-signature</arguments>
-                    </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.apache.maven.scm</groupId>
-                            <artifactId>maven-scm-provider-gitexe</artifactId>
-                            <version>1.9.5</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.4</version>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!-- Speed up dependency report by skipping check to see if resources are in specified repos -->
-                <plugin>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>2.9</version>
-                    <configuration>
-                        <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                        <!-- exclude generated enums coverage -->
+                        <excludes>
+                            <exclude>**/com/okta/sdk/resource/**/*</exclude>
+                            <exclude>**/quickstart/**/*</exclude>
+                        </excludes>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -517,268 +240,7 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.7.9</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.owasp</groupId>
-                    <artifactId>dependency-check-maven</artifactId>
-                    <version>1.4.5</version>
-                    <inherited>false</inherited>
-                    <configuration>
-                        <suppressionFile>${root.dir}/src/owasp-suppression.xml</suppressionFile>
-                        <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
-                        <name>OWASP Dependency Check</name>
-                    </configuration>
-                </plugin>
-                <!-- FindBugs Static Analysis -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>3.0.4</version>
-                    <configuration>
-                        <effort>Max</effort>
-                        <threshold>Low</threshold>
-                        <failOnError>true</failOnError>
-                        <omitVisitors>CrlfLogInjectionDetector</omitVisitors>
-                        <excludeFilterFile>${root.dir}/src/findbugs/findbugs-exclude.xml</excludeFilterFile>
-                        <plugins>
-                            <plugin>
-                                <groupId>com.h3xstream.findsecbugs</groupId>
-                                <artifactId>findsecbugs-plugin</artifactId>
-                                <version>1.6.0</version>
-                            </plugin>
-                        </plugins>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.8</version>
-                    <configuration>
-                        <rulesets>
-                            <ruleset>rulesets/java/basic.xml</ruleset>
-                            <ruleset>rulesets/java/empty.xml</ruleset>
-                            <ruleset>rulesets/java/imports.xml</ruleset>
-                            <ruleset>rulesets/java/unnecessary.xml</ruleset>
-                            <ruleset>rulesets/java/unusedcode.xml</ruleset>
-                            <ruleset>rulesets/java/sunsecure.xml</ruleset>
-                        </rulesets>
-                        <excludes>
-                            <!-- lang contains a few files copied from other projects -->
-                            <exclude>**/lang/*.java</exclude>
-                            <exclude>**/com/okta/sdk/impl/http/MediaType.java</exclude>
-                            <exclude>**/com/okta/sdk/impl/util/Base64.java</exclude>
-                            <exclude>**/com/okta/sdk/impl/util/BaseNCodec.java</exclude>
-                            <exclude>**/LinkedCaseInsensitiveMap</exclude>
-                            <exclude>**/com/okta/sdk/impl/util/MimeType.java</exclude>
-                            <!-- generated resources -->
-                            <exclude>**/com/okta/sdk/resource/**/*.java</exclude>
-                            <exclude>**/com/okta/sdk/client/Client.java</exclude>
-                            <exclude>**/com/okta/sdk/impl/resource/Default*.java</exclude>
-                            <exclude>**/com/okta/sdk/impl/resource/**/Default*.java</exclude>
-                            <exclude>**/com/okta/sdk/impl/client/DefaultClient.java</exclude>
-
-                            <!-- caching needs a little work -->
-                            <exclude>**/com/okta/sdk/impl/ds/cache/WriteCacheFilter.java</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
-
-    <profiles>
-        <profile>
-            <id>okta-signature</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>docs</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <inherited>true</inherited>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>ci</id>
-            <!-- Build the javadoc and scan the code for issues -->
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.mycila</groupId>
-                        <artifactId>license-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>check-license-headers</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>findbugs-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>scan</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-pmd-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>scan</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <!--  NOTE: this plugin config will return false positives, usage will require
-                  human interpretation (and should NOT be used to fail builds)
-            -->
-            <id>owasp</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.owasp</groupId>
-                        <artifactId>dependency-check-maven</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>aggregate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.owasp</groupId>
-                        <artifactId>dependency-check-maven</artifactId>
-                        <reportSets>
-                            <reportSet>
-                                <reports>
-                                    <report>aggregate</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
-        <profile>
-            <id>pub-docs</id>
-            <properties>
-                <javadoc.version.dir>development/</javadoc.version.dir>
-                <gh-pages.dir>${project.build.directory}/gh-pages</gh-pages.dir>
-                <javadoc.output.dir>${gh-pages.dir}/${javadoc.version.dir}apidocs</javadoc.output.dir>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <top><![CDATA[
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-15777010-3', 'auto');
-      ga('send', 'pageview');
-    </script>
-                                ]]></top>
-                            <additionalparam>--allow-script-in-comments</additionalparam>
-                            <excludePackageNames>
-                                *com.okta.sdk.impl.*:
-                                *com.okta.swagger.*:
-                                *.examples:
-                                *.tutorial.*:
-                                *quickstart
-                            </excludePackageNames>
-                            <outputDirectory>${javadoc.output.dir}</outputDirectory>
-                            <reportOutputDirectory>${javadoc.output.dir}</reportOutputDirectory>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-scm-publish-plugin</artifactId>
-                        <version>1.1</version>
-                        <inherited>false</inherited>
-                        <configuration>
-                            <checkinComment>Publishing javadoc for ${project.artifactId}:${project.version}</checkinComment>
-                            <content>${gh-pages.dir}</content>
-                            <skipDeletedFiles>true</skipDeletedFiles>
-                            <pubScmUrl>scm:git:https://${github.api.key}@github.com/okta/okta-sdk-java.git</pubScmUrl>
-                            <scmBranch>gh-pages</scmBranch> <!-- branch with static site -->
-                            <checkoutDirectory>${project.build.directory}/scmpublish-checkout-javadoc</checkoutDirectory>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
