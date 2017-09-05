@@ -94,7 +94,7 @@ class GroupRuleIT extends ITSupport {
         rule.activate()
 
         // Triggering the updated rule will remove the user from group
-        assertUserInGroup(user, group, 10, 1000, false)
+        assertUserInGroup(user, group, 20, 1000, false)
 
         // 5. delete rule
         rule.deactivate()
