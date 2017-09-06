@@ -31,14 +31,21 @@ NEW_VERSION="$(xmllint --xpath "//*[local-name()='project']/*[local-name()='vers
 TAG_NAME="okta-sdk-root-${NEW_VERSION}" # default release plugin tag format
 
 ##Release
-#$MVN_CMD org.sonatype.plugins:nexus-staging-maven-plugin:release
+$MVN_CMD org.sonatype.plugins:nexus-staging-maven-plugin:release
+
+git clone -b gh-pages git@github.com:okta/okta-sdk-java.git target/gh-pages
 
 # publish once to the versioned dir
-$MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs -Djavadoc.version.dir=''
+$MVN_CMD javadoc:aggregate -Ppub-docs -Djavadoc.version.dir=''
 # and again to the unversioned dir
-$MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs -Djavadoc.version.dir="${NEW_VERSION}/"
+$MVN_CMD javadoc:aggregate -Ppub-docs -Djavadoc.version.dir="${NEW_VERSION}/"
 
-cd ../..
+cd target/gh-pages
+git add .
+git commit -m "deploying javadocs for v${NEW_VERSION}"
+git push origin gh-pages
+
+cd ../../../..
 
 git push origin $(git rev-parse --abbrev-ref HEAD)
 git push origin ${TAG_NAME}
