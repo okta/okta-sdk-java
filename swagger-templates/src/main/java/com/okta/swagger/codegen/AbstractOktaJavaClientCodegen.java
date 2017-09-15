@@ -16,6 +16,7 @@
 package com.okta.swagger.codegen;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.codegen.CodegenModel;
@@ -36,6 +37,7 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.SwaggerException;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +54,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen {
@@ -74,6 +78,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     protected Map<String, String> modelTagMap = new HashMap<>();
     protected Set<String> enumList = new HashSet<>();
+    protected Map<String, Discriminator> discriminatorMap = new HashMap<>();
 
     public AbstractOktaJavaClientCodegen(String codeGenName, String relativeTemplateDir, String modelPackage) {
         super();
@@ -105,12 +110,29 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         removeListAfterAndLimit(swagger);
         moveOperationsToSingleClient(swagger);
         handleOktaLinkedOperations(swagger);
+        buildDiscriminationMap(swagger);
+    }
+
+    protected void buildDiscriminationMap(Swagger swagger) {
+        swagger.getDefinitions().forEach((name, model) -> {
+            ObjectNode discriminatorMapExtention = (ObjectNode) model.getVendorExtensions().get("x-openapi-v3-discriminator");
+            if (discriminatorMapExtention != null) {
+
+                String propertyName = discriminatorMapExtention.get("propertyName").asText();
+                ObjectNode mapping = (ObjectNode) discriminatorMapExtention.get("mapping");
+
+                ObjectMapper mapper = new ObjectMapper();
+                Map<String, String> result = mapper.convertValue(mapping, Map.class);
+                result = result.entrySet().stream().collect(Collectors.toMap(e -> e.getValue().substring(e.getValue().lastIndexOf('/')+1), e -> e.getKey()));
+                discriminatorMap.put(name, new Discriminator(name, propertyName, result));
+            }
+        });
     }
 
     protected void tagEnums(Swagger swagger) {
         swagger.getDefinitions().forEach((name, model) -> {
-            assert model instanceof ModelImpl : "Model MUST be an instance of ModelImpl";
-            if (((ModelImpl) model).getEnum() != null) {
+
+            if (model instanceof ModelImpl && ((ModelImpl) model).getEnum() != null) {
                 enumList.add(name);
             }
         });
@@ -218,28 +240,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                             // now any params that match the models we need to use the model value directly
                             // for example if the path contained {id} we would call getId() instead
 
-                            Map<String, String> argMap = new LinkedHashMap<>();
-                            ArrayNode argNodeList = (ArrayNode) n.get("arguments");
+                            Map<String, String> argMap = createArgMap(n);
 
-                            if (argNodeList != null) {
-                                for (Iterator argNodeIter = argNodeList.iterator(); argNodeIter.hasNext(); ) {
-                                    JsonNode argNode = (JsonNode) argNodeIter.next();
-
-                                    if (argNode.has("src")) {
-                                        String src = argNode.get("src").textValue();
-                                        String dest = argNode.get("dest").textValue();
-                                        if (src != null) {
-                                            argMap.put(dest, src); // reverse lookup
-                                        }
-                                    }
-
-                                    if (argNode.has("self")) {
-                                        String dest = argNode.get("dest").textValue();
-                                        argMap.put(dest, "this"); // reverse lookup
-                                    }
-                                }
-                            }
-
+                            List<CodegenParameter> cgOtherPathParamList = new ArrayList<>();
                             List<CodegenParameter> cgParamAllList = new ArrayList<>();
                             List<CodegenParameter> cgParamModelList = new ArrayList<>();
 
@@ -258,10 +261,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                     }
 
                                 } else {
-                                    cgParamAllList.add(param);
+                                    cgOtherPathParamList.add(param);
                                 }
                             });
 
+                            // remove the body param if the body is the object itself
                             for (Iterator<CodegenParameter> iter = cgOperation.bodyParams.iterator(); iter.hasNext(); ) {
                                 CodegenParameter bodyParam = iter.next();
                                 if (argMap.containsKey(bodyParam.paramName)) {
@@ -270,20 +274,18 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 }
                             }
 
-//                        if (cgOperation.getHasBodyParam()) {
-//                            CodegenParameter bodyParam = cgOperation.bodyParam;
-//                            if (argMap.containsKey(bodyParam.paramName)) {
-//                                bodyParam.paramName = "WTF";
-//                                bodyParam.vendorExtensions.put("self", true);
-//                            }
-//                        }
+                            // do not add the parrent path params to the list (they will be parsed from the href)
+                            SortedSet<String> pathParents = parentPathParams(n);
+                            cgOtherPathParamList.forEach(param -> {
+                                if (!pathParents.contains(param.paramName)) {
+                                    cgParamAllList.add(param);
+                                }
+                            });
 
-
-//                        // mark the last param
-//                        if (!cgParamModelList.isEmpty()) {
-//                            CodegenParameter param = cgParamModelList.get(cgParamModelList.size()-1);
-//                            param.hasMore = false;
-//                        }
+                            if (!pathParents.isEmpty()) {
+                                cgOperation.vendorExtensions.put("hasPathParents", true);
+                                cgOperation.vendorExtensions.put("pathParents", pathParents);
+                            }
 
                             cgParamAllList.addAll(cgOperation.queryParams);
                             cgParamAllList.addAll(cgOperation.bodyParams);
@@ -314,6 +316,51 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
             model.getVendorExtensions().put("operations", operationMap.values());
         });
+    }
+
+    private Map<String, String> createArgMap(ObjectNode n) {
+
+        Map<String, String> argMap = new LinkedHashMap<>();
+        ArrayNode argNodeList = (ArrayNode) n.get("arguments");
+
+        if (argNodeList != null) {
+            for (Iterator argNodeIter = argNodeList.iterator(); argNodeIter.hasNext(); ) {
+                JsonNode argNode = (JsonNode) argNodeIter.next();
+
+                if (argNode.has("src")) {
+                    String src = argNode.get("src").textValue();
+                    String dest = argNode.get("dest").textValue();
+                    if (src != null) {
+                        argMap.put(dest, src); // reverse lookup
+                    }
+                }
+
+                if (argNode.has("self")) {
+                    String dest = argNode.get("dest").textValue();
+                    argMap.put(dest, "this"); // reverse lookup
+                }
+            }
+        }
+        return argMap;
+    }
+
+    private SortedSet<String> parentPathParams(ObjectNode n) {
+
+        SortedSet<String> result = new TreeSet<>();
+        ArrayNode argNodeList = (ArrayNode) n.get("arguments");
+
+        if (argNodeList != null) {
+            for (JsonNode argNode : argNodeList) {
+                if (argNode.has("parentSrc")) {
+                    String src = argNode.get("parentSrc").textValue();
+                    String dest = argNode.get("dest").textValue();
+                    if (src != null) {
+                        result.add(dest);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     private void moveOperationsToSingleClient(Swagger swagger) {
@@ -392,6 +439,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                             .forEach(param -> codegenModel.imports.add(param.dataType));
                     }
             });
+        }
+
+        // force alias == false (likely only relevant for Lists, but something changed in swagger 2.2.3 to require this)
+        codegenModel.isAlias = false;
+
+        String parent = (String) model.getVendorExtensions().get("x-okta-parent");
+        if (StringUtils.isNotEmpty(parent)) {
+            codegenModel.parent = toApiName(parent.substring(parent.lastIndexOf("/")));
         }
 
        return codegenModel;
@@ -518,6 +573,13 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         // mark the operation as having optional params, so we can take advantage of it in the template
         addOptionalExtension(co, co.allParams);
+
+        // if the return type and the body and the return type are the same mark the body param
+        co.bodyParams.forEach(bodyParam -> {
+            if (bodyParam.dataType.equals(co.returnType)) {
+                co.vendorExtensions.put("updateBody", true);
+            }
+        });
 
         return co;
     }

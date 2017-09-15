@@ -40,7 +40,7 @@ import java.util.Map;
 @javax.annotation.Generated(
         value = "{{generatorClass}}",
         date  = "{{generatedDate}}")
-public class Default{{classname}} extends AbstractInstanceResource<{{classname}}> implements {{classname}} {
+public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}AbstractInstanceResource<{{classname}}>{{/parent}} implements {{classname}} {
 
 {{#vars}}
     private final static {{vendorExtensions.propertyType}}{{#vendorExtensions.typeClassExtra}}<{{{datatypeWithEnum}}}>{{/vendorExtensions.typeClassExtra}} {{name}}Property = new {{vendorExtensions.propertyType}}("{{baseName}}"{{vendorExtensions.constructorTypeExtra}});
@@ -50,6 +50,7 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
 
     public Default{{classname}}(InternalDataStore dataStore) {
         super(dataStore);
+        {{{vendorExtensions.defaultSetter}}}
     }
 
     public Default{{classname}}(InternalDataStore dataStore, Map<String, Object> properties) {
@@ -95,7 +96,13 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
-{{>queryPartial}}
+    {{#vendorExtensions.hasPathParents}}
+        Map<String, String> pathArgs = getParamsFromHref("{{path}}");
+    {{#vendorExtensions.pathParents}}
+        String {{.}} = pathArgs.get("{{.}}");
+    {{/vendorExtensions.pathParents}}
+    {{/vendorExtensions.hasPathParents}}
+    {{>queryPartial}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
     }
 
@@ -118,6 +125,12 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
+    {{#vendorExtensions.hasPathParents}}
+        Map<String, String> pathArgs = getParamsFromHref("{{path}}");
+        {{#vendorExtensions.pathParents}}
+        String {{.}} = pathArgs.get("{{.}}");
+        {{/vendorExtensions.pathParents}}
+    {{/vendorExtensions.hasPathParents}}
 {{>queryPartialRequired}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{#vendorExtensions.optionalBody}}{{>apiMethodPostNoBody}}{{/vendorExtensions.optionalBody}}{{^vendorExtensions.optionalBody}}{{>apiMethodPost}}{{/vendorExtensions.optionalBody}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
       }

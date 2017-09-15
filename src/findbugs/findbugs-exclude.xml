@@ -64,4 +64,10 @@
     <!-- Quickstart is formatted as an example, so there is dead code and hardcoded passwords -->
     <Match><Class name="quickstart.Quickstart"/></Match>
 
+    <!-- path destination is passed in as a build parameter -->
+    <Match>
+        <Package name="com.okta.swagger.codegen"></Package>
+        <Bug pattern="PATH_TRAVERSAL_IN" />
+    </Match>
+
 </FindBugsFilter>

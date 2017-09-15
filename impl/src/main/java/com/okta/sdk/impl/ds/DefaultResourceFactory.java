@@ -47,9 +47,20 @@ public class DefaultResourceFactory implements ResourceFactory {
             throw new NullPointerException("Resource class cannot be null.");
         }
 
-        Class<T> implClass = getImplementationClass(clazz);
+        Class<T> classToResolve = clazz;
 
         Object[] ctorArgs = createConstructorArgs(constructorArgs);
+
+        if (ctorArgs.length >= 2 && ctorArgs[1] instanceof Map) {
+
+            Map data = (Map) ctorArgs[1];
+            DiscriminatorRegistry registry = new DefaultDiscriminatorRegistry();
+            if (registry.supportedClass(clazz)) {
+                classToResolve = registry.resolve(clazz, data);
+            }
+        }
+
+        Class<T> implClass = getImplementationClass(classToResolve);
 
         Constructor<T> ctor;
 

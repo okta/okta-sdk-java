@@ -90,7 +90,7 @@ trait ClientProvider implements IHookable {
 
             Client client = getClient(scenarioId)
 
-            if (!isRunningWithTestServer()) {
+            if (!isRunningWithTestServer() && testResources != null) {
                 // delete any users that may collide with the test that is about to run
                 testResources.users().each { email ->
                     deleteUser(email, client)

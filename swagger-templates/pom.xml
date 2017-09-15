@@ -28,7 +28,7 @@
     <name>Okta Java SDK :: Swagger Templates</name>
 
     <properties>
-        <swagger-version>2.2.2</swagger-version>
+        <swagger-version>2.2.3</swagger-version>
     </properties>
 
     <dependencies>
@@ -47,6 +47,11 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
         </dependency>
 
     </dependencies>

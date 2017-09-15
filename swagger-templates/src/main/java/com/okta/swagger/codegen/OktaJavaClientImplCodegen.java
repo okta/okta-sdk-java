@@ -22,8 +22,20 @@ import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
 import org.apache.commons.lang3.BooleanUtils;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 {
@@ -42,6 +54,8 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
         apiTemplateFiles.put("api.mustache", ".java");
     }
+
+
 
     @Override
     public void preprocessSwagger(Swagger swagger) {
@@ -96,7 +110,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                     default:
                         propertyType = "ResourceReference";
                         propertyTypeMethod = "getResourceProperty";
-                        property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatype + ".class, "+ property.vendorExtensions.containsKey(CREATE_NESTED_KEY));
+                        property.vendorExtensions.put("constructorTypeExtra", buildConstructorTypeExtra(property));
                         property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
                 }
             }
@@ -108,10 +122,32 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         }
     }
 
+    private String buildConstructorTypeExtra(CodegenProperty property) {
+        Collection<String> autoCreateParams = Collections.singleton("profile");
+        boolean createNested = property.vendorExtensions.containsKey(CREATE_NESTED_KEY) || autoCreateParams.contains(property.name);
+        return ", " + property.datatype + ".class, "+ createNested;
+    }
+
     @Override
     public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
         CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
         codegenModel.imports.add(toModelName(codegenModel.classname)); // The 'Default' gets added in the template
+
+        // if the parent is set, we need to check for discrimination
+        String parent = (String) codegenModel.vendorExtensions.get("x-okta-parent");
+        if (parent != null) {
+            parent = parent.substring(parent.lastIndexOf('/') + 1);
+            if (discriminatorMap.containsKey(parent)) {
+                Discriminator discriminator = discriminatorMap.get(parent);
+
+                String fieldName = discriminator.getFieldName();
+                String defaultValue = discriminator.getDefaultFieldValue(name);
+                String defaultTypeSetter = "setProperty(\""+ fieldName +"\", \"" + defaultValue + "\");";
+
+                codegenModel.vendorExtensions.put("defaultSetter", defaultTypeSetter);
+            }
+        }
+
         return codegenModel;
     }
 
@@ -223,4 +259,44 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         return overrideModelPackage + "." + name;
     }
 
+    @Override
+    protected void buildDiscriminationMap(Swagger swagger) {
+        super.buildDiscriminationMap(swagger);
+
+        Map<String, Object> rootConfigMap = new HashMap<>();
+        Map<String, Object> destMap = new HashMap<>();
+        rootConfigMap.put("config", destMap);
+        discriminatorMap.values().forEach(disc -> {
+            String fqn = toModelImport(disc.getParentDefName());
+            String fieldName = disc.getFieldName();
+            Map<String, String> valueMap = disc.getValueDefMap().entrySet().stream()
+                    .collect(Collectors.toMap(e -> e.getValue(), e -> toModelImport(e.getKey())));
+            Map<String, Object> entries = new HashMap<>();
+            entries.put("fieldName", fieldName);
+            entries.put("values", valueMap);
+            destMap.put(fqn, entries);
+        });
+
+        // now dump this to yaml
+        // cheat a little here because we are assuming we are using maven
+        String mavenTargetDir = outputFolder().replaceFirst("/target/.*", "/target");
+        File destFile = new File(
+                new File(mavenTargetDir), "generated-resources/swagger/" + overrideModelPackage.replace('.', '/') +
+                "/discrimination.yaml");
+
+        boolean folderCreated = destFile.getParentFile().mkdirs();
+        if (!folderCreated && !destFile.getParentFile().exists()) {
+            throw new RuntimeException("Directory does not exist and could not be created: " + destFile.getParentFile());
+        }
+
+        try (OutputStream outputStream = new FileOutputStream(destFile)) {
+
+            Yaml yaml = new Yaml();
+            Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+            yaml.dump(rootConfigMap, writer);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write discrimination map to yaml: "+ destFile.getAbsolutePath(), e);
+        }
+    }
 }

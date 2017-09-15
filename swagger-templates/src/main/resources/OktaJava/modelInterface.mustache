@@ -23,7 +23,7 @@ import com.okta.sdk.resource.Saveable;
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
-public interface {{classname}} extends Resource{{#vendorExtensions.x-okta-extensible}}, Map<String, Object>{{/vendorExtensions.x-okta-extensible}}{{#vendorExtensions.deletable}}, Deletable{{/vendorExtensions.deletable}} {
+public interface {{classname}} extends Resource{{#parent}}, {{.}}{{/parent}}{{#vendorExtensions.x-okta-extensible}}, Map<String, Object>{{/vendorExtensions.x-okta-extensible}}{{#vendorExtensions.deletable}}, Deletable{{/vendorExtensions.deletable}} {
 
 {{#vars}}
     {{#vendorExtensions.extraAnnotation}}

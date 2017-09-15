@@ -85,6 +85,13 @@
     </dependencies>
 
     <build>
+
+        <resources>
+            <resource>
+                <directory>target/generated-resources/swagger</directory>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.zalando.maven.plugins</groupId>
