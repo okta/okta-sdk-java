@@ -23,14 +23,20 @@ import com.okta.sdk.lang.Strings;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -663,5 +669,36 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         } finally {
             readLock.unlock();
         }
+    }
+
+    protected Map<String, String> getParamsFromHref(String templateUrl) {
+        Assert.hasText(href, "Resource 'href' must be set before attempting to call an operation.");
+        Assert.hasText(templateUrl, "Template URL must not be empty.");
+        Map<String, String> resultMap = new HashMap<>();
+
+        try {
+            String hrefPath = new URI(href).getPath();
+
+            Iterator<String> templatePartsIter = Arrays.asList(templateUrl.split("/")).iterator();
+            Iterator<String> hrefPartsIter = Arrays.asList(hrefPath.split("/")).iterator();
+
+            while ( templatePartsIter.hasNext() && hrefPartsIter.hasNext()) {
+                String templatePart = templatePartsIter.next();
+                String hrefPart = hrefPartsIter.next();
+
+                // if the template string starts with '{' we have named path param
+                if (templatePart.startsWith("{") && templatePart.endsWith("}")) {
+                    String paramName = templatePart.substring(1,templatePart.length()-1);
+                    resultMap.put(paramName, hrefPart);
+                } else if (!Objects.equals(templatePart, hrefPart)) {
+                    // otherwise break, the template and the href no longer match
+                    break;
+                }
+                // otherwise the parts match, just continue
+            }
+        } catch (URISyntaxException e) {
+            throw new URIParseException("Invalid URI for resource: " + href, e);
+        }
+        return resultMap;
     }
 }
