@@ -105,6 +105,21 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         removeListAfterAndLimit(swagger);
         moveOperationsToSingleClient(swagger);
         handleOktaLinkedOperations(swagger);
+
+        handleNested(swagger);
+    }
+
+    protected void handleNested(Swagger swagger) {
+
+        swagger.getDefinitions().forEach((name, model) -> {
+            List<String> nested = (List<String>) model.getVendorExtensions().get("x-okta-nested");
+            if (nested != null) {
+                nested.forEach(nestedPropertyName -> {
+                    Property property = model.getProperties().get(nestedPropertyName);
+                    property.getVendorExtensions().put("x-okta-nested", true);
+                });
+            }
+        });
     }
 
     protected void tagEnums(Swagger swagger) {
@@ -394,7 +409,22 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             });
         }
 
-       return codegenModel;
+        for(Iterator<CodegenProperty> iter = codegenModel.vars.iterator(); iter.hasNext();){
+            CodegenProperty property = iter.next();
+            Boolean isNested = (Boolean) property.vendorExtensions.get("x-okta-nested");
+            if (isNested != null && isNested) {
+                String type = property.datatypeWithEnum;
+                CodegenModel nestedModel = fromModel(type, allDefinitions.get(type));
+                nestedModel.classname = codegenModel.classname;
+                codegenModel.vendorExtensions.put("x-okta-nestedModel", nestedModel);
+
+                nestedModel.vars.forEach(nestedProperty -> {
+                    nestedProperty.vendorExtensions.put("nestedName", property.name);
+                });
+            }
+        }
+
+        return codegenModel;
     }
 
     @Override

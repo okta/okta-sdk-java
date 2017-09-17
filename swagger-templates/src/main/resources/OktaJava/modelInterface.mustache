@@ -25,7 +25,7 @@ import com.okta.sdk.resource.Saveable;
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
 public interface {{classname}} extends Resource{{#vendorExtensions.x-okta-extensible}}, Map<String, Object>{{/vendorExtensions.x-okta-extensible}}{{#vendorExtensions.deletable}}, Deletable{{/vendorExtensions.deletable}} {
 
-{{#vars}}
+{{#vars}}{{^vendorExtensions.x-okta-nested}}
     {{#vendorExtensions.extraAnnotation}}
         {{{vendorExtensions.extraAnnotation}}}
     {{/vendorExtensions.extraAnnotation}}
@@ -47,7 +47,24 @@ public interface {{classname}} extends Resource{{#vendorExtensions.x-okta-extens
         {{/isContainer}}
     {{/items}}
 {{/items.isEnum}}
-{{/vars}}
+{{/vendorExtensions.x-okta-nested}}{{/vars}}
+
+
+// NESTED starts
+{{#vendorExtensions.x-okta-nestedModel}}{{#vars}}
+
+    // nested
+    {{#vendorExtensions.extraAnnotation}}
+        {{{vendorExtensions.extraAnnotation}}}
+    {{/vendorExtensions.extraAnnotation}}
+    {{{datatypeWithEnum}}} {{getter}}();
+
+    // nested
+    {{^isReadOnly}}
+        {{classname}} {{setter}}({{{datatypeWithEnum}}} {{name}});
+    {{/isReadOnly}}
+
+{{/vars}}{{/vendorExtensions.x-okta-nestedModel}}
 
 {{#vendorExtensions.operations}}{{#.}}
     /**

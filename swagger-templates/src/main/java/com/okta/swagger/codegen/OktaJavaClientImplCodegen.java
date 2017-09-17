@@ -96,7 +96,8 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                     default:
                         propertyType = "ResourceReference";
                         propertyTypeMethod = "getResourceProperty";
-                        property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatype + ".class, "+ property.vendorExtensions.containsKey(CREATE_NESTED_KEY));
+                        configureNestedConstructorTypeExtra(property);
+//                        property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatype + ".class, "+ property.vendorExtensions.containsKey(CREATE_NESTED_KEY));
                         property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
                 }
             }
@@ -108,10 +109,23 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         }
     }
 
+    private void configureNestedConstructorTypeExtra(CodegenProperty property) {
+        property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatype + ".class, "+ property.vendorExtensions.containsKey(CREATE_NESTED_KEY));
+    }
+
     @Override
     public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
         CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
         codegenModel.imports.add(toModelName(codegenModel.classname)); // The 'Default' gets added in the template
+
+        codegenModel.vars.forEach(property -> {
+            Boolean nested = (Boolean) property.vendorExtensions.get("x-okta-nested");
+            if (nested != null && nested) {
+                property.vendorExtensions.put(CREATE_NESTED_KEY, true);
+                configureNestedConstructorTypeExtra(property);
+            }
+        });
+
         return codegenModel;
     }
 

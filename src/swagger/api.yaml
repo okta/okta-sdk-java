@@ -2508,6 +2508,9 @@
       ],
       "x-okta-tags": [
         "User"
+      ],
+      "x-okta-nested": [
+        "profile"
       ]
     },
     "UserActivationToken": {

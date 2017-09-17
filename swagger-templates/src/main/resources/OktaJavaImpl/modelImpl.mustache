@@ -61,7 +61,7 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
         return PROPERTY_DESCRIPTORS;
     }
 
-{{#vars}}
+{{#vars}}{{^vendorExtensions.x-okta-nested}}
 
     public {{{datatypeWithEnum}}} {{getter}}() {
         return {{#vendorExtensions.forceCast}}({{{datatypeWithEnum}}}){{/vendorExtensions.forceCast}} {{vendorExtensions.propertyTypeMethod}}({{name}}Property);
@@ -74,7 +74,23 @@ public class Default{{classname}} extends AbstractInstanceResource<{{classname}}
     }
     {{/isReadOnly}}
 
-{{/vars}}
+{{/vendorExtensions.x-okta-nested}}{{/vars}}
+
+{{#vendorExtensions.x-okta-nestedModel}}{{#vars}}
+    // nested
+    public {{{datatypeWithEnum}}} {{getter}}() {
+        return getResourceProperty({{vendorExtensions.nestedName}}Property).{{getter}}();
+    }
+{{^isReadOnly}}
+
+    // nested
+    public {{classname}} {{setter}}({{{datatypeWithEnum}}} {{name}}) {
+        getResourceProperty({{vendorExtensions.nestedName}}Property).{{setter}}({{name}});
+        return this;
+    }
+{{/isReadOnly}}
+
+{{/vars}}{{/vendorExtensions.x-okta-nestedModel}}
 
 {{#vendorExtensions.operations}}{{#.}}
     /**
