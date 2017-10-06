@@ -30,8 +30,8 @@ public interface {{classname}} extends Resource{{#parent}}, {{.}}{{/parent}}{{#v
         {{{vendorExtensions.extraAnnotation}}}
     {{/vendorExtensions.extraAnnotation}}
     {{{datatypeWithEnum}}} {{getter}}();
-
 {{^isReadOnly}}
+
     {{classname}} {{setter}}({{{datatypeWithEnum}}} {{name}});
 {{/isReadOnly}}
 
@@ -48,7 +48,6 @@ public interface {{classname}} extends Resource{{#parent}}, {{.}}{{/parent}}{{#v
     {{/items}}
 {{/items.isEnum}}
 {{/vars}}
-
 {{#vendorExtensions.operations}}{{#.}}
     /**
     * {{summary}}

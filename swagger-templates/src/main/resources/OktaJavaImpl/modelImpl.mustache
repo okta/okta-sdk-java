@@ -61,7 +61,6 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     public Map<String, Property> getPropertyDescriptors() {
         return PROPERTY_DESCRIPTORS;
     }
-
 {{#vars}}
 
     public {{{datatypeWithEnum}}} {{getter}}() {
@@ -74,10 +73,9 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
         return this;
     }
     {{/isReadOnly}}
-
 {{/vars}}
-
 {{#vendorExtensions.operations}}{{#.}}
+
     /**
     * {{summary}}
     * {{notes}}
@@ -102,11 +100,11 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
         String {{.}} = pathArgs.get("{{.}}");
     {{/vendorExtensions.pathParents}}
     {{/vendorExtensions.hasPathParents}}
-    {{>queryPartial}}
+{{>queryPartial}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
     }
-
 {{#vendorExtensions.hasOptional}}
+
     /**
     * {{summary}}
     * {{notes}}
@@ -133,10 +131,10 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     {{/vendorExtensions.hasPathParents}}
 {{>queryPartialRequired}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{#vendorExtensions.optionalBody}}{{>apiMethodPostNoBody}}{{/vendorExtensions.optionalBody}}{{^vendorExtensions.optionalBody}}{{>apiMethodPost}}{{/vendorExtensions.optionalBody}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
-      }
+     }
 {{/vendorExtensions.hasOptional}}{{/.}}{{/vendorExtensions.operations}}
-
 {{#operation}}{{^vendorExtensions.moved}}
+
     /**
     * {{summary}}
     * {{notes}}
@@ -157,8 +155,8 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{>queryPartial}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
     }
-
 {{#vendorExtensions.hasOptional}}
+
     /**
     * {{summary}}
     * {{notes}}
@@ -183,4 +181,3 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 
 {{/model}}{{/models}}
 }
-
