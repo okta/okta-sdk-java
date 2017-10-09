@@ -12,6 +12,8 @@
 
 package com.okta.sdk.framework;
 
+import com.okta.sdk.models.links.Link;
+
 import java.util.List;
 
 public class PagedResults<T> {
@@ -50,7 +52,8 @@ public class PagedResults<T> {
      * @return {@link String}
      */
     public String getNextUrl() {
-        return apiResponse.getLinks().get("next").getHref();
+        Link next = apiResponse.getLinks().get("next");
+        return next != null ? next.getHref() : null;
     }
 
     /**
