@@ -1,8 +1,0 @@
-{
-  "name": "${project.artifactId}",
-
-  "devDependencies": {
-    "@okta/okta-sdk-test-server":
-        "okta/okta-sdk-test-server#${okta.testServer.ref}"
-  }
-}

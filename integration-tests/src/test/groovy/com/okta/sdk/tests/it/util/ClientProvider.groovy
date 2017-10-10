@@ -64,7 +64,7 @@ trait ClientProvider implements IHookable {
     private Client buildClient(String scenarioId = null) {
 
         String testServerBaseUrl = System.getProperty(TestServer.TEST_SERVER_BASE_URL)
-        if (isRunningWithTestServer()) {
+        if (isRunningWithTestServer() && scenarioId != null) {
             return Clients.builder()
                     .setOrgUrl(testServerBaseUrl + scenarioId)
                     .setClientCredentials(new TokenClientCredentials("00ICU812"))
@@ -86,6 +86,10 @@ trait ClientProvider implements IHookable {
             String scenarioId = null
             if (scenario != null) {
                 if (scenario != null) scenarioId = scenario.value()
+            }
+
+            if (scenario == null) {
+                log.info("Test: [{}.{}] does not have a scenario name.", getClass().name, testResult.method.methodName)
             }
 
             Client client = getClient(scenarioId)

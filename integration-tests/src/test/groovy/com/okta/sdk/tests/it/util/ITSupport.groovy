@@ -46,15 +46,16 @@ abstract class ITSupport implements ClientProvider {
                 }
             }
 
-            testServer = new TestServer().start(scenarios, System.getProperty("okta.testServer.bin", "node_modules/.bin/okta-sdk-test-server"), Boolean.getBoolean("okta.testServer.verbose"))
+            testServer = new TestServer().start(scenarios)
+            System.setProperty(TestServer.TEST_SERVER_BASE_URL, "http://localhost:${testServer.getMockPort()}/")
         }
     }
 
     @AfterSuite()
     void stop() {
         if (testServer != null) {
+            testServer.verify()
             testServer.stop()
         }
     }
-
 }
