@@ -18,7 +18,6 @@ package com.okta.sdk.impl.ds;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.ReferenceFactory;
 import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Strings;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -58,14 +57,14 @@ public class DefaultResourceConverter implements ResourceConverter {
 
         for (String propName : propNames) {
             Object value = resource.getProperty(propName);
-            value = toMapValue(resource, propName, value, partialUpdate);
+            value = toMapValue(propName, value, partialUpdate);
             props.put(propName, value);
         }
 
         return props;
     }
 
-    private Object toMapValue(final AbstractResource resource, final String propName, Object value, boolean dirtyOnly) {
+    private Object toMapValue(final String propName, Object value, boolean dirtyOnly) {
 
         if (value instanceof AbstractResource) {
             return toMap((AbstractResource)value, dirtyOnly);
@@ -74,16 +73,7 @@ public class DefaultResourceConverter implements ResourceConverter {
         if (value instanceof Map) {
             //Since defaultModel is a map, the DataStore thinks it is a Resource. This causes the code to crash later one as Resources
             //do need to have an href property
-
-            //if the property is a reference, don't write the entire object - just the href will do:
-            //TODO need to change this to write the entire object because this code defeats the purpose of entity expansion
-            //     when this code gets called (returning the reference instead of the whole object that is returned from Okta)
-            if(Strings.hasText(resource.getResourceHref())) {
-                return this.referenceFactory.createReference(propName, (Map) value);
-            }
-            else{
-                return this.referenceFactory.createUnmaterializedReference(propName, (Map) value);
-            }
+            return this.referenceFactory.createUnmaterializedReference(propName, (Map) value);
         }
 
         return value;

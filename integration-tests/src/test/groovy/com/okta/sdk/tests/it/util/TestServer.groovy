@@ -15,10 +15,24 @@
  */
 package com.okta.sdk.tests.it.util
 
-import com.okta.sdk.lang.Strings
-import org.testng.TestNGException
+import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.client.BasicMappingBuilder
+import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.http.RequestMethod
+import com.github.tomakehurst.wiremock.matching.RequestPattern
+import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
+import de.sstoehr.harreader.HarReader
+import de.sstoehr.harreader.model.Har
+import de.sstoehr.harreader.model.HarRequest
+import de.sstoehr.harreader.model.HarResponse
+import de.sstoehr.harreader.model.HttpMethod
+import org.apache.commons.lang3.StringUtils
+import org.testng.collections.CollectionUtils
 
-import static java.util.concurrent.TimeUnit.SECONDS
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 
 /**
  * Starts the Node.js based test server @okta/okta-sdk-test-server.
@@ -26,72 +40,115 @@ import static java.util.concurrent.TimeUnit.SECONDS
 class TestServer {
     public static final TEST_SERVER_BASE_URL = "okta.testServer.baseUrl"
 
-    private Process process
-    private File testServerLogFile
+    private WireMockServer wireMockServer
+    private int port
 
-    TestServer start(List<String> scenarios, String serverBin, boolean verbose = false) {
-
-        StringBuilder scenariosArgBuilder = new StringBuilder()
-        scenarios.each {scenario ->
-            scenariosArgBuilder.append(",")
-            scenariosArgBuilder.append(scenario)
+    int getMockPort() {
+        if (port == 0) {
+            port = new ServerSocket(0).withCloseable {it.getLocalPort()}
         }
+        return port
+    }
 
-        List<String> command = [serverBin]
-        if (verbose) command.add('--verbose')
-        // if we have scenarios (which we should), then add the '--scenarios' flag
-        if (Strings.hasLength(scenariosArgBuilder)) {
-            command.add("--scenarios")
-            command.add(scenariosArgBuilder.substring(1))
+    void configureHttpMock(WireMockServer wireMockServer, List<String> scenarios) {
+        scenarios.each {loadScenario(wireMockServer, it)}
+    }
+
+    TestServer start(List<String> scenarios) {
+        if (CollectionUtils.hasElements(scenarios)) {
+            wireMockServer = new WireMockServer(wireMockConfig().port(getMockPort()))
+            configureHttpMock(wireMockServer, scenarios)
+            wireMockServer.start()
         }
-
-        // set a property so we can point the client at the right location
-        System.setProperty(TEST_SERVER_BASE_URL, "http://localhost:8080/")
-
-        File targetDirectory = new File(System.getProperty("user.dir"), "target")
-        File workingDirectory = new File(targetDirectory, "test-classes")
-        testServerLogFile = new File(targetDirectory, "okta-sdk-test-server.log")
-
-        ProcessBuilder processBuilder = new ProcessBuilder(command)
-        processBuilder.directory(workingDirectory)
-        processBuilder.redirectOutput(ProcessBuilder.Redirect.to(testServerLogFile))
-        processBuilder.redirectErrorStream(true)
-        processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT)
-        processBuilder.environment().put("TERM", "vt220")
-
-        process = processBuilder.start()
-        if (process.waitFor(5, SECONDS)) {
-            String message = "okta-sdk-test-server process exited while starting with exit value " +
-                    "of '${process.exitValue()}'.\nProcess output follows:\n" + testServerLogFile.text
-
-            throw new TestNGException(message)
-        }
-
         return this
     }
 
     void stop() {
+        if (wireMockServer != null) {
+            wireMockServer.stop()
+        }
+    }
 
-        if (process != null && process.isAlive()) {
-            process.destroy()
-            if (process.waitFor(5, SECONDS)) {
-                if (process.exitValue() != 0) {
-                    String message = "okta-sdk-test-server process exited with a non-zero status " +
-                            "of '${process.exitValue()}'.\nProcess output follows:\n" + testServerLogFile.text
+    void verify() {
 
-                    throw new TestNGException(message)
+        if (wireMockServer != null) {
+            wireMockServer.stubMappings.each {
+
+                RequestPattern request = it.request
+                RequestPatternBuilder requestPatternBuilder = new RequestPatternBuilder(request.method, WireMock.urlPathEqualTo(request.urlPath))
+                request.headers.entrySet().each {
+                    requestPatternBuilder.withHeader(it.key, it.value.valuePattern)
                 }
+
+                if (request.queryParameters != null) {
+                    request.queryParameters.entrySet().each {
+                        requestPatternBuilder.withQueryParam(it.key, it.value.valuePattern)
+                    }
+                }
+
+                if (request.bodyPatterns != null) {
+                    requestPatternBuilder.withRequestBody(request.bodyPatterns.get(0))
+                }
+
+                wireMockServer.verify(requestPatternBuilder)
+            }
+        }
+    }
+
+    private void loadScenario(WireMockServer wireMockServer, String scenario) {
+
+        String scenarioName = scenario.replaceAll("\\.har\$", "")
+
+        HarReader harReader = new HarReader()
+        Har har = harReader.readFromString(getClass().getResource("/scenarios/${scenarioName}.har").text)
+
+        // force scenario order
+        int requestNum = 0
+
+        har.log.entries.forEach {
+
+            HarRequest request = it.getRequest()
+            HarResponse response = it.getResponse()
+
+            String path = request.url.replace("https://test.example.com", "/${scenarioName}").replaceAll("\\?.*", "")
+
+            def builder = new BasicMappingBuilder(RequestMethod.fromString(request.method.name()), WireMock.urlPathEqualTo(path))
+            builder.inScenario(scenarioName)
+
+            if (requestNum == 0) {
+                builder.whenScenarioStateIs(com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED)
             }
             else {
-                process.destroyForcibly()
-                String message = "Force killed test-server, manually check to see if it is still running.\n" +
-                        "The test-server output can be found in: ${testServerLogFile.absolutePath}"
-                throw new TestNGException(message)
+                builder.whenScenarioStateIs("state-${scenarioName}-${requestNum}")
             }
-        } else if (process != null) {
-            String message = "okta-sdk-test-server quit unexpectedly with exit status: ${process.exitValue()}" + testServerLogFile.text
+            builder.willSetStateTo("state-${scenarioName}-${++requestNum}")
 
-            throw new TestNGException(message)
+            // match headers exactly
+            request.headers.forEach {
+                // strip content type, that is non-matching for the request (recording error)
+                if ("content-type" != it.name ||
+                        (request.method == HttpMethod.POST || request.method == HttpMethod.PUT)) {
+                    builder.withHeader(it.name, equalTo(it.value))
+                }
+            }
+            // match query string exactly
+            request.queryString.forEach {
+                builder.withQueryParam(it.name, equalTo(it.value))
+            }
+            if (StringUtils.isNotEmpty(request.postData.text)) {
+                builder.withRequestBody(equalToJson(request.postData.text, false, true))
+            }
+
+            // response
+            def mockResponse = aResponse()
+            // include headers
+            response.headers.forEach {
+                mockResponse.withHeader(it.name, it.value)
+            }
+            mockResponse.withStatus(response.status)
+            mockResponse.withBody(response.content.text)
+
+            wireMockServer.stubFor(builder.willReturn(mockResponse))
         }
     }
 }

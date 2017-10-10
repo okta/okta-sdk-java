@@ -66,6 +66,9 @@ class UserIT extends ITSupport {
         user.activate(false)
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
+
+
+
     }
 
     @Test(enabled = false)
@@ -101,7 +104,6 @@ class UserIT extends ITSupport {
 
         // 5. List roles for user and verify role was removed
         assertNotPresent(user.listRoles(), role)
-
     }
 
     @Test
@@ -130,6 +132,10 @@ class UserIT extends ITSupport {
             .setOldPassword(client.instantiate(PasswordCredential).setValue('Abcd1234'))
             .setNewPassword(client.instantiate(PasswordCredential).setValue('1234Abcd')))
         assertThat credentials.provider.type, equalTo(AuthenticationProviderType.OKTA)
+
+        // 3. make the test recording happy, and call a get on the user
+        // TODO: fix har file
+        client.getUser(user.id)
     }
 
     @Test
@@ -168,8 +174,11 @@ class UserIT extends ITSupport {
         userCredentials.password.value = '1234Abcd'
         userCredentials.recoveryQuestion.answer = 'forty two'
         ForgotPasswordResponse response = user.forgotPassword(null, userCredentials)
-
         assertThat response.getResetPasswordUrl(), nullValue()
+
+        // 4. make the test recording happy, and call a get on the user
+        // TODO: fix har file
+        client.getUser(user.id)
     }
 
     @Test
