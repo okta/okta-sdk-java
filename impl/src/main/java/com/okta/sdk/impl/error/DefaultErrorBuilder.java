@@ -59,6 +59,11 @@ public class DefaultErrorBuilder {
         return this;
     }
 
+    public DefaultErrorBuilder headers(Map<String, String[]> headers) {
+        this.errorProperties.put(DefaultError.HEADERS.getName(), headers);
+        return this;
+    }
+
     public Error build() {
         for (Object value : errorProperties.values()) {
             Assert.notNull(value);
