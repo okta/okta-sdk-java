@@ -44,10 +44,12 @@
         <dependency>
             <groupId>com.okta.sdk</groupId>
             <artifactId>okta-sdk-examples-quickstart</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.okta.sdk</groupId>
             <artifactId>okta-sdk-integration-tests</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
