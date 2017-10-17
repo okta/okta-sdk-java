@@ -16,6 +16,7 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.impl.ds.InternalDataStore
+import com.okta.sdk.lang.Assert
 import com.okta.sdk.lang.Classes
 import com.okta.sdk.resource.Resource
 import org.mockito.Mockito
@@ -28,6 +29,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import java.util.stream.Stream
 
 import static org.hamcrest.MatcherAssert.*
 import static org.hamcrest.Matchers.*
@@ -48,12 +50,7 @@ class GeneratedResourceTest {
 
         InternalDataStore dataStore = createMockDataStore()
 
-        Arrays.stream(getClasses("com.okta.sdk.impl.resource"))
-            .filter { clazz -> clazz.superclass != null}
-            .filter { clazz -> clazz.superclass == AbstractInstanceResource}
-            .filter { clazz -> !clazz.name.contains("Test")}
-            .filter { clazz -> !clazz.name.contains("Abstract")}
-            .forEach { clazz ->
+        clazzStream().forEach { clazz ->
 
                 def resource = (AbstractResource) Classes.instantiate(
                         clazz.getDeclaredConstructor(InternalDataStore, Map), dataStore, null)
@@ -71,12 +68,7 @@ class GeneratedResourceTest {
 
         InternalDataStore dataStore = createMockDataStore()
 
-        Arrays.stream(getClasses("com.okta.sdk.impl.resource"))
-                .filter { clazz -> clazz.superclass != null}
-                .filter { clazz -> clazz.superclass == AbstractInstanceResource}
-                .filter { clazz -> !clazz.name.contains("Test")}
-                .filter { clazz -> !clazz.name.contains("Abstract")}
-                .forEach { clazz ->
+        clazzStream().forEach { clazz ->
 
                     def resource = (AbstractResource) Classes.instantiate(
                             clazz.getDeclaredConstructor(InternalDataStore, Map), dataStore, null)
@@ -94,18 +86,21 @@ class GeneratedResourceTest {
     void testConstructorsDoNotThrowException() {
         InternalDataStore dataStore = createMockDataStore()
 
-        Arrays.stream(getClasses("com.okta.sdk.impl.resource"))
-                .filter { clazz -> clazz.superclass != null}
-                .filter { clazz -> clazz.superclass == AbstractInstanceResource}
-                .filter { clazz -> !clazz.name.contains("Test")}
-                .filter { clazz -> !clazz.name.contains("Abstract")}
-                .forEach { clazz ->
+        clazzStream().forEach { clazz ->
 
                     // just make sure this doesn't throw an exception.
                     def resource = (AbstractResource) Classes.instantiate(clazz.getDeclaredConstructor(InternalDataStore), dataStore)
                     assertThat resource.getInternalProperties(), anEmptyMap()
                 }
 
+    }
+
+    Stream<Class> clazzStream() {
+        return Arrays.stream(getClasses("com.okta.sdk.impl.resource"))
+                .filter { clazz -> clazz.superclass != null}
+                .filter { clazz -> AbstractInstanceResource.isAssignableFrom(clazz)}
+                .filter { clazz -> !clazz.name.contains("Test")}
+                .filter { clazz -> !clazz.name.contains("Abstract")}
     }
 
     void validateViaGetter(Class clazz, Resource resource, boolean withSettersOnly = true) {
@@ -359,7 +354,7 @@ class GeneratedResourceTest {
         File[] files = directory.listFiles()
         for (File file : files) {
             if (file.isDirectory()) {
-                assert !file.getName().contains(".")
+                Assert.isTrue(!file.getName().contains("."), "Expected directory containing '.' in path")
                 classes.addAll(findClasses(file, packageName + "." + file.getName()))
             } else if (file.getName().endsWith(".class")) {
                 classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)))
