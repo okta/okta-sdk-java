@@ -16,6 +16,7 @@
 package com.okta.sdk.error;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @since 0.5.0
@@ -31,4 +32,6 @@ public interface Error {
     String getId();
 
     List<ErrorCause> getCauses();
+
+    Map<String, List<String>> getHeaders();
 }

@@ -49,6 +49,11 @@ class ResourceExceptionTest {
             }
 
             @Override
+            Map<String, String[]> getHeaders() {
+                return null
+            }
+
+            @Override
             String getId() {
                 return  null
             }
