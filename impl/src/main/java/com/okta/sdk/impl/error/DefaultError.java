@@ -20,6 +20,7 @@ import com.okta.sdk.error.ErrorCause;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.IntegerProperty;
 import com.okta.sdk.impl.resource.ListProperty;
+import com.okta.sdk.impl.resource.MapProperty;
 import com.okta.sdk.impl.resource.Property;
 import com.okta.sdk.impl.resource.StringProperty;
 
@@ -39,10 +40,11 @@ public class DefaultError extends AbstractResource implements Error {
     static final StringProperty CODE = new StringProperty("errorCode");
     static final StringProperty MESSAGE = new StringProperty("errorSummary");
     static final ListProperty CAUSES = new ListProperty("errorCauses");
+    static final MapProperty HEADERS = new MapProperty("errorHeaders");
     public static final StringProperty ERROR_ID = new StringProperty("errorId");
 
     private static final Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(
-            STATUS, CODE, MESSAGE, CAUSES, ERROR_ID
+            STATUS, CODE, MESSAGE, CAUSES, ERROR_ID, HEADERS
     );
 
     public DefaultError(Map<String, Object> body) {
@@ -115,4 +117,13 @@ public class DefaultError extends AbstractResource implements Error {
         return this;
     }
 
+    @Override
+    public Map<String, List<String>> getHeaders() {
+        return getMap(HEADERS);
+    }
+
+    public DefaultError setHeaders(Map<String, List<String>> headers) {
+        setProperty(HEADERS, headers);
+        return this;
+    }
 }

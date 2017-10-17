@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.*
  */
 class HttpHeadersTest {
 
-    def httpHeaders
+    HttpHeaders httpHeaders
 
     @BeforeMethod
     void setup() {
@@ -416,5 +416,19 @@ class HttpHeadersTest {
         assertThat(result.get("self"), equalToObject("https://example.com/api/v1/users?limit=200"))
         assertThat(result.get("next"), equalToObject("https://dev-259824.oktapreview.com/api/v1/users?after=200u9wv2af0FYl791n0h7&limit=200"))
         assertThat(result, aMapWithSize(2))
+    }
+
+    @Test
+    void testGetXHeaders() {
+
+        httpHeaders.add("x-header1", "value1")
+        httpHeaders.add("x-header1", "value2")
+        httpHeaders.add("non-header2", "ignored")
+        httpHeaders.add("x-header2", "single-value")
+
+        assertThat httpHeaders.getXHeaders(), allOf(
+                hasEntry(is("x-header1"), equalTo(["value1", "value2"])),
+                hasEntry(is("x-header2"), equalTo(["single-value"])),
+                aMapWithSize(2))
     }
 }
