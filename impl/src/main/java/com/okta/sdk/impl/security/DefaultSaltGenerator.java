@@ -15,9 +15,9 @@
  */
 package com.okta.sdk.impl.security;
 
-import com.okta.sdk.impl.util.Base64;
 
 import java.security.SecureRandom;
+import java.util.Base64;
 
 /**
  * @since 0.5.0
@@ -40,6 +40,6 @@ public class DefaultSaltGenerator implements SaltGenerator {
         SecureRandom random = new SecureRandom();
         byte[] byteArr = new byte[bytesSize];
         random.nextBytes(byteArr);
-        return Base64.encodeBase64URLSafeString(byteArr);
+        return Base64.getUrlEncoder().encodeToString(byteArr);
     }
 }
