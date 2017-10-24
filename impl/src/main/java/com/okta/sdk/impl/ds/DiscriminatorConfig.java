@@ -24,6 +24,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 
+/**
+ * Simple configuration bean which allows the {@link DiscriminatorRegistry} configuration to be loaded from a file.
+ *
+ * @since 0.8.0
+ */
 public class DiscriminatorConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DiscriminatorConfig.class);
@@ -61,6 +66,12 @@ public class DiscriminatorConfig {
         }
     }
 
+    /**
+     * Loads DiscriminatorConfig from the classpath file: {code}/com/okta/sdk/resource/discrimination.yaml{code}.
+     * If this file cannot be found an empty DiscriminatorConfig is returned.
+     *
+     * @return a DiscriminatorConfig based on the discrimination.yaml found on the classpath.
+     */
     static DiscriminatorConfig loadConfig() {
         Yaml yaml = new Yaml();
         String configFile = "/com/okta/sdk/resource/discrimination.yaml";
