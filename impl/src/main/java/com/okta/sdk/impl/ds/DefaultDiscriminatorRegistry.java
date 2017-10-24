@@ -20,6 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Default implementation of @{link DiscriminatorRegistry} that looks up implementations based on
+ * the configuration from {@link DiscriminatorConfig}.
+ *
+ * @since 0.8.0
+ */
 public class DefaultDiscriminatorRegistry implements DiscriminatorRegistry {
 
     private Map<Class, AttributeDiscriminationStrategy> supportedClassMap = new HashMap<>();

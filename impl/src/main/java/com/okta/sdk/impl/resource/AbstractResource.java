@@ -671,6 +671,17 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         }
     }
 
+    /**
+     * Parses path parameters from URL based on a template string.
+     * <p>
+     * Example:
+     * For the template string: <code>/users/{userId}/favorite/{iceCream}</code>, and the href of this resource:
+     * <code>/users/42/favorite/vanilla}</code>, the resulting map would be: <code>[userId: 42, iceCream: vanilla]</code>.
+     *
+     * @param templateUrl template of the URL to parse
+     * @return a map of path parameters
+     * @since 0.8.0
+     */
     protected Map<String, String> getParamsFromHref(String templateUrl) {
         Assert.hasText(href, "Resource 'href' must be set before attempting to call an operation.");
         Assert.hasText(templateUrl, "Template URL must not be empty.");

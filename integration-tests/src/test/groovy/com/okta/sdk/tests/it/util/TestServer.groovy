@@ -35,7 +35,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 
 /**
- * Starts the Node.js based test server @okta/okta-sdk-test-server.
+ * Starts the WireMock based test server using the 'har' files from @okta/okta-sdk-test-server.
  */
 class TestServer {
     public static final TEST_SERVER_BASE_URL = "okta.testServer.baseUrl"
