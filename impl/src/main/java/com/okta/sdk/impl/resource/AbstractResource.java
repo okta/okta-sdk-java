@@ -693,7 +693,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
             Iterator<String> templatePartsIter = Arrays.asList(templateUrl.split("/")).iterator();
             Iterator<String> hrefPartsIter = Arrays.asList(hrefPath.split("/")).iterator();
 
-            while ( templatePartsIter.hasNext() && hrefPartsIter.hasNext()) {
+            while (templatePartsIter.hasNext() && hrefPartsIter.hasNext()) {
                 String templatePart = templatePartsIter.next();
                 String hrefPart = hrefPartsIter.next();
 
