@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.resource
 
 import org.testng.annotations.Test
-import static org.hamcrest.Matchers.*
+import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.MatcherAssert.assertThat
 
 class AbstractResourceTest {
