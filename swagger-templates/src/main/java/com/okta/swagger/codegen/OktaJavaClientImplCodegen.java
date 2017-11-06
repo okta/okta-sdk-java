@@ -278,8 +278,9 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         });
 
         // now dump this to yaml
-        // cheat a little here because we are assuming we are using maven
-        String mavenTargetDir = outputFolder().replaceFirst("/target/.*", "/target");
+        // cheat a little here because we are assuming we are using maven, replace the LAST index of /target/ (the
+        // release process will have two 'target' directories in the path
+        String mavenTargetDir = outputFolder().substring(0, outputFolder.lastIndexOf("/target/") + 8);
         File destFile = new File(
                 new File(mavenTargetDir), "generated-resources/swagger/" + overrideModelPackage.replace('.', '/') +
                 "/discrimination.yaml");
