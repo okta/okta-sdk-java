@@ -48,7 +48,7 @@ final class EnumConverter {
         // Get the reverse enum map
         Map<String, E> reverseMap = getReverseLookupMap(enumType);
 
-        //lookup the value
+        // lookup the value
         E result = reverseMap.get(value);
 
         // if null, then revert to Enum.valueOf
