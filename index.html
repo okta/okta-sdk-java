@@ -31,26 +31,24 @@ function addVersion(version, versionName) {
 
 $(function() {
 
-for (version of window.apiVersions.versions) {
-  let versionName = version;
-  if ( window.apiVersions.current === version) {
-    versionName = versionName + " [Current]";
-  }  
-  addVersion(version, versionName);
-}
+  for (version of window.apiVersions.versions) {
+    let versionName = version;
+    if ( window.apiVersions.current === version) {
+      versionName = versionName + " [Current]";
+    }  
+    addVersion(version, versionName);
+  }
 
-addSeparator();
-// TODO: add dev version in the future
-// addVersion('development', 'Development');
-// addSeparator();
+  addSeparator();
+  // TODO: add dev version in the future
+  // addVersion('development', 'Development');
+  // addSeparator();
 
-for (version of window.apiVersions.legacy) {
-  addVersion(version, version + ' [Legacy]');
-}
+  for (version of window.apiVersions.legacy) {
+    addVersion(version, version + ' [Legacy]');
+  }
 
-$('#currentSelection').html(window.apiVersions.current + ' [Current] <span class="caret"></span>');
-
-$('#versionsList').append();
+  $('#currentSelection').html(window.apiVersions.current + ' [Current] <span class="caret"></span>');
 
   $(".dropdown .dropdown-menu li a").click(function(){  
     $(this).parents(".dropdown").find('.dropdown-toggle').html($(this).text() + ' <span class="caret"></span>');
