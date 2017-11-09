@@ -43,6 +43,7 @@ public abstract class AbstractPropertyRetriever {
     private static final Logger log = LoggerFactory.getLogger(AbstractPropertyRetriever.class);
 
     private final DateFormat dateFormatter = new ISO8601DateFormat();
+    private final EnumConverter enumConverter = new EnumConverter();
 
     protected final Lock readLock;
 
@@ -195,7 +196,7 @@ public abstract class AbstractPropertyRetriever {
 
         if (value != null) {
             if (value instanceof String) {
-                return Enum.valueOf(type, value.toString());
+                return enumConverter.fromValue(type, value.toString());
             }
             if (type.isAssignableFrom(value.getClass())) {
                 //noinspection unchecked
