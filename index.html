@@ -31,7 +31,7 @@ function addVersion(version, versionName) {
 
 $(function() {
 
-  for (ii = 0; ii < window.apiVersions.versions.length; ii++) {
+  for (var ii = 0; ii < window.apiVersions.versions.length; ii++) {
     let version = window.apiVersions.versions[ii];
     var versionName = version;
     if ( window.apiVersions.current === versionName) {
