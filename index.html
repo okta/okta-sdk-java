@@ -17,7 +17,7 @@ function addSeparator() {
 }
 
 function addVersion(version, versionName) {
-  versionName = versionName || version
+  versionName = versionName || version;
 
   $('#versionsList').append(
     $('<li>').append(
@@ -31,9 +31,9 @@ function addVersion(version, versionName) {
 
 $(function() {
 
-  for (var ii = 0; ii < window.apiVersions.versions.length; ii++) {
+  for (let ii = 0; ii < window.apiVersions.versions.length; ii++) {
     let version = window.apiVersions.versions[ii];
-    var versionName = version;
+    let versionName = version;
     if ( window.apiVersions.current === versionName) {
       versionName = versionName + " [Current]";
     }  
@@ -45,7 +45,8 @@ $(function() {
   // addVersion('development', 'Development');
   // addSeparator();
 
-  for (version of window.apiVersions.legacy) {
+  for (let ii = 0; ii < window.apiVersions.legacy.length; ii++) {
+    let version =window.apiVersions.legacy[ii];
     addVersion(version, version + ' [Legacy]');
   }
 
@@ -59,16 +60,15 @@ $(function() {
 </script>
 
 <div class="fill">
-    <ol class="breadcrumb" style="margin-bottom: 0px;">
+    <ol class="breadcrumb" style="margin-bottom: 0;">
         <li><a href="/"><img src="images/okta-dev-logo-48.png" style="height:1.7em"></a>
-            Okta Java SDK
+            <a href="https://github.com/okta/okta-sdk-java">Okta Java SDK</a>
         </li>
         <li class="dropdown">
-            <a id="currentSelection" href="#" class="dropdown-toggle" data-toggle="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <a id="currentSelection" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             	[Current] <span class="caret"></span>
-            </i></a>
-            <ul id="versionsList" class="dropdown-menu">
-            </ul>
+            </a>
+            <ul id="versionsList" class="dropdown-menu"></ul>
         </li>
     </ol>
     <iframe style="width: 100%; height: 100vh" src="apidocs/index.html" name="javadocs"></iframe>
