@@ -18,6 +18,7 @@ package com.okta.sdk.resource;
 import com.okta.sdk.error.Error;
 import com.okta.sdk.error.ErrorCause;
 import com.okta.sdk.lang.Assert;
+import com.okta.sdk.lang.Collections;
 import com.okta.sdk.lang.Strings;
 
 import java.util.List;
@@ -46,10 +47,18 @@ public class ResourceException extends RuntimeException implements Error {
         StringBuilder sb = new StringBuilder();
         sb.append("HTTP ").append(error.getStatus())
           .append(", Okta ").append(error.getCode())
-          .append(" (").append(error.getMessage()).append(")");
+          .append(" (").append(error.getMessage());
+
+        // if there is only one cause (most common) just include it, otherwise show the cause count
+        int causeCount = Collections.size(error.getCauses());
+        if (causeCount == 1) {
+            sb.append(" - ").append(error.getCauses().get(0).getSummary());
+        } else if (causeCount > 1) {
+            sb.append(" - '").append(causeCount).append(" causes'");
+        }
+        sb.append(")");
 
         String errorId = error.getId();
-
         if (Strings.hasText(errorId)) {
             sb.append(", ErrorId ").append(errorId);
         }

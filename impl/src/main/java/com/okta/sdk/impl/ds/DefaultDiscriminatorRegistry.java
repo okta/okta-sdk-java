@@ -48,7 +48,14 @@ public class DefaultDiscriminatorRegistry implements DiscriminatorRegistry {
     public <P> Class<P> resolve(Class<P> clazz, Map data) {
 
         if (supportedClass(clazz)) {
-            return supportedClassMap.get(clazz).resolve(clazz, data);
+            Class<P> result = supportedClassMap.get(clazz).resolve(clazz, data);
+
+            // recursive lookup if clazz != result
+            if (clazz != result) {
+                return resolve(result, data);
+            } else {
+                return result;
+            }
         }
         return clazz;
     }

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenParameter;
@@ -30,8 +31,10 @@ import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
+import io.swagger.models.RefModel;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
+import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
@@ -62,23 +65,15 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     private final String codeGenName;
 
-    static final String MEDIA_TYPE = "mediaType";
-
     static final String X_OPENAPI_V3_SCHEMA_REF = "x-openapi-v3-schema-ref";
 
     @SuppressWarnings("hiding")
     private final Logger log = LoggerFactory.getLogger(AbstractOktaJavaClientCodegen.class);
 
-    public static final String PARCELABLE_MODEL = "parcelableModel";
-
-    protected boolean parcelableModel = false;
-    protected boolean useBeanValidation = false;
-    protected boolean performBeanValidation = false;
-    protected boolean useGzipFeature = false;
-
     protected Map<String, String> modelTagMap = new HashMap<>();
     protected Set<String> enumList = new HashSet<>();
     protected Map<String, Discriminator> discriminatorMap = new HashMap<>();
+    protected Set<String> topLevelResources = new HashSet<>();
 
     public AbstractOktaJavaClientCodegen(String codeGenName, String relativeTemplateDir, String modelPackage) {
         super();
@@ -105,12 +100,67 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         vendorExtensions.put("basePath", swagger.getBasePath());
         super.preprocessSwagger(swagger);
         tagEnums(swagger);
+        buildTopLevelResourceList(swagger);
         addListModels(swagger);
         buildModelTagMap(swagger);
         removeListAfterAndLimit(swagger);
         moveOperationsToSingleClient(swagger);
         handleOktaLinkedOperations(swagger);
         buildDiscriminationMap(swagger);
+    }
+
+    protected void buildTopLevelResourceList(Swagger swagger) {
+
+        Set<String> resources = new HashSet<>();
+
+        swagger.getPaths().forEach((pathName, path) ->
+                path.getOperations().forEach(operation -> {
+                    // params
+                    operation.getParameters().forEach(parameter -> {
+                        if (parameter instanceof BodyParameter) {
+                            resources.add(((RefModel) ((BodyParameter)parameter).getSchema()).getSimpleRef());
+                        }
+                    });
+
+                    // responses
+                    operation.getResponses().entrySet().stream()
+                    .filter(entry -> "200".equals(entry.getKey()))
+                    .forEach(entry -> {
+                        Property rawSchema = entry.getValue().getSchema();
+
+                        if (rawSchema != null) {
+                            RefProperty refProperty;
+                            if (rawSchema instanceof ArrayProperty) {
+                                Property innerProp = ((ArrayProperty) rawSchema).getItems();
+                                if (innerProp instanceof RefProperty) {
+                                    refProperty = (RefProperty) innerProp;
+                                } else {
+                                    throw new SwaggerException("Expected 'schema.items.$ref' to exist.");
+                                }
+                            } else if (rawSchema instanceof RefProperty) {
+                                refProperty = (RefProperty) rawSchema;
+                            } else {
+                                throw new SwaggerException("Expected 'schema' to be of type 'ArrayProperty' or 'RefProperty'.");
+                            }
+
+                            resources.add(refProperty.getSimpleRef());
+                        }
+                    });
+                })
+        );
+
+        // find any children of those resources
+        swagger.getDefinitions().forEach((name, model) -> {
+            String parent = (String) model.getVendorExtensions().get("x-okta-parent");
+            if (parent != null) {
+                parent = parent.replaceAll(".*/", "");
+
+                if (resources.contains(parent)) {
+                    resources.add(parent);
+                }
+            }
+        });
+        this.topLevelResources = resources;
     }
 
     protected void buildDiscriminationMap(Swagger swagger) {
@@ -613,6 +663,18 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     }
 
     @Override
+    public String toVarName(String name) {
+        String originalResult = super.toVarName(name);
+//        if (originalResult.contains("Oauth")) {
+//            originalResult = originalResult.replaceAll("Oauth", "OAuth");
+//        }
+        if (originalResult.contains("oauth")) {
+            originalResult = originalResult.replaceAll("oauth", "oAuth");
+        }
+        return originalResult;
+    }
+
+    @Override
     public String toApiName(String name) {
         if (name.length() == 0) {
             return "Client";
@@ -651,7 +713,10 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         }
 
         swagger.getDefinitions()
-                .forEach((key, model) -> {
+                .entrySet().stream()
+                .filter(entry -> topLevelResources.contains(entry.getKey()))
+                .forEach(entry -> {
+                    Model model = entry.getValue();
                     if (model != null && model.getProperties() != null) {
                         listModels.putAll(processListsFromProperties(model.getProperties().values(), model, swagger));
                     }
@@ -675,7 +740,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                     String baseName = ref.getSimpleRef();
 
                     // Do not generate List wrappers for primitives (or strings)
-                    if (!languageSpecificPrimitives.contains(baseName)) {
+                    if (!languageSpecificPrimitives.contains(baseName) && !enumList.contains(baseName)) {
+
                         String modelName = baseName + "List";
 
                         ModelImpl model = new ModelImpl();
@@ -701,6 +767,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 }
             }
         }
+
         return result;
     }
 
@@ -717,7 +784,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             }
 
             String type = super.getTypeDeclaration(inner);
-            if (!languageSpecificPrimitives.contains(type)) {
+            if (!languageSpecificPrimitives.contains(type) && topLevelResources.contains(type)) {
                 return type + "List";
             }
         }

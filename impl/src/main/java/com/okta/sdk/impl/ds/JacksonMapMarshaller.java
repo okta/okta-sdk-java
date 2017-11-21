@@ -15,16 +15,27 @@
  */
 package com.okta.sdk.impl.ds;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.fasterxml.jackson.databind.util.StdConverter;
+import com.okta.sdk.impl.resource.AbstractResource;
+import com.okta.sdk.impl.resource.ReferenceFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @since 0.5.0
@@ -35,7 +46,13 @@ public class JacksonMapMarshaller implements MapMarshaller {
 
     public JacksonMapMarshaller() {
         this.objectMapper = new ObjectMapper();
+        this.objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
         this.objectMapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);
+
+
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(new AbstractResourceSerializer(AbstractResource.class));
+        this.objectMapper.registerModule(simpleModule);
     }
 
     public ObjectMapper getObjectMapper() {
@@ -92,6 +109,24 @@ public class JacksonMapMarshaller implements MapMarshaller {
                 "Resolved Object is neither a Map or a List: " + resolvedObj.getClass());
         } catch (IOException e) {
             throw new MarshalingException("Unable to convert InputStream String to Map.", e);
+        }
+    }
+
+    static class AbstractResourceSerializer extends StdSerializer<AbstractResource> {
+
+        private final ResourceConverter resourceConverter;
+
+        AbstractResourceSerializer(Class<AbstractResource> t) {
+            super(t);
+            ReferenceFactory referenceFactory = new ReferenceFactory();
+            this.resourceConverter = new DefaultResourceConverter(referenceFactory);
+        }
+
+        @Override
+        public void serialize(AbstractResource resource,
+                              JsonGenerator jgen,
+                              SerializerProvider sp) throws IOException {
+            jgen.writeObject(resourceConverter.convert(resource, false));
         }
     }
 }

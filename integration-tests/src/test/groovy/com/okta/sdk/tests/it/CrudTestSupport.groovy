@@ -37,24 +37,28 @@ trait CrudTestSupport {
         // get the size of initial list
         int preCount = getCount(client)
 
-        // Create a group
+        // Create a resource
         def resource = create(client)
 
-        // get the count of users after adding
+        // count the resource after creating
         int count = getCount(client)
-        assertThat count, is(preCount + 1)
+        assertThat "More then one resource was created", count, is(preCount + 1)
+
+//        // getting the resource again should result in the same object
+//        assertThat read(client, resource.id), equalTo(resource)
 
         // update the resource
         update(client, resource)
 
         count = getCount(client)
-        assertThat count, is(preCount + 1)
+        assertThat "New resource was created while attempting to update", count, is(preCount + 1)
 
         // delete the resource
         delete(client, resource)
 
         count = getCount(client)
-        assertThat count, is(preCount)
+
+        assertThat "Resource was not deleted", count, is(preCount)
     }
 
     void preTestSetup(Client client) {
@@ -71,7 +75,9 @@ trait CrudTestSupport {
     abstract void update(Client client, def resource)
 
     // delete
-    abstract void delete(Client client, def resource)
+    void delete(Client client, def resource) {
+        resource.delete()
+    }
 
     // list
     abstract Iterator getResourceCollectionIterator(Client client)

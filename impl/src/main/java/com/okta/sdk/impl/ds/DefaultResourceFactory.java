@@ -36,6 +36,8 @@ public class DefaultResourceFactory implements ResourceFactory {
     private static final String IMPL_PACKAGE_NAME = IMPL_PACKAGE_NAME_FRAGMENT + ".";
     private static final String IMPL_CLASS_PREFIX = "Default";
 
+    private final DiscriminatorRegistry registry = new DefaultDiscriminatorRegistry();
+
     public DefaultResourceFactory(InternalDataStore dataStore) {
         this.dataStore = dataStore;
     }
@@ -54,7 +56,6 @@ public class DefaultResourceFactory implements ResourceFactory {
         if (ctorArgs.length >= 2 && ctorArgs[1] instanceof Map) {
 
             Map data = (Map) ctorArgs[1];
-            DiscriminatorRegistry registry = new DefaultDiscriminatorRegistry();
             if (registry.supportedClass(clazz)) {
                 classToResolve = registry.resolve(clazz, data);
             }
