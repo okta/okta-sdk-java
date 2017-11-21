@@ -1,3 +1,19 @@
+#
+# Copyright 2017 Okta
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 {
   "swagger": "2.0",
   "info": {
@@ -3174,6 +3190,7 @@
           "$ref": "#/definitions/ApplicationLicensing"
         },
         "name": {
+          "readOnly": true,
           "type": "string"
         },
         "settings": {
@@ -3641,21 +3658,6 @@
         "Application"
       ]
     },
-    "ApplicationTemplateName": {
-      "enum": [
-        "bookmark",
-        "template_basic_auth",
-        "template_swa",
-        "template_swa3field",
-        "tempalte_sps",
-        "template_wsfed",
-        "oidc_client"
-      ],
-      "type": "string",
-      "x-okta-tags": [
-        "Application"
-      ]
-    },
     "ApplicationVisibility": {
       "properties": {
         "appLinks": {
@@ -3790,6 +3792,9 @@
           "$ref": "#/definitions/BasicApplicationSettings"
         }
       },
+      "x-okta-default-values": {
+        "name": "template_basic_auth"
+      },
       "x-okta-parent": "#/definitions/Application",
       "x-okta-tags": [
         "Application"
@@ -3800,6 +3805,9 @@
         "settings": {
           "$ref": "#/definitions/BookmarkApplicationSettings"
         }
+      },
+      "x-okta-default-values": {
+        "name": "bookmark"
       },
       "x-okta-parent": "#/definitions/Application",
       "x-okta-tags": [
@@ -4568,6 +4576,9 @@
           "$ref": "#/definitions/OpenIdConnectApplicationSettings"
         }
       },
+      "x-okta-default-values": {
+        "name": "oidc_client"
+      },
       "x-okta-parent": "#/definitions/Application",
       "x-okta-tags": [
         "Application"
@@ -4922,6 +4933,9 @@
           "$ref": "#/definitions/SecurePasswordStoreApplicationSettings"
         }
       },
+      "x-okta-default-values": {
+        "name": "template_sps"
+      },
       "x-okta-parent": "#/definitions/Application",
       "x-okta-tags": [
         "Application"
@@ -5045,6 +5059,9 @@
           "$ref": "#/definitions/SwaApplicationSettings"
         }
       },
+      "x-okta-default-values": {
+        "name": "template_swa"
+      },
       "x-okta-parent": "#/definitions/BrowserPluginApplication",
       "x-okta-tags": [
         "Application"
@@ -5086,6 +5103,9 @@
         "settings": {
           "$ref": "#/definitions/SwaThreeFieldApplicationSettings"
         }
+      },
+      "x-okta-default-values": {
+        "name": "template_swa3field"
       },
       "x-okta-parent": "#/definitions/BrowserPluginApplication",
       "x-okta-tags": [
@@ -5709,6 +5729,9 @@
         "settings": {
           "$ref": "#/definitions/WsFederationApplicationSettings"
         }
+      },
+      "x-okta-default-values": {
+        "name": "template_wsfed"
       },
       "x-okta-parent": "#/definitions/Application",
       "x-okta-tags": [

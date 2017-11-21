@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.impl.ds;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -23,19 +22,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.fasterxml.jackson.databind.util.StdConverter;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.ReferenceFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @since 0.5.0
@@ -114,12 +111,11 @@ public class JacksonMapMarshaller implements MapMarshaller {
 
     static class AbstractResourceSerializer extends StdSerializer<AbstractResource> {
 
-        private final ResourceConverter resourceConverter;
+        private static final long serialVersionUID = 42L;
+        private final transient ResourceConverter resourceConverter = new DefaultResourceConverter(new ReferenceFactory());
 
         AbstractResourceSerializer(Class<AbstractResource> t) {
             super(t);
-            ReferenceFactory referenceFactory = new ReferenceFactory();
-            this.resourceConverter = new DefaultResourceConverter(referenceFactory);
         }
 
         @Override
@@ -127,6 +123,14 @@ public class JacksonMapMarshaller implements MapMarshaller {
                               JsonGenerator jgen,
                               SerializerProvider sp) throws IOException {
             jgen.writeObject(resourceConverter.convert(resource, false));
+        }
+
+        private void writeObject(ObjectOutputStream stream) throws IOException {
+            stream.defaultWriteObject();
+        }
+
+        private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+            stream.defaultReadObject();
         }
     }
 }
