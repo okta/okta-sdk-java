@@ -23,8 +23,7 @@ import com.okta.sdk.lang.Assert;
  * The Authentication Scheme setting is helpful in cases where the code is run in a platform where the header information for
  * outgoing HTTP requests is modified and thus causing communication issues.
  * <p>
- * There are currently two authentication schemes available: <a href="http://docs.okta.com/rest/product-guide/#authentication-basic">HTTP
- * Basic Authentication</a>, and SSWS (Okta session bearer token).
+ * There is currently only one authentication scheme available: SSWS (Okta session bearer token).
  *
  * @since 0.5.0
  */

@@ -51,4 +51,4 @@ git push origin $(git rev-parse --abbrev-ref HEAD)
 git push origin ${TAG_NAME}
 
 #notify for new release
-send_tag_notification "${TAG_NAME}"
+#send_tag_notification "${TAG_NAME}"

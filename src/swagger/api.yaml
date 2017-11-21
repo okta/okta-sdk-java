@@ -1,19 +1,3 @@
-#
-# Copyright 2017 Okta
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
 {
   "swagger": "2.0",
   "info": {
@@ -29,7 +13,7 @@
       "name": "Apache-2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.6.0"
+    "version": "0.7.0"
   },
   "externalDocs": {
     "description": "Find more info here",
@@ -55,6 +39,935 @@
     }
   },
   "paths": {
+    "/api/v1/apps": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Enumerates apps added to your organization with pagination. A subset of apps can be returned that match a supported filter expression or query.",
+        "operationId": "listApplications",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "description": "Specifies the pagination cursor for the next page of apps",
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "description": "Specifies the number of results for a page",
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "description": "Filters apps by status, user.id, group.id or credentials.signing.kid expression",
+            "in": "query",
+            "name": "filter",
+            "type": "string"
+          },
+          {
+            "description": "Traverses users link relationship and optionally embeds Application User resource",
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          },
+          {
+            "default": false,
+            "in": "query",
+            "name": "includeNonDeleted",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Application"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "List Applications",
+        "tags": [
+          "Application"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Adds a new application to your Okta organization.",
+        "operationId": "createApplication",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "application",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Application"
+            }
+          },
+          {
+            "default": true,
+            "description": "Executes activation lifecycle operation when creating the app",
+            "in": "query",
+            "name": "activate",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Application"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Add Application",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Removes an inactive application.",
+        "operationId": "deleteApplication",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Delete Application",
+        "tags": [
+          "Application"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Fetches an application from your Okta organization by `id`.",
+        "operationId": "getApplication",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Application"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Get Application",
+        "tags": [
+          "Application"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates an application in your organization.",
+        "operationId": "updateApplication",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "application",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Application"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Application"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Update Application",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/credentials/keys": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Enumerates key credentials for an application",
+        "operationId": "listApplicationKeys",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/JsonWebKeyRSAMediated"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "List Key Credentials for Application",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/credentials/keys/generate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Generates a new X.509 certificate for an application key credential",
+        "operationId": "generateApplicationKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "expiry of the Application Key Credential",
+            "format": "int32",
+            "in": "query",
+            "name": "validityYears",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Generate New Application Key Credential",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/credentials/keys/{keyId}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Gets a specific [application key credential](#application-key-credential-model) by `kid`",
+        "operationId": "getApplicationKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "keyId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Get Key Credential for Application",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/credentials/keys/{keyId}/clone": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Clones a X.509 certificate for an application key credential from a source application to target application.",
+        "operationId": "cloneApplicationKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "keyId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Unique key of the target Application",
+            "in": "query",
+            "name": "targetAid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Clone Application Key Credential",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/groups": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Enumerates group assignments for an application.",
+        "operationId": "listApplicationGroupAssignments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "description": "Specifies the pagination cursor for the next page of assignments",
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "description": "Specifies the number of results for a page",
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/ApplicationGroupAssignment"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "List Groups Assigned to Application",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/groups/{groupId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Removes a group assignment from an application.",
+        "operationId": "deleteGroupApplicationAssignment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Remove Group from Application",
+        "tags": [
+          "Application"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Fetches an application group assignment",
+        "operationId": "getGroupApplicationAssignment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ApplicationGroupAssignment"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Get Assigned Group for Application",
+        "tags": [
+          "Application"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Assigns a group to an application",
+        "operationId": "updateGroupApplicationAssignment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "applicationGroupAssignment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ApplicationGroupAssignment"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ApplicationGroupAssignment"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Assign Group to Application",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/lifecycle/activate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Activates an inactive application.",
+        "operationId": "activateApplication",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Activate Application",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/lifecycle/deactivate": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Deactivates an active application.",
+        "operationId": "deactivateApplication",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Deactivate Application",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/users": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Enumerates all assigned [application users](#application-user-model) for an application.",
+        "operationId": "listApplicationUsers",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "query_scope",
+            "type": "string"
+          },
+          {
+            "description": "specifies the pagination cursor for the next page of assignments",
+            "in": "query",
+            "name": "after",
+            "type": "string"
+          },
+          {
+            "default": -1,
+            "description": "specifies the number of results for a page",
+            "format": "int32",
+            "in": "query",
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/AppUser"
+              },
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "List Users Assigned to Application",
+        "tags": [
+          "Application"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Assigns an user to an application with [credentials](#application-user-credentials-object) and an app-specific [profile](#application-user-profile-object). Profile mappings defined for the application are first applied before applying any profile properties specified in the request.",
+        "operationId": "assignUserToApplication",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "appUser",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Assign User to Application for SSO & Provisioning",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
+    "/api/v1/apps/{appId}/users/{userId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Removes an assignment for a user from an application.",
+        "operationId": "deleteApplicationUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Remove User from Application",
+        "tags": [
+          "Application"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Fetches a specific user assignment for application by `id`.",
+        "operationId": "getApplicationUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Get Assigned User for Application",
+        "tags": [
+          "Application"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Updates a user's profile for an application",
+        "operationId": "updateApplicationUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "appUser",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AppUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Update Application Profile for Assigned User",
+        "tags": [
+          "Application"
+        ]
+      }
+    },
     "/api/v1/groups": {
       "get": {
         "consumes": [
@@ -2136,6 +3049,647 @@
         "User"
       ]
     },
+    "AppUser": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "created": {
+          "type": "string"
+        },
+        "credentials": {
+          "$ref": "#/definitions/AppUserCredentials"
+        },
+        "externalId": {
+          "type": "string"
+        },
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "lastSync": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "passwordChanged": {
+          "type": "string"
+        },
+        "profile": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "statusChanged": {
+          "type": "string"
+        },
+        "syncState": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "AppUserCredentials": {
+      "properties": {
+        "password": {
+          "$ref": "#/definitions/PasswordCredential"
+        },
+        "userName": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "Application": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "accessibility": {
+          "$ref": "#/definitions/ApplicationAccessibility"
+        },
+        "created": {
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "credentials": {
+          "$ref": "#/definitions/ApplicationCredentials"
+        },
+        "features": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "licensing": {
+          "$ref": "#/definitions/ApplicationLicensing"
+        },
+        "name": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/definitions/ApplicationSettings"
+        },
+        "signOnMode": {
+          "$ref": "#/definitions/ApplicationSignOnMode"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "INACTIVE",
+            "DELETED"
+          ],
+          "readOnly": true,
+          "type": "string"
+        },
+        "visibility": {
+          "$ref": "#/definitions/ApplicationVisibility"
+        }
+      },
+      "type": "object",
+      "x-okta-crud": [
+        {
+          "alias": "read",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getApplication"
+        },
+        {
+          "alias": "update",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            },
+            {
+              "dest": "application",
+              "self": true
+            }
+          ],
+          "operationId": "updateApplication"
+        },
+        {
+          "alias": "delete",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteApplication"
+        }
+      ],
+      "x-okta-operations": [
+        {
+          "alias": "activate",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "activateApplication"
+        },
+        {
+          "alias": "deactivate",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deactivateApplication"
+        },
+        {
+          "alias": "listApplicationUsers",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listApplicationUsers"
+        },
+        {
+          "alias": "assignUserToApplication",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "assignUserToApplication"
+        },
+        {
+          "alias": "getApplicationUser",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getApplicationUser"
+        },
+        {
+          "alias": "updateApplicationUser",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateApplicationUser"
+        },
+        {
+          "alias": "deleteApplicationUser",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteApplicationUser"
+        },
+        {
+          "alias": "updateGroupApplicationAssignment",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "updateGroupApplicationAssignment"
+        },
+        {
+          "alias": "getGroupApplicationAssignment",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getGroupApplicationAssignment"
+        },
+        {
+          "alias": "deleteGroupApplicationAssignment",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteGroupApplicationAssignment"
+        },
+        {
+          "alias": "generateApplicationKey",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "generateApplicationKey"
+        },
+        {
+          "alias": "cloneApplicationKey",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "cloneApplicationKey"
+        },
+        {
+          "alias": "getApplicationKey",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getApplicationKey"
+        },
+        {
+          "alias": "listGroupAssignments",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listApplicationGroupAssignments"
+        },
+        {
+          "alias": "listKeys",
+          "arguments": [
+            {
+              "dest": "appId",
+              "src": "id"
+            }
+          ],
+          "operationId": "listApplicationKeys"
+        }
+      ],
+      "x-okta-tags": [
+        "Application"
+      ],
+      "x-openapi-v3-discriminator": {
+        "mapping": {
+          "AUTO_LOGIN": "#/definitions/AutoLoginApplication",
+          "BASIC_AUTH": "#/definitions/BasicAuthApplication",
+          "BOOKMARK": "#/definitions/BookmarkApplication",
+          "BROWSER_PLUGIN": "#/definitions/BrowserPluginApplication",
+          "OPENID_CONNECT": "#/definitions/OpenIdConnectApplication",
+          "SAML_2_0": "#/definitions/SamlApplication",
+          "SECURE_PASSWORD_STORE": "#/definitions/SecurePasswordStoreApplication",
+          "WS_FEDERATION": "#/definitions/WsFederationApplication"
+        },
+        "propertyName": "signOnMode"
+      }
+    },
+    "ApplicationAccessibility": {
+      "properties": {
+        "errorRedirectUrl": {
+          "type": "string"
+        },
+        "loginRedirectUrl": {
+          "type": "string"
+        },
+        "selfService": {
+          "type": "boolean"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationCredentials": {
+      "properties": {
+        "signing": {
+          "$ref": "#/definitions/ApplicationCredentialsSigning"
+        },
+        "userNameTemplate": {
+          "$ref": "#/definitions/ApplicationCredentialsUsernameTemplate"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationCredentialsOAuthClient": {
+      "properties": {
+        "autoKeyRotation": {
+          "type": "boolean"
+        },
+        "client_id": {
+          "readonly": true,
+          "type": "string"
+        },
+        "client_secret": {
+          "readonly": true,
+          "type": "string"
+        },
+        "token_endpoint_auth_method": {
+          "$ref": "#/definitions/OAuthEndpointAuthenticationMethod"
+        }
+      },
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationCredentialsScheme": {
+      "enum": [
+        "SHARED_USERNAME_AND_PASSWORD",
+        "EXTERNAL_PASSWORD_SYNC",
+        "EDIT_USERNAME_AND_PASSWORD",
+        "EDIT_PASSWORD_ONLY",
+        "ADMIN_SETS_CREDENTIALS"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationCredentialsSigning": {
+      "properties": {
+        "kid": {
+          "type": "string"
+        },
+        "lastRotated": {
+          "type": "string"
+        },
+        "nextRotation": {
+          "type": "string"
+        },
+        "rotationMode": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationCredentialsUsernameTemplate": {
+      "properties": {
+        "suffix": {
+          "type": "string"
+        },
+        "template": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationGroupAssignment": {
+      "properties": {
+        "_embedded": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "_links": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "profile": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "type": "object"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationLicensing": {
+      "properties": {
+        "seatCount": {
+          "type": "integer"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationSettings": {
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/ApplicationSettingsApplication",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "notifications": {
+          "$ref": "#/definitions/ApplicationSettingsNotifications"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationSettingsApplication": {
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationSettingsNotifications": {
+      "properties": {
+        "vpn": {
+          "$ref": "#/definitions/ApplicationSettingsNotificationsVpn"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationSettingsNotificationsVpn": {
+      "properties": {
+        "helpUrl": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "network": {
+          "$ref": "#/definitions/ApplicationSettingsNotificationsVpnNetwork"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationSettingsNotificationsVpnNetwork": {
+      "properties": {
+        "connection": {
+          "type": "string"
+        },
+        "exclude": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "include": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationSignOnMode": {
+      "enum": [
+        "BOOKMARK",
+        "BASIC_AUTH",
+        "BROWSER_PLUGIN",
+        "SECURE_PASSWORD_STORE",
+        "AUTO_LOGIN",
+        "WS_FEDERATION",
+        "SAML_2_0",
+        "OPENID_CONNECT"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationTemplateName": {
+      "enum": [
+        "bookmark",
+        "template_basic_auth",
+        "template_swa",
+        "template_swa3field",
+        "tempalte_sps",
+        "template_wsfed",
+        "oidc_client"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationVisibility": {
+      "properties": {
+        "appLinks": {
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "type": "object"
+        },
+        "autoSubmitToolbar": {
+          "type": "boolean"
+        },
+        "hide": {
+          "$ref": "#/definitions/ApplicationVisibilityHide"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "ApplicationVisibilityHide": {
+      "properties": {
+        "iOS": {
+          "type": "boolean"
+        },
+        "web": {
+          "type": "boolean"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
     "AuthenticationProvider": {
       "properties": {
         "name": {
@@ -2163,6 +3717,137 @@
       "x-okta-tags": [
         "User"
       ]
+    },
+    "AutoLoginApplication": {
+      "properties": {
+        "credentials": {
+          "$ref": "#/definitions/SchemeApplicationCredentials"
+        },
+        "settings": {
+          "$ref": "#/definitions/AutoLoginApplicationSettings"
+        }
+      },
+      "x-okta-parent": "#/definitions/Application",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "AutoLoginApplicationSettings": {
+      "properties": {
+        "signOn": {
+          "$ref": "#/definitions/AutoLoginApplicationSettingsSignOn"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettings",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "AutoLoginApplicationSettingsSignOn": {
+      "properties": {
+        "loginUrl": {
+          "type": "string"
+        },
+        "redirectUrl": {
+          "type": "string"
+        }
+      },
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "BasicApplicationSettings": {
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/BasicApplicationSettingsApplication"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettings",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "BasicApplicationSettingsApplication": {
+      "properties": {
+        "authURL": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettingsApplication",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "BasicAuthApplication": {
+      "properties": {
+        "credentials": {
+          "$ref": "#/definitions/SchemeApplicationCredentials"
+        },
+        "settings": {
+          "$ref": "#/definitions/BasicApplicationSettings"
+        }
+      },
+      "x-okta-parent": "#/definitions/Application",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "BookmarkApplication": {
+      "properties": {
+        "settings": {
+          "$ref": "#/definitions/BookmarkApplicationSettings"
+        }
+      },
+      "x-okta-parent": "#/definitions/Application",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "BookmarkApplicationSettings": {
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/BookmarkApplicationSettingsApplication"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettings",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "BookmarkApplicationSettingsApplication": {
+      "properties": {
+        "requestIntegration": {
+          "type": "boolean"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettingsApplication",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "BrowserPluginApplication": {
+      "properties": {
+        "credentials": {
+          "$ref": "#/definitions/SchemeApplicationCredentials"
+        }
+      },
+      "x-okta-parent": "#/definitions/Application",
+      "x-okta-tags": [
+        "Application"
+      ],
+      "x-openapi-v3-discriminator": {
+        "mapping": {
+          "template_swa": "#/definitions/SwaApplication",
+          "template_swa3field": "#/definitions/SwaThreeFieldApplication"
+        },
+        "propertyName": "name"
+      }
     },
     "CallFactor": {
       "properties": {
@@ -2753,6 +4438,217 @@
         "UserFactor"
       ]
     },
+    "JsonWebKeyRSAMediated": {
+      "properties": {
+        "alg": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "created": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "e": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "expiresAt": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "key_ops": {
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "kid": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "kty": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "lastUpdated": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "n": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "status": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "use": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "x5c": {
+          "items": {
+            "type": "string"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "x5t": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "x5t#S256": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "x5u": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "OAuthApplicationCredentials": {
+      "properties": {
+        "oauthClient": {
+          "$ref": "#/definitions/ApplicationCredentialsOAuthClient"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationCredentials",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "OAuthEndpointAuthenticationMethod": {
+      "enum": [
+        "none",
+        "client_secret_post",
+        "client_secret_basic",
+        "client_secret_jwt"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "OAuthGrantType": {
+      "enum": [
+        "authorization_code",
+        "implicit",
+        "password",
+        "refresh_token",
+        "client_credentials"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "OAuthResponseType": {
+      "enum": [
+        "code",
+        "token",
+        "id_token"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "OpenIdConnectApplication": {
+      "properties": {
+        "credentials": {
+          "$ref": "#/definitions/OAuthApplicationCredentials"
+        },
+        "settings": {
+          "$ref": "#/definitions/OpenIdConnectApplicationSettings"
+        }
+      },
+      "x-okta-parent": "#/definitions/Application",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "OpenIdConnectApplicationConsentMethod": {
+      "enum": [
+        "REQUIRED",
+        "TRUSTED"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "OpenIdConnectApplicationSettings": {
+      "properties": {
+        "oauthClient": {
+          "$ref": "#/definitions/OpenIdConnectApplicationSettingsClient"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettings",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "OpenIdConnectApplicationSettingsClient": {
+      "properties": {
+        "application_type": {
+          "$ref": "#/definitions/OpenIdConnectApplicationType"
+        },
+        "client_uri": {
+          "type": "string"
+        },
+        "consent_method": {
+          "$ref": "#/definitions/OpenIdConnectApplicationConsentMethod"
+        },
+        "grant_types": {
+          "items": {
+            "$ref": "#/definitions/OAuthGrantType"
+          },
+          "type": "array"
+        },
+        "logo_uri": {
+          "type": "string"
+        },
+        "policy_uri": {
+          "type": "string"
+        },
+        "redirect_uris": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "response_types": {
+          "items": {
+            "$ref": "#/definitions/OAuthResponseType"
+          },
+          "type": "array"
+        },
+        "tos_uri": {
+          "type": "string"
+        }
+      },
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "OpenIdConnectApplicationType": {
+      "enum": [
+        "web",
+        "native",
+        "browser",
+        "service"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
     "PasswordCredential": {
       "properties": {
         "value": {
@@ -2880,6 +4776,203 @@
         "User"
       ]
     },
+    "SamlApplication": {
+      "properties": {
+        "settings": {
+          "$ref": "#/definitions/SamlApplicationSettings"
+        }
+      },
+      "x-okta-parent": "#/definitions/Application",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SamlApplicationSettings": {
+      "properties": {
+        "signOn": {
+          "$ref": "#/definitions/SamlApplicationSettingsSignOn"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettings",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SamlApplicationSettingsSignOn": {
+      "properties": {
+        "assertionSigned": {
+          "type": "boolean"
+        },
+        "attributeStatements": {
+          "items": {
+            "$ref": "#/definitions/SamlAttributeStatement"
+          },
+          "type": "array"
+        },
+        "audience": {
+          "type": "string"
+        },
+        "audienceOverride": {
+          "type": "string"
+        },
+        "authnContextClassRef": {
+          "type": "string"
+        },
+        "defaultRelayState": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        },
+        "destinationOverride": {
+          "type": "string"
+        },
+        "digestAlgorithm": {
+          "type": "string"
+        },
+        "honorForceAuthn": {
+          "type": "boolean"
+        },
+        "idpIssuer": {
+          "type": "string"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "recipientOverride": {
+          "type": "string"
+        },
+        "requestCompressed": {
+          "type": "boolean"
+        },
+        "responseSigned": {
+          "type": "boolean"
+        },
+        "signatureAlgorithm": {
+          "type": "string"
+        },
+        "spIssuer": {
+          "type": "string"
+        },
+        "ssoAcsUrl": {
+          "type": "string"
+        },
+        "ssoAcsUrlOverride": {
+          "type": "string"
+        },
+        "subjectNameIdFormat": {
+          "type": "string"
+        },
+        "subjectNameIdTemplate": {
+          "type": "string"
+        }
+      },
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SamlAttributeStatement": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "values": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "SchemeApplicationCredentials": {
+      "properties": {
+        "password": {
+          "$ref": "#/definitions/PasswordCredential"
+        },
+        "revealPassword": {
+          "type": "boolean"
+        },
+        "scheme": {
+          "$ref": "#/definitions/ApplicationCredentialsScheme"
+        },
+        "signing": {
+          "$ref": "#/definitions/ApplicationCredentialsSigning"
+        },
+        "userName": {
+          "type": "string"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationCredentials",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SecurePasswordStoreApplication": {
+      "properties": {
+        "credentials": {
+          "$ref": "#/definitions/SchemeApplicationCredentials"
+        },
+        "settings": {
+          "$ref": "#/definitions/SecurePasswordStoreApplicationSettings"
+        }
+      },
+      "x-okta-parent": "#/definitions/Application",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SecurePasswordStoreApplicationSettings": {
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/SecurePasswordStoreApplicationSettingsApplication"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettings",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SecurePasswordStoreApplicationSettingsApplication": {
+      "properties": {
+        "optionalField1": {
+          "type": "string"
+        },
+        "optionalField1Value": {
+          "type": "string"
+        },
+        "optionalField2": {
+          "type": "string"
+        },
+        "optionalField2Value": {
+          "type": "string"
+        },
+        "optionalField3": {
+          "type": "string"
+        },
+        "optionalField3Value": {
+          "type": "string"
+        },
+        "passwordField": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "usernameField": {
+          "type": "string"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettingsApplication",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
     "SecurityQuestion": {
       "properties": {
         "answer": {
@@ -2944,6 +5037,96 @@
       "x-okta-parent": "#/definitions/FactorProfile",
       "x-okta-tags": [
         "UserFactor"
+      ]
+    },
+    "SwaApplication": {
+      "properties": {
+        "settings": {
+          "$ref": "#/definitions/SwaApplicationSettings"
+        }
+      },
+      "x-okta-parent": "#/definitions/BrowserPluginApplication",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SwaApplicationSettings": {
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/SwaApplicationSettingsApplication"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettings",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SwaApplicationSettingsApplication": {
+      "properties": {
+        "buttonField": {
+          "type": "string"
+        },
+        "passwordField": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "usernameField": {
+          "type": "string"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettingsApplication",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SwaThreeFieldApplication": {
+      "properties": {
+        "settings": {
+          "$ref": "#/definitions/SwaThreeFieldApplicationSettings"
+        }
+      },
+      "x-okta-parent": "#/definitions/BrowserPluginApplication",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SwaThreeFieldApplicationSettings": {
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/SwaThreeFieldApplicationSettingsApplication"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettings",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "SwaThreeFieldApplicationSettingsApplication": {
+      "properties": {
+        "buttonSelector": {
+          "type": "string"
+        },
+        "extraFieldSelector": {
+          "type": "string"
+        },
+        "extraFieldValue": {
+          "type": "string"
+        },
+        "passwordSelector": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "userNameSelector": {
+          "type": "string"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettingsApplication",
+      "x-okta-tags": [
+        "Application"
       ]
     },
     "TempPassword": {
@@ -3519,6 +5702,72 @@
       "x-okta-parent": "#/definitions/FactorProfile",
       "x-okta-tags": [
         "UserFactor"
+      ]
+    },
+    "WsFederationApplication": {
+      "properties": {
+        "settings": {
+          "$ref": "#/definitions/WsFederationApplicationSettings"
+        }
+      },
+      "x-okta-parent": "#/definitions/Application",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "WsFederationApplicationSettings": {
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/WsFederationApplicationSettingsApplication"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettings",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "WsFederationApplicationSettingsApplication": {
+      "properties": {
+        "attributeStatements": {
+          "type": "string"
+        },
+        "audienceRestriction": {
+          "type": "string"
+        },
+        "authnContextClassRef": {
+          "type": "string"
+        },
+        "groupFilter": {
+          "type": "string"
+        },
+        "groupName": {
+          "type": "string"
+        },
+        "groupValueFormat": {
+          "type": "string"
+        },
+        "nameIDFormat": {
+          "type": "string"
+        },
+        "realm": {
+          "type": "string"
+        },
+        "siteURL": {
+          "type": "string"
+        },
+        "usernameAttribute": {
+          "type": "string"
+        },
+        "wReplyOverride": {
+          "type": "boolean"
+        },
+        "wReplyURL": {
+          "type": "string"
+        }
+      },
+      "x-okta-parent": "#/definitions/ApplicationSettingsApplication",
+      "x-okta-tags": [
+        "Application"
       ]
     }
   }

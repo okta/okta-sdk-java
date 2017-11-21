@@ -260,6 +260,13 @@ class GeneratedResourceTest {
      * @return camelized string
      */
     static String camelize(String word, boolean lowercaseFirstLetter) {
+
+        // special cases
+        if (word.toLowerCase(Locale.ENGLISH).contains("oauth")) {
+            // set to oAuth, 'lowercaseFirstLetter' will be resolved below
+            word = word.replaceAll("oauth", "oAuth")
+        }
+
         // Replace all slashes with dots (package separator)
         Pattern p = Pattern.compile("\\/(.?)");
         Matcher m = p.matcher(word);

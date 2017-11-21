@@ -18,6 +18,9 @@ package com.okta.sdk.impl.ds
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.okta.sdk.impl.resource.AbstractResource
+import com.okta.sdk.impl.resource.Property
+import com.okta.sdk.impl.resource.StringProperty
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.testng.annotations.BeforeTest
@@ -25,13 +28,15 @@ import org.testng.annotations.Test
 
 import static org.mockito.Mockito.*
 import static org.testng.Assert.*
+import static org.hamcrest.Matchers.*
+import static org.hamcrest.MatcherAssert.assertThat
 
 /**
  * @since 0.5.0
  */
 class JacksonMapMarshallerTest {
 
-    def mapMarshaller
+    JacksonMapMarshaller mapMarshaller
 
     @BeforeTest
     void setup() {
@@ -120,5 +125,51 @@ class JacksonMapMarshallerTest {
         } catch (MarshalingException e) {
             assertEquals e.getMessage(), "Unable to convert InputStream String to Map."
         }
+    }
+
+    @Test
+    void testMapContainingList() {
+
+        def testMap = [
+                "test1": "value1",
+                "simpleListKey": ["one", "two", "three"],
+                "complexResourceList": [new FooResource(null, [foo: "bar1"]),
+                                        new FooResource(null, [foo: "bar2"])]
+        ]
+
+        String result = new JacksonMapMarshaller().marshal(testMap)
+        assertThat result, not(containsString("dirty"))
+        assertThat result, containsString('"complexResourceList":[{"foo":"bar1"},{"foo":"bar2"}]')
+    }
+
+    static class FooResource extends AbstractResource {
+
+        private final static StringProperty FOO_PROPERTY = new StringProperty("foo")
+
+        private final static Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(FOO_PROPERTY)
+
+        FooResource(InternalDataStore dataStore) {
+            super(dataStore)
+
+        }
+
+        FooResource(InternalDataStore dataStore, Map<String, Object> properties) {
+            super(dataStore, properties)
+        }
+
+        @Override
+        Map<String, Property> getPropertyDescriptors() {
+            return PROPERTY_DESCRIPTORS
+        }
+
+        String getFoo() {
+            return getString(FOO_PROPERTY)
+        }
+
+        FooResource setFoo(String foo) {
+            setProperty(FOO_PROPERTY, foo)
+            return this
+        }
+
     }
 }
