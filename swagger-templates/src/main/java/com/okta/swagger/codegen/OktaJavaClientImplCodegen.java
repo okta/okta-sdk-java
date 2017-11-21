@@ -15,6 +15,7 @@
  */
 package com.okta.swagger.codegen;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenProperty;
@@ -34,6 +35,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -133,6 +136,15 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
         codegenModel.imports.add(toModelName(codegenModel.classname)); // The 'Default' gets added in the template
 
+        Map<String, String> defaultValuesMap = new LinkedHashMap<>();
+
+        ObjectNode rawDefaultValues = (ObjectNode) codegenModel.vendorExtensions.get("x-okta-default-values");
+        if (rawDefaultValues != null) {
+            rawDefaultValues.fields().forEachRemaining(entry -> {
+                defaultValuesMap.put(entry.getKey(), entry.getValue().textValue());
+            });
+        }
+
         // if the parent is set, we need to check for discrimination
         String parent = (String) codegenModel.vendorExtensions.get("x-okta-parent");
         if (parent != null) {
@@ -142,16 +154,20 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
                 String fieldName = discriminator.getFieldName();
                 String defaultValue = discriminator.getDefaultFieldValue(name);
-                String defaultTypeSetter = "setProperty(\""+ fieldName +"\", \"" + defaultValue + "\");";
 
-                codegenModel.vendorExtensions.put("defaultSetter", defaultTypeSetter);
+                defaultValuesMap.put(fieldName, defaultValue);
             }
         }
 
+        List<KeyValuePair> defaultTypeSetter = defaultValuesMap.entrySet().stream()
+                .map(entry -> new KeyValuePair(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        codegenModel.vendorExtensions.put("defaultSetter", defaultTypeSetter);
+
+
         return codegenModel;
     }
-
-
 
     public CodegenOperation fromOperation(String path,
                                           String httpMethod,

@@ -36,29 +36,39 @@ trait CrudTestSupport {
 
         // get the size of initial list
         int preCount = getCount(client)
+        slowItDown()
 
         // Create a resource
         def resource = create(client)
+        slowItDown()
 
         // count the resource after creating
         int count = getCount(client)
         assertThat "More then one resource was created", count, is(preCount + 1)
+        slowItDown()
 
 //        // getting the resource again should result in the same object
 //        assertThat read(client, resource.id), equalTo(resource)
 
         // update the resource
         update(client, resource)
+        slowItDown()
 
         count = getCount(client)
         assertThat "New resource was created while attempting to update", count, is(preCount + 1)
+        slowItDown()
 
         // delete the resource
         delete(client, resource)
+        slowItDown()
 
         count = getCount(client)
-
         assertThat "Resource was not deleted", count, is(preCount)
+        slowItDown()
+    }
+
+    void slowItDown() {
+        Thread.sleep(200)
     }
 
     void preTestSetup(Client client) {

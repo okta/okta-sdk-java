@@ -70,4 +70,10 @@
         <Bug pattern="PATH_TRAVERSAL_IN" />
     </Match>
 
+    <Match>
+        <Class name="com.okta.swagger.codegen.KeyValuePair">
+            <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
+        </Class>
+    </Match>
+
 </FindBugsFilter>
