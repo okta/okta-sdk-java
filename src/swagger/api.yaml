@@ -310,7 +310,7 @@
             "description": "Success",
             "schema": {
               "items": {
-                "$ref": "#/definitions/JsonWebKeyRSAMediated"
+                "$ref": "#/definitions/JsonWebKey"
               },
               "type": "array"
             }
@@ -357,7 +357,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+              "$ref": "#/definitions/JsonWebKey"
             }
           }
         },
@@ -400,7 +400,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+              "$ref": "#/definitions/JsonWebKey"
             }
           }
         },
@@ -450,7 +450,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/JsonWebKeyRSAMediated"
+              "$ref": "#/definitions/JsonWebKey"
             }
           }
         },
@@ -535,7 +535,7 @@
           "application/json"
         ],
         "description": "Removes a group assignment from an application.",
-        "operationId": "deleteGroupApplicationAssignment",
+        "operationId": "deleteApplicationGroupAssignment",
         "parameters": [
           {
             "in": "path",
@@ -573,7 +573,7 @@
           "application/json"
         ],
         "description": "Fetches an application group assignment",
-        "operationId": "getGroupApplicationAssignment",
+        "operationId": "getApplicationGroupAssignment",
         "parameters": [
           {
             "in": "path",
@@ -619,7 +619,7 @@
           "application/json"
         ],
         "description": "Assigns a group to an application",
-        "operationId": "updateGroupApplicationAssignment",
+        "operationId": "updateApplicationGroupAssignment",
         "parameters": [
           {
             "in": "path",
@@ -3321,34 +3321,34 @@
           "operationId": "deleteApplicationUser"
         },
         {
-          "alias": "updateGroupApplicationAssignment",
+          "alias": "updateApplicationGroupAssignment",
           "arguments": [
             {
               "dest": "appId",
               "src": "id"
             }
           ],
-          "operationId": "updateGroupApplicationAssignment"
+          "operationId": "updateApplicationGroupAssignment"
         },
         {
-          "alias": "getGroupApplicationAssignment",
+          "alias": "getApplicationGroupAssignment",
           "arguments": [
             {
               "dest": "appId",
               "src": "id"
             }
           ],
-          "operationId": "getGroupApplicationAssignment"
+          "operationId": "getApplicationGroupAssignment"
         },
         {
-          "alias": "deleteGroupApplicationAssignment",
+          "alias": "deleteApplicationGroupAssignment",
           "arguments": [
             {
               "dest": "appId",
               "src": "id"
             }
           ],
-          "operationId": "deleteGroupApplicationAssignment"
+          "operationId": "deleteApplicationGroupAssignment"
         },
         {
           "alias": "generateApplicationKey",
@@ -3792,7 +3792,7 @@
           "$ref": "#/definitions/BasicApplicationSettings"
         }
       },
-      "x-okta-default-values": {
+      "x-okta-defined-as": {
         "name": "template_basic_auth"
       },
       "x-okta-parent": "#/definitions/Application",
@@ -3806,7 +3806,7 @@
           "$ref": "#/definitions/BookmarkApplicationSettings"
         }
       },
-      "x-okta-default-values": {
+      "x-okta-defined-as": {
         "name": "bookmark"
       },
       "x-okta-parent": "#/definitions/Application",
@@ -4446,7 +4446,7 @@
         "UserFactor"
       ]
     },
-    "JsonWebKeyRSAMediated": {
+    "JsonWebKey": {
       "properties": {
         "alg": {
           "readOnly": true,
@@ -4515,10 +4515,7 @@
           "type": "string"
         }
       },
-      "type": "object",
-      "x-okta-tags": [
-        "Application"
-      ]
+      "type": "object"
     },
     "OAuthApplicationCredentials": {
       "properties": {
@@ -4576,7 +4573,7 @@
           "$ref": "#/definitions/OpenIdConnectApplicationSettings"
         }
       },
-      "x-okta-default-values": {
+      "x-okta-defined-as": {
         "name": "oidc_client"
       },
       "x-okta-parent": "#/definitions/Application",
@@ -4933,7 +4930,7 @@
           "$ref": "#/definitions/SecurePasswordStoreApplicationSettings"
         }
       },
-      "x-okta-default-values": {
+      "x-okta-defined-as": {
         "name": "template_sps"
       },
       "x-okta-parent": "#/definitions/Application",
@@ -5059,7 +5056,7 @@
           "$ref": "#/definitions/SwaApplicationSettings"
         }
       },
-      "x-okta-default-values": {
+      "x-okta-defined-as": {
         "name": "template_swa"
       },
       "x-okta-parent": "#/definitions/BrowserPluginApplication",
@@ -5104,7 +5101,7 @@
           "$ref": "#/definitions/SwaThreeFieldApplicationSettings"
         }
       },
-      "x-okta-default-values": {
+      "x-okta-defined-as": {
         "name": "template_swa3field"
       },
       "x-okta-parent": "#/definitions/BrowserPluginApplication",
@@ -5730,7 +5727,7 @@
           "$ref": "#/definitions/WsFederationApplicationSettings"
         }
       },
-      "x-okta-default-values": {
+      "x-okta-defined-as": {
         "name": "template_wsfed"
       },
       "x-okta-parent": "#/definitions/Application",

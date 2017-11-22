@@ -19,6 +19,7 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.resource.SamlAttributeStatement
 import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.application.ApplicationCredentialsOAuthClient
+import com.okta.sdk.resource.application.ApplicationCredentialsScheme
 import com.okta.sdk.resource.application.ApplicationSignOnMode
 import com.okta.sdk.resource.application.ApplicationVisibility
 import com.okta.sdk.resource.application.ApplicationVisibilityHide
@@ -42,6 +43,7 @@ import com.okta.sdk.resource.application.OpenIdConnectApplicationType
 import com.okta.sdk.resource.application.SamlApplication
 import com.okta.sdk.resource.application.SamlApplicationSettings
 import com.okta.sdk.resource.application.SamlApplicationSettingsSignOn
+import com.okta.sdk.resource.application.SchemeApplicationCredentials
 import com.okta.sdk.resource.application.SecurePasswordStoreApplication
 import com.okta.sdk.resource.application.SecurePasswordStoreApplicationSettings
 import com.okta.sdk.resource.application.SecurePasswordStoreApplicationSettingsApplication
@@ -51,6 +53,7 @@ import com.okta.sdk.resource.application.SwaApplicationSettingsApplication
 import com.okta.sdk.resource.application.WsFederationApplication
 import com.okta.sdk.resource.application.WsFederationApplicationSettings
 import com.okta.sdk.resource.application.WsFederationApplicationSettingsApplication
+import com.okta.sdk.resource.user.PasswordCredential
 import org.testng.ITest
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Factory
@@ -257,6 +260,36 @@ class ApplicationsIT implements CrudTestSupport, ITest {
                         String label = "app-${UUID.randomUUID().toString()}"
                         return client.instantiate(BasicAuthApplication)
                                 .setLabel(label)
+                                .setSettings(client.instantiate(BasicApplicationSettings)
+                                    .setApp(client.instantiate(BasicApplicationSettingsApplication)
+                                        .setAuthURL("https://example.com/auth.html")
+                                        .setUrl("https://example.com/login.html")))
+                    }
+                } ],
+                [ ApplicationSignOnMode.BASIC_AUTH.toString() +"--"+ ApplicationCredentialsScheme.EDIT_USERNAME_AND_PASSWORD.toString(),
+                  new ApplicationCreator() {
+                    @Override
+                    Application createApplication(Client client) {
+                        String label = "app-${UUID.randomUUID().toString()}"
+                        return client.instantiate(BasicAuthApplication)
+                                .setLabel(label)
+                                .setCredentials(client.instantiate(SchemeApplicationCredentials)
+                                    .setScheme(ApplicationCredentialsScheme.EDIT_USERNAME_AND_PASSWORD))
+                                .setSettings(client.instantiate(BasicApplicationSettings)
+                                    .setApp(client.instantiate(BasicApplicationSettingsApplication)
+                                        .setAuthURL("https://example.com/auth.html")
+                                        .setUrl("https://example.com/login.html")))
+                    }
+                } ],
+                [ ApplicationSignOnMode.BASIC_AUTH.toString()+"--"+ ApplicationCredentialsScheme.ADMIN_SETS_CREDENTIALS.toString(), new ApplicationCreator() {
+                    @Override
+                    Application createApplication(Client client) {
+                        String label = "app-${UUID.randomUUID().toString()}"
+                        return client.instantiate(BasicAuthApplication)
+                                .setLabel(label)
+                                .setCredentials(client.instantiate(SchemeApplicationCredentials)
+                                    .setScheme(ApplicationCredentialsScheme.ADMIN_SETS_CREDENTIALS)
+                                    .setRevealPassword(true))
                                 .setSettings(client.instantiate(BasicApplicationSettings)
                                     .setApp(client.instantiate(BasicApplicationSettingsApplication)
                                         .setAuthURL("https://example.com/auth.html")

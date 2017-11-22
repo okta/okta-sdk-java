@@ -138,7 +138,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
         Map<String, String> defaultValuesMap = new LinkedHashMap<>();
 
-        ObjectNode rawDefaultValues = (ObjectNode) codegenModel.vendorExtensions.get("x-okta-default-values");
+        ObjectNode rawDefaultValues = (ObjectNode) codegenModel.vendorExtensions.get("x-okta-defined-as");
         if (rawDefaultValues != null) {
             rawDefaultValues.fields().forEachRemaining(entry -> {
                 defaultValuesMap.put(entry.getKey(), entry.getValue().textValue());
