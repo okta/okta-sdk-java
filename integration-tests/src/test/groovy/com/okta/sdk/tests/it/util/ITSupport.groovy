@@ -15,6 +15,9 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.okta.sdk.client.Client
+import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import org.testng.ITestContext
 import org.testng.annotations.AfterSuite
@@ -57,5 +60,21 @@ abstract class ITSupport implements ClientProvider {
             testServer.verify()
             testServer.stop()
         }
+    }
+
+    User randomUser() {
+        Client client = getClient()
+
+        def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName("Joe")
+                .setLastName("Code")
+                .setPassword("Password1")
+                .setActive(true)
+                .buildAndCreate(client)
+        registerForCleanup(user)
+
+        return user
     }
 }

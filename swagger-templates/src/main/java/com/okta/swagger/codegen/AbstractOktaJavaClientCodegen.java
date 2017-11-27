@@ -623,7 +623,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         // mark the operation as having optional params, so we can take advantage of it in the template
         addOptionalExtension(co, co.allParams);
 
-        // if the return type and the body and the return type are the same mark the body param
+        // if the body and the return type are the same mark the body param
         co.bodyParams.forEach(bodyParam -> {
             if (bodyParam.dataType.equals(co.returnType)) {
                 co.vendorExtensions.put("updateBody", true);

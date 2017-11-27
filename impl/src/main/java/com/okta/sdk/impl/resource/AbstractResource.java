@@ -22,6 +22,8 @@ import com.okta.sdk.lang.Collections;
 import com.okta.sdk.lang.Strings;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
+import com.okta.sdk.resource.application.AppUser;
+import com.okta.sdk.resource.application.Application;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -126,6 +128,29 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         if (!Collections.isEmpty(self)) {
             return (String) self.get("href");
         }
+        return fixSelfHref(properties);
+    }
+
+    private String fixSelfHref(Map<String, Object> properties) {
+
+        // the AppUsers object does NOT contain a self link, in this case we need build it based on the 'app' link
+        Map<String, Object> links = getMapValue(properties, "_links");
+        if (links != null) {
+            if (this instanceof AppUser) {
+                Map<String, Object> self = getMapValue(links, "app");
+                if (!Collections.isEmpty(self)) {
+                    return self.get("href") + "/users/" + properties.get("id");
+                }
+            }
+            if (this instanceof Application) {
+                Map<String, Object> self = getMapValue(links, "users");
+                if (!Collections.isEmpty(self)) {
+                    String href = self.get("href").toString();
+                    return href.substring(0, href.lastIndexOf("/users"));
+                }
+            }
+        }
+
         return null;
     }
 

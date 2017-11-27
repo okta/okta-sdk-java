@@ -13,5 +13,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-        {{#returnType}}{{^vendorExtensions.updateBody}}return {{/vendorExtensions.updateBody}}{{/returnType}}getDataStore().create(href, {{#vendorExtensions.bodyIsSelf}}this{{/vendorExtensions.bodyIsSelf}}{{^vendorExtensions.bodyIsSelf}}{{bodyParam.paramName}}{{/vendorExtensions.bodyIsSelf}}{{^bodyParam}}new DefaultVoidResource(getDataStore()){{/bodyParam}}{{#returnType}}, {{#vendorExtensions.updateBody}}{{bodyParam.paramName}}.getClass(){{/vendorExtensions.updateBody}}{{^vendorExtensions.updateBody}}{{returnType}}.class{{/vendorExtensions.updateBody}}{{/returnType}});{{#returnType}}{{#vendorExtensions.updateBody}}
-        return {{bodyParam.paramName}};{{/vendorExtensions.updateBody}}{{/returnType}}
+{{#returnType}}{{#vendorExtensions.updateBody}}{{#vendorExtensions.bodyIsSelf}}        {{returnType}} {{bodyParam.paramName}} = this;
+{{/vendorExtensions.bodyIsSelf}}{{/vendorExtensions.updateBody}}{{/returnType}}{{#returnType}}        {{^vendorExtensions.updateBody}}return {{/vendorExtensions.updateBody}}{{/returnType}}getDataStore().create(href, {{#vendorExtensions.bodyIsSelf}}this{{/vendorExtensions.bodyIsSelf}}{{^vendorExtensions.bodyIsSelf}}{{bodyParam.paramName}}{{/vendorExtensions.bodyIsSelf}}{{^bodyParam}}new DefaultVoidResource(getDataStore()){{/bodyParam}}{{#returnType}}, {{#vendorExtensions.updateBody}}{{bodyParam.paramName}}.getClass(){{/vendorExtensions.updateBody}}{{^vendorExtensions.updateBody}}{{returnType}}.class{{/vendorExtensions.updateBody}}{{/returnType}});
+{{#returnType}}{{#vendorExtensions.updateBody}}        return {{bodyParam.paramName}};{{/vendorExtensions.updateBody}}{{/returnType}}
