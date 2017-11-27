@@ -16,7 +16,6 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.SamlAttributeStatement
 import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.application.ApplicationCredentialsOAuthClient
 import com.okta.sdk.resource.application.ApplicationCredentialsScheme
@@ -43,6 +42,7 @@ import com.okta.sdk.resource.application.OpenIdConnectApplicationType
 import com.okta.sdk.resource.application.SamlApplication
 import com.okta.sdk.resource.application.SamlApplicationSettings
 import com.okta.sdk.resource.application.SamlApplicationSettingsSignOn
+import com.okta.sdk.resource.application.SamlAttributeStatement
 import com.okta.sdk.resource.application.SchemeApplicationCredentials
 import com.okta.sdk.resource.application.SecurePasswordStoreApplication
 import com.okta.sdk.resource.application.SecurePasswordStoreApplicationSettings
@@ -53,7 +53,6 @@ import com.okta.sdk.resource.application.SwaApplicationSettingsApplication
 import com.okta.sdk.resource.application.WsFederationApplication
 import com.okta.sdk.resource.application.WsFederationApplicationSettings
 import com.okta.sdk.resource.application.WsFederationApplicationSettingsApplication
-import com.okta.sdk.resource.user.PasswordCredential
 import org.testng.ITest
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Factory

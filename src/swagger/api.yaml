@@ -471,7 +471,7 @@
           "application/json"
         ],
         "description": "Enumerates group assignments for an application.",
-        "operationId": "listApplicationGroupAssignments",
+        "operationId": "listGroupAppAssignments",
         "parameters": [
           {
             "in": "path",
@@ -619,7 +619,7 @@
           "application/json"
         ],
         "description": "Assigns a group to an application",
-        "operationId": "updateApplicationGroupAssignment",
+        "operationId": "createApplicationGroupAssignment",
         "parameters": [
           {
             "in": "path",
@@ -3091,7 +3091,6 @@
           "type": "string"
         },
         "id": {
-          "readOnly": true,
           "type": "string"
         },
         "lastSync": {
@@ -3123,6 +3122,40 @@
         }
       },
       "type": "object",
+      "x-okta-crud": [
+        {
+          "alias": "update",
+          "arguments": [
+            {
+              "dest": "appId",
+              "parentSrc": "appId"
+            },
+            {
+              "dest": "userId",
+              "src": "id"
+            },
+            {
+              "dest": "appUser",
+              "self": true
+            }
+          ],
+          "operationId": "updateApplicationUser"
+        },
+        {
+          "alias": "delete",
+          "arguments": [
+            {
+              "dest": "appId",
+              "parentSrc": "appId"
+            },
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "deleteApplicationUser"
+        }
+      ],
       "x-okta-tags": [
         "Application"
       ]
@@ -3301,34 +3334,14 @@
           "operationId": "getApplicationUser"
         },
         {
-          "alias": "updateApplicationUser",
+          "alias": "createApplicationGroupAssignment",
           "arguments": [
             {
               "dest": "appId",
               "src": "id"
             }
           ],
-          "operationId": "updateApplicationUser"
-        },
-        {
-          "alias": "deleteApplicationUser",
-          "arguments": [
-            {
-              "dest": "appId",
-              "src": "id"
-            }
-          ],
-          "operationId": "deleteApplicationUser"
-        },
-        {
-          "alias": "updateApplicationGroupAssignment",
-          "arguments": [
-            {
-              "dest": "appId",
-              "src": "id"
-            }
-          ],
-          "operationId": "updateApplicationGroupAssignment"
+          "operationId": "createApplicationGroupAssignment"
         },
         {
           "alias": "getApplicationGroupAssignment",
@@ -3339,16 +3352,6 @@
             }
           ],
           "operationId": "getApplicationGroupAssignment"
-        },
-        {
-          "alias": "deleteApplicationGroupAssignment",
-          "arguments": [
-            {
-              "dest": "appId",
-              "src": "id"
-            }
-          ],
-          "operationId": "deleteApplicationGroupAssignment"
         },
         {
           "alias": "generateApplicationKey",
@@ -3381,17 +3384,17 @@
           "operationId": "getApplicationKey"
         },
         {
-          "alias": "listGroupAssignments",
+          "alias": "listApplicationGroupAssignments",
           "arguments": [
             {
               "dest": "appId",
               "src": "id"
             }
           ],
-          "operationId": "listApplicationGroupAssignments"
+          "operationId": "listGroupAppAssignments"
         },
         {
-          "alias": "listKeys",
+          "alias": "listApplicationKeys",
           "arguments": [
             {
               "dest": "appId",
@@ -3554,6 +3557,22 @@
         }
       },
       "type": "object",
+      "x-okta-crud": [
+        {
+          "alias": "delete",
+          "arguments": [
+            {
+              "dest": "appId",
+              "parentSrc": "appId"
+            },
+            {
+              "dest": "groupId",
+              "parentSrc": "groupId"
+            }
+          ],
+          "operationId": "deleteApplicationGroupAssignment"
+        }
+      ],
       "x-okta-tags": [
         "Application"
       ]
@@ -3788,6 +3807,9 @@
         "credentials": {
           "$ref": "#/definitions/SchemeApplicationCredentials"
         },
+        "name": {
+          "default": "template_basic_auth"
+        },
         "settings": {
           "$ref": "#/definitions/BasicApplicationSettings"
         }
@@ -3802,6 +3824,9 @@
     },
     "BookmarkApplication": {
       "properties": {
+        "name": {
+          "default": "bookmark"
+        },
         "settings": {
           "$ref": "#/definitions/BookmarkApplicationSettings"
         }
@@ -4515,7 +4540,10 @@
           "type": "string"
         }
       },
-      "type": "object"
+      "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
     },
     "OAuthApplicationCredentials": {
       "properties": {
@@ -4568,6 +4596,9 @@
       "properties": {
         "credentials": {
           "$ref": "#/definitions/OAuthApplicationCredentials"
+        },
+        "name": {
+          "default": "oidc_client"
         },
         "settings": {
           "$ref": "#/definitions/OpenIdConnectApplicationSettings"
@@ -4896,7 +4927,10 @@
           },
           "type": "array"
         }
-      }
+      },
+      "x-okta-tags": [
+        "Application"
+      ]
     },
     "SchemeApplicationCredentials": {
       "properties": {
@@ -4925,6 +4959,9 @@
       "properties": {
         "credentials": {
           "$ref": "#/definitions/SchemeApplicationCredentials"
+        },
+        "name": {
+          "default": "template_sps"
         },
         "settings": {
           "$ref": "#/definitions/SecurePasswordStoreApplicationSettings"
@@ -5052,6 +5089,9 @@
     },
     "SwaApplication": {
       "properties": {
+        "name": {
+          "default": "template_swa"
+        },
         "settings": {
           "$ref": "#/definitions/SwaApplicationSettings"
         }
@@ -5097,6 +5137,9 @@
     },
     "SwaThreeFieldApplication": {
       "properties": {
+        "name": {
+          "default": "template_swa3field"
+        },
         "settings": {
           "$ref": "#/definitions/SwaThreeFieldApplicationSettings"
         }
@@ -5723,6 +5766,9 @@
     },
     "WsFederationApplication": {
       "properties": {
+        "name": {
+          "default": "template_wsfed"
+        },
         "settings": {
           "$ref": "#/definitions/WsFederationApplicationSettings"
         }

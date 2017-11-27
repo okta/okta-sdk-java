@@ -188,20 +188,4 @@ class FactorsIT extends ITSupport {
         user.addFactor(totpFactor)
         totpFactor.delete()
     }
-
-    User randomUser() {
-        Client client = getClient()
-
-        def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
-        User user = UserBuilder.instance()
-                .setEmail(email)
-                .setFirstName("Joe")
-                .setLastName("Code")
-                .setPassword("Password1")
-                .setActive(true)
-                .buildAndCreate(client)
-        registerForCleanup(user)
-
-        return user
-    }
 }
