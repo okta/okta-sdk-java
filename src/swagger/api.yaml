@@ -471,7 +471,7 @@
           "application/json"
         ],
         "description": "Enumerates group assignments for an application.",
-        "operationId": "listGroupAppAssignments",
+        "operationId": "listApplicationGroupAssignments",
         "parameters": [
           {
             "in": "path",
@@ -3082,42 +3082,56 @@
           "type": "object"
         },
         "created": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "credentials": {
           "$ref": "#/definitions/AppUserCredentials"
         },
         "externalId": {
+          "readOnly": true,
           "type": "string"
         },
         "id": {
           "type": "string"
         },
         "lastSync": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "passwordChanged": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "profile": {
           "additionalProperties": {
             "type": "object"
           },
+          "readOnly": true,
           "type": "object"
         },
         "scope": {
           "type": "string"
         },
         "status": {
+          "readOnly": true,
           "type": "string"
         },
         "statusChanged": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "syncState": {
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -3163,13 +3177,23 @@
     "AppUserCredentials": {
       "properties": {
         "password": {
-          "$ref": "#/definitions/PasswordCredential"
+          "$ref": "#/definitions/AppUserPasswordCredential"
         },
         "userName": {
           "type": "string"
         }
       },
       "type": "object",
+      "x-okta-tags": [
+        "Application"
+      ]
+    },
+    "AppUserPasswordCredential": {
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      },
       "x-okta-tags": [
         "Application"
       ]
@@ -3384,17 +3408,17 @@
           "operationId": "getApplicationKey"
         },
         {
-          "alias": "listApplicationGroupAssignments",
+          "alias": "listGroupAssignments",
           "arguments": [
             {
               "dest": "appId",
               "src": "id"
             }
           ],
-          "operationId": "listGroupAppAssignments"
+          "operationId": "listApplicationGroupAssignments"
         },
         {
-          "alias": "listApplicationKeys",
+          "alias": "listKeys",
           "arguments": [
             {
               "dest": "appId",
@@ -3492,9 +3516,13 @@
           "type": "string"
         },
         "lastRotated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "nextRotation": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "rotationMode": {
@@ -3544,6 +3572,8 @@
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
+          "readOnly": true,
           "type": "string"
         },
         "priority": {

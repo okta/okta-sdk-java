@@ -226,7 +226,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         // pre interpolate the resource href
         co.vendorExtensions.put("hrefFiltered", co.path
                 .replaceAll("\\{", "\" + ")
-                .replaceAll("\\}", "+ \""));
+                .replaceAll("\\}", " + \""));
 
         return co;
     }

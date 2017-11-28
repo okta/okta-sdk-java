@@ -20,6 +20,7 @@ import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.application.AppUser
 import com.okta.sdk.resource.application.AppUserCredentials
 import com.okta.sdk.resource.application.AppUserList
+import com.okta.sdk.resource.application.AppUserPasswordCredential
 import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.application.ApplicationCredentialsOAuthClient
 import com.okta.sdk.resource.application.ApplicationCredentialsScheme
@@ -62,7 +63,6 @@ import com.okta.sdk.resource.application.WsFederationApplicationSettings
 import com.okta.sdk.resource.application.WsFederationApplicationSettingsApplication
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.user.PasswordCredential
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
@@ -337,12 +337,12 @@ class ApplicationsIT extends ITSupport {
         client.createApplication(app1)
         client.createApplication(app2)
 
-        JsonWebKeyList app1Keys = app1.listApplicationKeys()
+        JsonWebKeyList app1Keys = app1.listKeys()
         assertThat(app1Keys.size(), equalTo(1))
 
         JsonWebKey webKey = app1.generateApplicationKey(5)
         assertThat(webKey, notNullValue())
-        assertThat(app1.listApplicationKeys().size(), equalTo(2))
+        assertThat(app1.listKeys().size(), equalTo(2))
 
         JsonWebKey readWebKey = app1.getApplicationKey(webKey.getKid())
         assertThat(webKey, equalTo(readWebKey))
@@ -350,7 +350,7 @@ class ApplicationsIT extends ITSupport {
         JsonWebKey clonedWebKey = app1.cloneApplicationKey(webKey.getKid(), app2.getId())
         assertThat(clonedWebKey, notNullValue())
 
-        JsonWebKeyList app2Keys = app2.listApplicationKeys()
+        JsonWebKeyList app2Keys = app2.listKeys()
         assertThat(app2Keys.size(), equalTo(2))
     }
 
@@ -427,10 +427,10 @@ class ApplicationsIT extends ITSupport {
         registerForCleanup(app)
         registerForCleanup(group)
 
-        ApplicationGroupAssignmentList assignmentList = app.listApplicationGroupAssignments()
+        ApplicationGroupAssignmentList assignmentList = app.listGroupAssignments()
         println("FOOBAR")
         println(assignmentList)
-        assertThat(app.listApplicationGroupAssignments().iterator().size(), equalTo(0))
+        assertThat(app.listGroupAssignments().iterator().size(), equalTo(0))
 
         ApplicationGroupAssignment aga = client.instantiate(ApplicationGroupAssignment)
             .setPriority(2)
@@ -438,11 +438,11 @@ class ApplicationsIT extends ITSupport {
         ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.id, aga)
         assertThat(groupAssignment, notNullValue())
         assertThat(groupAssignment.priority, equalTo(2))
-        assertThat(app.listApplicationGroupAssignments().iterator().size(), equalTo(1))
+        assertThat(app.listGroupAssignments().iterator().size(), equalTo(1))
 
         // delete the assignment
         groupAssignment.delete()
-        assertThat(app.listApplicationGroupAssignments().iterator().size(), equalTo(0))
+        assertThat(app.listGroupAssignments().iterator().size(), equalTo(0))
     }
 
     @Test
@@ -474,7 +474,7 @@ class ApplicationsIT extends ITSupport {
             .setId(user1.id)
             .setCredentials(client.instantiate(AppUserCredentials)
                 .setUserName(user1.getProfile().getEmail())
-                .setPassword(client.instantiate(PasswordCredential)
+                .setPassword(client.instantiate(AppUserPasswordCredential)
                     .setValue("super-secret1")))
         app.assignUserToApplication(appUser1)
 
@@ -483,7 +483,7 @@ class ApplicationsIT extends ITSupport {
             .setId(user2.id)
             .setCredentials(client.instantiate(AppUserCredentials)
                 .setUserName(user2.getProfile().getEmail())
-                .setPassword(client.instantiate(PasswordCredential)
+                .setPassword(client.instantiate(AppUserPasswordCredential)
                     .setValue("super-secret2")))
 
         // FIXME: returned object should be the same
