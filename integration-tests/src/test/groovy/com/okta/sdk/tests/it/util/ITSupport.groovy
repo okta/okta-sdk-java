@@ -77,4 +77,8 @@ abstract class ITSupport implements ClientProvider {
 
         return user
     }
+
+    void slowItDown() {
+        Thread.sleep(200)
+    }
 }
