@@ -88,6 +88,9 @@
 
         <resources>
             <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
                 <directory>target/generated-resources/swagger</directory>
             </resource>
         </resources>
