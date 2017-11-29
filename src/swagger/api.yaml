@@ -3597,7 +3597,7 @@
             },
             {
               "dest": "groupId",
-              "parentSrc": "groupId"
+              "src": "id"
             }
           ],
           "operationId": "deleteApplicationGroupAssignment"
@@ -4508,6 +4508,7 @@
           "type": "string"
         },
         "created": {
+          "format": "date-time",
           "readOnly": true,
           "type": "string"
         },
@@ -4516,6 +4517,7 @@
           "type": "string"
         },
         "expiresAt": {
+          "format": "date-time",
           "readOnly": true,
           "type": "string"
         },
@@ -4535,6 +4537,7 @@
           "type": "string"
         },
         "lastUpdated": {
+          "format": "date-time",
           "readOnly": true,
           "type": "string"
         },
