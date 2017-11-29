@@ -88,6 +88,7 @@ class ApplicationsIT extends ITSupport {
 
         // Create a resource
         def resource = create(client, app)
+        registerForCleanup(resource)
         slowItDown()
 
         // count the resource after creating
@@ -112,7 +113,7 @@ class ApplicationsIT extends ITSupport {
 
         count = getCount(client)
         assertThat "Resource was not deleted", count, is(preCount)
-        slowItDown()
+        slowItDown(1000)
     }
 
     def create(Client client, Application app) {
@@ -335,23 +336,32 @@ class ApplicationsIT extends ITSupport {
                         .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
                         .setLoginUrl("http://swaprimaryloginurl.okta.com")))
         client.createApplication(app1)
+        registerForCleanup(app1)
+        slowItDown()
         client.createApplication(app2)
+        registerForCleanup(app2)
+        slowItDown()
 
         JsonWebKeyList app1Keys = app1.listKeys()
         assertThat(app1Keys.size(), equalTo(1))
+        slowItDown()
 
         JsonWebKey webKey = app1.generateApplicationKey(5)
         assertThat(webKey, notNullValue())
         assertThat(app1.listKeys().size(), equalTo(2))
+        slowItDown()
 
         JsonWebKey readWebKey = app1.getApplicationKey(webKey.getKid())
         assertThat(webKey, equalTo(readWebKey))
+        slowItDown()
 
         JsonWebKey clonedWebKey = app1.cloneApplicationKey(webKey.getKid(), app2.getId())
         assertThat(clonedWebKey, notNullValue())
+        slowItDown()
 
         JsonWebKeyList app2Keys = app2.listKeys()
         assertThat(app2Keys.size(), equalTo(2))
+        slowItDown()
     }
 
     @Test
@@ -368,13 +378,18 @@ class ApplicationsIT extends ITSupport {
                         .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
                         .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
 
+        registerForCleanup(app)
+
         assertThat(app.status, equalTo(Application.StatusEnum.ACTIVE))
+        slowItDown()
 
         app.deactivate()
         assertThat(client.getApplication(app.getId()).status, equalTo(Application.StatusEnum.INACTIVE))
+        slowItDown()
 
         app.activate()
         assertThat(client.getApplication(app.getId()).status, equalTo(Application.StatusEnum.ACTIVE))
+        slowItDown()
     }
 
 //    @Test
@@ -426,19 +441,18 @@ class ApplicationsIT extends ITSupport {
 
         registerForCleanup(app)
         registerForCleanup(group)
+        slowItDown()
 
-        ApplicationGroupAssignmentList assignmentList = app.listGroupAssignments()
-        println("FOOBAR")
-        println(assignmentList)
         assertThat(app.listGroupAssignments().iterator().size(), equalTo(0))
 
         ApplicationGroupAssignment aga = client.instantiate(ApplicationGroupAssignment)
-            .setPriority(2)
+                                            .setPriority(2)
 
         ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.id, aga)
         assertThat(groupAssignment, notNullValue())
         assertThat(groupAssignment.priority, equalTo(2))
         assertThat(app.listGroupAssignments().iterator().size(), equalTo(1))
+        slowItDown()
 
         // delete the assignment
         groupAssignment.delete()
@@ -450,7 +464,9 @@ class ApplicationsIT extends ITSupport {
 
         Client client = getClient()
         User user1 = randomUser()
+        slowItDown()
         User user2 = randomUser()
+        slowItDown()
 
         String label = "app-${UUID.randomUUID().toString()}"
         Application app = client.instantiate(AutoLoginApplication)
@@ -465,6 +481,8 @@ class ApplicationsIT extends ITSupport {
                         .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
                         .setLoginUrl("http://swaprimaryloginurl.okta.com")))
         client.createApplication(app)
+        registerForCleanup(app)
+        slowItDown()
 
         AppUserList appUserList = app.listApplicationUsers()
         assertThat appUserList.iterator().size(), equalTo(0)
@@ -477,6 +495,7 @@ class ApplicationsIT extends ITSupport {
                 .setPassword(client.instantiate(AppUserPasswordCredential)
                     .setValue("super-secret1")))
         app.assignUserToApplication(appUser1)
+        slowItDown()
 
         AppUser appUser2 = client.instantiate(AppUser)
             .setScope("USER")
@@ -489,12 +508,14 @@ class ApplicationsIT extends ITSupport {
         // FIXME: returned object should be the same
         appUser1 = app.assignUserToApplication(appUser1)
         appUser2 = app.assignUserToApplication(appUser2)
+        slowItDown()
 
         // now we should have 2
         assertThat appUserList.iterator().size(), equalTo(2)
 
         // delete just one
         appUser1.delete()
+        slowItDown()
 
         // now we should have 1
         assertThat appUserList.iterator().size(), equalTo(1)

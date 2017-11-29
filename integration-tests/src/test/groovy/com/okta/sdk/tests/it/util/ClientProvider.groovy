@@ -70,7 +70,10 @@ trait ClientProvider implements IHookable {
                     .setClientCredentials(new TokenClientCredentials("00ICU812"))
                     .build()
         }
-        return Clients.builder().build()
+
+        Client client = Clients.builder().build()
+        client.dataStore.requestExecutor.numRetries = 10
+        return client
     }
 
     @Override

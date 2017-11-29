@@ -17,6 +17,8 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
+import com.okta.sdk.tests.it.util.ClientProvider
+import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
@@ -25,12 +27,12 @@ import static org.hamcrest.Matchers.*
 /**
  * Support for basic CRUD tests
  */
-trait CrudTestSupport {
+trait CrudTestSupport implements ClientProvider {
 
     @Test
     void basicCrudTest() {
 
-        Client client = Clients.builder().build()
+        Client client = getClient()
 
         preTestSetup(client)
 
