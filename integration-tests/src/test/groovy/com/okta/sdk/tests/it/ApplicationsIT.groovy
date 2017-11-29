@@ -71,6 +71,7 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
+import static org.hamcrest.Matchers.sameInstance
 
 /**
  * Tests for /api/v1/apps.
@@ -505,9 +506,8 @@ class ApplicationsIT extends ITSupport {
                 .setPassword(client.instantiate(AppUserPasswordCredential)
                     .setValue("super-secret2")))
 
-        // FIXME: returned object should be the same
-        appUser1 = app.assignUserToApplication(appUser1)
-        appUser2 = app.assignUserToApplication(appUser2)
+        assertThat(app.assignUserToApplication(appUser1), sameInstance(appUser1))
+        assertThat(app.assignUserToApplication(appUser2), sameInstance(appUser1))
         slowItDown()
 
         // now we should have 2
