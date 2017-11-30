@@ -125,10 +125,12 @@ public class JacksonMapMarshaller implements MapMarshaller {
             jgen.writeObject(resourceConverter.convert(resource, false));
         }
 
+        // method not used, but here to prevent java serialization PMD warnings
         private void writeObject(ObjectOutputStream stream) throws IOException {
             stream.defaultWriteObject();
         }
 
+        // method not used, but here to prevent java serialization PMD warnings
         private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
             stream.defaultReadObject();
         }

@@ -15,6 +15,9 @@
  */
 package com.okta.swagger.codegen;
 
+/**
+ * Simple key/value pair to make things easier with swagger templates.
+ */
 public class KeyValuePair {
 
     public final String key;
