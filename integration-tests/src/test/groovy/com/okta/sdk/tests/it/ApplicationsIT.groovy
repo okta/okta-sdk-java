@@ -507,7 +507,7 @@ class ApplicationsIT extends ITSupport {
                     .setValue("super-secret2")))
 
         assertThat(app.assignUserToApplication(appUser1), sameInstance(appUser1))
-        assertThat(app.assignUserToApplication(appUser2), sameInstance(appUser1))
+        assertThat(app.assignUserToApplication(appUser2), sameInstance(appUser2))
         slowItDown()
 
         // now we should have 2
