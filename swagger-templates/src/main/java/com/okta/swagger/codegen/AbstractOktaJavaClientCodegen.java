@@ -108,6 +108,10 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         buildDiscriminationMap(swagger);
     }
 
+    /**
+     * Figure out which models are top level models (directly returned from a endpoint).
+     * @param swagger The instance of swagger.
+     */
     protected void buildTopLevelResourceList(Swagger swagger) {
 
         Set<String> resources = new HashSet<>();
@@ -143,6 +147,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                             }
 
                             resources.add(refProperty.getSimpleRef());
+
                         }
                     });
                 })
@@ -159,6 +164,15 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 }
             }
         });
+
+
+        resources.stream()
+                .map(resourceName -> swagger.getDefinitions().get(resourceName))
+                .forEach(model -> {
+                    model.getVendorExtensions().put("top-level", true);
+                });
+
+
         this.topLevelResources = resources;
     }
 
@@ -664,9 +678,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     @Override
     public String toVarName(String name) {
         String originalResult = super.toVarName(name);
-//        if (originalResult.contains("Oauth")) {
-//            originalResult = originalResult.replaceAll("Oauth", "OAuth");
-//        }
         if (originalResult.contains("oauth")) {
             originalResult = originalResult.replaceAll("oauth", "oAuth");
         }

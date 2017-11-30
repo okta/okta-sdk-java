@@ -14,6 +14,7 @@
     limitations under the License.
 }}
 import com.okta.sdk.impl.resource.AbstractInstanceResource;
+import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.Property;
 import com.okta.sdk.impl.resource.ResourceReference;
 import com.okta.sdk.impl.ds.InternalDataStore;
@@ -40,7 +41,7 @@ import java.util.Map;
 @javax.annotation.Generated(
         value = "{{generatorClass}}",
         date  = "{{generatedDate}}")
-public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}AbstractInstanceResource<{{classname}}>{{/parent}} implements {{classname}} {
+public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}{{#vendorExtensions.top-level}}AbstractInstanceResource<{{classname}}>{{/vendorExtensions.top-level}}{{^vendorExtensions.top-level}}AbstractResource{{/vendorExtensions.top-level}}{{/parent}} implements {{classname}} {
 
 {{#vars}}
     private final static {{vendorExtensions.propertyType}}{{#vendorExtensions.typeClassExtra}}<{{{datatypeWithEnum}}}>{{/vendorExtensions.typeClassExtra}} {{name}}Property = new {{vendorExtensions.propertyType}}("{{baseName}}"{{vendorExtensions.constructorTypeExtra}});
