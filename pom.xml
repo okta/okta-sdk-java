@@ -157,6 +157,12 @@
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.beanshell</groupId>
+                        <artifactId>bsh</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
@@ -244,6 +250,28 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.jasig.maven</groupId>
+                <artifactId>maven-notice-plugin</artifactId>
+                <version>1.0.6.1</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <fileName>THIRD-PARTY-NOTICES</fileName>
+                    <generateChildNotices>false</generateChildNotices>
+                    <noticeTemplate>${root.dir}/src/license/NOTICE.template</noticeTemplate>
+                    <licenseMapping>
+                        <mapping>src/license/mapping.xml</mapping>
+                    </licenseMapping>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
