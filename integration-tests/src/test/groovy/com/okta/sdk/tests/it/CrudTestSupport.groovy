@@ -71,24 +71,19 @@ trait CrudTestSupport implements ClientProvider {
 
     void preTestSetup(Client client) {}
 
-    // create
     abstract def create(Client client)
 
-    // read
     abstract def read(Client client, String id)
 
-    // list
     abstract Iterator getResourceCollectionIterator(Client client)
+
+    abstract void update(Client client, def resource)
+
+    abstract void assertUpdate(Client client, def resource)
 
     Stream getResourceListStream(Client client) {
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(getResourceCollectionIterator(client), Spliterator.ORDERED),false)
     }
-
-    // update
-    abstract void update(Client client, def resource)
-
-    // validate the update
-    abstract void assertUpdate(Client client, def resource)
 
     // delete
     void delete(Client client, def resource) {

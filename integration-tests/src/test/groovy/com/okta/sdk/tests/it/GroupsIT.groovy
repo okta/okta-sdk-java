@@ -67,32 +67,6 @@ class GroupsIT implements CrudTestSupport {
         return client.listGroups().iterator()
     }
 
-    @Test(enabled = false)
-    @Scenario("group-get-and-stats")
-    @TestResources(groups="Get Test Group")
-    void getGroupAndStatsTest() {
-
-        Client client = getClient()
-
-        // 1. Create a new group
-        Group createdGroup = GroupBuilder.instance()
-            .setName("Get Test Group")
-            .buildAndCreate(client)
-
-        // 2. Get the group by ID
-        Group group = client.getGroup(createdGroup.id)
-        validateGroup(group, createdGroup)
-
-        // 3. Get group stats
-//        Stats stats = createdGroup.getStatus();
-//        assertThat(stats.usersCount, equalTo(0))
-//        assertThat(stats.appsCount, equalTo(0))
-//        assertThat(stats.groupPushMappingsCount, equalTo(0))
-
-        // 4. Delete the group
-        group.delete()
-    }
-
     @Test
     @Scenario("list-groups")
     @TestResources(groups = "List Test Group")
