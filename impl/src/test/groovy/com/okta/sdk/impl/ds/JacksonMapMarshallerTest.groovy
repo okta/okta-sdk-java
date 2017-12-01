@@ -140,6 +140,8 @@ class JacksonMapMarshallerTest {
         String result = new JacksonMapMarshaller().marshal(testMap)
         assertThat result, not(containsString("dirty"))
         assertThat result, containsString('"complexResourceList":[{"foo":"bar1"},{"foo":"bar2"}]')
+        assertThat result, containsString('"simpleListKey":["one","two","three"]')
+        assertThat result, containsString('"test1":"value1"')
     }
 
     static class FooResource extends AbstractResource {
@@ -150,7 +152,6 @@ class JacksonMapMarshallerTest {
 
         FooResource(InternalDataStore dataStore) {
             super(dataStore)
-
         }
 
         FooResource(InternalDataStore dataStore, Map<String, Object> properties) {
@@ -170,6 +171,5 @@ class JacksonMapMarshallerTest {
             setProperty(FOO_PROPERTY, foo)
             return this
         }
-
     }
 }

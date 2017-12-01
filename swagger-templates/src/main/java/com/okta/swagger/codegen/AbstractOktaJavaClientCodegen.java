@@ -116,44 +116,49 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         Set<String> resources = new HashSet<>();
 
+        // Loop through all of the operations looking for the models that are used as the response and body params
         swagger.getPaths().forEach((pathName, path) ->
                 path.getOperations().forEach(operation -> {
-                    // params
+                    // find all body params
                     operation.getParameters().forEach(parameter -> {
                         if (parameter instanceof BodyParameter) {
                             resources.add(((RefModel) ((BodyParameter)parameter).getSchema()).getSimpleRef());
                         }
                     });
 
-                    // responses
+                    // response objects are a more complicated, start with filter for only the 200 responses
                     operation.getResponses().entrySet().stream()
                     .filter(entry -> "200".equals(entry.getKey()))
                     .forEach(entry -> {
+                        // this schema could be a ref or an array property containing a ref (or null)
                         Property rawSchema = entry.getValue().getSchema();
 
                         if (rawSchema != null) {
                             RefProperty refProperty;
+                            // detect array properties
                             if (rawSchema instanceof ArrayProperty) {
                                 Property innerProp = ((ArrayProperty) rawSchema).getItems();
                                 if (innerProp instanceof RefProperty) {
                                     refProperty = (RefProperty) innerProp;
                                 } else {
+                                    // invalid swagger config file
                                     throw new SwaggerException("Expected 'schema.items.$ref' to exist.");
                                 }
                             } else if (rawSchema instanceof RefProperty) {
+                                // non array, standard ref property typically in the format of '#/Definitions/MyModel'
                                 refProperty = (RefProperty) rawSchema;
                             } else {
                                 throw new SwaggerException("Expected 'schema' to be of type 'ArrayProperty' or 'RefProperty'.");
                             }
 
+                            // get the simple name 'MyModel' instead of '#/Definitions/MyModel'
                             resources.add(refProperty.getSimpleRef());
-
                         }
                     });
                 })
         );
 
-        // find any children of those resources
+        // find any children of these resources
         swagger.getDefinitions().forEach((name, model) -> {
             String parent = (String) model.getVendorExtensions().get("x-okta-parent");
             if (parent != null) {
@@ -165,13 +170,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             }
         });
 
-
+        // mark each model with a 'top-level' vendorExtension
         resources.stream()
                 .map(resourceName -> swagger.getDefinitions().get(resourceName))
                 .forEach(model -> {
                     model.getVendorExtensions().put("top-level", true);
                 });
-
 
         this.topLevelResources = resources;
     }
