@@ -1,3 +1,0 @@
-[submodule ".submodules/okta-sdk-test-server"]
-	path = .submodules/okta-sdk-test-server
-	url = https://github.com/okta/okta-sdk-test-server.git
