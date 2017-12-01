@@ -49,8 +49,8 @@ trait CrudTestSupport implements ClientProvider {
         assertThat "More then one resource was created", count, is(preCount + 1)
         slowItDown()
 
-//        // getting the resource again should result in the same object
-//        assertThat read(client, resource.id), equalTo(resource)
+        // getting the resource again should result in the same object
+        assertThat read(client, resource.id), equalTo(resource)
 
         // update the resource
         update(client, resource)
