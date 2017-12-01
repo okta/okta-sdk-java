@@ -16,10 +16,13 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.client.Clients
+import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.tests.it.util.ClientProvider
-import com.okta.sdk.tests.it.util.ITSupport
+import org.testng.Assert
 import org.testng.annotations.Test
+
+import java.util.stream.Stream
+import java.util.stream.StreamSupport
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
@@ -33,49 +36,40 @@ trait CrudTestSupport implements ClientProvider {
     void basicCrudTest() {
 
         Client client = getClient()
-
         preTestSetup(client)
-
-        // get the size of initial list
-        int preCount = getCount(client)
-        slowItDown()
 
         // Create a resource
         def resource = create(client)
-        slowItDown()
-
-        // count the resource after creating
-        int count = getCount(client)
-        assertThat "More then one resource was created", count, is(preCount + 1)
-        slowItDown()
 
         // getting the resource again should result in the same object
-        assertThat read(client, resource.id), equalTo(resource)
+        def readResource = read(client, resource.id)
+        assertThat readResource, notNullValue()
+        assertThat readResource, equalTo(resource)
 
         // update the resource
         update(client, resource)
-        slowItDown()
-
-        count = getCount(client)
-        assertThat "New resource was created while attempting to update", count, is(preCount + 1)
-        slowItDown()
+        assertUpdate(client, read(client, resource.id))
 
         // delete the resource
         delete(client, resource)
-        slowItDown()
-
-        count = getCount(client)
-        assertThat "Resource was not deleted", count, is(preCount)
-        slowItDown()
+        assertDelete(client, resource)
     }
 
-    void slowItDown() {
-        Thread.sleep(200)
+    @Test
+    void basicListTest() {
+
+        // Create a resource
+        def resource = create(client)
+        // search the resource collection looking for the new resource
+        Optional optional = getResourceListStream(client)
+                                .filter {it.id == resource.id}
+                                .findFirst()
+
+        // make sure it exists
+        assertThat "New resource with id ${resource.id} was not found in list resource.", optional.isPresent()
     }
 
-    void preTestSetup(Client client) {
-
-    }
+    void preTestSetup(Client client) {}
 
     // create
     abstract def create(Client client)
@@ -83,19 +77,33 @@ trait CrudTestSupport implements ClientProvider {
     // read
     abstract def read(Client client, String id)
 
-    // update
-    abstract void update(Client client, def resource)
-
-    // delete
-    void delete(Client client, def resource) {
-        resource.delete()
-    }
-
     // list
     abstract Iterator getResourceCollectionIterator(Client client)
 
-    int getCount(Client client) {
-        return getResourceCollectionIterator(client).size()
+    Stream getResourceListStream(Client client) {
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(getResourceCollectionIterator(client), Spliterator.ORDERED),false)
     }
 
+    // update
+    abstract void update(Client client, def resource)
+
+    // validate the update
+    abstract void assertUpdate(Client client, def resource)
+
+    // delete
+    void delete(Client client, def resource) {
+        if (resource.metaClass.respondsTo(resource, "deactivate")) {
+            resource.deactivate()
+        }
+        resource.delete()
+    }
+
+    void assertDelete(Client client, def resource) {
+        try {
+            read(client, resource.id)
+            Assert.fail("Expected ResourceException (404)")
+        } catch (ResourceException e) {
+            assertThat e.status, equalTo(404)
+        }
+    }
 }

@@ -587,9 +587,9 @@ public class DefaultDataStore implements InternalDataStore {
                 body.put(DefaultError.ERROR_ID.getName(), requestId);
             }
 
-            DefaultError error = new DefaultError(body)
-                    .setHeaders(response.getHeaders().getXHeaders());
-            throw new ResourceException(error);
+            throw new ResourceException(new DefaultError(body)
+                                            .setHeaders(response.getHeaders().getXHeaders())
+                                            .setStatus(response.getHttpStatus()));
         }
 
         return response;
