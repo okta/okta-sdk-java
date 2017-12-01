@@ -44,7 +44,7 @@ public interface Error {
     String getMessage();
 
     /**
-     * Returns the error ID of this error. This maybe use used when opening a support case and troubleshooting.
+     * Returns the error ID of this error. This maybe used when opening a support case and troubleshooting.
      * @return error ID of this error
      */
     String getId();
