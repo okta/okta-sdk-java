@@ -91,10 +91,6 @@ trait ClientProvider implements IHookable {
                 if (scenario != null) scenarioId = scenario.value()
             }
 
-            if (scenario == null) {
-                log.info("Test: [{}.{}] does not have a scenario name.", getClass().name, testResult.method.methodName)
-            }
-
             Client client = getClient(scenarioId)
 
             if (!isRunningWithTestServer() && testResources != null) {

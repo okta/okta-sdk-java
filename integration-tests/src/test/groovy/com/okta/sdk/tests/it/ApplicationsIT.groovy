@@ -17,6 +17,7 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
+import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.AppUser
 import com.okta.sdk.resource.application.AppUserCredentials
 import com.okta.sdk.resource.application.AppUserList
@@ -25,7 +26,6 @@ import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.application.ApplicationCredentialsOAuthClient
 import com.okta.sdk.resource.application.ApplicationCredentialsScheme
 import com.okta.sdk.resource.application.ApplicationGroupAssignment
-import com.okta.sdk.resource.application.ApplicationGroupAssignmentList
 import com.okta.sdk.resource.application.ApplicationVisibility
 import com.okta.sdk.resource.application.ApplicationVisibilityHide
 import com.okta.sdk.resource.application.AutoLoginApplication
@@ -65,12 +65,14 @@ import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.tests.it.util.ITSupport
+import org.testng.Assert
 import org.testng.annotations.Test
+
+import java.util.stream.Stream
+import java.util.stream.StreamSupport
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
-import static org.hamcrest.Matchers.instanceOf
-import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static org.hamcrest.Matchers.sameInstance
 
@@ -84,45 +86,30 @@ class ApplicationsIT extends ITSupport {
 
         Client client = Clients.builder().build()
 
-        // get the size of initial list
-        int preCount = getCount(client)
-        slowItDown()
-
         // Create a resource
         def resource = create(client, app)
         registerForCleanup(resource)
-        slowItDown()
 
-        // count the resource after creating
-        int count = getCount(client)
-        assertThat "More then one resource was created", count, is(preCount + 1)
-        slowItDown()
+        // getting the resource again should result in the same object
+        def readResource = read(client, resource.id)
+        assertThat readResource, notNullValue()
 
         // OpenIdConnectApplication contains a password when created, so it will not be the same when retrieved)
         if (!(app instanceof OpenIdConnectApplication)) {
             // getting the resource again should result in the same object
-            assertThat read(client, resource.id), equalTo(resource)
+            assertThat readResource, equalTo(resource)
         }
 
         // update the resource
-        update(client, resource)
-        slowItDown()
-
-        count = getCount(client)
-        assertThat "New resource was created while attempting to update", count, is(preCount + 1)
-        slowItDown()
+        updateAndValidate(client, resource)
 
         // delete the resource
-        delete(resource)
-        slowItDown()
-
-        count = getCount(client)
-        assertThat "Resource was not deleted", count, is(preCount)
-        slowItDown(1000)
+        deleteAndValidate(resource)
     }
 
     def create(Client client, Application app) {
         app.setLabel("app-${UUID.randomUUID().toString()}")
+        registerForCleanup(app)
         return client.createApplication(app)
     }
 
@@ -130,7 +117,7 @@ class ApplicationsIT extends ITSupport {
         return client.getApplication(id)
     }
 
-    void update(Client client, def resource) {
+    void updateAndValidate(Client client, def resource) {
         String newLabel = resource.label + "-update"
         resource.label = newLabel
         resource.update()
@@ -139,17 +126,43 @@ class ApplicationsIT extends ITSupport {
         assertThat read(client, resource.id).label, equalTo(newLabel)
     }
 
-    void delete(def resource) {
+    void deleteAndValidate(def resource) {
         resource.deactivate()
         resource.delete()
+
+        try {
+            read(client, resource.id)
+            Assert.fail("Expected ResourceException (404)")
+        } catch (ResourceException e) {
+            assertThat e.status, equalTo(404)
+        }
     }
 
-    int getCount(Client client) {
-        return getResourceCollectionIterator(client).size()
+    @Test
+    void basicListTest() {
+
+        // Create a resource
+        def resource = create(client, client.instantiate(AutoLoginApplication)
+                                            .setVisibility(client.instantiate(ApplicationVisibility)
+                                                .setAutoSubmitToolbar(false)
+                                                .setHide(client.instantiate(ApplicationVisibilityHide)
+                                                    .setIOS(false)
+                                                    .setWeb(false)))
+                                            .setSettings(client.instantiate(AutoLoginApplicationSettings)
+                                                .setSignOn(client.instantiate(AutoLoginApplicationSettingsSignOn)
+                                                    .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
+                                                    .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
+        // search the resource collection looking for the new resource
+        Optional optional = getResourceListStream(client)
+                                .filter {it.id == resource.id}
+                                .findFirst()
+
+        // make sure it exists
+        assertThat "New resource with id ${resource.id} was not found in list resource.", optional.isPresent()
     }
 
-    Iterator getResourceCollectionIterator(Client client) {
-        return client.listApplications().iterator()
+    Stream getResourceListStream(Client client) {
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(client.listApplications().iterator(), Spliterator.ORDERED),false)
     }
 
     @Test
@@ -342,31 +355,24 @@ class ApplicationsIT extends ITSupport {
                         .setLoginUrl("http://swaprimaryloginurl.okta.com")))
         client.createApplication(app1)
         registerForCleanup(app1)
-        slowItDown()
         client.createApplication(app2)
         registerForCleanup(app2)
-        slowItDown()
 
         JsonWebKeyList app1Keys = app1.listKeys()
         assertThat(app1Keys.size(), equalTo(1))
-        slowItDown()
 
         JsonWebKey webKey = app1.generateApplicationKey(5)
         assertThat(webKey, notNullValue())
         assertThat(app1.listKeys().size(), equalTo(2))
-        slowItDown()
 
         JsonWebKey readWebKey = app1.getApplicationKey(webKey.getKid())
         assertThat(webKey, equalTo(readWebKey))
-        slowItDown()
 
         JsonWebKey clonedWebKey = app1.cloneApplicationKey(webKey.getKid(), app2.getId())
         assertThat(clonedWebKey, notNullValue())
-        slowItDown()
 
         JsonWebKeyList app2Keys = app2.listKeys()
         assertThat(app2Keys.size(), equalTo(2))
-        slowItDown()
     }
 
     @Test
@@ -386,15 +392,12 @@ class ApplicationsIT extends ITSupport {
         registerForCleanup(app)
 
         assertThat(app.status, equalTo(Application.StatusEnum.ACTIVE))
-        slowItDown()
 
         app.deactivate()
         assertThat(client.getApplication(app.getId()).status, equalTo(Application.StatusEnum.INACTIVE))
-        slowItDown()
 
         app.activate()
         assertThat(client.getApplication(app.getId()).status, equalTo(Application.StatusEnum.ACTIVE))
-        slowItDown()
     }
 
 //    @Test
@@ -446,7 +449,6 @@ class ApplicationsIT extends ITSupport {
 
         registerForCleanup(app)
         registerForCleanup(group)
-        slowItDown()
 
         assertThat(app.listGroupAssignments().iterator().size(), equalTo(0))
 
@@ -457,7 +459,6 @@ class ApplicationsIT extends ITSupport {
         assertThat(groupAssignment, notNullValue())
         assertThat(groupAssignment.priority, equalTo(2))
         assertThat(app.listGroupAssignments().iterator().size(), equalTo(1))
-        slowItDown()
 
         // delete the assignment
         groupAssignment.delete()
@@ -469,9 +470,7 @@ class ApplicationsIT extends ITSupport {
 
         Client client = getClient()
         User user1 = randomUser()
-        slowItDown()
         User user2 = randomUser()
-        slowItDown()
 
         String label = "app-${UUID.randomUUID().toString()}"
         Application app = client.instantiate(AutoLoginApplication)
@@ -487,7 +486,6 @@ class ApplicationsIT extends ITSupport {
                         .setLoginUrl("http://swaprimaryloginurl.okta.com")))
         client.createApplication(app)
         registerForCleanup(app)
-        slowItDown()
 
         AppUserList appUserList = app.listApplicationUsers()
         assertThat appUserList.iterator().size(), equalTo(0)
@@ -500,7 +498,6 @@ class ApplicationsIT extends ITSupport {
                 .setPassword(client.instantiate(AppUserPasswordCredential)
                     .setValue("super-secret1")))
         app.assignUserToApplication(appUser1)
-        slowItDown()
 
         AppUser appUser2 = client.instantiate(AppUser)
             .setScope("USER")
@@ -512,14 +509,12 @@ class ApplicationsIT extends ITSupport {
 
         assertThat(app.assignUserToApplication(appUser1), sameInstance(appUser1))
         assertThat(app.assignUserToApplication(appUser2), sameInstance(appUser2))
-        slowItDown()
 
         // now we should have 2
         assertThat appUserList.iterator().size(), equalTo(2)
 
         // delete just one
         appUser1.delete()
-        slowItDown()
 
         // now we should have 1
         assertThat appUserList.iterator().size(), equalTo(1)
