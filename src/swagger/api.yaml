@@ -29,7 +29,7 @@
       "name": "Apache-2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.7.0"
+    "version": "0.9.0"
   },
   "externalDocs": {
     "description": "Find more info here",
@@ -4007,7 +4007,7 @@
           "$ref": "#/definitions/FactorProfile"
         },
         "provider": {
-          "type": "string"
+          "$ref": "#/definitions/FactorProvider"
         },
         "rechallengeExistingFactor": {
           "type": "boolean"
@@ -4079,6 +4079,7 @@
       "x-openapi-v3-discriminator": {
         "mapping": {
           "call": "#/definitions/CallFactor",
+          "email": "#/definitions/EmailFactor",
           "push": "#/definitions/PushFactor",
           "question": "#/definitions/SecurityQuestionFactor",
           "sms": "#/definitions/SmsFactor",
@@ -4092,6 +4093,21 @@
     },
     "FactorProfile": {
       "properties": {},
+      "x-okta-tags": [
+        "UserFactor"
+      ]
+    },
+    "FactorProvider": {
+      "enum": [
+        "OKTA",
+        "RSA",
+        "GOOGLE",
+        "SYMANTEC",
+        "DUO",
+        "YUBICO",
+        "FIDO"
+      ],
+      "type": "string",
       "x-okta-tags": [
         "UserFactor"
       ]
@@ -4137,7 +4153,8 @@
         "token:software:totp",
         "token:hardware",
         "question",
-        "web"
+        "web",
+        "email"
       ],
       "type": "string",
       "x-okta-tags": [
