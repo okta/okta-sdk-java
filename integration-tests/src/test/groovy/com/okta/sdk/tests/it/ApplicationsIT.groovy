@@ -140,7 +140,6 @@ class ApplicationsIT extends ITSupport {
 
     @Test
     void basicListTest() {
-
         // Create a resource
         def resource = create(client, client.instantiate(AutoLoginApplication)
                                             .setVisibility(client.instantiate(ApplicationVisibility)
@@ -400,32 +399,33 @@ class ApplicationsIT extends ITSupport {
         assertThat(client.getApplication(app.getId()).status, equalTo(Application.StatusEnum.ACTIVE))
     }
 
-//    @Test
-//    void groupAssignmentWithNullBodyTest() {
-//
-//        Application app = client.createApplication(client.instantiate(AutoLoginApplication)
-//                .setLabel("app-${UUID.randomUUID().toString()}")
-//                .setVisibility(client.instantiate(ApplicationVisibility)
-//                    .setAutoSubmitToolbar(false)
-//                    .setHide(client.instantiate(ApplicationVisibilityHide)
-//                        .setIOS(false)
-//                        .setWeb(false)))
-//                .setSettings(client.instantiate(AutoLoginApplicationSettings)
-//                    .setSignOn(client.instantiate(AutoLoginApplicationSettingsSignOn)
-//                        .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
-//                        .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
-//
-//        Group group = GroupBuilder.instance()
-//                .setName("app-test-group-" + UUID.randomUUID().toString())
-//                .setDescription("IT created Group")
-//                .buildAndCreate(client)
-//
-//        registerForCleanup(app)
-//        registerForCleanup(group)
-//
-//        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.id, null)
-//        assertThat(groupAssignment, notNullValue())
-//    }
+    // disabled to do: https://github.com/okta/openapi/issues/107
+    @Test(enabled = false)
+    void groupAssignmentWithNullBodyTest() {
+
+        Application app = client.createApplication(client.instantiate(AutoLoginApplication)
+                .setLabel("app-${UUID.randomUUID().toString()}")
+                .setVisibility(client.instantiate(ApplicationVisibility)
+                    .setAutoSubmitToolbar(false)
+                    .setHide(client.instantiate(ApplicationVisibilityHide)
+                        .setIOS(false)
+                        .setWeb(false)))
+                .setSettings(client.instantiate(AutoLoginApplicationSettings)
+                    .setSignOn(client.instantiate(AutoLoginApplicationSettingsSignOn)
+                        .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
+                        .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
+
+        Group group = GroupBuilder.instance()
+                .setName("app-test-group-" + UUID.randomUUID().toString())
+                .setDescription("IT created Group")
+                .buildAndCreate(client)
+
+        registerForCleanup(app)
+        registerForCleanup(group)
+
+        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.id, null)
+        assertThat(groupAssignment, notNullValue())
+    }
 
     @Test
     void groupAssignmentTest() {
