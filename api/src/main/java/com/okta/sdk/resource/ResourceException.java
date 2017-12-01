@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * A Runtime exception typically thrown when the remote server returns a non 20x response.
  * @since 0.5.0
  */
 public class ResourceException extends RuntimeException implements Error {
