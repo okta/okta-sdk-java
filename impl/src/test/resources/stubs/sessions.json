@@ -1,0 +1,51 @@
+{
+  "id": "101W_juydrDRByB7fUdRyE2JQ",
+  "login": "joe.coder@example.com",
+  "userId": "00ubgaSARVOQDIOXMORI",
+  "createdAt": "2015-08-30T18:41:35.818Z",
+  "expiresAt": "2015-08-30T18:41:35.818Z",
+  "status": "ACTIVE",
+  "lastPasswordVerification": "2015-08-30T18:41:35.818Z",
+  "lastFactorVerification": "2015-08-30T18:41:35.818Z",
+  "amr": [
+    "pwd",
+    "otp",
+    "mfa"
+  ],
+  "idp": {
+    "id": "00oi5cpnylv792IcF0g3",
+    "type": "OKTA"
+  },
+  "mfaActive": true,
+  "_links": {
+    "self": {
+      "href": "https://java.oktapreview.com/api/v1/sessions/101W_juydrDRByB7fUdRyE2JQ",
+      "hints": {
+        "allow": [
+          "GET",
+          "DELETE"
+        ]
+      }
+    },
+    "refresh": {
+      "href": "https://java.oktapreview.com/api/v1/sessions/101W_juydrDRByB7fUdRyE2JQ/lifecycle/refresh",
+      "hints": {
+        "allow": [
+          "POST"
+        ]
+      }
+    },
+    "user": {
+      "name": "Joe Coder",
+      "href": "https://java.oktapreview.com/api/v1/users/00uit00ZK6ELuzPoD0g3",
+      "hints": {
+        "allow": [
+          "GET"
+        ]
+      }
+    }
+  },
+  "_embedded": {
+    "test": "this"
+  }
+}
