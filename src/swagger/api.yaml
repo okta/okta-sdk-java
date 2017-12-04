@@ -29,7 +29,7 @@
       "name": "Apache-2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.9.0"
+    "version": "0.11.0"
   },
   "externalDocs": {
     "description": "Find more info here",
@@ -1603,6 +1603,150 @@
         ]
       }
     },
+    "/api/v1/sessions": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Creates a new session for a user with a valid session token. Use this API if, for example, you want to set the session cookie yourself instead of allowing Okta to set it, or want to hold the session ID in order to delete a session via the API instead of visiting the logout URL.",
+        "operationId": "createSession",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "createSessionRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateSessionRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Session"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Create Session with Session Token",
+        "tags": [
+          "Session"
+        ]
+      }
+    },
+    "/api/v1/sessions/{sessionId}": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "",
+        "operationId": "endSession",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sessionId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Close Session",
+        "tags": [
+          "Session"
+        ]
+      },
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Get details about a session.",
+        "operationId": "getSession",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sessionId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Session"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "Session"
+        ]
+      }
+    },
+    "/api/v1/sessions/{sessionId}/lifecycle/refresh": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "",
+        "operationId": "refreshSession",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sessionId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Session"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "summary": "Refresh Session",
+        "tags": [
+          "Session"
+        ]
+      }
+    },
     "/api/v1/users": {
       "get": {
         "consumes": [
@@ -3014,6 +3158,46 @@
           "User"
         ]
       }
+    },
+    "/api/v1/users/{userId}/sessions": {
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Removes all active identity provider sessions. This forces the user to authenticate on the next operation. Optionally revokes OpenID Connect and OAuth refresh and access tokens issued to the user.",
+        "operationId": "endAllUserSessions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "default": false,
+            "description": "Revoke issued OpenID Connect and OAuth refresh and access tokens",
+            "in": "query",
+            "name": "oauthTokens",
+            "type": "boolean"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "api_token": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
     }
   },
   "definitions": {
@@ -3946,6 +4130,17 @@
       "type": "object",
       "x-okta-tags": [
         "User"
+      ]
+    },
+    "CreateSessionRequest": {
+      "properties": {
+        "sessionToken": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Session"
       ]
     },
     "EmailFactor": {
@@ -5112,6 +5307,160 @@
         "UserFactor"
       ]
     },
+    "Session": {
+      "properties": {
+        "_links": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "amr": {
+          "items": {
+            "$ref": "#/definitions/SessionAuthenticationMethod"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "createdAt": {
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "expiresAt": {
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "idp": {
+          "$ref": "#/definitions/SessionIdentityProvider",
+          "readOnly": true
+        },
+        "lastFactorVerification": {
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "lastPasswordVerification": {
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "login": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/SessionStatus",
+          "readOnly": true
+        },
+        "userId": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-crud": [
+        {
+          "alias": "read",
+          "arguments": [
+            {
+              "dest": "sessionId",
+              "src": "id"
+            }
+          ],
+          "operationId": "getSession"
+        },
+        {
+          "alias": "delete",
+          "arguments": [
+            {
+              "dest": "sessionId",
+              "src": "id"
+            }
+          ],
+          "operationId": "endSession"
+        }
+      ],
+      "x-okta-operations": [
+        {
+          "alias": "refresh",
+          "arguments": [
+            {
+              "dest": "sessionId",
+              "src": "id"
+            }
+          ],
+          "operationId": "refreshSession"
+        }
+      ],
+      "x-okta-tags": [
+        "Session"
+      ]
+    },
+    "SessionAuthenticationMethod": {
+      "enum": [
+        "pwd",
+        "swk",
+        "hwk",
+        "otp",
+        "sms",
+        "tel",
+        "geo",
+        "fpt",
+        "kba",
+        "mfa"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Session"
+      ]
+    },
+    "SessionIdentityProvider": {
+      "properties": {
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/SessionIdentityProviderType",
+          "readOnly": true
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Session"
+      ]
+    },
+    "SessionIdentityProviderType": {
+      "enum": [
+        "ACTIVE_DIRECTORY",
+        "LDAP",
+        "OKTA",
+        "FEDERATION",
+        "SOCIAL"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Session"
+      ]
+    },
+    "SessionStatus": {
+      "enum": [
+        "ACTIVE",
+        "MFA_ENROLL",
+        "MFA_REQUIRED"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Session"
+      ]
+    },
     "SmsFactor": {
       "properties": {
         "profile": {
@@ -5409,6 +5758,16 @@
         }
       ],
       "x-okta-operations": [
+        {
+          "alias": "endAllSessions",
+          "arguments": [
+            {
+              "dest": "userId",
+              "src": "id"
+            }
+          ],
+          "operationId": "endAllUserSessions"
+        },
         {
           "alias": "listAppLinks",
           "arguments": [
