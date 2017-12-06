@@ -42,8 +42,14 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -64,6 +70,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     private final String codeGenName;
 
+    public static final String API_FILE_KEY = "apiFile";
     static final String X_OPENAPI_V3_SCHEMA_REF = "x-openapi-v3-schema-ref";
 
     @SuppressWarnings("hiding")
@@ -73,6 +80,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected Set<String> enumList = new HashSet<>();
     protected Map<String, Discriminator> discriminatorMap = new HashMap<>();
     protected Set<String> topLevelResources = new HashSet<>();
+    protected Map<String, Object> rawSwaggerConfig;
 
     public AbstractOktaJavaClientCodegen(String codeGenName, String relativeTemplateDir, String modelPackage) {
         super();
@@ -91,11 +99,24 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         apiTemplateFiles.clear();
         modelTemplateFiles.clear();
-
     }
 
     @Override
     public void preprocessSwagger(Swagger swagger) {
+
+        // make sure we have the apiFile location
+        String apiFile = (String) additionalProperties.get(API_FILE_KEY);
+        if (apiFile == null || apiFile.isEmpty()) {
+            throw new SwaggerException("'additionalProperties."+API_FILE_KEY +" property is required. This must be " +
+                    "set to the same file that Swagger is using.");
+        }
+
+        try (Reader reader = new InputStreamReader(new FileInputStream(apiFile), StandardCharsets.UTF_8.toString())) {
+            rawSwaggerConfig = new Yaml().loadAs(reader, Map.class);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to parse apiFile: "+ apiFile, e);
+        }
+
         vendorExtensions.put("basePath", swagger.getBasePath());
         super.preprocessSwagger(swagger);
         tagEnums(swagger);
@@ -480,8 +501,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         return super.toModelImport(name);
     }
 
-
-
     @Override
     public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
        CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
@@ -515,6 +534,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         if (StringUtils.isNotEmpty(parent)) {
             codegenModel.parent = toApiName(parent.substring(parent.lastIndexOf("/")));
         }
+
+        // We use '$ref' attributes with siblings, which isn't valid JSON schema (or swagger), so we need process
+        // additional attributes from the raw schema
+        Map<String, Object> modelDef = getRawSwaggerDefinition(name);
+        codegenModel.vars.forEach(codegenProperty -> {
+            Map<String, Object> rawPropertyMap = getRawSwaggerProperty(modelDef, codegenProperty.baseName);
+            codegenProperty.isReadOnly = Boolean.TRUE.equals(rawPropertyMap.get("readOnly"));
+        });
 
        return codegenModel;
     }
@@ -754,7 +781,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                     String baseName = ref.getSimpleRef();
 
                     // Do not generate List wrappers for primitives (or strings)
-                    if (!languageSpecificPrimitives.contains(baseName) && !enumList.contains(baseName)) {
+                    if (!languageSpecificPrimitives.contains(baseName) && topLevelResources.contains(baseName)) {
 
                         String modelName = baseName + "List";
 
@@ -803,5 +830,17 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             }
         }
         return super.getTypeDeclaration(p);
+    }
+
+    private Map<String, Object> castToMap(Object object) {
+        return (Map<String, Object>) object;
+    }
+
+    protected Map<String, Object> getRawSwaggerDefinition(String name) {
+        return castToMap(castToMap(rawSwaggerConfig.get("definitions")).get(name));
+    }
+
+    protected Map<String, Object> getRawSwaggerProperty(Map<String, Object> definition, String propertyName) {
+        return castToMap(castToMap(definition.get("properties")).get(propertyName));
     }
 }

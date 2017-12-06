@@ -59,7 +59,6 @@ class GroupRulesIT implements CrudTestSupport {
         GroupRule rule = client.instantiate(GroupRule)
         rule.setName("rule+" + UUID.randomUUID().toString() )
         rule.setType("group_rule")
-        rule.setStatus(GroupRuleStatus.ACTIVE)
 
         rule.setConditions(client.instantiate(GroupRuleConditions))
         rule.getConditions().setExpression(client.instantiate(GroupRuleExpression))
