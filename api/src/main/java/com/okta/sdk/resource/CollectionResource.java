@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.resource;
 
+import java.util.stream.Stream;
+
 /**
  * A {@code CollectionResource} is a first-class {@link Resource} that contains a collection of
  * other {@link Resource} instances.
@@ -34,5 +36,13 @@ public interface CollectionResource<T extends Resource> extends Resource, Iterab
      * @throws java.lang.IllegalStateException if this list contains either zero or more than one element.
      */
     T single();
+
+    /**
+     * Returns a sequential {@code Stream} with this collection as its source.
+     *
+     * @return a sequential {@code Stream} over the elements in this resource
+     * @since 0.11.0
+     */
+    Stream<T> stream();
 
 }

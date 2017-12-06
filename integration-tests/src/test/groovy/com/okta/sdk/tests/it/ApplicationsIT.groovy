@@ -152,16 +152,12 @@ class ApplicationsIT extends ITSupport {
                                                     .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
                                                     .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
         // search the resource collection looking for the new resource
-        Optional optional = getResourceListStream(client)
+        Optional optional = client.listApplications().stream()
                                 .filter {it.id == resource.id}
                                 .findFirst()
 
         // make sure it exists
         assertThat "New resource with id ${resource.id} was not found in list resource.", optional.isPresent()
-    }
-
-    Stream getResourceListStream(Client client) {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(client.listApplications().iterator(), Spliterator.ORDERED),false)
     }
 
     @Test

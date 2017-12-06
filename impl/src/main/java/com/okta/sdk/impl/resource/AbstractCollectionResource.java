@@ -29,7 +29,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * @since 0.5.0
@@ -144,6 +148,16 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
     public Iterator<T> iterator() {
         //firstPageQueryRequired ensures that newly obtained collection resources don't need to query unnecessarily
         return new PaginatedIterator<>(this, firstPageQueryRequired.getAndSet(true));
+    }
+
+    @Override
+    public Stream<T> stream() {
+        return StreamSupport.stream(spliterator(), false);
+    }
+
+    @Override
+    public Spliterator<T> spliterator() {
+        return Spliterators.spliteratorUnknownSize(iterator(), Spliterator.ORDERED);
     }
 
     private Collection<T> toResourceList(Collection vals, Class<T> itemType) {
