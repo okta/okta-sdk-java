@@ -311,7 +311,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     /**
      */
     protected Object setProperty(String name, Object value, final boolean dirty) {
-        return setProperty(name, value, dirty, false);
+        return setProperty(name, value, dirty, true);
     }
 
     /**
@@ -738,5 +738,38 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
             throw new URIParseException("Invalid URI for resource: " + href, e);
         }
         return resultMap;
+    }
+
+
+    String getString(String key) {
+        return getStringProperty(key);
+    }
+
+    Integer getInteger(String key) {
+        return getIntProperty(key);
+    }
+
+    Double getDouble(String key) {
+        return getDoubleProperty(key);
+    }
+
+    Double getNumber(String key) {
+        return getDoubleProperty(key);
+    }
+
+    Boolean getBoolean(String key) {
+        return getNullableBooleanProperty(key);
+    }
+
+    List<String> getStringList(String key) {
+        return getListProperty(key);
+    }
+
+    List<Integer> getIntegerList(String key) {
+        return getListProperty(key);
+    }
+
+    List<Double> getNumberList(String key) {
+        return getListProperty(key);
     }
 }

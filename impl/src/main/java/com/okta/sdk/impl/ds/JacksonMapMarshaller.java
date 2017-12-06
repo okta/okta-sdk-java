@@ -17,7 +17,6 @@ package com.okta.sdk.impl.ds;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -44,8 +43,6 @@ public class JacksonMapMarshaller implements MapMarshaller {
     public JacksonMapMarshaller() {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
-        this.objectMapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);
-
 
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(new AbstractResourceSerializer(AbstractResource.class));
