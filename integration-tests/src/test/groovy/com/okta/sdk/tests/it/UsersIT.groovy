@@ -50,10 +50,75 @@ import static org.hamcrest.Matchers.*
  */
 class UsersIT implements CrudTestSupport {
 
-    def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
+    @Test
+    void userProfileNumberValues() {
+
+        def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName("Joe")
+                .setLastName("Code")
+                .setPassword("Password1")
+                .setSecurityQuestion("Favorite security question?")
+                .setSecurityQuestionAnswer("None of them!")
+                .putAllProfileProperties([
+                    customNumber: 1.5d,
+                    customBoolean: true,
+                    customInteger: 123,
+                    customStringArray: ["one", "two", "three"],
+                    customNumberArray: [1.5d, 2.5d, 3.5d],
+                    customIntegerArray: [1, 2, 3]
+                ])
+                .buildAndCreate(getClient())
+
+        // check the values after create
+        assertThat(user.profile.getString("firstName"), equalTo("Joe"))
+        assertThat(user.profile.getNumber("customNumber"), equalTo(1.5d))
+        assertThat(user.profile.getBoolean("customBoolean"), equalTo(true))
+        assertThat(user.profile.getInteger("customInteger"), equalTo(123))
+        assertThat(user.profile.getStringList("customStringArray"), equalTo(["one", "two", "three"]))
+        assertThat(user.profile.getNumberList("customNumberArray"), equalTo([1.5d, 2.5d, 3.5d]))
+        assertThat(user.profile.getIntegerList("customIntegerArray"), equalTo([1, 2, 3]))
+
+        // Use the 'get' to update the values to make sure there are no conversion issues
+        user.profile.putAll([
+                        customNumber: user.profile.getNumber("customNumber"),
+                        customBoolean: true,
+                        customStringArray: user.profile.getStringList("customStringArray"),
+                        customNumberArray: user.profile.getNumberList("customNumberArray"),
+                        customIntegerArray: user.profile.getIntegerList("customIntegerArray")])
+        user.update()
+
+        // same check as before
+        assertThat(user.profile.getNumber("customNumber"), equalTo(1.5d))
+        assertThat(user.profile.getBoolean("customBoolean"), equalTo(true))
+        assertThat(user.profile.getInteger("customInteger"), equalTo(123))
+        assertThat(user.profile.getStringList("customStringArray"), equalTo(["one", "two", "three"]))
+        assertThat(user.profile.getNumberList("customNumberArray"), equalTo([1.5d, 2.5d, 3.5d]))
+        assertThat(user.profile.getIntegerList("customIntegerArray"), equalTo([1, 2, 3]))
+
+        // test again but null out all of the values
+        user.profile.remove("customNumber")
+        user.profile.remove("customBoolean")
+        user.profile.remove("customInteger")
+        user.profile.remove("customStringArray")
+        user.profile.remove("customNumberArray")
+        user.profile.remove("customIntegerArray")
+        user.update()
+
+        // everything should be null
+        assertThat(user.profile.getNumber("customNumber"), nullValue())
+        assertThat(user.profile.getBoolean("customBoolean"), nullValue())
+        assertThat(user.profile.getInteger("customInteger"), nullValue())
+        assertThat(user.profile.getStringList("customStringArray"), nullValue())
+        assertThat(user.profile.getNumberList("customNumberArray"), nullValue())
+        assertThat(user.profile.getIntegerList("customIntegerArray"), nullValue())
+    }
+
 
     @Override
     def create(Client client) {
+        def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
         return UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName("Joe")

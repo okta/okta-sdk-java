@@ -73,10 +73,11 @@ public abstract class AbstractPropertyRetriever {
 
 
     protected int getInt(IntegerProperty property) {
-        return getIntProperty(property.getName());
+        Integer value = getIntProperty(property.getName());
+        return (value == null) ? -1 : value;
     }
 
-    protected int getIntProperty(String key) {
+    protected Integer getIntProperty(String key) {
         Object value = getProperty(key);
         if (value != null) {
             if (value instanceof String) {
@@ -85,7 +86,23 @@ public abstract class AbstractPropertyRetriever {
                 return ((Number) value).intValue();
             }
         }
-        return -1;
+        return null;
+    }
+
+    protected Double getDoubleProperty(DoubleProperty property) {
+        return getDoubleProperty(property.getName());
+    }
+
+    protected Double getDoubleProperty(String key) {
+        Object value = getProperty(key);
+        if (value != null) {
+            if (value instanceof String) {
+                return parseDouble((String) value);
+            } else if (value instanceof Number) {
+                return ((Number) value).doubleValue();
+            }
+        }
+        return null;
     }
 
     protected boolean getBoolean(BooleanProperty property) {
@@ -98,7 +115,7 @@ public abstract class AbstractPropertyRetriever {
      * @param key the identifier
      * @return a boolean representation of the value (null == false)
      */
-    protected boolean getBooleanProperty(String key) {
+    protected Boolean getBooleanProperty(String key) {
         return Boolean.TRUE.equals(getNullableBooleanProperty(key));
     }
 
@@ -123,7 +140,19 @@ public abstract class AbstractPropertyRetriever {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
             if (log.isErrorEnabled()) {
-                String msg = "Unabled to parse string '{}' into an integer value.  Defaulting to -1";
+                String msg = "Unable to parse string '{}' into an integer value.  Defaulting to -1";
+                log.error(msg, e);
+            }
+        }
+        return -1;
+    }
+
+    private double parseDouble(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            if (log.isErrorEnabled()) {
+                String msg = "Unable to parse string '{}' into an double value.  Defaulting to -1";
                 log.error(msg, e);
             }
         }
