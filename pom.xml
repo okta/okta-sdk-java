@@ -238,6 +238,9 @@
                     <configuration>
                         <!-- This is relative to a direct sub module -->
                         <apiFile>${project.basedir}/../src/swagger/api.yaml</apiFile>
+                        <additionalProperties>
+                            <apiFile>${project.basedir}/../src/swagger/api.yaml</apiFile>
+                        </additionalProperties>
                     </configuration>
                     <dependencies>
                         <dependency>
