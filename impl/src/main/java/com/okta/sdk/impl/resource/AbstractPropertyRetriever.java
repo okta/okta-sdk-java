@@ -77,6 +77,10 @@ public abstract class AbstractPropertyRetriever {
         return (value == null) ? -1 : value;
     }
 
+    protected Integer getIntProperty(IntegerProperty property) {
+        return getIntProperty(property.getName());
+    }
+
     protected Integer getIntProperty(String key) {
         Object value = getProperty(key);
         if (value != null) {

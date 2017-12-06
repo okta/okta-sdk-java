@@ -120,7 +120,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                         break;
                     case "Integer":
                         propertyType = "IntegerProperty";
-                        propertyTypeMethod = "getInt";
+                        propertyTypeMethod = "getIntProperty";
                         break;
                     case "Date":
                         propertyType = "DateProperty";

@@ -26,12 +26,13 @@ public class StubResource extends AbstractResource {
     public final  EnumListProperty<StubEnum> enumListProp = new EnumListProperty<>("enumListPropKey", StubEnum.class);
     public final  EnumProperty<StubEnum> enumProp = new EnumProperty<>("enumPropKey", StubEnum.class);
     public final  IntegerProperty integerProp = new IntegerProperty("intPropKey");
+    public final  DoubleProperty doubleProp = new DoubleProperty("doublePropKey");
     public final  ListProperty listProp = new ListProperty("listPropKey");
     public final  MapProperty mapProp = new MapProperty("mapPropKey");
     public final  ResourceListProperty<NestedStubResource> resourceListProp = new ResourceListProperty<>("resourceListPropKey", NestedStubResource.class);
     public final  StringProperty stringProp = new StringProperty("stringPropKey");
 
-    private final Map<String, Property> propertyDescriptors = AbstractResource.createPropertyDescriptorMap(booleanProp, dateProp, enumListProp, enumProp, integerProp, listProp, mapProp, resourceListProp, stringProp);
+    private final Map<String, Property> propertyDescriptors = AbstractResource.createPropertyDescriptorMap(booleanProp, dateProp, enumListProp, enumProp, integerProp, doubleProp, listProp, mapProp, resourceListProp, stringProp);
 
     protected StubResource(InternalDataStore dataStore) {
         super(dataStore);

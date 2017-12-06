@@ -27,7 +27,6 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.hasItem
 import static org.hamcrest.Matchers.hasProperty
 import static org.hamcrest.Matchers.hasSize
-import static org.hamcrest.Matchers.notNullValue
 import static org.hamcrest.Matchers.nullValue
 import static org.mockito.Mockito.*
 
@@ -121,6 +120,7 @@ class AbstractResourceTest {
                 ],
                 enumPropKey: "VALUE_2",
                 intPropKey: 42,
+                doublePropKey: 42.42d,
                 listPropKey: [
                         "one",
                         "two",
@@ -154,6 +154,8 @@ class AbstractResourceTest {
         assertThat resource.getEnumListProperty(resource.enumListProp), equalTo([StubEnum.VALUE_3, StubEnum.VALUE_1])
         assertThat resource.getEnumProperty(resource.enumProp), equalTo(StubEnum.VALUE_2)
         assertThat resource.getInt(resource.integerProp), equalTo(42)
+        assertThat resource.getIntProperty(resource.integerProp), equalTo(42)
+        assertThat resource.getDoubleProperty(resource.doubleProp), equalTo(42.42d)
         assertThat resource.getListProperty(resource.listProp), equalTo(["one", "two", "three"])
         assertThat resource.getMap(resource.mapProp), equalTo([one: "1", two: "22", three: "333"])
         assertThat resource.getString(resource.stringProp), equalTo("string_value")
@@ -173,6 +175,7 @@ class AbstractResourceTest {
                 enumListPropKey: null,
                 enumPropKey: null,
                 intPropKey: null,
+                doublePropKey: null,
                 listPropKey: null,
                 mapPropKey: null,
                 resourceListPropKey: null,
@@ -187,13 +190,11 @@ class AbstractResourceTest {
         assertThat resource.getEnumListProperty(resource.enumListProp), nullValue()
         assertThat resource.getEnumProperty(resource.enumProp), nullValue()
         assertThat resource.getInt(resource.integerProp), equalTo(-1)
+        assertThat resource.getIntProperty(resource.integerProp), nullValue()
+        assertThat resource.getDoubleProperty(resource.doubleProp), nullValue()
         assertThat resource.getListProperty(resource.listProp), nullValue()
         assertThat resource.getMap(resource.mapProp), nullValue()
         assertThat resource.getString(resource.stringProp), nullValue()
         assertThat resource.getResourceListProperty(resource.resourceListProp), nullValue()
-
     }
 }
-
-
-
