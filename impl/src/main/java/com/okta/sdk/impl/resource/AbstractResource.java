@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @since 0.5.0
@@ -405,17 +406,18 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * @param property identifier
      * @return property identified by {@code property}
      */
-    protected List getListProperty(ListProperty property){
-        return getListProperty(property.getName());
-    }
+    protected List getResourceListProperty(ResourceListProperty property){
+        List rawList = (List) getProperty(property.getName());
 
-    /**
-     * Returns the {@link List} property identified by {@code key}
-     *
-     */
-    protected List getListProperty(String key){
-        Object list = getProperty(key);
-        return (List) list;
+        return (rawList == null) ? null : (List) rawList.stream()
+                .map(item -> {
+                    if (property.type.isInstance(item)) {
+                        return item;
+                    } else {
+                        return dataStore.instantiate(property.type, (Map<String, Object>) item);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
     /**

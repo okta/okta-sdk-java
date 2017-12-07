@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 /**
  * Refactored methods from {@link AbstractResource} to make them common to subclasses.
@@ -153,8 +154,29 @@ public abstract class AbstractPropertyRetriever {
      *
      */
     protected List getListProperty(String key) {
-        Object list = getProperty(key);
-        return (List) list;
+        return (List) getProperty(key);
+    }
+
+    /**
+     * Returns the {@link List} property identified by {@code key}
+     * @param property identifier
+     * @return property identified by {@code property}
+     */
+    protected List getListProperty(ListProperty property){
+        return getListProperty(property.getName());
+    }
+
+    /**
+     * Returns the {@link List} property identified by {@code key}
+     * @param property identifier
+     * @return property identified by {@code property}
+     */
+    protected List getEnumListProperty(EnumListProperty property){
+        List<String> rawList = (List) getProperty(property.getName());
+
+        return (rawList == null) ? null : (List) rawList.stream()
+                .map(item -> enumConverter.fromValue(property.getType(), item))
+                .collect(Collectors.toList());
     }
 
     /**

@@ -15,9 +15,21 @@
  */
 package com.okta.sdk.impl.resource
 
+import com.okta.sdk.impl.ds.InternalDataStore
 import org.testng.annotations.Test
+
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+
+import static org.hamcrest.Matchers.allOf
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.hasItem
+import static org.hamcrest.Matchers.hasProperty
+import static org.hamcrest.Matchers.hasSize
+import static org.hamcrest.Matchers.notNullValue
+import static org.hamcrest.Matchers.nullValue
+import static org.mockito.Mockito.*
 
 class AbstractResourceTest {
 
@@ -93,4 +105,95 @@ class AbstractResourceTest {
         def actualMap = resource.getParamsFromHref(templateUrl)
         assertThat actualMap, equalTo(expectedValues)
     }
+
+    StubResource createSubResource() {
+
+        List nestedResourceData = [
+                [nestedStringPropKey: "item0"],
+                [nestedStringPropKey: "item1"]]
+
+        Map data = [
+                booleanPropKey: true,
+                datePropKey: "2015-08-30T18:41:35.818Z",
+                enumListPropKey: [
+                        "VALUE_3",
+                        "VALUE_1"
+                ],
+                enumPropKey: "VALUE_2",
+                intPropKey: 42,
+                listPropKey: [
+                        "one",
+                        "two",
+                        "three"
+                ],
+                mapPropKey: [
+                        one: "1",
+                        two: "22",
+                        three: "333"
+                ],
+                resourceListPropKey: nestedResourceData,
+                stringPropKey: "string_value"
+        ]
+
+        InternalDataStore dataStore = mock(InternalDataStore)
+        Map item0 = nestedResourceData.get(0)
+        Map item1 = nestedResourceData.get(1)
+        when(dataStore.instantiate(NestedStubResource, item0)).thenReturn(new NestedStubResource(dataStore, item0))
+        when(dataStore.instantiate(NestedStubResource, item1)).thenReturn(new NestedStubResource(dataStore, item1))
+        return new StubResource(dataStore, data)
+    }
+
+    @Test
+    void basicPropertyValuesTest() {
+        StubResource resource = createSubResource()
+
+        Date expectedDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2015-08-30T18:41:35.818Z")))
+
+        assertThat resource.getBoolean(resource.booleanProp), equalTo(true)
+        assertThat resource.getDateProperty(resource.dateProp), equalTo(expectedDate)
+        assertThat resource.getEnumListProperty(resource.enumListProp), equalTo([StubEnum.VALUE_3, StubEnum.VALUE_1])
+        assertThat resource.getEnumProperty(resource.enumProp), equalTo(StubEnum.VALUE_2)
+        assertThat resource.getInt(resource.integerProp), equalTo(42)
+        assertThat resource.getListProperty(resource.listProp), equalTo(["one", "two", "three"])
+        assertThat resource.getMap(resource.mapProp), equalTo([one: "1", two: "22", three: "333"])
+        assertThat resource.getString(resource.stringProp), equalTo("string_value")
+        assertThat resource.getResourceListProperty(resource.resourceListProp), allOf(
+                hasItem(hasProperty("stringProp", equalTo("item0"))),
+                hasItem(hasProperty("stringProp", equalTo("item1"))),
+                hasSize(2)
+        )
+    }
+
+    @Test
+    void nullPropertyValueTest() {
+
+        Map data = [
+                booleanPropKey: null,
+                datePropKey: null,
+                enumListPropKey: null,
+                enumPropKey: null,
+                intPropKey: null,
+                listPropKey: null,
+                mapPropKey: null,
+                resourceListPropKey: null,
+                stringPropKey: null
+        ]
+
+        StubResource resource = new StubResource(null, data)
+
+        assertThat resource.getBoolean(resource.booleanProp), equalTo(false)
+        assertThat resource.getNullableBoolean(resource.booleanProp), nullValue()
+        assertThat resource.getDateProperty(resource.dateProp), nullValue()
+        assertThat resource.getEnumListProperty(resource.enumListProp), nullValue()
+        assertThat resource.getEnumProperty(resource.enumProp), nullValue()
+        assertThat resource.getInt(resource.integerProp), equalTo(-1)
+        assertThat resource.getListProperty(resource.listProp), nullValue()
+        assertThat resource.getMap(resource.mapProp), nullValue()
+        assertThat resource.getString(resource.stringProp), nullValue()
+        assertThat resource.getResourceListProperty(resource.resourceListProp), nullValue()
+
+    }
 }
+
+
+

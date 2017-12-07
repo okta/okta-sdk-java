@@ -79,12 +79,28 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             if (property.isEnum || enumList.contains(property.datatype)) {
                 propertyType = "EnumProperty";
                 propertyTypeMethod = "getEnumProperty";
+                property.vendorExtensions.put("itemType", property.datatypeWithEnum);
                 property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatypeWithEnum + ".class");
                 property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
             }
             else if(property.isListContainer) {
-                propertyType = "ListProperty";
-                propertyTypeMethod = "getListProperty";
+
+                if (property.items.baseType.equals("String")) {
+                    propertyType = "ListProperty";
+                    propertyTypeMethod = "getListProperty";
+                } else if(enumList.contains(property.items.baseType)) {
+                    propertyType = "EnumListProperty";
+                    propertyTypeMethod = "getEnumListProperty";
+                    property.vendorExtensions.put("itemType", property.items.datatypeWithEnum);
+                    property.vendorExtensions.put("constructorTypeExtra", ", " + property.items.datatypeWithEnum + ".class");
+                    property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
+                } else {
+                    propertyType = "ResourceListProperty";
+                    propertyTypeMethod = "getResourceListProperty";
+                    property.vendorExtensions.put("itemType", property.items.datatypeWithEnum);
+                    property.vendorExtensions.put("constructorTypeExtra", ", " + property.items.datatypeWithEnum + ".class");
+                    property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
+                }
                 forceCast = true;
             }
             else if(property.isMapContainer || "Object".equals(property.datatype)) {
@@ -113,6 +129,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                     default:
                         propertyType = "ResourceReference";
                         propertyTypeMethod = "getResourceProperty";
+                        property.vendorExtensions.put("itemType", property.datatype);
                         property.vendorExtensions.put("constructorTypeExtra", buildConstructorTypeExtra(property));
                         property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
                 }
