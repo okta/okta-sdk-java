@@ -77,8 +77,9 @@ public class ResourceException extends RuntimeException implements Error {
     }
 
     /**
-     * Get the Okta Error Code
-     * Check http://docs.okta.com/errors/ for the list of Okta Error Codes
+     * Get the Okta Error Code, <a href="https://developer.okta.com/reference/error_codes/index">click here</a> for the
+     * list of Okta error codes.
+     *
      * @return the code of the error
      */
     @Override
