@@ -2147,7 +2147,7 @@
             "default": true,
             "in": "query",
             "name": "sendEmail",
-            "required": true,
+            "required": false,
             "type": "boolean"
           }
         ],

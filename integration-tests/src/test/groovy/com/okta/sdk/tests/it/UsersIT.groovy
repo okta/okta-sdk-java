@@ -33,6 +33,7 @@ import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserList
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
+import org.testng.Assert
 import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.assertGroupTargetPresent
@@ -503,5 +504,36 @@ class UsersIT implements CrudTestSupport {
         // 3. Unsuspend the user and verify user in list of active users
         user.unsuspend()
         assertPresent(client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null), user)
+    }
+
+    @Test
+    void getUserInvalidUserId() {
+        try {
+            def userId = "invalid-user-id-" + UUID.randomUUID().toString() + "@example.com"
+            getClient().getUser(userId)
+            Assert.fail("Expected ResourceException")
+        } catch(ResourceException e) {
+            assertThat e.getStatus(), equalTo(404)
+        }
+    }
+
+    @Test
+    void getUserNullUserId() {
+        try {
+            getClient().getUser(null)
+            Assert.fail("Expected IllegalArgumentException")
+        } catch(IllegalArgumentException e) {
+            assertThat e.getMessage(), allOf(containsString("userId"), containsString("required"))
+        }
+    }
+
+    @Test
+    void getUserEmptyUserId() {
+        try {
+            getClient().getUser("")
+            Assert.fail("Expected IllegalArgumentException")
+        } catch(IllegalArgumentException e) {
+            assertThat e.getMessage(), allOf(containsString("userId"), containsString("required"))
+        }
     }
 }
