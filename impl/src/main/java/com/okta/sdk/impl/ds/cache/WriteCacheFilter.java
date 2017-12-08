@@ -30,12 +30,12 @@ import com.okta.sdk.impl.resource.ArrayProperty;
 import com.okta.sdk.impl.resource.Property;
 import com.okta.sdk.impl.resource.ReferenceFactory;
 import com.okta.sdk.impl.resource.ResourceReference;
-import com.okta.sdk.impl.resource.SetProperty;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Collections;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
+import javafx.beans.property.SetProperty;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -149,18 +149,12 @@ public class WriteCacheFilter extends AbstractCacheFilter {
                 //find the type of objects this collection contains:
                 Property property = getPropertyDescriptor(clazz, name);
 
-                boolean isCollection = property instanceof SetProperty || property instanceof ArrayProperty;
+                boolean isCollection = property instanceof ArrayProperty;
 
                 Assert.isTrue(isCollection, "It is expected that only ArrayProperty or SetProperty properties represent collection items.");
 
-                Property itemsProperty;
-                Class itemType;
-                if(property instanceof SetProperty){
-                    itemsProperty = SetProperty.class.cast(property);
-                }else {
-                    itemsProperty = ArrayProperty.class.cast(property);
-                }
-                itemType = itemsProperty.getType();
+//                Property itemsProperty = ArrayProperty.class.cast(property);
+//                Class itemType = itemsProperty.getType();
 
                 for (Object o : c) {
                     Object element = o;

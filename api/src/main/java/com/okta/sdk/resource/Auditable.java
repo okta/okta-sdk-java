@@ -18,7 +18,7 @@ package com.okta.sdk.resource;
 import java.util.Date;
 
 /**
- * Interface to be implemented by {@link Resource Resources} that contain and can be retrieved using the {@code Resource#createdAt} and {@code Resource#modifiedAt} fields as part of the query {@link com.okta.sdk.query.Criteria Criteria}.
+ * Interface to be implemented by {@link Resource Resources} that contain and can be retrieved using the {@code Resource#createdAt}.
  *
  * @since 0.5.0
  */

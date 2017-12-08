@@ -16,19 +16,15 @@
 package com.okta.sdk.impl.resource;
 
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
-import com.okta.sdk.impl.ds.Enlistment;
 import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -212,16 +208,6 @@ public abstract class AbstractPropertyRetriever {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Returns the {@link Set} property identified by {@code key}
-     * @param key the identifier
-     * @return a Set
-     */
-    protected Set getSetProperty(String key) {
-        Object set = getProperty(key);
-        return (Set) set;
-    }
-
     protected Map getMap(MapProperty mapProperty) {
         return getMapProperty(mapProperty.getName());
     }
@@ -259,50 +245,6 @@ public abstract class AbstractPropertyRetriever {
             }
         }
         return null;
-    }
-
-    protected <T, P> T getParentAwareObjectProperty(ParentAwareObjectProperty<T, P> objectProperty) {
-        return getParentAwareObjectProperty(objectProperty.getName(), objectProperty.getType(), objectProperty.getParentType());
-    }
-
-    protected <T, P> T getParentAwareObjectProperty(String name, Class<T> type, Class<P> parentType) {
-
-        Object value = getProperty(name);
-
-        if (value == null) {
-            return null;
-        }
-
-        if (type.isAssignableFrom(value.getClass())) {
-            return (T) value;
-        }
-
-        if (value instanceof Map) {
-            writeLock.lock();
-            try {
-                Constructor<T> propertyConstructor = Classes.getConstructor(type, String.class, Map.class, parentType);
-
-                @SuppressWarnings("unchecked")
-                T instance = propertyConstructor.newInstance(name, new Enlistment((Map<String, Object>) value) , this);
-
-                getInternalProperties().put(name, instance);
-
-                return instance;
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Unable to create instace", e);
-            } finally {
-                writeLock.unlock();
-            }
-        }
-
-        String msg = "'" + name + "' property value type does not match the specified property type. " +
-                "Existing type: " + value.getClass().getName();
-
-        msg += (isPrintableProperty(name) ? ".  Value: " + value : ".");
-
-        throw new IllegalArgumentException(msg);
     }
 
     /**

@@ -41,7 +41,7 @@ public class DefaultCacheMapCreator implements CacheMapCreator {
      */
     @Override
     public Map<String, Object> create() {
-        return new LinkedHashMap<String, Object>(data.size());
+        return new LinkedHashMap<>(data.size());
     }
 
     public Map<String, ?> getData() {

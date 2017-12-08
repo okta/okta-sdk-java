@@ -28,7 +28,6 @@ import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Classes;
-import com.okta.sdk.query.Options;
 import com.okta.sdk.resource.Resource;
 
 import java.lang.reflect.Constructor;
@@ -140,20 +139,5 @@ public abstract class AbstractClient implements Client {
     @Override
     public <T extends Resource> T getResource(String href, Class<T> clazz) {
         return this.dataStore.getResource(href, clazz);
-    }
-
-    /**
-     * Delegates to the internal {@code dataStore} instance. This is a convenience mechanism to eliminate the constant
-     * need to call {@code client.getDataStore()} every time one needs to look up a Resource.
-     *
-     * @param href  the URL of the resource to retrieve
-     * @param clazz the {@link Resource} sub-interface to instantiate
-     * @param options the {@link Options} sub-interface with the properties to expand
-     * @param <T>   type parameter indicating the returned value is a {@link Resource} instance.
-     * @return an instance of the specified {@code Class} based on the data returned from the specified {@code href} URL.
-     */
-    @Override
-    public <T extends Resource, O extends Options> T getResource(String href, Class<T> clazz, O options) {
-        return this.dataStore.getResource(href, clazz, options);
     }
 }

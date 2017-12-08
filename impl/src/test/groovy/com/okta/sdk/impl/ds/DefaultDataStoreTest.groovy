@@ -20,10 +20,8 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver
 import com.okta.sdk.impl.http.HttpHeaders
 import com.okta.sdk.impl.http.RequestExecutor
 import com.okta.sdk.impl.http.Response
-import com.okta.sdk.impl.query.DefaultOptions
 import com.okta.sdk.impl.resource.TestResource
 import com.okta.sdk.impl.util.StringInputStream
-import com.okta.sdk.query.Options
 import com.okta.sdk.resource.Resource
 import org.mockito.Mockito
 import org.testng.annotations.Test
@@ -37,38 +35,6 @@ import static org.hamcrest.MatcherAssert.*
  * @since 0.5.0
  */
 class DefaultDataStoreTest {
-
-
-    @Test
-    void testGetResource_Expanded_InvalidArguments() {
-        def requestExecutor = mock(RequestExecutor)
-        def apiKeyResolver = mock(ClientCredentialsResolver)
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
-        def emptyOptions = mock(DefaultOptions)
-        def resourceData = Resource
-        def href = "http://api.okta.com/v1/directories/2B6PLkZ8AGvWlziq18JJ62"
-
-        try {
-            defaultDataStore.getResource(null, resourceData, emptyOptions)
-            fail("should have thrown due to empty href")
-        } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "href argument cannot be null or empty.")
-        }
-
-        try {
-            defaultDataStore.getResource(href, null, emptyOptions)
-            fail("should have thrown due to empty class")
-        } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "Resource class argument cannot be null.")
-        }
-
-        try {
-            defaultDataStore.getResource(href, resourceData, (Options) null)
-            fail("should have thrown due to empty options")
-        } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "The com.okta.sdk.impl.ds.DefaultDataStore implementation only functions with com.okta.sdk.impl.query.DefaultOptions instances.Object of class [null] must be an instance of class com.okta.sdk.impl.query.DefaultOptions")
-        }
-    }
 
     @Test
     void testApiKeyResolverReturnsCorrectApiKey() {

@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.sdk.impl.ds.Enlistment;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Collections;
@@ -65,11 +64,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         this.dataStore = dataStore;
         this.dirtyProperties = new LinkedHashMap<>();
         this.deletedPropertyNames = new HashSet<>();
-        if (properties instanceof Enlistment) {
-            this.properties = properties;
-        } else {
-            this.properties = new LinkedHashMap<>();
-        }
+        this.properties = new LinkedHashMap<>();
         setInternalProperties(properties);
     }
 
@@ -101,7 +96,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
             this.dirtyProperties.clear();
             this.dirty = false;
             if (properties != null && !properties.isEmpty()) {
-                if (this.properties instanceof Enlistment && this.properties != properties) {
+                if (this.properties != properties) {
                     this.properties.clear();
                     this.properties.putAll(properties);
                 } else {
@@ -207,12 +202,8 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         writeLock.lock();
         try {
             if (this.properties != resource.properties) {
-                if (!(this.properties instanceof Enlistment)) {
-                    this.properties = resource.properties;
-                } else {
-                    this.properties.clear();
-                    this.properties.putAll(resource.properties);
-                }
+                this.properties.clear();
+                this.properties.putAll(resource.properties);
             }
 
             //retain dirty properties:
@@ -420,76 +411,11 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Returns the {@link Set} property identified by {@code key}
-     *
-     */
-    protected Set getSetProperty(String key) {
-        Object set = getProperty(key);
-        if (set instanceof List) {
-            return new HashSet((List) set);
-        }
-        return (Set) set;
-    }
-
-//    /**
-//
-//     */
-//    @SuppressWarnings("unchecked")
-//    protected <T extends Resource, R extends T> R getSpecificResourceProperty(ResourceReference<T> property, Class<>) {
-//        String key = property.getName();
-//        Class<T> clazz = property.getType();
-//
-//        Object value = getProperty(key);
-//        if (value == null) {
-//            return null;
-//        }
-//        if (clazz.isInstance(value)) {
-//            return (R) value;
-//        }
-//        if (value instanceof Map && !((Map) value).isEmpty()) {
-//            T resource = dataStore.instantiate(clazz, (Map<String, Object>) value);
-//
-//
-//            //replace the existing link object (map with an href) with the newly constructed Resource instance.
-//            //Don't dirty the instance - we're just swapping out a property that already exists for the materialized version.
-//            setProperty(key, resource, false);
-//            return resource;
-//        }
-//
-//        String msg = "'" + key + "' property value type does not match the specified type.  Specified type: " +
-//                clazz.getName() + ".  Existing type: " + value.getClass().getName();
-//        msg += (isPrintableProperty(key) ? ".  Value: " + value : ".");
-//        throw new IllegalArgumentException(msg);
-//    }
-
     protected <T extends Resource> void setResourceProperty(ResourceReference<T> property, Resource value) {
         Assert.notNull(property, "Property argument cannot be null.");
         String name = property.getName();
         Map<String, String> reference = this.referenceFactory.createReference(name, value);
         setProperty(name, reference);
-    }
-
-
-    /**
-     * This method is able to set a Reference to a resource (<code>value</code>) even though resource has not yet an href value
-     * <p>Note that this is method is analogous to the {@link #setResourceProperty(ResourceReference, Resource)} method (in fact
-     * it relies on it when the resource alredy has an href value) but this method does not complain when the href of the resource is missing.</p>
-     *
-     * @param property the property whose value is going to be set to <code>value</code>
-     * @param value    the value to be set to <code>property</code>
-     * @param <T>      the type of Resource returned
-     */
-    protected <T extends Resource> void setMaterializableResourceProperty(ResourceReference<T> property, Resource value, boolean dirtyOnly) {
-        Assert.notNull(property, "Property argument cannot be null.");
-        Assert.isNull(value.getResourceHref(), "Resource must not have an 'href' property ");
-        if (((AbstractResource) value).isMaterialized()) {
-            setResourceProperty(property, value);
-        } else {
-            String name = property.getName();
-            Map<String, String> reference = this.referenceFactory.createUnmaterializedReference(name, value, dirtyOnly);
-            setProperty(name, reference);
-        }
     }
 
     public String toString() {
