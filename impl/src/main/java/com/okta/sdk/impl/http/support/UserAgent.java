@@ -130,9 +130,8 @@ public class UserAgent {
 
     private static String createUserAgentString() {
         String userAgent =  getIntegrationString() +    // okta-shiro | okta-spring-security
-                getOktaSDKComponentsString() +     // okta-servlet-java | okta-spring-boot-starter
-                getOktaSdkString() +               // okta-sdk-java
-                getOktaSdkString() +                    // okta-oktagration
+                getOktaSDKComponentsString() +          // okta-servlet-java | okta-spring-boot-starter
+                getOktaSdkString() +                    // okta-sdk-java
                 getSecurityFrameworkString() +          // shiro | spring-security
                 getIntegrationRuntimeString() +         // spring
                 getSpringBootString() +                 // spring-boot

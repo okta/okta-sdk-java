@@ -15,22 +15,30 @@
  */
 package com.okta.sdk.impl.http.support
 
-import com.okta.sdk.lang.Assert
+import com.okta.sdk.lang.Strings
 import org.testng.annotations.Test
+
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.*
 
 /**
  * @since 0.5.0
  */
 class UserAgentTest {
 
-    private static final String VERSION_SEPARATOR = "/";
-    private static final String ENTRY_SEPARATOR = " ";
+    private static final String VERSION_SEPARATOR = "/"
+    private static final String ENTRY_SEPARATOR = " "
+    private static final String SDK_KEY = "okta-sdk-java"
 
     @Test
     void testGetUserAgentString() {
+
         String userAgent = UserAgent.getUserAgentString()
-        Assert.hasText(userAgent)
-        Assert.isTrue(userAgent.contains("okta-sdk-java" + VERSION_SEPARATOR + Version.getClientVersion() + ENTRY_SEPARATOR))
-        Assert.isTrue(userAgent.contains("java" + VERSION_SEPARATOR + System.getProperty("java.version") + ENTRY_SEPARATOR))
+        assertThat userAgent, allOf(
+                not(emptyString()),
+                containsString(SDK_KEY + VERSION_SEPARATOR + Version.getClientVersion() + ENTRY_SEPARATOR),
+                containsString("java" + VERSION_SEPARATOR + System.getProperty("java.version") + ENTRY_SEPARATOR)
+        )
+        assertThat "Expected '${SDK_KEY}' to appear in userAgent once once.", Strings.countOccurrencesOf(userAgent, SDK_KEY), equalTo(1)
     }
 }
