@@ -288,21 +288,17 @@ public interface ClientBuilder {
 
     /**
      * Overrides the default (very secure)
-     * <a href="http://docs.okta.com/rest/product-guide/#authentication-digest">Okta SSWS Digest
+     * <a href="https://developer.okta.com/docs/api/getting_started/design_principles.html#authentication">Okta SSWS Digest
      * Authentication Scheme</a> used to authenticate every request sent to the Okta API server.
      *
      * <p>It is not recommended that you override this setting <em>unless</em> your application is deployed in an
      * environment that - outside of your application's control - manipulates request headers on outgoing HTTP requests.
      * Google App Engine is one such environment, for example.</p>
      *
-     * <p>As such, in these environments only, an alternative authentication mechanism is necessary, such as
-     * <a href="http://docs.okta.com/rest/product-guide/#authentication-basic">HTTP
-     * Basic Authentication</a>.  You can enable Basic Authentication as follows (again, only do this if your
-     * application runtime environment forces you to use it, like Google App Engine):</p>
      * <pre>
      * Client client = Clients.builder()...
      *    // setApiKey, etc...
-     *    .setAuthenticationScheme(AuthenticationScheme.BASIC) //set the basic authentication scheme
+     *    .setAuthenticationScheme(AuthenticationScheme.SSWS) //set the SSWS authentication scheme
      *    .build(); //build the Client
      * </pre>
      *
