@@ -40,6 +40,9 @@ import java.util.List;
 import java.util.Map;
 {{/fullJavaUtil}}
 
+import static com.okta.sdk.lang.Assert.notNull;
+import static com.okta.sdk.lang.Assert.hasText;
+
 {{#operations}}
     @javax.annotation.Generated(
             value = "{{generatorClass}}",
@@ -87,8 +90,8 @@ import java.util.Map;
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
-
-{{>queryPartial}}{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+{{>queryPartial}}
+{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
     }
 
 {{#vendorExtensions.hasOptional}}
@@ -108,7 +111,6 @@ import java.util.Map;
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
-
 {{>queryPartialRequired}}
 {{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{#vendorExtensions.optionalBody}}{{>apiMethodPostNoBody}}{{/vendorExtensions.optionalBody}}{{^vendorExtensions.optionalBody}}{{>apiMethodPost}}{{/vendorExtensions.optionalBody}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
     }

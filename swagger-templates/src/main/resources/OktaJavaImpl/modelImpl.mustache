@@ -36,6 +36,9 @@ import com.okta.sdk.resource.VoidResource;
 
 import java.util.Map;
 
+import static com.okta.sdk.lang.Assert.notNull;
+import static com.okta.sdk.lang.Assert.hasText;
+
 {{#models}}{{#model}}
 /**
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}

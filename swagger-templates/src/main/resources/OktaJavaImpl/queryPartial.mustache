@@ -13,7 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{^queryParams.isEmpty}}        QueryString queryArgs = new QueryString();{{#queryParams}}
+{{>queryParamValidatePartial}}{{^queryParams.isEmpty}}        QueryString queryArgs = new QueryString();{{#queryParams}}
         if ({{paramName}} != null) queryArgs.put("{{baseName}}", {{paramName}});{{/queryParams}}
 
         String href = QueryString.buildHref("{{{vendorExtensions.hrefFiltered}}}", queryArgs);{{/queryParams.isEmpty}}{{#queryParams.isEmpty}}

@@ -13,4 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{>queryParamValidatePartial}}        String href = "{{{vendorExtensions.hrefFiltered}}}";
+{{#queryParams}}{{#required}}
+        notNull({{paramName}}, "'{{paramName}}' is required and cannot be null.");{{/required}}{{/queryParams}}{{^vendorExtensions.bodyIsSelf}}{{#bodyParam}}{{#required}}
+        notNull({{bodyParam.paramName}}, "'{{paramName}}' is required and cannot be null.");{{/required}}{{/bodyParam}}{{/vendorExtensions.bodyIsSelf}}{{#pathParams}}
+        hasText({{paramName}}, "'{{paramName}}' is required and cannot be null or empty.");{{/pathParams}}
