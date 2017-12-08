@@ -36,6 +36,8 @@ import com.okta.sdk.tests.TestResources
 import org.testng.Assert
 import org.testng.annotations.Test
 
+import java.util.stream.Collectors
+
 import static com.okta.sdk.tests.it.util.Util.assertGroupTargetPresent
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
 import static com.okta.sdk.tests.it.util.Util.assertPresent
@@ -535,5 +537,41 @@ class UsersIT implements CrudTestSupport {
         } catch(IllegalArgumentException e) {
             assertThat e.getMessage(), allOf(containsString("userId"), containsString("required"))
         }
+    }
+
+    @Test
+    @TestResources(users = "john-group-target@example.com",
+                   groups = ["Group-to-Assign"])
+    void createUserWithGroups() {
+
+        def groupName = 'Group-to-Assign'
+        def password = 'Abcd1234'
+        def firstName = 'John'
+        def lastName = 'Create-User-With-Group'
+        def email = 'john-create-user-with-groups@example.com'
+
+        // 1. Create group
+        Group group = GroupBuilder.instance()
+            .setName(groupName)
+            .buildAndCreate(client)
+        registerForCleanup(group)
+        validateGroup(group, groupName)
+
+        // 2. Create a user
+        User createUser = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password)
+                .setActive(false)
+                .addGroup(group.id)
+                .buildAndCreate(client)
+        registerForCleanup(createUser)
+        validateUser(createUser, firstName, lastName, email)
+
+        List<Group> groups = createUser.listGroups().stream().collect(Collectors.toList())
+        assertThat groups, allOf(hasSize(2))
+        assertThat groups.get(0).profile.name, equalTo("Everyone")
+        assertThat groups.get(1).getId(), equalTo(group.id)
     }
 }
