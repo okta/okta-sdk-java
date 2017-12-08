@@ -17,6 +17,7 @@ package com.okta.sdk.impl.resource;
 
 
 import com.okta.sdk.client.Client;
+import com.okta.sdk.lang.Collections;
 import com.okta.sdk.lang.Strings;
 import com.okta.sdk.resource.user.RecoveryQuestionCredential;
 import com.okta.sdk.resource.user.UserBuilder;
@@ -25,8 +26,11 @@ import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserCredentials;
 import com.okta.sdk.resource.user.UserProfile;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class DefaultUserBuilder implements UserBuilder {
 
@@ -42,6 +46,7 @@ public class DefaultUserBuilder implements UserBuilder {
     private String mobilePhone;
     private Boolean active;
     private Boolean provider;
+    private Set<String> groupIds = new HashSet<>();
 
     private Map<String, Object> customProfileAttributes = new LinkedHashMap<>();
 
@@ -117,6 +122,16 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
+    public UserBuilder setGroups(Set<String> groupIds) {
+        this.groupIds = groupIds;
+        return this;
+    }
+
+    public UserBuilder addGroup(String groupId) {
+        this.groupIds.add(groupId);
+        return this;
+    }
+
     private User build(Client client) {
 
         User user = client.instantiate(User.class);
@@ -133,6 +148,14 @@ public class DefaultUserBuilder implements UserBuilder {
         }
         else {
             userProfile.setLogin(email);
+        }
+
+        if (!Collections.isEmpty(groupIds)) {
+            if (user instanceof AbstractResource) {
+                ((AbstractResource) user).setProperty("groupIds", groupIds, true);
+            } else {
+                throw new IllegalArgumentException("'User' is not an instance of 'AbstractResource', so 'groupIds' cannot be set. This would only happen if the implementation of 'User' has been customized.");
+            }
         }
 
         userProfile.putAll(customProfileAttributes);

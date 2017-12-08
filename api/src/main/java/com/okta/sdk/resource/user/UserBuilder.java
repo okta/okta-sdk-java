@@ -18,7 +18,9 @@ package com.okta.sdk.resource.user;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.lang.Classes;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface UserBuilder {
 
@@ -53,6 +55,10 @@ public interface UserBuilder {
     UserBuilder putAllProfileProperties(Map<String, Object> profileProperties);
 
     UserBuilder putProfileProperty(String key, Object value);
+
+    UserBuilder setGroups(Set<String> groupIds);
+
+    UserBuilder addGroup(String groupId);
 
     User buildAndCreate(Client client);
 }
