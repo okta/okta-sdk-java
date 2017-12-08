@@ -31,15 +31,12 @@ import com.okta.sdk.impl.http.HttpHeaders;
 import com.okta.sdk.impl.http.HttpHeadersHolder;
 import com.okta.sdk.impl.http.MediaType;
 import com.okta.sdk.impl.http.QueryString;
-import com.okta.sdk.impl.http.QueryStringFactory;
 import com.okta.sdk.impl.http.Request;
 import com.okta.sdk.impl.http.RequestExecutor;
 import com.okta.sdk.impl.http.Response;
 import com.okta.sdk.impl.http.support.DefaultCanonicalUri;
 import com.okta.sdk.impl.http.support.DefaultRequest;
 import com.okta.sdk.impl.http.support.UserAgent;
-import com.okta.sdk.impl.query.DefaultCriteria;
-import com.okta.sdk.impl.query.DefaultOptions;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.ReferenceFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
@@ -48,8 +45,6 @@ import com.okta.sdk.impl.util.StringInputStream;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Collections;
 import com.okta.sdk.lang.Strings;
-import com.okta.sdk.query.Criteria;
-import com.okta.sdk.query.Options;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.ResourceException;
@@ -57,14 +52,11 @@ import com.okta.sdk.resource.VoidResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 
 import static com.okta.sdk.impl.http.HttpHeaders.OKTA_AGENT;
 import static com.okta.sdk.impl.http.HttpHeaders.OKTA_CLIENT_REQUEST_ID;
@@ -81,16 +73,6 @@ public class DefaultDataStore implements InternalDataStore {
 
     public static final int DEFAULT_API_VERSION = 1;
 
-    private static final String APPEND_PARAM_CHAR = "&";
-
-    public static final String DEFAULT_CRITERIA_MSG = "The " + DefaultDataStore.class.getName() +
-                                                      " implementation only functions with " +
-                                                      DefaultCriteria.class.getName() + " instances.";
-
-    public static final String DEFAULT_OPTIONS_MSG = "The " + DefaultDataStore.class.getName() +
-                                                     " implementation only functions with " +
-                                                     DefaultOptions.class.getName() + " instances.";
-
     public static final String HREF_REQD_MSG = "'save' may only be called on objects that have already been " +
                                                "persisted and have an existing 'href' attribute.";
 
@@ -102,7 +84,6 @@ public class DefaultDataStore implements InternalDataStore {
     private final CacheManager cacheManager;
     private final CacheResolver cacheResolver;
     private final ResourceConverter resourceConverter;
-    private final QueryStringFactory queryStringFactory;
     private final List<Filter> filters;
     private final ClientCredentialsResolver clientCredentialsResolver;
     private final BaseUrlResolver baseUrlResolver;
@@ -131,7 +112,6 @@ public class DefaultDataStore implements InternalDataStore {
         this.cacheManager = cacheManager;
         this.resourceFactory = new DefaultResourceFactory(this);
         this.mapMarshaller = new JacksonMapMarshaller();
-        this.queryStringFactory = new QueryStringFactory();
         this.cacheResolver = new DefaultCacheResolver(this.cacheManager, new DefaultCacheRegionNameResolver());
         this.clientCredentialsResolver = clientCredentialsResolver;
 
@@ -139,8 +119,6 @@ public class DefaultDataStore implements InternalDataStore {
         this.resourceConverter = new DefaultResourceConverter(referenceFactory);
 
         this.filters = new ArrayList<Filter>();
-
-//        this.filters.add(new EnlistmentFilter()); // FIXME: cannot support this yet
 
 //        if(clientCredentials instanceof ApiKeyCredentials) { // FIXME: add this back in
 //            this.filters.add(new DecryptApiKeySecretFilter((ApiKeyCredentials) clientCredentials));
@@ -213,14 +191,6 @@ public class DefaultDataStore implements InternalDataStore {
         return getResource(href, clazz, (Map<String, Object>) null);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends Resource> T getResource(String href, Class<T> clazz, Criteria criteria) {
-        Assert.isInstanceOf(DefaultCriteria.class, criteria, DEFAULT_CRITERIA_MSG);
-        QueryString qs = queryStringFactory.createQueryString(href, (DefaultCriteria)criteria);
-        return (T) getResource(href, clazz, (Map) qs);
-    }
-
     public <T extends Resource> T getResource(String href, Class<T> clazz, Map<String, Object> queryParameters) {
         ResourceDataResult result = getResourceData(href, clazz, queryParameters);
         T resource = instantiate(clazz, result.getData(), result.getUri().getQuery());
@@ -229,55 +199,6 @@ public class DefaultDataStore implements InternalDataStore {
 
         return resource;
 
-    }
-
-    /**
-     * This method provides the ability to instruct the DataStore how to decide which class of a resource hierarchy will
-     * be instantiated.
-     *
-     * @param href            the endpoint where the request will be targeted to.
-     * @param parent          the root class of the Resource hierarchy (helps to validate that the idClassMap contains
-     *                        subclasses of it).
-     * @param childIdProperty the property whose value will be used to identify the specific class in the hierarchy that
-     *                        we need to instantiate.
-     * @param idClassMap      a mapping to be able to know which class corresponds to each <code>childIdProperty</code>
-     *                        value.
-     * @param <T>             the root of the hierarchy of the Resource we want to instantiate.
-     * @param <R>             the sub-class of the root Resource.
-     * @return the retrieved resource
-     */
-    @Override
-    public <T extends Resource, R extends T> R getResource(String href, Class<T> parent, String childIdProperty,
-                                                           Map<String, Class<? extends R>> idClassMap) {
-        Assert.hasText(childIdProperty, "childIdProperty cannot be null or empty.");
-        Assert.notEmpty(idClassMap, "idClassMap cannot be null or empty.");
-
-        ResourceDataResult result = getResourceData(href, parent, null);
-        Map<String, ?> data = result.getData();
-
-        if (Collections.isEmpty(data) || !data.containsKey(childIdProperty)) {
-            throw new IllegalStateException(childIdProperty + " could not be found in: " + data + ".");
-        }
-
-        Object propertyValue = data.get(childIdProperty);
-        if (propertyValue == null) {
-            throw new IllegalStateException("No Class mapping could be found for " + childIdProperty + ".");
-        }
-
-        Class<? extends R> childClass = idClassMap.get(propertyValue.toString());
-
-        return instantiate(childClass, data, result.getUri().getQuery());
-    }
-
-    @Override
-    public <T extends Resource, O extends Options> T getResource(String href, Class<T> clazz, O options) {
-        Assert.hasText(href, "href argument cannot be null or empty.");
-        Assert.notNull(clazz, "Resource class argument cannot be null.");
-        Assert.isInstanceOf(DefaultOptions.class, options, "The " + getClass().getName() + " implementation only functions with " +
-                DefaultOptions.class.getName() + " instances.");
-        DefaultOptions defaultOptions = (DefaultOptions) options;
-        QueryString qs = queryStringFactory.createQueryString(defaultOptions);
-        return (T) getResource(href, clazz, (Map) qs);
     }
 
     @SuppressWarnings("unchecked")
@@ -333,13 +254,6 @@ public class DefaultDataStore implements InternalDataStore {
         return (T)save(parentHref, resource, null, resource.getClass(), null, true);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends Resource> T create(String parentHref, T resource, Options options) {
-        QueryString qs = toQueryString(parentHref, options);
-        return (T)save(parentHref, resource, null, resource.getClass(), qs, true);
-    }
-
     @Override
     public <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType) {
         return save(parentHref, resource, null, returnType, null, true);
@@ -348,12 +262,6 @@ public class DefaultDataStore implements InternalDataStore {
     @Override
     public <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType, HttpHeaders requestHeaders) {
         return save(parentHref, resource, requestHeaders, returnType, null, true);
-    }
-
-    @Override
-    public <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType, Options options) {
-        QueryString qs = toQueryString(parentHref, options);
-        return save(parentHref, resource, null, returnType, qs, true);
     }
 
     @Override
@@ -368,27 +276,9 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     @Override
-    public <T extends Resource> void save(T resource, Options options) {
-        Assert.notNull(options, "options argument cannot be null.");
-        String href = resource.getResourceHref();
-        Assert.hasText(href, HREF_REQD_MSG);
-        QueryString qs = toQueryString(href, options);
-        save(href, resource, null, resource.getClass(), qs, false);
-    }
-
-    @Override
     public <T extends Resource, R extends Resource> R save(T resource, Class<? extends R> returnType) {
         Assert.hasText(resource.getResourceHref(), HREF_REQD_MSG);
         return save(resource.getResourceHref(), resource, null, returnType, null, false);
-    }
-
-    private QueryString toQueryString(String href, Options options) {
-        if (options == null) {
-            return null;
-        }
-        Assert.isInstanceOf(DefaultOptions.class, options, DEFAULT_OPTIONS_MSG);
-        DefaultOptions defaultOptions = (DefaultOptions)options;
-        return queryStringFactory.createQueryString(href, defaultOptions);
     }
 
     @SuppressWarnings("unchecked")
@@ -408,14 +298,10 @@ public class DefaultDataStore implements InternalDataStore {
             public ResourceDataResult filter(final ResourceDataRequest req) {
 
                 String bodyString;
-                if (req.getHttpHeaders().getContentType() != null && req.getHttpHeaders().getContentType().equals(MediaType.APPLICATION_FORM_URLENCODED)){
-                    bodyString = buildCanonicalBodyQueryParams(req.getData());
+                if (resource instanceof VoidResource) {
+                    bodyString = "";
                 } else {
-                    if (resource instanceof VoidResource) {
-                        bodyString = "";
-                    } else {
-                        bodyString = mapMarshaller.marshal(req.getData());
-                    }
+                    bodyString = mapMarshaller.marshal(req.getData());
                 }
                 StringInputStream body = new StringInputStream(bodyString);
                 long length = body.available();
@@ -488,26 +374,6 @@ public class DefaultDataStore implements InternalDataStore {
     public <T extends Resource> void deleteResourceProperty(T resource, String propertyName) {
         Assert.hasText(propertyName, "propertyName cannot be null or empty.");
         doDelete(resource, propertyName);
-    }
-
-    private String buildCanonicalBodyQueryParams(Map<String, Object> bodyData){
-        StringBuilder builder = new StringBuilder();
-        Map<String, Object> treeMap = new TreeMap<String, Object>(bodyData);
-        try {
-            for (Map.Entry<String,Object> entry : treeMap.entrySet()) {
-                Object value = entry.getValue();
-                if (value != null) {
-                    if (builder.length() > 0) {
-                        builder.append(APPEND_PARAM_CHAR);
-                    }
-                    builder.append(String.format("%s=%s", URLEncoder.encode(entry.getKey(), "UTF-8"), URLEncoder.encode(value.toString(), "UTF-8")));
-                }
-            }
-        } catch (UnsupportedEncodingException e){
-            log.trace("Body content could not be properly encoded");
-            return null;
-        }
-        return builder.toString();
     }
 
     private void doDelete(String resourceHref, Class resourceClass, final String possiblyNullPropertyName) {

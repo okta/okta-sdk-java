@@ -100,10 +100,4 @@ public class DefaultRequest extends AbstractHttpMessage implements Request {
     public InputStream getBody() {
         return body;
     }
-
-    @Override
-    public void setBody(InputStream body, long length) {
-        this.body = body;
-        getHeaders().setContentLength(length);
-    }
 }

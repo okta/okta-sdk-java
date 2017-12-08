@@ -17,7 +17,6 @@ package com.okta.sdk.impl.http;
 
 import com.okta.sdk.http.HttpMethod;
 
-import java.io.InputStream;
 import java.net.URI;
 
 /**
@@ -45,6 +44,4 @@ public interface Request extends HttpMessage {
     QueryString getQueryString();
 
     void setQueryString(QueryString queryString);
-
-    void setBody(InputStream body, long length);
 }

@@ -15,9 +15,6 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.sdk.impl.query.Operator;
-import com.okta.sdk.impl.query.SimpleExpression;
-
 /**
  * @since 0.5.0
  */
@@ -25,15 +22,5 @@ public abstract class NonStringProperty<T> extends Property<T> {
 
     protected NonStringProperty(String name, Class<T> type) {
         super(name, type);
-    }
-
-    /**
-     * Returns a new equals expression reflecting the property name and the specified value.
-     *
-     * @param value the value that should equal the property value.
-     * @return a new equals expression reflecting the property name and the specified value.
-     */
-    public SimpleExpression eq(Object value) {
-        return new SimpleExpression(this.name, value, Operator.EQUALS);
     }
 }

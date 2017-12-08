@@ -17,7 +17,6 @@ package com.okta.sdk.ds;
 
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
-import com.okta.sdk.query.Options;
 import com.okta.sdk.resource.Resource;
 
 /**
@@ -52,19 +51,6 @@ public interface DataStore {
      * @return an instance of the specified class based on the data returned from the specified {@code href} URL.
      */
     <T extends Resource> T getResource(String href, Class<T> clazz);
-
-    /**
-     * Retrieves the resource at the specified {@code href} according to the specified {@code Options} and returns the
-     * resource as an instance of the specified {@code clazz}.
-     *
-     * @param href  the URL of the resource to retrieve
-     * @param clazz the {@link Resource} sub-interface to instantiate
-     * @param <T>   type parameter indicating the returned value is a {@link Resource} instance.
-     * @param <O>   type of options
-     * @param options the {@link Options} sub-interface with the properties to expand
-     * @return an instance of the specified class based on the data returned from the specified {@code href} URL.
-     */
-    <T extends Resource, O extends Options> T getResource(String href, Class<T> clazz, O options);
 
     /**
      * Returns the ClientCredentials used to authenticate HTTPS requests sent to the Okta API server.
