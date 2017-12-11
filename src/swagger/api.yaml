@@ -1657,7 +1657,7 @@
             "description": "Success",
             "schema": {
               "items": {
-                "$ref": "#/definitions/Log"
+                "$ref": "#/definitions/LogEvent"
               },
               "type": "array"
             }
@@ -2203,7 +2203,7 @@
         "parameters": [
           {
             "in": "body",
-            "name": "body",
+            "name": "userCredentials",
             "schema": {
               "$ref": "#/definitions/UserCredentials"
             }
@@ -2218,7 +2218,6 @@
             "default": true,
             "in": "query",
             "name": "sendEmail",
-            "required": true,
             "type": "boolean"
           }
         ],
@@ -3272,37 +3271,6 @@
     }
   },
   "definitions": {
-    "Actor": {
-      "properties": {
-        "alternateId": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "detail": {
-          "additionalProperties": {
-            "type": "object"
-          },
-          "readOnly": true,
-          "type": "object"
-        },
-        "displayName": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "id": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
-      ]
-    },
     "AppLink": {
       "properties": {
         "appAssignmentId": {
@@ -4022,45 +3990,6 @@
         "Application"
       ]
     },
-    "AuthenticationContext": {
-      "properties": {
-        "authenticationProvider": {
-          "$ref": "#/definitions/LogAuthenticationProvider",
-          "readOnly": true,
-          "type": "string"
-        },
-        "credentialProvider": {
-          "items": {
-            "$ref": "#/definitions/CredentialProvider"
-          },
-          "readOnly": true,
-          "type": "array"
-        },
-        "credentialType": {
-          "items": {
-            "$ref": "#/definitions/CredentialType"
-          },
-          "readOnly": true,
-          "type": "array"
-        },
-        "externalSessionId": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "interface": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "issuer": {
-          "$ref": "#/definitions/Issuer",
-          "readOnly": true
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
-      ]
-    },
     "AuthenticationProvider": {
       "properties": {
         "name": {
@@ -4271,45 +4200,6 @@
         "User"
       ]
     },
-    "Client": {
-      "properties": {
-        "device": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "geographicalContext": {
-          "$ref": "#/definitions/GeographicalContext",
-          "readOnly": true
-        },
-        "id": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "ipAddress": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "ipChain": {
-          "items": {
-            "$ref": "#/definitions/IpAddress"
-          },
-          "readOnly": true,
-          "type": "array"
-        },
-        "userAgent": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "zone": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
-      ]
-    },
     "CreateSessionRequest": {
       "properties": {
         "sessionToken": {
@@ -4319,51 +4209,6 @@
       "type": "object",
       "x-okta-tags": [
         "Session"
-      ]
-    },
-    "CredentialProvider": {
-      "enum": [
-        "OKTA_AUTHENTICATION_PROVIDER",
-        "RSA",
-        "SYMANTEC",
-        "GOOGLE",
-        "DUO",
-        "YUBIKEY"
-      ],
-      "type": "string",
-      "x-okta-tags": [
-        "Log"
-      ]
-    },
-    "CredentialType": {
-      "enum": [
-        "OTP",
-        "SMS",
-        "PASSWORD",
-        "ASSERTION",
-        "IWA",
-        "EMAIL",
-        "OAUTH2",
-        "JWT"
-      ],
-      "type": "string",
-      "x-okta-tags": [
-        "Log"
-      ]
-    },
-    "DebugContext": {
-      "properties": {
-        "debugData": {
-          "additionalProperties": {
-            "type": "object"
-          },
-          "readOnly": true,
-          "type": "object"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
       ]
     },
     "EmailFactor": {
@@ -4588,52 +4433,6 @@
       },
       "x-okta-tags": [
         "User"
-      ]
-    },
-    "GeographicalContext": {
-      "properties": {
-        "city": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "country": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "geolocation": {
-          "$ref": "#/definitions/Geolocation",
-          "readOnly": true
-        },
-        "postalCode": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "state": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
-      ]
-    },
-    "Geolocation": {
-      "properties": {
-        "lat": {
-          "format": "double",
-          "readOnly": true,
-          "type": "number"
-        },
-        "lon": {
-          "format": "double",
-          "readOnly": true,
-          "type": "number"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
       ]
     },
     "Group": {
@@ -4979,46 +4778,6 @@
         "UserFactor"
       ]
     },
-    "IpAddress": {
-      "properties": {
-        "geographicalContext": {
-          "$ref": "#/definitions/GeographicalContext",
-          "readOnly": true
-        },
-        "ip": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "source": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "version": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
-      ]
-    },
-    "Issuer": {
-      "properties": {
-        "id": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
-      ]
-    },
     "JsonWebKey": {
       "properties": {
         "alg": {
@@ -5096,71 +4855,73 @@
         "Application"
       ]
     },
-    "Log": {
+    "LogActor": {
       "properties": {
-        "actor": {
-          "$ref": "#/definitions/Actor",
-          "readOnly": true
-        },
-        "authenticationContext": {
-          "$ref": "#/definitions/AuthenticationContext",
-          "readOnly": true
-        },
-        "client": {
-          "$ref": "#/definitions/Client",
-          "readOnly": true
-        },
-        "debugContext": {
-          "$ref": "#/definitions/DebugContext",
-          "readOnly": true
-        },
-        "displayMessage": {
+        "alternateId": {
           "readOnly": true,
           "type": "string"
         },
-        "eventType": {
+        "detail": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "displayName": {
           "readOnly": true,
           "type": "string"
         },
-        "legacyEventType": {
+        "id": {
           "readOnly": true,
           "type": "string"
         },
-        "outcome": {
-          "$ref": "#/definitions/Outcome",
-          "readOnly": true
-        },
-        "published": {
-          "format": "date-time",
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogAuthenticationContext": {
+      "properties": {
+        "authenticationProvider": {
+          "$ref": "#/definitions/LogAuthenticationProvider",
           "readOnly": true,
           "type": "string"
         },
-        "securityContext": {
-          "$ref": "#/definitions/SecurityContext",
-          "readOnly": true
+        "authenticationStep": {
+          "readOnly": true,
+          "type": "integer"
         },
-        "severity": {
-          "$ref": "#/definitions/LogSeverity",
-          "readOnly": true
-        },
-        "target": {
+        "credentialProvider": {
           "items": {
-            "$ref": "#/definitions/Target"
+            "$ref": "#/definitions/LogCredentialProvider"
           },
           "readOnly": true,
           "type": "array"
         },
-        "transaction": {
-          "$ref": "#/definitions/Transaction",
+        "credentialType": {
+          "items": {
+            "$ref": "#/definitions/LogCredentialType"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "externalSessionId": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "interface": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "issuer": {
+          "$ref": "#/definitions/LogIssuer",
           "readOnly": true
-        },
-        "uuid": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "version": {
-          "readOnly": true,
-          "type": "string"
         }
       },
       "type": "object",
@@ -5182,6 +4943,304 @@
         "Log"
       ]
     },
+    "LogClient": {
+      "properties": {
+        "device": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "geographicalContext": {
+          "$ref": "#/definitions/LogGeographicalContext",
+          "readOnly": true
+        },
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "ipAddress": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "userAgent": {
+          "$ref": "#/definitions/LogUserAgent",
+          "readOnly": true
+        },
+        "zone": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogCredentialProvider": {
+      "enum": [
+        "OKTA_AUTHENTICATION_PROVIDER",
+        "RSA",
+        "SYMANTEC",
+        "GOOGLE",
+        "DUO",
+        "YUBIKEY"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogCredentialType": {
+      "enum": [
+        "OTP",
+        "SMS",
+        "PASSWORD",
+        "ASSERTION",
+        "IWA",
+        "EMAIL",
+        "OAUTH2",
+        "JWT"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogDebugContext": {
+      "properties": {
+        "debugData": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogEvent": {
+      "properties": {
+        "actor": {
+          "$ref": "#/definitions/LogActor",
+          "readOnly": true
+        },
+        "authenticationContext": {
+          "$ref": "#/definitions/LogAuthenticationContext",
+          "readOnly": true
+        },
+        "client": {
+          "$ref": "#/definitions/LogClient",
+          "readOnly": true
+        },
+        "debugContext": {
+          "$ref": "#/definitions/LogDebugContext",
+          "readOnly": true
+        },
+        "displayMessage": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "eventType": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "legacyEventType": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "outcome": {
+          "$ref": "#/definitions/LogOutcome",
+          "readOnly": true
+        },
+        "published": {
+          "format": "date-time",
+          "readOnly": true,
+          "type": "string"
+        },
+        "request": {
+          "$ref": "#/definitions/LogRequest",
+          "readOnly": true
+        },
+        "securityContext": {
+          "$ref": "#/definitions/LogSecurityContext",
+          "readOnly": true
+        },
+        "severity": {
+          "$ref": "#/definitions/LogSeverity",
+          "readOnly": true
+        },
+        "target": {
+          "items": {
+            "$ref": "#/definitions/LogTarget"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "transaction": {
+          "$ref": "#/definitions/LogTransaction",
+          "readOnly": true
+        },
+        "uuid": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "version": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogGeographicalContext": {
+      "properties": {
+        "city": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "country": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "geolocation": {
+          "$ref": "#/definitions/LogGeolocation",
+          "readOnly": true
+        },
+        "postalCode": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "state": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogGeolocation": {
+      "properties": {
+        "lat": {
+          "format": "double",
+          "readOnly": true,
+          "type": "number"
+        },
+        "lon": {
+          "format": "double",
+          "readOnly": true,
+          "type": "number"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogIpAddress": {
+      "properties": {
+        "geographicalContext": {
+          "$ref": "#/definitions/LogGeographicalContext",
+          "readOnly": true
+        },
+        "ip": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "source": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "version": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogIssuer": {
+      "properties": {
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogOutcome": {
+      "properties": {
+        "reason": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "result": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogRequest": {
+      "properties": {
+        "ipChain": {
+          "items": {
+            "$ref": "#/definitions/LogIpAddress"
+          },
+          "readOnly": true,
+          "type": "array"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogSecurityContext": {
+      "properties": {
+        "asNumber": {
+          "readOnly": true,
+          "type": "integer"
+        },
+        "asOrg": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "domain": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "isProxy": {
+          "readOnly": true,
+          "type": "boolean"
+        },
+        "isp": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
     "LogSeverity": {
       "enum": [
         "DEBUG",
@@ -5190,6 +5249,80 @@
         "ERROR"
       ],
       "type": "string",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogTarget": {
+      "properties": {
+        "alternateId": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "detailEntry": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "displayName": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogTransaction": {
+      "properties": {
+        "detail": {
+          "additionalProperties": {
+            "type": "object"
+          },
+          "readOnly": true,
+          "type": "object"
+        },
+        "id": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "x-okta-tags": [
+        "Log"
+      ]
+    },
+    "LogUserAgent": {
+      "properties": {
+        "browser": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "os": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "rawUserAgent": {
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object",
       "x-okta-tags": [
         "Log"
       ]
@@ -5335,22 +5468,6 @@
       "type": "string",
       "x-okta-tags": [
         "Application"
-      ]
-    },
-    "Outcome": {
-      "properties": {
-        "reason": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "result": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
       ]
     },
     "PasswordCredential": {
@@ -5686,34 +5803,6 @@
         "Application"
       ]
     },
-    "SecurityContext": {
-      "properties": {
-        "asNumber": {
-          "readOnly": true,
-          "type": "integer"
-        },
-        "asOrg": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "domain": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "isProxy": {
-          "readOnly": true,
-          "type": "boolean"
-        },
-        "isp": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
-      ]
-    },
     "SecurityQuestion": {
       "properties": {
         "answer": {
@@ -6042,37 +6131,6 @@
         "Application"
       ]
     },
-    "Target": {
-      "properties": {
-        "alternateId": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "detailEntry": {
-          "items": {
-            "type": "string"
-          },
-          "readOnly": true,
-          "type": "object"
-        },
-        "displayName": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "id": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
-      ]
-    },
     "TempPassword": {
       "properties": {
         "tempPassword": {
@@ -6126,29 +6184,6 @@
       "x-okta-parent": "#/definitions/FactorProfile",
       "x-okta-tags": [
         "UserFactor"
-      ]
-    },
-    "Transaction": {
-      "properties": {
-        "detail": {
-          "additionalProperties": {
-            "type": "object"
-          },
-          "readOnly": true,
-          "type": "object"
-        },
-        "id": {
-          "readOnly": true,
-          "type": "string"
-        },
-        "type": {
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object",
-      "x-okta-tags": [
-        "Log"
       ]
     },
     "User": {
