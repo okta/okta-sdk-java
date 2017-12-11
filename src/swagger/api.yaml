@@ -2132,7 +2132,7 @@
         "parameters": [
           {
             "in": "body",
-            "name": "body",
+            "name": "userCredentials",
             "schema": {
               "$ref": "#/definitions/UserCredentials"
             }
@@ -2147,7 +2147,6 @@
             "default": true,
             "in": "query",
             "name": "sendEmail",
-            "required": false,
             "type": "boolean"
           }
         ],
