@@ -17,16 +17,20 @@ package com.okta.sdk.impl.resource.log
 
 import com.okta.sdk.impl.client.MockClient
 import com.okta.sdk.impl.http.Request
-import com.okta.sdk.resource.log.Actor
-import com.okta.sdk.resource.log.AuthenticationContext
-import com.okta.sdk.resource.log.DebugContext
-import com.okta.sdk.resource.log.GeographicalContext
-import com.okta.sdk.resource.log.Geolocation
-import com.okta.sdk.resource.log.Log
+import com.okta.sdk.resource.log.LogActor
+import com.okta.sdk.resource.log.LogAuthenticationContext
+import com.okta.sdk.resource.log.LogClient
+import com.okta.sdk.resource.log.LogDebugContext
+import com.okta.sdk.resource.log.LogEvent
+import com.okta.sdk.resource.log.LogGeographicalContext
+import com.okta.sdk.resource.log.LogGeolocation
+import com.okta.sdk.resource.log.LogIpAddress
+import com.okta.sdk.resource.log.LogOutcome
+import com.okta.sdk.resource.log.LogRequest
+import com.okta.sdk.resource.log.LogSecurityContext
 import com.okta.sdk.resource.log.LogSeverity
-import com.okta.sdk.resource.log.Outcome
-import com.okta.sdk.resource.log.SecurityContext
-import com.okta.sdk.resource.log.Transaction
+import com.okta.sdk.resource.log.LogTransaction
+import com.okta.sdk.resource.log.LogUserAgent
 import org.mockito.Mockito
 import org.testng.annotations.Test
 
@@ -47,16 +51,16 @@ class LogsTest {
                 .withMockResponse(Mockito.any(Request), '/stubs/logs.json')
 
         // get the list of logs
-        List<Log> logs = client.getLogs().stream().collect(Collectors.toList())
+        List<LogEvent> logs = client.getLogs().stream().collect(Collectors.toList())
         assertThat logs, hasSize(100)
-        logs.forEach { assertThat it, instanceOf(Log) }
+        logs.forEach { assertThat it, instanceOf(LogEvent) }
 
         // grab the first Log item and validate it
-        Log log = logs.get(0)
+        LogEvent log = logs.get(0)
 
         Date expectedDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:15:16.838Z")))
 
-        assertThat log.actor, instanceOf(Actor)
+        assertThat log.actor, instanceOf(LogActor)
         assertThat log.actor.id, equalTo("0000222244448888000")
         assertThat log.actor.type, equalTo("User")
         assertThat log.actor.alternateId, equalTo("joe.coder@example.com")
@@ -65,22 +69,26 @@ class LogsTest {
         assertThat log.actor.type, equalTo("User")
         assertThat log.actor.type, equalTo("User")
 
-        assertThat log.client, instanceOf(com.okta.sdk.resource.log.Client)
-//        assertThat log.client.userAgent, equalTo("User")
+        assertThat log.client, instanceOf(LogClient)
+        assertThat log.client.userAgent, instanceOf(LogUserAgent)
+        assertThat log.client.userAgent.rawUserAgent, equalTo("okta-sdk-java/0.9.0-SNAPSHOT okta-sdk-java/0.9.0-SNAPSHOT jetty/9.2.22.v20170606 java/1.8.0_121 Mac OS X/10.13.1")
+        assertThat log.client.userAgent.os, equalTo( "Mac OS X")
+        assertThat log.client.userAgent.browser, equalTo( "UNKNOWN")
+
         assertThat log.client.zone, equalTo("null")
         assertThat log.client.device, equalTo("Computer")
         assertThat log.client.id, nullValue()
         assertThat log.client.ipAddress, equalTo("66.222.111.88")
-        assertThat log.client.geographicalContext, instanceOf(GeographicalContext)
+        assertThat log.client.geographicalContext, instanceOf(LogGeographicalContext)
         assertThat log.client.geographicalContext.city, equalTo("Concord")
         assertThat log.client.geographicalContext.state, equalTo("New Hampshire")
         assertThat log.client.geographicalContext.country, equalTo("United States")
         assertThat log.client.geographicalContext.postalCode, equalTo("03303")
-        assertThat log.client.geographicalContext.geolocation, instanceOf(Geolocation)
+        assertThat log.client.geographicalContext.geolocation, instanceOf(LogGeolocation)
         assertThat log.client.geographicalContext.geolocation.lat, equalTo(43.3091d)
         assertThat log.client.geographicalContext.geolocation.lon, equalTo(-71.6861d)
 
-        assertThat log.authenticationContext, instanceOf(AuthenticationContext)
+        assertThat log.authenticationContext, instanceOf(LogAuthenticationContext)
         assertThat log.authenticationContext.authenticationProvider, nullValue()
         assertThat log.authenticationContext.credentialProvider, nullValue()
         assertThat log.authenticationContext.credentialType, nullValue()
@@ -97,21 +105,21 @@ class LogsTest {
         assertThat log.version, equalTo("0")
         assertThat log.legacyEventType, equalTo("core.user.config.user_deactivated")
 
-        assertThat log.outcome, instanceOf(Outcome)
+        assertThat log.outcome, instanceOf(LogOutcome)
         assertThat log.outcome.result, equalTo("SUCCESS")
         assertThat log.outcome.reason, nullValue()
 
-        assertThat log.securityContext, instanceOf(SecurityContext)
+        assertThat log.securityContext, instanceOf(LogSecurityContext)
         assertThat log.securityContext.asNumber, nullValue()
         assertThat log.securityContext.asOrg, nullValue()
         assertThat log.securityContext.isp, nullValue()
         assertThat log.securityContext.domain, nullValue()
         assertThat log.securityContext.isProxy, equalTo(false)
 
-        assertThat log.debugContext, instanceOf(DebugContext)
+        assertThat log.debugContext, instanceOf(LogDebugContext)
         assertThat log.debugContext.debugData.get("requestUri"), equalTo("/api/v1/users/00ud384zryL1GFAg30h7/lifecycle/deactivate")
 
-        assertThat log.transaction, instanceOf(Transaction)
+        assertThat log.transaction, instanceOf(LogTransaction)
         assertThat log.transaction.type, equalTo("WEB")
         assertThat log.transaction.id, equalTo("WiB04-V4MgacZHWciQq8YwAADpA")
         assertThat log.transaction.detail, anEmptyMap()
@@ -122,5 +130,19 @@ class LogsTest {
         assertThat log.target.get(0).alternateId, equalTo("john-with-group@example.com")
         assertThat log.target.get(0).displayName, equalTo("John With-Group")
         assertThat log.target.get(0).detailEntry, nullValue()
+
+        assertThat log.request, instanceOf(LogRequest)
+        assertThat log.request.ipChain[0], instanceOf(LogIpAddress)
+        assertThat log.request.ipChain[0].ip, equalTo("66.222.111.88")
+        assertThat log.request.ipChain[0].version, equalTo("V4")
+        assertThat log.request.ipChain[0].source, nullValue()
+        assertThat log.request.ipChain[0].geographicalContext, instanceOf(LogGeographicalContext)
+        assertThat log.request.ipChain[0].geographicalContext.city, equalTo("Concord")
+        assertThat log.request.ipChain[0].geographicalContext.state, equalTo("New Hampshire")
+        assertThat log.request.ipChain[0].geographicalContext.country, equalTo("United States")
+        assertThat log.request.ipChain[0].geographicalContext.postalCode, equalTo("03303")
+        assertThat log.request.ipChain[0].geographicalContext.geolocation, instanceOf(LogGeolocation)
+        assertThat log.request.ipChain[0].geographicalContext.geolocation.lat, equalTo(43.3091d)
+        assertThat log.request.ipChain[0].geographicalContext.geolocation.lon, equalTo(-71.6861d)
     }
 }
