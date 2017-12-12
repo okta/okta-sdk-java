@@ -17,6 +17,7 @@ package com.okta.sdk.impl.resource;
 
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import com.okta.sdk.lang.Assert;
+import com.okta.sdk.resource.PropertyRetriever;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
  *
  * @since 0.5.0
  */
-public abstract class AbstractPropertyRetriever {
+public abstract class AbstractPropertyRetriever implements PropertyRetriever {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractPropertyRetriever.class);
 
@@ -55,6 +56,41 @@ public abstract class AbstractPropertyRetriever {
 
     public abstract Object getProperty(String name);
 
+    @Override
+    public String getString(String key) {
+        return getStringProperty(key);
+    }
+
+    @Override
+    public Integer getInteger(String key) {
+        return getIntProperty(key);
+    }
+
+    @Override
+    public Double getNumber(String key) {
+        return getDoubleProperty(key);
+    }
+
+    @Override
+    public Boolean getBoolean(String key) {
+        return getNullableBooleanProperty(key);
+    }
+
+    @Override
+    public List<String> getStringList(String key) {
+        return getListProperty(key);
+    }
+
+    @Override
+    public List<Integer> getIntegerList(String key) {
+        return getListProperty(key);
+    }
+
+    @Override
+    public List<Double> getNumberList(String key) {
+        return getListProperty(key);
+    }
+
     protected String getString(StringProperty property) {
         return getStringProperty(property.getName());
     }
@@ -66,7 +102,6 @@ public abstract class AbstractPropertyRetriever {
         }
         return String.valueOf(value);
     }
-
 
     protected int getInt(IntegerProperty property) {
         Integer value = getIntProperty(property.getName());

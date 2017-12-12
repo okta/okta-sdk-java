@@ -17,13 +17,13 @@ import java.util.Map;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.Deletable;
 import com.okta.sdk.resource.Saveable;
-
+{{#vendorExtensions.x-okta-extensible}}import com.okta.sdk.resource.PropertyRetriever;{{/vendorExtensions.x-okta-extensible}}
 {{#models}}{{#model}}
 /**
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
-public interface {{classname}} extends Resource{{#parent}}, {{.}}{{/parent}}{{#vendorExtensions.x-okta-extensible}}, Map<String, Object>{{/vendorExtensions.x-okta-extensible}}{{#vendorExtensions.deletable}}, Deletable{{/vendorExtensions.deletable}} {
+public interface {{classname}} extends Resource{{#parent}}, {{.}}{{/parent}}{{#vendorExtensions.x-okta-extensible}}, PropertyRetriever, Map<String, Object>{{/vendorExtensions.x-okta-extensible}}{{#vendorExtensions.deletable}}, Deletable{{/vendorExtensions.deletable}} {
 
 {{#vars}}
     {{#vendorExtensions.extraAnnotation}}

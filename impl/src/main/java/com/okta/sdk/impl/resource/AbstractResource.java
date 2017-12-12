@@ -665,37 +665,4 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         }
         return resultMap;
     }
-
-
-    String getString(String key) {
-        return getStringProperty(key);
-    }
-
-    Integer getInteger(String key) {
-        return getIntProperty(key);
-    }
-
-    Double getDouble(String key) {
-        return getDoubleProperty(key);
-    }
-
-    Double getNumber(String key) {
-        return getDoubleProperty(key);
-    }
-
-    Boolean getBoolean(String key) {
-        return getNullableBooleanProperty(key);
-    }
-
-    List<String> getStringList(String key) {
-        return getListProperty(key);
-    }
-
-    List<Integer> getIntegerList(String key) {
-        return getListProperty(key);
-    }
-
-    List<Double> getNumberList(String key) {
-        return getListProperty(key);
-    }
 }
