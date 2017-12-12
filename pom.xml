@@ -221,6 +221,27 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <configuration>
+                        <excludeRoots>
+                            <!-- exclude the generated code from PMD, Findbugs will still run -->
+                            <excludeRoot>${project.build.directory}/generated-sources/swagger-codegen</excludeRoot>
+                        </excludeRoots>
+                        <excludes>
+                            <!-- lang contains a few files copied from other projects -->
+                            <exclude>**/lang/*.java</exclude>
+                            <exclude>**/com/okta/sdk/impl/http/MediaType.java</exclude>
+                            <exclude>**/com/okta/sdk/impl/util/Base64.java</exclude>
+                            <exclude>**/com/okta/sdk/impl/util/BaseNCodec.java</exclude>
+                            <exclude>**/com/okta/sdk/impl/util/LinkedCaseInsensitiveMap</exclude>
+                            <exclude>**/com/okta/sdk/impl/util/MimeType.java</exclude>
+                            <!-- caching needs a little work -->
+                            <exclude>**/com/okta/sdk/impl/ds/cache/WriteCacheFilter.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <configuration>
