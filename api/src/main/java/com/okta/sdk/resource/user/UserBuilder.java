@@ -18,7 +18,6 @@ package com.okta.sdk.resource.user;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.lang.Classes;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
