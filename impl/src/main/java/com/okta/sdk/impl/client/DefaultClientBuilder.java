@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.impl.client;
 
+import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.cache.CacheManagerBuilder;
@@ -311,6 +312,49 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
         this.clientConfig.setBaseUrl(baseUrl);
         return this;
+    }
+
+    @Override
+    public ClientBuilder withConfiguration(com.okta.sdk.client.ClientConfiguration clientConfiguration) {
+
+        setConnectionTimeout(clientConfiguration.getConnectionTimeout());
+
+        if (clientConfiguration.getOrgUrl() != null) {
+            setOrgUrl(clientConfiguration.getOrgUrl());
+        }
+
+        ClientCredentials tmpClientCredentials = clientCredentials(clientConfiguration);
+        if (tmpClientCredentials != null) {
+            setClientCredentials(tmpClientCredentials);
+        }
+
+        Proxy proxyInfo = proxyInfo(clientConfiguration.getProxy());
+        if (proxyInfo != null) {
+            setProxy(proxyInfo);
+        }
+
+        return this;
+    }
+
+    private ClientCredentials clientCredentials(com.okta.sdk.client.ClientConfiguration clientConfiguration) {
+        return (clientConfiguration.getToken() != null) ? new TokenClientCredentials(clientConfiguration.getToken()) : null;
+    }
+
+    private Proxy proxyInfo(com.okta.sdk.client.ClientConfiguration.ClientProxyInfo proxyInfo) {
+
+        if (proxyInfo == null || !Strings.hasText(proxyInfo.getHostname())) {
+            return null;
+        }
+
+        Proxy tmpProxy;
+
+        if (Strings.hasText(proxyInfo.getUsername()) || Strings.hasText(proxyInfo.getPassword())) {
+            tmpProxy = new Proxy(proxyInfo.getHostname(), proxyInfo.getPort(), proxyInfo.getUsername(), proxyInfo.getPassword());
+        } else {
+            tmpProxy = new Proxy(proxyInfo.getHostname(), proxyInfo.getPort());
+        }
+
+        return tmpProxy;
     }
 
     // Used for testing, package private

@@ -17,9 +17,15 @@ This project includes:
   Animal Sniffer Annotations under MIT license
   ANTLR 4 Runtime under The BSD License
   AOP alliance under Public Domain
-  Apache Commons Codec under The Apache Software License, Version 2.0
+  Apache Commons Codec under Apache License, Version 2.0
   Apache Commons Collections under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
+  Apache Commons Logging under The Apache Software License, Version 2.0
+  Apache DeltaSpike CDI ContainerControl API under Apache License, Version 2.0
+  Apache DeltaSpike CDI Weld-ContainerControl under Apache License, Version 2.0
+  Apache DeltaSpike Core-API under Apache License, Version 2.0
+  Apache DeltaSpike Test-Control-Module API under Apache License, Version 2.0
+  Apache DeltaSpike Test-Control-Module Impl under Apache License, Version 2.0
   Apache Groovy under The Apache Software License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpCore under Apache License, Version 2.0
@@ -28,13 +34,17 @@ This project includes:
   Bean Validation API under The Apache Software License, Version 2.0
   Byte Buddy (without dependencies) under The Apache Software License, Version 2.0
   Byte Buddy Java agent under The Apache Software License, Version 2.0
+  CDI APIs under Apache License, Version 2.0
+  classfilewriter under Apache License, version 2.0
   commonmark-java core under BSD 2-Clause License
   Commons CLI under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   Compiler assisted localization library (CAL10N) - API under MIT License
   error-prone annotations under Apache 2.0
+  Expression Language 3.0 API under Common Development and Distribution License or GNU General Public License, Version 2 with the Classpath Exception
   FindBugs-jsr305 under The Apache Software License, Version 2.0
   Google Guice - Core Library under The Apache Software License, Version 2.0
+  Google Guice - Extensions - MultiBindings under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
   Handlebars under The Apache Software License, Version 2.0
   har-reader under The MIT License
@@ -45,9 +55,13 @@ This project includes:
   Jackson-dataformat-YAML under The Apache Software License, Version 2.0
   Java Hamcrest under BSD Licence 3
   Java Servlet API under CDDL + GPLv2 with classpath exception
+  Java(TM) EE Interceptors 1.2 API under Common Development and Distribution License or GNU General Public License, Version 2 with the Classpath Exception
   JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
   JavaMail API jar under CDDL or GPLv2+CE
+  javax.annotation API under CDDL + GPLv2 with classpath exception
   javax.inject under The Apache Software License, Version 2.0
+  javax.interceptor API under CDDL + GPLv2 with classpath exception
+  JBoss Logging 3 under Apache License, version 2.0
   JCL 1.2 implemented over SLF4J under MIT License
   JCommander under The Apache Software License, Version 2.0
   Jetty :: Continuation under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
@@ -82,6 +96,9 @@ This project includes:
   Okta Java SDK :: Examples :: Quickstart Code under The Apache License, Version 2.0
   Okta Java SDK :: Extensions :: HTTP Client under The Apache License, Version 2.0
   Okta Java SDK :: Impl under The Apache License, Version 2.0
+  Okta Java SDK :: Inject :: CDI under The Apache License, Version 2.0
+  Okta Java SDK :: Inject :: Guice under The Apache License, Version 2.0
+  Okta Java SDK :: Inject :: Spring under The Apache License, Version 2.0
   Okta Java SDK :: Integration Tests under The Apache License, Version 2.0
   Okta Java SDK :: Swagger Templates under The Apache License, Version 2.0
   org.xmlunit:xmlunit-core under The Apache Software License, Version 2.0
@@ -91,6 +108,15 @@ This project includes:
   SLF4J Extensions Module under MIT License
   SLF4J Simple Binding under MIT License
   SnakeYAML under Apache License, Version 2.0
+  Spring AOP under Apache License, Version 2.0
+  Spring Beans under Apache License, Version 2.0
+  Spring Boot under Apache License, Version 2.0
+  Spring Boot AutoConfigure under Apache License, Version 2.0
+  Spring Boot Test under Apache License, Version 2.0
+  Spring Context under Apache License, Version 2.0
+  Spring Core under Apache License, Version 2.0
+  Spring Expression Language (SpEL) under Apache License, Version 2.0
+  Spring TestContext Framework under Apache License, Version 2.0
   swagger-annotations under Apache License 2.0
   swagger-codegen (core library) under Apache License 2.0
   swagger-compat-spec-parser under Apache License 2.0
@@ -98,6 +124,12 @@ This project includes:
   swagger-models under Apache License 2.0
   swagger-parser under Apache License 2.0
   testng under Apache  Version 2.0, January 2004
+  Weld APIs under Apache License, Version 2.0
+  Weld Environment Common under Apache License, Version 2.0
+  Weld Implementation (Core) under Apache License, Version 2.0
+  Weld Probe Core under Apache License, Version 2.0
+  Weld SE (Core) under Apache License, Version 2.0
+  Weld SPIs for container integration under Apache License, Version 2.0
   WireMock under The Apache Software License, Version 2.0
   zjsonpatch under The Apache Software License, Version 2.0
 

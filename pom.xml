@@ -55,6 +55,10 @@
         <module>integration-tests</module>
         <module>examples</module>
         <module>coverage</module>
+
+        <module>inject/spring</module>
+        <module>inject/cdi</module>
+        <module>inject/guice</module>
     </modules>
 
     <dependencyManagement>
