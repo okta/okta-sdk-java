@@ -76,7 +76,8 @@ class SessionsTest {
                 final InternalDataStore dataStore = mock(InternalDataStore)
                 DefaultSession session = new DefaultSession(dataStore, data)
                 Map idpData = data.get("idp")
-                when(dataStore.instantiate(SessionIdentityProvider, idpData)).thenReturn(new DefaultSessionIdentityProvider(dataStore, idpData))
+                def sessionIdp = new DefaultSessionIdentityProvider(dataStore, idpData)
+                when(dataStore.instantiate(SessionIdentityProvider, idpData)).thenReturn(sessionIdp)
                 when(dataStore.create((String) eq("/api/v1/sessions"), any(), (Class) eq(Session.class))).thenReturn(session)
                 return dataStore
             }
@@ -112,7 +113,8 @@ class SessionsTest {
                 final InternalDataStore dataStore = mock(InternalDataStore)
                 DefaultSession session = new DefaultSession(dataStore, data)
                 Map idpData = data.get("idp")
-                when(dataStore.instantiate(SessionIdentityProvider, idpData)).thenReturn(new DefaultSessionIdentityProvider(dataStore, idpData))
+                def sessionIdp = new DefaultSessionIdentityProvider(dataStore, idpData)
+                when(dataStore.instantiate(SessionIdentityProvider, idpData)).thenReturn(sessionIdp)
                 when(dataStore.getResource("/api/v1/sessions/${MOCK_SESSION_ID}", Session)).thenReturn(session)
                 when(dataStore.create((String) eq("/api/v1/sessions/${MOCK_SESSION_ID}/lifecycle/refresh".toString()), any(), (Class) eq(Session.class))).thenReturn(session)
                 return dataStore
