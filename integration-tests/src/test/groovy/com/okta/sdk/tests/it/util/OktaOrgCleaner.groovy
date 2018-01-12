@@ -31,28 +31,47 @@ class OktaOrgCleaner {
 
         Client client = Clients.builder().build()
 
+        println("Deleting Active Users:")
         toStream(client.listUsers().iterator())
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
             .forEach {
+                println("\t ${it.getProfile().getEmail()}")
                 it.deactivate()
                 it.delete()
             }
 
         toStream(client.listUsers(null, null, null, "status eq \"${UserStatus.DEPROVISIONED}\"", null).iterator())
-            .forEach { it.delete() }
+            .forEach {
+                println("Deleting deactivated user: ${it.getProfile().getEmail()}")
+                it.delete()
+            }
 
+        println("Deleting Applications:")
         toStream(client.listApplications().iterator())
             .filter { it.getLabel().matches(".*-${uuidRegex}.*")}
             .forEach {
+                println("\t ${it.getLabel()}")
                 it.deactivate()
                 it.delete()
             }
 
+        println("Deleting Groups:")
         toStream(client.listGroups().iterator())
                 .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*")}
                 .forEach {
-            it.delete()
-        }
+                    println("\t ${it.getProfile().getName()}")
+                    it.delete()
+                }
+
+        println("Deleting Group Rules:")
+        client.listRules().stream()
+                .filter { it.getName().matches("rule\\+${uuidRegex}.*")}
+                .forEach {
+                    println("\t ${it.getName()}")
+                    it.deactivate()
+                    it.delete()
+                }
+
     }
 
     static Stream<Deletable> toStream(Iterator<Deletable> iterator) {

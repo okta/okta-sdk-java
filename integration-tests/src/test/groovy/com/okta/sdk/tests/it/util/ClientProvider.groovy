@@ -173,7 +173,9 @@ trait ClientProvider implements IHookable {
                     deletable.delete()
                 }
                 catch (Exception e) {
-                    log.debug("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run", e)
+                    log.debug("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run:")
+                    log.debug("\t" + e.getMessage())
+                    log.trace("\tCause:", e)
                 }
             }
         }
