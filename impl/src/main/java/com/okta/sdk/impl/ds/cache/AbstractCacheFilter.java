@@ -24,10 +24,14 @@ import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Collections;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 abstract class AbstractCacheFilter implements Filter {
+
+    private final Logger logger = LoggerFactory.getLogger(AbstractCacheFilter.class);
 
     private final CacheResolver cacheResolver;
     private final boolean collectionCachingEnabled; //DEVELOPMENT PURPOSES ONLY! DOES NOT WORK FOR PRODUCTION!
@@ -46,7 +50,13 @@ abstract class AbstractCacheFilter implements Filter {
         Assert.hasText(href, "href argument cannot be null or empty.");
         Assert.notNull(clazz, "Class argument cannot be null.");
         Cache<String, Map<String, ?>> cache = getCache(clazz);
-        return cache.get(href);
+
+        Map<String, ?> value = cache.get(href);
+        if (value != null) {
+            logger.debug("Cache hit for key      '{}', class: '{}'", href, clazz);
+        }
+        return value;
+
     }
 
     protected String getCacheKey(ResourceDataRequest request) {

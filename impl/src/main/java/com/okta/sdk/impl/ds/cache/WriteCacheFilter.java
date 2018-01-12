@@ -36,6 +36,8 @@ import com.okta.sdk.lang.Collections;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
 import javafx.beans.property.SetProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ import java.util.Map;
 
 public class WriteCacheFilter extends AbstractCacheFilter {
 
+    private final Logger logger = LoggerFactory.getLogger(WriteCacheFilter.class);
     private final BaseUrlResolver baseUrlResolver;
     private final ReferenceFactory referenceFactory;
     private final CacheMapInitializer cacheMapInitializer;
@@ -84,9 +87,14 @@ public class WriteCacheFilter extends AbstractCacheFilter {
 
         Class<? extends Resource> clazz = result.getResourceClass();
 
-        return
-            //@since 0.5.0
-            AbstractResource.isMaterialized(result.getData());
+        //@since 0.5.0
+        boolean materialized = isMaterialized(result.getData(), clazz);
+
+        if (!materialized) {
+            logger.debug("Class: {}, is not cacheable.", clazz.getSimpleName());
+        }
+
+        return materialized;
     }
 
 
@@ -179,6 +187,8 @@ public class WriteCacheFilter extends AbstractCacheFilter {
             Cache cache = getCache(clazz);
             String cacheKey = getCacheKey(href, uri.getQuery(), clazz);
             cache.put(cacheKey, cacheValue);
+            Object previousCacheValue = cache.put(cacheKey, cacheValue);
+            logger.debug("Caching object for key '{}', class: '{}', updated {}", cacheKey, clazz, previousCacheValue != null);
         }
     }
 
@@ -250,5 +260,6 @@ public class WriteCacheFilter extends AbstractCacheFilter {
         Assert.notNull(resourceType, "resourceType cannot be null.");
         Cache<String, Map<String, ?>> cache = getCache(resourceType);
         cache.remove(cacheKey);
+        logger.debug("Removing cache for key '{}', class: '{}'", cacheKey, resourceType);
     }
 }
