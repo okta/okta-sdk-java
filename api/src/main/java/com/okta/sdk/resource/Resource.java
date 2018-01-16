@@ -22,4 +22,8 @@ public interface Resource {
 
     String getResourceHref();
     void setResourceHref(String href);
+
+    default Class<? extends Resource> getResourceClass() {
+        return getClass();
+    }
 }

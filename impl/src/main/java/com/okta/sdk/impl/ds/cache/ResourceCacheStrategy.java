@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Stormpath, Inc.
+ * Copyright 2017 Okta
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,14 @@
  */
 package com.okta.sdk.impl.ds.cache;
 
-import com.okta.sdk.impl.ds.Filter;
-import com.okta.sdk.lang.Assert;
+import com.okta.sdk.impl.ds.ResourceDataRequest;
+import com.okta.sdk.impl.ds.ResourceDataResult;
 
-abstract class AbstractCacheFilter implements Filter {
+public interface ResourceCacheStrategy {
 
-    protected final ResourceCacheStrategy cacheStrategy;
+    void cache(ResourceDataRequest request, ResourceDataResult result);
 
-    protected AbstractCacheFilter(ResourceCacheStrategy cacheStrategy) {
-        Assert.notNull(cacheStrategy, "cacheStrategy cannot be null.");
-        this.cacheStrategy = cacheStrategy;
-    }
+    ResourceDataResult readFromCache(ResourceDataRequest request);
+
+
 }

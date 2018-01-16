@@ -52,17 +52,4 @@ public abstract class AbstractInstanceResource<R extends Resource> extends Abstr
             writeLock.unlock();
         }
     }
-
-    /**
-     * Returns {@code true} if the specified data map represents a materialized instance resource data set, {@code
-     * false} otherwise.
-     *
-     * @param props the data properties to test
-     * @return {@code true} if the specified data map represents a materialized instance resource data set, {@code
-     * false} otherwise.
-     */
-    public static boolean isInstanceResource(Map<String, ?> props) {
-        return isMaterialized(props) && !props.containsKey(AbstractCollectionResource.ITEMS_PROPERTY_NAME); //collections have 'items'
-    }
-
 }

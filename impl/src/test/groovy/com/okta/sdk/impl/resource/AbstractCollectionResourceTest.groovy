@@ -32,6 +32,7 @@ class AbstractCollectionResourceTest {
     void testPagedCollection() {
 
         InternalDataStore ds = mock(InternalDataStore)
+        when(ds.getBaseUrl()).thenReturn("https://example.com/")
 
         def page1 = createTestPage(0, 200, "https://example.com/resource?nextPage=1")
         def page2 = createTestPage(200, 200, "https://example.com/resource?nextPage=2")
@@ -52,6 +53,7 @@ class AbstractCollectionResourceTest {
     void testSinglePagedCollection() {
 
         InternalDataStore ds = mock(InternalDataStore)
+        when(ds.getBaseUrl()).thenReturn("https://example.com/")
 
         def page1 = createTestPage(0, 13, null)
 
@@ -65,6 +67,7 @@ class AbstractCollectionResourceTest {
     void testEmptyLastPagedCollection() {
 
         InternalDataStore ds = mock(InternalDataStore)
+        when(ds.getBaseUrl()).thenReturn("https://example.com/")
 
         def page1 = createTestPage(0, 200, "https://example.com/resource?nextPage=1")
         def page2 = createTestPage(200, 0, null)

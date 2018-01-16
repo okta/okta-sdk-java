@@ -27,9 +27,13 @@ public interface ResourceMessage {
 
     CanonicalUri getUri();
 
+    CanonicalUri getParentUri();
+
     Map<String,Object> getData();
 
     Class<? extends Resource> getResourceClass();
+
+    Class<? extends Resource> getParentResourceClass();
 
     HttpHeaders getHttpHeaders();
 }

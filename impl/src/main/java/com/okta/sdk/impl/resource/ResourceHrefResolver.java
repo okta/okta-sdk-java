@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Stormpath, Inc.
+ * Copyright 2017 Okta
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.impl.ds.cache;
+package com.okta.sdk.impl.resource;
 
-import com.okta.sdk.impl.ds.Filter;
-import com.okta.sdk.lang.Assert;
+import com.okta.sdk.resource.Resource;
 
-abstract class AbstractCacheFilter implements Filter {
+import java.util.Map;
 
-    protected final ResourceCacheStrategy cacheStrategy;
+public interface ResourceHrefResolver {
 
-    protected AbstractCacheFilter(ResourceCacheStrategy cacheStrategy) {
-        Assert.notNull(cacheStrategy, "cacheStrategy cannot be null.");
-        this.cacheStrategy = cacheStrategy;
-    }
+    <R extends Resource> String resolveHref(Map<String, ?> properties, Class<R> clazz, String baseUrl);
 }

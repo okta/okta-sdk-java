@@ -23,7 +23,9 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.cache.DisabledCacheManager;
 import com.okta.sdk.impl.ds.cache.CacheResolver;
 import com.okta.sdk.impl.ds.cache.DefaultCacheResolver;
+import com.okta.sdk.impl.ds.cache.DefaultResourceCacheStrategy;
 import com.okta.sdk.impl.ds.cache.ReadCacheFilter;
+import com.okta.sdk.impl.ds.cache.ResourceCacheStrategy;
 import com.okta.sdk.impl.ds.cache.WriteCacheFilter;
 import com.okta.sdk.impl.error.DefaultError;
 import com.okta.sdk.impl.http.CanonicalUri;
@@ -38,6 +40,7 @@ import com.okta.sdk.impl.http.support.DefaultCanonicalUri;
 import com.okta.sdk.impl.http.support.DefaultRequest;
 import com.okta.sdk.impl.http.support.UserAgent;
 import com.okta.sdk.impl.resource.AbstractResource;
+import com.okta.sdk.impl.resource.DefaultResourceHrefResolver;
 import com.okta.sdk.impl.resource.ReferenceFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
@@ -75,8 +78,6 @@ public class DefaultDataStore implements InternalDataStore {
 
     public static final String HREF_REQD_MSG = "'save' may only be called on objects that have already been " +
                                                "persisted and have an existing 'href' attribute.";
-
-    private static final boolean COLLECTION_CACHING_ENABLED = false; //EXPERIMENTAL - set to true only while developing.
 
     private final RequestExecutor requestExecutor;
     private final ResourceFactory resourceFactory;
@@ -125,8 +126,9 @@ public class DefaultDataStore implements InternalDataStore {
 //        }
 
         if (isCachingEnabled()) {
-            this.filters.add(new ReadCacheFilter(this.cacheResolver, COLLECTION_CACHING_ENABLED));
-            this.filters.add(new WriteCacheFilter(this.baseUrlResolver, this.cacheResolver, COLLECTION_CACHING_ENABLED, referenceFactory));
+            ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(baseUrlResolver, new DefaultResourceHrefResolver(), cacheResolver);
+            this.filters.add(new ReadCacheFilter(cacheStrategy));
+            this.filters.add(new WriteCacheFilter(cacheStrategy));
         }
 
         this.filters.add(new ProviderAccountResultFilter());
@@ -250,39 +252,39 @@ public class DefaultDataStore implements InternalDataStore {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Resource> T create(String parentHref, T resource) {
-        return (T)save(parentHref, resource, null, resource.getClass(), null, true);
+    public <T extends Resource> T create(String parentHref, T resource, T parentResource) {
+        return (T)save(parentHref, resource, parentResource, null, resource.getClass(), null, true);
     }
 
     @Override
-    public <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType) {
-        return save(parentHref, resource, null, returnType, null, true);
+    public <T extends Resource, R extends Resource> R create(String parentHref, T resource, T parentResource, Class<? extends R> returnType) {
+        return save(parentHref, resource, parentResource, null, returnType, null, true);
     }
 
-    @Override
-    public <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType, HttpHeaders requestHeaders) {
-        return save(parentHref, resource, requestHeaders, returnType, null, true);
-    }
+//    @Override
+//    public <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType, HttpHeaders requestHeaders) {
+//        return save(parentHref, resource, null, requestHeaders, returnType, null, true);
+//    }
 
     @Override
     public <T extends Resource> void save(T resource) {
-        save(resource.getResourceHref(), resource);
+        save(resource.getResourceHref(), resource, null);
     }
 
     @Override
-    public <T extends Resource> void save(String href, T resource) {
+    public <T extends Resource> void save(String href, T resource, T parentResource) {
         Assert.hasText(href, HREF_REQD_MSG);
-        save(href, resource, null, resource.getClass(), null, false);
-    }
-
-    @Override
-    public <T extends Resource, R extends Resource> R save(T resource, Class<? extends R> returnType) {
-        Assert.hasText(resource.getResourceHref(), HREF_REQD_MSG);
-        return save(resource.getResourceHref(), resource, null, returnType, null, false);
+        save(href, resource, parentResource, null, resource.getResourceClass(), null, false);
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Resource, R extends Resource> R save(String href, final T resource, HttpHeaders requestHeaders, final Class<? extends R> returnType, final QueryString qs, final boolean create) {
+    private <T extends Resource, R extends Resource> R save(String href,
+                                                            final T resource,
+                                                            final T parentResource,
+                                                            HttpHeaders requestHeaders,
+                                                            final Class<? extends R> returnType,
+                                                            final QueryString qs,
+                                                            final boolean create) {
         Assert.hasText(href, "href argument cannot be null or empty.");
         Assert.notNull(resource, "resource argument cannot be null.");
         Assert.notNull(returnType, "returnType class cannot be null.");
@@ -342,14 +344,18 @@ public class DefaultDataStore implements InternalDataStore {
         });
 
         ResourceAction action = create ? ResourceAction.CREATE : ResourceAction.UPDATE;
-        ResourceDataRequest request = new DefaultResourceDataRequest(action, uri, abstractResource.getClass(), props, requestHeaders);
+
+        CanonicalUri parentUri = (parentResource != null) ? canonicalize(parentResource.getResourceHref(), null) : null;
+        Class<? extends Resource> parentResourceClass = (parentResource != null) ? parentResource.getResourceClass() : null;
+
+        ResourceDataRequest request = new DefaultResourceDataRequest(action, uri, parentUri, abstractResource.getResourceClass(), parentResourceClass, props, requestHeaders);
 
         ResourceDataResult result = chain.filter(request);
 
         Map<String,Object> data = result.getData();
 
         //ensure the caller's argument is updated with what is returned from the server if the types are the same:
-        if (returnType.equals(abstractResource.getClass())) {
+        if (returnType.isAssignableFrom(abstractResource.getClass())) {
             abstractResource.setInternalProperties(data);
         }
 
@@ -367,13 +373,12 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public <T extends Resource> void delete(T resource) {
-        doDelete(resource, null);
+        doDelete(resource.getResourceHref(), resource, null);
     }
 
     @Override
-    public <T extends Resource> void deleteResourceProperty(T resource, String propertyName) {
-        Assert.hasText(propertyName, "propertyName cannot be null or empty.");
-        doDelete(resource, propertyName);
+    public <T extends Resource> void delete(String href, T resource) {
+        doDelete(href, resource, null);
     }
 
     private void doDelete(String resourceHref, Class resourceClass, final String possiblyNullPropertyName) {
@@ -408,12 +413,15 @@ public class DefaultDataStore implements InternalDataStore {
         chain.filter(request);
     }
 
-    private <T extends Resource> void doDelete(T resource, final String possiblyNullPropertyName) {
+    private <T extends Resource> void doDelete(String href, T resource, final String possiblyNullPropertyName) {
 
         Assert.notNull(resource, "resource argument cannot be null.");
         Assert.isInstanceOf(AbstractResource.class, resource, "Resource argument must be an AbstractResource.");
 
-        doDelete(resource.getResourceHref(), resource.getClass(), possiblyNullPropertyName);
+        if (href == null) {
+            href = resource.getResourceHref();
+        }
+        doDelete(href, resource.getResourceClass(), possiblyNullPropertyName);
     }
 
     /* =====================================================================

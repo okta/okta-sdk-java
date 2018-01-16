@@ -18,6 +18,7 @@ package com.okta.sdk.tests.it.util
 import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
+import com.okta.sdk.impl.cache.DisabledCacheManager
 import com.okta.sdk.lang.Strings
 import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
@@ -68,10 +69,13 @@ trait ClientProvider implements IHookable {
             return Clients.builder()
                     .setOrgUrl(testServerBaseUrl + scenarioId)
                     .setClientCredentials(new TokenClientCredentials("00ICU812"))
+                    .setCacheManager(new DisabledCacheManager())
                     .build()
         }
 
-        Client client = Clients.builder().build()
+        Client client = Clients.builder()
+//                .setCacheManager(new DisabledCacheManager())
+                .build()
         client.dataStore.requestExecutor.numRetries = 10
         return client
     }
@@ -173,9 +177,7 @@ trait ClientProvider implements IHookable {
                     deletable.delete()
                 }
                 catch (Exception e) {
-                    log.debug("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run:")
-                    log.debug("\t" + e.getMessage())
-                    log.trace("\tCause:", e)
+                    log.trace("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run:", e)
                 }
             }
         }

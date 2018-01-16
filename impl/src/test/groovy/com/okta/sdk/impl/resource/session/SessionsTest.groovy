@@ -78,7 +78,7 @@ class SessionsTest {
                 Map idpData = data.get("idp")
                 def sessionIdp = new DefaultSessionIdentityProvider(dataStore, idpData)
                 when(dataStore.instantiate(SessionIdentityProvider, idpData)).thenReturn(sessionIdp)
-                when(dataStore.create((String) eq("/api/v1/sessions"), any(), (Class) eq(Session.class))).thenReturn(session)
+                when(dataStore.create((String) eq("/api/v1/sessions"), any(), isNull(), (Class) eq(Session.class))).thenReturn(session)
                 return dataStore
             }
         }
@@ -88,7 +88,7 @@ class SessionsTest {
         assertSession(createdSession)
 
         createdSession.delete()
-        verify(client.dataStore).delete("/api/v1/sessions/${MOCK_SESSION_ID}")
+        verify(client.dataStore).delete("/api/v1/sessions/${MOCK_SESSION_ID}", createdSession)
     }
 
     @Test
@@ -116,7 +116,7 @@ class SessionsTest {
                 def sessionIdp = new DefaultSessionIdentityProvider(dataStore, idpData)
                 when(dataStore.instantiate(SessionIdentityProvider, idpData)).thenReturn(sessionIdp)
                 when(dataStore.getResource("/api/v1/sessions/${MOCK_SESSION_ID}", Session)).thenReturn(session)
-                when(dataStore.create((String) eq("/api/v1/sessions/${MOCK_SESSION_ID}/lifecycle/refresh".toString()), any(), (Class) eq(Session.class))).thenReturn(session)
+                when(dataStore.create((String) eq("/api/v1/sessions/${MOCK_SESSION_ID}/lifecycle/refresh".toString()), any(), eq(session), (Class) eq(Session.class))).thenReturn(session)
                 return dataStore
             }
         }
@@ -125,7 +125,7 @@ class SessionsTest {
         assertSession(session)
 
         assertThat session.refresh(), notNullValue()
-        verify(client.dataStore).create((String) eq("/api/v1/sessions/${MOCK_SESSION_ID}/lifecycle/refresh".toString()), any(), (Class) eq(Session.class))
+        verify(client.dataStore).create((String) eq("/api/v1/sessions/${MOCK_SESSION_ID}/lifecycle/refresh".toString()), any(), eq(session), (Class) eq(Session.class))
     }
 
     @Test
