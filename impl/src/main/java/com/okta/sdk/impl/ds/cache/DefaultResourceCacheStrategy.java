@@ -86,12 +86,9 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
             data = getCachedValue(cacheKey, clazz);
         }
 
+        // return if no data
         if (Collections.isEmpty(data)) {
             return null;
-        }
-
-        if (logger.isTraceEnabled()) {
-            logger.trace("Executing cache request: action: '{}', uri: {}", request.getAction(), request.getUri().getAbsolutePath());
         }
 
         return new DefaultResourceDataResult(request.getAction(), uri, clazz, coerce(data));
@@ -155,6 +152,27 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
     }
 
     /**
+     * Quick fix for <a href="https://github.com/stormpath/stormpath-sdk-java/issues/17">Issue #17</a>.
+     *
+     */
+    private boolean isDirectlyCacheable(Class<? extends Resource> clazz, Map<String, ?> data) {
+
+        return isMaterialized(data, clazz) &&
+               // do NOT cache collections
+               !CollectionResource.class.isAssignableFrom(clazz);
+    }
+
+    @SuppressWarnings("PMD.UselessParentheses")
+    private boolean isCacheRetrievalEnabled(ResourceDataRequest request) {
+        return
+            //create, update and delete all should bypass cache reads:
+            request.getAction() == ResourceAction.READ &&
+
+            //Collection caching is disabled
+            !CollectionResource.class.isAssignableFrom(request.getResourceClass());
+    }
+
+    /**
      * Returns {@code true} if the specified data map represents a materialized resource data set, {@code false}
      * otherwise.
      *
@@ -168,18 +186,9 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
         return hrefResolver.resolveHref(props, clazz, baseUrlResolver.getBaseUrl()) != null;
     }
 
-
-    /**
-     * Quick fix for <a href="https://github.com/stormpath/stormpath-sdk-java/issues/17">Issue #17</a>.
-     *
-     */
-    private boolean isDirectlyCacheable(Class<? extends Resource> clazz, Map<String, ?> data) {
-
-        return isMaterialized(data, clazz) &&
-               // do NOT cache collections
-               !CollectionResource.class.isAssignableFrom(clazz);
+    private <T> Cache<String, Map<String, ?>> getCache(Class<T> clazz) {
+        return this.cacheResolver.getCache(clazz);
     }
-
 
     private Map<String, ?> getCachedValue(String href, Class<? extends Resource> clazz) {
         Assert.hasText(href, "href argument cannot be null or empty.");
@@ -191,7 +200,6 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
             logger.debug("Cache hit for key      '{}', class: '{}'", href, clazz);
         }
         return value;
-
     }
 
     private String getCacheKey(ResourceDataRequest request) {
@@ -206,22 +214,8 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
         return href;
     }
 
-    private <T> Cache<String, Map<String, ?>> getCache(Class<T> clazz) {
-        return this.cacheResolver.getCache(clazz);
-    }
-
     @SuppressWarnings("unchecked")
     private static Map<String, Object> coerce(Map<String, ?> data) {
         return (Map<String, Object>) data;
-    }
-
-    @SuppressWarnings("PMD.UselessParentheses")
-    private boolean isCacheRetrievalEnabled(ResourceDataRequest request) {
-        return
-            //create, update and delete all should bypass cache reads:
-            request.getAction() == ResourceAction.READ &&
-
-            //Collection caching is disabled
-            !CollectionResource.class.isAssignableFrom(request.getResourceClass());
     }
 }
