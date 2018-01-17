@@ -30,10 +30,7 @@ public class DefaultResourceMessage implements ResourceMessage {
     private final Map<String,Object> data;
     private HttpHeaders httpHeaders;
 
-    private final CanonicalUri parentUri;
-    private final Class<? extends Resource> parentResourceClass;
-
-    public DefaultResourceMessage(ResourceAction action, CanonicalUri uri, CanonicalUri parentUri, Class<? extends Resource> resourceClass, Class<? extends Resource> parentResourceClass, Map<String,Object> data) {
+    public DefaultResourceMessage(ResourceAction action, CanonicalUri uri, Class<? extends Resource> resourceClass, Map<String,Object> data) {
         Assert.notNull(action, "resource action cannot be null.");
         Assert.notNull(uri, "uri cannot be null.");
         Assert.notNull(resourceClass, "resourceClass cannot be null.");
@@ -42,17 +39,10 @@ public class DefaultResourceMessage implements ResourceMessage {
         this.uri = uri;
         this.resourceClass = resourceClass;
         this.data = data;
-
-        this.parentUri = parentUri;
-        this.parentResourceClass = parentResourceClass;
     }
 
-    public DefaultResourceMessage(ResourceAction action, CanonicalUri uri, Class<? extends Resource> resourceClass, Map<String,Object> data) {
-        this(action, uri, null, resourceClass, null, data);
-    }
-
-    public DefaultResourceMessage(ResourceAction action, CanonicalUri uri, CanonicalUri parentUri, Class<? extends Resource> resourceClass, Class<? extends Resource> parentResourceClass, Map<String,Object> data, HttpHeaders customHeaders) {
-        this(action, uri, parentUri, resourceClass, parentResourceClass, data);
+    public DefaultResourceMessage(ResourceAction action, CanonicalUri uri, Class<? extends Resource> resourceClass, Map<String,Object> data, HttpHeaders customHeaders) {
+        this(action, uri, resourceClass, data);
         this.httpHeaders = customHeaders;
     }
 
@@ -78,15 +68,5 @@ public class DefaultResourceMessage implements ResourceMessage {
 
     public HttpHeaders getHttpHeaders() {
         return httpHeaders != null ? httpHeaders : new HttpHeaders();
-    }
-
-    @Override
-    public CanonicalUri getParentUri() {
-        return parentUri;
-    }
-
-    @Override
-    public Class<? extends Resource> getParentResourceClass() {
-        return parentResourceClass;
     }
 }

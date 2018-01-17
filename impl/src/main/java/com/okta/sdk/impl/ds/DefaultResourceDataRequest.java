@@ -21,14 +21,28 @@ import com.okta.sdk.resource.Resource;
 
 import java.util.Map;
 
-//todo - remove this - DefaultResourceMessage currently contains everything necessary
 public class DefaultResourceDataRequest extends DefaultResourceMessage implements ResourceDataRequest {
 
+    private final CanonicalUri parentUri;
+    private final Class<? extends Resource> parentResourceClass;
+
     public DefaultResourceDataRequest(ResourceAction action, CanonicalUri uri, Class<? extends Resource> resourceClass, Map<String,Object> data) {
-        super(action, uri, null, resourceClass, null, data);
+        this(action, uri, null, resourceClass, null, data, null);
     }
 
     public DefaultResourceDataRequest(ResourceAction action, CanonicalUri uri, CanonicalUri parrentUri, Class<? extends Resource> resourceClass, Class<? extends Resource> parentResourceClass, Map<String,Object> data, HttpHeaders customHeaders) {
-        super(action, uri, parrentUri, resourceClass, parentResourceClass, data, customHeaders);
+        super(action, uri, resourceClass, data, customHeaders);
+        this.parentUri = parrentUri;
+        this.parentResourceClass = parentResourceClass;
+    }
+
+    @Override
+    public CanonicalUri getParentUri() {
+        return parentUri;
+    }
+
+    @Override
+    public Class<? extends Resource> getParentResourceClass() {
+        return parentResourceClass;
     }
 }

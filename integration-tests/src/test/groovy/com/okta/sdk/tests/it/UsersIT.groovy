@@ -73,6 +73,7 @@ class UsersIT implements CrudTestSupport {
                     customIntegerArray: [1, 2, 3]
                 ])
                 .buildAndCreate(getClient())
+        registerForCleanup(user)
 
         // check the values after create
         assertThat(user.profile.getString("firstName"), equalTo("Joe"))
@@ -122,7 +123,7 @@ class UsersIT implements CrudTestSupport {
     @Override
     def create(Client client) {
         def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
-        return UserBuilder.instance()
+        User user = UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName("Joe")
                 .setLastName("Code")
@@ -130,6 +131,8 @@ class UsersIT implements CrudTestSupport {
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
                 .buildAndCreate(client)
+        registerForCleanup(user)
+        return user
     }
 
     @Override

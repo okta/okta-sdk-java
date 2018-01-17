@@ -22,6 +22,7 @@ import com.okta.sdk.impl.cache.DisabledCacheManager
 import com.okta.sdk.lang.Strings
 import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
+import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.group.GroupList
 import com.okta.sdk.resource.group.rule.GroupRule
 import com.okta.sdk.resource.group.rule.GroupRuleList
@@ -172,6 +173,8 @@ trait ClientProvider implements IHookable {
                     if (deletable instanceof User) {
                         deletable.deactivate()
                     } else if (deletable instanceof GroupRule) {
+                        deletable.deactivate()
+                    } else if (deletable instanceof Application) {
                         deletable.deactivate()
                     }
                     deletable.delete()

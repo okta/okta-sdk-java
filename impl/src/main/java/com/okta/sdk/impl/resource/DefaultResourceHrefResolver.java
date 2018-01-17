@@ -24,6 +24,20 @@ import com.okta.sdk.resource.group.rule.GroupRule;
 
 import java.util.Map;
 
+/**
+ * The default HREF resolver return a HAL self link if available ({@code _links.self.href}). If the {@code self} link is
+ * missing, it will be statically built for known objects (or null will be returned).
+ * <p>
+ * Known Objects:
+ * <ul>
+ *     <li>AppUser</li>
+ *     <li>Application</li>
+ *     <li>Group</li>
+ *     <li>GroupRule</li>
+ * </ul>
+ *
+ * @since 0.11.0
+ */
 public class DefaultResourceHrefResolver implements ResourceHrefResolver {
 
     @Override

@@ -34,6 +34,21 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+/**
+ * This default implementation of {@link ResourceCacheStrategy} manages reading and writing to/from a Cache. This
+ * implementation also invalidates an object's cache when {@code DELETE} and other mutating operations are called.
+ * <p>
+ * Key Points:
+ * <ul>
+ *     <li>Collection Resources are NOT cached</li>
+ *     <li>Any individual Resource with a {@code _link.self.href} is cached</li>
+ *     <li>The {@link ResourceHrefResolver} will be consulted if a Resource does NOT have a @{code _link.self.href} property</li>
+ *     <li>A call to the {@code cache} method with a {@code DELETE} action will also remove that object from the cache</li>
+ *     <li>Any @{code CREATE} or {@code UPDATE} call to the {@code cache} method, that has a _parent_ set in the {@link ResourceDataRequest} will also remove the parent from the cache</li>
+ * </ul>
+ *
+ * @since 0.11.0
+ */
 public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
 
     private final Logger logger = LoggerFactory.getLogger(DefaultResourceCacheStrategy.class);

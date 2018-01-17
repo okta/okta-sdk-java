@@ -15,7 +15,9 @@
  */
 package com.okta.sdk.impl.ds;
 
+import com.okta.sdk.impl.http.CanonicalUri;
 import com.okta.sdk.impl.http.HttpHeaders;
+import com.okta.sdk.resource.Resource;
 
 /**
  * This class represents a request to obtain a resource and its related data.
@@ -30,4 +32,8 @@ public interface ResourceDataRequest extends ResourceMessage {
      *
      */
     HttpHeaders getHttpHeaders();
+
+    CanonicalUri getParentUri();
+
+    Class<? extends Resource> getParentResourceClass();
 }

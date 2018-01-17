@@ -19,6 +19,12 @@ import com.okta.sdk.resource.Resource;
 
 import java.util.Map;
 
+/**
+ * Resolves an HREF for a given {@link Resource} class and data. This class allows for a plugable way to resolve a
+ * Resource's HREF. Okta uses HAL style links, but other implementations could be used to resolve or augment the HREF.
+ *
+ * @since 0.11.0
+ */
 public interface ResourceHrefResolver {
 
     <R extends Resource> String resolveHref(Map<String, ?> properties, Class<R> clazz, String baseUrl);

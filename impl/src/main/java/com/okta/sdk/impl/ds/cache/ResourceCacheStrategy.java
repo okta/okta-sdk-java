@@ -18,11 +18,26 @@ package com.okta.sdk.impl.ds.cache;
 import com.okta.sdk.impl.ds.ResourceDataRequest;
 import com.okta.sdk.impl.ds.ResourceDataResult;
 
+/**
+ * Defines the strategy used for reading/adding/updating/removing objects from the cache based on a
+ * {@link ResourceDataRequest} and {@link ResourceDataResult}.
+ *
+ * @since 0.11.0
+ */
 public interface ResourceCacheStrategy {
 
+    /**
+     * Cache the {@code result} data that was returned based on the {@code request}.
+     * @param request the data request
+     * @param result the result to be cached
+     */
     void cache(ResourceDataRequest request, ResourceDataResult result);
 
+    /**
+     * Attempts to retrieve data from the cache based on the {@code request}. If the object is NOT found in the cache,
+     * {@code null} is returned.
+     * @param request the source request used to query the cache.
+     * @return A result containing data from cache, or null
+     */
     ResourceDataResult readFromCache(ResourceDataRequest request);
-
-
 }

@@ -261,11 +261,6 @@ public class DefaultDataStore implements InternalDataStore {
         return save(parentHref, resource, parentResource, null, returnType, null, true);
     }
 
-//    @Override
-//    public <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType, HttpHeaders requestHeaders) {
-//        return save(parentHref, resource, null, requestHeaders, returnType, null, true);
-//    }
-
     @Override
     public <T extends Resource> void save(T resource) {
         save(resource.getResourceHref(), resource, null);
@@ -418,10 +413,7 @@ public class DefaultDataStore implements InternalDataStore {
         Assert.notNull(resource, "resource argument cannot be null.");
         Assert.isInstanceOf(AbstractResource.class, resource, "Resource argument must be an AbstractResource.");
 
-        if (href == null) {
-            href = resource.getResourceHref();
-        }
-        doDelete(href, resource.getResourceClass(), possiblyNullPropertyName);
+        doDelete(href != null ? href : resource.getResourceHref(), resource.getResourceClass(), possiblyNullPropertyName);
     }
 
     /* =====================================================================

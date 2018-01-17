@@ -17,11 +17,9 @@ package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
-import com.okta.sdk.resource.Deletable
+import com.okta.sdk.resource.ResourceException
+import com.okta.sdk.resource.group.rule.GroupRule
 import com.okta.sdk.resource.user.UserStatus
-
-import java.util.stream.Stream
-import java.util.stream.StreamSupport
 
 class OktaOrgCleaner {
 
@@ -32,7 +30,7 @@ class OktaOrgCleaner {
         Client client = Clients.builder().build()
 
         println("Deleting Active Users:")
-        toStream(client.listUsers().iterator())
+        client.listUsers().stream()
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
             .forEach {
                 println("\t ${it.getProfile().getEmail()}")
@@ -40,14 +38,14 @@ class OktaOrgCleaner {
                 it.delete()
             }
 
-        toStream(client.listUsers(null, null, null, "status eq \"${UserStatus.DEPROVISIONED}\"", null).iterator())
+        client.listUsers(null, null, null, "status eq \"${UserStatus.DEPROVISIONED}\"", null).stream()
             .forEach {
                 println("Deleting deactivated user: ${it.getProfile().getEmail()}")
                 it.delete()
             }
 
         println("Deleting Applications:")
-        toStream(client.listApplications().iterator())
+        client.listApplications().stream()
             .filter { it.getLabel().matches(".*-${uuidRegex}.*")}
             .forEach {
                 println("\t ${it.getLabel()}")
@@ -56,7 +54,7 @@ class OktaOrgCleaner {
             }
 
         println("Deleting Groups:")
-        toStream(client.listGroups().iterator())
+        client.listGroups().stream()
                 .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*")}
                 .forEach {
                     println("\t ${it.getProfile().getName()}")
@@ -67,14 +65,13 @@ class OktaOrgCleaner {
         client.listRules().stream()
                 .filter { it.getName().matches("rule\\+${uuidRegex}.*")}
                 .forEach {
-                    println("\t ${it.getName()}")
-                    it.deactivate()
-                    it.delete()
+                    GroupRule rule = it
+                    println("\t ${rule.getName()}")
+                    Util.ignoring(ResourceException) {
+                        rule.deactivate()
+                    }
+                    rule.delete()
                 }
 
-    }
-
-    static Stream<Deletable> toStream(Iterator<Deletable> iterator) {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED),false)
     }
 }

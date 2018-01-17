@@ -15,15 +15,18 @@
  */
 package com.okta.sdk.impl.ds.cache;
 
+import com.okta.sdk.impl.ds.Filter;
 import com.okta.sdk.impl.ds.FilterChain;
 import com.okta.sdk.impl.ds.ResourceDataRequest;
 import com.okta.sdk.impl.ds.ResourceDataResult;
 
 
-public class ReadCacheFilter extends AbstractCacheFilter {
+public class ReadCacheFilter implements Filter {
+
+    private final ResourceCacheStrategy cacheStrategy;
 
     public ReadCacheFilter(ResourceCacheStrategy cacheStrategy) {
-        super(cacheStrategy);
+        this.cacheStrategy = cacheStrategy;
     }
 
     @Override
