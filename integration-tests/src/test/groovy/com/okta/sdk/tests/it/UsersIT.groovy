@@ -297,6 +297,30 @@ class UsersIT implements CrudTestSupport {
     }
 
     @Test
+    @TestResources(users = "john-forgot-password@example.com")
+    void forgotPasswordTest() {
+
+        def password = 'Abcd1234'
+        def firstName = 'John'
+        def lastName = 'Forgot-Password'
+        def email = 'john-forgot-password@example.com'
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password)
+                .setActive(true)
+                .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        ForgotPasswordResponse response = user.forgotPassword(false, null)
+        assertThat response.getResetPasswordUrl(), containsString("/reset_password/")
+    }
+
+    @Test
     @Scenario("user-expire-password")
     @TestResources(users = "john-expire-password@example.com")
     void expirePasswordTest() {

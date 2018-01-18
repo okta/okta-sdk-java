@@ -27,7 +27,12 @@
         {{/vendorExtensions.bodyIsSelf}}
         {{^vendorExtensions.bodyIsSelf}}
             {{#bodyParam}}
+                {{#bodyParam.required}}
             {{bodyParam.paramName}},
+                {{/bodyParam.required}}
+                {{^bodyParam.required}}
+            ({{bodyParam.paramName}} != null) ? {{bodyParam.paramName}} : getDataStore().instantiate(VoidResource.class),
+                {{/bodyParam.required}}
             {{/bodyParam}}
         {{/vendorExtensions.bodyIsSelf}}
         {{^bodyParam}}
