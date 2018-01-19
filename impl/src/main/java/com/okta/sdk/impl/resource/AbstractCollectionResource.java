@@ -68,19 +68,6 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
             this.queryParams = Collections.emptyMap();
         }
     }
-//
-//    /**
-//     * Returns {@code true} if the specified data map represents a materialized collection resource data set, {@code
-//     * false} otherwise.
-//     *
-//     * @param props the data properties to test
-//     * @return {@code true} if the specified data map represents a materialized collection resource data set, {@code
-//     * false} otherwise.
-//     */
-//    public static boolean isCollectionResource(Map<String,?> props) {
-//        return isMaterialized(props)
-//                && props.get(ITEMS_PROPERTY_NAME) instanceof Iterable;
-//    }
 
     private String getNextPageHref() {
         return nextPageHref;

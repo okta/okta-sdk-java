@@ -20,58 +20,61 @@ import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.rule.GroupRule
 import com.okta.sdk.resource.user.UserStatus
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class OktaOrgCleaner {
 
+    private final static Logger log = LoggerFactory.getLogger(OktaOrgCleaner)
+    
     static void main(String[] args) {
 
         String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 
         Client client = Clients.builder().build()
 
-        println("Deleting Active Users:")
+        log.info("Deleting Active Users:")
         client.listUsers().stream()
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
             .forEach {
-                println("\t ${it.getProfile().getEmail()}")
+                log.info("\t ${it.getProfile().getEmail()}")
                 it.deactivate()
                 it.delete()
             }
 
         client.listUsers(null, null, null, "status eq \"${UserStatus.DEPROVISIONED}\"", null).stream()
             .forEach {
-                println("Deleting deactivated user: ${it.getProfile().getEmail()}")
+                log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
                 it.delete()
             }
 
-        println("Deleting Applications:")
+        log.info("Deleting Applications:")
         client.listApplications().stream()
             .filter { it.getLabel().matches(".*-${uuidRegex}.*")}
             .forEach {
-                println("\t ${it.getLabel()}")
+                log.info("\t ${it.getLabel()}")
                 it.deactivate()
                 it.delete()
             }
 
-        println("Deleting Groups:")
+        log.info("Deleting Groups:")
         client.listGroups().stream()
                 .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*")}
                 .forEach {
-                    println("\t ${it.getProfile().getName()}")
+                    log.info("\t ${it.getProfile().getName()}")
                     it.delete()
                 }
 
-        println("Deleting Group Rules:")
+        log.info("Deleting Group Rules:")
         client.listRules().stream()
                 .filter { it.getName().matches("rule\\+${uuidRegex}.*")}
                 .forEach {
                     GroupRule rule = it
-                    println("\t ${rule.getName()}")
+                    log.info("\t ${rule.getName()}")
                     Util.ignoring(ResourceException) {
                         rule.deactivate()
                     }
                     rule.delete()
                 }
-
     }
 }

@@ -149,9 +149,7 @@ class DefaultResourceCacheStrategyTest {
         verifyNoMoreInteractions(cacheManager)
     }
 
-
     def createCacheableResourceData(String href) {
-
         return [
             booleanPropKey: true,
             enumPropKey: StubEnum.VALUE_1,
@@ -166,7 +164,6 @@ class DefaultResourceCacheStrategyTest {
     }
 
     def createNonResourceData() {
-
         return [
             booleanPropKey: true,
             enumPropKey: StubEnum.VALUE_1,

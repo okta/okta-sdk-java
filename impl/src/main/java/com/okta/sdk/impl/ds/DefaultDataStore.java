@@ -340,10 +340,14 @@ public class DefaultDataStore implements InternalDataStore {
 
         ResourceAction action = create ? ResourceAction.CREATE : ResourceAction.UPDATE;
 
-        CanonicalUri parentUri = (parentResource != null) ? canonicalize(parentResource.getResourceHref(), null) : null;
-        Class<? extends Resource> parentResourceClass = (parentResource != null) ? parentResource.getResourceClass() : null;
-
-        ResourceDataRequest request = new DefaultResourceDataRequest(action, uri, parentUri, abstractResource.getResourceClass(), parentResourceClass, props, requestHeaders);
+        ResourceDataRequest request = new DefaultResourceDataRequest(
+                action,
+                uri,
+                canonicalizeParent(parentResource),
+                abstractResource.getResourceClass(),
+                resolveParentClass(parentResource),
+                props,
+                requestHeaders);
 
         ResourceDataResult result = chain.filter(request);
 
@@ -500,9 +504,24 @@ public class DefaultDataStore implements InternalDataStore {
         }
     }
 
+    private Class<? extends Resource> resolveParentClass(Resource parentResource) {
+        if (parentResource != null) {
+            return parentResource.getResourceClass();
+        }
+        return null;
+    }
+
     protected CanonicalUri canonicalize(String href, Map<String,?> queryParams) {
         href = ensureFullyQualified(href);
         return DefaultCanonicalUri.create(href, queryParams);
+    }
+
+    protected CanonicalUri canonicalizeParent(Resource parentResource) {
+        if (parentResource != null && parentResource.getResourceHref() != null) {
+            String href = ensureFullyQualified(parentResource.getResourceHref());
+            return DefaultCanonicalUri.create(href, null);
+        }
+        return null;
     }
 
     protected String ensureFullyQualified(String href) {

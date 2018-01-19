@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Okta
+ * Copyright 2018 Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- * This default implementation of {@link ResourceCacheStrategy} manages reading and writing to/from a Cache. This
+ * This default implementation of {@link ResourceCacheStrategy} manages reading and writing to/from a {@link Cache}. This
  * implementation also invalidates an object's cache when {@code DELETE} and other mutating operations are called.
  * <p>
  * Key Points:
@@ -95,7 +95,7 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
 
         Map<String, ?> data = null;
 
-        //Prevent an expanded request to obtain a non-expanded resource from the cache
+        // Prevent an expanded request to obtain a non-expanded resource from the cache
         String cacheKey = getCacheKey(request);
         if (! (request.getUri().hasQuery() && request.getUri().getQuery().containsKey("expand") ^ (cacheKey != null && cacheKey.contains("expand=")))) {
             data = getCachedValue(cacheKey, clazz);
@@ -117,20 +117,16 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
 
         if (isDirectlyCacheable(clazz, data)) {
             Assert.notNull(href, "Resource data must contain an 'href' attribute.");
-            Assert.isTrue(data.size() > 1, "Resource data must be materialized to be cached " +
-                    "(need more than just an 'href' attribute)."); // TODO: this likely is not valid for Okta
+            Assert.isTrue(data.size() > 0, "Resource data must be materialized to be cached " +
+                    "(need more at least one attribute).");
         }
 
-        //create a map to reflect the resource's canonical representation - this is what will be cached:
+        // create a map to reflect the resource's canonical representation - this is what will be cached:
         Map<String, Object> cacheValue = cacheMapInitializer.initialize(clazz, data, uri.getQuery());
 
-        for (Map.Entry<String, ?> entry : data.entrySet()) {
-
-            String name = entry.getKey();
-            Object value = entry.getValue();
-
-            cacheValue.put(name, value);
-        }
+        data.entrySet().forEach(entry ->
+            cacheValue.put(entry.getKey(), entry.getValue())
+        );
 
         if (isDirectlyCacheable(clazz, cacheValue)) {
             Cache cache = getCache(clazz);
@@ -156,7 +152,7 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
 
         Class<? extends Resource> clazz = result.getResourceClass();
 
-        //@since 0.5.0
+        // @since 0.5.0
         boolean materialized = isMaterialized(result.getData(), clazz);
 
         if (!materialized) {
@@ -171,19 +167,17 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
      *
      */
     private boolean isDirectlyCacheable(Class<? extends Resource> clazz, Map<String, ?> data) {
-
         return isMaterialized(data, clazz) &&
                // do NOT cache collections
                !CollectionResource.class.isAssignableFrom(clazz);
     }
 
-    @SuppressWarnings("PMD.UselessParentheses")
     private boolean isCacheRetrievalEnabled(ResourceDataRequest request) {
         return
-            //create, update and delete all should bypass cache reads:
+            // create, update and delete all should bypass cache reads:
             request.getAction() == ResourceAction.READ &&
 
-            //Collection caching is disabled
+            // Collection caching is disabled
             !CollectionResource.class.isAssignableFrom(request.getResourceClass());
     }
 
@@ -218,11 +212,7 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
     }
 
     private String getCacheKey(ResourceDataRequest request) {
-
-        final CanonicalUri uri = request.getUri();
-        final String href = uri.getAbsolutePath();
-
-        return getCacheKey(href);
+        return getCacheKey(request.getUri().getAbsolutePath());
     }
 
     private String getCacheKey(String href) {
