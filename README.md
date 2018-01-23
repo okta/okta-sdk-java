@@ -14,6 +14,10 @@ This version of the Okta Java SDK supports CRUD (Create, Read, Update, Delete) o
 
 # Usage
 
+## Javadocs
+
+You can see this project's Javadocs at https://developer.okta.com/okta-sdk-java/apidocs/. 
+
 ## Dependencies
 
 The only compile time dependency you will need is `okta-sdk-api`.  You will also need to add the implementation dependencies too: `okta-sdk-impl` and `okta-sdk-httpclient`.
