@@ -26,10 +26,9 @@ import com.okta.sdk.impl.ds.ResourceDataRequest
 import com.okta.sdk.impl.ds.ResourceDataResult
 import com.okta.sdk.impl.http.QueryString
 import com.okta.sdk.impl.http.support.DefaultCanonicalUri
-import com.okta.sdk.impl.resource.DefaultResourceHrefResolver
+import com.okta.sdk.impl.resource.HalResourceHrefResolver
 import com.okta.sdk.impl.resource.StubEnum
 import com.okta.sdk.impl.resource.StubResource
-import com.okta.sdk.impl.util.DefaultBaseUrlResolver
 import com.okta.sdk.resource.VoidResource
 import org.testng.annotations.Test
 
@@ -49,13 +48,12 @@ class DefaultResourceCacheStrategyTest {
         String baseUrl = "https://okta.example.com/cache-strategy-test"
         String resourceUrl = "${baseUrl}/cache-me"
 
-        DefaultBaseUrlResolver urlResolver = new DefaultBaseUrlResolver(baseUrl)
         CacheManager cacheManager = new DefaultCacheManager()
         CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
         when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
         CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
 
-        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(urlResolver, new DefaultResourceHrefResolver(), cacheResolver)
+        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
 
         DefaultCanonicalUri canonicalUri = new DefaultCanonicalUri(resourceUrl, QueryString.create(""))
         ResourceDataRequest dataRequest = new DefaultResourceDataRequest(ResourceAction.READ, canonicalUri, StubResource, Collections.emptyMap())
@@ -95,7 +93,6 @@ class DefaultResourceCacheStrategyTest {
         String baseUrl = "https://okta.example.com/cache-strategy-test"
         String resourceUrl = "${baseUrl}/cache-me"
 
-        DefaultBaseUrlResolver urlResolver = new DefaultBaseUrlResolver(baseUrl)
         Cache cache = mock(Cache)
         CacheManager cacheManager = mock(CacheManager)
         when(cacheManager.getCache(StubResource.getName())).thenReturn(cache)
@@ -103,7 +100,7 @@ class DefaultResourceCacheStrategyTest {
         when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
         CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
 
-        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(urlResolver, new DefaultResourceHrefResolver(), cacheResolver)
+        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
 
         DefaultCanonicalUri canonicalUri = new DefaultCanonicalUri(resourceUrl, QueryString.create(""))
         ResourceDataRequest dataRequest = new DefaultResourceDataRequest(ResourceAction.READ, canonicalUri, StubResource, Collections.emptyMap())
@@ -129,13 +126,12 @@ class DefaultResourceCacheStrategyTest {
         String baseUrl = "https://okta.example.com/cache-strategy-test"
         String resourceUrl = "${baseUrl}/cache-me"
 
-        DefaultBaseUrlResolver urlResolver = new DefaultBaseUrlResolver(baseUrl)
         CacheManager cacheManager = mock(CacheManager)
         CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
         when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
         CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
 
-        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(urlResolver, new DefaultResourceHrefResolver(), cacheResolver)
+        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
 
         DefaultCanonicalUri canonicalUri = new DefaultCanonicalUri(resourceUrl, QueryString.create(""))
         ResourceDataRequest dataRequest = new DefaultResourceDataRequest(ResourceAction.READ, canonicalUri, StubResource, Collections.emptyMap())

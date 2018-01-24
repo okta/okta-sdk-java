@@ -24,7 +24,6 @@ import com.okta.sdk.impl.ds.ResourceDataRequest;
 import com.okta.sdk.impl.ds.ResourceDataResult;
 import com.okta.sdk.impl.http.CanonicalUri;
 import com.okta.sdk.impl.resource.ResourceHrefResolver;
-import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Collections;
 import com.okta.sdk.resource.CollectionResource;
@@ -53,13 +52,11 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
 
     private final Logger logger = LoggerFactory.getLogger(DefaultResourceCacheStrategy.class);
 
-    private final BaseUrlResolver baseUrlResolver;
     private final ResourceHrefResolver hrefResolver;
     private final CacheResolver cacheResolver;
     private final CacheMapInitializer cacheMapInitializer = new DefaultCacheMapInitializer();
 
-    public DefaultResourceCacheStrategy(BaseUrlResolver baseUrlResolver, ResourceHrefResolver hrefResolver, CacheResolver cacheResolver) {
-        this.baseUrlResolver = baseUrlResolver;
+    public DefaultResourceCacheStrategy(ResourceHrefResolver hrefResolver, CacheResolver cacheResolver) {
         this.hrefResolver = hrefResolver;
         this.cacheResolver = cacheResolver;
     }
@@ -73,7 +70,7 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
         } else if (isCacheable(result)) {
             cache(result.getResourceClass(), result.getData(), result.getUri());
         } else {
-            if (request.getParentResourceClass() != null) {
+            if (request.getParentUri() != null) {
                 logger.debug("Removing parent cache  '{}'", request.getUri().getAbsolutePath());
                 String key = getCacheKey(request.getParentUri().getAbsolutePath());
                 uncache(key, request.getParentResourceClass());
@@ -113,7 +110,7 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
     private void cache(Class<? extends Resource> clazz, Map<String, ?> data, CanonicalUri uri) {
 
         Assert.notEmpty(data, "Resource data cannot be null or empty.");
-        String href = hrefResolver.resolveHref(data, clazz, baseUrlResolver.getBaseUrl());
+        String href = hrefResolver.resolveHref(data, clazz);
 
         if (isDirectlyCacheable(clazz, data)) {
             Assert.notNull(href, "Resource data must contain an 'href' attribute.");
@@ -192,7 +189,7 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
     private <R extends Resource> boolean isMaterialized(Map<String, ?> props, Class<R> clazz) {
 
         // this check to see if the data map has an self href in it (which is used for the caching key)
-        return hrefResolver.resolveHref(props, clazz, baseUrlResolver.getBaseUrl()) != null;
+        return hrefResolver.resolveHref(props, clazz) != null;
     }
 
     private <T> Cache<String, Map<String, ?>> getCache(Class<T> clazz) {

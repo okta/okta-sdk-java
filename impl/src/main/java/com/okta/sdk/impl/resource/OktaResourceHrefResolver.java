@@ -38,19 +38,20 @@ import java.util.Map;
  *
  * @since 0.11.0
  */
-public class DefaultResourceHrefResolver implements ResourceHrefResolver {
+public class OktaResourceHrefResolver implements ResourceHrefResolver {
+
+    private final ResourceHrefResolver halResourceHrefResolver = new HalResourceHrefResolver();
 
     @Override
-    public <R extends Resource> String resolveHref(Map<String, ?> properties, Class<R> clazz, String baseUrl) {
-        Map<String, ?> links = getMapValue(properties, "_links");
-        Map<String, ?> self = getMapValue(links, "self");
-        if (!Collections.isEmpty(self)) {
-            return (String) self.get("href");
-        }
-        return fixSelfHref(properties, clazz, baseUrl);
+    public <R extends Resource> String resolveHref(Map<String, ?> properties, Class<R> clazz) {
+        String href = halResourceHrefResolver.resolveHref(properties, clazz);
+
+        return href != null
+                ? href
+                : fixSelfHref(properties, clazz);
     }
 
-    private <R extends Resource> String fixSelfHref(Map<String, ?> properties, Class<R> clazz, String baseUrl) {
+    private <R extends Resource> String fixSelfHref(Map<String, ?> properties, Class<R> clazz) {
 
         // the AppUsers object does NOT contain a self link, in this case we need build it based on the 'app' link
         Map<String, ?> links = getMapValue(properties, "_links");
@@ -70,14 +71,12 @@ public class DefaultResourceHrefResolver implements ResourceHrefResolver {
             }
         }
 
-        if (baseUrl != null) {
-            if (Group.class.isAssignableFrom(clazz)) {
-                return baseUrl + "/api/v1/groups/" + properties.get("id");
-            }
+        if (Group.class.isAssignableFrom(clazz)) {
+            return "/api/v1/groups/" + properties.get("id");
+        }
 
-            if (GroupRule.class.isAssignableFrom(clazz)) {
-                return baseUrl + "/api/v1/groups/rules/" + properties.get("id");
-            }
+        if (GroupRule.class.isAssignableFrom(clazz)) {
+            return "/api/v1/groups/rules/" + properties.get("id");
         }
 
         return null;

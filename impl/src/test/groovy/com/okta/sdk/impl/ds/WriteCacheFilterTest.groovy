@@ -24,11 +24,9 @@ import com.okta.sdk.impl.ds.cache.ResourceCacheStrategy
 import com.okta.sdk.impl.ds.cache.WriteCacheFilter
 import com.okta.sdk.impl.http.QueryString
 import com.okta.sdk.impl.http.support.DefaultCanonicalUri
-import com.okta.sdk.impl.resource.DefaultResourceHrefResolver
-import com.okta.sdk.impl.resource.ReferenceFactory
+import com.okta.sdk.impl.resource.HalResourceHrefResolver
 import com.okta.sdk.impl.resource.StubEnum
 import com.okta.sdk.impl.resource.StubResource
-import com.okta.sdk.impl.util.DefaultBaseUrlResolver
 import org.testng.annotations.Test
 
 import static org.mockito.Mockito.*
@@ -43,13 +41,12 @@ class WriteCacheFilterTest {
         String baseUrl = "https://okta.example.com/cache-test"
         String resourceUrl = "${baseUrl}/cache-me"
 
-        DefaultBaseUrlResolver urlResolver = new DefaultBaseUrlResolver(baseUrl)
         CacheManager cacheManager = new DefaultCacheManager()
         CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
         when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
         CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
 
-        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(urlResolver, new DefaultResourceHrefResolver(), cacheResolver)
+        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
         WriteCacheFilter cacheFilter = new WriteCacheFilter(cacheStrategy)
 
         Map<String,Object> payload = [
@@ -83,13 +80,12 @@ class WriteCacheFilterTest {
         String baseUrl = "https://okta.example.com/cache-test"
         String resourceUrl = "${baseUrl}/cache-me"
 
-        DefaultBaseUrlResolver urlResolver = new DefaultBaseUrlResolver(baseUrl)
         CacheManager cacheManager = new DefaultCacheManager()
         CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
         when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
         CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
 
-        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(urlResolver, new DefaultResourceHrefResolver(), cacheResolver)
+        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
         WriteCacheFilter cacheFilter = new WriteCacheFilter(cacheStrategy)
 
         Map<String,Object> initialGetPayload = [
@@ -162,13 +158,12 @@ class WriteCacheFilterTest {
         String baseUrl = "https://okta.example.com/cache-test"
         String resourceUrl = "${baseUrl}/cache-me"
 
-        DefaultBaseUrlResolver urlResolver = new DefaultBaseUrlResolver(baseUrl)
         CacheManager cacheManager = new DefaultCacheManager()
         CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
         when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
         CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
 
-        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(urlResolver, new DefaultResourceHrefResolver(), cacheResolver)
+        ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
         WriteCacheFilter cacheFilter = new WriteCacheFilter(cacheStrategy)
 
         Map<String,Object> initialGetPayload = [

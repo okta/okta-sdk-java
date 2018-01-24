@@ -27,5 +27,5 @@ import java.util.Map;
  */
 public interface ResourceHrefResolver {
 
-    <R extends Resource> String resolveHref(Map<String, ?> properties, Class<R> clazz, String baseUrl);
+    <R extends Resource> String resolveHref(Map<String, ?> properties, Class<R> clazz);
 }

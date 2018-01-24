@@ -41,7 +41,7 @@ import com.okta.sdk.impl.http.support.DefaultRequest;
 import com.okta.sdk.impl.http.support.UserAgent;
 import com.okta.sdk.impl.resource.AbstractInstanceResource;
 import com.okta.sdk.impl.resource.AbstractResource;
-import com.okta.sdk.impl.resource.DefaultResourceHrefResolver;
+import com.okta.sdk.impl.resource.HalResourceHrefResolver;
 import com.okta.sdk.impl.resource.ReferenceFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
@@ -127,7 +127,7 @@ public class DefaultDataStore implements InternalDataStore {
 //        }
 
         if (isCachingEnabled()) {
-            ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(baseUrlResolver, new DefaultResourceHrefResolver(), cacheResolver);
+            ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver);
             this.filters.add(new ReadCacheFilter(cacheStrategy));
             this.filters.add(new WriteCacheFilter(cacheStrategy));
         }

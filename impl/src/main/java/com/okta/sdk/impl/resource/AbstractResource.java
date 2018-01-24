@@ -52,7 +52,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     private String href = null;
     protected volatile boolean dirty;
     private volatile boolean materialized;
-    private final ResourceHrefResolver hrefResolver = new DefaultResourceHrefResolver();
+    private final ResourceHrefResolver hrefResolver;
 
     protected AbstractResource(InternalDataStore dataStore) {
         this(dataStore, null);
@@ -64,6 +64,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         this.dirtyProperties = new LinkedHashMap<>();
         this.deletedPropertyNames = new HashSet<>();
         this.properties = new LinkedHashMap<>();
+        this.hrefResolver = new OktaResourceHrefResolver();
         setInternalProperties(properties);
     }
 
@@ -89,7 +90,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
                 } else {
                     this.properties = properties;
                 }
-                setResourceHref(hrefResolver.resolveHref(properties, getClass(), getBaseUrl()));
+                setResourceHref(hrefResolver.resolveHref(properties, getClass()));
                 // Don't consider this resource materialized if it is only a reference.  A reference is any object that
                 // has only one 'href' property.
 
@@ -103,10 +104,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         } finally {
             writeLock.unlock();
         }
-    }
-
-    private String getBaseUrl() {
-        return dataStore != null ? dataStore.getBaseUrl() : null;
     }
 
     public String getResourceHref() {

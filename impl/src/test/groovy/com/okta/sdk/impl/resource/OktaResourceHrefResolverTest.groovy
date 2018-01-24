@@ -23,16 +23,17 @@ import com.okta.sdk.resource.user.User
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.*
+import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.Matchers.nullValue
 
-class DefaultResourceHrefResolverTest {
+class OktaResourceHrefResolverTest {
 
     final static String BASE_URL = "https://okta.example.com"
 
     @Test
     void missingHrefReturnsNullTest() {
 
-        ResourceHrefResolver resolver = new DefaultResourceHrefResolver()
+        ResourceHrefResolver resolver = new OktaResourceHrefResolver()
 
         Map<String, ?> nullHrefProps = [
             _links: [
@@ -46,9 +47,9 @@ class DefaultResourceHrefResolverTest {
                     foo: "bar"
             ]]]
 
-        assertThat resolver.resolveHref(Collections.emptyMap(), User, BASE_URL), nullValue()
-        assertThat resolver.resolveHref(nullHrefProps, User, BASE_URL), nullValue()
-        assertThat resolver.resolveHref(missingHrefProps, User, BASE_URL), nullValue()
+        assertThat resolver.resolveHref(Collections.emptyMap(), User), nullValue()
+        assertThat resolver.resolveHref(nullHrefProps, User), nullValue()
+        assertThat resolver.resolveHref(missingHrefProps, User), nullValue()
     }
 
     @Test
@@ -61,9 +62,9 @@ class DefaultResourceHrefResolverTest {
                     href: selfHref
             ]]]
 
-        ResourceHrefResolver resolver = new DefaultResourceHrefResolver()
-        assertThat resolver.resolveHref(props, User, BASE_URL), equalTo(selfHref)
-        assertThat resolver.resolveHref(props, null, BASE_URL), equalTo(selfHref) // clazz doesn't matter when self link is set
+        ResourceHrefResolver resolver = new OktaResourceHrefResolver()
+        assertThat resolver.resolveHref(props, User), equalTo(selfHref)
+        assertThat resolver.resolveHref(props, null), equalTo(selfHref) // clazz doesn't matter when self link is set
     }
 
     @Test
@@ -85,9 +86,9 @@ class DefaultResourceHrefResolverTest {
             ]
         ]
 
-        ResourceHrefResolver resolver = new DefaultResourceHrefResolver()
-        assertThat resolver.resolveHref(props, AppUser, BASE_URL), equalTo("https://okta-test.example.com/api/v1/apps/an-app-id/users/this-user-id")
-        assertThat resolver.resolveHref(props, User, BASE_URL), nullValue() // wrong class, so this should return null
+        ResourceHrefResolver resolver = new OktaResourceHrefResolver()
+        assertThat resolver.resolveHref(props, AppUser), equalTo("https://okta-test.example.com/api/v1/apps/an-app-id/users/this-user-id")
+        assertThat resolver.resolveHref(props, User), nullValue() // wrong class, so this should return null
     }
 
     @Test
@@ -123,9 +124,9 @@ class DefaultResourceHrefResolverTest {
             ]
         ]
 
-        ResourceHrefResolver resolver = new DefaultResourceHrefResolver()
-        assertThat resolver.resolveHref(props, Application, BASE_URL), equalTo("https://okta-test.example.com/api/v1/apps/this-app-id")
-        assertThat resolver.resolveHref(props, User, BASE_URL), nullValue() // wrong class, so this should return null
+        ResourceHrefResolver resolver = new OktaResourceHrefResolver()
+        assertThat resolver.resolveHref(props, Application), equalTo("https://okta-test.example.com/api/v1/apps/this-app-id")
+        assertThat resolver.resolveHref(props, User), nullValue() // wrong class, so this should return null
     }
 
     @Test
@@ -156,9 +157,9 @@ class DefaultResourceHrefResolverTest {
             ]
         ]
 
-        ResourceHrefResolver resolver = new DefaultResourceHrefResolver()
-        assertThat resolver.resolveHref(props, Group, BASE_URL), equalTo("${BASE_URL}/api/v1/groups/this-group-id".toString())
-        assertThat resolver.resolveHref(props, User, BASE_URL), nullValue() // wrong class, so this should return null
+        ResourceHrefResolver resolver = new OktaResourceHrefResolver()
+        assertThat resolver.resolveHref(props, Group), equalTo("/api/v1/groups/this-group-id".toString())
+        assertThat resolver.resolveHref(props, User), nullValue() // wrong class, so this should return null
     }
 
     @Test
@@ -169,9 +170,9 @@ class DefaultResourceHrefResolverTest {
             id: groupRuleId
         ]
 
-        ResourceHrefResolver resolver = new DefaultResourceHrefResolver()
-        assertThat resolver.resolveHref(props, GroupRule, BASE_URL), equalTo("${BASE_URL}/api/v1/groups/rules/this-group-rule-id".toString())
-        assertThat resolver.resolveHref(props, User, BASE_URL), nullValue() // wrong class, so this should return null
+        ResourceHrefResolver resolver = new OktaResourceHrefResolver()
+        assertThat resolver.resolveHref(props, GroupRule), equalTo("/api/v1/groups/rules/this-group-rule-id".toString())
+        assertThat resolver.resolveHref(props, User), nullValue() // wrong class, so this should return null
     }
 
 }
