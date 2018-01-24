@@ -39,6 +39,7 @@ import com.okta.sdk.impl.http.Response;
 import com.okta.sdk.impl.http.support.DefaultCanonicalUri;
 import com.okta.sdk.impl.http.support.DefaultRequest;
 import com.okta.sdk.impl.http.support.UserAgent;
+import com.okta.sdk.impl.resource.AbstractInstanceResource;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.DefaultResourceHrefResolver;
 import com.okta.sdk.impl.resource.ReferenceFactory;
@@ -269,7 +270,7 @@ public class DefaultDataStore implements InternalDataStore {
     @Override
     public <T extends Resource> void save(String href, T resource, T parentResource) {
         Assert.hasText(href, HREF_REQD_MSG);
-        save(href, resource, parentResource, null, resource.getResourceClass(), null, false);
+        save(href, resource, parentResource, null, getResourceClass(resource), null, false);
     }
 
     @SuppressWarnings("unchecked")
@@ -344,8 +345,8 @@ public class DefaultDataStore implements InternalDataStore {
                 action,
                 uri,
                 canonicalizeParent(parentResource),
-                abstractResource.getResourceClass(),
-                resolveParentClass(parentResource),
+                returnType,
+                getResourceClass(parentResource),
                 props,
                 requestHeaders);
 
@@ -417,7 +418,7 @@ public class DefaultDataStore implements InternalDataStore {
         Assert.notNull(resource, "resource argument cannot be null.");
         Assert.isInstanceOf(AbstractResource.class, resource, "Resource argument must be an AbstractResource.");
 
-        doDelete(href != null ? href : resource.getResourceHref(), resource.getResourceClass(), possiblyNullPropertyName);
+        doDelete(href != null ? href : resource.getResourceHref(), getResourceClass(resource), possiblyNullPropertyName);
     }
 
     /* =====================================================================
@@ -504,13 +505,6 @@ public class DefaultDataStore implements InternalDataStore {
         }
     }
 
-    private Class<? extends Resource> resolveParentClass(Resource parentResource) {
-        if (parentResource != null) {
-            return parentResource.getResourceClass();
-        }
-        return null;
-    }
-
     protected CanonicalUri canonicalize(String href, Map<String,?> queryParams) {
         href = ensureFullyQualified(href);
         return DefaultCanonicalUri.create(href, queryParams);
@@ -562,5 +556,14 @@ public class DefaultDataStore implements InternalDataStore {
         }
         sb.append(href);
         return sb.toString();
+    }
+
+    private Class<? extends Resource> getResourceClass(Resource resource) {
+
+        if (AbstractInstanceResource.class.isInstance(resource)) {
+            return ((AbstractInstanceResource)resource).getResourceClass();
+        }
+
+        return resource != null ? resource.getClass() : null;
     }
 }

@@ -52,4 +52,17 @@ public abstract class AbstractInstanceResource<R extends Resource> extends Abstr
             writeLock.unlock();
         }
     }
+
+    /**
+     * Returns the class this resource represents. This is used when you need to figure out what the main type of
+     * Resource this object is.  For example, DefaultFoo, ImplFoo, and SuperFoo may all represent the Resource of
+     * <code>Foo</code>, in this case this method may return <code>Foo.class</code>.
+     * (Defaults to <code>getClass()</code>.)
+     *
+     * @return The type of resource this class represents.
+     * @since 0.11.0
+     */
+    public Class<? extends Resource> getResourceClass() {
+        return getClass();
+    }
 }

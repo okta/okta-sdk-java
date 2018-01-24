@@ -25,10 +25,6 @@ import com.okta.sdk.resource.Saveable;
 {{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
 public interface {{classname}} extends Resource{{#parent}}, {{.}}{{/parent}}{{#vendorExtensions.x-okta-extensible}}, PropertyRetriever, Map<String, Object>{{/vendorExtensions.x-okta-extensible}}{{#vendorExtensions.deletable}}, Deletable{{/vendorExtensions.deletable}} {
 
-    default Class<? extends Resource> getResourceClass() {
-        return {{#vendorExtensions.discriminatorRoot}}{{.}}{{/vendorExtensions.discriminatorRoot}}{{^vendorExtensions.discriminatorRoot}}{{classname}}{{/vendorExtensions.discriminatorRoot}}.class;
-    }
-
 {{#vars}}
     {{#vendorExtensions.extraAnnotation}}
         {{{vendorExtensions.extraAnnotation}}}

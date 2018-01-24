@@ -33,7 +33,9 @@ import com.okta.sdk.impl.resource.EnumProperty;
 import com.okta.sdk.impl.resource.MapProperty;
 import com.okta.sdk.impl.resource.DefaultVoidResource;
 import com.okta.sdk.resource.VoidResource;
-
+{{#vendorExtensions.top-level}}
+import com.okta.sdk.resource.Resource;
+{{/vendorExtensions.top-level}}
 import java.util.Map;
 
 import static com.okta.sdk.lang.Assert.notNull;
@@ -43,7 +45,6 @@ import static com.okta.sdk.lang.Assert.hasText;
 /**
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
-{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
 @javax.annotation.Generated(
         value = "{{generatorClass}}",
         date  = "{{generatedDate}}")
@@ -68,6 +69,13 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     public Map<String, Property> getPropertyDescriptors() {
         return PROPERTY_DESCRIPTORS;
     }
+
+{{#vendorExtensions.top-level}}
+    @Override
+    public Class<? extends Resource> getResourceClass() {
+        return {{#vendorExtensions.discriminatorRoot}}{{.}}{{/vendorExtensions.discriminatorRoot}}{{^vendorExtensions.discriminatorRoot}}{{classname}}{{/vendorExtensions.discriminatorRoot}}.class;
+    }
+{{/vendorExtensions.top-level}}
 {{#vars}}
 
     public {{{datatypeWithEnum}}} {{getter}}() {
