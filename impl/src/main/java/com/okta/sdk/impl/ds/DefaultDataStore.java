@@ -559,11 +559,9 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     private Class<? extends Resource> getResourceClass(Resource resource) {
-
         if (AbstractInstanceResource.class.isInstance(resource)) {
             return ((AbstractInstanceResource)resource).getResourceClass();
         }
-
         return resource != null ? resource.getClass() : null;
     }
 }

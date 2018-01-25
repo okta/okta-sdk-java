@@ -70,13 +70,11 @@ trait ClientProvider implements IHookable {
             return Clients.builder()
                     .setOrgUrl(testServerBaseUrl + scenarioId)
                     .setClientCredentials(new TokenClientCredentials("00ICU812"))
-                    .setCacheManager(new DisabledCacheManager())
+                    .setCacheManager(new DisabledCacheManager()) // disable cache when using mock server
                     .build()
         }
 
-        Client client = Clients.builder()
-//                .setCacheManager(new DisabledCacheManager())
-                .build()
+        Client client = Clients.builder().build()
         client.dataStore.requestExecutor.numRetries = 10
         return client
     }
