@@ -49,8 +49,6 @@ Snapshots are deployed off of the 'master' branch to OSSRH and can be consumed u
 https://oss.sonatype.org/content/repositories/snapshots/
 ```
 
-
-
 ## Client configuration
 
 There are a few ways to configure the client, but the easiest way is to create a `~/.okta/okta.yaml`file and set the `token` and `orgUrl` values:
@@ -74,6 +72,8 @@ ClientBuilder builder = Clients.builder();
 // in pre-defined locations.
 Client client = builder.build();
 ```
+
+For more details see: [Creating a Client](wiki/Creating-a-Client)
 
 ## Client CRUD Operations
 
