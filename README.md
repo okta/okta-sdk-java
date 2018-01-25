@@ -73,7 +73,7 @@ ClientBuilder builder = Clients.builder();
 Client client = builder.build();
 ```
 
-For more details see: [Creating a Client](wiki/Creating-a-Client)
+For more details see: [Creating a Client](https://github.com/okta/okta-sdk-java/wiki/Creating-a-Client)
 
 ## Client CRUD Operations
 
