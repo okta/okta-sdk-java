@@ -58,8 +58,6 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         apiTemplateFiles.put("api.mustache", ".java");
     }
 
-
-
     @Override
     public void preprocessSwagger(Swagger swagger) {
         super.preprocessSwagger(swagger);
@@ -186,7 +184,6 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
         codegenModel.vendorExtensions.put("defaultSetter", defaultTypeSetter);
 
-
         return codegenModel;
     }
 
@@ -214,32 +211,14 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             else {
                 co.vendorExtensions.put("dsMethod", "save");
             }
-
-//            if (co.allParams.size() == 2 &&
-//                co.bodyParam != null) { // TODO clean this up
-//                    co.vendorExtensions.put("isSimpleUpdate", true);
-//                    co.vendorExtensions.put("resource", co.bodyParam);
-//            }
-        }
-
-        if ("post".equals(httpMethod) ) {
+        } else if ("post".equals(httpMethod) ) {
 
             co.vendorExtensions.put("dsMethod", "create");
             co.vendorExtensions.put("isPost", true);
-
-//            if (co.allParams.size() == 1 &&
-//                co.bodyParam != null) {
-//                    co.vendorExtensions.put("isSimpleCreate", true);
-//                    co.vendorExtensions.put("resource", co.bodyParam);
-//            }
-        }
-
-        if ("get".equals(httpMethod)) {
+        } else if ("get".equals(httpMethod)) {
             co.vendorExtensions.put("dsMethod", "getResource");
             co.vendorExtensions.put("isGet", true);
-        }
-
-        else if ("delete".equals(httpMethod)) {
+        } else if ("delete".equals(httpMethod)) {
             co.vendorExtensions.put("dsMethod", "delete");
             co.vendorExtensions.put("isDelete", true);
         }

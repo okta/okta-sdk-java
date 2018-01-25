@@ -18,9 +18,11 @@ package com.okta.sdk.tests.it.util
 import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
+import com.okta.sdk.impl.cache.DisabledCacheManager
 import com.okta.sdk.lang.Strings
 import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
+import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.group.GroupList
 import com.okta.sdk.resource.group.rule.GroupRule
 import com.okta.sdk.resource.group.rule.GroupRuleList
@@ -68,6 +70,7 @@ trait ClientProvider implements IHookable {
             return Clients.builder()
                     .setOrgUrl(testServerBaseUrl + scenarioId)
                     .setClientCredentials(new TokenClientCredentials("00ICU812"))
+                    .setCacheManager(new DisabledCacheManager()) // disable cache when using mock server
                     .build()
         }
 
@@ -169,11 +172,13 @@ trait ClientProvider implements IHookable {
                         deletable.deactivate()
                     } else if (deletable instanceof GroupRule) {
                         deletable.deactivate()
+                    } else if (deletable instanceof Application) {
+                        deletable.deactivate()
                     }
                     deletable.delete()
                 }
                 catch (Exception e) {
-                    log.debug("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run", e)
+                    log.trace("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run:", e)
                 }
             }
         }

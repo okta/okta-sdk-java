@@ -32,15 +32,18 @@ class AbstractCollectionResourceTest {
     void testPagedCollection() {
 
         InternalDataStore ds = mock(InternalDataStore)
+        when(ds.getBaseUrl()).thenReturn("https://example.com/")
 
         def page1 = createTestPage(0, 200, "https://example.com/resource?nextPage=1")
         def page2 = createTestPage(200, 200, "https://example.com/resource?nextPage=2")
         def page3 = createTestPage(400, 13, null)
 
         expectPage(page1, ds)
-        when(ds.getResource("https://example.com/resource?nextPage=1", TestCollectionResource)).thenReturn(new TestCollectionResource(ds, page2))
+        def collectionResource2 = new TestCollectionResource(ds, page2)
+        when(ds.getResource("https://example.com/resource?nextPage=1", TestCollectionResource)).thenReturn(collectionResource2)
         expectPage(page2, ds)
-        when(ds.getResource("https://example.com/resource?nextPage=2", TestCollectionResource)).thenReturn(new TestCollectionResource(ds, page3))
+        def collectionResource3 = new TestCollectionResource(ds, page3)
+        when(ds.getResource("https://example.com/resource?nextPage=2", TestCollectionResource)).thenReturn(collectionResource3)
         expectPage(page3, ds)
 
         verifyCollection(new TestCollectionResource(ds, page1), 413)
@@ -50,6 +53,7 @@ class AbstractCollectionResourceTest {
     void testSinglePagedCollection() {
 
         InternalDataStore ds = mock(InternalDataStore)
+        when(ds.getBaseUrl()).thenReturn("https://example.com/")
 
         def page1 = createTestPage(0, 13, null)
 
@@ -63,12 +67,14 @@ class AbstractCollectionResourceTest {
     void testEmptyLastPagedCollection() {
 
         InternalDataStore ds = mock(InternalDataStore)
+        when(ds.getBaseUrl()).thenReturn("https://example.com/")
 
         def page1 = createTestPage(0, 200, "https://example.com/resource?nextPage=1")
         def page2 = createTestPage(200, 0, null)
 
         expectPage(page1, ds)
-        when(ds.getResource("https://example.com/resource?nextPage=1", TestCollectionResource)).thenReturn(new TestCollectionResource(ds, page2))
+        def collectionResource = new TestCollectionResource(ds, page2)
+        when(ds.getResource("https://example.com/resource?nextPage=1", TestCollectionResource)).thenReturn(collectionResource)
         expectPage(page2, ds)
 
         verifyCollection(new TestCollectionResource(ds, page1), 200)
@@ -86,7 +92,8 @@ class AbstractCollectionResourceTest {
 
     def expectPage(def page, InternalDataStore ds) {
         for (def item : page["items"]) {
-            when(ds.instantiate(TestResource, item)).thenReturn(new TestResource(ds, item))
+            def resource = new TestResource(ds, item)
+            when(ds.instantiate(TestResource, item)).thenReturn(resource)
         }
     }
 

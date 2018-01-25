@@ -17,7 +17,6 @@ package com.okta.sdk.impl.ds;
 
 import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.impl.ds.cache.CacheResolver;
-import com.okta.sdk.impl.http.HttpHeaders;
 import com.okta.sdk.resource.Resource;
 
 import java.util.Map;
@@ -48,23 +47,19 @@ public interface InternalDataStore extends DataStore {
      */
     <T extends Resource> T instantiate(Class<T> clazz, Map<String, Object> properties, boolean hrefFragment);
 
-    <T extends Resource> T create(String parentHref, T resource);
+    <T extends Resource> T create(String parentHref, T resource, T parentResource);
 
-    <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType);
-
-    <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType, HttpHeaders customHeaders);
+    <T extends Resource, R extends Resource> R create(String parentHref, T resource, T parentResource, Class<? extends R> returnType);
 
     <T extends Resource> void save(T resource);
 
-    <T extends Resource> void save(String href, T resource);
-
-    <T extends Resource, R extends Resource> R save(T resource, Class<? extends R> returnType);
+    <T extends Resource> void save(String href, T resource, T parentResource);
 
     <T extends Resource> void delete(T resource);
 
-    void delete(String href);
+    <T extends Resource> void delete(String href, T resource);
 
-    <T extends Resource> void deleteResourceProperty(T resource, String propertyName);
+    void delete(String href);
 
     <T extends Resource> T getResource(String href, Class<T> clazz, Map<String,Object> queryParameters);
 

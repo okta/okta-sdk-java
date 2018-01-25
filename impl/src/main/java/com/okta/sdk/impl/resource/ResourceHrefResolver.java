@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Stormpath, Inc.
+ * Copyright 2018 Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.resource;
+package com.okta.sdk.impl.resource;
+
+import com.okta.sdk.resource.Resource;
+
+import java.util.Map;
 
 /**
- * Base representation of a REST resource payload.  All objects transferred over the wire by this SDK are Resources.
- * @since 0.5.0
+ * Resolves an HREF for a given {@link Resource} class and data. This class allows for a plugable way to resolve a
+ * Resource's HREF. Okta uses HAL style links, but other implementations could be used to resolve or augment the HREF.
+ *
+ * @since 0.11.0
  */
-public interface Resource {
+public interface ResourceHrefResolver {
 
-    String getResourceHref();
-    void setResourceHref(String href);
+    <R extends Resource> String resolveHref(Map<String, ?> properties, Class<R> clazz);
 }

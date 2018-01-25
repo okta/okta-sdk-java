@@ -21,8 +21,6 @@ import com.okta.sdk.lang.Collections;
 import com.okta.sdk.lang.Strings;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
-import com.okta.sdk.resource.application.AppUser;
-import com.okta.sdk.resource.application.Application;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -54,6 +52,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     private String href = null;
     protected volatile boolean dirty;
     private volatile boolean materialized;
+    private final ResourceHrefResolver hrefResolver;
 
     protected AbstractResource(InternalDataStore dataStore) {
         this(dataStore, null);
@@ -65,19 +64,8 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         this.dirtyProperties = new LinkedHashMap<>();
         this.deletedPropertyNames = new HashSet<>();
         this.properties = new LinkedHashMap<>();
+        this.hrefResolver = new OktaResourceHrefResolver();
         setInternalProperties(properties);
-    }
-
-    /**
-     * Returns {@code true} if the specified data map represents a materialized resource data set, {@code false}
-     * otherwise.
-     *
-     * @param props the data properties to test
-     * @return {@code true} if the specified data map represents a materialized resource data set, {@code false}
-     * otherwise.
-     */
-    public static boolean isMaterialized(Map<String, ?> props) {
-        return props != null && props.size() > 1;
     }
 
     protected static Map<String, Property> createPropertyDescriptorMap(Property... props) {
@@ -102,7 +90,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
                 } else {
                     this.properties = properties;
                 }
-                setResourceHref(getSelfHref(properties));
+                setResourceHref(hrefResolver.resolveHref(properties, getClass()));
                 // Don't consider this resource materialized if it is only a reference.  A reference is any object that
                 // has only one 'href' property.
 
@@ -116,45 +104,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         } finally {
             writeLock.unlock();
         }
-    }
-
-    private String getSelfHref(Map<String, Object> properties) {
-        Map<String, Object> links = getMapValue(properties, "_links");
-        Map<String, Object> self = getMapValue(links, "self");
-        if (!Collections.isEmpty(self)) {
-            return (String) self.get("href");
-        }
-        return fixSelfHref(properties);
-    }
-
-    private String fixSelfHref(Map<String, Object> properties) {
-
-        // the AppUsers object does NOT contain a self link, in this case we need build it based on the 'app' link
-        Map<String, Object> links = getMapValue(properties, "_links");
-        if (links != null) {
-            if (this instanceof AppUser) {
-                Map<String, Object> self = getMapValue(links, "app");
-                if (!Collections.isEmpty(self)) {
-                    return self.get("href") + "/users/" + properties.get("id");
-                }
-            }
-            if (this instanceof Application) {
-                Map<String, Object> self = getMapValue(links, "users");
-                if (!Collections.isEmpty(self)) {
-                    String href = self.get("href").toString();
-                    return href.substring(0, href.lastIndexOf("/users"));
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private Map<String, Object> getMapValue(Map<String, Object> properties, String key) {
-        if (!Collections.isEmpty(properties)) {
-            return (Map<String, Object>) properties.get(key);
-        }
-        return null;
     }
 
     public String getResourceHref() {
