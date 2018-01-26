@@ -26,6 +26,13 @@ import {{import}};
 import java.io.Serializable;
 {{/serializableModel}}
 
-{{#models}}{{#model}}
-{{#vendorExtensions.x-isResourceList}}{{>modelListResourceImpl}}{{/vendorExtensions.x-isResourceList}}{{^vendorExtensions.x-isResourceList}}{{>modelImpl}}{{/vendorExtensions.x-isResourceList}}
-{{/model}}{{/models}}
+{{#models}}
+    {{#model}}
+        {{#vendorExtensions.x-isResourceList}}
+{{>modelListResourceImpl}}
+        {{/vendorExtensions.x-isResourceList}}
+        {{^vendorExtensions.x-isResourceList}}
+{{>modelImpl}}
+        {{/vendorExtensions.x-isResourceList}}
+    {{/model}}
+{{/models}}

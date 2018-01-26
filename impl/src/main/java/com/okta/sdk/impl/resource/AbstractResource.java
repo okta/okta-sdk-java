@@ -68,18 +68,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         setInternalProperties(properties);
     }
 
-    /**
-     * Returns {@code true} if the specified data map represents a materialized resource data set, {@code false}
-     * otherwise.
-     *
-     * @param props the data properties to test
-     * @return {@code true} if the specified data map represents a materialized resource data set, {@code false}
-     * otherwise.
-     */
-    public static boolean isMaterialized(Map<String, ?> props) {
-        return props != null && props.size() > 1;
-    }
-
     protected static Map<String, Property> createPropertyDescriptorMap(Property... props) {
         Map<String, Property> m = new LinkedHashMap<String, Property>();
         for (Property prop : props) {

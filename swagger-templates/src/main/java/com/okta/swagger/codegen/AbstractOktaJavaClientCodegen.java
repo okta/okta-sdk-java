@@ -79,6 +79,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected Map<String, String> modelTagMap = new HashMap<>();
     protected Set<String> enumList = new HashSet<>();
     protected Map<String, Discriminator> discriminatorMap = new HashMap<>();
+    protected Map<String, String> reverseDiscriminatorMap = new HashMap<>();
     protected Set<String> topLevelResources = new HashSet<>();
     protected Map<String, Object> rawSwaggerConfig;
 
@@ -211,7 +212,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, String> result = mapper.convertValue(mapping, Map.class);
-                result = result.entrySet().stream().collect(Collectors.toMap(e -> e.getValue().substring(e.getValue().lastIndexOf('/')+1), e -> e.getKey()));
+                result = result.entrySet().stream()
+                        .collect(Collectors.toMap(e -> e.getValue().substring(e.getValue().lastIndexOf('/')+1), e -> e.getKey()));
+                result.forEach((key, value) -> {
+                    reverseDiscriminatorMap.put(key, name);
+                });
                 discriminatorMap.put(name, new Discriminator(name, propertyName, result));
             }
         });
@@ -316,6 +321,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 model.getVendorExtensions().put("saveable", true);
                             } else if ("delete".equals(alias)) {
                                 model.getVendorExtensions().put("deletable", true);
+                                cgOperation.vendorExtensions.put("selfDelete", true);
                             }
                             else if ("read".equals(alias) || "create".equals(alias)) {
                                 canLinkMethod = false;
@@ -533,6 +539,13 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         String parent = (String) model.getVendorExtensions().get("x-okta-parent");
         if (StringUtils.isNotEmpty(parent)) {
             codegenModel.parent = toApiName(parent.substring(parent.lastIndexOf("/")));
+
+            // figure out the resourceClass if this model has a parent
+            String discriminatorRoot = getRootDiscriminator(name);
+            if (discriminatorRoot != null) {
+                model.getVendorExtensions().put("discriminatorRoot", discriminatorRoot);
+            }
+
         }
 
         // We use '$ref' attributes with siblings, which isn't valid JSON schema (or swagger), so we need process
@@ -544,6 +557,18 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         });
 
        return codegenModel;
+    }
+
+    private String getRootDiscriminator(String name) {
+        String result = reverseDiscriminatorMap.get(name);
+
+        if (result != null) {
+            String parentResult = getRootDiscriminator(result);
+            if (parentResult != null) {
+                result = parentResult;
+            }
+        }
+        return result;
     }
 
     @Override

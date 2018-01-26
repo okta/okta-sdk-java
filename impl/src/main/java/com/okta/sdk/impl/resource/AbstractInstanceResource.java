@@ -54,15 +54,15 @@ public abstract class AbstractInstanceResource<R extends Resource> extends Abstr
     }
 
     /**
-     * Returns {@code true} if the specified data map represents a materialized instance resource data set, {@code
-     * false} otherwise.
+     * Returns the class this resource represents. This is used when you need to figure out what the main type of
+     * Resource this object is.  For example, DefaultFoo, ImplFoo, and SuperFoo may all represent the Resource of
+     * <code>Foo</code>, in this case this method may return <code>Foo.class</code>.
+     * (Defaults to <code>getClass()</code>.)
      *
-     * @param props the data properties to test
-     * @return {@code true} if the specified data map represents a materialized instance resource data set, {@code
-     * false} otherwise.
+     * @return The type of resource this class represents.
+     * @since 0.11.0
      */
-    public static boolean isInstanceResource(Map<String, ?> props) {
-        return isMaterialized(props) && !props.containsKey(AbstractCollectionResource.ITEMS_PROPERTY_NAME); //collections have 'items'
+    public Class<? extends Resource> getResourceClass() {
+        return getClass();
     }
-
 }

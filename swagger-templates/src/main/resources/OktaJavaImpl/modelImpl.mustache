@@ -33,7 +33,9 @@ import com.okta.sdk.impl.resource.EnumProperty;
 import com.okta.sdk.impl.resource.MapProperty;
 import com.okta.sdk.impl.resource.DefaultVoidResource;
 import com.okta.sdk.resource.VoidResource;
-
+{{#vendorExtensions.top-level}}
+import com.okta.sdk.resource.Resource;
+{{/vendorExtensions.top-level}}
 import java.util.Map;
 
 import static com.okta.sdk.lang.Assert.notNull;
@@ -43,7 +45,6 @@ import static com.okta.sdk.lang.Assert.hasText;
 /**
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
-{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
 @javax.annotation.Generated(
         value = "{{generatorClass}}",
         date  = "{{generatedDate}}")
@@ -68,6 +69,13 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     public Map<String, Property> getPropertyDescriptors() {
         return PROPERTY_DESCRIPTORS;
     }
+
+{{#vendorExtensions.top-level}}
+    @Override
+    public Class<? extends Resource> getResourceClass() {
+        return {{#vendorExtensions.discriminatorRoot}}{{.}}{{/vendorExtensions.discriminatorRoot}}{{^vendorExtensions.discriminatorRoot}}{{classname}}{{/vendorExtensions.discriminatorRoot}}.class;
+    }
+{{/vendorExtensions.top-level}}
 {{#vars}}
 
     public {{{datatypeWithEnum}}} {{getter}}() {
@@ -108,7 +116,18 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     {{/vendorExtensions.pathParents}}
     {{/vendorExtensions.hasPathParents}}
 {{>queryPartial}}
-{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+{{#vendorExtensions.isGet}}
+{{>apiMethodGet}}
+{{/vendorExtensions.isGet}}
+{{#vendorExtensions.isPut}}
+{{>apiMethodPut}}
+{{/vendorExtensions.isPut}}
+{{#vendorExtensions.isPost}}
+{{>apiMethodPostResource}}
+{{/vendorExtensions.isPost}}
+{{#vendorExtensions.isDelete}}
+{{>apiMethodDelete}}
+{{/vendorExtensions.isDelete}}
     }
 {{#vendorExtensions.hasOptional}}
 
@@ -137,10 +156,29 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
         {{/vendorExtensions.pathParents}}
     {{/vendorExtensions.hasPathParents}}
 {{>queryPartialRequired}}
-{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{#vendorExtensions.optionalBody}}{{>apiMethodPostNoBody}}{{/vendorExtensions.optionalBody}}{{^vendorExtensions.optionalBody}}{{>apiMethodPost}}{{/vendorExtensions.optionalBody}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+{{#vendorExtensions.isGet}}
+{{>apiMethodGet}}
+{{/vendorExtensions.isGet}}
+{{#vendorExtensions.isPut}}
+{{>apiMethodPut}}
+{{/vendorExtensions.isPut}}
+{{#vendorExtensions.isPost}}
+    {{#vendorExtensions.optionalBody}}
+{{>apiMethodPostNoBody}}
+    {{/vendorExtensions.optionalBody}}
+    {{^vendorExtensions.optionalBody}}
+{{>apiMethodPostResource}}
+    {{/vendorExtensions.optionalBody}}
+{{/vendorExtensions.isPost}}
+{{#vendorExtensions.isDelete}}
+{{>apiMethodDelete}}
+{{/vendorExtensions.isDelete}}
      }
-{{/vendorExtensions.hasOptional}}{{/.}}{{/vendorExtensions.operations}}
-{{#operation}}{{^vendorExtensions.moved}}
+{{/vendorExtensions.hasOptional}}
+{{/.}}
+{{/vendorExtensions.operations}}
+{{#operation}}
+{{^vendorExtensions.moved}}
 
     /**
     * {{summary}}
@@ -160,7 +198,18 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
 
 {{>queryPartial}}
-{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{>apiMethodPost}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+{{#vendorExtensions.isGet}}
+{{>apiMethodGet}}
+{{/vendorExtensions.isGet}}
+{{#vendorExtensions.isPut}}
+{{>apiMethodPut}}
+{{/vendorExtensions.isPut}}
+{{#vendorExtensions.isPost}}
+{{>apiMethodPostResource}}
+{{/vendorExtensions.isPost}}
+{{#vendorExtensions.isDelete}}
+{{>apiMethodDelete}}
+{{/vendorExtensions.isDelete}}
     }
 {{#vendorExtensions.hasOptional}}
 
@@ -182,9 +231,28 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
 
 {{>queryPartialRequired}}
-{{#vendorExtensions.isGet}}{{>apiMethodGet}}{{/vendorExtensions.isGet}}{{#vendorExtensions.isPut}}{{>apiMethodPut}}{{/vendorExtensions.isPut}}{{#vendorExtensions.isPost}}{{#vendorExtensions.optionalBody}}{{>apiMethodPostNoBody}}{{/vendorExtensions.optionalBody}}{{^vendorExtensions.optionalBody}}{{>apiMethodPost}}{{/vendorExtensions.optionalBody}}{{/vendorExtensions.isPost}}{{#vendorExtensions.isDelete}}{{>apiMethodDelete}}{{/vendorExtensions.isDelete}}
+{{#vendorExtensions.isGet}}
+{{>apiMethodGet}}
+{{/vendorExtensions.isGet}}
+{{#vendorExtensions.isPut}}
+{{>apiMethodPut}}
+{{/vendorExtensions.isPut}}
+{{#vendorExtensions.isPost}}
+    {{#vendorExtensions.optionalBody}}
+{{>apiMethodPostNoBody}}
+    {{/vendorExtensions.optionalBody}}
+    {{^vendorExtensions.optionalBody}}
+{{>apiMethodPostResource}}
+    {{/vendorExtensions.optionalBody}}
+{{/vendorExtensions.isPost}}
+{{#vendorExtensions.isDelete}}
+{{>apiMethodDelete}}
+{{/vendorExtensions.isDelete}}
     }
-    {{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
+{{/vendorExtensions.hasOptional}}
+{{/vendorExtensions.moved}}
+{{/operation}}
 
-{{/model}}{{/models}}
+{{/model}}
+{{/models}}
 }
