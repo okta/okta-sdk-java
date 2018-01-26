@@ -60,4 +60,23 @@ class HalResourceHrefResolverTest {
         assertThat resolver.resolveHref(props, User), equalTo(selfHref)
         assertThat resolver.resolveHref(props, null), equalTo(selfHref) // clazz doesn't matter when self link is set
     }
+
+    @Test
+    void resourceWithMultipleLinksTest() {
+
+        String selfHref = "https://okta-test.example.com/my/href"
+        Map<String, ?> props = [
+            _links: [
+                other: [
+                    bar: "foo"
+                ],
+                self: [
+                    href: selfHref,
+                    foo: "bar"
+            ]]]
+
+        ResourceHrefResolver resolver = new HalResourceHrefResolver()
+        assertThat resolver.resolveHref(props, User), equalTo(selfHref)
+        assertThat resolver.resolveHref(props, null), equalTo(selfHref) // clazz doesn't matter when self link is set
+    }
 }
