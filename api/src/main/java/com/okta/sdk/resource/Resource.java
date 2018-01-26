@@ -16,6 +16,7 @@
 package com.okta.sdk.resource;
 
 /**
+ * Base representation of a REST resource payload.  All objects transferred over the wire by this SDK are Resources.
  * @since 0.5.0
  */
 public interface Resource {

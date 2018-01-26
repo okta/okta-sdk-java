@@ -17,45 +17,64 @@ package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
-import com.okta.sdk.resource.Deletable
+import com.okta.sdk.resource.ResourceException
+import com.okta.sdk.resource.group.rule.GroupRule
 import com.okta.sdk.resource.user.UserStatus
-
-import java.util.stream.Stream
-import java.util.stream.StreamSupport
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class OktaOrgCleaner {
 
+    private final static Logger log = LoggerFactory.getLogger(OktaOrgCleaner)
+    
     static void main(String[] args) {
 
         String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 
         Client client = Clients.builder().build()
 
-        toStream(client.listUsers().iterator())
+        log.info("Deleting Active Users:")
+        client.listUsers().stream()
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
             .forEach {
+                log.info("\t ${it.getProfile().getEmail()}")
                 it.deactivate()
                 it.delete()
             }
 
-        toStream(client.listUsers(null, null, null, "status eq \"${UserStatus.DEPROVISIONED}\"", null).iterator())
-            .forEach { it.delete() }
+        client.listUsers(null, null, null, "status eq \"${UserStatus.DEPROVISIONED}\"", null).stream()
+            .forEach {
+                log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
+                it.delete()
+            }
 
-        toStream(client.listApplications().iterator())
+        log.info("Deleting Applications:")
+        client.listApplications().stream()
             .filter { it.getLabel().matches(".*-${uuidRegex}.*")}
             .forEach {
+                log.info("\t ${it.getLabel()}")
                 it.deactivate()
                 it.delete()
             }
 
-        toStream(client.listGroups().iterator())
+        log.info("Deleting Groups:")
+        client.listGroups().stream()
                 .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*")}
                 .forEach {
-            it.delete()
-        }
-    }
+                    log.info("\t ${it.getProfile().getName()}")
+                    it.delete()
+                }
 
-    static Stream<Deletable> toStream(Iterator<Deletable> iterator) {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED),false)
+        log.info("Deleting Group Rules:")
+        client.listRules().stream()
+                .filter { it.getName().matches("rule\\+${uuidRegex}.*")}
+                .forEach {
+                    GroupRule rule = it
+                    log.info("\t ${rule.getName()}")
+                    Util.ignoring(ResourceException) {
+                        rule.deactivate()
+                    }
+                    rule.delete()
+                }
     }
 }
