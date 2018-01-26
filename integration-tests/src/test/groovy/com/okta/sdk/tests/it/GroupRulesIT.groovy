@@ -68,7 +68,10 @@ class GroupRulesIT implements CrudTestSupport {
         rule.getActions().setAssignUserToGroups(client.instantiate(GroupRuleGroupAssignment))
         rule.getActions().getAssignUserToGroups().setGroupIds(Collections.singletonList(group.id))
 
-        return client.createRule(rule)
+        rule = client.createRule(rule)
+        registerForCleanup(rule)
+
+        return rule
     }
 
     @Override

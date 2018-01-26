@@ -138,8 +138,10 @@ class AbstractResourceTest {
         InternalDataStore dataStore = mock(InternalDataStore)
         Map item0 = nestedResourceData.get(0)
         Map item1 = nestedResourceData.get(1)
-        when(dataStore.instantiate(NestedStubResource, item0)).thenReturn(new NestedStubResource(dataStore, item0))
-        when(dataStore.instantiate(NestedStubResource, item1)).thenReturn(new NestedStubResource(dataStore, item1))
+        def resource0 = new NestedStubResource(dataStore, item0)
+        def resource1 = new NestedStubResource(dataStore, item1)
+        when(dataStore.instantiate(NestedStubResource, item0)).thenReturn(resource0)
+        when(dataStore.instantiate(NestedStubResource, item1)).thenReturn(resource1)
         return new StubResource(dataStore, data)
     }
 

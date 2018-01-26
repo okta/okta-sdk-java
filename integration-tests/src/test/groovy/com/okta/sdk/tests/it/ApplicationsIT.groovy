@@ -84,8 +84,6 @@ class ApplicationsIT extends ITSupport {
 
     void doCrudTest(Application app) {
 
-        Client client = Clients.builder().build()
-
         // Create a resource
         def resource = create(client, app)
         registerForCleanup(resource)

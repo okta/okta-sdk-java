@@ -139,7 +139,7 @@ class Util {
     static def expect = { Class<? extends Throwable> catchMe, Closure callMe ->
         try {
             callMe.call()
-            Assert.fail("Expected ${catchMe.getClass().getName()} to be thrown.")
+            Assert.fail("Expected ${catchMe.getName()} to be thrown.")
         } catch(e) {
             if (!e.class.isAssignableFrom(catchMe)) {
                 throw e

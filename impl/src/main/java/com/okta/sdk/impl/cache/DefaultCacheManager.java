@@ -20,6 +20,8 @@ import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.impl.util.SoftHashMap;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -74,6 +76,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DefaultCacheManager implements CacheManager {
 
+    private final Logger logger = LoggerFactory.getLogger(DefaultCacheManager.class);
     /**
      * Retains any region-specific configuration that might be used when creating Cache instances.
      */
@@ -196,6 +199,8 @@ public class DefaultCacheManager implements CacheManager {
 
         cache = caches.get(name);
         if (cache == null) {
+            logger.debug("Creating cache '{}'", name);
+
             cache = createCache(name);
             Cache existing = caches.putIfAbsent(name, cache);
             if (existing != null) {
