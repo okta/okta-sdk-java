@@ -13,4 +13,4 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-        getDataStore().delete(href);
+        getDataStore().delete({{#vendorExtensions.selfDelete}}href, this{{/vendorExtensions.selfDelete}}{{^vendorExtensions.selfDelete}}href{{/vendorExtensions.selfDelete}});

@@ -119,5 +119,4 @@ public interface {{classname}} extends Resource{{#parent}}, {{.}}{{/parent}}{{#v
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
 {{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
 }
-
 {{/model}}{{/models}}
