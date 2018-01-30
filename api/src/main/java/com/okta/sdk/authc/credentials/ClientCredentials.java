@@ -25,7 +25,7 @@ public interface ClientCredentials<T> {
      * other than the actual account holder.  The secret value is mostly used for computing HMAC digests, but can also
      * be used as a password for password-based key derivation and encryption.
      *
-     * <h3>Security Notice</h3>
+     * <h1>Security Notice</h1>
      *
      * <p>Okta SDKs automatically encrypt this value at rest and in SDK cache to prevent plaintext access.  The
      * plaintext value is only available by calling this method, which returns the plaintext (unencrypted) value.

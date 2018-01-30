@@ -16,7 +16,7 @@
 package com.okta.sdk.cache;
 
 /**
- * A CacheManager provides and maintains the lifecycles of {@link Cache Cache} instances.
+ * A CacheManager provides and maintains the lifecycle of {@link Cache Cache} instances.
  * <p>
  * This interface provides an abstraction (wrapper) API on top of an underlying
  * cache framework's main Manager component (e.g. JCache, Ehcache, Hazelcast, JCS, OSCache, JBossCache, TerraCotta,

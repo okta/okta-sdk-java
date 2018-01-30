@@ -35,9 +35,9 @@ public class ResourceException extends RuntimeException implements Error {
     /**
      * Ensures the message used for the exception (i.e. exception.getMessage()) reports the {@code developerMessage}
      * returned by the Okta API Server.  The regular Okta response body {@code message} field is targeted
-     * at applicadtion end-users that could very likely be non-technical.  Since an exception should be helpful to
+     * at application end-users that could very likely be non-technical.  Since an exception should be helpful to
      * developers, it is better to show a more technical message.
-     * <p/>
+     * <p>
      * Added as a fix for <a href="https://github.com/stormpath/stormpath-sdk-java/issues/28">Issue #28</a>.
      *
      * @param error the response Error. Cannot be null.
@@ -103,18 +103,14 @@ public class ResourceException extends RuntimeException implements Error {
         return error.getHeaders();
     }
 
-    public Error getOktaError() {
-        return this.error;
-    }
-
     /**
      * Returns the underlying REST {@link Error} returned from the Okta API server.
-     * <p/>
+     * <p>
      * Because this class's {@link #getMessage() getMessage()} value returns a developer-friendly message to help you
      * debug when you see stack traces, you might want to acquire the underlying {@code Error} to show an end-user
      * the simpler end-user appropriate error message.  The end-user error message is non-technical in nature - as a
      * convenience, you can show this message directly to your application end-users.
-     * <p/>
+     * <p>
      * For example:
      * <pre>
      * try {
@@ -130,9 +126,8 @@ public class ResourceException extends RuntimeException implements Error {
      * </pre>
      *
      * @return the underlying REST {@link Error} resource representation returned from the Okta API server.
-
-     *
-        public Error getError() {
+     */
+    public Error getError() {
         return this.error;
-    }*/
+    }
 }
