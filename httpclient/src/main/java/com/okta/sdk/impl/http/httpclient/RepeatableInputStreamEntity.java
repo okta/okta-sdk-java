@@ -43,12 +43,12 @@ class RepeatableInputStreamEntity extends BasicHttpEntity {
     /**
      * The underlying InputStreamRequestEntity being delegated to
      */
-    private InputStreamEntity inputStreamEntity;
+    private final InputStreamEntity inputStreamEntity;
 
     /**
      * The InputStream containing the content to write out
      */
-    private InputStream content;
+    private final InputStream content;
 
     /**
      * Creates a new RepeatableInputStreamEntity using the information

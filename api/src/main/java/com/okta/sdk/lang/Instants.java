@@ -30,14 +30,11 @@ public class Instants {
 
     public static final TimeZone UTC_TIMEZONE = TimeZone.getTimeZone("UTC");
 
-    private static final ThreadLocal<SimpleDateFormat> DATE_FORMAT = new ThreadLocal<SimpleDateFormat>() {
-        @Override
-        protected SimpleDateFormat initialValue() {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            df.setTimeZone(UTC_TIMEZONE);
-            return df;
-        }
-    };
+    private static final ThreadLocal<SimpleDateFormat> DATE_FORMAT = ThreadLocal.withInitial(() -> {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        df.setTimeZone(UTC_TIMEZONE);
+        return df;
+    });
 
     /**
      * Returns the UTC-normalized ISO 8601 representation of the specified date instance.
@@ -246,7 +243,7 @@ public class Instants {
     private static long getTimeZoneOffset(long time, TimeZone from, TimeZone to) {
         int fromOffset = from.getOffset(time);
         int toOffset = to.getOffset(time);
-        int diff = 0;
+        int diff;
 
         if (fromOffset >= 0) {
             if (toOffset > 0) {

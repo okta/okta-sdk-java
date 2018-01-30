@@ -35,7 +35,7 @@ public class Classes {
      */
     private static final ClassLoaderAccessor THREAD_CL_ACCESSOR = new ExceptionIgnoringAccessor() {
         @Override
-        protected ClassLoader doGetClassLoader() throws Throwable {
+        protected ClassLoader doGetClassLoader() {
             return Thread.currentThread().getContextClassLoader();
         }
     };
@@ -44,7 +44,7 @@ public class Classes {
      */
     private static final ClassLoaderAccessor CLASS_CL_ACCESSOR = new ExceptionIgnoringAccessor() {
         @Override
-        protected ClassLoader doGetClassLoader() throws Throwable {
+        protected ClassLoader doGetClassLoader() {
             return Classes.class.getClassLoader();
         }
     };
@@ -53,7 +53,7 @@ public class Classes {
      */
     private static final ClassLoaderAccessor SYSTEM_CL_ACCESSOR = new ExceptionIgnoringAccessor() {
         @Override
-        protected ClassLoader doGetClassLoader() throws Throwable {
+        protected ClassLoader doGetClassLoader() {
             return ClassLoader.getSystemClassLoader();
         }
     };
@@ -61,10 +61,10 @@ public class Classes {
     /**
      * Attempts to load the specified class name from the current thread's
      * {@link Thread#getContextClassLoader() context class loader}, then the
-     * current ClassLoader (<code>Classes.class.getClassLoader()</code>), then the system/application
-     * ClassLoader (<code>ClassLoader.getSystemClassLoader()</code>, in that order.  If any of them cannot locate
-     * the specified class, an <code>UnknownClassException</code> is thrown (our RuntimeException equivalent of
-     * the JRE's <code>ClassNotFoundException</code>.
+     * current ClassLoader ({@code Classes.class.getClassLoader()}), then the system/application
+     * ClassLoader ({@code ClassLoader.getSystemClassLoader()}, in that order.  If any of them cannot locate
+     * the specified class, an {@code UnknownClassException} is thrown (our RuntimeException equivalent of
+     * the JRE's {@code ClassNotFoundException}.
      *
      * @param fqcn the fully qualified class name to load
      * @param <T> type of class
@@ -108,12 +108,12 @@ public class Classes {
     /**
      * Returns the specified resource by checking the current thread's
      * {@link Thread#getContextClassLoader() context class loader}, then the
-     * current ClassLoader (<code>Classes.class.getClassLoader()</code>), then the system/application
-     * ClassLoader (<code>ClassLoader.getSystemClassLoader()</code>, in that order, using
+     * current ClassLoader ({@code Classes.class.getClassLoader()}), then the system/application
+     * ClassLoader ({@code ClassLoader.getSystemClassLoader()}, in that order, using
      * {@link ClassLoader#getResourceAsStream(String) getResourceAsStream(name)}.
      *
      * @param name the name of the resource to acquire from the classloader(s).
-     * @return the InputStream of the resource found, or <code>null</code> if the resource cannot be found from any
+     * @return the InputStream of the resource found, or {@code null} if the resource cannot be found from any
      *         of the three mentioned ClassLoaders.
      */
     public static InputStream getResourceAsStream(String name) {
@@ -191,7 +191,7 @@ public class Classes {
 
     /**
      */
-    private static interface ClassLoaderAccessor {
+    private interface ClassLoaderAccessor {
         <T> Class<T> loadClass(String fqcn);
         InputStream getResourceStream(String name);
     }

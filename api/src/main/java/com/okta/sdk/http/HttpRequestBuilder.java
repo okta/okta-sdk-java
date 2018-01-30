@@ -38,7 +38,7 @@ public interface HttpRequestBuilder {
      * @return the builder instance for method chaining.
      * @throws IllegalArgumentException if the method argument is {@code null}.
      */
-    HttpRequestBuilder headers(Map<String, String[]> headers) throws IllegalArgumentException;
+    HttpRequestBuilder headers(Map<String, String[]> headers);
 
     /**
      * Sets the request parameters that will be present in the resulting request instance.
@@ -57,7 +57,7 @@ public interface HttpRequestBuilder {
      * @throws IllegalArgumentException if the name or value arguments are {@code null}.
      *
      */
-    HttpRequestBuilder addHeader(String name, String[] value) throws IllegalArgumentException;
+    HttpRequestBuilder addHeader(String name, String[] value);
 
     /**
      * Adds a request parameter that will be part of the parameters map in the resulting request instance.
@@ -68,7 +68,7 @@ public interface HttpRequestBuilder {
      * @throws IllegalArgumentException if the name or value arguments are {@code null}.
      *
      */
-    HttpRequestBuilder addParameter(String name, String[] value) throws IllegalArgumentException;
+    HttpRequestBuilder addParameter(String name, String[] value);
 
     /**
      * Sets the query parameters that will be present in the resulting request instance.

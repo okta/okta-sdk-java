@@ -18,7 +18,6 @@ package com.okta.sdk.impl.io;
 import com.okta.sdk.lang.Assert;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
@@ -41,7 +40,7 @@ public class StringResource implements Resource {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         return new ByteArrayInputStream(string.getBytes(charset));
     }
 }
