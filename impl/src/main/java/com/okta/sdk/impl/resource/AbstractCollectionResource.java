@@ -16,17 +16,14 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.lang.Classes;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
@@ -245,26 +242,5 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
         public Collection<T> getItems() {
             return this.items;
         }
-    }
-
-    public static final <T extends Resource, R extends CollectionResource<T>> R emptyCollectionResource(InternalDataStore internalDataStore, Class<R> implClass) {
-        List<T> emptyList = Collections.emptyList();
-
-        Map<String, Object> properties = new LinkedHashMap<>();
-        properties.put(ITEMS_PROPERTY_NAME, emptyList);
-
-        Constructor<R> ctor = Classes.getConstructor(implClass, InternalDataStore.class, Map.class);
-        return Classes.instantiate(ctor, internalDataStore, properties);
-    }
-
-    public static final <T extends Resource, R extends CollectionResource<T>> R singletonCollectionResource(InternalDataStore internalDataStore, Class<R> implClass, T item) {
-
-        List<T> singletonList = Collections.singletonList(item);
-
-        Map<String, Object> properties = new LinkedHashMap<>();
-        properties.put(ITEMS_PROPERTY_NAME, singletonList);
-
-        Constructor<R> ctor = Classes.getConstructor(implClass, InternalDataStore.class, Map.class);
-        return Classes.instantiate(ctor, internalDataStore, properties);
     }
 }
