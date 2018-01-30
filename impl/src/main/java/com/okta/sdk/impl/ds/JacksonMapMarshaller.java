@@ -16,7 +16,6 @@
 package com.okta.sdk.impl.ds;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -29,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,27 +66,21 @@ public class JacksonMapMarshaller implements MapMarshaller {
     }
 
     @Override
-    public String marshal(Map map) {
-        try {
-            return this.objectMapper.writeValueAsString(map);
-        } catch (IOException e) {
-            throw new MarshalingException("Unable to convert Map to JSON String.", e);
+    public void marshal(OutputStream out, Map map) {
+        if (map == null) {
+            throw new MarshalingException("Cannot convert null to JSON.");
         }
-    }
 
-    @Override
-    public Map unmarshal(String marshalled) {
         try {
-            TypeReference<LinkedHashMap<String,Object>> typeRef = new TypeReference<LinkedHashMap<String,Object>>(){};
-            return this.objectMapper.readValue(marshalled, typeRef);
+            this.objectMapper.writeValue(out, map);
         } catch (IOException e) {
-            throw new MarshalingException("Unable to convert JSON String to Map.", e);
+            throw new MarshalingException("Unable to convert Map to JSON.", e);
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<String, Object> unmarshall(InputStream marshalled, Map<String, String> linkMap) {
+    public Map<String, Object> unmarshal(InputStream marshalled, Map<String, String> linkMap) {
         try {
             Object resolvedObj = this.objectMapper.readValue(marshalled, Object.class);
             if (resolvedObj instanceof Map) {

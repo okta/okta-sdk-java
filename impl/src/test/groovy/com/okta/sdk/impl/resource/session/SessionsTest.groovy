@@ -70,11 +70,9 @@ class SessionsTest {
                                                         ClientCredentialsResolver clientCredentialsResolver,
                                                         CacheManager cacheManager) {
 
-                JacksonMapMarshaller mapMarshaller = new JacksonMapMarshaller()
-                Map data = mapMarshaller.unmarshal(this.getClass().getResource( '/stubs/sessions.json' ).text)
-
+                Map data = dataFromJsonFile()
                 final InternalDataStore dataStore = mock(InternalDataStore)
-                DefaultSession session = new DefaultSession(dataStore, data)
+                DefaultSession session = new DefaultSession(dataStore, dataFromJsonFile())
                 Map idpData = data.get("idp")
                 def sessionIdp = new DefaultSessionIdentityProvider(dataStore, idpData)
                 when(dataStore.instantiate(SessionIdentityProvider, idpData)).thenReturn(sessionIdp)
@@ -107,9 +105,8 @@ class SessionsTest {
                                                         BaseUrlResolver baseUrlResolver,
                                                         ClientCredentialsResolver clientCredentialsResolver,
                                                         CacheManager cacheManager) {
-                JacksonMapMarshaller mapMarshaller = new JacksonMapMarshaller()
-                Map data = mapMarshaller.unmarshal(this.getClass().getResource( '/stubs/sessions.json' ).text)
 
+                Map data = dataFromJsonFile()
                 final InternalDataStore dataStore = mock(InternalDataStore)
                 DefaultSession session = new DefaultSession(dataStore, data)
                 Map idpData = data.get("idp")
@@ -160,5 +157,12 @@ class SessionsTest {
     private Date parseDate(String dateString) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME
         return Date.from(Instant.from(timeFormatter.parse(dateString)))
+    }
+
+    private Map dataFromJsonFile(String resourceFile = '/stubs/sessions.json') {
+
+        return new JacksonMapMarshaller().unmarshal(
+                this.getClass().getResource(resourceFile).openStream(),
+                Collections.emptyMap())
     }
 }

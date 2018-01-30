@@ -36,16 +36,10 @@ import static org.hamcrest.MatcherAssert.assertThat
  */
 class JacksonMapMarshallerTest {
 
-    JacksonMapMarshaller mapMarshaller
-
-    @BeforeTest
-    void setup() {
-        mapMarshaller = new JacksonMapMarshaller()
-    }
-
     @Test
     void testGetAndSetObjectMapper() {
 
+        JacksonMapMarshaller mapMarshaller = new JacksonMapMarshaller()
         def objectMapper = new ObjectMapper()
         mapMarshaller.setObjectMapper(objectMapper)
 
@@ -55,6 +49,7 @@ class JacksonMapMarshallerTest {
     @Test
     void testSetPrettyPrint() {
 
+        JacksonMapMarshaller mapMarshaller = new JacksonMapMarshaller()
         def objectMapper = new ObjectMapper()
         mapMarshaller.setObjectMapper(objectMapper)
 
@@ -67,6 +62,7 @@ class JacksonMapMarshallerTest {
     @Test
     void testMarshalException() {
 
+        JacksonMapMarshaller mapMarshaller = new JacksonMapMarshaller()
         def objectMapper = mock(ObjectMapper)
         when(objectMapper.writeValueAsString(null)).then(new Answer<String>() {
             @Override
@@ -77,37 +73,18 @@ class JacksonMapMarshallerTest {
         mapMarshaller.setObjectMapper(objectMapper)
 
         try {
-            mapMarshaller.marshal(null)
+            ByteArrayOutputStream out = new ByteArrayOutputStream()
+            mapMarshaller.marshal(out, null)
             fail("shouldn't be here")
         } catch (MarshalingException e) {
-            assertEquals e.getMessage(), "Unable to convert Map to JSON String."
-        }
-    }
-
-    @Test
-    void testUnmarshalStringException() {
-
-        def objectMapper = mock(ObjectMapper)
-        when(objectMapper.readValue((String)eq("a value"), (TypeReference)isA(TypeReference)))
-            .then(new Answer<Map>() {
-                @Override
-                Map answer(InvocationOnMock invocation) throws Throwable {
-                    throw new IOException("kaboom")
-                }
-            })
-        mapMarshaller.setObjectMapper(objectMapper)
-
-        try {
-            mapMarshaller.unmarshal("a value")
-            fail("shouldn't be here")
-        } catch (MarshalingException e) {
-            assertEquals e.getMessage(), "Unable to convert JSON String to Map."
+            assertEquals e.getMessage(), "Cannot convert null to JSON."
         }
     }
 
     @Test
     void testUnmarshalInputStreamException() {
 
+        JacksonMapMarshaller mapMarshaller = new JacksonMapMarshaller()
         def objectMapper = mock(ObjectMapper)
         def inputStream = mock(InputStream)
         when(objectMapper.readValue((InputStream)eq(inputStream), (Class)eq(Object.class)))
@@ -120,7 +97,7 @@ class JacksonMapMarshallerTest {
         mapMarshaller.setObjectMapper(objectMapper)
 
         try {
-            mapMarshaller.unmarshall(inputStream, null)
+            mapMarshaller.unmarshal(inputStream, null)
             fail("shouldn't be here")
         } catch (MarshalingException e) {
             assertEquals e.getMessage(), "Unable to convert InputStream String to Map."
@@ -137,7 +114,10 @@ class JacksonMapMarshallerTest {
                                         new FooResource(null, [foo: "bar2"])]
         ]
 
-        String result = new JacksonMapMarshaller().marshal(testMap)
+        ByteArrayOutputStream out = new ByteArrayOutputStream()
+        new JacksonMapMarshaller().marshal(out, testMap)
+        String result = out.toString()
+
         assertThat result, not(containsString("dirty"))
         assertThat result, containsString('"complexResourceList":[{"foo":"bar1"},{"foo":"bar2"}]')
         assertThat result, containsString('"simpleListKey":["one","two","three"]')
