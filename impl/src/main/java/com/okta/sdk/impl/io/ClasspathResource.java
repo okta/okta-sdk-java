@@ -17,7 +17,6 @@ package com.okta.sdk.impl.io;
 
 import com.okta.sdk.lang.Classes;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 public class ClasspathResource extends AbstractResource {
@@ -35,7 +34,7 @@ public class ClasspathResource extends AbstractResource {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         return Classes.getResourceAsStream(getLocation());
     }
 

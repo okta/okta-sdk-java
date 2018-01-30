@@ -38,8 +38,8 @@ public class DefaultHttpRequestBuilder implements HttpRequestBuilder {
     public DefaultHttpRequestBuilder(HttpMethod method) {
         Assert.notNull(method);
         this.method = method;
-        this.headers = new HashMap<String, String[]>();
-        this.parameters = new HashMap<String, String[]>();
+        this.headers = new HashMap<>();
+        this.parameters = new HashMap<>();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DefaultHttpRequestBuilder implements HttpRequestBuilder {
     }
 
     @Override
-    public HttpRequestBuilder addHeader(String key, String[] value) throws IllegalArgumentException {
+    public HttpRequestBuilder addHeader(String key, String[] value) {
         Assert.notNull(key, "key argument is required.");
         Assert.notNull(value, "value argument is required.");
 
@@ -66,7 +66,7 @@ public class DefaultHttpRequestBuilder implements HttpRequestBuilder {
     }
 
     @Override
-    public HttpRequestBuilder addParameter(String key, String[] value) throws IllegalArgumentException {
+    public HttpRequestBuilder addParameter(String key, String[] value) {
         Assert.notNull(key, "key argument is required.");
         Assert.notNull(value, "value argument is required.");
 

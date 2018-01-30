@@ -147,7 +147,7 @@ public class HttpHeaders implements MultiValueMap<String, String> {
      */
     public List<MediaType> getAccept() {
         String value = getFirst(ACCEPT);
-        return (value != null ? MediaType.parseMediaTypes(value) : Collections.<MediaType>emptyList());
+        return (value != null ? MediaType.parseMediaTypes(value) : Collections.emptyList());
     }
 
     /**

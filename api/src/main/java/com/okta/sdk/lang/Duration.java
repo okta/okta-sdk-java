@@ -47,14 +47,7 @@ public class Duration implements Comparable<Duration>, Cloneable {
     @Override
     public int compareTo(Duration duration) {
         long converted = timeUnit.convert(duration.getValue(), duration.getTimeUnit());
-
-        if (this.value < converted) {
-            return -1;
-        } else if (this.value > converted) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return Long.compare(this.value, converted);
     }
 
     public boolean isLessThan(Duration duration) {

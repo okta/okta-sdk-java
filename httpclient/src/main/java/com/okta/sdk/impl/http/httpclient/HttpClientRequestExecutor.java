@@ -408,7 +408,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
              * retry, hoping that the pause is long enough for the request to
              * get through the next time.
              */
-            if (isThrottlingException(re)) return true;
+            return isThrottlingException(re);
         }
 
         return false;
