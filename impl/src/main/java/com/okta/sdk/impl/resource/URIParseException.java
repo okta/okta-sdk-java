@@ -17,10 +17,6 @@ package com.okta.sdk.impl.resource;
 
 public class URIParseException extends RuntimeException {
 
-    public URIParseException(String message) {
-        super(message);
-    }
-
     public URIParseException(String message, Throwable cause) {
         super(message, cause);
     }

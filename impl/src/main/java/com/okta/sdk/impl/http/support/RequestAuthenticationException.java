@@ -26,10 +26,6 @@ public class RequestAuthenticationException extends RestException {
         super(s);
     }
 
-    public RequestAuthenticationException (Throwable cause) {
-        super(cause);
-    }
-
     public RequestAuthenticationException (String s, Throwable cause) {
         super(s, cause);
     }

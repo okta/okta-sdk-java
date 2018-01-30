@@ -138,11 +138,6 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     @Override
-    public CacheResolver getCacheResolver() {
-        return this.cacheResolver;
-    }
-
-    @Override
     public ClientCredentials getClientCredentials() {
         return this.clientCredentialsResolver.getClientCredentials();
     }
@@ -173,17 +168,6 @@ public class DefaultDataStore implements InternalDataStore {
         }
         //otherwise it must be an instance resource, so use the two-arg constructor:
         return this.resourceFactory.instantiate(clazz, properties);
-    }
-
-    @Override
-    public <T extends Resource> T instantiate(Class<T> clazz, Map<String, Object> properties, boolean hrefFragment) {
-        if (hrefFragment) {
-            Assert.hasText((String) properties.get("href"), "when hrefFragment is set to true the properties map must contain an href key.");
-            String hrefValue = (String) properties.get("href");
-            hrefValue = qualify(hrefValue);
-            properties.put("href", hrefValue);
-        }
-        return this.instantiate(clazz, properties);
     }
 
     /* =====================================================================

@@ -16,7 +16,6 @@
 package com.okta.sdk.impl.ds;
 
 import com.okta.sdk.ds.DataStore;
-import com.okta.sdk.impl.ds.cache.CacheResolver;
 import com.okta.sdk.resource.Resource;
 
 import java.util.Map;
@@ -31,21 +30,6 @@ import java.util.Map;
 public interface InternalDataStore extends DataStore {
 
     <T extends Resource> T instantiate(Class<T> clazz, Map<String,Object> properties);
-
-    /**
-     * Instantiates and returns a new instance of the specified Resource type. The instance is merely instantiated and
-     * is not saved/synchronized with the server in any way. This operation allows
-     * the <code>href</code> to be a fragment, where the <code>baseUrl</code> can be missing and will be added automatically.
-     *
-     * @param clazz the Resource class to instantiate.
-     * @param <T>   the Resource sub-type
-     * @param properties the properties the instantiated resource will have
-     * @param hrefFragment when <code>true</code>, the baseUrl will be appended to the value found in the href key of the properties map.
-     *                     If <code>false</code> the href will not be altered and will be kept as-is.
-     * @return a resource instance corresponding to the specified clazz.
-
-     */
-    <T extends Resource> T instantiate(Class<T> clazz, Map<String, Object> properties, boolean hrefFragment);
 
     <T extends Resource> T create(String parentHref, T resource, T parentResource);
 
@@ -62,8 +46,6 @@ public interface InternalDataStore extends DataStore {
     void delete(String href);
 
     <T extends Resource> T getResource(String href, Class<T> clazz, Map<String,Object> queryParameters);
-
-    CacheResolver getCacheResolver();
 
     String getBaseUrl();
 

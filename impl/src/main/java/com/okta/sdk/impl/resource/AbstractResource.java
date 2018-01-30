@@ -360,13 +360,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
                 .collect(Collectors.toList());
     }
 
-    protected <T extends Resource> void setResourceProperty(ResourceReference<T> property, Resource value) {
-        Assert.notNull(property, "Property argument cannot be null.");
-        String name = property.getName();
-        Map<String, String> reference = this.referenceFactory.createReference(name, value);
-        setProperty(name, reference);
-    }
-
     public String toString() {
         readLock.lock();
         try {
