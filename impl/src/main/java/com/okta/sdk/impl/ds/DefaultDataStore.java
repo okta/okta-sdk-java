@@ -177,7 +177,7 @@ public class DefaultDataStore implements InternalDataStore {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Resource> T getResource(String href, Class<T> clazz) {
-        return getResource(href, clazz, (Map<String, Object>) null);
+        return getResource(href, clazz, null);
     }
 
     public <T extends Resource> T getResource(String href, Class<T> clazz, Map<String, Object> queryParameters) {
@@ -196,26 +196,23 @@ public class DefaultDataStore implements InternalDataStore {
         Assert.hasText(href, "href argument cannot be null or empty.");
         Assert.notNull(clazz, "Resource class argument cannot be null.");
 
-        FilterChain chain = new DefaultFilterChain(this.filters, new FilterChain() {
-            @Override
-            public ResourceDataResult filter(final ResourceDataRequest req) {
+        FilterChain chain = new DefaultFilterChain(this.filters, req -> {
 
-                CanonicalUri uri = req.getUri();
+            CanonicalUri uri = req.getUri();
 
-                Request getRequest = new DefaultRequest(HttpMethod.GET, uri.getAbsolutePath(), uri.getQuery());
-                Response getResponse = execute(getRequest);
-                Map<String,?> body = getBody(getResponse);
+            Request getRequest = new DefaultRequest(HttpMethod.GET, uri.getAbsolutePath(), uri.getQuery());
+            Response getResponse = execute(getRequest);
+            Map<String,?> body = getBody(getResponse);
 
-                if (Collections.isEmpty(body)) {
-                    throw new IllegalStateException("Unable to obtain resource data from the API server or from cache.");
-                }
-
-                return new DefaultResourceDataResult(req.getAction(), uri, req.getResourceClass(), (Map<String,Object>)body);
+            if (Collections.isEmpty(body)) {
+                throw new IllegalStateException("Unable to obtain resource data from the API server or from cache.");
             }
+
+            return new DefaultResourceDataResult(req.getAction(), uri, req.getResourceClass(), (Map<String,Object>)body);
         });
 
         CanonicalUri uri = canonicalize(href, queryParameters);
-        ResourceDataRequest req = new DefaultResourceDataRequest(ResourceAction.READ, uri, clazz, new HashMap<String,Object>());
+        ResourceDataRequest req = new DefaultResourceDataRequest(ResourceAction.READ, uri, clazz, new HashMap<>());
         return chain.filter(req);
     }
 
@@ -278,55 +275,52 @@ public class DefaultDataStore implements InternalDataStore {
         // Most Okta endpoints do not support partial update, we can revisit in the future.
         final Map<String, Object> props = resourceConverter.convert(abstractResource, false);
 
-        FilterChain chain = new DefaultFilterChain(this.filters, new FilterChain() {
-            @Override
-            public ResourceDataResult filter(final ResourceDataRequest req) {
+        FilterChain chain = new DefaultFilterChain(this.filters, req -> {
 
-                CanonicalUri uri = req.getUri();
-                String href = uri.getAbsolutePath();
-                QueryString qs = uri.getQuery();
+            CanonicalUri uri1 = req.getUri();
+            String href1 = uri1.getAbsolutePath();
+            QueryString qs1 = uri1.getQuery();
 
-                HttpHeaders httpHeaders = req.getHttpHeaders();
+            HttpHeaders httpHeaders = req.getHttpHeaders();
 
-                // if this is an Okta user, we must use a PUT and not a POST
-                HttpMethod method = HttpMethod.POST;
-                if (!create) {
-                    method = HttpMethod.PUT;
-                }
-
-                InputStream body;
-                long length = 0;
-                if (resource instanceof VoidResource) {
-                    body = new ByteArrayInputStream(new byte[0]);
-                } else {
-                    ByteArrayOutputStream bodyOut = new ByteArrayOutputStream();
-                    mapMarshaller.marshal(bodyOut, req.getData());
-                    body = new ByteArrayInputStream(bodyOut.toByteArray());
-                    length = bodyOut.size();
-                }
-
-                Request request = new DefaultRequest(method, href, qs, httpHeaders, body, length);
-
-                Response response = execute(request);
-                Map<String, Object> responseBody = getBody(response);
-
-                if (Collections.isEmpty(responseBody)) {
-                    // Fix for https://github.com/stormpath/stormpath-sdk-java/issues/218
-                    // Okta response with 200 for deactivate requests (i.e. /api/v1/apps/<id>/lifecycle/deactivate)
-                    if (response.getHttpStatus() == 202
-                            || response.getHttpStatus() == 200
-                            || response.getHttpStatus() == 204) {
-                        //202 means that the request has been accepted for processing, but the processing has not been completed. Therefore we do not have a response body.
-                        responseBody = java.util.Collections.emptyMap();
-                    } else {
-                        throw new IllegalStateException("Unable to obtain resource data from the API server.");
-                    }
-                }
-
-                ResourceAction responseAction = getPostAction(req, response);
-
-                return new DefaultResourceDataResult(responseAction, uri, returnType, responseBody);
+            // if this is an Okta user, we must use a PUT and not a POST
+            HttpMethod method = HttpMethod.POST;
+            if (!create) {
+                method = HttpMethod.PUT;
             }
+
+            InputStream body;
+            long length = 0;
+            if (resource instanceof VoidResource) {
+                body = new ByteArrayInputStream(new byte[0]);
+            } else {
+                ByteArrayOutputStream bodyOut = new ByteArrayOutputStream();
+                mapMarshaller.marshal(bodyOut, req.getData());
+                body = new ByteArrayInputStream(bodyOut.toByteArray());
+                length = bodyOut.size();
+            }
+
+            Request request = new DefaultRequest(method, href1, qs1, httpHeaders, body, length);
+
+            Response response = execute(request);
+            Map<String, Object> responseBody = getBody(response);
+
+            if (Collections.isEmpty(responseBody)) {
+                // Fix for https://github.com/stormpath/stormpath-sdk-java/issues/218
+                // Okta response with 200 for deactivate requests (i.e. /api/v1/apps/<id>/lifecycle/deactivate)
+                if (response.getHttpStatus() == 202
+                        || response.getHttpStatus() == 200
+                        || response.getHttpStatus() == 204) {
+                    //202 means that the request has been accepted for processing, but the processing has not been completed. Therefore we do not have a response body.
+                    responseBody = java.util.Collections.emptyMap();
+                } else {
+                    throw new IllegalStateException("Unable to obtain resource data from the API server.");
+                }
+            }
+
+            ResourceAction responseAction = getPostAction(req, response);
+
+            return new DefaultResourceDataResult(responseAction, uri1, returnType, responseBody);
         });
 
         ResourceAction action = create ? ResourceAction.CREATE : ResourceAction.UPDATE;
@@ -363,12 +357,12 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public <T extends Resource> void delete(T resource) {
-        doDelete(resource.getResourceHref(), resource, null);
+        doDelete(resource.getResourceHref(), resource);
     }
 
     @Override
     public <T extends Resource> void delete(String href, T resource) {
-        doDelete(href, resource, null);
+        doDelete(href, resource);
     }
 
     private void doDelete(String resourceHref, Class resourceClass, final String possiblyNullPropertyName) {
@@ -387,15 +381,11 @@ public class DefaultDataStore implements InternalDataStore {
             requestHref = resourceHref;
         }
 
-        FilterChain chain = new DefaultFilterChain(this.filters, new FilterChain() {
-
-            @Override
-            public ResourceDataResult filter(ResourceDataRequest request) {
-                Request deleteRequest = new DefaultRequest(HttpMethod.DELETE, requestHref);
-                execute(deleteRequest);
-                //delete requests have HTTP 204 (no content), so just create an empty body for the result:
-                return new DefaultResourceDataResult(request.getAction(), request.getUri(), request.getResourceClass(), new HashMap<String, Object>());
-            }
+        FilterChain chain = new DefaultFilterChain(this.filters, request -> {
+            Request deleteRequest = new DefaultRequest(HttpMethod.DELETE, requestHref);
+            execute(deleteRequest);
+            //delete requests have HTTP 204 (no content), so just create an empty body for the result:
+            return new DefaultResourceDataResult(request.getAction(), request.getUri(), request.getResourceClass(), new HashMap<String, Object>());
         });
 
         final CanonicalUri resourceUri = canonicalize(resourceHref, null);
@@ -403,12 +393,12 @@ public class DefaultDataStore implements InternalDataStore {
         chain.filter(request);
     }
 
-    private <T extends Resource> void doDelete(String href, T resource, final String possiblyNullPropertyName) {
+    private <T extends Resource> void doDelete(String href, T resource) {
 
         Assert.notNull(resource, "resource argument cannot be null.");
         Assert.isInstanceOf(AbstractResource.class, resource, "Resource argument must be an AbstractResource.");
 
-        doDelete(href != null ? href : resource.getResourceHref(), getResourceClass(resource), possiblyNullPropertyName);
+        doDelete(href != null ? href : resource.getResourceHref(), getResourceClass(resource), null);
     }
 
     /* =====================================================================
@@ -477,7 +467,7 @@ public class DefaultDataStore implements InternalDataStore {
         String oktaAgentHeaderName = OKTA_AGENT.toLowerCase(Locale.ENGLISH);
         if (headerMap != null && headerMap.get(oktaAgentHeaderName) != null) {
             List<String> oktaAgents = headerMap.get(oktaAgentHeaderName);
-            if (oktaAgents != null && oktaAgents.size() > 0) {
+            if (oktaAgents != null && !oktaAgents.isEmpty()) {
                 String oktaAgent = Strings.arrayToDelimitedString(oktaAgents.toArray(), " ");
                 request.getHeaders().set("User-Agent", oktaAgent + " " + USER_AGENT_STRING);
             }
@@ -529,9 +519,7 @@ public class DefaultDataStore implements InternalDataStore {
                 c = href.charAt(2);
                 if (c == 't' || c == 'T') {
                     c = href.charAt(3);
-                    if (c == 'p' || c == 'P') {
-                        return true;
-                    }
+                    return c == 'p' || c == 'P';
                 }
             }
         }
