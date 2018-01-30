@@ -45,7 +45,6 @@ import com.okta.sdk.impl.resource.HalResourceHrefResolver;
 import com.okta.sdk.impl.resource.ReferenceFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
-import com.okta.sdk.impl.util.StringInputStream;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Collections;
 import com.okta.sdk.lang.Strings;
@@ -56,6 +55,9 @@ import com.okta.sdk.resource.VoidResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -289,20 +291,12 @@ public class DefaultDataStore implements InternalDataStore {
 
         final CanonicalUri uri = canonicalize(href, qs);
         final AbstractResource abstractResource = (AbstractResource) resource;
-        final Map<String, Object> props = resourceConverter.convert(abstractResource, false); // TODO: Okta doesn't have great support for updating just dirty props so always include clean and dirty props
+        // Most Okta endpoints do not support partial update, we can revisit in the future.
+        final Map<String, Object> props = resourceConverter.convert(abstractResource, false);
 
         FilterChain chain = new DefaultFilterChain(this.filters, new FilterChain() {
             @Override
             public ResourceDataResult filter(final ResourceDataRequest req) {
-
-                String bodyString;
-                if (resource instanceof VoidResource) {
-                    bodyString = "";
-                } else {
-                    bodyString = mapMarshaller.marshal(req.getData());
-                }
-                StringInputStream body = new StringInputStream(bodyString);
-                long length = body.available();
 
                 CanonicalUri uri = req.getUri();
                 String href = uri.getAbsolutePath();
@@ -315,6 +309,18 @@ public class DefaultDataStore implements InternalDataStore {
                 if (!create) {
                     method = HttpMethod.PUT;
                 }
+
+                InputStream body;
+                long length = 0;
+                if (resource instanceof VoidResource) {
+                    body = new ByteArrayInputStream(new byte[0]);
+                } else {
+                    ByteArrayOutputStream bodyOut = new ByteArrayOutputStream();
+                    mapMarshaller.marshal(bodyOut, req.getData());
+                    body = new ByteArrayInputStream(bodyOut.toByteArray());
+                    length = bodyOut.size();
+                }
+
                 Request request = new DefaultRequest(method, href, qs, httpHeaders, body, length);
 
                 Response response = execute(request);
@@ -473,7 +479,7 @@ public class DefaultDataStore implements InternalDataStore {
         Map<String, Object> out = null;
 
         if (response.hasBody()) {
-            out = mapMarshaller.unmarshall(response.getBody(), response.getHeaders().getLinkMap());
+            out = mapMarshaller.unmarshal(response.getBody(), response.getHeaders().getLinkMap());
         }
 
         return out;
