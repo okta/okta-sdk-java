@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * Builder for creating simple {@link CacheManager} instances <b>suitable for SINGLE-JVM APPLICATIONS</b>.  If your
  * application is deployed (mirrored or clustered) across multiple JVMs, you might not
  * want to use this builder and use your own clusterable CacheManager implementation instead.  See Clustering below.
- * <h2>Clustering</h2>
+ * <h1>Clustering</h1>
  * <b>The default CacheManager instances created by this Builder DO NOT SUPPORT CLUSTERING</b>.
  * <p>
  * If you use this Builder and your application is deployed on multiple JVMs, <b>each of your application instances will
@@ -68,7 +68,7 @@ public interface CacheManagerBuilder {
      * If this value is not configured, it is assumed that cache entries could potentially live indefinitely.
      * Note however that entries can still be expunged due to other conditions (e.g. memory constraints, Time to
      * Idle setting, etc).
-     * <h3>Usage</h3>
+     * <h1>Usage</h1>
      * <pre>
      *     ...withDefaultTimeToLive(30, TimeUnit.MINUTES)...
      *     ...withDefaultTimeToLive(1, TimeUnit.HOURS)...
@@ -92,7 +92,7 @@ public interface CacheManagerBuilder {
      * If this value is not configured, it is assumed that cache entries could potentially live indefinitely.
      * Note however that entries can still be expunged due to other conditions (e.g. memory constraints, Time to
      * Live setting, etc).
-     * <h3>Usage</h3>
+     * <h1>Usage</h1>
      * <pre>
      *     ...withDefaultTimeToLive(30, TimeUnit.MINUTES)...
      *     ...withDefaultTimeToLive(1, TimeUnit.HOURS)...

@@ -16,8 +16,8 @@
 package com.okta.sdk.lang;
 
 /**
- * A <code>RuntimeException</code> equivalent of the JDK's
- * <code>ClassNotFoundException</code>, to maintain a RuntimeException paradigm.
+ * A {@code RuntimeException} equivalent of the JDK's
+ * {@code ClassNotFoundException}, to maintain a RuntimeException paradigm.
  *
  * @since 0.5.0
  */
