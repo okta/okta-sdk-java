@@ -318,7 +318,7 @@ class ApplicationsIT extends ITSupport {
                                 .setUrl("https://example.com/bookmark.htm"))))
     }
 
-    @Test
+    @Test(enabled = false) // OKTA-75280
     void applicationKeysTest() {
 
         Client client = getClient()
