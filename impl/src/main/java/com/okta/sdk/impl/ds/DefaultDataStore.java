@@ -511,20 +511,7 @@ public class DefaultDataStore implements InternalDataStore {
         if (href == null || href.length() < 5) {
             return false;
         }
-
-        char c = href.charAt(0);
-        if (c == 'h' || c == 'H') {
-            c = href.charAt(1);
-            if (c == 't' || c == 'T') {
-                c = href.charAt(2);
-                if (c == 't' || c == 'T') {
-                    c = href.charAt(3);
-                    return c == 'p' || c == 'P';
-                }
-            }
-        }
-
-        return false;
+        return href.regionMatches(true, 0, "http", 0, 4);
     }
 
     protected String qualify(String href) {
