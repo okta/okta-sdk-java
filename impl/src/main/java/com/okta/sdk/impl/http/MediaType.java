@@ -1,5 +1,6 @@
 /*
  * Copyright 2002-2017 the original author or authors.
+ * Modifications Copyright 2018 Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +17,6 @@
 
 package com.okta.sdk.impl.http;
 
-import com.okta.sdk.impl.util.InvalidMimeTypeException;
-import com.okta.sdk.impl.util.MimeType;
-import com.okta.sdk.impl.util.MimeTypeUtils;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Strings;
-
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -33,6 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.okta.sdk.impl.util.InvalidMimeTypeException;
+import com.okta.sdk.impl.util.MimeType;
+import com.okta.sdk.impl.util.MimeTypeUtils;
+import com.okta.sdk.lang.Assert;
+import com.okta.sdk.lang.Strings;
 
 /**
  * A sub-class of {@link MimeType} that adds support for quality parameters as defined
@@ -44,7 +44,8 @@ import java.util.stream.Collectors;
  * @author Sebastien Deleuze
  * @author Kazuki Shimizu
  * @since 3.0
- * @see <a href="http://tools.ietf.org/html/rfc7231#section-3.1.1.1">HTTP 1.1: Semantics and Content, section 3.1.1.1</a>
+ * @see <a href="http://tools.ietf.org/html/rfc7231#section-3.1.1.1">
+ *     HTTP 1.1: Semantics and Content, section 3.1.1.1</a>
  */
 public class MediaType extends MimeType implements Serializable {
 
@@ -100,7 +101,7 @@ public class MediaType extends MimeType implements Serializable {
     /**
      * A String equivalent of {@link MediaType#APPLICATION_JSON_UTF8}.
      */
-    public final static String APPLICATION_JSON_UTF8_VALUE = APPLICATION_JSON_VALUE + ";charset=UTF-8";
+    public final static String APPLICATION_JSON_UTF8_VALUE = "application/json;charset=UTF-8";
 
     /**
      * Public constant media type for {@code application/octet-stream}.
@@ -123,6 +124,48 @@ public class MediaType extends MimeType implements Serializable {
      * @since 4.3
      */
     public final static String APPLICATION_PDF_VALUE = "application/pdf";
+
+    /**
+     * Public constant media type for {@code application/problem+json}.
+     * @since 5.0
+     * @see <a href="https://tools.ietf.org/html/rfc7807#section-6.1">
+     *     Problem Details for HTTP APIs, 6.1. application/problem+json</a>
+     */
+    public final static MediaType APPLICATION_PROBLEM_JSON;
+
+    /**
+     * A String equivalent of {@link MediaType#APPLICATION_PROBLEM_JSON}.
+     * @since 5.0
+     */
+    public final static String APPLICATION_PROBLEM_JSON_VALUE = "application/problem+json";
+
+    /**
+     * Public constant media type for {@code application/problem+json}.
+     * @since 5.0
+     * @see <a href="https://tools.ietf.org/html/rfc7807#section-6.1">
+     *     Problem Details for HTTP APIs, 6.1. application/problem+json</a>
+     */
+    public final static MediaType APPLICATION_PROBLEM_JSON_UTF8;
+
+    /**
+     * A String equivalent of {@link MediaType#APPLICATION_PROBLEM_JSON_UTF8}.
+     * @since 5.0
+     */
+    public final static String APPLICATION_PROBLEM_JSON_UTF8_VALUE = "application/problem+json;charset=UTF-8";
+
+    /**
+     * Public constant media type for {@code application/problem+xml}.
+     * @since 5.0
+     * @see <a href="https://tools.ietf.org/html/rfc7807#section-6.2">
+     *     Problem Details for HTTP APIs, 6.2. application/problem+xml</a>
+     */
+    public final static MediaType APPLICATION_PROBLEM_XML;
+
+    /**
+     * A String equivalent of {@link MediaType#APPLICATION_PROBLEM_XML}.
+     * @since 5.0
+     */
+    public final static String APPLICATION_PROBLEM_XML_VALUE = "application/problem+xml";
 
     /**
      * Public constant media type for {@code application/rss+xml}.
@@ -263,32 +306,6 @@ public class MediaType extends MimeType implements Serializable {
      */
     public final static String TEXT_XML_VALUE = "text/xml";
 
-    /**
-     * Public constant media type for {@code application/problem+json}.
-     * @since 5.0
-     * @see <a href="https://tools.ietf.org/html/rfc7807#section-6.1">Problem Details for HTTP APIs, 6.1. application/problem+json</a>
-     */
-    public final static MediaType APPLICATION_PROBLEM_JSON;
-
-    /**
-     * A String equivalent of {@link MediaType#APPLICATION_PROBLEM_JSON}.
-     * @since 5.0
-     */
-    public final static String APPLICATION_PROBLEM_JSON_VALUE = "application/problem+json";
-
-    /**
-     * Public constant media type for {@code application/problem+xml}.
-     * @since 5.0
-     * @see <a href="https://tools.ietf.org/html/rfc7807#section-6.2">Problem Details for HTTP APIs, 6.2. application/problem+xml</a>
-     */
-    public final static MediaType APPLICATION_PROBLEM_XML;
-
-    /**
-     * A String equivalent of {@link MediaType#APPLICATION_PROBLEM_XML}.
-     * @since 5.0
-     */
-    public final static String APPLICATION_PROBLEM_XML_VALUE = "application/problem+xml";
-
     private static final String PARAM_QUALITY_FACTOR = "q";
 
 
@@ -301,6 +318,7 @@ public class MediaType extends MimeType implements Serializable {
         APPLICATION_OCTET_STREAM = valueOf(APPLICATION_OCTET_STREAM_VALUE);
         APPLICATION_PDF = valueOf(APPLICATION_PDF_VALUE);
         APPLICATION_PROBLEM_JSON = valueOf(APPLICATION_PROBLEM_JSON_VALUE);
+        APPLICATION_PROBLEM_JSON_UTF8 = valueOf(APPLICATION_PROBLEM_JSON_UTF8_VALUE);
         APPLICATION_PROBLEM_XML = valueOf(APPLICATION_PROBLEM_XML_VALUE);
         APPLICATION_RSS_XML = valueOf(APPLICATION_RSS_XML_VALUE);
         APPLICATION_STREAM_JSON = valueOf(APPLICATION_STREAM_JSON_VALUE);
@@ -441,7 +459,6 @@ public class MediaType extends MimeType implements Serializable {
 
     /**
      * Return a replica of this instance with the quality value of the given MediaType.
-     * @param mediaType the source mediaType
      * @return the same instance if the given MediaType doesn't have a quality value, or a new one otherwise
      */
     public MediaType copyQualityValue(MediaType mediaType) {
@@ -469,12 +486,10 @@ public class MediaType extends MimeType implements Serializable {
 
     /**
      * Parse the given String value into a {@code MediaType} object,
-     * with this method name following the 'valueOf' naming convention
-     * (as supported by {@code org.springframework.core.convert.ConversionService}.
+     * with this method name following the 'valueOf' naming convention.
      * @param value the string to parse
      * @throws InvalidMediaTypeException if the media type value cannot be parsed
      * @see #parseMediaType(String)
-     * @return MediaType based on the {@code value}
      */
     public static MediaType valueOf(String value) {
         return parseMediaType(value);
@@ -548,8 +563,7 @@ public class MediaType extends MimeType implements Serializable {
 
     /**
      * Re-create the given mime types as media types.
-     * @param mimeTypes the list to convert
-     * @return the resulting MimeTypes list
+     * @since 5.0
      */
     public static List<MediaType> asMediaTypes(List<MimeType> mimeTypes) {
         return mimeTypes.stream().map(MediaType::asMediaType).collect(Collectors.toList());
@@ -557,8 +571,7 @@ public class MediaType extends MimeType implements Serializable {
 
     /**
      * Re-create the given mime type as a media type.
-     * @param mimeType the MimeType to convert
-     * @return a MediaType based on the mimeType
+     * @since 5.0
      */
     public static MediaType asMediaType(MimeType mimeType) {
         if (mimeType instanceof MediaType) {
@@ -641,7 +654,6 @@ public class MediaType extends MimeType implements Serializable {
     /**
      * Sorts the given list of {@code MediaType} objects by specificity as the
      * primary criteria and quality value the secondary.
-     * @param mediaTypes list to sort
      * @see MediaType#sortBySpecificity(List)
      * @see MediaType#sortByQualityValue(List)
      */
@@ -657,40 +669,37 @@ public class MediaType extends MimeType implements Serializable {
     /**
      * Comparator used by {@link #sortByQualityValue(List)}.
      */
-    public static final Comparator<MediaType> QUALITY_VALUE_COMPARATOR = new Comparator<MediaType>() {
-
-        @Override
-        public int compare(MediaType mediaType1, MediaType mediaType2) {
-            double quality1 = mediaType1.getQualityValue();
-            double quality2 = mediaType2.getQualityValue();
-            int qualityComparison = Double.compare(quality2, quality1);
-            if (qualityComparison != 0) {
-                return qualityComparison;  // audio/*;q=0.7 < audio/*;q=0.3
-            }
-            else if (mediaType1.isWildcardType() && !mediaType2.isWildcardType()) { // */* < audio/*
+    public static final Comparator<MediaType> QUALITY_VALUE_COMPARATOR = (mediaType1, mediaType2) -> {
+        double quality1 = mediaType1.getQualityValue();
+        double quality2 = mediaType2.getQualityValue();
+        int qualityComparison = Double.compare(quality2, quality1);
+        if (qualityComparison != 0) {
+            return qualityComparison;  // audio/*;q=0.7 < audio/*;q=0.3
+        }
+        else if (mediaType1.isWildcardType() && !mediaType2.isWildcardType()) { // */* < audio/*
+            return 1;
+        }
+        else if (mediaType2.isWildcardType() && !mediaType1.isWildcardType()) { // audio/* > */*
+            return -1;
+        }
+        else if (!mediaType1.getType().equals(mediaType2.getType())) { // audio/basic == text/html
+            return 0;
+        }
+        else { // mediaType1.getType().equals(mediaType2.getType())
+            if (mediaType1.isWildcardSubtype() && !mediaType2.isWildcardSubtype()) { // audio/* < audio/basic
                 return 1;
             }
-            else if (mediaType2.isWildcardType() && !mediaType1.isWildcardType()) { // audio/* > */*
+            else if (mediaType2.isWildcardSubtype() && !mediaType1.isWildcardSubtype()) { // audio/basic > audio/*
                 return -1;
             }
-            else if (!mediaType1.getType().equals(mediaType2.getType())) { // audio/basic == text/html
+            else if (!mediaType1.getSubtype().equals(mediaType2.getSubtype())) { // audio/basic == audio/wave
                 return 0;
             }
-            else { // mediaType1.getType().equals(mediaType2.getType())
-                if (mediaType1.isWildcardSubtype() && !mediaType2.isWildcardSubtype()) { // audio/* < audio/basic
-                    return 1;
-                }
-                else if (mediaType2.isWildcardSubtype() && !mediaType1.isWildcardSubtype()) { // audio/basic > audio/*
-                    return -1;
-                }
-                else if (!mediaType1.getSubtype().equals(mediaType2.getSubtype())) { // audio/basic == audio/wave
-                    return 0;
-                }
-                else {
-                    int paramsSize1 = mediaType1.getParameters().size();
-                    int paramsSize2 = mediaType2.getParameters().size();
-                    return (paramsSize2 < paramsSize1 ? -1 : (paramsSize2 == paramsSize1 ? 0 : 1)); // audio/basic;level=1 < audio/basic
-                }
+            else {
+                int paramsSize1 = mediaType1.getParameters().size();
+                int paramsSize2 = mediaType2.getParameters().size();
+                // audio/basic;level=1 < audio/basic
+                return (paramsSize2 < paramsSize1 ? -1 : (paramsSize2 == paramsSize1 ? 0 : 1));
             }
         }
     };

@@ -1,5 +1,6 @@
 /*
- * Copyright 2002-2016 the original author or authors.
+ * Copyright 2002-2017 the original author or authors.
+ * Modifications Copyright 2018 Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +21,6 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Miscellaneous object utility methods.
@@ -37,6 +37,7 @@ import java.util.Optional;
  * @author Rob Harrop
  * @author Chris Beams
  * @author Sam Brannen
+ * @since 19.03.2004
  * @see Classes
  * @see Collections
  * @see Strings
@@ -92,7 +93,6 @@ public abstract class Objects {
      * Determine whether the given object is an array:
      * either an Object array or a primitive array.
      * @param obj the object to check
-     * @return true if {@code obj} is an array
      */
     public static boolean isArray(Object obj) {
         return (obj != null && obj.getClass().isArray());
@@ -102,7 +102,6 @@ public abstract class Objects {
      * Determine whether the given array is empty:
      * i.e. {@code null} or of zero length.
      * @param array the array to check
-     * @return true if array is null or empty
      * @see #isEmpty(Object)
      */
     public static boolean isEmpty(Object[] array) {
@@ -113,7 +112,6 @@ public abstract class Objects {
      * Determine whether the given object is empty.
      * <p>This method supports the following object types.
      * <ul>
-     * <li>{@code Optional}: considered empty if {@link Optional#empty()}</li>
      * <li>{@code Array}: considered empty if its length is zero</li>
      * <li>{@link CharSequence}: considered empty if its length is zero</li>
      * <li>{@link Collection}: delegates to {@link Collection#isEmpty()}</li>
@@ -124,7 +122,6 @@ public abstract class Objects {
      * @param obj the object to check
      * @return {@code true} if the object is {@code null} or <em>empty</em>
      * @since 4.2
-     * @see Optional#isPresent()
      * @see Objects#isEmpty(Object[])
      * @see Strings#hasLength(CharSequence)
      * @see Strings#isEmpty(Object)
@@ -137,14 +134,11 @@ public abstract class Objects {
             return true;
         }
 
-        if (obj instanceof Optional) {
-            return !((Optional) obj).isPresent();
+        if (obj instanceof CharSequence) {
+            return ((CharSequence) obj).length() == 0;
         }
         if (obj.getClass().isArray()) {
             return Array.getLength(obj) == 0;
-        }
-        if (obj instanceof CharSequence) {
-            return ((CharSequence) obj).length() == 0;
         }
         if (obj instanceof Collection) {
             return ((Collection) obj).isEmpty();
@@ -155,26 +149,6 @@ public abstract class Objects {
 
         // else
         return false;
-    }
-
-    /**
-     * Unwrap the given object which is potentially a {@link java.util.Optional}.
-     * @param obj the candidate object
-     * @return either the value held within the {@code Optional}, {@code null}
-     * if the {@code Optional} is empty, or simply the given object as-is
-     * @since 5.0
-     */
-    public static Object unwrapOptional(Object obj) {
-        if (obj instanceof Optional) {
-            Optional<?> optional = (Optional<?>) obj;
-            if (!optional.isPresent()) {
-                return null;
-            }
-            Object result = optional.get();
-            Assert.isTrue(!(result instanceof Optional), "Multi-level Optional usage not supported");
-            return result;
-        }
-        return obj;
     }
 
     /**
@@ -230,7 +204,6 @@ public abstract class Objects {
      * @param <E> the concrete Enum type
      * @param enumValues the array of all Enum constants in question, usually per Enum.values()
      * @param constant the constant to get the enum value of
-     * @return Enum based on the case insensitive value
      * @throws IllegalArgumentException if the given constant is not found in the given array
      * of enum values. Use {@link #containsConstant(Enum[], String)} as a guard to avoid this exception.
      */
@@ -250,8 +223,6 @@ public abstract class Objects {
      * consisting of the input array contents plus the given object.
      * @param array the array to append to (can be {@code null})
      * @param obj the object to append
-     * @param <A> The type of object array
-     * @param <O> The type of object to add
      * @return the new array (of the same component type; never {@code null})
      */
     public static <A, O extends A> A[] addObjectToArray(A[] array, O obj) {
@@ -381,8 +352,6 @@ public abstract class Objects {
      * this method will delegate to any of the {@code nullSafeHashCode}
      * methods for arrays in this class. If the object is {@code null},
      * this method returns 0.
-     * @param obj the Object to create a hash of
-     * @return hash code based on the contents of the specified array
      * @see Object#hashCode()
      * @see #nullSafeHashCode(Object[])
      * @see #nullSafeHashCode(boolean[])
@@ -433,8 +402,6 @@ public abstract class Objects {
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
-     * @param array the Array to create a hash of
-     * @return hash code based on the contents of the specified array
      */
     public static int nullSafeHashCode(Object[] array) {
         if (array == null) {
@@ -450,8 +417,6 @@ public abstract class Objects {
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
-     * @param array the Array to create a hash of
-     * @return hash code based on the contents of the specified array
      */
     public static int nullSafeHashCode(boolean[] array) {
         if (array == null) {
@@ -459,7 +424,7 @@ public abstract class Objects {
         }
         int hash = INITIAL_HASH;
         for (boolean element : array) {
-            hash = MULTIPLIER * hash + Boolean.hashCode(element);
+            hash = MULTIPLIER * hash + hashCode(element);
         }
         return hash;
     }
@@ -467,8 +432,6 @@ public abstract class Objects {
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
-     * @param array the Array to create a hash of
-     * @return hash code based on the contents of the specified array
      */
     public static int nullSafeHashCode(byte[] array) {
         if (array == null) {
@@ -484,8 +447,6 @@ public abstract class Objects {
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
-     * @param array the Array to create a hash of
-     * @return hash code based on the contents of the specified array
      */
     public static int nullSafeHashCode(char[] array) {
         if (array == null) {
@@ -501,8 +462,6 @@ public abstract class Objects {
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
-     * @param array the Array to create a hash of
-     * @return hash code based on the contents of the specified array
      */
     public static int nullSafeHashCode(double[] array) {
         if (array == null) {
@@ -510,7 +469,7 @@ public abstract class Objects {
         }
         int hash = INITIAL_HASH;
         for (double element : array) {
-            hash = MULTIPLIER * hash + Double.hashCode(element);
+            hash = MULTIPLIER * hash + hashCode(element);
         }
         return hash;
     }
@@ -518,8 +477,6 @@ public abstract class Objects {
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
-     * @param array the Array to create a hash of
-     * @return hash code based on the contents of the specified array
      */
     public static int nullSafeHashCode(float[] array) {
         if (array == null) {
@@ -527,7 +484,7 @@ public abstract class Objects {
         }
         int hash = INITIAL_HASH;
         for (float element : array) {
-            hash = MULTIPLIER * hash + Float.hashCode(element);
+            hash = MULTIPLIER * hash + hashCode(element);
         }
         return hash;
     }
@@ -535,8 +492,6 @@ public abstract class Objects {
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
-     * @param array the Array to create a hash of
-     * @return hash code based on the contents of the specified array
      */
     public static int nullSafeHashCode(int[] array) {
         if (array == null) {
@@ -552,8 +507,6 @@ public abstract class Objects {
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
-     * @param array the Array to create a hash of
-     * @return hash code based on the contents of the specified array
      */
     public static int nullSafeHashCode(long[] array) {
         if (array == null) {
@@ -561,7 +514,7 @@ public abstract class Objects {
         }
         int hash = INITIAL_HASH;
         for (long element : array) {
-            hash = MULTIPLIER * hash + Long.hashCode(element);
+            hash = MULTIPLIER * hash + hashCode(element);
         }
         return hash;
     }
@@ -569,8 +522,6 @@ public abstract class Objects {
     /**
      * Return a hash code based on the contents of the specified array.
      * If {@code array} is {@code null}, this method returns 0.
-     * @param array the Array to create a hash of
-     * @return hash code based on the contents of the specified array
      */
     public static int nullSafeHashCode(short[] array) {
         if (array == null) {
@@ -582,6 +533,39 @@ public abstract class Objects {
         }
         return hash;
     }
+
+    /**
+     * Return the same value as {@link Boolean#hashCode()}}.
+     * @see Boolean#hashCode()
+     */
+    public static int hashCode(boolean bool) {
+        return (bool ? 1231 : 1237);
+    }
+
+    /**
+     * Return the same value as {@link Double#hashCode()}}.
+     * @see Double#hashCode()
+     */
+    public static int hashCode(double dbl) {
+        return hashCode(Double.doubleToLongBits(dbl));
+    }
+
+    /**
+     * Return the same value as {@link Float#hashCode()}}.
+     * @see Float#hashCode()
+     */
+    public static int hashCode(float flt) {
+        return Float.floatToIntBits(flt);
+    }
+
+    /**
+     * Return the same value as {@link Long#hashCode()}}.
+     * @see Long#hashCode()
+     */
+    public static int hashCode(long lng) {
+        return (int) (lng ^ (lng >>> 32));
+    }
+
 
     //---------------------------------------------------------------------
     // Convenience methods for toString output

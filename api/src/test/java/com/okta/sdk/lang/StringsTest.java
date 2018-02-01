@@ -1,12 +1,12 @@
 /*
- * Copyright 2014 Stormpath, Inc.
+ * Copyright 2002-2017 the original author or authors.
  * Modifications Copyright 2018 Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,11 +16,11 @@
  */
 package com.okta.sdk.lang;
 
-import org.testng.annotations.Test;
-
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
+
+import org.testng.annotations.Test;
 
 import static org.testng.AssertJUnit.*;
 
@@ -32,24 +32,24 @@ import static org.testng.AssertJUnit.*;
 public class StringsTest {
 
     @Test
-    public void testHasTextBlank() throws Exception {
+    public void testHasTextBlank() {
         String blank = "          ";
         assertEquals(false, Strings.hasText(blank));
     }
 
     @Test
-    public void testHasTextNullEmpty() throws Exception {
+    public void testHasTextNullEmpty() {
         assertEquals(false, Strings.hasText(null));
         assertEquals(false, Strings.hasText(""));
     }
 
     @Test
-    public void testHasTextValid() throws Exception {
+    public void testHasTextValid() {
         assertEquals(true, Strings.hasText("t"));
     }
 
     @Test
-    public void testContainsWhitespace() throws Exception {
+    public void testContainsWhitespace() {
         assertFalse(Strings.containsWhitespace(null));
         assertFalse(Strings.containsWhitespace(""));
         assertFalse(Strings.containsWhitespace("a"));
@@ -62,7 +62,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testTrimWhitespace() throws Exception {
+    public void testTrimWhitespace() {
         assertEquals(null, Strings.trimWhitespace(null));
         assertEquals("", Strings.trimWhitespace(""));
         assertEquals("", Strings.trimWhitespace(" "));
@@ -75,7 +75,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testTrimAllWhitespace() throws Exception {
+    public void testTrimAllWhitespace() {
         assertEquals("", Strings.trimAllWhitespace(""));
         assertEquals("", Strings.trimAllWhitespace(" "));
         assertEquals("", Strings.trimAllWhitespace("\t"));
@@ -87,7 +87,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testTrimLeadingWhitespace() throws Exception {
+    public void testTrimLeadingWhitespace() {
         assertEquals(null, Strings.trimLeadingWhitespace(null));
         assertEquals("", Strings.trimLeadingWhitespace(""));
         assertEquals("", Strings.trimLeadingWhitespace(" "));
@@ -100,7 +100,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testTrimTrailingWhitespace() throws Exception {
+    public void testTrimTrailingWhitespace() {
         assertEquals(null, Strings.trimTrailingWhitespace(null));
         assertEquals("", Strings.trimTrailingWhitespace(""));
         assertEquals("", Strings.trimTrailingWhitespace(" "));
@@ -113,7 +113,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testTrimLeadingCharacter() throws Exception {
+    public void testTrimLeadingCharacter() {
         assertEquals(null, Strings.trimLeadingCharacter(null, ' '));
         assertEquals("", Strings.trimLeadingCharacter("", ' '));
         assertEquals("", Strings.trimLeadingCharacter(" ", ' '));
@@ -126,7 +126,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testTrimTrailingCharacter() throws Exception {
+    public void testTrimTrailingCharacter() {
         assertEquals(null, Strings.trimTrailingCharacter(null, ' '));
         assertEquals("", Strings.trimTrailingCharacter("", ' '));
         assertEquals("", Strings.trimTrailingCharacter(" ", ' '));
@@ -136,6 +136,60 @@ public class StringsTest {
         assertEquals(" a", Strings.trimTrailingCharacter(" a ", ' '));
         assertEquals(" a b", Strings.trimTrailingCharacter(" a b ", ' '));
         assertEquals(" a b  c", Strings.trimTrailingCharacter(" a b  c ", ' '));
+    }
+
+    @Test
+    public void testStartsWithIgnoreCase() {
+        String prefix = "fOo";
+        assertTrue(Strings.startsWithIgnoreCase("foo", prefix));
+        assertTrue(Strings.startsWithIgnoreCase("Foo", prefix));
+        assertTrue(Strings.startsWithIgnoreCase("foobar", prefix));
+        assertTrue(Strings.startsWithIgnoreCase("foobarbar", prefix));
+        assertTrue(Strings.startsWithIgnoreCase("Foobar", prefix));
+        assertTrue(Strings.startsWithIgnoreCase("FoobarBar", prefix));
+        assertTrue(Strings.startsWithIgnoreCase("foObar", prefix));
+        assertTrue(Strings.startsWithIgnoreCase("FOObar", prefix));
+        assertTrue(Strings.startsWithIgnoreCase("fOobar", prefix));
+        assertFalse(Strings.startsWithIgnoreCase(null, prefix));
+        assertFalse(Strings.startsWithIgnoreCase("fOobar", null));
+        assertFalse(Strings.startsWithIgnoreCase("b", prefix));
+        assertFalse(Strings.startsWithIgnoreCase("barfoo", prefix));
+        assertFalse(Strings.startsWithIgnoreCase("barfoobar", prefix));
+    }
+
+    @Test
+    public void testEndsWithIgnoreCase() {
+        String suffix = "fOo";
+        assertTrue(Strings.endsWithIgnoreCase("foo", suffix));
+        assertTrue(Strings.endsWithIgnoreCase("Foo", suffix));
+        assertTrue(Strings.endsWithIgnoreCase("barfoo", suffix));
+        assertTrue(Strings.endsWithIgnoreCase("barbarfoo", suffix));
+        assertTrue(Strings.endsWithIgnoreCase("barFoo", suffix));
+        assertTrue(Strings.endsWithIgnoreCase("barBarFoo", suffix));
+        assertTrue(Strings.endsWithIgnoreCase("barfoO", suffix));
+        assertTrue(Strings.endsWithIgnoreCase("barFOO", suffix));
+        assertTrue(Strings.endsWithIgnoreCase("barfOo", suffix));
+        assertFalse(Strings.endsWithIgnoreCase(null, suffix));
+        assertFalse(Strings.endsWithIgnoreCase("barfOo", null));
+        assertFalse(Strings.endsWithIgnoreCase("b", suffix));
+        assertFalse(Strings.endsWithIgnoreCase("foobar", suffix));
+        assertFalse(Strings.endsWithIgnoreCase("barfoobar", suffix));
+    }
+
+    @Test
+    public void testSubstringMatch() {
+        assertTrue(Strings.substringMatch("foo", 0, "foo"));
+        assertTrue(Strings.substringMatch("foo", 1, "oo"));
+        assertTrue(Strings.substringMatch("foo", 2, "o"));
+        assertFalse(Strings.substringMatch("foo", 0, "fOo"));
+        assertFalse(Strings.substringMatch("foo", 1, "fOo"));
+        assertFalse(Strings.substringMatch("foo", 2, "fOo"));
+        assertFalse(Strings.substringMatch("foo", 3, "fOo"));
+        assertFalse(Strings.substringMatch("foo", 1, "Oo"));
+        assertFalse(Strings.substringMatch("foo", 2, "Oo"));
+        assertFalse(Strings.substringMatch("foo", 3, "Oo"));
+        assertFalse(Strings.substringMatch("foo", 2, "O"));
+        assertFalse(Strings.substringMatch("foo", 3, "O"));
     }
 
     @Test
@@ -166,7 +220,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testReplace() throws Exception {
+    public void testReplace() {
         String inString = "a6AazAaa77abaa";
         String oldPattern = "aa";
         String newPattern = "foo";
@@ -189,7 +243,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void testDelete() {
         String inString = "The quick brown fox jumped over the lazy dog";
 
         String noThe = Strings.delete(inString, "the");
@@ -216,7 +270,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testDeleteAny() throws Exception {
+    public void testDeleteAny() {
         String inString = "Able was I ere I saw Elba";
 
         String res = Strings.deleteAny(inString, "I");
@@ -301,7 +355,6 @@ public class StringsTest {
 
     @Test
     public void testStripFilenameExtension() {
-        assertEquals(null, Strings.stripFilenameExtension(null));
         assertEquals("", Strings.stripFilenameExtension(""));
         assertEquals("myfile", Strings.stripFilenameExtension("myfile"));
         assertEquals("myfile", Strings.stripFilenameExtension("myfile."));
@@ -580,26 +633,9 @@ public class StringsTest {
         assertTrue("Output equals input", Arrays.equals(sa, components));
     }
 
-    @Test
-    public void testEndsWithIgnoreCase() {
-        String suffix = "fOo";
-        assertTrue(Strings.endsWithIgnoreCase("foo", suffix));
-        assertTrue(Strings.endsWithIgnoreCase("Foo", suffix));
-        assertTrue(Strings.endsWithIgnoreCase("barfoo", suffix));
-        assertTrue(Strings.endsWithIgnoreCase("barbarfoo", suffix));
-        assertTrue(Strings.endsWithIgnoreCase("barFoo", suffix));
-        assertTrue(Strings.endsWithIgnoreCase("barBarFoo", suffix));
-        assertTrue(Strings.endsWithIgnoreCase("barfoO", suffix));
-        assertTrue(Strings.endsWithIgnoreCase("barFOO", suffix));
-        assertTrue(Strings.endsWithIgnoreCase("barfOo", suffix));
-        assertFalse(Strings.endsWithIgnoreCase(null, suffix));
-        assertFalse(Strings.endsWithIgnoreCase("barfOo", null));
-        assertFalse(Strings.endsWithIgnoreCase("b", suffix));
-    }
-
 
     @Test
-    public void testParseLocaleStringSunnyDay() throws Exception {
+    public void testParseLocaleStringSunnyDay() {
         Locale expectedLocale = Locale.UK;
         Locale locale = Strings.parseLocaleString(expectedLocale.toString());
         assertNotNull("When given a bona-fide Locale string, must not return null.", locale);
@@ -607,19 +643,19 @@ public class StringsTest {
     }
 
     @Test
-    public void testParseLocaleStringWithMalformedLocaleString() throws Exception {
+    public void testParseLocaleStringWithMalformedLocaleString() {
         Locale locale = Strings.parseLocaleString("_banjo_on_my_knee");
         assertNotNull("When given a malformed Locale string, must not return null.", locale);
     }
 
     @Test
-    public void testParseLocaleStringWithEmptyLocaleStringYieldsNullLocale() throws Exception {
+    public void testParseLocaleStringWithEmptyLocaleStringYieldsNullLocale() {
         Locale locale = Strings.parseLocaleString("");
         assertNull("When given an empty Locale string, must return null.", locale);
     }
 
     @Test  // SPR-8637
-    public void testParseLocaleWithMultiSpecialCharactersInVariant() throws Exception {
+    public void testParseLocaleWithMultiSpecialCharactersInVariant() {
         String variant = "proper-northern";
         String localeString = "en_GB_" + variant;
         Locale locale = Strings.parseLocaleString(localeString);
@@ -627,7 +663,7 @@ public class StringsTest {
     }
 
     @Test  // SPR-3671
-    public void testParseLocaleWithMultiValuedVariant() throws Exception {
+    public void testParseLocaleWithMultiValuedVariant() {
         String variant = "proper_northern";
         String localeString = "en_GB_" + variant;
         Locale locale = Strings.parseLocaleString(localeString);
@@ -635,7 +671,7 @@ public class StringsTest {
     }
 
     @Test  // SPR-3671
-    public void testParseLocaleWithMultiValuedVariantUsingSpacesAsSeparators() throws Exception {
+    public void testParseLocaleWithMultiValuedVariantUsingSpacesAsSeparators() {
         String variant = "proper northern";
         String localeString = "en GB " + variant;
         Locale locale = Strings.parseLocaleString(localeString);
@@ -643,7 +679,7 @@ public class StringsTest {
     }
 
     @Test  // SPR-3671
-    public void testParseLocaleWithMultiValuedVariantUsingMixtureOfUnderscoresAndSpacesAsSeparators() throws Exception {
+    public void testParseLocaleWithMultiValuedVariantUsingMixtureOfUnderscoresAndSpacesAsSeparators() {
         String variant = "proper northern";
         String localeString = "en_GB_" + variant;
         Locale locale = Strings.parseLocaleString(localeString);
@@ -651,7 +687,7 @@ public class StringsTest {
     }
 
     @Test  // SPR-3671
-    public void testParseLocaleWithMultiValuedVariantUsingSpacesAsSeparatorsWithLotsOfLeadingWhitespace() throws Exception {
+    public void testParseLocaleWithMultiValuedVariantUsingSpacesAsSeparatorsWithLotsOfLeadingWhitespace() {
         String variant = "proper northern";
         String localeString = "en GB            " + variant;  // lots of whitespace
         Locale locale = Strings.parseLocaleString(localeString);
@@ -659,7 +695,7 @@ public class StringsTest {
     }
 
     @Test  // SPR-3671
-    public void testParseLocaleWithMultiValuedVariantUsingUnderscoresAsSeparatorsWithLotsOfLeadingWhitespace() throws Exception {
+    public void testParseLocaleWithMultiValuedVariantUsingUnderscoresAsSeparatorsWithLotsOfLeadingWhitespace() {
         String variant = "proper_northern";
         String localeString = "en_GB_____" + variant;  // lots of underscores
         Locale locale = Strings.parseLocaleString(localeString);
@@ -695,12 +731,5 @@ public class StringsTest {
     public void testParseJava7Variant() {
         assertEquals("sr_#LATN", Strings.parseLocaleString("sr_#LATN").toString());
     }
-    
-    @Test
-    public void clean() {
-        assertNull(Strings.clean(null));
-        assertNull(Strings.clean("  "));
-        assertEquals("foo", Strings.clean(" foo     "));
-        assertEquals("foo", Strings.clean("foo"));
-    }
+
 }
