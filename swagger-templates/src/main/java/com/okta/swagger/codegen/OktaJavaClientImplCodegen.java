@@ -109,8 +109,13 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
                 switch (property.baseType) {
                     case "String":
-                        propertyType = "StringProperty";
-                        propertyTypeMethod = "getString";
+                        if ("password".equals(property.dataFormat)) {
+                            propertyType = "CharacterArrayProperty";
+                            propertyTypeMethod = "getCharArray";
+                        } else {
+                            propertyType = "StringProperty";
+                            propertyTypeMethod = "getString";
+                        }
                         break;
                     case "Boolean":
                         propertyType = "BooleanProperty";

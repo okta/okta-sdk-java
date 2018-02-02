@@ -70,7 +70,7 @@ abstract class ITSupport implements ClientProvider {
                 .setEmail(email)
                 .setFirstName("Joe")
                 .setLastName("Code")
-                .setPassword("Password1")
+                .setPassword("Password1".toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
         registerForCleanup(user)

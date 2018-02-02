@@ -27,7 +27,7 @@ public interface UserBuilder {
         return Classes.newInstance("com.okta.sdk.impl.resource.DefaultUserBuilder");
     }
 
-    UserBuilder setPassword(String password);
+    UserBuilder setPassword(char[] password);
 
     UserBuilder setSecurityQuestion(String question);
 
