@@ -27,8 +27,6 @@ public class ReferenceFactory {
     public ReferenceFactory(){}
 
     public Map<String, String> createUnmaterializedReference(String resourceName, Map map) {
-        Map<String, String> reference = new HashMap<>();
-            reference.putAll(map);
-        return reference;
+        return new HashMap<>(map);
     }
 }

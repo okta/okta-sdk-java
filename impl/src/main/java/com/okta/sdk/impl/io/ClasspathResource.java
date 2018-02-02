@@ -22,7 +22,7 @@ import java.io.InputStream;
 
 public class ClasspathResource extends AbstractResource {
 
-    public static final String SCHEME = "classpath";
+    private static final String SCHEME = "classpath";
     public static final String SCHEME_PREFIX = SCHEME + ":";
 
     public ClasspathResource(String location) {

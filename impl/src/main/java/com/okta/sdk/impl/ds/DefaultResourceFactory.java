@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class DefaultResourceFactory implements ResourceFactory {
 
-    private InternalDataStore dataStore;
+    private final InternalDataStore dataStore;
 
     private static final String BASE_PACKAGE = "com.okta.sdk.";
     private static final String IMPL_PACKAGE_NAME_FRAGMENT = "impl";
@@ -78,7 +78,7 @@ public class DefaultResourceFactory implements ResourceFactory {
         return Classes.instantiate(ctor, ctorArgs);
     }
 
-    public static <T extends Resource> Class<T> getImplementationClass(Class<T> clazz) {
+    private static <T extends Resource> Class<T> getImplementationClass(Class<T> clazz) {
         if (clazz.isInterface()) {
             return convertToImplClass(clazz);
         }

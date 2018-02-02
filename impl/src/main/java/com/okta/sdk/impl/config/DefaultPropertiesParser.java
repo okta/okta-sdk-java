@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -32,10 +33,9 @@ public class DefaultPropertiesParser implements PropertiesParser {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultPropertiesParser.class);
 
-    public static final String DEFAULT_CHARSET_NAME = "UTF-8";
-    public static final String COMMENT_POUND     = "#";
-    public static final String COMMENT_SEMICOLON = ";";
-    protected static final char ESCAPE_TOKEN = '\\';
+    private static final String COMMENT_POUND     = "#";
+    private static final String COMMENT_SEMICOLON = ";";
+    private static final char ESCAPE_TOKEN = '\\';
 
     @Override
     public Map<String, String> parse(String source) {
@@ -46,7 +46,7 @@ public class DefaultPropertiesParser implements PropertiesParser {
     @Override
     public Map<String, String> parse(Resource resource) throws IOException {
         InputStream is = resource.getInputStream();
-        Scanner scanner = new Scanner(is, DEFAULT_CHARSET_NAME);
+        Scanner scanner = new Scanner(is, StandardCharsets.UTF_8.toString());
         return parse(scanner);
     }
 
@@ -60,7 +60,7 @@ public class DefaultPropertiesParser implements PropertiesParser {
 
         Assert.notNull(scanner, "Scanner argument cannot be null.");
 
-        Map<String, String> props = new LinkedHashMap<String, String>();
+        Map<String, String> props = new LinkedHashMap<>();
 
         StringBuilder lineBuffer = new StringBuilder();
 

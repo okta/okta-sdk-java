@@ -80,8 +80,8 @@ public class DefaultClientBuilder implements ClientBuilder {
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
 
-    public static final  String ENVVARS_TOKEN  = "envvars";
-    public static final  String SYSPROPS_TOKEN = "sysprops";
+    private static final  String ENVVARS_TOKEN  = "envvars";
+    private static final  String SYSPROPS_TOKEN = "sysprops";
     private static final String OKTA_YAML      = "okta.yaml";
     private static final String USER_HOME      = System.getProperty("user.home") + File.separatorChar;
 

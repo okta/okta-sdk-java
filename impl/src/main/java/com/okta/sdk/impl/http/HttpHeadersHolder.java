@@ -23,7 +23,7 @@ import java.util.Map;
  * This class is used to hold key/value pairs in a ThreadLocal.
  */
 public abstract class HttpHeadersHolder {
-    private static ThreadLocal<Map<String, List<String>>> current = new ThreadLocal<>();
+    private static final ThreadLocal<Map<String, List<String>>> current = new ThreadLocal<>();
 
     public static void set(Map<String, List<String>> headers) {
         current.set(headers);

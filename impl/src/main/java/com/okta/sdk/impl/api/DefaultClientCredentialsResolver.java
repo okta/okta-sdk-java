@@ -25,7 +25,7 @@ import com.okta.sdk.impl.config.ClientConfiguration;
  */
 public class DefaultClientCredentialsResolver implements ClientCredentialsResolver {
 
-    private ClientCredentials clientCredentials;
+    private final ClientCredentials clientCredentials;
 
     public DefaultClientCredentialsResolver(final ClientCredentials clientCredentials) {
         this.clientCredentials = clientCredentials;

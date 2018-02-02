@@ -22,7 +22,7 @@ import java.io.InputStream;
 
 public class FileResource extends AbstractResource {
 
-    public static final String SCHEME = "file";
+    private static final String SCHEME = "file";
 
     public FileResource(String location) {
         super(location);

@@ -26,15 +26,14 @@ public class DefaultFilterChain implements FilterChain {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultFilterChain.class);
 
-    private List<Filter> filters;
+    private final List<Filter> filters;
     private int index = 0;
-    private final FilterChain COMPLETION_HANDLER;
+    private final FilterChain completionHandler;
 
     public DefaultFilterChain(List<Filter> filters, FilterChain completionHandler) {
         this.filters = filters;
-        this.index = 0;
         Assert.notNull(completionHandler, "completionHandler cannot be null.");
-        this.COMPLETION_HANDLER = completionHandler;
+        this.completionHandler = completionHandler;
     }
 
     @Override
@@ -45,7 +44,7 @@ public class DefaultFilterChain implements FilterChain {
                 log.trace("Invoking completion handler.");
             }
 
-            return this.COMPLETION_HANDLER.filter(request);
+            return this.completionHandler.filter(request);
         } else {
             if (log.isTraceEnabled()) {
                 log.trace("Invoking wrapped filter at index [" + this.index + "]");

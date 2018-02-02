@@ -285,7 +285,7 @@ public abstract class AbstractPropertyRetriever implements PropertyRetriever {
 
     protected char[] getCharArray(CharacterArrayProperty property) {
 
-        Object value = getProperty(property.name);
+        Object value = getProperty(property.getName());
         if (value instanceof char[]) {
             return (char[]) value;
         } else if (value != null) {

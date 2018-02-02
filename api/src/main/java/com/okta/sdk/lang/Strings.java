@@ -1000,9 +1000,7 @@ public abstract class Strings {
         }
 
         Set<String> set = new LinkedHashSet<>();
-        for (String element : array) {
-            set.add(element);
-        }
+        Collections.addAll(set, array);
         return toStringArray(set);
     }
 
@@ -1222,9 +1220,7 @@ public abstract class Strings {
     public static Set<String> commaDelimitedListToSet(String str) {
         Set<String> set = new LinkedHashSet<>();
         String[] tokens = commaDelimitedListToStringArray(str);
-        for (String token : tokens) {
-            set.add(token);
-        }
+        Collections.addAll(set, tokens);
         return set;
     }
 

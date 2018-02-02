@@ -45,13 +45,12 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractResource extends AbstractPropertyRetriever implements Resource {
 
-    protected final Map<String, Object> dirtyProperties;  //Protected by read/write lock
-    protected final Set<String> deletedPropertyNames;     //Protected by read/write lock
-    protected final ReferenceFactory referenceFactory;
+    private final Map<String, Object> dirtyProperties;  //Protected by read/write lock
+    private final Set<String> deletedPropertyNames;     //Protected by read/write lock
     private final InternalDataStore dataStore;
     protected Map<String, Object> properties;       //Protected by read/write lock
     private String href = null;
-    protected volatile boolean dirty;
+    private volatile boolean dirty;
     private volatile boolean materialized;
     private final ResourceHrefResolver hrefResolver;
 
@@ -60,7 +59,6 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     }
 
     protected AbstractResource(InternalDataStore dataStore, Map<String, Object> properties) {
-        this.referenceFactory = new ReferenceFactory();
         this.dataStore = dataStore;
         this.dirtyProperties = new LinkedHashMap<>();
         this.deletedPropertyNames = new HashSet<>();
@@ -119,7 +117,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         return this.dataStore;
     }
 
-    public final boolean isMaterialized() {
+    private final boolean isMaterialized() {
         return this.materialized;
     }
 
@@ -139,7 +137,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      *
      * @return {@code true} if the resource doesn't yet have an assigned 'href' property, {@code false} otherwise.
      */
-    protected final boolean isNew() {
+    private boolean isNew() {
         String href = getResourceHref();
         return !Strings.hasText(href);
     }
@@ -200,7 +198,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
 
                 //only materialize if the property hasn't been set previously (no need to execute a server
                 // request since we have the most recent value already):
-                boolean present = false;
+                boolean present;
                 readLock.lock();
                 try {
                     present = this.dirtyProperties.containsKey(name);
@@ -352,10 +350,10 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
 
         return (rawList == null) ? null : (List) rawList.stream()
                 .map(item -> {
-                    if (property.type.isInstance(item)) {
+                    if (property.getType().isInstance(item)) {
                         return item;
                     } else {
-                        return dataStore.instantiate(property.type, (Map<String, Object>) item);
+                        return dataStore.instantiate(property.getType(), (Map<String, Object>) item);
                     }
                 })
                 .collect(Collectors.toList());
@@ -453,6 +451,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         return this.size() <= 0;
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     public boolean containsKey(Object key) {
         return this.keySet().contains(key);
     }
@@ -479,6 +478,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         Assert.isInstanceOf(String.class, key);
         writeLock.lock();
         try {
+            //noinspection SuspiciousMethodCalls
             Object object = this.dirtyProperties.remove(key);
             this.deletedPropertyNames.add(key.toString());
             this.dirty = true;
@@ -507,9 +507,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
 
         writeLock.lock();
         try {
-            Set<String> propertiesToFilter = new HashSet<>();
-            propertiesToFilter.addAll(getPropertyDescriptors().keySet());
-
+            Set<String> propertiesToFilter = new HashSet<>(getPropertyDescriptors().keySet());
             for (String propertyName : this.keySet()) {
                 if (propertiesToFilter.contains(propertyName)) {
                     continue;
@@ -571,8 +569,8 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
      * Parses path parameters from URL based on a template string.
      * <p>
      * Example:
-     * For the template string: <code>/users/{userId}/favorite/{iceCream}</code>, and the href of this resource:
-     * <code>/users/42/favorite/vanilla}</code>, the resulting map would be: <code>[userId: 42, iceCream: vanilla]</code>.
+     * For the template string: {@code /users/{userId}/favorite/{iceCream}}, and the href of this resource:
+     * {@code /users/42/favorite/vanilla}}, the resulting map would be: {@code [userId: 42, iceCream: vanilla]}.
      *
      * @param templateUrl template of the URL to parse
      * @return a map of path parameters

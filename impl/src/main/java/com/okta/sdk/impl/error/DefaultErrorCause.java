@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class DefaultErrorCause extends AbstractResource implements ErrorCause {
 
-    static final StringProperty SUMMARY = new StringProperty("errorSummary");
+    private static final StringProperty SUMMARY = new StringProperty("errorSummary");
 
     private static final Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(
             SUMMARY

@@ -31,12 +31,12 @@ public class DefaultCacheKey {
     public DefaultCacheKey(String href, QueryString queryString) {
         Assert.notNull(href, "href argument cannot be null.");
 
-        String url = href;
+        String tmpUrl = href;
         QueryString qs = queryString;
 
         int questionMarkIndex = href.lastIndexOf('?');
         if (questionMarkIndex >= 0) {
-            url = href.substring(0, questionMarkIndex);
+            tmpUrl = href.substring(0, questionMarkIndex);
             String after = href.substring(questionMarkIndex + 1);
 
             if (Strings.hasLength(after)) {
@@ -49,10 +49,10 @@ public class DefaultCacheKey {
         }
 
         if (!Collections.isEmpty(qs)) {
-            url += "?" + qs.toString();
+            tmpUrl += "?" + qs.toString();
         }
 
-        this.url = url;
+        this.url = tmpUrl;
     }
 
     @Override
