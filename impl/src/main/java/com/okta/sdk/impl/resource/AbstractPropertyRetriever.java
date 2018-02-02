@@ -283,6 +283,17 @@ public abstract class AbstractPropertyRetriever implements PropertyRetriever {
         return null;
     }
 
+    protected char[] getCharArray(CharacterArrayProperty property) {
+
+        Object value = getProperty(property.name);
+        if (value instanceof char[]) {
+            return (char[]) value;
+        } else if (value != null) {
+            return value.toString().toCharArray();
+        }
+        return null;
+    }
+
     /**
      * Returns {@code true} if the internal property is safe to print in toString(), {@code false} otherwise.
      *

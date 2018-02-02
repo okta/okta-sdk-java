@@ -490,7 +490,7 @@ class ApplicationsIT extends ITSupport {
             .setCredentials(client.instantiate(AppUserCredentials)
                 .setUserName(user1.getProfile().getEmail())
                 .setPassword(client.instantiate(AppUserPasswordCredential)
-                    .setValue("super-secret1")))
+                    .setValue("super-secret1".toCharArray())))
         app.assignUserToApplication(appUser1)
 
         AppUser appUser2 = client.instantiate(AppUser)
@@ -499,7 +499,7 @@ class ApplicationsIT extends ITSupport {
             .setCredentials(client.instantiate(AppUserCredentials)
                 .setUserName(user2.getProfile().getEmail())
                 .setPassword(client.instantiate(AppUserPasswordCredential)
-                    .setValue("super-secret2")))
+                    .setValue("super-secret2".toCharArray())))
 
         assertThat(app.assignUserToApplication(appUser1), sameInstance(appUser1))
         assertThat(app.assignUserToApplication(appUser2), sameInstance(appUser2))

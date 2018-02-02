@@ -143,7 +143,7 @@ class GroupsIT implements CrudTestSupport {
                 .setEmail(email)
                 .setFirstName(firstName)
                 .setLastName(lastName)
-                .setPassword(password)
+                .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
         registerForCleanup(user)

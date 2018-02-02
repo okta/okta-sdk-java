@@ -114,7 +114,7 @@ class GroupRulesIT implements CrudTestSupport {
                 .setEmail(email)
                 .setFirstName(firstName)
                 .setLastName(lastName)
-                .setPassword(password)
+                .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
         registerForCleanup(user)

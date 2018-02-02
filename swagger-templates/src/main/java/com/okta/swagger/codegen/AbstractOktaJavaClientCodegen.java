@@ -840,6 +840,10 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     @Override
     public String getTypeDeclaration(Property p) {
 
+        if ("password".equals(p.getFormat())) {
+            return "char[]";
+        }
+
         if (p instanceof ArrayProperty) {
             ArrayProperty ap = (ArrayProperty) p;
             Property inner = ap.getItems();

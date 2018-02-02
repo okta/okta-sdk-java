@@ -75,5 +75,11 @@
             <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
         </Class>
     </Match>
+    <Match>
+        <Class name="com.okta.sdk.impl.resource.AbstractPropertyRetriever">
+            <Method name="getCharArray" />
+            <Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
+        </Class>
+    </Match>
 
 </FindBugsFilter>

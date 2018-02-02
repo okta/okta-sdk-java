@@ -29,7 +29,7 @@
       "name": "Apache-2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.11.0"
+    "version": "0.12.0"
   },
   "externalDocs": {
     "description": "Find more info here",
@@ -322,51 +322,6 @@
           }
         ],
         "summary": "List Key Credentials for Application",
-        "tags": [
-          "Application"
-        ]
-      }
-    },
-    "/api/v1/apps/{appId}/credentials/keys/generate": {
-      "post": {
-        "consumes": [
-          "application/json"
-        ],
-        "description": "Generates a new X.509 certificate for an application key credential",
-        "operationId": "generateApplicationKey",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "appId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "description": "expiry of the Application Key Credential",
-            "format": "int32",
-            "in": "query",
-            "name": "validityYears",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/JsonWebKey"
-            }
-          }
-        },
-        "security": [
-          {
-            "api_token": []
-          }
-        ],
-        "summary": "Generate New Application Key Credential",
         "tags": [
           "Application"
         ]
@@ -3369,7 +3324,6 @@
           "additionalProperties": {
             "type": "object"
           },
-          "readOnly": true,
           "type": "object"
         },
         "scope": {
@@ -3445,6 +3399,7 @@
     "AppUserPasswordCredential": {
       "properties": {
         "value": {
+          "format": "password",
           "type": "string"
         }
       },
@@ -5473,6 +5428,7 @@
     "PasswordCredential": {
       "properties": {
         "value": {
+          "format": "password",
           "type": "string"
         }
       },

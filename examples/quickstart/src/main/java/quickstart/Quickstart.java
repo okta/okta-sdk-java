@@ -58,11 +58,12 @@ public class Quickstart {
             // Create a User Account
             String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
 
+            char[] password = {'P','a','s','s','w','o','r','d','1'};
             User user = UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName("Joe")
                 .setLastName("Coder")
-                .setPassword("Password1")
+                .setPassword(password)
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
                 .putProfileProperty("division", "Seven") // key/value pairs predefined in the user profile schema

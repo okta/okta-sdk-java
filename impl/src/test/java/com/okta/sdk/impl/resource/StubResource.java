@@ -31,8 +31,10 @@ public class StubResource extends AbstractResource {
     public final  MapProperty mapProp = new MapProperty("mapPropKey");
     public final  ResourceListProperty<NestedStubResource> resourceListProp = new ResourceListProperty<>("resourceListPropKey", NestedStubResource.class);
     public final  StringProperty stringProp = new StringProperty("stringPropKey");
+    public final  CharacterArrayProperty charArrayProp1 = new CharacterArrayProperty("charArrayPropKey1");
+    public final  CharacterArrayProperty charArrayProp2 = new CharacterArrayProperty("charArrayPropKey2");
 
-    private final Map<String, Property> propertyDescriptors = AbstractResource.createPropertyDescriptorMap(booleanProp, dateProp, enumListProp, enumProp, integerProp, doubleProp, listProp, mapProp, resourceListProp, stringProp);
+    private final Map<String, Property> propertyDescriptors = AbstractResource.createPropertyDescriptorMap(booleanProp, dateProp, enumListProp, enumProp, integerProp, doubleProp, listProp, mapProp, resourceListProp, stringProp, charArrayProp1, charArrayProp2);
 
     protected StubResource(InternalDataStore dataStore) {
         super(dataStore);

@@ -26,6 +26,7 @@ import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserCredentials;
 import com.okta.sdk.resource.user.UserProfile;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,7 +35,7 @@ import java.util.Set;
 public class DefaultUserBuilder implements UserBuilder {
 
 
-    private String password;
+    private char[] password;
     private String securityQuestion;
     private String securityQuestionAnswer;
     private String email;
@@ -49,8 +50,8 @@ public class DefaultUserBuilder implements UserBuilder {
 
     private Map<String, Object> customProfileAttributes = new LinkedHashMap<>();
 
-    public UserBuilder setPassword(String password) {
-        this.password = password;
+    public UserBuilder setPassword(char[] password) {
+        this.password = Arrays.copyOf(password, password.length);
         return this;
     }
 
@@ -159,7 +160,7 @@ public class DefaultUserBuilder implements UserBuilder {
 
         userProfile.putAll(customProfileAttributes);
 
-        if (Strings.hasText(password) || Strings.hasText(securityQuestion)) {
+        if (password != null && password.length > 0 || Strings.hasText(securityQuestion)) {
             UserCredentials credentials = client.instantiate(UserCredentials.class);
             user.setCredentials(credentials);
 
@@ -170,7 +171,7 @@ public class DefaultUserBuilder implements UserBuilder {
                 credentials.setRecoveryQuestion(question);
             }
 
-            if (Strings.hasText(password)) {
+            if (password != null && password.length > 0) {
                 PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
                 credentials.setPassword(passwordCredential.setValue(password));
             }
@@ -178,7 +179,6 @@ public class DefaultUserBuilder implements UserBuilder {
 
         return user;
     }
-
 
     @Override
     public User buildAndCreate(Client client) {

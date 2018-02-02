@@ -16,15 +16,15 @@
  */
 package com.okta.sdk.impl.ds
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.okta.sdk.impl.resource.AbstractResource
+import com.okta.sdk.impl.resource.CharacterArrayProperty
 import com.okta.sdk.impl.resource.Property
+import com.okta.sdk.impl.resource.ReferenceFactory
 import com.okta.sdk.impl.resource.StringProperty
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import org.testng.annotations.BeforeTest
 import org.testng.annotations.Test
 
 import static org.mockito.Mockito.*
@@ -125,11 +125,26 @@ class JacksonMapMarshallerTest {
         assertThat result, containsString('"test1":"value1"')
     }
 
+    @Test
+    void testCharArrayPropertyConvertedToJsonString() {
+        
+        FooResource foo = new FooResource(null, null)
+        foo.setBar("MyPassword".toCharArray())
+
+        ResourceConverter resourceConverter = new DefaultResourceConverter(new ReferenceFactory())
+        final Map<String, Object> map = resourceConverter.convert(foo, false)
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream()
+        new JacksonMapMarshaller().marshal(out, map)
+        assertThat out.toString(), containsString("\"MyPassword\"")
+    }
+
     static class FooResource extends AbstractResource {
 
         private final static StringProperty FOO_PROPERTY = new StringProperty("foo")
+        private final static CharacterArrayProperty BAR_PROPERTY = new CharacterArrayProperty("bar")
 
-        private final static Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(FOO_PROPERTY)
+        private final static Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap(FOO_PROPERTY, BAR_PROPERTY)
 
         FooResource(InternalDataStore dataStore) {
             super(dataStore)
@@ -150,6 +165,15 @@ class JacksonMapMarshallerTest {
 
         FooResource setFoo(String foo) {
             setProperty(FOO_PROPERTY, foo)
+            return this
+        }
+
+        char[] getBar() {
+            return getCharArray(BAR_PROPERTY)
+        }
+
+        FooResource setBar(char[] bar) {
+            setProperty(BAR_PROPERTY, bar)
             return this
         }
     }

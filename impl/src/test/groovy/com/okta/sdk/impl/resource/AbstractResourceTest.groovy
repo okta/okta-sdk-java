@@ -132,7 +132,10 @@ class AbstractResourceTest {
                         three: "333"
                 ],
                 resourceListPropKey: nestedResourceData,
-                stringPropKey: "string_value"
+                stringPropKey: "string_value",
+                charArrayPropKey1: "valueAsString",
+                charArrayPropKey2: "valueAsChars".toCharArray(),
+
         ]
 
         InternalDataStore dataStore = mock(InternalDataStore)
@@ -164,8 +167,9 @@ class AbstractResourceTest {
         assertThat resource.getResourceListProperty(resource.resourceListProp), allOf(
                 hasItem(hasProperty("stringProp", equalTo("item0"))),
                 hasItem(hasProperty("stringProp", equalTo("item1"))),
-                hasSize(2)
-        )
+                hasSize(2))
+        assertThat resource.getCharArray(resource.charArrayProp1), equalTo("valueAsString".toCharArray())
+        assertThat resource.getCharArray(resource.charArrayProp2), equalTo("valueAsChars".toCharArray())
     }
 
     @Test
@@ -181,7 +185,9 @@ class AbstractResourceTest {
                 listPropKey: null,
                 mapPropKey: null,
                 resourceListPropKey: null,
-                stringPropKey: null
+                stringPropKey: null,
+                charArrayPropKey1: null,
+                charArrayPropKey2: null
         ]
 
         StubResource resource = new StubResource(null, data)
@@ -198,5 +204,7 @@ class AbstractResourceTest {
         assertThat resource.getMap(resource.mapProp), nullValue()
         assertThat resource.getString(resource.stringProp), nullValue()
         assertThat resource.getResourceListProperty(resource.resourceListProp), nullValue()
+        assertThat resource.getCharArray(resource.charArrayProp1), nullValue()
+        assertThat resource.getCharArray(resource.charArrayProp2), nullValue()
     }
 }
