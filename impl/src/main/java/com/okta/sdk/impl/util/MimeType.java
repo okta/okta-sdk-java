@@ -106,7 +106,7 @@ public class MimeType implements Comparable<MimeType>, Serializable {
 
     /**
      * Create a new {@code MimeType} for the given primary type.
-     * <p>The {@linkplain #getSubtype() subtype} is set to <code>"&#42;"</code>,
+     * <p>The {@linkplain #getSubtype() subtype} is set to {@code "&#42;"},
      * and the parameters are empty.
      * @param type the primary type
      * @throws IllegalArgumentException if any of the parameters contains illegal characters
@@ -235,7 +235,7 @@ public class MimeType implements Comparable<MimeType>, Serializable {
 
     /**
      * Indicates whether the {@linkplain #getType() type} is the wildcard character
-     * <code>&#42;</code> or not.
+     * {@code &#42;} or not.
      * @return return true if this type is a wildcard
      */
     public boolean isWildcardType() {
@@ -244,8 +244,8 @@ public class MimeType implements Comparable<MimeType>, Serializable {
 
     /**
      * Indicates whether the {@linkplain #getSubtype() subtype} is the wildcard
-     * character <code>&#42;</code> or the wildcard character followed by a suffix
-     * (e.g. <code>&#42;+xml</code>).
+     * character {@code &#42;} or the wildcard character followed by a suffix
+     * (e.g. {@code &#42;+xml}).
      * @return whether the subtype is a wildcard
      */
     public boolean isWildcardSubtype() {
@@ -254,7 +254,7 @@ public class MimeType implements Comparable<MimeType>, Serializable {
 
     /**
      * Indicates whether this media type is concrete, i.e. whether neither the type
-     * nor the subtype is a wildcard character <code>&#42;</code>.
+     * nor the subtype is a wildcard character {@code &#42;}.
      * @return whether this media type is concrete
      */
     public boolean isConcrete() {

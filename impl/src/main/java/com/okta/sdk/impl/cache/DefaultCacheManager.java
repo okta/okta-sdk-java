@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  * an in-memory {@link ConcurrentMap ConcurrentMap}.  By default, this implementation creates thread-safe
  * {@link DefaultCache} instances via the {@link #createCache(String) createCache(name)} method, but this can be overridden
  * by subclasses that wish to provide different Cache implementations.
- * <h2>Clustering</h2>
+ * <h1>Clustering</h1>
  * <b>This implementation DOES NOT SUPPORT CLUSTERING</b>.
  * <p>
  * If your application is deployed on multiple hosts, it is

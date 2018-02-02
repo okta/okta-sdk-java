@@ -1313,17 +1313,17 @@ public abstract class Strings {
     /**
      * Returns a 'cleaned' representation of the specified argument.  'Cleaned' is defined as the following:
      * <ol>
-     * <li>If the specified <code>String</code> is <code>null</code>, return <code>null</code></li>
-     * <li>If not <code>null</code>, {@link String#trim() trim()} it.</li>
-     * <li>If the trimmed string is equal to the empty String (i.e. &quot;&quot;), return <code>null</code></li>
+     * <li>If the specified {@code String} is <code>null</code>, return <code>null</code></li>
+     * <li>If not {@code null}, {@link String#trim() trim()} it.</li>
+     * <li>If the trimmed string is equal to the empty String (i.e. &quot;&quot;), return {@code null}</li>
      * <li>If the trimmed string is not the empty string, return the trimmed version</li>
      * </ol>
      * <p>
-     * Therefore this method always ensures that any given string has trimmed text, and if it doesn't, <code>null</code>
+     * Therefore this method always ensures that any given string has trimmed text, and if it doesn't, {@code null}
      * is returned.
      *
      * @param s the input String to clean.
-     * @return a populated-but-trimmed String or <code>null</code> otherwise
+     * @return a populated-but-trimmed String or {@code null} otherwise
      */
     public static String clean(String s) {
         if (s == null) {
@@ -1340,7 +1340,7 @@ public abstract class Strings {
      * Calls {@link String#getBytes(Charset)}
      *
      * @param string  The string to encode (if null, return null).
-     * @param charset The {@link Charset} to encode the <code>String</code>
+     * @param charset The {@link Charset} to encode the {@code String}
      * @return the encoded bytes
      */
     private static byte[] getBytes(final String string, final Charset charset) {
@@ -1354,8 +1354,8 @@ public abstract class Strings {
      * Encodes the given string into a sequence of bytes using the UTF-8 charset, storing the result into a new byte
      * array.
      *
-     * @param string the String to encode, may be <code>null</code>
-     * @return encoded bytes, or <code>null</code> if the input string was <code>null</code>
+     * @param string the String to encode, may be {@code null}
+     * @return encoded bytes, or {@code null} if the input string was <code>null</code>
      * @throws NullPointerException Thrown if {@link StandardCharsets#UTF_8} is not initialized, which should never happen since it is
      *                              required by the Java platform specification.
      * @see <a href="http://download.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html">Standard charsets</a>

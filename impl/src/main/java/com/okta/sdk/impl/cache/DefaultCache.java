@@ -28,9 +28,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * A <code>DefaultCache</code> is a {@link Cache Cache} implementation that uses a backing {@link Map} instance to store
+ * A {@code DefaultCache} is a {@link Cache Cache} implementation that uses a backing {@link Map} instance to store
  * and retrieve cached data.
- * <h2>Thread Safety</h2>
+ * <h1>Thread Safety</h1>
  * This implementation is thread-safe <em>only</em> if the backing map is thread-safe.
  *
  * @since 0.5.0

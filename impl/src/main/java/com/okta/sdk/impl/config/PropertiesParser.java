@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- * Parses a {@code .properties} source (string, file, stream, etc) and returns a <code>Map&lt;String,String&gt;</code>
+ * Parses a {@code .properties} source (string, file, stream, etc) and returns a {@code Map<String,String>}
  * that reflects the parsed properties.
  * <p>This implementation differs from default Java property loading behavior in that the returned Map's iteration
  * order is guaranteed to be the same as the order in which the properties are read.  This can be beneficial if it is

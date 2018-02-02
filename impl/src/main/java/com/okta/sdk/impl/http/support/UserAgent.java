@@ -313,8 +313,8 @@ public class UserAgent {
     }
 
     /**
-     * WARNING: This method must never be invoked unless we already know that the class identified by the parameter <code>fqcn</code>
-     * really exists in the classpath. For example, we first need to assure that <code>Classes.isAvailable(fqcn))</code> is <code>TRUE</code>
+     * WARNING: This method must never be invoked unless we already know that the class identified by the parameter {@code fqcn}
+     * really exists in the classpath. For example, we first need to assure that {@code Classes.isAvailable(fqcn))} is <code>TRUE</code>
      */
     private static String getVersionInfoFromPomProperties(String fqcn) {
         String version = "unknown";
@@ -370,8 +370,8 @@ public class UserAgent {
     }
 
     /**
-     * WARNING: This method must never be invoked unless we already know that the class identified by the parameter <code>fqcn</code>
-     * really exists in the classpath. For example, we first need to assure that <code>Classes.isAvailable(fqcn))</code> is <code>TRUE</code>
+     * WARNING: This method must never be invoked unless we already know that the class identified by the parameter {@code fqcn}
+     * really exists in the classpath. For example, we first need to assure that {@code Classes.isAvailable(fqcn))} is <code>TRUE</code>
      */
     private static String getVersionInfoInManifest(String fqcn){
         //get class package
@@ -388,9 +388,9 @@ public class UserAgent {
     }
 
     /**
-     * This method should only be invoked after already knowing that the class identified by <code>WEB_SERVER_WEBSPHERE_CLASS</code>
-     * really exists in the classpath. For example, it can be checked that <code>Classes.isAvailable(WEB_SERVER_WEBSPHERE_CLASS))</code>
-     * is <code>TRUE</code>
+     * This method should only be invoked after already knowing that the class identified by {@code WEB_SERVER_WEBSPHERE_CLASS}
+     * really exists in the classpath. For example, it can be checked that {@code Classes.isAvailable(WEB_SERVER_WEBSPHERE_CLASS))}
+     * is {@code TRUE}
      */
     private static String getWebSphereVersion() {
         try {
@@ -447,9 +447,9 @@ public class UserAgent {
     }
 
     /**
-     * This method should only be invoked after already knowing that the class identified by <code>WEB_SERVER_WEBLOGIC_CLASS</code>
-     * really exists in the classpath. For example, it can be checked that <code>Classes.isAvailable(WEB_SERVER_WEBLOGIC_CLASS))</code>
-     * is <code>TRUE</code>
+     * This method should only be invoked after already knowing that the class identified by {@code WEB_SERVER_WEBLOGIC_CLASS}
+     * really exists in the classpath. For example, it can be checked that {@code Classes.isAvailable(WEB_SERVER_WEBLOGIC_CLASS))}
+     * is {@code TRUE}
      */
     private static String getWebLogicVersion() {
         try {
