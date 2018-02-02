@@ -103,7 +103,7 @@ public class SoftHashMap<K, V> implements Map<K, V> {
      * elements retained after a GC due to the strong references.
      * <p>
      * Note that in a highly concurrent environments the exact total number of strong references may differ slightly
-     * than the actual <code>retentionSize</code> value.  This number is intended to be a best-effort retention low
+     * than the actual {@code retentionSize} value.  This number is intended to be a best-effort retention low
      * water mark.
      *
      * @param retentionSize the total number of most recent entries in the map that will be strongly referenced
@@ -140,7 +140,7 @@ public class SoftHashMap<K, V> implements Map<K, V> {
      * elements retained after a GC due to the strong references.
      * <p>
      * Note that in a highly concurrent environments the exact total number of strong references may differ slightly
-     * than the actual <code>retentionSize</code> value.  This number is intended to be a best-effort retention low
+     * than the actual {@code retentionSize} value.  This number is intended to be a best-effort retention low
      * water mark.
      *
      * @param source        the backing map to populate this {@code SoftHashMap}
