@@ -23,8 +23,8 @@ import com.okta.sdk.lang.Assert;
  */
 public abstract class Property<T> {
 
-    protected final String name;
-    protected final Class<T> type;
+    private final String name;
+    private final Class<T> type;
 
     protected Property(String name, Class<T> type) {
         Assert.notNull(name, "name is required.");

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public class DefaultDiscriminatorRegistry implements DiscriminatorRegistry {
 
-    private Map<Class, AttributeDiscriminationStrategy> supportedClassMap = new HashMap<>();
+    private final Map<Class, AttributeDiscriminationStrategy> supportedClassMap = new HashMap<>();
 
     public DefaultDiscriminatorRegistry() {
 

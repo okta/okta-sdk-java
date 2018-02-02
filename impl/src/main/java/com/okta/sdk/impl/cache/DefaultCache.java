@@ -126,7 +126,7 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * @see #setTimeToIdle(com.okta.sdk.lang.Duration)
      * @see #setTimeToLive(com.okta.sdk.lang.Duration)
      */
-    public DefaultCache(String name, Map<K, Entry<V>> backingMap, Duration timeToLive, Duration timeToIdle) throws IllegalArgumentException {
+    public DefaultCache(String name, Map<K, Entry<V>> backingMap, Duration timeToLive, Duration timeToIdle) {
         Assert.notNull(name, "Cache name cannot be null.");
         Assert.notNull(backingMap, "Backing map cannot be null.");
         assertTtl(timeToLive);
@@ -140,13 +140,13 @@ public class DefaultCache<K, V> implements Cache<K, V> {
         this.missCount = new AtomicLong(0);
     }
 
-    protected static void assertTtl(Duration ttl) throws IllegalArgumentException {
+    protected static void assertTtl(Duration ttl) {
         if (ttl != null) {
             Assert.isTrue(ttl.getValue() > 0, "timeToLive duration must be greater than zero");
         }
     }
 
-    protected static void assertTti(Duration tti) throws IllegalArgumentException {
+    protected static void assertTti(Duration tti) {
         if (tti != null) {
             Assert.isTrue(tti.getValue() > 0, "timeToIdle duration must be greater than zero");
         }

@@ -22,7 +22,7 @@ import java.net.URL;
 
 public class UrlResource extends AbstractResource {
 
-    public static final String SCHEME = "url";
+    private static final String SCHEME = "url";
     public static final String SCHEME_PREFIX = SCHEME + ":";
 
     public UrlResource(String location) {

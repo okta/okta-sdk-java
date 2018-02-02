@@ -27,7 +27,7 @@ import java.util.TimeZone;
  *
  * @since 0.5.0
  */
-public class Instants {
+public abstract class Instants {
 
     public static final TimeZone UTC_TIMEZONE = TimeZone.getTimeZone("UTC");
 

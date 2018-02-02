@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 public class Version {
 
     private static final String CLIENT_VERSION = lookupClientVersion();
+    private static final String VERSION_FILE = "/com/okta/sdk/version.properties";
 
     public static String getClientVersion() {
         return CLIENT_VERSION;
@@ -35,11 +36,10 @@ public class Version {
 
     private static String lookupClientVersion() {
         Class clazz = Version.class;
-        String filePath = "/com/okta/sdk/version.properties";
         InputStream inputStream = null;
         BufferedReader reader = null;
         try {
-            inputStream = clazz.getResourceAsStream(filePath);
+            inputStream = clazz.getResourceAsStream(VERSION_FILE);
             reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             String line;
             do {
@@ -47,20 +47,20 @@ public class Version {
             } while (line != null && (line.startsWith("#") || line.isEmpty()));
             return line;
         } catch (IOException e) {
-            throw new RuntimeException("Unable to obtain version from [" + filePath + "].");
+            throw new RuntimeException("Unable to obtain version from [" + VERSION_FILE + "].", e);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    throw new RuntimeException("Exception while trying to close file [" + filePath + "].");
+                    throw new RuntimeException("Exception while trying to close file [" + VERSION_FILE + "].", e);
                 }
             }
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    throw new RuntimeException("Exception while trying to close file [" + filePath + "].");
+                    throw new RuntimeException("Exception while trying to close file [" + VERSION_FILE + "].", e);
                 }
             }
         }

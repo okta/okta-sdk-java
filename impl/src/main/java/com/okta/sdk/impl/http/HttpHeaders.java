@@ -92,7 +92,7 @@ public class HttpHeaders implements MultiValueMap<String, String> {
             "EEE MMM dd HH:mm:ss yyyy"
     };
 
-    private static TimeZone GMT = TimeZone.getTimeZone("GMT");
+    private final static TimeZone GMT = TimeZone.getTimeZone("GMT");
 
     private final Map<String, List<String>> headers;
 
@@ -104,7 +104,7 @@ public class HttpHeaders implements MultiValueMap<String, String> {
         Assert.notNull(headers, "'headers' must not be null");
         if (readOnly) {
             Map<String, List<String>> map =
-                    new LinkedCaseInsensitiveMap<List<String>>(headers.size(), Locale.ENGLISH);
+                    new LinkedCaseInsensitiveMap<>(headers.size(), Locale.ENGLISH);
             for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
                 List<String> values = Collections.unmodifiableList(entry.getValue());
                 map.put(entry.getKey(), values);
@@ -431,9 +431,7 @@ public class HttpHeaders implements MultiValueMap<String, String> {
         String value = getFirst(IF_NONE_MATCH);
         if (value != null) {
             String[] tokens = value.split(",\\s*");
-            for (String token : tokens) {
-                result.add(token);
-            }
+            Collections.addAll(result, tokens);
         }
         return result;
     }

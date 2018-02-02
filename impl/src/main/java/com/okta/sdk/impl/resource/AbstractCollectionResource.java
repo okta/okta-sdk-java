@@ -38,13 +38,13 @@ import java.util.stream.StreamSupport;
  */
 public abstract class AbstractCollectionResource<T extends Resource> extends AbstractResource implements CollectionResource<T> {
 
-    public static final StringProperty NEXT_PAGE = new StringProperty("nextPage");
-    public static final String ITEMS_PROPERTY_NAME = "items";
+    private static final StringProperty NEXT_PAGE = new StringProperty("nextPage");
+    private static final String ITEMS_PROPERTY_NAME = "items";
 
     private final Map<String, Object> queryParams;
     private String nextPageHref = null;
 
-    private AtomicBoolean firstPageQueryRequired = new AtomicBoolean();
+    private final AtomicBoolean firstPageQueryRequired = new AtomicBoolean();
 
     protected AbstractCollectionResource(InternalDataStore dataStore) {
         super(dataStore);
@@ -168,7 +168,6 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
 
         private Page<T> currentPage;
         private Iterator<T> currentPageIterator;
-        private int currentItemIndex;
 
         private PaginatedIterator(AbstractCollectionResource<T> resource, boolean firstPageQueryRequired) {
 
@@ -182,7 +181,6 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
             }
 
             this.currentPageIterator = this.currentPage.getItems().iterator();
-            this.currentItemIndex = 0;
         }
 
         @SuppressWarnings("unchecked")
@@ -210,7 +208,6 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
                     this.resource = nextResource;
                     this.currentPage = nextPage;
                     this.currentPageIterator = nextIterator;
-                    this.currentItemIndex = 0;
                     nextPageHref = nextResource.getString(NEXT_PAGE);
                 }
             }
@@ -220,9 +217,7 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
 
         @Override
         public T next() {
-            T item = currentPageIterator.next();
-            currentItemIndex++;
-            return item;
+            return currentPageIterator.next();
         }
 
         @Override

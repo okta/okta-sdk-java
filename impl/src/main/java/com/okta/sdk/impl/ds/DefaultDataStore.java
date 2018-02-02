@@ -76,32 +76,19 @@ public class DefaultDataStore implements InternalDataStore {
     private static final Logger log = LoggerFactory.getLogger(DefaultDataStore.class);
     private static final Logger requestLog = LoggerFactory.getLogger(DataStore.class.getName() + "-request");
 
-    public static final String DEFAULT_SERVER_HOST = "api.okta.com";
-
-    public static final int DEFAULT_API_VERSION = 1;
-
-    public static final String HREF_REQD_MSG = "'save' may only be called on objects that have already been " +
+    private static final String HREF_REQD_MSG = "'save' may only be called on objects that have already been " +
                                                "persisted and have an existing 'href' attribute.";
 
     private final RequestExecutor requestExecutor;
     private final ResourceFactory resourceFactory;
     private final MapMarshaller mapMarshaller;
     private final CacheManager cacheManager;
-    private final CacheResolver cacheResolver;
     private final ResourceConverter resourceConverter;
     private final List<Filter> filters;
     private final ClientCredentialsResolver clientCredentialsResolver;
     private final BaseUrlResolver baseUrlResolver;
 
-    public static final String USER_AGENT_STRING = UserAgent.getUserAgentString();
-
-    public DefaultDataStore(RequestExecutor requestExecutor, ClientCredentialsResolver clientCredentialsResolver) {
-        this(requestExecutor, DEFAULT_API_VERSION, clientCredentialsResolver);
-    }
-
-    public DefaultDataStore(RequestExecutor requestExecutor, int apiVersion, ClientCredentialsResolver clientCredentialsResolver) {
-        this(requestExecutor, "https://" + DEFAULT_SERVER_HOST + "/v" + apiVersion, clientCredentialsResolver);
-    }
+    private static final String USER_AGENT_STRING = UserAgent.getUserAgentString();
 
     public DefaultDataStore(RequestExecutor requestExecutor, String baseUrl, ClientCredentialsResolver clientCredentialsResolver) {
         this(requestExecutor, new DefaultBaseUrlResolver(baseUrl), clientCredentialsResolver, new DisabledCacheManager());
@@ -117,13 +104,13 @@ public class DefaultDataStore implements InternalDataStore {
         this.cacheManager = cacheManager;
         this.resourceFactory = new DefaultResourceFactory(this);
         this.mapMarshaller = new JacksonMapMarshaller();
-        this.cacheResolver = new DefaultCacheResolver(this.cacheManager, new DefaultCacheRegionNameResolver());
+        CacheResolver cacheResolver = new DefaultCacheResolver(this.cacheManager, new DefaultCacheRegionNameResolver());
         this.clientCredentialsResolver = clientCredentialsResolver;
 
         ReferenceFactory referenceFactory = new ReferenceFactory();
         this.resourceConverter = new DefaultResourceConverter(referenceFactory);
 
-        this.filters = new ArrayList<Filter>();
+        this.filters = new ArrayList<>();
 
 //        if(clientCredentials instanceof ApiKeyCredentials) { // FIXME: add this back in
 //            this.filters.add(new DecryptApiKeySecretFilter((ApiKeyCredentials) clientCredentials));
@@ -134,8 +121,6 @@ public class DefaultDataStore implements InternalDataStore {
             this.filters.add(new ReadCacheFilter(cacheStrategy));
             this.filters.add(new WriteCacheFilter(cacheStrategy));
         }
-
-        this.filters.add(new ProviderAccountResultFilter());
     }
 
     @Override
@@ -406,7 +391,7 @@ public class DefaultDataStore implements InternalDataStore {
        Resource Caching
        ===================================================================== */
 
-    public boolean isCachingEnabled() {
+    protected boolean isCachingEnabled() {
         return this.cacheManager != null && !(this.cacheManager instanceof DisabledCacheManager);
     }
 
@@ -486,12 +471,12 @@ public class DefaultDataStore implements InternalDataStore {
         }
     }
 
-    protected CanonicalUri canonicalize(String href, Map<String,?> queryParams) {
+    private CanonicalUri canonicalize(String href, Map<String,?> queryParams) {
         href = ensureFullyQualified(href);
         return DefaultCanonicalUri.create(href, queryParams);
     }
 
-    protected CanonicalUri canonicalizeParent(Resource parentResource) {
+    private CanonicalUri canonicalizeParent(Resource parentResource) {
         if (parentResource != null && parentResource.getResourceHref() != null) {
             String href = ensureFullyQualified(parentResource.getResourceHref());
             return DefaultCanonicalUri.create(href, null);
@@ -499,7 +484,7 @@ public class DefaultDataStore implements InternalDataStore {
         return null;
     }
 
-    protected String ensureFullyQualified(String href) {
+    private String ensureFullyQualified(String href) {
         String value = href;
         if (!isFullyQualified(href)) {
             value = qualify(href);
@@ -507,7 +492,7 @@ public class DefaultDataStore implements InternalDataStore {
         return value;
     }
 
-    protected boolean isFullyQualified(String href) {
+    private boolean isFullyQualified(String href) {
 
         if (href == null || href.length() < 5) {
             return false;
@@ -515,7 +500,7 @@ public class DefaultDataStore implements InternalDataStore {
         return href.regionMatches(true, 0, "http", 0, 4);
     }
 
-    protected String qualify(String href) {
+    private String qualify(String href) {
         StringBuilder sb = new StringBuilder(this.baseUrlResolver.getBaseUrl());
         if (!href.startsWith("/")) {
             sb.append("/");

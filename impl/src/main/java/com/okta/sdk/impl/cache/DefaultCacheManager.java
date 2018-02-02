@@ -81,7 +81,7 @@ public class DefaultCacheManager implements CacheManager {
     /**
      * Retains any region-specific configuration that might be used when creating Cache instances.
      */
-    protected final ConcurrentMap<String, CacheConfiguration> configs;
+    private final ConcurrentMap<String, CacheConfiguration> configs;
 
     /**
      * Retains all Cache objects maintained by this cache manager.
@@ -95,8 +95,8 @@ public class DefaultCacheManager implements CacheManager {
      * Default no-arg constructor that instantiates an internal name-to-cache {@code ConcurrentMap}.
      */
     public DefaultCacheManager() {
-        this.configs = new ConcurrentHashMap<String, CacheConfiguration>();
-        this.caches = new ConcurrentHashMap<String, Cache>();
+        this.configs = new ConcurrentHashMap<>();
+        this.caches = new ConcurrentHashMap<>();
     }
 
     /**

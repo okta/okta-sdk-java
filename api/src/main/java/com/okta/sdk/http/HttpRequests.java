@@ -47,7 +47,7 @@ public final class HttpRequests {
      * @return a new HttpRequestBuilder that can be used to construct a new {@link HttpRequest} instance.
      * @throws IllegalArgumentException if the method argument is {@code null}.
      */
-    public static HttpRequestBuilder method(HttpMethod method) throws IllegalArgumentException {
+    public static HttpRequestBuilder method(HttpMethod method) {
         Assert.notNull(method, "method argument is required.");
 
         Constructor<HttpRequestBuilder> ctor = Classes.getConstructor(HTTP_REQUEST_BUILDER, HttpMethod.class);

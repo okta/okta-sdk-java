@@ -46,9 +46,7 @@ public class DefaultResourceConverter implements ResourceConverter {
 
     private LinkedHashMap<String, Object> toMap(final AbstractResource resource, boolean partialUpdate) {
 
-        Set<String> propNames = new HashSet<>();
-
-        propNames.addAll(resource.getUpdatedPropertyNames());
+        Set<String> propNames = new HashSet<>(resource.getUpdatedPropertyNames());
 
         if (!partialUpdate) {
             propNames.addAll(resource.getPropertyNames());

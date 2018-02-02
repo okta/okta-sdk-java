@@ -62,7 +62,7 @@ public class YAMLPropertiesSource implements PropertiesSource {
      * @param source the source map
      * @return a flattened map
      */
-    protected final Map<String, String> getFlattenedMap(Map<String, Object> source) {
+    private final Map<String, String> getFlattenedMap(Map<String, Object> source) {
         Map<String, String> result = new LinkedHashMap<>();
         buildFlattenedMap(result, source, null);
         return result;

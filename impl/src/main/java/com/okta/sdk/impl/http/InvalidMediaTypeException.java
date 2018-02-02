@@ -28,7 +28,7 @@ import com.okta.sdk.impl.util.InvalidMimeTypeException;
 @SuppressWarnings("serial")
 public class InvalidMediaTypeException extends IllegalArgumentException {
 
-    private String mediaType;
+    private final String mediaType;
 
 
     /**
