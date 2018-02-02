@@ -74,8 +74,8 @@ public class Duration implements Comparable<Duration>, Cloneable {
 
         Duration duration = (Duration) o;
 
-        if (value != duration.value) return false;
-        return timeUnit == duration.timeUnit;
+        return value == duration.value
+            && timeUnit == duration.timeUnit;
     }
 
     @Override
