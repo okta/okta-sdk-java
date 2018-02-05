@@ -61,7 +61,7 @@ public abstract class AbstractInstanceResource<R extends Resource> extends Abstr
      * (Defaults to {@code getClass()}.)
      *
      * @return The type of resource this class represents.
-     * @since 0.11.0
+     * @since 1.0
      */
     public Class<? extends Resource> getResourceClass() {
         return getClass();

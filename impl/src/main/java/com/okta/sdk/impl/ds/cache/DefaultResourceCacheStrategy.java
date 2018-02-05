@@ -46,7 +46,7 @@ import java.util.Map;
  *     <li>Any @{code CREATE} or {@code UPDATE} call to the {@code cache} method, that has a _parent_ set in the {@link ResourceDataRequest} will also remove the parent from the cache</li>
  * </ul>
  *
- * @since 0.11.0
+ * @since 1.0
  */
 public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
 

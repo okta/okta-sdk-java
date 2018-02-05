@@ -18,7 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.sdk.lang.Assert;
 
 /**
- * @since 0.11.0
+ * @since 1.0
  */
 public class EnumListProperty<T> extends Property<T> {
 

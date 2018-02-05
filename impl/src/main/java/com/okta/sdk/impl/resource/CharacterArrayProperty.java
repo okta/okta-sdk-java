@@ -17,7 +17,7 @@
 package com.okta.sdk.impl.resource;
 
 /**
- * @since 0.11.0
+ * @since 1.0
  */
 public class CharacterArrayProperty extends Property<char[]> {
 

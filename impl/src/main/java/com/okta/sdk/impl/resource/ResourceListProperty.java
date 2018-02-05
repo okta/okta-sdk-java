@@ -18,7 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.sdk.resource.Resource;
 
 /**
- * @since 0.11.0
+ * @since 1.0
  */
 public class ResourceListProperty<T extends Resource> extends Property<T> {
 

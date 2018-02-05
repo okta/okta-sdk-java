@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * The default HREF resolver return a HAL self link if available ({@code _links.self.href}).
  *
- * @since 0.11.0
+ * @since 1.0
  */
 public class HalResourceHrefResolver implements ResourceHrefResolver {
 
