@@ -29,7 +29,7 @@
       "name": "Apache-2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.12.0"
+    "version": "0.13.0"
   },
   "externalDocs": {
     "description": "Find more info here",
@@ -3585,16 +3585,6 @@
             }
           ],
           "operationId": "getApplicationGroupAssignment"
-        },
-        {
-          "alias": "generateApplicationKey",
-          "arguments": [
-            {
-              "dest": "appId",
-              "src": "id"
-            }
-          ],
-          "operationId": "generateApplicationKey"
         },
         {
           "alias": "cloneApplicationKey",
