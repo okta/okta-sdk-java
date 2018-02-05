@@ -42,7 +42,7 @@ public interface CollectionResource<T extends Resource> extends Resource, Iterab
      * Returns a sequential {@code Stream} with this collection as its source.
      *
      * @return a sequential {@code Stream} over the elements in this resource
-     * @since 0.11.0
+     * @since 1.0
      */
     Stream<T> stream();
 

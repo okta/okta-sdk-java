@@ -22,7 +22,7 @@ import com.okta.sdk.impl.ds.ResourceDataResult;
  * Defines the strategy used for reading/adding/updating/removing objects from the cache based on a
  * {@link ResourceDataRequest} and {@link ResourceDataResult}.
  *
- * @since 0.11.0
+ * @since 1.0
  */
 public interface ResourceCacheStrategy {
 

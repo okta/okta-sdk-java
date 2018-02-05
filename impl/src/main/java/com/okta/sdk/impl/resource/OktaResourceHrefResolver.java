@@ -36,7 +36,7 @@ import java.util.Map;
  *     <li>GroupRule</li>
  * </ul>
  *
- * @since 0.11.0
+ * @since 1.0
  */
 public class OktaResourceHrefResolver implements ResourceHrefResolver {
 
