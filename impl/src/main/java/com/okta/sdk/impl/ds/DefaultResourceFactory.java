@@ -21,6 +21,7 @@ import com.okta.sdk.resource.Resource;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class DefaultResourceFactory implements ResourceFactory {
 
     private final InternalDataStore dataStore;
 
-    private static final String BASE_PACKAGE = "com.okta.sdk.";
+    private static final List<String> SUPPORTED_PACKAGES = Arrays.asList("com.okta.sdk.", "com.okta.authn.sdk.");
     private static final String IMPL_PACKAGE_NAME_FRAGMENT = "impl";
     private static final String IMPL_PACKAGE_NAME = IMPL_PACKAGE_NAME_FRAGMENT + ".";
     private static final String IMPL_CLASS_PREFIX = "Default";
@@ -94,7 +95,13 @@ public class DefaultResourceFactory implements ResourceFactory {
 
     static <T extends Resource> Class<T> convertToInterfaceClass(Class<T> clazz) {
         String fqcn = clazz.getName();
-        String afterBase = fqcn.substring(BASE_PACKAGE.length());
+
+        String basePackage = SUPPORTED_PACKAGES.stream()
+                .filter(fqcn::startsWith)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Could not determine interface for class: '" + fqcn +"'"));
+
+        String afterBase = fqcn.substring(basePackage.length());
 
         //e.g. if impl is com.okta.sdk.impl.account.DefaultAccount, 'afterBase' is impl.account.DefaultAccount
 
@@ -116,7 +123,7 @@ public class DefaultResourceFactory implements ResourceFactory {
         index = simpleName.indexOf(IMPL_CLASS_PREFIX);
         simpleName = simpleName.substring(index + IMPL_CLASS_PREFIX.length());
 
-        String ifaceFqcn = BASE_PACKAGE + beforeSimpleName + "." + simpleName;
+        String ifaceFqcn = basePackage + beforeSimpleName + "." + simpleName;
 
         return Classes.forName(ifaceFqcn);
     }
@@ -125,7 +132,12 @@ public class DefaultResourceFactory implements ResourceFactory {
     static <T extends Resource> Class<T> convertToImplClass(Class<T> clazz) {
         String fqcn = clazz.getName();
 
-        String afterBase = fqcn.substring(BASE_PACKAGE.length());
+        String basePackage = SUPPORTED_PACKAGES.stream()
+                .filter(fqcn::startsWith)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Could not determine impl for class: '" + fqcn +"'"));
+
+        String afterBase = fqcn.substring(basePackage.length());
         //e.g. if interface is com.okta.sdk.account.Account, 'afterBase' is account.Account
 
         //split interface simple name and the remainder of the package structure:
@@ -138,7 +150,7 @@ public class DefaultResourceFactory implements ResourceFactory {
         int index = afterBase.lastIndexOf('.');
         String beforeConcreteClassName = afterBase.substring(0, index);
 
-        String implFqcn = BASE_PACKAGE + IMPL_PACKAGE_NAME_FRAGMENT + "." +
+        String implFqcn = basePackage + IMPL_PACKAGE_NAME_FRAGMENT + "." +
                 beforeConcreteClassName + "." + IMPL_CLASS_PREFIX + clazz.getSimpleName();
 
         return Classes.forName(implFqcn);

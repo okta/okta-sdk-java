@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -246,6 +247,11 @@ public abstract class AbstractPropertyRetriever implements PropertyRetriever {
 
     protected Map getMap(MapProperty mapProperty) {
         return getMapProperty(mapProperty.getName());
+    }
+
+    protected Map getNonEmptyMap(MapProperty mapProperty) {
+        Map result = getMap(mapProperty);
+        return result != null ? result : Collections.emptyMap();
     }
 
     protected Map getMapProperty(String key) {
