@@ -50,4 +50,15 @@ public interface InternalDataStore extends DataStore {
 
     String getBaseUrl();
 
+    default <T extends Resource> T create(String parentHref, T resource) {
+        return create(parentHref, resource, (T) null);
+    }
+
+    default <T extends Resource, R extends Resource> R create(String parentHref, T resource, Class<? extends R> returnType) {
+        return create(parentHref, resource, null, returnType);
+    }
+
+    default <T extends Resource> void save(String href, T resource) {
+        save(href, resource, null);
+    }
 }

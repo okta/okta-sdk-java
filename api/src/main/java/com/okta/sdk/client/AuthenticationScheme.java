@@ -24,13 +24,15 @@ import com.okta.sdk.lang.Assert;
  * The Authentication Scheme setting is helpful in cases where the code is run in a platform where the header information for
  * outgoing HTTP requests is modified and thus causing communication issues.
  * <p>
- * There is currently only one authentication scheme available: SSWS (Okta session bearer token).
+ * The SSWS (Okta session bearer token) should be used for the management SDK, {code NONE} should be used for non
+ * authenticated requests.
  *
  * @since 0.5.0
  */
 public enum AuthenticationScheme {
 
-    SSWS("com.okta.sdk.impl.http.authc.SswsAuthenticator"); //SSWS Authentication
+    SSWS("com.okta.sdk.impl.http.authc.SswsAuthenticator"), //SSWS Authentication
+    NONE("com.okta.sdk.impl.http.authc.DisabledAuthenticator");
 
     private final String requestAuthenticatorClassName;
 

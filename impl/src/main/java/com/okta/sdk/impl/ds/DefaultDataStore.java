@@ -233,7 +233,7 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public <T extends Resource> void save(T resource) {
-        save(resource.getResourceHref(), resource, null);
+        save(resource.getResourceHref(), resource);
     }
 
     @Override
