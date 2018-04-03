@@ -145,10 +145,6 @@ for (User tmpUser : users) {
 }
 ```
 
-## Build this Project
+## Contribute to the Project
 
-To build and install:
-
-1. Clone the repo
-2. Navigate to the repo directory. It should contain pom.xml
-3. Build with tests `mvn install`
+Take a look at the (contribution guide)[CONTRIBUTING.md] and the [build instructions wiki](https://github.com/okta/okta-sdk-java/wiki/Build-It) (though just cloning the repo and running `mvn install` should get you going).
