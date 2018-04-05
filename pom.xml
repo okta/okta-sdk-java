@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.okta</groupId>
         <artifactId>okta-parent</artifactId>
-        <version>2</version>
+        <version>3</version>
         <relativePath>../okta-java-parent</relativePath>
     </parent>
 
@@ -36,10 +36,10 @@
 
     <properties>
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
-        <jackson.version>2.8.8</jackson.version>
+        <jackson.version>2.9.5</jackson.version>
         <snakeyaml.version>1.17</snakeyaml.version>
         <jjwt.version>0.6.0</jjwt.version>
-        <okta.sdk.pereviousVersion>0.10.0</okta.sdk.pereviousVersion>
+        <okta.sdk.pereviousVersion>1.0.0</okta.sdk.pereviousVersion>
 
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
@@ -193,12 +193,6 @@
     <dependencies>
 
         <!-- Test dependencies -->
-
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
