@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+
+    <!-- this comes from this repo, and it is java not ruby, so... false positive -->
+    <suppress>
+       <notes><![CDATA[ file name: okta-sdk-httpclient-1.0.1-SNAPSHOT.jar ]]></notes>
+       <gav regex="true">^com\.okta\.sdk:okta-sdk-httpclient:.*$</gav>
+       <cpe>cpe:/a:rest-client_project:rest-client</cpe>
+    </suppress>
+
+    <!-- invalid artifact detection / swagger uber jars-->
+    <suppress>
+       <notes><![CDATA[file name: swagger-codegen-2.2.3.jar: gradle-wrapper.jar]]></notes>
+       <sha1>0f6f1fa2b59ae770ca14f975726bed8d6620ed9b</sha1>
+       <cve>CVE-2016-6199</cve>
+    </suppress>
+
+</suppressions>
