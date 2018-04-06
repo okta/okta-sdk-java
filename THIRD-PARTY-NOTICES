@@ -1,4 +1,4 @@
-Copyright 2017 Okta
+Copyright 2017, Okta, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,83 +13,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 This project includes:
-  aerogear-otp-java under The Apache Software License, Version 2.0
-  Animal Sniffer Annotations under MIT license
-  ANTLR 4 Runtime under The BSD License
-  AOP alliance under Public Domain
   Apache Commons Codec under The Apache Software License, Version 2.0
-  Apache Commons Collections under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
-  Apache Groovy under The Apache Software License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpCore under Apache License, Version 2.0
-  ASM based accessors helper used by json-smart under The Apache Software License, Version 2.0
-  ASM Core under BSD
   Bean Validation API under The Apache Software License, Version 2.0
-  Byte Buddy (without dependencies) under The Apache Software License, Version 2.0
-  Byte Buddy Java agent under The Apache Software License, Version 2.0
   commonmark-java core under BSD 2-Clause License
   Commons CLI under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   Compiler assisted localization library (CAL10N) - API under MIT License
-  error-prone annotations under Apache 2.0
   FindBugs-jsr305 under The Apache Software License, Version 2.0
-  Google Guice - Core Library under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
-  Handlebars under The Apache Software License, Version 2.0
-  har-reader under The MIT License
-  J2ObjC Annotations under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
   jackson-databind under The Apache Software License, Version 2.0
   Jackson-dataformat-YAML under The Apache Software License, Version 2.0
-  Java Hamcrest under BSD Licence 3
-  Java Servlet API under CDDL + GPLv2 with classpath exception
   JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
   JavaMail API jar under CDDL or GPLv2+CE
-  javax.inject under The Apache Software License, Version 2.0
   JCL 1.2 implemented over SLF4J under MIT License
-  JCommander under The Apache Software License, Version 2.0
-  Jetty :: Continuation under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
-  Jetty :: Http Utility under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
-  Jetty :: IO Utility under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
-  Jetty :: Security under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
-  Jetty :: Server Core under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
-  Jetty :: Servlet Handling under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
-  Jetty :: Utilities under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
-  Jetty :: Utility Servlets and Filters under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
-  Jetty :: Webapp Application Support under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
-  Jetty :: XML utilities under Apache Software License - Version 2.0 or Eclipse Public License - Version 1.0
   jmustache under The (New) BSD License
   Joda-Time under Apache 2
   JOpt Simple under The MIT License
-  JSON Small and Fast Parser under The Apache Software License, Version 2.0
   JSON Web Token support for the JVM under Apache License, Version 2.0
   json-schema-core under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-validator under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
-  JUnit under Eclipse Public License 1.0
   libphonenumber under The Apache Software License, Version 2.0
-  Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
-  Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
-  mockito-core under The MIT License
   Mozilla Rhino under Mozilla Public License, Version 2.0
   null under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
-  Objenesis under Apache 2
-  Okta Java SDK under The Apache License, Version 2.0
-  Okta Java SDK :: API under The Apache License, Version 2.0
-  Okta Java SDK :: Coverage under The Apache License, Version 2.0
-  Okta Java SDK :: Examples under The Apache License, Version 2.0
-  Okta Java SDK :: Examples :: Quickstart Code under The Apache License, Version 2.0
-  Okta Java SDK :: Extensions :: HTTP Client under The Apache License, Version 2.0
-  Okta Java SDK :: Impl under The Apache License, Version 2.0
-  Okta Java SDK :: Integration Tests under The Apache License, Version 2.0
-  Okta Java SDK :: Swagger Templates under The Apache License, Version 2.0
-  org.xmlunit:xmlunit-core under The Apache Software License, Version 2.0
-  org.xmlunit:xmlunit-legacy under The BSD 3-Clause License
-  project ':json-path' under The Apache Software License, Version 2.0
   SLF4J API Module under MIT License
   SLF4J Extensions Module under MIT License
-  SLF4J Simple Binding under MIT License
   SnakeYAML under Apache License, Version 2.0
   swagger-annotations under Apache License 2.0
   swagger-codegen (core library) under Apache License 2.0
@@ -97,21 +49,4 @@ This project includes:
   swagger-core under Apache License 2.0
   swagger-models under Apache License 2.0
   swagger-parser under Apache License 2.0
-  testng under Apache  Version 2.0, January 2004
-  WireMock under The Apache Software License, Version 2.0
-  zjsonpatch under The Apache Software License, Version 2.0
 
-
-This project also includes modified code based on the following copyrights:
-- Request, Response, and Signature functions were based on those in the
-  Amazon AWS SDK for Java, Copyright 2010-2012 Amazon.com, Inc. or its
-  affiliates.  Apache 2.0 licensed.
-- com.okta.sdk.impl.util.BaseNCodec, Copyright ASF. Apache 2.0 licensed.
-- *Util classes, HttpHeaders,
-  com.okta.sdk.http.InvalidMediaTypeException,
-  com.okta.sdk.http.InvalidMimeTypeException, com.okta.sdk.http.MediaType,
-  com.okta.sdk.http.MimeType classes and functions from the
-  Spring Framework project (http://www.springframework.org).  Copyright
-  2002-2017 SpringSource, Pivotal, and original authors.  Apache 2.0 licensed.
-- com.okta.sdk.impl.util.SoftHashMap, Apache Shiro. Apache 2.0 licensed.
-- Code from https://github.com/stormpath/stormpath-sdk-java, Copyright 2015 Stormpath. Apache 2.0 licensed.

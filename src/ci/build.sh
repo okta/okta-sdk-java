@@ -33,8 +33,11 @@ else
         # also deploy the javadocs to the site
         git config --global user.email "developers@okta.com"
         git config --global user.name "okta-sdk-java Auto Doc Build"
-        $MVN_CMD javadoc:aggregate scm-publish:publish-scm -Ppub-docs -Pci
-    else
+        $MVN_CMD javadoc:aggregate \
+                 scm-publish:publish-scm \
+                 com.okta:okta-doclist-maven-plugin:generate \
+                 -Ppub-docs -Pci
+    else 
         # else try to run the ITs if possible (for someone who has push access to the repo
         if [ "$RUN_ITS" = true ] ; then
             echo "Running mvn install"
