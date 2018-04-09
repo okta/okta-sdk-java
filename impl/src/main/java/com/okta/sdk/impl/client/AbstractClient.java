@@ -20,6 +20,7 @@ import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.Proxy;
+import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.ds.DefaultDataStore;
@@ -41,7 +42,7 @@ import java.lang.reflect.Constructor;
  * @see <a href="http://www.okta.com/docs/quickstart/connect">Communicating with Okta: Get your API Key</a>
  * @since 0.5.0
  */
-public abstract class AbstractClient implements Client {
+public abstract class AbstractClient implements DataStore {
 
     private final InternalDataStore dataStore;
 
@@ -83,7 +84,6 @@ public abstract class AbstractClient implements Client {
         return this.dataStore.getCacheManager();
     }
 
-    @Override
     public InternalDataStore getDataStore() {
         return this.dataStore;
     }

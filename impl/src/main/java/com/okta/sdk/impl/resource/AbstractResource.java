@@ -68,11 +68,14 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
     }
 
     protected static Map<String, Property> createPropertyDescriptorMap(Property... props) {
-        Map<String, Property> m = new LinkedHashMap<String, Property>();
+        return createPropertyDescriptorMap(new LinkedHashMap<>(), props);
+    }
+
+    protected static Map<String, Property> createPropertyDescriptorMap(Map<String, Property> existingProperties, Property... props) {
         for (Property prop : props) {
-            m.put(prop.getName(), prop);
+            existingProperties.put(prop.getName(), prop);
         }
-        return m;
+        return existingProperties;
     }
 
     public abstract Map<String, Property> getPropertyDescriptors();
