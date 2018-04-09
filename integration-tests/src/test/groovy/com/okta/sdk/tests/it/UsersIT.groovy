@@ -396,11 +396,11 @@ class UsersIT implements CrudTestSupport {
 
         // 2. Get the user by user ID
         User user = client.getUser(createUser.id)
-        validateUser(user, createUser)
+        validateUser(user, firstName, lastName, email)
 
         // 3. Get the user by user login
         User userByLogin = client.getUser(createUser.profile.getLogin())
-        validateUser(userByLogin, createUser)
+        validateUser(userByLogin, firstName, lastName, email)
 
         // 3. delete the user
         user.deactivate()
