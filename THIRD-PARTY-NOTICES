@@ -114,4 +114,5 @@ This project also includes modified code based on the following copyrights:
   Spring Framework project (http://www.springframework.org).  Copyright
   2002-2017 SpringSource, Pivotal, and original authors.  Apache 2.0 licensed.
 - com.okta.sdk.impl.util.SoftHashMap, Apache Shiro. Apache 2.0 licensed.
+- com.okta.sdk.lang.Locales, Apache Commons Lang. Apache 2.0 licensed.
 - Code from https://github.com/stormpath/stormpath-sdk-java, Copyright 2015 Stormpath. Apache 2.0 licensed.
