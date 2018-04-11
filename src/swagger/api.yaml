@@ -29,7 +29,7 @@
       "name": "Apache-2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "0.13.0"
+    "version": "0.14.0"
   },
   "externalDocs": {
     "description": "Find more info here",
@@ -4294,6 +4294,7 @@
           "token": "#/definitions/TokenFactor",
           "token:hardware": "#/definitions/HardwareFactor",
           "token:software:totp": "#/definitions/TotpFactor",
+          "u2f": "#/definitions/U2fFactor",
           "web": "#/definitions/WebFactor"
         },
         "propertyName": "factorType"
@@ -4362,7 +4363,11 @@
         "token:hardware",
         "question",
         "web",
-        "email"
+        "email",
+        "u2f",
+        "webauthn",
+        "token:software",
+        "custom"
       ],
       "type": "string",
       "x-okta-tags": [
@@ -6124,6 +6129,28 @@
     "TotpFactorProfile": {
       "properties": {
         "credentialId": {
+          "type": "string"
+        }
+      },
+      "x-okta-parent": "#/definitions/FactorProfile",
+      "x-okta-tags": [
+        "UserFactor"
+      ]
+    },
+    "U2fFactor": {
+      "properties": {
+        "profile": {
+          "$ref": "#/definitions/U2fFactorProfile"
+        }
+      },
+      "x-okta-parent": "#/definitions/Factor",
+      "x-okta-tags": [
+        "UserFactor"
+      ]
+    },
+    "U2fFactorProfile": {
+      "properties": {
+        "email": {
           "type": "string"
         }
       },
