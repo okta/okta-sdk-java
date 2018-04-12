@@ -19,7 +19,6 @@ package com.okta.sdk.impl.client;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.client.AuthenticationScheme;
-import com.okta.sdk.client.Client;
 import com.okta.sdk.client.Proxy;
 import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
