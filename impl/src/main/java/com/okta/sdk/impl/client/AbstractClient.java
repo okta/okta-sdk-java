@@ -20,31 +20,20 @@ import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.Proxy;
-import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
-import com.okta.sdk.authc.credentials.ClientCredentials;
-import com.okta.sdk.impl.ds.DefaultDataStore;
-import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.impl.http.RequestExecutor;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Classes;
-import com.okta.sdk.resource.Resource;
-
-import java.lang.reflect.Constructor;
 
 /**
- * The default {@link Client} implementation.
- * This is a convenience mechanism to eliminate the constant need to call {@code client.getDataStore()} every
- * time one needs to instantiate or look up a Resource.
+ * Abstract client implementation, use BaseClient instead. Kept only for backwards compatibility, this class will
+ * be removed in future versions.
  *
+ * @deprecated see {link BaseClient}
  * @see <a href="http://www.okta.com/docs/quickstart/connect">Communicating with Okta: Get your API Key</a>
  * @since 0.5.0
  */
-public abstract class AbstractClient implements DataStore {
-
-    private final InternalDataStore dataStore;
+@Deprecated
+public abstract class AbstractClient extends BaseClient implements Client {
 
     /**
      * Instantiates a new Client instance that will communicate with the Okta REST API.  See the class-level
@@ -62,83 +51,6 @@ public abstract class AbstractClient implements DataStore {
      * @param connectionTimeout    connection timeout in seconds
      */
     public AbstractClient(ClientCredentialsResolver clientCredentialsResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
-        Assert.notNull(clientCredentialsResolver, "clientCredentialsResolver argument cannot be null.");
-        Assert.notNull(baseUrlResolver, "baseUrlResolver argument cannot be null.");
-        Assert.isTrue(connectionTimeout >= 0, "connectionTimeout cannot be a negative number.");
-        RequestExecutor requestExecutor = createRequestExecutor(clientCredentialsResolver.getClientCredentials(), proxy, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
-        this.dataStore = createDataStore(requestExecutor, baseUrlResolver, clientCredentialsResolver, cacheManager);
-    }
-
-
-    protected InternalDataStore createDataStore(RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentialsResolver clientCredentialsResolver, CacheManager cacheManager) {
-        return new DefaultDataStore(requestExecutor, baseUrlResolver, clientCredentialsResolver, cacheManager);
-    }
-
-    @Override
-    public ClientCredentials getClientCredentials() {
-        return this.dataStore.getClientCredentials();
-    }
-
-    @Override
-    public CacheManager getCacheManager() {
-        return this.dataStore.getCacheManager();
-    }
-
-    public InternalDataStore getDataStore() {
-        return this.dataStore;
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    protected RequestExecutor createRequestExecutor(ClientCredentials clientCredentials, Proxy proxy, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
-
-        String className = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor";
-
-        Class requestExecutorClass;
-
-        if (Classes.isAvailable(className)) {
-            requestExecutorClass = Classes.forName(className);
-        } else {
-            //we might be able to check for other implementations in the future, but for now, we only support
-            //HTTP calls via the HttpClient.  Throw an exception:
-
-            String msg = "Unable to find the '" + className + "' implementation on the classpath.  Please ensure you " +
-                    "have added the okta-sdk-httpclient .jar file to your runtime classpath.";
-            throw new RuntimeException(msg);
-        }
-
-        Constructor<RequestExecutor> ctor = Classes.getConstructor(requestExecutorClass, ClientCredentials.class, Proxy.class, AuthenticationScheme.class, RequestAuthenticatorFactory.class, Integer.class);
-
-        return Classes.instantiate(ctor, clientCredentials, proxy, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
-    }
-
-    // ========================================================================
-    // DataStore methods (delegate to underlying DataStore instance)
-    // ========================================================================
-
-    /**
-     * Delegates to the internal {@code dataStore} instance. This is a convenience mechanism to eliminate the constant
-     * need to call {@code client.getDataStore()} every time one needs to instantiate Resource.
-     *
-     * @param clazz the Resource class to instantiate.
-     * @param <T>   the Resource sub-type
-     * @return a new instance of the specified Resource.
-     */
-    @Override
-    public <T extends Resource> T instantiate(Class<T> clazz) {
-        return this.dataStore.instantiate(clazz);
-    }
-
-    /**
-     * Delegates to the internal {@code dataStore} instance. This is a convenience mechanism to eliminate the constant
-     * need to call {@code client.getDataStore()} every time one needs to look up a Resource.
-     *
-     * @param href  the resource URL of the resource to retrieve
-     * @param clazz the {@link Resource} sub-interface to instantiate
-     * @param <T>   type parameter indicating the returned value is a {@link Resource} instance.
-     * @return an instance of the specified class based on the data returned from the specified {@code href} URL.
-     */
-    @Override
-    public <T extends Resource> T getResource(String href, Class<T> clazz) {
-        return this.dataStore.getResource(href, clazz);
+        super(clientCredentialsResolver, baseUrlResolver, proxy, cacheManager, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
     }
 }
