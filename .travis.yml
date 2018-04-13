@@ -25,3 +25,4 @@ deploy:
     name: Travis CI - Auto Doc Build
     on:
       branch: master
+      condition: $TRAVIS_EVENT_TYPE != cron
