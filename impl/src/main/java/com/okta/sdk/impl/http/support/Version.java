@@ -27,19 +27,23 @@ import java.nio.charset.StandardCharsets;
  */
 public class Version {
 
-    private static final String CLIENT_VERSION = lookupClientVersion();
     private static final String VERSION_FILE = "/com/okta/sdk/version.properties";
+    private static final String CLIENT_VERSION = lookupClientVersion(VERSION_FILE);
 
     public static String getClientVersion() {
         return CLIENT_VERSION;
     }
 
-    private static String lookupClientVersion() {
+    public static String getClientVersion(String versionFile) {
+        return lookupClientVersion(versionFile);
+    }
+
+    private static String lookupClientVersion(String versionFile) {
         Class clazz = Version.class;
         InputStream inputStream = null;
         BufferedReader reader = null;
         try {
-            inputStream = clazz.getResourceAsStream(VERSION_FILE);
+            inputStream = clazz.getResourceAsStream(versionFile);
             reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
             String line;
             do {
@@ -47,20 +51,20 @@ public class Version {
             } while (line != null && (line.startsWith("#") || line.isEmpty()));
             return line;
         } catch (IOException e) {
-            throw new RuntimeException("Unable to obtain version from [" + VERSION_FILE + "].", e);
+            throw new RuntimeException("Unable to obtain version from [" + versionFile + "].", e);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    throw new RuntimeException("Exception while trying to close file [" + VERSION_FILE + "].", e);
+                    throw new RuntimeException("Exception while trying to close file [" + versionFile + "].", e);
                 }
             }
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    throw new RuntimeException("Exception while trying to close file [" + VERSION_FILE + "].", e);
+                    throw new RuntimeException("Exception while trying to close file [" + versionFile + "].", e);
                 }
             }
         }

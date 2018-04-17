@@ -16,6 +16,7 @@
  */
 package com.okta.sdk.impl.http.support;
 
+import com.okta.sdk.http.UserAgentProvider;
 import com.okta.sdk.lang.Classes;
 import com.okta.sdk.lang.Strings;
 
@@ -26,8 +27,12 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+import java.util.ServiceLoader;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+
+import static java.util.stream.StreamSupport.stream;
 
 /**
  * This class is in charge of constructing the <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.43">
@@ -61,9 +66,6 @@ public class UserAgent {
     private static final String INTEGRATION_SHIRO_CLASS = "com.okta.shiro.realm.ApplicationRealm";
     private static final String INTEGRATION_SPRING_SECURITY_ID = "okta-spring-security";
     private static final String INTEGRATION_SPRING_SECURITY_CLASS = "com.okta.spring.security.provider.OktaAuthenticationProvider";
-
-    //SDK
-    private static final String OKTA_SDK_STRING = "okta-sdk-java";
 
     //Okta Zuul support
     private static final String OKTA_ZUUL_ID = "okta-zuul";
@@ -132,7 +134,7 @@ public class UserAgent {
     private static String createUserAgentString() {
         String userAgent =  getIntegrationString() +    // okta-shiro | okta-spring-security
                 getOktaSDKComponentsString() +          // okta-servlet-java | okta-spring-boot-starter
-                getOktaSdkString() +                    // okta-sdk-java
+                getFromProviders() +                    // okta-sdk-java
                 getSecurityFrameworkString() +          // shiro | spring-security
                 getIntegrationRuntimeString() +         // spring
                 getSpringBootString() +                 // spring-boot
@@ -140,6 +142,12 @@ public class UserAgent {
                 getJavaSDKRuntimeString() +             // java
                 getOSString();                          // Mac OS X
         return userAgent.trim();
+    }
+
+    private static String getFromProviders() {
+        return stream(ServiceLoader.load(UserAgentProvider.class).spliterator(), false)
+                    .map(UserAgentProvider::getUserAgent)
+                    .collect(Collectors.joining(ENTRY_SEPARATOR)) + ENTRY_SEPARATOR;
     }
 
     private static String getIntegrationString() {
@@ -153,10 +161,6 @@ public class UserAgent {
             return integrationString;
         }
         return "";
-    }
-
-    private static String getOktaSdkString() {
-        return OKTA_SDK_STRING + VERSION_SEPARATOR + Version.getClientVersion() + ENTRY_SEPARATOR;
     }
 
     private static String getIntegrationRuntimeString() {
