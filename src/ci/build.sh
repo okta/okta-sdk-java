@@ -24,6 +24,9 @@ source "${COMMON_SCRIPT}"
 if [ "$TRAVIS_EVENT_TYPE" = "cron" ] ; then
     echo "Running TRAVIS CRON task"
     $MVN_CMD dependency-check:aggregate -Powasp
+
+    echo "Running Integration Tests against Trex Org"
+    OKTA_CLIENT_ORGURL=$TREX_CLIENT_ORGURL OKTA_CLIENT_TOKEN=$TREX_CLIENT_TOKEN $MVN_CMD install
 else
     # run 'mvn deploy' if we can
     if [ "$DEPLOY" = true ] ; then
