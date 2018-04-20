@@ -54,6 +54,38 @@ public interface DataStore {
     <T extends Resource> T getResource(String href, Class<T> clazz);
 
     /**
+     * Creates a new resource and returns the instance as represented by the server. This could mean default values
+     * have been set, modification dates changed, etc.
+     *
+     * @param parentHref the resource URL of the resource to retrieve
+     * @param resource the object payload to to send to the server
+     * @param <T> type parameter indicating the returned value is a {@link Resource} instance.
+     * @return an updated resource as represented by the server.
+     */
+    <T extends Resource> T create(String parentHref, T resource);
+
+    /**
+     * Saves an exiting resource to the remote server.
+     * <p>
+     * <strong>NOTE:</strong> this is typically done by using {@code resource.save()} instead of this method.
+     *
+     * @param href the resource URL of the resource to updated
+     * @param resource the object payload to to send to the server
+     * @param <T> type parameter indicating the type of {@link Resource} instance.
+     */
+    <T extends Resource> void save(String href, T resource);
+
+    /**
+     * Deleted a resource on the remote server.<p>
+     * <strong>NOTE:</strong> this is typically done by using {@code resource.delete()} instead of this method.
+     *
+     * @param href the resource URL of the resource to deleted
+     * @param resource the object payload to to send to the server
+     * @param <T> type parameter indicating the type of {@link Resource} instance.
+     */
+    <T extends Resource> void delete(String href, T resource);
+
+    /**
      * Returns the ClientCredentials used to authenticate HTTPS requests sent to the Okta API server.
      *
      * @return the ClientCredentials used to authenticate HTTPS requests sent to the Okta API server.

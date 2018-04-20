@@ -136,4 +136,19 @@ public abstract class BaseClient implements DataStore {
     public <T extends Resource> T getResource(String href, Class<T> clazz) {
         return this.dataStore.getResource(href, clazz);
     }
+
+    @Override
+    public <T extends Resource> T create(String parentHref, T resource) {
+        return this.dataStore.create(parentHref, resource);
+    }
+
+    @Override
+    public <T extends Resource> void save(String href, T resource) {
+        this.dataStore.save(href, resource);
+    }
+
+    @Override
+    public <T extends Resource> void delete(String href, T resource) {
+        this.dataStore.delete(href, resource);
+    }
 }
