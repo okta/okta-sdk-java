@@ -281,12 +281,9 @@
                         </oldVersion>
                         <parameter>
                             <onlyModified>true</onlyModified>
+                            <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                             <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
-                            <excludes>
-                                <exclue>com.okta.sdk.impl.ds.InternalDataStore#create(java.lang.String,com.okta.sdk.resource.Resource)</exclue>
-                                <exclue>com.okta.sdk.impl.ds.InternalDataStore#create(java.lang.String,com.okta.sdk.resource.Resource,java.lang.Class)</exclue>
-                                <exclue>com.okta.sdk.impl.ds.InternalDataStore#save(java.lang.String,com.okta.sdk.resource.Resource)</exclue>
-                            </excludes>
+                            <postAnalysisScript>${root.dir}/src/japicmp/postAnalysisScript.groovy</postAnalysisScript>
                         </parameter>
                     </configuration>
                 </plugin>
