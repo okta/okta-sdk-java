@@ -82,12 +82,11 @@ public class AppUserApiClient extends JsonApiClient {
      * Creates an App User.
      *
      * @param  appInstanceId {@link String}          ID of the App.
-     * @param  userId {@link String}                 User's unique ID.
      * @return {@link AppUser}                       Updated app user object.
      * @throws IOException                           If an input or output exception occurred.
      */
-    public AppUser createAppUser(String appInstanceId, String userId) throws IOException {
-        return put(getEncodedPath("/%s/users/%s", appInstanceId, userId), null, new TypeReference<AppUser>() { });
+    public AppUser createAppUser(String appInstanceId, AppUser appUser) throws IOException {
+        return post(getEncodedPath("/%s/users", appInstanceId), appUser, new TypeReference<AppUser>() { });
     }
 
     /**
