@@ -328,5 +328,21 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>pub-docs</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.okta</groupId>
+                        <artifactId>okta-doclist-maven-plugin</artifactId>
+                        <configuration>
+                            <legacyVersions>
+                                <legacyVersion>0.0.4</legacyVersion>
+                            </legacyVersions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
