@@ -33,7 +33,7 @@ TAG_NAME="okta-sdk-root-${NEW_VERSION}" # default release plugin tag format
 ##Release
 $MVN_CMD org.sonatype.plugins:nexus-staging-maven-plugin:release
 
-git clone -b gh-pages git@github.com:okta/okta-sdk-java.git target/gh-pages
+git clone -b gh-pages git@github.com:${REPO_SLUG}.git target/gh-pages
 
 # publish once to the versioned dir
 $MVN_CMD javadoc:aggregate -Ppub-docs -Djavadoc.version.dir=''
