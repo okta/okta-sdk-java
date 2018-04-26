@@ -61,6 +61,8 @@ public interface DataStore {
      * @param resource the object payload to to send to the server
      * @param <T> type parameter indicating the returned value is a {@link Resource} instance.
      * @return an updated resource as represented by the server.
+     *
+     * @since 1.1.0
      */
     <T extends Resource> T create(String parentHref, T resource);
 
@@ -72,6 +74,8 @@ public interface DataStore {
      * @param href the resource URL of the resource to updated
      * @param resource the object payload to to send to the server
      * @param <T> type parameter indicating the type of {@link Resource} instance.
+     *
+     * @since 1.1.0
      */
     <T extends Resource> void save(String href, T resource);
 
@@ -82,6 +86,8 @@ public interface DataStore {
      * @param href the resource URL of the resource to deleted
      * @param resource the object payload to to send to the server
      * @param <T> type parameter indicating the type of {@link Resource} instance.
+     *
+     * @since 1.1.0
      */
     <T extends Resource> void delete(String href, T resource);
 
