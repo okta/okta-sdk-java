@@ -20,7 +20,12 @@ import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.http.Request;
 import com.okta.sdk.impl.http.support.RequestAuthenticationException;
 
-
+/**
+ * This {@link RequestAuthenticator} provides a no-op implementation. No authentication is added to requests that use
+ * this implementation.
+ *
+ * @since 1.1.0
+ */
 @SuppressWarnings("PMD.UnusedFormalParameter")
 public class DisabledAuthenticator implements RequestAuthenticator {
 

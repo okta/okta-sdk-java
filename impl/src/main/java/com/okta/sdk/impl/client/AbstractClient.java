@@ -29,7 +29,7 @@ import com.okta.sdk.impl.util.BaseUrlResolver;
  * Abstract client implementation, use BaseClient instead. Kept only for backwards compatibility, this class will
  * be removed in future versions.
  *
- * @deprecated see {link BaseClient}
+ * @deprecated see {@link BaseClient}
  * @see <a href="http://www.okta.com/docs/quickstart/connect">Communicating with Okta: Get your API Key</a>
  * @since 0.5.0
  */
