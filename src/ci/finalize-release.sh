@@ -38,7 +38,7 @@ git clone -b gh-pages git@github.com:${REPO_SLUG}.git target/gh-pages
 # publish once to the versioned dir
 $MVN_CMD javadoc:aggregate -Ppub-docs -Djavadoc.version.dir=''
 # and again to the unversioned dir
-$MVN_CMD javadoc:aggregate -Ppub-docs -Djavadoc.version.dir="${NEW_VERSION}/"
+$MVN_CMD javadoc:aggregate com.okta:okta-doclist-maven-plugin:generate -Ppub-docs -Djavadoc.version.dir="${NEW_VERSION}/"
 
 cd target/gh-pages
 git add .
