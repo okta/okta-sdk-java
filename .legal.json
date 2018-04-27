@@ -1,0 +1,7 @@
+{
+  "exclude": [
+    "mvnw.cmd",
+    "mvnw",
+    "**/META-INF/services/*"
+  ]
+}
