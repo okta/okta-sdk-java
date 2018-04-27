@@ -6149,11 +6149,6 @@
       ]
     },
     "U2fFactorProfile": {
-      "properties": {
-        "email": {
-          "type": "string"
-        }
-      },
       "x-okta-parent": "#/definitions/FactorProfile",
       "x-okta-tags": [
         "UserFactor"
