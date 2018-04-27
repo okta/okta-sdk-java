@@ -153,4 +153,4 @@ Take a look at the (contribution guide)[CONTRIBUTING.md] and the [build instruct
 
 This project follows [SemVer](https://semver.org/) to retain binary compatibility (not source compatibility). This is similar to the stance the [OSGI Alliance](https://www.osgi.org/wp-content/uploads/SemanticVersioning.pdf) has taken. 
 
-In practical terms this means we may add methods to interfaces between MINOR version releases, this should not effect your application at runtime. If for some reason this is causing your project a lot of grief please [reach out to us](https://devforum.okta.com/)!
+In practical terms this means we may add methods to interfaces between MINOR version releases, this should not affect your application at runtime. If for some reason this is causing your project a lot of grief please [reach out to us](https://devforum.okta.com/)!
