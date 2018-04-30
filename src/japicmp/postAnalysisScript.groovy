@@ -39,7 +39,6 @@ while (it.hasNext()) {
 
             if (methodChanges) {
                 println("  method ${method.getName()} ${methodChanges}")
-
             }
         }
     }

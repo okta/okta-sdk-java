@@ -22,11 +22,8 @@ import com.okta.sdk.http.UserAgentProvider;
  */
 public class SdkUserAgentProvider implements UserAgentProvider {
 
-    private static final String OKTA_SDK_STRING = "okta-sdk-java";
-    private static final String VERSION_SEPARATOR = "/";
-
     @Override
     public String getUserAgent() {
-        return OKTA_SDK_STRING + VERSION_SEPARATOR + Version.getClientVersion();
+        return "okta-sdk-java/" + Version.getClientVersion();
     }
 }

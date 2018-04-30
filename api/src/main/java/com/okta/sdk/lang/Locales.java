@@ -55,7 +55,7 @@ public final class Locales {
      * The length must be correct.
      * </p>
      *
-     * @param str  the locale String to convert, null returns null
+     * @param str the locale String to convert, null returns null
      * @return a Locale, null if null input
      * @throws IllegalArgumentException if the string is an invalid format
      * @see Locale#forLanguageTag(String)
