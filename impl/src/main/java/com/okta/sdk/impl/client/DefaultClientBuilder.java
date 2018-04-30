@@ -42,8 +42,8 @@ import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import com.okta.sdk.lang.Assert;
+import com.okta.sdk.lang.Classes;
 import com.okta.sdk.lang.Strings;
-import io.jsonwebtoken.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
