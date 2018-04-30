@@ -330,6 +330,14 @@ public interface ClientBuilder {
     ClientBuilder setOrgUrl(String baseUrl);
 
     /**
+     * Uses each non-null property of {code}clientConfiguration{code}, to set the corresponding argument of this
+     * ClientBuilder.
+     * @param clientConfiguration set of properties to use as configuration
+     * @return the ClientBuilder instance for method chaining
+     */
+    ClientBuilder withConfiguration(ClientConfiguration clientConfiguration);
+
+    /**
      * Constructs a new {@link Client} instance based on the ClientBuilder's current configuration state.
      *
      * @return a new {@link Client} instance based on the ClientBuilder's current configuration state.
