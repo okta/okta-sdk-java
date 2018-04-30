@@ -21,10 +21,15 @@ import com.okta.sdk.resource.Resource;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.stream.StreamSupport.stream;
 
 /**
  * @since 0.5.0
@@ -33,7 +38,7 @@ public class DefaultResourceFactory implements ResourceFactory {
 
     private final InternalDataStore dataStore;
 
-    private static final List<String> SUPPORTED_PACKAGES = Arrays.asList("com.okta.sdk.", "com.okta.authn.sdk.");
+    private static final Set<String> SUPPORTED_PACKAGES = getSupportedPackages();
     private static final String IMPL_PACKAGE_NAME_FRAGMENT = "impl";
     private static final String IMPL_PACKAGE_NAME = IMPL_PACKAGE_NAME_FRAGMENT + ".";
     private static final String IMPL_CLASS_PREFIX = "Default";
@@ -160,12 +165,22 @@ public class DefaultResourceFactory implements ResourceFactory {
         int argsLength = (existing != null ? existing.length : 0);
         argsLength += 1; //account for the 'DataStore' instance that is required for every implementation.
 
-        List<Object> args = new ArrayList<Object>(argsLength);
+        List<Object> args = new ArrayList<>(argsLength);
         args.add(this.dataStore); //always first arg
         if (existing != null) {
             Collections.addAll(args, existing);
         }
 
         return args.toArray();
+    }
+
+    private static Set<String> getSupportedPackages() {
+        Set<String> result = new HashSet<>();
+        stream(ServiceLoader.load(ResourceFactoryConfig.class).spliterator(), false)
+                    .map(config -> config.getSupportedPackages().stream()
+                               .map(it -> it +".")
+                               .collect(Collectors.toSet()))
+                    .forEach(result::addAll);
+        return result;
     }
 }
