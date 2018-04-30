@@ -34,7 +34,6 @@ This project includes:
   jmustache under The (New) BSD License
   Joda-Time under Apache 2
   JOpt Simple under The MIT License
-  JSON Web Token support for the JVM under Apache License, Version 2.0
   json-schema-core under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-validator under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   libphonenumber under The Apache Software License, Version 2.0
