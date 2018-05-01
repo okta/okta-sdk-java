@@ -71,6 +71,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     private final String codeGenName;
 
     public static final String API_FILE_KEY = "apiFile";
+    private static final String NON_OPTIONAL_PRAMS = "nonOptionalParams";
     static final String X_OPENAPI_V3_SCHEMA_REF = "x-openapi-v3-schema-ref";
 
     @SuppressWarnings("hiding")
@@ -501,6 +502,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     @Override
     public String toModelImport(String name) {
+        if (languageSpecificPrimitives.contains(name)) {
+            throw new IllegalStateException("Cannot import primitives: "+ name);
+        }
         if (modelTagMap.containsKey(name)) {
             return modelPackage() +"."+ modelTagMap.get(name) +"."+ name;
         }
@@ -592,6 +596,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 .filter(cgOp -> cgOp.allParams != null)
                 .forEach(cgOp -> cgOp.allParams.stream()
                         .filter(cgParam -> cgParam.isEnum)
+                        .filter(cgParam -> needToImport(cgParam.dataType))
                         .forEach(cgParam -> importsToAdd.add(toModelImport(cgParam.dataType))));
 
         // add each one as an import
@@ -716,17 +721,28 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             if (!nonOptionalParams.isEmpty()) {
                 CodegenParameter param = nonOptionalParams.get(nonOptionalParams.size()-1);
                 param.hasMore = false;
-                co.vendorExtensions.put("nonOptionalParams", nonOptionalParams);
+                co.vendorExtensions.put(NON_OPTIONAL_PRAMS, nonOptionalParams);
             }
 
-            // remove the noOptionalParams if we have trimmed down the list.
-            if (co.vendorExtensions.get("nonOptionalParams") != null && nonOptionalParams.isEmpty()) {
-                co.vendorExtensions.remove("nonOptionalParams");
+            // remove the nonOptionalParams if we have trimmed down the list.
+            if (co.vendorExtensions.get(NON_OPTIONAL_PRAMS) != null && nonOptionalParams.isEmpty()) {
+                co.vendorExtensions.remove(NON_OPTIONAL_PRAMS);
             }
 
-            // remove th body parameter if it was optional
+            // remove the body parameter if it was optional
             if (co.bodyParam != null && !co.bodyParam.required) {
                 co.vendorExtensions.put("optionalBody", true);
+            }
+
+            if (params.parallelStream().anyMatch(param -> param.vendorExtensions.containsKey("x-okta-added-version"))) {
+                List<CodegenParameter> onlyBackwardsCompatibleParams = params.stream()
+                        .filter(param -> !param.vendorExtensions.containsKey("x-okta-added-version"))
+                        .map(CodegenParameter::copy)
+                        .collect(Collectors.toList());
+                CodegenParameter lastItem = onlyBackwardsCompatibleParams.get(onlyBackwardsCompatibleParams.size()-1);
+                lastItem.hasMore = false;
+                co.vendorExtensions.put("hasBackwardsCompatibleParams", true);
+                co.vendorExtensions.put("onlyBackwardsCompatibleParams", onlyBackwardsCompatibleParams);
             }
         }
     }

@@ -1876,6 +1876,15 @@
             "in": "query",
             "name": "provider",
             "type": "boolean"
+          },
+          {
+            "default": false,
+            "description": "With activate=true, set nextLogin to \"changePassword\" to have the password be EXPIRED, so user must change it the next time they log in.",
+            "in": "query",
+            "name": "nextLogin",
+            "type": "string",
+            "x-okta-added-version": "0.14.0",
+            "x-openapi-v3-schema-ref": "#/definitions/UserNextLogin"
           }
         ],
         "produces": [
@@ -6562,6 +6571,15 @@
       "type": "object",
       "x-okta-tags": [
         "User"
+      ]
+    },
+    "UserNextLogin": {
+      "enum": [
+        "changePassword"
+      ],
+      "type": "string",
+      "x-okta-tags": [
+        "Application"
       ]
     },
     "UserProfile": {
