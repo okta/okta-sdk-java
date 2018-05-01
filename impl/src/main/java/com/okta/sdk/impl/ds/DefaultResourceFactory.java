@@ -178,7 +178,7 @@ public class DefaultResourceFactory implements ResourceFactory {
         Set<String> result = new HashSet<>();
         stream(ServiceLoader.load(ResourceFactoryConfig.class).spliterator(), false)
                     .map(config -> config.getSupportedPackages().stream()
-                               .map(it -> it +".")
+                               .map(it -> it + ".")
                                .collect(Collectors.toSet()))
                     .forEach(result::addAll);
         return result;
