@@ -43,6 +43,8 @@ import static org.hamcrest.MatcherAssert.assertThat
 class FactorsIT extends ITSupport {
 
 
+    private String smsTestNumber = "150 055 50006"
+
     @Test
     void factorListTest() {
 
@@ -52,7 +54,7 @@ class FactorsIT extends ITSupport {
         assertThat user.listFactors(), emptyIterable()
 
         SmsFactor smsFactor = client.instantiate(SmsFactor)
-        smsFactor.profile.phoneNumber = "415 123 1234"
+        smsFactor.profile.phoneNumber = smsTestNumber
         user.addFactor(smsFactor)
 
         SecurityQuestionFactor securityQuestionFactor = client.instantiate(SecurityQuestionFactor)
@@ -97,7 +99,7 @@ class FactorsIT extends ITSupport {
         assertThat user.listFactors(), emptyIterable()
 
         CallFactor callFactor = client.instantiate(CallFactor)
-        callFactor.profile.phoneNumber = "415 123 1234"
+        callFactor.profile.phoneNumber = smsTestNumber
 
         assertThat callFactor.id, nullValue()
         assertThat callFactor, sameInstance(user.addFactor(callFactor))
@@ -112,7 +114,7 @@ class FactorsIT extends ITSupport {
         assertThat user.listFactors(), emptyIterable()
 
         SmsFactor smsFactor = client.instantiate(SmsFactor)
-        smsFactor.profile.phoneNumber = "415 123 1234"
+        smsFactor.profile.phoneNumber = smsTestNumber
 
         assertThat smsFactor.id, nullValue()
         assertThat smsFactor, sameInstance(user.addFactor(smsFactor))
