@@ -127,6 +127,13 @@ println("User lookup by ID: "+ client.getUser(userId).getProfile().getLogin());
 println("User lookup by Email: "+ client.getUser(email).getProfile().getLogin());
 ```
 
+Add a SMS factor to the user:
+``` java
+SmsFactor smsFactor = client.instantiate(SmsFactor.class);
+smsFactor.getProfile().setPhoneNumber("555 123 1234");
+user.addFactor(smsFactor);
+```
+
 ## Paging
 
 Paging is handled automatically when iterating over a any collection.
