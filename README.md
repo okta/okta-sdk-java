@@ -7,7 +7,7 @@
 
 This SDK is in EA, so all existing features are supported by Okta in a production setting.
 
-This version of the Okta Java SDK supports CRUD (Create, Read, Update, Delete) operations for the following resource:
+This version of the Okta Java SDK supports CRUD (Create, Read, Update, Delete) operations for the following resources:
 - User
 - Group
 - Group Membership Rules
