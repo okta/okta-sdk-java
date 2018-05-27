@@ -147,7 +147,7 @@ for (User tmpUser : users) {
 
 ## Contribute to the Project
 
-Take a look at the (contribution guide)[CONTRIBUTING.md] and the [build instructions wiki](https://github.com/okta/okta-sdk-java/wiki/Build-It) (though just cloning the repo and running `mvn install` should get you going).
+Take a look at the [contribution guide](CONTRIBUTING.md) and the [build instructions wiki](https://github.com/okta/okta-sdk-java/wiki/Build-It) (though just cloning the repo and running `mvn install` should get you going).
 
 ## Versioning
 
