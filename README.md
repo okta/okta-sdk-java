@@ -145,6 +145,15 @@ for (User tmpUser : users) {
 }
 ```
 
+## Proxy Configuration
+
+Use the standard [Java proxy system properties](https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html) ([Spring documentation](https://docs.spring.io/spring-integration/reference/html/http.html#http-proxy)) to configure proxy support.
+
+```txt
+-Dhttps.proxyHost={your.proxt.host} \
+-Dhttps.proxyPort={your.proxy.port}
+```
+
 ## Contribute to the Project
 
 Take a look at the [contribution guide](CONTRIBUTING.md) and the [build instructions wiki](https://github.com/okta/okta-sdk-java/wiki/Build-It) (though just cloning the repo and running `mvn install` should get you going).
