@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.okta</groupId>
         <artifactId>okta-parent</artifactId>
-        <version>4</version>
+        <version>5</version>
         <relativePath>../okta-java-parent</relativePath>
     </parent>
 
@@ -339,6 +339,14 @@
                             <legacyVersions>
                                 <legacyVersion>0.0.4</legacyVersion>
                             </legacyVersions>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                        <configuration>
+                            <sourcePath>${project.build.sourceDirectory};${root.dir}/api/target/generated-sources/swagger-codegen;${root.dir}/impl/target/generated-sources/swagger-codegen</sourcePath>
+                            <excludes>**/com/okta/swagger/**</excludes>
                         </configuration>
                     </plugin>
                 </plugins>
