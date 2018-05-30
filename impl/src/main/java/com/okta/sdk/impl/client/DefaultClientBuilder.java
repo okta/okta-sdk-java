@@ -58,16 +58,13 @@ import java.util.concurrent.TimeUnit;
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
  * in the following locations and order of precedence (last one wins).</p>
  * <ul>
- * <li>classpath:com/okta/sdk/config/okta.properties</li>
- * <li>classpath:okta.properties</li>
- * <li>classpath:okta.json</li>
+ * <li>classpath:com/okta/sdk/config/okta.yaml</li>
  * <li>classpath:okta.yaml</li>
- * <li>~/.okta/okta.properties</li>
- * <li>~/.okta/okta.json</li>
  * <li>~/.okta/okta.yaml</li>
  * <li>~/okta.properties</li>
- * <li>~/okta.json</li>
- * <li>~/okta.yaml</li>
+ * <li>Environment Variables (with dot notation converted to uppercase + underscores)</li>
+ * <li>System Properties</li>
+ * <li>Programmatically</li>
  * </ul>
  *
  * @since 0.5.0
