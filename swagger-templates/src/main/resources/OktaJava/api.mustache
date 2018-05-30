@@ -51,7 +51,8 @@ public interface {{classname}} extends DataStore {
     */
     DataStore getDataStore();
 
-    {{#operation}}{{^vendorExtensions.moved}}
+{{#operation}}
+{{^vendorExtensions.moved}}
     /**
     * {{summary}}
     * {{notes}}
@@ -84,6 +85,27 @@ public interface {{classname}} extends DataStore {
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
-{{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
+    {{/vendorExtensions.hasOptional}}
+
+    {{#vendorExtensions.hasBackwardsCompatibleParams}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#vendorExtensions.onlyBackwardsCompatibleParams}}
+    * @param {{paramName}} {{description}} (required)
+    {{/vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    @javax.annotation.Generated(
+            value    = "{{generatorClass}}",
+            date     = "{{generatedDate}}",
+            comments = "{{httpMethod}} - {{path}}")
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.onlyBackwardsCompatibleParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.onlyBackwardsCompatibleParams}});
+    {{/vendorExtensions.hasBackwardsCompatibleParams}}
+
+{{/vendorExtensions.moved}}
+{{/operation}}
 }
 {{/operations}}

@@ -176,83 +176,50 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{/vendorExtensions.isDelete}}
      }
 {{/vendorExtensions.hasOptional}}
+
+{{#vendorExtensions.hasBackwardsCompatibleParams}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#vendorExtensions.onlyBackwardsCompatibleParams}}
+    * @param {{paramName}} {{description}} (required)
+    {{/vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    @Override
+    @javax.annotation.Generated(
+            value    = "{{generatorClass}}",
+            date     = "{{generatedDate}}",
+            comments = "{{httpMethod}} - {{path}}")
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.onlyBackwardsCompatibleParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.onlyBackwardsCompatibleParams}}) {
+
+    {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
+    {{#vendorExtensions.hasPathParents}}
+        Map<String, String> pathArgs = getParamsFromHref("{{path}}");
+        {{#vendorExtensions.pathParents}}
+        String {{.}} = pathArgs.get("{{.}}");
+        {{/vendorExtensions.pathParents}}
+    {{/vendorExtensions.hasPathParents}}
+{{>queryPartialBackwardsCompat}}
+{{#vendorExtensions.isGet}}
+{{>apiMethodGet}}
+{{/vendorExtensions.isGet}}
+{{#vendorExtensions.isPut}}
+{{>apiMethodPut}}
+{{/vendorExtensions.isPut}}
+{{#vendorExtensions.isPost}}
+{{>apiMethodPostClient}}
+{{/vendorExtensions.isPost}}
+{{#vendorExtensions.isDelete}}
+{{>apiMethodDelete}}
+{{/vendorExtensions.isDelete}}
+    }
+{{/vendorExtensions.hasBackwardsCompatibleParams}}
+
 {{/.}}
 {{/vendorExtensions.operations}}
-{{#operation}}
-{{^vendorExtensions.moved}}
-
-    /**
-    * {{summary}}
-    * {{notes}}
-    {{#allParams}}
-    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
-    {{/allParams}}
-    {{#returnType}}
-    * @return {{returnType}}
-    {{/returnType}}
-    */
-    @Override
-    @javax.annotation.Generated(
-            value    = "{{generatorClass}}",
-            date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}")
-    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
-
-{{>queryPartial}}
-{{#vendorExtensions.isGet}}
-{{>apiMethodGet}}
-{{/vendorExtensions.isGet}}
-{{#vendorExtensions.isPut}}
-{{>apiMethodPut}}
-{{/vendorExtensions.isPut}}
-{{#vendorExtensions.isPost}}
-{{>apiMethodPostResource}}
-{{/vendorExtensions.isPost}}
-{{#vendorExtensions.isDelete}}
-{{>apiMethodDelete}}
-{{/vendorExtensions.isDelete}}
-    }
-{{#vendorExtensions.hasOptional}}
-
-    /**
-    * {{summary}}
-    * {{notes}}
-    {{#vendorExtensions.nonOptionalParams}}
-    * @param {{paramName}} {{description}} (required)
-    {{/vendorExtensions.nonOptionalParams}}
-    {{#returnType}}
-    * @return {{returnType}}
-    {{/returnType}}
-    */
-    @Override
-    @javax.annotation.Generated(
-            value    = "{{generatorClass}}",
-            date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}")
-    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
-
-{{>queryPartialRequired}}
-{{#vendorExtensions.isGet}}
-{{>apiMethodGet}}
-{{/vendorExtensions.isGet}}
-{{#vendorExtensions.isPut}}
-{{>apiMethodPut}}
-{{/vendorExtensions.isPut}}
-{{#vendorExtensions.isPost}}
-    {{#vendorExtensions.optionalBody}}
-{{>apiMethodPostNoBody}}
-    {{/vendorExtensions.optionalBody}}
-    {{^vendorExtensions.optionalBody}}
-{{>apiMethodPostResource}}
-    {{/vendorExtensions.optionalBody}}
-{{/vendorExtensions.isPost}}
-{{#vendorExtensions.isDelete}}
-{{>apiMethodDelete}}
-{{/vendorExtensions.isDelete}}
-    }
-{{/vendorExtensions.hasOptional}}
-{{/vendorExtensions.moved}}
-{{/operation}}
 
 {{/model}}
 {{/models}}
