@@ -142,6 +142,39 @@ import static com.okta.sdk.lang.Assert.hasText;
 {{/vendorExtensions.isDelete}}
     }
 {{/vendorExtensions.hasOptional}}
+
+{{#vendorExtensions.hasBackwardsCompatibleParams}}
+    /**
+    * {{summary}}
+    * {{notes}}
+    {{#vendorExtensions.onlyBackwardsCompatibleParams}}
+    * @param {{paramName}} {{description}} (required)
+    {{/vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{#returnType}}
+    * @return {{returnType}}
+    {{/returnType}}
+    */
+    @Override
+    @javax.annotation.Generated(
+            value    = "{{generatorClass}}",
+            date     = "{{generatedDate}}",
+            comments = "{{httpMethod}} - {{path}}")
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.onlyBackwardsCompatibleParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.onlyBackwardsCompatibleParams}}) {
+{{>queryPartialBackwardsCompat}}
+{{#vendorExtensions.isGet}}
+{{>apiMethodGet}}
+{{/vendorExtensions.isGet}}
+{{#vendorExtensions.isPut}}
+{{>apiMethodPut}}
+{{/vendorExtensions.isPut}}
+{{#vendorExtensions.isPost}}
+{{>apiMethodPostClient}}
+{{/vendorExtensions.isPost}}
+{{#vendorExtensions.isDelete}}
+{{>apiMethodDelete}}
+{{/vendorExtensions.isDelete}}
+    }
+{{/vendorExtensions.hasBackwardsCompatibleParams}}
 {{/vendorExtensions.moved}}
 {{/operation}}
 }

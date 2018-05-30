@@ -81,33 +81,14 @@ public interface {{classname}} extends Resource{{#parent}}, {{.}}{{/parent}}{{#v
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
-
-{{/vendorExtensions.hasOptional}}{{/.}}{{/vendorExtensions.operations}}
-
-{{#operation}}{{^vendorExtensions.moved}}
+{{/vendorExtensions.hasOptional}}
+{{#vendorExtensions.hasBackwardsCompatibleParams}}
     /**
     * {{summary}}
     * {{notes}}
-    {{#allParams}}
-    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/required}}
-    {{/allParams}}
-    {{#returnType}}
-    * @return {{returnType}}
-    {{/returnType}}
-    */
-    @javax.annotation.Generated(
-        value    = "{{generatorClass}}",
-        date     = "{{generatedDate}}",
-        comments = "{{httpMethod}} - {{path}}")
-    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
-
-{{#vendorExtensions.hasOptional}}
-    /**
-    * {{summary}}
-    * {{notes}}
-    {{#vendorExtensions.nonOptionalParams}}
+    {{#vendorExtensions.onlyBackwardsCompatibleParams}}
     * @param {{paramName}} {{description}} (required)
-    {{/vendorExtensions.nonOptionalParams}}
+    {{/vendorExtensions.onlyBackwardsCompatibleParams}}
     {{#returnType}}
     * @return {{returnType}}
     {{/returnType}}
@@ -116,7 +97,9 @@ public interface {{classname}} extends Resource{{#parent}}, {{.}}{{/parent}}{{#v
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
-{{/vendorExtensions.hasOptional}}{{/vendorExtensions.moved}}{{/operation}}
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{vendorExtensions.alias}}({{#vendorExtensions.onlyBackwardsCompatibleParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.onlyBackwardsCompatibleParams}});
+{{/vendorExtensions.hasBackwardsCompatibleParams}}
+{{/.}}
+{{/vendorExtensions.operations}}
 }
 {{/model}}{{/models}}
