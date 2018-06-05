@@ -149,10 +149,10 @@ for (User tmpUser : users) {
 
 Use the standard [Java proxy system properties](https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html) ([Spring documentation](https://docs.spring.io/spring-integration/reference/html/http.html#http-proxy)) to configure proxy support.
 
-```txt
--Dhttps.proxyHost={your.proxt.host} \
--Dhttps.proxyPort={your.proxy.port}
-```
+| System Property | Description |
+| --------------- | ------------- |
+| https.proxyHost | The hostname, or address, of the proxy server |
+| https.proxyPort | The port number of the proxy server (default: 443) |
 
 ## Contribute to the Project
 
