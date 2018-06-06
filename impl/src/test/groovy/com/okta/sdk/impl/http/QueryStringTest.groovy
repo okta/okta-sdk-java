@@ -83,4 +83,11 @@ class QueryStringTest {
     void testCreateWithEncodedQuery() {
         assertEquals(QueryString.create("foo%3Abar=http%3A%2F%2Ffoo.com").toString(), "foo%3Abar=http%3A%2F%2Ffoo.com")
     }
+
+    @Test
+    void testWithMap() {
+        def query = [key1:"value1", key2: "value2"]
+        def qs = new QueryString(query)
+        assertEquals qs.toString(), "key1=value1&key2=value2"
+    }
 }
