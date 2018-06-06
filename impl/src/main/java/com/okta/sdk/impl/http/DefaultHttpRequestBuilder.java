@@ -28,7 +28,9 @@ import java.util.Map;
  * DefaultHttpRequestBuilder
  *
  * @since 0.5.0
+ * @deprecated not used
  */
+@Deprecated
 public class DefaultHttpRequestBuilder implements HttpRequestBuilder {
 
     private HttpMethod method;

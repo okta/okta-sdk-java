@@ -29,7 +29,9 @@ import java.util.Map;
  * @see HttpRequest
  * @see HttpRequests
  * @since 0.5.0
+ * @deprecated Not used
  */
+@Deprecated
 public interface HttpRequestBuilder {
 
     /**

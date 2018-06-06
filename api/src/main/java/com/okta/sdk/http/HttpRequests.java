@@ -30,7 +30,9 @@ import java.lang.reflect.Constructor;
  * </p>
  *
  * @since 0.5.0
+ * @deprecated not used
  */
+@Deprecated
 public final class HttpRequests {
 
     private static final Class<HttpRequestBuilder> HTTP_REQUEST_BUILDER =

@@ -31,7 +31,9 @@ import java.util.StringTokenizer;
  * This is the default implementation for {@link HttpRequest} interface.
  *
  * @since 0.5.0
+ * @deprecated not used
  */
+@Deprecated
 public class DefaultHttpRequest implements HttpRequest {
 
     private final Map<String, String[]> headers;
