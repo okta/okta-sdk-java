@@ -145,6 +145,26 @@ for (User tmpUser : users) {
 }
 ```
 
+## Calling other Okta endpoints
+
+Is the endpoint you want to call not supported in this SDK yet? Use `client.getDataStore().http()` to make http calls with a convenient builder interface.  The following example sets a user's password using the [set password](https://developer.okta.com/docs/api/resources/users#set-password) end point (which isn't supported yet).
+
+```java
+String userId = "some-user-id";
+
+// Create a resource object
+ExtensibleResource userPasswordRequest = client.instantiate(ExtensibleResource.class);
+userPasswordRequest.put("credentials", client.instantiate(UserCredentials.class)
+                        .setPassword(client.instantiate(PasswordCredential.class)
+                            .setValue("aPassword1!".toCharArray())));
+
+User result = client.getDataStore()
+                .http()
+                    .setBody(userPasswordRequest)
+                    .addQueryParameter("key", "value")
+                    .post("/api/v1/users/"+ userId, User.class);
+```
+
 ## Proxy Configuration
 
 Use the standard [Java proxy system properties](https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html) ([Spring documentation](https://docs.spring.io/spring-integration/reference/html/http.html#http-proxy)) to configure proxy support.

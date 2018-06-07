@@ -19,6 +19,7 @@ package com.okta.sdk.impl.ds;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.ds.DataStore;
+import com.okta.sdk.ds.RequestBuilder;
 import com.okta.sdk.http.HttpMethod;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.cache.DisabledCacheManager;
@@ -111,10 +112,6 @@ public class DefaultDataStore implements InternalDataStore {
         this.resourceConverter = new DefaultResourceConverter(referenceFactory);
 
         this.filters = new ArrayList<>();
-
-//        if(clientCredentials instanceof ApiKeyCredentials) { // FIXME: add this back in
-//            this.filters.add(new DecryptApiKeySecretFilter((ApiKeyCredentials) clientCredentials));
-//        }
 
         if (isCachingEnabled()) {
             ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver);
@@ -223,12 +220,17 @@ public class DefaultDataStore implements InternalDataStore {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Resource> T create(String parentHref, T resource, T parentResource) {
-        return (T)save(parentHref, resource, parentResource, null, resource.getClass(), null, true);
+        return (T)create(parentHref, resource, parentResource, resource.getClass());
     }
 
     @Override
     public <T extends Resource, R extends Resource> R create(String parentHref, T resource, T parentResource, Class<? extends R> returnType) {
-        return save(parentHref, resource, parentResource, null, returnType, null, true);
+        return create(parentHref, resource, parentResource, returnType, null);
+    }
+
+    @Override
+    public <T extends Resource, R extends Resource> R create(String parentHref, T resource, T parentResource, Class<? extends R> returnType, Map<String, Object> queryParameters) {
+        return save(parentHref, resource, parentResource, null, returnType,  new QueryString(queryParameters), true);
     }
 
     @Override
@@ -238,8 +240,13 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public <T extends Resource> void save(String href, T resource, T parentResource) {
+        save(href, resource, parentResource, null);
+    }
+
+    @Override
+    public <T extends Resource> void save(String href, T resource, T parentResource, Map<String, Object> queryParameters) {
         Assert.hasText(href, HREF_REQD_MSG);
-        save(href, resource, parentResource, null, getResourceClass(resource), null, false);
+        save(href, resource, parentResource, null, getResourceClass(resource), new QueryString(queryParameters), false);
     }
 
     @SuppressWarnings("unchecked")
@@ -269,7 +276,7 @@ public class DefaultDataStore implements InternalDataStore {
 
             HttpHeaders httpHeaders = req.getHttpHeaders();
 
-            // if this is an Okta user, we must use a PUT and not a POST
+            // create == POST
             HttpMethod method = HttpMethod.POST;
             if (!create) {
                 method = HttpMethod.PUT;
@@ -297,7 +304,7 @@ public class DefaultDataStore implements InternalDataStore {
                 if (response.getHttpStatus() == 202
                         || response.getHttpStatus() == 200
                         || response.getHttpStatus() == 204) {
-                    //202 means that the request has been accepted for processing, but the processing has not been completed. Therefore we do not have a response body.
+                    //202 means that the request has been accepted for processing, but the processing has not been completed. Therefore we do not have a response setBody.
                     responseBody = java.util.Collections.emptyMap();
                 } else {
                     throw new IllegalStateException("Unable to obtain resource data from the API server.");
@@ -338,7 +345,12 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public void delete(String href) {
-        doDelete(href, VoidResource.class, null);
+        delete(href, (Map<String, Object>) null);
+    }
+
+    @Override
+    public void delete(String href, Map<String, Object> queryParameters) {
+        doDelete(href, VoidResource.class, new QueryString(queryParameters));
     }
 
     @Override
@@ -351,31 +363,22 @@ public class DefaultDataStore implements InternalDataStore {
         doDelete(href, resource);
     }
 
-    private void doDelete(String resourceHref, Class resourceClass, final String possiblyNullPropertyName) {
+    private void doDelete(String resourceHref, Class resourceClass, QueryString qs) {
 
         Assert.hasText(resourceHref, "This resource does not have an href value, therefore it cannot be deleted.");
 
         // if this URL is a partial, then we MUST add the baseUrl
-        if (resourceHref.startsWith("/") ) {
-            resourceHref = qualify(resourceHref);
-        }
-
-        final String requestHref;
-        if (Strings.hasText(possiblyNullPropertyName)) { //delete just that property, not the entire resource:
-            requestHref = resourceHref + "/" + possiblyNullPropertyName;
-        } else {
-            requestHref = resourceHref;
-        }
+        final CanonicalUri uri = canonicalize(resourceHref, qs);
 
         FilterChain chain = new DefaultFilterChain(this.filters, request -> {
-            Request deleteRequest = new DefaultRequest(HttpMethod.DELETE, requestHref);
+            Request deleteRequest = new DefaultRequest(HttpMethod.DELETE, uri.getAbsolutePath(), uri.getQuery());
             execute(deleteRequest);
-            //delete requests have HTTP 204 (no content), so just create an empty body for the result:
-            return new DefaultResourceDataResult(request.getAction(), request.getUri(), request.getResourceClass(), new HashMap<String, Object>());
+            //delete requests have HTTP 204 (no content), so just create an empty setBody for the result:
+            return new DefaultResourceDataResult(request.getAction(), request.getUri(), request.getResourceClass(), new HashMap<>());
         });
 
         final CanonicalUri resourceUri = canonicalize(resourceHref, null);
-        ResourceDataRequest request = new DefaultResourceDataRequest(ResourceAction.DELETE, resourceUri, resourceClass, new HashMap<String, Object>());
+        ResourceDataRequest request = new DefaultResourceDataRequest(ResourceAction.DELETE, resourceUri, resourceClass, new HashMap<>());
         chain.filter(request);
     }
 
@@ -514,5 +517,10 @@ public class DefaultDataStore implements InternalDataStore {
             return ((AbstractInstanceResource)resource).getResourceClass();
         }
         return resource != null ? resource.getClass() : null;
+    }
+
+    @Override
+    public RequestBuilder http() {
+        return new DefaultRequestBuilder(this);
     }
 }

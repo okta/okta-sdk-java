@@ -36,15 +36,30 @@ public interface InternalDataStore extends DataStore {
 
     <T extends Resource, R extends Resource> R create(String parentHref, T resource, T parentResource, Class<? extends R> returnType);
 
+    /**
+     * @since 1.2.0
+     */
+    <T extends Resource, R extends Resource> R create(String parentHref, T resource, T parentResource, Class<? extends R> returnType, Map<String,Object> queryParameters);
+
     <T extends Resource> void save(T resource);
 
     <T extends Resource> void save(String href, T resource, T parentResource);
+
+    /**
+     * @since 1.2.0
+     */
+    <T extends Resource> void save(String href, T resource, T parentResource, Map<String,Object> queryParameters);
 
     <T extends Resource> void delete(T resource);
 
     <T extends Resource> void delete(String href, T resource);
 
     void delete(String href);
+
+    /**
+     * @since 1.2.0
+     */
+    void delete(String href, Map<String,Object> queryParameters);
 
     <T extends Resource> T getResource(String href, Class<T> clazz, Map<String,Object> queryParameters);
 
