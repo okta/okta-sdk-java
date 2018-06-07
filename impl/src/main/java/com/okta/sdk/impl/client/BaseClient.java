@@ -21,6 +21,7 @@ import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Proxy;
 import com.okta.sdk.ds.DataStore;
+import com.okta.sdk.ds.RequestBuilder;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.ds.DefaultDataStore;
 import com.okta.sdk.impl.ds.InternalDataStore;
@@ -150,5 +151,10 @@ public abstract class BaseClient implements DataStore {
     @Override
     public <T extends Resource> void delete(String href, T resource) {
         this.dataStore.delete(href, resource);
+    }
+
+    @Override
+    public RequestBuilder http() {
+        return this.dataStore.http();
     }
 }

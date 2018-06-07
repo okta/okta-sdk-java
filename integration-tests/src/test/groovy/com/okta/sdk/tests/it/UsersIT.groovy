@@ -16,6 +16,8 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.ExtensibleResource
+import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
@@ -33,6 +35,7 @@ import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserList
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
+import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
 
@@ -51,7 +54,7 @@ import static org.hamcrest.Matchers.*
  * Tests for /api/v1/users
  * @since 0.5.0
  */
-class UsersIT implements CrudTestSupport {
+class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test
     void userProfileNumberValues() {
@@ -600,5 +603,25 @@ class UsersIT implements CrudTestSupport {
         assertThat groups, allOf(hasSize(2))
         assertThat groups.get(0).profile.name, equalTo("Everyone")
         assertThat groups.get(1).getId(), equalTo(group.id)
+    }
+
+    @Test
+    void setUserPasswordWithoutReset() {
+
+        def user = randomUser()
+        def userId = user.getId()
+
+        Resource userPasswordRequest = client.instantiate(ExtensibleResource)
+        userPasswordRequest.put("credentials", client.instantiate(ExtensibleResource)
+                               .put("password", client.instantiate(ExtensibleResource)
+                                   .put("value", "aPassword1!".toCharArray())))
+
+        Resource result = client.getDataStore().http()
+                                    .setBody(userPasswordRequest)
+                                    .addQueryParameter("key1", "value1")
+                                    .addQueryParameter("key2", "value2")
+                                    .post("/api/v1/users/"+ userId, User.class)
+
+        assertThat(result, instanceOf(User))
     }
 }
