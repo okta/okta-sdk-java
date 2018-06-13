@@ -1,6 +1,6 @@
 /*
  * Copyright 2014 Stormpath, Inc.
- * Modifications Copyright 2018 Okta, Inc.
+ * Modifications Copyright 2018-present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * A RequestBuilder allows for making {@link Resource} based request to any Okta endpoint. Not all Okta endpoints are
- * supported by this SDK currently, this interface allow to make requests with:
+ * implemented by this SDK currently, this interface allow to make requests with:
  * <ul>
  *     <li>Any Resource as the request {@code body}</li>
  *     <li>Setting query parameters</li>
