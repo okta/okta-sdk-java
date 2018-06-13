@@ -106,9 +106,9 @@ public interface DataStore {
     CacheManager getCacheManager();
 
     /**
-     * Returns an http request builder to help make requested to Okta endpoints that are NOT supported by this SDK.
+     * Returns an http request builder to help make requests to Okta endpoints that are NOT implemented by this SDK.
      *
-     * @return an http request builder to help make requested to Okta endpoints that are NOT supported by this SDK.
+     * @return an http request builder to help make requests to Okta endpoints that are NOT implemented by this SDK.
      * @since 1.2.0
      */
     RequestBuilder http();
