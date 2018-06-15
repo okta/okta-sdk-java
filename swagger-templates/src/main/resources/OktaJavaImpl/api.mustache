@@ -23,12 +23,12 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.http.QueryString;
+import com.okta.sdk.impl.config.ClientConfiguration;
 
 import {{vendorExtensions.overrideApiPackage}}.*;
 
 {{#imports}}import {{import}};
 {{/imports}}
-import com.okta.sdk.impl.client.AbstractClient;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.resource.DefaultVoidResource;
 
@@ -44,10 +44,11 @@ import static com.okta.sdk.lang.Assert.notNull;
 import static com.okta.sdk.lang.Assert.hasText;
 
 {{#operations}}
-    @javax.annotation.Generated(
-            value = "{{generatorClass}}",
-            date  = "{{generatedDate}}")
-    public class {{classname}} extends AbstractClient {
+@javax.annotation.Generated(
+        value = "{{generatorClass}}",
+        date  = "{{generatedDate}}")
+@SuppressWarnings("deprecation")
+public class {{classname}} extends com.okta.sdk.impl.client.AbstractClient {
 
     /**
     * Instantiates a new Client instance that will communicate with the Okta REST API.  See the class-level
@@ -63,7 +64,8 @@ import static com.okta.sdk.lang.Assert.hasText;
     * @param requestAuthenticatorFactory
     * @param connectionTimeout
     */
-    public DefaultClient(ClientCredentialsResolver clientCredentialsResolver,
+    @Deprecated
+    public {{classname}}(ClientCredentialsResolver clientCredentialsResolver,
                          BaseUrlResolver baseUrlResolver,
                          Proxy proxy,
                          CacheManager cacheManager,
@@ -71,6 +73,17 @@ import static com.okta.sdk.lang.Assert.hasText;
                          RequestAuthenticatorFactory requestAuthenticatorFactory,
                          int connectionTimeout) {
         super(clientCredentialsResolver, baseUrlResolver, proxy, cacheManager, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
+    }
+
+    /**
+    * Instantiates a new Client instance that will communicate with the Okta REST API.  See the class-level
+    * JavaDoc for a usage example.
+    *
+    * @param clientConfiguration  the {@link ClientConfiguration} containing the connection information
+    * @param cacheManager         the {@link CacheManager} that should be used to cache
+    */
+    public {{classname}}(ClientConfiguration clientConfiguration, CacheManager cacheManager) {
+        super(clientConfiguration, cacheManager);
     }
 
 {{#operation}}{{^vendorExtensions.moved}}

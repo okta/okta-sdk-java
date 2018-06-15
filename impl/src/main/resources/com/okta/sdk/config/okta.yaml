@@ -29,3 +29,5 @@ okta:
       host:
       username:
       password:
+    retry:
+      maxElapsed: 180

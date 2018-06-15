@@ -14,16 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.impl.http.httpclient
+package com.okta.sdk.impl.http.stub
 
-import com.okta.sdk.client.AuthenticationScheme
-import com.okta.sdk.client.Proxy
-import com.okta.sdk.authc.credentials.ClientCredentials
+import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.http.Request
 import com.okta.sdk.impl.http.RequestExecutor
 import com.okta.sdk.impl.http.Response
 import com.okta.sdk.impl.http.RestException
-import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
 
 /**
  *
@@ -33,14 +30,12 @@ import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
  *
  * @since 0.5.0
  */
-public class HttpClientRequestExecutor implements RequestExecutor {
+class StubRequestExecutor implements RequestExecutor {
 
     @Override
-    public Response executeRequest(Request request) throws RestException {
-        return null;
+    Response executeRequest(Request request) throws RestException {
+        return null
     }
 
-    public HttpClientRequestExecutor(ClientCredentials clientCredentials, Proxy proxy, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, Integer connectionTimeout) {
-
-    }
+    StubRequestExecutor(ClientConfiguration clientConfiguration) {}
 }

@@ -21,6 +21,7 @@ import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
+import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
@@ -53,6 +54,10 @@ public abstract class AbstractClient extends BaseClient implements Client {
      */
     public AbstractClient(ClientCredentialsResolver clientCredentialsResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
         super(clientCredentialsResolver, baseUrlResolver, proxy, cacheManager, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
+    }
+
+    public AbstractClient(ClientConfiguration clientConfiguration, CacheManager cacheManager) {
+        super(clientConfiguration, cacheManager);
     }
 
     @Override

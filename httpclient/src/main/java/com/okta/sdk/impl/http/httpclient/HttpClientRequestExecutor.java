@@ -19,6 +19,7 @@ package com.okta.sdk.impl.http.httpclient;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Proxy;
 import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.http.HttpHeaders;
 import com.okta.sdk.impl.http.MediaType;
 import com.okta.sdk.impl.http.QueryString;
@@ -33,6 +34,7 @@ import com.okta.sdk.impl.http.support.BackoffStrategy;
 import com.okta.sdk.impl.http.support.DefaultRequest;
 import com.okta.sdk.impl.http.support.DefaultResponse;
 import com.okta.sdk.lang.Assert;
+import com.okta.sdk.lang.Strings;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -50,6 +52,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.GzipDecompressingEntity;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.DateUtils;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -65,7 +68,8 @@ import java.io.InputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
-import java.util.Random;
+import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * {@code RequestExecutor} implementation that uses the
@@ -81,7 +85,9 @@ public class HttpClientRequestExecutor implements RequestExecutor {
     /**
      * Maximum exponential back-off time before retrying a request
      */
-    private static final int MAX_BACKOFF_IN_MILLISECONDS = 20 * 1000;
+    private static final int DEFAULT_MAX_BACKOFF_IN_MILLISECONDS = 60 * 1000;
+    private static final int DEFAULT_MIN_429_RANDOM_OFFSET_IN_MILLISECONDS = 500;
+    private static final int DEFAULT_MAX_429_RANDOM_OFFSET_IN_MILLISECONDS = 1000;
 
     private static final int DEFAULT_MAX_RETRIES = 4;
 
@@ -95,6 +101,8 @@ public class HttpClientRequestExecutor implements RequestExecutor {
 
     private int numRetries = DEFAULT_MAX_RETRIES;
 
+    private int maxElapsedMillis = DEFAULT_MAX_BACKOFF_IN_MILLISECONDS;
+
     private final RequestAuthenticator requestAuthenticator;
 
     private HttpClient httpClient;
@@ -102,9 +110,6 @@ public class HttpClientRequestExecutor implements RequestExecutor {
     private BackoffStrategy backoffStrategy;
 
     private HttpClientRequestFactory httpClientRequestFactory;
-
-    //doesn't need to be SecureRandom: only used in backoff strategy, not for crypto:
-    private final Random random = new Random();
 
     static {
         int connectionMaxPerRoute = DEFAULT_MAX_CONNECTIONS_PER_ROUTE;
@@ -136,6 +141,19 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         MAX_CONNECTIONS_TOTAL = connectionMaxTotal;
     }
 
+    @SuppressWarnings({"deprecation"})
+    public HttpClientRequestExecutor(ClientConfiguration clientConfiguration) {
+        this(clientConfiguration.getClientCredentialsResolver().getClientCredentials(),
+             clientConfiguration.getProxy(),
+             clientConfiguration.getAuthenticationScheme(),
+             clientConfiguration.getRequestAuthenticatorFactory(),
+             clientConfiguration.getConnectionTimeout());
+
+        if (clientConfiguration.getRetryMaxElapsed() >= 0) {
+            maxElapsedMillis = clientConfiguration.getRetryMaxElapsed();
+        }
+    }
+
     /**
      * Creates a new {@code HttpClientRequestExecutor} using the specified {@code ClientCredentials} and optional {@code Proxy}
      * configuration.
@@ -144,6 +162,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
      * @param authenticationScheme the HTTP authentication scheme to be used when communicating with the Okta API server.
      *                             If null, then SSWS will be used.
      */
+    @Deprecated
     public HttpClientRequestExecutor(ClientCredentials clientCredentials, Proxy proxy, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, Integer connectionTimeout) {
         Assert.notNull(clientCredentials, "clientCredentials argument is required.");
         Assert.isTrue(connectionTimeout >= 0, "Timeout cannot be a negative number.");
@@ -231,7 +250,8 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         int retryCount = 0;
         URI redirectUri = null;
         HttpEntity entity = null;
-        RestException exception = null;
+        HttpResponse httpResponse = null;
+        String requestId = null;
 
         // Make a copy of the original request params and headers so that we can
         // permute them in the loop and start over with the original every time.
@@ -257,8 +277,11 @@ public class HttpClientRequestExecutor implements RequestExecutor {
             if (retryCount > 0) {
                 request.setQueryString(originalQuery);
                 request.setHeaders(originalHeaders);
-            }
 
+                if (httpResponse != null && requestId == null) {
+                    requestId = getHeaderValue(httpResponse.getFirstHeader("X-Okta-Request-Id"));
+                }
+            }
 
             // Sign the request
             this.requestAuthenticator.authenticate(request);
@@ -269,14 +292,12 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                 entity = ((HttpEntityEnclosingRequest) httpRequest).getEntity();
             }
 
-
-            HttpResponse httpResponse = null;
             try {
                 // We don't want to treat a redirect like a retry,
                 // so if redirectUri is not null, we won't pause
                 // before executing the request below.
                 if (retryCount > 0 && redirectUri == null) {
-                    pauseExponentially(retryCount, exception);
+                    pauseBeforeRetry(retryCount, httpResponse);
                     if (entity != null) {
                         InputStream content = entity.getContent();
                         if (content.markSupported()) {
@@ -287,8 +308,10 @@ public class HttpClientRequestExecutor implements RequestExecutor {
 
                 // reset redirectUri so that if there is an exception, we will pause on retry
                 redirectUri = null;
-                exception = null;
                 retryCount++;
+
+                // include X-Okta headers when retrying
+                setOktaHeaders(request, requestId, retryCount);
 
                 httpResponse = httpClient.execute(httpRequest);
 
@@ -303,11 +326,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                     Response response = toSdkResponse(httpResponse);
 
                     int httpStatus = response.getHttpStatus();
-
-                    if (httpStatus == 429) {
-                        throw new RestException("HTTP 429: Too Many Requests.  Exceeded request rate limit in the allotted amount of time.");
-                    }
-                    if ((httpStatus == 503 || httpStatus == 504) && retryCount <= this.numRetries) {
+                    if ((httpStatus == 429 || httpStatus == 503 || httpStatus == 504) && retryCount <= this.numRetries) {
                         //allow the loop to continue to execute a retry request
                         continue;
                     }
@@ -316,10 +335,6 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                 }
             } catch (Throwable t) {
                 log.warn("Unable to execute HTTP request: ", t.getMessage(), t);
-
-                if (t instanceof RestException) {
-                    exception = (RestException)t;
-                }
 
                 if (!shouldRetry(httpRequest, t, retryCount)) {
                     throw new RestException("Unable to execute HTTP request: " + t.getMessage(), t);
@@ -331,6 +346,29 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                 }
             }
         }
+    }
+
+    /**
+     * Adds {@code X-Okta-Retry-For} and {@code X-Okta-Retry-Count} headers to request if not null/empty or zero.
+     *
+     * @param request the request to add headers too
+     * @param requestId request ID of the original request that failed
+     * @param retryCount the number of times the request has been retried
+     */
+    private void setOktaHeaders(Request request, String requestId, int retryCount) {
+        if (Strings.hasText(requestId)) {
+            request.getHeaders().add("X-Okta-Retry-For", requestId);
+        }
+        if (retryCount > 1) {
+            request.getHeaders().add("X-Okta-Retry-Count", Integer.toString(retryCount));
+        }
+    }
+
+    private String getHeaderValue(Header header) {
+        if (header != null) {
+            return header.getValue();
+        }
+        return null;
     }
 
     private boolean isRedirect(HttpResponse response) {
@@ -347,21 +385,22 @@ public class HttpClientRequestExecutor implements RequestExecutor {
      * retries.
      *
      * @param retries           Current retry count.
-     * @param previousException Exception information for the previous attempt, if any.
      */
-    private void pauseExponentially(int retries, RestException previousException) {
-        long delay;
+    private void pauseBeforeRetry(int retries, HttpResponse httpResponse) {
+        long delay = -1;
         if (backoffStrategy != null) {
-            delay = this.backoffStrategy.getDelayMillis(retries);
-        } else {
-            long scaleFactor = 300;
-            if (previousException != null && isThrottlingException(previousException)) {
-                scaleFactor = 500 + random.nextInt(100);
+            delay = Math.min(this.backoffStrategy.getDelayMillis(retries), maxElapsedMillis);
+        } else if (httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 429) {
+            delay = get429DelayMillis(httpResponse);
+            if (delay > maxElapsedMillis) {
+                throw new RestException("HTTP 429: Too Many Requests.  Exceeded request rate limit in the allotted amount of time.");
             }
-            delay = (long) (Math.pow(2, retries) * scaleFactor);
+            log.debug("429 detected, will retry in {}ms, attempt number: {}", delay, retries);
+        }
+        if (delay < 0) {
+            delay = Math.min(getDefaultDelayMillis(retries), maxElapsedMillis);
         }
 
-        delay = Math.min(delay, MAX_BACKOFF_IN_MILLISECONDS);
         log.debug("Retryable condition detected, will retry in {}ms, attempt number: {}", delay, retries);
 
         try {
@@ -370,6 +409,44 @@ public class HttpClientRequestExecutor implements RequestExecutor {
             Thread.currentThread().interrupt();
             throw new RestException(e.getMessage(), e);
         }
+    }
+
+    private long get429DelayMillis(HttpResponse httpResponse) {
+
+        // the time at which the rate limit will reset, specified in UTC epoch time.
+        String resetLimit = getHeaderValue(httpResponse.getFirstHeader("X-Rate-Limit-Reset"));
+        if (!resetLimit.chars().allMatch(Character::isDigit)) {
+            return -1;
+        }
+
+        // If the Date header is not set, do not continue
+        Date requestDate = dateFromHeader(httpResponse);
+        if (requestDate == null) {
+            return -1;
+        }
+
+        long waitUntil = Long.parseLong(resetLimit) * 1000L;
+        long requestTime = requestDate.getTime();
+        long scaleFactor = ThreadLocalRandom.current().nextInt(DEFAULT_MIN_429_RANDOM_OFFSET_IN_MILLISECONDS,
+                                                               DEFAULT_MAX_429_RANDOM_OFFSET_IN_MILLISECONDS);
+        long delay = waitUntil - requestTime + scaleFactor;
+        log.debug("429 wait: {} - {} + {} = {}", waitUntil, requestTime, scaleFactor, delay);
+
+        return delay;
+    }
+
+    private Date dateFromHeader(HttpResponse httpResponse) {
+        Date result = null;
+        Header dateHeader = httpResponse.getFirstHeader("Date");
+        if (dateHeader != null) {
+            result = DateUtils.parseDate(dateHeader.getValue());
+        }
+        return result;
+    }
+
+    private long getDefaultDelayMillis(int retries) {
+        long scaleFactor = 300;
+        return (long) (Math.pow(2, retries) * scaleFactor);
     }
 
     /**
@@ -400,30 +477,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
             return true;
         }
 
-        if (t instanceof RestException) {
-            RestException re = (RestException) t;
-
-            /*
-             * Throttling is reported as a 429 error. To try
-             * and smooth out an occasional throttling error, we'll pause and
-             * retry, hoping that the pause is long enough for the request to
-             * get through the next time.
-             */
-            return isThrottlingException(re);
-        }
-
         return false;
-    }
-
-    /**
-     * Returns {@code true} if the exception resulted from a throttling error, {@code false} otherwise.
-     *
-     * @param re The exception to test.
-     * @return {@code true} if the exception resulted from a throttling error, {@code false} otherwise.
-     */
-    private boolean isThrottlingException(RestException re) {
-        String msg = re.getMessage();
-        return msg != null && msg.contains("HTTP 429");
     }
 
     protected byte[] toBytes(HttpEntity entity) throws IOException {
@@ -480,7 +534,6 @@ public class HttpClientRequestExecutor implements RequestExecutor {
     private HttpHeaders getHeaders(HttpResponse response) {
 
         HttpHeaders headers = new HttpHeaders();
-
         Header[] httpHeaders = response.getAllHeaders();
 
         if (httpHeaders != null) {
