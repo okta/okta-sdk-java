@@ -19,57 +19,58 @@ package com.okta.sdk.impl.client
 import com.okta.sdk.cache.CacheManager
 import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.impl.api.ClientCredentialsResolver
+import com.okta.sdk.impl.http.RequestExecutorFactory
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
-import com.okta.sdk.impl.test.RestoreSecurityManager
 import com.okta.sdk.impl.util.BaseUrlResolver
-import org.testng.annotations.Listeners
+import com.okta.sdk.lang.Classes
+import org.mockito.Mock
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
+import org.powermock.core.classloader.annotations.PrepareForTest
+import org.powermock.modules.testng.PowerMockTestCase
 import org.testng.annotations.Test
 
-import java.security.Permission
 
 import static org.mockito.Mockito.*
-import static org.testng.Assert.assertEquals
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.is
 import static org.testng.Assert.fail
+import static org.powermock.api.mockito.PowerMockito.mockStatic
 
 /**
  * @since 0.5.0
  */
 
-@Listeners(RestoreSecurityManager.class)
-class DefaultClientTest {
+@PrepareForTest(Classes.class)
+class DefaultClientTest extends PowerMockTestCase {
+
+    @Mock
+    private ServiceLoader mockServiceLoader
 
     @Test
     void testCreateRequestExecutor() {
+
+        mockStatic(Classes.class)
+        when(Classes.loadFromService(eq(RequestExecutorFactory), any(String))).then(new Answer<Object>() {
+            @Override
+            Object answer(InvocationOnMock invocation) throws Throwable {
+                throw new IllegalStateException(invocation.getArgument(1))
+            }
+        })
 
         def apiKeyResolver = mock(ClientCredentialsResolver)
         def cacheManager = mock(CacheManager)
         def requestAuthenticatorFactory = mock(RequestAuthenticatorFactory)
         def baseUrlResolver = mock(BaseUrlResolver)
-
-        def className = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor"
-
-        System.setSecurityManager(new SecurityManager() {
-            @Override
-            void checkPermission(Permission perm) {}
-
-            @Override
-            void checkPermission(Permission perm, Object context) {}
-
-            @Override
-            void checkPackageAccess(String pkg) {
-                if ("com.okta.sdk.impl.http.httpclient".equals(pkg)) {
-                    throw new ClassNotFoundException("Thrown intentionally DefaultClientTest.testCreateRequestExecutor()")
-                }
-            }
-        })
+        def className = RequestExecutorFactory.name
 
         try {
             new DefaultClient(apiKeyResolver, baseUrlResolver, null, cacheManager, AuthenticationScheme.SSWS, requestAuthenticatorFactory, 3600)
             fail("shouldn't be here")
         } catch (Exception e) {
-            assertEquals e.getMessage(), "Unable to find the '" + className +
-                "' implementation on the classpath.  Please ensure you " +
-                "have added the okta-sdk-httpclient .jar file to your runtime classpath."
+            assertThat e.getMessage(), is(("Unable to find a '${className}' " +
+                "implementation on the classpath.  Please ensure you " +
+                "have added the okta-sdk-httpclient.jar file to your runtime classpath.").toString())
         }
     }
 }

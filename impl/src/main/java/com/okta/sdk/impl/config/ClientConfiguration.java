@@ -18,6 +18,7 @@ package com.okta.sdk.impl.config;
 
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.client.AuthenticationScheme;
+import com.okta.sdk.client.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
@@ -50,7 +51,9 @@ public class ClientConfiguration {
     private String proxyHost;
     private String proxyUsername;
     private String proxyPassword;
+    private Proxy proxy;
     private BaseUrlResolver baseUrlResolver;
+    private int retryMaxElapsed = -1;
 
     public String getApiToken() {
         return apiToken;
@@ -197,6 +200,37 @@ public class ClientConfiguration {
         this.baseUrlResolver = baseUrlResolver;
     }
 
+    public Proxy getProxy() {
+        if (this.proxy != null) {
+            return proxy;
+        }
+
+        Proxy proxy = null;
+        // use proxy overrides if they're set
+        if (getProxyPort() > 0 || getProxyHost() != null && (getProxyUsername() == null || getProxyPassword() == null)) {
+            proxy = new Proxy(getProxyHost(), getProxyPort());
+        } else if (getProxyUsername() != null && getProxyPassword() != null) {
+            proxy = new Proxy(getProxyHost(), getProxyPort(), getProxyUsername(), getProxyPassword());
+        }
+
+        this.proxy = proxy;
+        return this.proxy;
+    }
+
+    public ClientConfiguration setProxy(Proxy proxy) {
+        this.proxy = proxy;
+        return this;
+    }
+
+    public int getRetryMaxElapsed() {
+        return retryMaxElapsed;
+    }
+
+    public ClientConfiguration setRetryMaxElapsed(int retryMaxElapsed) {
+        this.retryMaxElapsed = retryMaxElapsed;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ClientConfiguration{" +
@@ -206,10 +240,8 @@ public class ClientConfiguration {
                 ", baseUrl='" + baseUrl + '\'' +
                 ", connectionTimeout=" + connectionTimeout +
                 ", authenticationScheme=" + authenticationScheme +
-                ", proxyPort=" + proxyPort +
-                ", proxyHost='" + proxyHost + '\'' +
-                ", proxyUsername='" + proxyUsername + '\'' +
-                ", proxyPassword='" + proxyPassword + '\'' +
+                ", retryMaxElapsed=" + retryMaxElapsed +
+                ", proxy=" + proxy +
                 '}';
     }
 }

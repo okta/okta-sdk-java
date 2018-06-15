@@ -76,7 +76,6 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
 
-    private Proxy proxy;
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
 
@@ -208,7 +207,10 @@ public class DefaultClientBuilder implements ClientBuilder {
         if (proxy == null) {
             throw new IllegalArgumentException("proxy argument cannot be null.");
         }
-        this.proxy = proxy;
+        clientConfig.setProxyHost(proxy.getHost());
+        clientConfig.setProxyPort(proxy.getPort());
+        clientConfig.setProxyUsername(proxy.getUsername());
+        clientConfig.setProxyPassword(proxy.getPassword());
         return this;
     }
 
@@ -257,6 +259,12 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
+    public ClientBuilder setRetryMaxElapsed(int maxElapsed) {
+        this.clientConfig.setRetryMaxElapsed(maxElapsed);
+        return this;
+    }
+
+    @Override
     public Client build() {
         if (!this.clientConfig.isCacheManagerEnabled()) {
             log.debug("CacheManager disabled. Defaulting to DisabledCacheManager");
@@ -276,33 +284,19 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.cacheManager = cacheManagerBuilder.build();
         }
 
-        // use proxy overrides if they're set
-        if (this.clientConfig.getProxyPort() > 0 || this.clientConfig.getProxyHost() != null &&
-                (this.clientConfig.getProxyUsername() == null || this.clientConfig.getProxyPassword() == null)) {
-            this.proxy = new Proxy(this.clientConfig.getProxyHost(), this.clientConfig.getProxyPort());
-        } else if (this.clientConfig.getProxyUsername() != null && this.clientConfig.getProxyPassword() != null) {
-            this.proxy = new Proxy(this.clientConfig.getProxyHost(), this.clientConfig.getProxyPort(),
-                    this.clientConfig.getProxyUsername(), this.clientConfig.getProxyPassword());
+        if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
+        }
+        else if (this.clientConfig.getClientCredentialsResolver() == null) {
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(clientConfig));
         }
 
-        ClientCredentialsResolver clientCredentialsResolver = this.clientConfig.getClientCredentialsResolver();
-
-        if (clientCredentialsResolver == null && this.clientCredentials != null) {
-            clientCredentialsResolver = new DefaultClientCredentialsResolver(this.clientCredentials);
-        }
-        else if (clientCredentialsResolver == null) {
-            clientCredentialsResolver = new DefaultClientCredentialsResolver(clientConfig);
-        }
-
-        BaseUrlResolver baseUrlResolver = this.clientConfig.getBaseUrlResolver();
-
-        if (baseUrlResolver == null) {
+        if (this.clientConfig.getBaseUrlResolver() == null) {
             Assert.notNull(this.clientConfig.getBaseUrl(), "Okta org url must not be null.");
-            baseUrlResolver = new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl());
+            this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
-        return new DefaultClient(clientCredentialsResolver, baseUrlResolver, this.proxy, this.cacheManager,
-                this.clientConfig.getAuthenticationScheme(), this.clientConfig.getRequestAuthenticatorFactory(), this.clientConfig.getConnectionTimeout());
+        return new DefaultClient(clientConfig, cacheManager);
     }
 
     @Override

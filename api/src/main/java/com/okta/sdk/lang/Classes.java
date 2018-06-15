@@ -21,6 +21,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.util.Optional;
+import java.util.ServiceConfigurationError;
+import java.util.ServiceLoader;
+import java.util.stream.StreamSupport;
 
 /**
  * @since 0.5.0
@@ -187,6 +191,20 @@ public class Classes {
         } catch (Exception e) {
             String msg = "Unable to instantiate instance with constructor [" + ctor + "]";
             throw new InstantiationException(msg, e);
+        }
+    }
+
+    public static <T> T loadFromService(Class<T> clazz) {
+        return loadFromService(clazz, "ServiceLoader failed to find implementation for class: " + clazz);
+    }
+
+    public static <T> T loadFromService(Class<T> clazz, String errorMessage) {
+        try {
+            ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz);
+            Optional<T> result = StreamSupport.stream(serviceLoader.spliterator(), false).findFirst();
+            return result.orElseThrow(() -> new IllegalStateException(errorMessage));
+        } catch(ServiceConfigurationError e) {
+            throw new IllegalStateException(errorMessage, e);
         }
     }
 

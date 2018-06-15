@@ -23,16 +23,17 @@ import com.okta.sdk.client.Proxy;
 import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.ds.RequestBuilder;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
+import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
+import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.ds.DefaultDataStore;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.http.RequestExecutor;
+import com.okta.sdk.impl.http.RequestExecutorFactory;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Classes;
 import com.okta.sdk.resource.Resource;
-
-import java.lang.reflect.Constructor;
 
 /**
  * The base client class.
@@ -57,6 +58,7 @@ public abstract class BaseClient implements DataStore {
      * @param requestAuthenticatorFactory factory used to handle creating autentication requests
      * @param connectionTimeout    connection timeout in seconds
      */
+    @Deprecated
     public BaseClient(ClientCredentialsResolver clientCredentialsResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
         Assert.notNull(clientCredentialsResolver, "clientCredentialsResolver argument cannot be null.");
         Assert.notNull(baseUrlResolver, "baseUrlResolver argument cannot be null.");
@@ -65,6 +67,14 @@ public abstract class BaseClient implements DataStore {
         this.dataStore = createDataStore(requestExecutor, baseUrlResolver, clientCredentialsResolver, cacheManager);
     }
 
+    public BaseClient(ClientConfiguration clientConfiguration, CacheManager cacheManager) {
+        Assert.notNull(clientConfiguration, "clientConfiguration argument cannot be null.");
+        RequestExecutor requestExecutor = createRequestExecutor(clientConfiguration);
+        this.dataStore = createDataStore(requestExecutor,
+                                         clientConfiguration.getBaseUrlResolver(),
+                                         clientConfiguration.getClientCredentialsResolver(),
+                                         cacheManager);
+    }
 
     protected InternalDataStore createDataStore(RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver, ClientCredentialsResolver clientCredentialsResolver, CacheManager cacheManager) {
         return new DefaultDataStore(requestExecutor, baseUrlResolver, clientCredentialsResolver, cacheManager);
@@ -85,26 +95,26 @@ public abstract class BaseClient implements DataStore {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
+    protected RequestExecutor createRequestExecutor(ClientConfiguration clientConfiguration) {
+
+        String msg = "Unable to find a '" + RequestExecutorFactory.class.getName() + "' " +
+                "implementation on the classpath.  Please ensure you have added the " +
+                "okta-sdk-httpclient.jar file to your runtime classpath.";
+        return Classes.loadFromService(RequestExecutorFactory.class, msg).create(clientConfiguration);
+    }
+
+    @Deprecated
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected RequestExecutor createRequestExecutor(ClientCredentials clientCredentials, Proxy proxy, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
 
-        String className = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor";
+        ClientConfiguration clientConfiguration = new ClientConfiguration();
+        clientConfiguration.setClientCredentialsResolver(new DefaultClientCredentialsResolver(clientCredentials));
+        clientConfiguration.setProxy(proxy);
+        clientConfiguration.setAuthenticationScheme(authenticationScheme);
+        clientConfiguration.setRequestAuthenticatorFactory(requestAuthenticatorFactory);
+        clientConfiguration.setConnectionTimeout(connectionTimeout);
 
-        Class requestExecutorClass;
-
-        if (Classes.isAvailable(className)) {
-            requestExecutorClass = Classes.forName(className);
-        } else {
-            //we might be able to check for other implementations in the future, but for now, we only support
-            //HTTP calls via the HttpClient.  Throw an exception:
-
-            String msg = "Unable to find the '" + className + "' implementation on the classpath.  Please ensure you " +
-                    "have added the okta-sdk-httpclient .jar file to your runtime classpath.";
-            throw new RuntimeException(msg);
-        }
-
-        Constructor<RequestExecutor> ctor = Classes.getConstructor(requestExecutorClass, ClientCredentials.class, Proxy.class, AuthenticationScheme.class, RequestAuthenticatorFactory.class, Integer.class);
-
-        return Classes.instantiate(ctor, clientCredentials, proxy, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
+        return createRequestExecutor(clientConfiguration);
     }
 
     // ========================================================================
