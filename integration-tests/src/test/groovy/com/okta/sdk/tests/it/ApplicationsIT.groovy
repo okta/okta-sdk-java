@@ -196,7 +196,7 @@ class ApplicationsIT extends ITSupport {
                                 .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
     }
 
-    @Test
+    @Test (groups = "bacon")
     void crudWsFed() {
         doCrudTest(client.instantiate(WsFederationApplication)
                         .setSettings(client.instantiate(WsFederationApplicationSettings)
