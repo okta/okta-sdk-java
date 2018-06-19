@@ -26,6 +26,7 @@ import com.okta.sdk.impl.http.HttpHeaders
 import com.okta.sdk.impl.http.QueryString
 import com.okta.sdk.impl.http.Request
 import com.okta.sdk.impl.http.Response
+import com.okta.sdk.impl.http.RestException
 import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory
 import com.okta.sdk.impl.http.authc.RequestAuthenticator
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
@@ -36,6 +37,7 @@ import org.apache.http.StatusLine
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpRequestBase
 import org.apache.http.message.BasicHeader
+import org.testng.Assert
 import org.testng.annotations.Test
 
 import java.text.SimpleDateFormat
@@ -185,7 +187,73 @@ class HttpClientRequestExecutorTest {
         assertThat totalTime as Integer, is(both(
                                                 greaterThan(5000))
                                             .and(
-                                                lessThan(6500)))
+                                                lessThan(10500)))
+    }
+
+    @Test
+    void test429DelayTooLong() {
+
+        def content = "error-content"
+        def request = mockRequest()
+        def requestAuthenticator = mock(RequestAuthenticator)
+        def httpRequest = mock(HttpRequestBase)
+        def httpClientRequestFactory = mock(HttpClientRequestFactory)
+        def httpClient = mock(HttpClient)
+        def dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz")
+        long currentTime = System.currentTimeMillis()
+        long resetTime = ((currentTime / 1000L) + 20L) as Long // current time plus 20 seconds
+        def dateHeaderValue = dateFormat.format(new Date(currentTime))
+        Header[] headers = [
+                new BasicHeader("X-Rate-Limit-Reset", resetTime.toString()),
+                new BasicHeader("Date", dateHeaderValue),
+                new BasicHeader("X-Okta-Request-Id", "a-request-id")]
+        def httpResponse = mockHttpResponse(content, 429, headers)
+
+        when(httpClientRequestFactory.createHttpClientRequest(request, null)).thenReturn(httpRequest)
+        when(httpClient.execute(httpRequest)).thenReturn(httpResponse)
+
+        def requestExecutor = createRequestExecutor(requestAuthenticator)
+        requestExecutor.httpClientRequestFactory = httpClientRequestFactory
+        requestExecutor.httpClient = httpClient
+
+        def totalTime = time {
+            def response = requestExecutor.executeRequest(request)
+            assertThat response.httpStatus, is(429)
+        }
+
+        // should be almost instant, but we are just making sure we didn't sleep for 20 sec
+        assertThat totalTime, lessThan(1000L)
+    }
+
+    @Test
+    void test429RetryHeaders() {
+
+        def httpResponse = mock(HttpResponse)
+
+        def requestExecutor = createRequestExecutor()
+
+        // no headers
+        assertThat requestExecutor.get429DelayMillis(httpResponse), is(-1L)
+
+        // duplicate X-Rate-Limit-Reset header
+        String limitHeaderName = "X-Rate-Limit-Reset"
+        long currentTime = System.currentTimeMillis()
+        long resetTime1 = ((currentTime / 1000L) + 10L) as Long // current time plus 10 seconds
+        long resetTime2 = ((currentTime / 1000L) + 20L) as Long // current time plus 20 seconds
+        Header[] headers = [
+                new BasicHeader("X-Rate-Limit-Reset", resetTime1.toString()),
+                new BasicHeader("X-Rate-Limit-Reset", resetTime2.toString())]
+
+        when(httpResponse.getHeaders(limitHeaderName)).thenReturn(headers)
+        assertThat requestExecutor.get429DelayMillis(httpResponse), is(-1L)
+
+        // valid case
+        def dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz")
+        def dateHeaderValue = dateFormat.format(new Date(currentTime))
+        when(httpResponse.getFirstHeader("Date")).thenReturn(new BasicHeader("Date", dateHeaderValue))
+        headers = [new BasicHeader("X-Rate-Limit-Reset", resetTime1.toString())]
+        when(httpResponse.getHeaders(limitHeaderName)).thenReturn(headers)
+        assertThat requestExecutor.get429DelayMillis(httpResponse), both(greaterThan(11000L)).and(lessThan(15000L)) // 10 seconds plus 1-5 seconds
     }
 
     private static long time(Closure closure) {
@@ -194,7 +262,19 @@ class HttpClientRequestExecutorTest {
         return (System.currentTimeMillis() - startTime)
     }
 
-    private HttpClientRequestExecutor createRequestExecutor(RequestAuthenticator requestAuthenticator) {
+    static <T extends Throwable> T expect(Class<T> catchMe, Closure closure) {
+        try {
+            closure.call()
+            Assert.fail("Expected ${catchMe.getName()} to be thrown.")
+        } catch(e) {
+            if (!e.class.isAssignableFrom(catchMe)) {
+                throw e
+            }
+            return e
+        }
+    }
+
+    private HttpClientRequestExecutor createRequestExecutor(RequestAuthenticator requestAuthenticator = mock(RequestAuthenticator), int maxElapsed = 10 * 1000) {
 
         def clientCredentials = mock(ClientCredentials)
         def clientConfig = mock(ClientConfiguration)
@@ -204,7 +284,7 @@ class HttpClientRequestExecutorTest {
         when(clientConfig.getRequestAuthenticatorFactory()).thenReturn(requestAuthFactory)
         when(clientConfig.getAuthenticationScheme()).thenReturn(AuthenticationScheme.SSWS)
         when(clientConfig.getConnectionTimeout()).thenReturn(1111)
-        when(clientConfig.getRetryMaxElapsed()).thenReturn(10 * 1000)
+        when(clientConfig.getRetryMaxElapsed()).thenReturn(maxElapsed)
 
         when(requestAuthFactory.create(AuthenticationScheme.SSWS, clientCredentials)).thenReturn(requestAuthenticator)
 
@@ -226,7 +306,7 @@ class HttpClientRequestExecutorTest {
         return request
     }
 
-    private mockHttpResponse(String content, int statusCode = 200, Header[] headers = null) {
+    private HttpResponse mockHttpResponse(String content, int statusCode = 200, Header[] headers = null) {
 
         def httpResponse = mock(HttpResponse)
         def statusLine = mock(StatusLine)
@@ -239,6 +319,8 @@ class HttpClientRequestExecutorTest {
         if (headers != null) {
             headers.each {
                 when(httpResponse.getFirstHeader(it.name)).thenReturn(it)
+                Header[] singleHeader = [it]
+                when(httpResponse.getHeaders(it.name)).thenReturn(singleHeader)
             }
         }
 

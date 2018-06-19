@@ -85,9 +85,9 @@ public class HttpClientRequestExecutor implements RequestExecutor {
     /**
      * Maximum exponential back-off time before retrying a request
      */
-    private static final int DEFAULT_MAX_BACKOFF_IN_MILLISECONDS = 60 * 1000;
-    private static final int DEFAULT_MIN_429_RANDOM_OFFSET_IN_MILLISECONDS = 500;
-    private static final int DEFAULT_MAX_429_RANDOM_OFFSET_IN_MILLISECONDS = 1000;
+    private static final int DEFAULT_MAX_BACKOFF_IN_MILLISECONDS = 65 * 1000;
+    private static final int DEFAULT_MIN_429_RANDOM_OFFSET_IN_MILLISECONDS = 1000;
+    private static final int DEFAULT_MAX_429_RANDOM_OFFSET_IN_MILLISECONDS = 5000;
 
     private static final int DEFAULT_MAX_RETRIES = 4;
 
@@ -252,6 +252,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         HttpEntity entity = null;
         HttpResponse httpResponse = null;
         String requestId = null;
+        Timer timer = new Timer();
 
         // Make a copy of the original request params and headers so that we can
         // permute them in the loop and start over with the original every time.
@@ -278,6 +279,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                 request.setQueryString(originalQuery);
                 request.setHeaders(originalHeaders);
 
+                // remember the request-id header if we need to retry
                 if (httpResponse != null && requestId == null) {
                     requestId = getHeaderValue(httpResponse.getFirstHeader("X-Okta-Request-Id"));
                 }
@@ -297,7 +299,12 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                 // so if redirectUri is not null, we won't pause
                 // before executing the request below.
                 if (retryCount > 0 && redirectUri == null) {
-                    pauseBeforeRetry(retryCount, httpResponse);
+                    try {
+                        pauseBeforeRetry(retryCount, httpResponse, maxElapsedMillis - timer.split());
+                    } catch (RestException e) {
+                        log.warn("Unable to pause for retry: ", e.getMessage(), e);
+                        return toSdkResponse(httpResponse);
+                    }
                     if (entity != null) {
                         InputStream content = entity.getContent();
                         if (content.markSupported()) {
@@ -326,7 +333,9 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                     Response response = toSdkResponse(httpResponse);
 
                     int httpStatus = response.getHttpStatus();
-                    if ((httpStatus == 429 || httpStatus == 503 || httpStatus == 504) && retryCount <= this.numRetries) {
+                    if ((httpStatus == 429 || httpStatus == 503 || httpStatus == 504)
+                            && retryCount <= this.numRetries
+                            && timer.split() < maxElapsedMillis) {
                         //allow the loop to continue to execute a retry request
                         continue;
                     }
@@ -364,6 +373,14 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         }
     }
 
+    private String getOnlySingleHeaderValue(HttpResponse response, String name) {
+        Header[] headers = response.getHeaders(name);
+        if (headers == null || headers.length != 1) {
+            return null;
+        }
+        return headers[0].getValue();
+    }
+
     private String getHeaderValue(Header header) {
         if (header != null) {
             return header.getValue();
@@ -386,19 +403,19 @@ public class HttpClientRequestExecutor implements RequestExecutor {
      *
      * @param retries           Current retry count.
      */
-    private void pauseBeforeRetry(int retries, HttpResponse httpResponse) {
+    private void pauseBeforeRetry(int retries, HttpResponse httpResponse, long timeElapsedLeft) throws RestException {
         long delay = -1;
         if (backoffStrategy != null) {
-            delay = Math.min(this.backoffStrategy.getDelayMillis(retries), maxElapsedMillis);
+            delay = Math.min(this.backoffStrategy.getDelayMillis(retries), timeElapsedLeft);
         } else if (httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 429) {
             delay = get429DelayMillis(httpResponse);
-            if (delay > maxElapsedMillis) {
+            if (delay > timeElapsedLeft) {
                 throw new RestException("HTTP 429: Too Many Requests.  Exceeded request rate limit in the allotted amount of time.");
             }
             log.debug("429 detected, will retry in {}ms, attempt number: {}", delay, retries);
         }
         if (delay < 0) {
-            delay = Math.min(getDefaultDelayMillis(retries), maxElapsedMillis);
+            delay = Math.min(getDefaultDelayMillis(retries), timeElapsedLeft);
         }
 
         log.debug("Retryable condition detected, will retry in {}ms, attempt number: {}", delay, retries);
@@ -414,8 +431,8 @@ public class HttpClientRequestExecutor implements RequestExecutor {
     private long get429DelayMillis(HttpResponse httpResponse) {
 
         // the time at which the rate limit will reset, specified in UTC epoch time.
-        String resetLimit = getHeaderValue(httpResponse.getFirstHeader("X-Rate-Limit-Reset"));
-        if (!resetLimit.chars().allMatch(Character::isDigit)) {
+        String resetLimit = getOnlySingleHeaderValue(httpResponse,"X-Rate-Limit-Reset");
+        if (resetLimit == null || !resetLimit.chars().allMatch(Character::isDigit)) {
             return -1;
         }
 
