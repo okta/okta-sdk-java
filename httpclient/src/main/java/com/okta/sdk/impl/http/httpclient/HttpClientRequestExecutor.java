@@ -280,8 +280,8 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                 request.setHeaders(originalHeaders);
 
                 // remember the request-id header if we need to retry
-                if (httpResponse != null && requestId == null) {
-                    requestId = getHeaderValue(httpResponse.getFirstHeader("X-Okta-Request-Id"));
+                if (requestId == null) {
+                    requestId = getRequestId(httpResponse);
                 }
             }
 
@@ -300,17 +300,14 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                 // before executing the request below.
                 if (retryCount > 0 && redirectUri == null) {
                     try {
+                        // if we cannot pause, then return the original response
                         pauseBeforeRetry(retryCount, httpResponse, maxElapsedMillis - timer.split());
                     } catch (RestException e) {
                         log.warn("Unable to pause for retry: ", e.getMessage(), e);
                         return toSdkResponse(httpResponse);
                     }
-                    if (entity != null) {
-                        InputStream content = entity.getContent();
-                        if (content.markSupported()) {
-                            content.reset();
-                        }
-                    }
+
+                    resetStream(entity);
                 }
 
                 // reset redirectUri so that if there is an exception, we will pause on retry
@@ -323,24 +320,16 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                 httpResponse = httpClient.execute(httpRequest);
 
                 if (isRedirect(httpResponse)) {
-                    Header[] locationHeaders = httpResponse.getHeaders("Location");
-                    String location = locationHeaders[0].getValue();
-                    log.debug("Redirecting to: {}", location);
-                    redirectUri = URI.create(location);
+                    redirectUri = getRedirectUri(httpResponse);
                     httpRequest.setURI(redirectUri);
                 } else {
 
                     Response response = toSdkResponse(httpResponse);
 
-                    int httpStatus = response.getHttpStatus();
-                    if ((httpStatus == 429 || httpStatus == 503 || httpStatus == 504)
-                            && retryCount <= this.numRetries
-                            && timer.split() < maxElapsedMillis) {
-                        //allow the loop to continue to execute a retry request
-                        continue;
+                    //allow the loop to continue to execute a retry request
+                    if (!shouldRetry(response, retryCount, timer.split())) {
+                        return response;
                     }
-
-                    return response;
                 }
             } catch (Throwable t) {
                 log.warn("Unable to execute HTTP request: ", t.getMessage(), t);
@@ -353,6 +342,18 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                     httpResponse.getEntity().getContent().close();
                 } catch (Throwable ignored) { // NOPMD
                 }
+            }
+        }
+    }
+
+    /**
+     * Resets entities InputStream if supported
+     */
+    private void resetStream(HttpEntity entity) throws IOException {
+        if (entity != null) {
+            InputStream content = entity.getContent();
+            if (content.markSupported()) {
+                content.reset();
             }
         }
     }
@@ -371,6 +372,13 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         if (retryCount > 1) {
             request.getHeaders().add("X-Okta-Retry-Count", Integer.toString(retryCount));
         }
+    }
+
+    private String getRequestId(HttpResponse httpResponse) {
+        if (httpResponse != null) {
+            return getHeaderValue(httpResponse.getFirstHeader("X-Okta-Request-Id"));
+        }
+        return null;
     }
 
     private String getOnlySingleHeaderValue(HttpResponse response, String name) {
@@ -395,6 +403,13 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                 status == HttpStatus.SC_TEMPORARY_REDIRECT) &&
                 response.getHeaders("Location") != null &&
                 response.getHeaders("Location").length > 0;
+    }
+
+    private URI getRedirectUri(HttpResponse httpResponse) {
+        Header[] locationHeaders = httpResponse.getHeaders("Location");
+        String location = locationHeaders[0].getValue();
+        log.debug("Redirecting to: {}", location);
+        return URI.create(location);
     }
 
     /**
@@ -495,6 +510,15 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         }
 
         return false;
+    }
+
+    private boolean shouldRetry(Response response, int retryCount, long timeElapsed) {
+        int httpStatus = response.getHttpStatus();
+        return (httpStatus == 429
+             || httpStatus == 503
+             || httpStatus == 504)
+             && retryCount <= this.numRetries
+             && timeElapsed < maxElapsedMillis;
     }
 
     protected byte[] toBytes(HttpEntity entity) throws IOException {
