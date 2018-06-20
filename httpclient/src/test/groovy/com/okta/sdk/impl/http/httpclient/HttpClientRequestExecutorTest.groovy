@@ -26,7 +26,6 @@ import com.okta.sdk.impl.http.HttpHeaders
 import com.okta.sdk.impl.http.QueryString
 import com.okta.sdk.impl.http.Request
 import com.okta.sdk.impl.http.Response
-import com.okta.sdk.impl.http.RestException
 import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory
 import com.okta.sdk.impl.http.authc.RequestAuthenticator
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
