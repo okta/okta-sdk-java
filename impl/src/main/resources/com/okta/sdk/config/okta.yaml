@@ -30,4 +30,4 @@ okta:
       username:
       password:
     retry:
-      maxElapsed: 180
+      maxElapsed: 65
