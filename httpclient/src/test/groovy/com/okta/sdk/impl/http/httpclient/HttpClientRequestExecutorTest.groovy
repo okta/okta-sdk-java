@@ -91,11 +91,11 @@ class HttpClientRequestExecutorTest {
         clientConfig.setAuthenticationScheme(AuthenticationScheme.NONE)
         clientConfig.setRequestAuthenticatorFactory(new DefaultRequestAuthenticatorFactory())
         clientConfig.setConnectionTimeout(1111)
-        clientConfig.setRetryMaxElapsed(2222)
+        clientConfig.setRetryMaxElapsed(2)
 
         def requestExecutor = new HttpClientRequestExecutor(clientConfig)
 
-        assertThat requestExecutor.maxElapsedMillis, is(2222)
+        assertThat requestExecutor.maxElapsedMillis, is(2000)
     }
 
     @Test
@@ -273,7 +273,7 @@ class HttpClientRequestExecutorTest {
         }
     }
 
-    private HttpClientRequestExecutor createRequestExecutor(RequestAuthenticator requestAuthenticator = mock(RequestAuthenticator), int maxElapsed = 10 * 1000) {
+    private HttpClientRequestExecutor createRequestExecutor(RequestAuthenticator requestAuthenticator = mock(RequestAuthenticator), int maxElapsed = 10) {
 
         def clientCredentials = mock(ClientCredentials)
         def clientConfig = mock(ClientConfiguration)

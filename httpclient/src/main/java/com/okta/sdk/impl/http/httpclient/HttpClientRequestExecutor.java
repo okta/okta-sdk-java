@@ -150,7 +150,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
              clientConfiguration.getConnectionTimeout());
 
         if (clientConfiguration.getRetryMaxElapsed() >= 0) {
-            maxElapsedMillis = clientConfiguration.getRetryMaxElapsed();
+            maxElapsedMillis = clientConfiguration.getRetryMaxElapsed() * 1000;
         }
     }
 
