@@ -54,6 +54,7 @@ public class ClientConfiguration {
     private Proxy proxy;
     private BaseUrlResolver baseUrlResolver;
     private int retryMaxElapsed = -1;
+    private int rateLimitMaxOffset = -1;
 
     public String getApiToken() {
         return apiToken;
@@ -231,6 +232,15 @@ public class ClientConfiguration {
         return this;
     }
 
+    public int getRateLimitMaxOffset() {
+        return rateLimitMaxOffset;
+    }
+
+    public ClientConfiguration setRateLimitMaxOffset(int rateLimitMaxOffset) {
+        this.rateLimitMaxOffset = rateLimitMaxOffset;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "ClientConfiguration{" +
@@ -241,6 +251,7 @@ public class ClientConfiguration {
                 ", connectionTimeout=" + connectionTimeout +
                 ", authenticationScheme=" + authenticationScheme +
                 ", retryMaxElapsed=" + retryMaxElapsed +
+                ", rateLimitMaxOffset=" + rateLimitMaxOffset +
                 ", proxy=" + proxy +
                 '}';
     }

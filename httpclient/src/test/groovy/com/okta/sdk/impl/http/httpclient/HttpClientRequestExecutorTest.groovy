@@ -92,10 +92,12 @@ class HttpClientRequestExecutorTest {
         clientConfig.setRequestAuthenticatorFactory(new DefaultRequestAuthenticatorFactory())
         clientConfig.setConnectionTimeout(1111)
         clientConfig.setRetryMaxElapsed(2)
+        clientConfig.setRateLimitMaxOffset(3)
 
         def requestExecutor = new HttpClientRequestExecutor(clientConfig)
 
         assertThat requestExecutor.maxElapsedMillis, is(2000)
+        assertThat requestExecutor.rateLimitMaxOffset, is(3000)
     }
 
     @Test
@@ -184,9 +186,9 @@ class HttpClientRequestExecutorTest {
 
         // max randomness plus 500ms for slow CPUs
         assertThat totalTime as Integer, is(both(
-                                                greaterThan(5000))
+                                                greaterThan(6000))
                                             .and(
-                                                lessThan(10500)))
+                                                lessThan(15500)))
     }
 
     @Test
@@ -252,7 +254,7 @@ class HttpClientRequestExecutorTest {
         when(httpResponse.getFirstHeader("Date")).thenReturn(new BasicHeader("Date", dateHeaderValue))
         headers = [new BasicHeader("X-Rate-Limit-Reset", resetTime1.toString())]
         when(httpResponse.getHeaders(limitHeaderName)).thenReturn(headers)
-        assertThat requestExecutor.get429DelayMillis(httpResponse), both(greaterThan(11000L)).and(lessThan(15000L)) // 10 seconds plus 1-5 seconds
+        assertThat requestExecutor.get429DelayMillis(httpResponse), both(greaterThan(11000L)).and(lessThan(20000L)) // 10 seconds plus 1-10 seconds
     }
 
     private static long time(Closure closure) {
@@ -273,7 +275,7 @@ class HttpClientRequestExecutorTest {
         }
     }
 
-    private HttpClientRequestExecutor createRequestExecutor(RequestAuthenticator requestAuthenticator = mock(RequestAuthenticator), int maxElapsed = 10) {
+    private HttpClientRequestExecutor createRequestExecutor(RequestAuthenticator requestAuthenticator = mock(RequestAuthenticator), int maxElapsed = 15) {
 
         def clientCredentials = mock(ClientCredentials)
         def clientConfig = mock(ClientConfiguration)
