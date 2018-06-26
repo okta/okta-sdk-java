@@ -201,6 +201,10 @@ public class DefaultClientBuilder implements ClientBuilder {
         if (Strings.hasText(props.get(DEFAULT_CLIENT_RETRY_MAX_ELAPSED_PROPERTY_NAME))) {
             clientConfig.setRetryMaxElapsed(Integer.parseInt(props.get(DEFAULT_CLIENT_RETRY_MAX_ELAPSED_PROPERTY_NAME)));
         }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_RETRY_RATE_LIMIT_MAX_OFFSET))) {
+            clientConfig.setRateLimitMaxOffset(Integer.parseInt(props.get(DEFAULT_CLIENT_RETRY_RATE_LIMIT_MAX_OFFSET)));
+        }
     }
 
     @Override

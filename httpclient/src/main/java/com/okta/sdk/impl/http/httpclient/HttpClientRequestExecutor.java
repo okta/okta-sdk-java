@@ -87,7 +87,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
      */
     private static final int DEFAULT_MAX_BACKOFF_IN_MILLISECONDS = 65 * 1000;
     private static final int DEFAULT_MIN_429_RANDOM_OFFSET_IN_MILLISECONDS = 1000;
-    private static final int DEFAULT_MAX_429_RANDOM_OFFSET_IN_MILLISECONDS = 5000;
+    private static final int DEFAULT_MAX_429_RANDOM_OFFSET_IN_MILLISECONDS = 10 * 1000;
 
     private static final int DEFAULT_MAX_RETRIES = 4;
 
@@ -102,6 +102,8 @@ public class HttpClientRequestExecutor implements RequestExecutor {
     private int numRetries = DEFAULT_MAX_RETRIES;
 
     private int maxElapsedMillis = DEFAULT_MAX_BACKOFF_IN_MILLISECONDS;
+
+    private int rateLimitMaxOffset = DEFAULT_MAX_429_RANDOM_OFFSET_IN_MILLISECONDS;
 
     private final RequestAuthenticator requestAuthenticator;
 
@@ -151,6 +153,10 @@ public class HttpClientRequestExecutor implements RequestExecutor {
 
         if (clientConfiguration.getRetryMaxElapsed() >= 0) {
             maxElapsedMillis = clientConfiguration.getRetryMaxElapsed() * 1000;
+        }
+
+        if (clientConfiguration.getRateLimitMaxOffset() > 0) {
+            rateLimitMaxOffset = clientConfiguration.getRateLimitMaxOffset() * 1000;
         }
     }
 
@@ -460,7 +466,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         long waitUntil = Long.parseLong(resetLimit) * 1000L;
         long requestTime = requestDate.getTime();
         long scaleFactor = ThreadLocalRandom.current().nextInt(DEFAULT_MIN_429_RANDOM_OFFSET_IN_MILLISECONDS,
-                                                               DEFAULT_MAX_429_RANDOM_OFFSET_IN_MILLISECONDS);
+                                                               rateLimitMaxOffset);
         long delay = waitUntil - requestTime + scaleFactor;
         log.debug("429 wait: {} - {} + {} = {}", waitUntil, requestTime, scaleFactor, delay);
 
