@@ -92,12 +92,12 @@ class HttpClientRequestExecutorTest {
         clientConfig.setRequestAuthenticatorFactory(new DefaultRequestAuthenticatorFactory())
         clientConfig.setConnectionTimeout(1111)
         clientConfig.setRetryMaxElapsed(2)
-        clientConfig.setRateLimitMaxOffset(3)
+        clientConfig.setRetryMaxAttempts(3)
 
         def requestExecutor = new HttpClientRequestExecutor(clientConfig)
 
         assertThat requestExecutor.maxElapsedMillis, is(2000)
-        assertThat requestExecutor.rateLimitMaxOffset, is(3000)
+        assertThat requestExecutor.maxRetries, is(3)
     }
 
     @Test
@@ -184,11 +184,11 @@ class HttpClientRequestExecutorTest {
         verify(headers).add("X-Okta-Retry-Count", "2")
         verify(requestAuthenticator, times(2)).authenticate(request)
 
-        // max randomness plus 500ms for slow CPUs
+        // plus 500ms for slow CPUs
         assertThat totalTime as Integer, is(both(
-                                                greaterThan(6000))
+                                                greaterThanOrEqualTo(6000))
                                             .and(
-                                                lessThan(15500)))
+                                                lessThan(6500)))
     }
 
     @Test
@@ -254,7 +254,36 @@ class HttpClientRequestExecutorTest {
         when(httpResponse.getFirstHeader("Date")).thenReturn(new BasicHeader("Date", dateHeaderValue))
         headers = [new BasicHeader("X-Rate-Limit-Reset", resetTime1.toString())]
         when(httpResponse.getHeaders(limitHeaderName)).thenReturn(headers)
-        assertThat requestExecutor.get429DelayMillis(httpResponse), both(greaterThan(11000L)).and(lessThan(20000L)) // 10 seconds plus 1-10 seconds
+
+        // 10 seconds 500ms for slow CPU
+        assertThat requestExecutor.get429DelayMillis(httpResponse), both(greaterThanOrEqualTo(11000L)).and(lessThan(11500L))
+    }
+
+    @Test
+    void shouldRetryTest() {
+
+        def response = mock(Response)
+        when(response.getHttpStatus()).thenReturn(429)
+
+        def requestExecutor = createRequestExecutor()
+        assertThat requestExecutor.shouldRetry(response, 1, 10000L), is(true)
+        assertThat requestExecutor.shouldRetry(response, 1, 20000L), is(false) // max elapsed expired
+        assertThat requestExecutor.shouldRetry(response, 5, 10000L), is(false) // max retry count
+
+        // both disabled
+        requestExecutor.maxRetries = 0
+        requestExecutor.maxElapsedMillis = 0
+        assertThat requestExecutor.shouldRetry(response, 1, 10000L), is(false)
+
+        // maxElapsed enabled
+        requestExecutor.maxRetries = 0
+        requestExecutor.maxElapsedMillis = 15000
+        assertThat requestExecutor.shouldRetry(response, 1, 10000L), is(true)
+
+        // maxRetries enabled
+        requestExecutor.maxRetries = 4
+        requestExecutor.maxElapsedMillis = 0
+        assertThat requestExecutor.shouldRetry(response, 1, 10000L), is(true)
     }
 
     private static long time(Closure closure) {
@@ -275,7 +304,7 @@ class HttpClientRequestExecutorTest {
         }
     }
 
-    private HttpClientRequestExecutor createRequestExecutor(RequestAuthenticator requestAuthenticator = mock(RequestAuthenticator), int maxElapsed = 15) {
+    private HttpClientRequestExecutor createRequestExecutor(RequestAuthenticator requestAuthenticator = mock(RequestAuthenticator), int maxElapsed = 15, int maxAttempts = 4) {
 
         def clientCredentials = mock(ClientCredentials)
         def clientConfig = mock(ClientConfiguration)
@@ -286,6 +315,7 @@ class HttpClientRequestExecutorTest {
         when(clientConfig.getAuthenticationScheme()).thenReturn(AuthenticationScheme.SSWS)
         when(clientConfig.getConnectionTimeout()).thenReturn(1111)
         when(clientConfig.getRetryMaxElapsed()).thenReturn(maxElapsed)
+        when(clientConfig.getRetryMaxAttempts()).thenReturn(maxAttempts)
 
         when(requestAuthFactory.create(AuthenticationScheme.SSWS, clientCredentials)).thenReturn(requestAuthenticator)
 

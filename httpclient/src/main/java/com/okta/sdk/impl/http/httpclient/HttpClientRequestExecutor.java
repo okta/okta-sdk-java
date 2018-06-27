@@ -85,9 +85,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
     /**
      * Maximum exponential back-off time before retrying a request
      */
-    private static final int DEFAULT_MAX_BACKOFF_IN_MILLISECONDS = 65 * 1000;
-    private static final int DEFAULT_MIN_429_RANDOM_OFFSET_IN_MILLISECONDS = 1000;
-    private static final int DEFAULT_MAX_429_RANDOM_OFFSET_IN_MILLISECONDS = 10 * 1000;
+    private static final int DEFAULT_MAX_BACKOFF_IN_MILLISECONDS = 20 * 1000;
 
     private static final int DEFAULT_MAX_RETRIES = 4;
 
@@ -99,11 +97,9 @@ public class HttpClientRequestExecutor implements RequestExecutor {
     private static final String MAX_CONNECTIONS_TOTAL_PROPERTY_KEY = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.maxTotal";
     private static final int MAX_CONNECTIONS_TOTAL;
 
-    private int numRetries = DEFAULT_MAX_RETRIES;
+    private int maxRetries = DEFAULT_MAX_RETRIES;
 
-    private int maxElapsedMillis = DEFAULT_MAX_BACKOFF_IN_MILLISECONDS;
-
-    private int rateLimitMaxOffset = DEFAULT_MAX_429_RANDOM_OFFSET_IN_MILLISECONDS;
+    private int maxElapsedMillis = 0;
 
     private final RequestAuthenticator requestAuthenticator;
 
@@ -155,8 +151,8 @@ public class HttpClientRequestExecutor implements RequestExecutor {
             maxElapsedMillis = clientConfiguration.getRetryMaxElapsed() * 1000;
         }
 
-        if (clientConfiguration.getRateLimitMaxOffset() > 0) {
-            rateLimitMaxOffset = clientConfiguration.getRateLimitMaxOffset() * 1000;
+        if (clientConfiguration.getRetryMaxAttempts() > 0) {
+            maxRetries = clientConfiguration.getRetryMaxAttempts();
         }
     }
 
@@ -228,12 +224,14 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         this.httpClient = httpClientBuilder.build();
     }
 
+    @Deprecated
     public int getNumRetries() {
-        return numRetries;
+        return maxRetries;
     }
 
+    @Deprecated
     public void setNumRetries(int numRetries) {
-        this.numRetries = numRetries;
+        this.maxRetries = numRetries;
     }
 
     public BackoffStrategy getBackoffStrategy() {
@@ -307,7 +305,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                 if (retryCount > 0 && redirectUri == null) {
                     try {
                         // if we cannot pause, then return the original response
-                        pauseBeforeRetry(retryCount, httpResponse, maxElapsedMillis - timer.split());
+                        pauseBeforeRetry(retryCount, httpResponse, timer.split());
                     } catch (RestException e) {
                         log.warn("Unable to pause for retry: ", e.getMessage(), e);
                         return toSdkResponse(httpResponse);
@@ -340,7 +338,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
             } catch (Throwable t) {
                 log.warn("Unable to execute HTTP request: ", t.getMessage(), t);
 
-                if (!shouldRetry(httpRequest, t, retryCount)) {
+                if (!shouldRetry(httpRequest, t, retryCount, timer.split())) {
                     throw new RestException("Unable to execute HTTP request: " + t.getMessage(), t);
                 }
             } finally {
@@ -424,17 +422,20 @@ public class HttpClientRequestExecutor implements RequestExecutor {
      *
      * @param retries           Current retry count.
      */
-    private void pauseBeforeRetry(int retries, HttpResponse httpResponse, long timeElapsedLeft) throws RestException {
+    private void pauseBeforeRetry(int retries, HttpResponse httpResponse, long timeElapsed) throws RestException {
         long delay = -1;
+        long timeElapsedLeft = maxElapsedMillis - timeElapsed;
         if (backoffStrategy != null) {
             delay = Math.min(this.backoffStrategy.getDelayMillis(retries), timeElapsedLeft);
         } else if (httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 429) {
             delay = get429DelayMillis(httpResponse);
-            if (delay > timeElapsedLeft) {
+            if (!shouldRetry(retries, timeElapsed + delay)) {
                 throw new RestException("HTTP 429: Too Many Requests.  Exceeded request rate limit in the allotted amount of time.");
             }
             log.debug("429 detected, will retry in {}ms, attempt number: {}", delay, retries);
         }
+
+        // default / fallback strategy
         if (delay < 0) {
             delay = Math.min(getDefaultDelayMillis(retries), timeElapsedLeft);
         }
@@ -465,10 +466,8 @@ public class HttpClientRequestExecutor implements RequestExecutor {
 
         long waitUntil = Long.parseLong(resetLimit) * 1000L;
         long requestTime = requestDate.getTime();
-        long scaleFactor = ThreadLocalRandom.current().nextInt(DEFAULT_MIN_429_RANDOM_OFFSET_IN_MILLISECONDS,
-                                                               rateLimitMaxOffset);
-        long delay = waitUntil - requestTime + scaleFactor;
-        log.debug("429 wait: {} - {} + {} = {}", waitUntil, requestTime, scaleFactor, delay);
+        long delay = waitUntil - requestTime + 1000;
+        log.debug("429 wait: {} - {} + {} = {}", waitUntil, requestTime, 1000, delay);
 
         return delay;
     }
@@ -484,7 +483,8 @@ public class HttpClientRequestExecutor implements RequestExecutor {
 
     private long getDefaultDelayMillis(int retries) {
         long scaleFactor = 300;
-        return (long) (Math.pow(2, retries) * scaleFactor);
+        long result = (long) (Math.pow(2, retries) * scaleFactor);
+        return Math.min(result, DEFAULT_MAX_BACKOFF_IN_MILLISECONDS);
     }
 
     /**
@@ -492,11 +492,12 @@ public class HttpClientRequestExecutor implements RequestExecutor {
      *
      * @param method  The current HTTP method being executed.
      * @param t       The throwable from the failed request.
-     * @param retries The number of times the current request has been attempted.
+     * @param retryCount  The number of times the current request has been attempted.
+     * @param timeElapsed The time elapsed for this attempt.
      * @return True if the failed request should be retried.
      */
-    private boolean shouldRetry(HttpRequestBase method, Throwable t, int retries) {
-        if (retries > this.numRetries) {
+    private boolean shouldRetry(HttpRequestBase method, Throwable t, int retryCount, long timeElapsed) {
+        if (!shouldRetry(retryCount, timeElapsed)) {
             return false;
         }
 
@@ -518,13 +519,25 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         return false;
     }
 
+    private boolean shouldRetry(int retryCount, long timeElapsed) {
+               // either maxRetries or maxElapsedMillis is enabled
+        return (maxRetries > 0 || maxElapsedMillis > 0)
+
+               // maxRetries count is disabled OR if set check it
+               && (maxRetries <= 0 || retryCount <= this.maxRetries)
+
+               // maxElapsedMillis is disabled OR if set check it
+               && (maxElapsedMillis <= 0 || timeElapsed < maxElapsedMillis);
+    }
+
     private boolean shouldRetry(Response response, int retryCount, long timeElapsed) {
         int httpStatus = response.getHttpStatus();
-        return (httpStatus == 429
+
+        // supported status codes
+        return shouldRetry(retryCount, timeElapsed)
+            && (httpStatus == 429
              || httpStatus == 503
-             || httpStatus == 504)
-             && retryCount <= this.numRetries
-             && timeElapsed < maxElapsedMillis;
+             || httpStatus == 504);
     }
 
     protected byte[] toBytes(HttpEntity entity) throws IOException {
