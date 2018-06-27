@@ -53,8 +53,8 @@ public class ClientConfiguration {
     private String proxyPassword;
     private Proxy proxy;
     private BaseUrlResolver baseUrlResolver;
-    private int retryMaxElapsed = -1;
-    private int rateLimitMaxOffset = -1;
+    private int retryMaxElapsed = 0;
+    private int retryMaxAttempts = 0;
 
     public String getApiToken() {
         return apiToken;
@@ -232,12 +232,12 @@ public class ClientConfiguration {
         return this;
     }
 
-    public int getRateLimitMaxOffset() {
-        return rateLimitMaxOffset;
+    public int getRetryMaxAttempts() {
+        return retryMaxAttempts;
     }
 
-    public ClientConfiguration setRateLimitMaxOffset(int rateLimitMaxOffset) {
-        this.rateLimitMaxOffset = rateLimitMaxOffset;
+    public ClientConfiguration setRetryMaxAttempts(int retryMaxAttempts) {
+        this.retryMaxAttempts = retryMaxAttempts;
         return this;
     }
 
@@ -251,7 +251,7 @@ public class ClientConfiguration {
                 ", connectionTimeout=" + connectionTimeout +
                 ", authenticationScheme=" + authenticationScheme +
                 ", retryMaxElapsed=" + retryMaxElapsed +
-                ", rateLimitMaxOffset=" + rateLimitMaxOffset +
+                ", retryMaxAttempts=" + retryMaxAttempts +
                 ", proxy=" + proxy +
                 '}';
     }

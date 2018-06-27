@@ -208,8 +208,8 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_PROXY_HOST_PROPERTY_NAME = "okta.client.proxy.host";
     String DEFAULT_CLIENT_PROXY_USERNAME_PROPERTY_NAME = "okta.client.proxy.username";
     String DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME = "okta.client.proxy.password";
-    String DEFAULT_CLIENT_RETRY_MAX_ELAPSED_PROPERTY_NAME = "okta.client.retry.maxElapsed";
-    String DEFAULT_CLIENT_RETRY_RATE_LIMIT_MAX_OFFSET = "okta.client.retry.rateLimitMaxOffset";
+    String DEFAULT_CLIENT_RETRY_MAX_ELAPSED_PROPERTY_NAME = "okta.client.requestTimeout";
+    String DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME = "okta.client.rateLimit.maxRetries";
 
     /**
      * Allows specifying an {@code ApiKey} instance directly instead of relying on the
@@ -338,6 +338,14 @@ public interface ClientBuilder {
      * @return the ClientBuilder instance for method chaining
      */
     ClientBuilder setRetryMaxElapsed(int maxElapsed);
+
+    /**
+     * Sets the maximum number of attempts to retrying before giving up.
+     *
+     * @param maxAttempts retry max attempts
+     * @return the ClientBuilder instance for method chaining
+     */
+    ClientBuilder setRetryMaxAttempts(int maxAttempts);
 
     /**
      * Constructs a new {@link Client} instance based on the ClientBuilder's current configuration state.
