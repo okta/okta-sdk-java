@@ -306,7 +306,12 @@ public class HttpClientRequestExecutor implements RequestExecutor {
                         // if we cannot pause, then return the original response
                         pauseBeforeRetry(retryCount, httpResponse, timer.split());
                     } catch (RestException e) {
-                        log.warn("Unable to pause for retry: ", e.getMessage(), e);
+                        if (log.isDebugEnabled()) {
+                            log.warn("Unable to pause for retry: {}", e.getMessage(), e);
+                        } else {
+                            log.warn("Unable to pause for retry: {}", e.getMessage());
+                        }
+
                         return toSdkResponse(httpResponse);
                     }
 
@@ -429,7 +434,7 @@ public class HttpClientRequestExecutor implements RequestExecutor {
         } else if (httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 429) {
             delay = get429DelayMillis(httpResponse);
             if (!shouldRetry(retries, timeElapsed + delay)) {
-                throw new RestException("HTTP 429: Too Many Requests.  Exceeded request rate limit in the allotted amount of time.");
+                throw new RestException("Cannot retry request, next request will exceed retry configuration.");
             }
             log.debug("429 detected, will retry in {}ms, attempt number: {}", delay, retries);
         }
