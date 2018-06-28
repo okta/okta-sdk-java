@@ -82,4 +82,8 @@
         </Class>
     </Match>
 
+    <Match>
+        <Class name="quickstart.ReadmeSnippets" />]
+    </Match>
+
 </FindBugsFilter>
