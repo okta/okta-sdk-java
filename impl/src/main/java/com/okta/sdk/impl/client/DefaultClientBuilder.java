@@ -201,8 +201,8 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setProxyPassword(props.get(DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME));
         }
 
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_RETRY_MAX_ELAPSED_PROPERTY_NAME))) {
-            clientConfig.setRetryMaxElapsed(Integer.parseInt(props.get(DEFAULT_CLIENT_RETRY_MAX_ELAPSED_PROPERTY_NAME)));
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME))) {
+            clientConfig.setRetryMaxElapsed(Integer.parseInt(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME)));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME))) {
