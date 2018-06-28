@@ -69,7 +69,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.util.Date;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * {@code RequestExecutor} implementation that uses the
