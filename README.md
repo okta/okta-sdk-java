@@ -336,7 +336,7 @@ This library looks for configuration in the following sources:
 0. An `okta.yaml` file in a `.okta` folder in the current user's home directory (`~/.okta/okta.yaml` or `%userprofile\.okta\okta.yaml`)
 0. Environment variables
 0. Java System Properties
-0. Configuration explicitly passed to the constructor (see the example in [Getting started](#getting-started))
+0. Configuration explicitly set programmatically (see the example in [Getting started](#getting-started))
  
 Higher numbers win. In other words, configuration passed via the constructor will override configuration found in environment variables, which will override configuration in `okta.yaml` (if any), and so on.
  
