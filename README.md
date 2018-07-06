@@ -38,7 +38,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 
 | Version | Status                    |
 | ------- | ------------------------- |
-| 0.0.x | :warning: Retiring on 2018-11-10 |
+| 0.0.x | :warning: Retiring on 2019-04-09 |
 | 1.x   | :heavy_check_mark: Stable |
  
 The latest release can always be found on the [releases page][github-releases].
@@ -104,8 +104,8 @@ Construct a client instance by passing it your Okta domain name and API token:
 [//]: # (method: createClient)
 ```java
 Client client = Clients.builder()
-    .setOrgUrl("https://dev-123456.oktapreview.com/")
-    .setClientCredentials(new TokenClientCredentials("your-api-token"))
+    .setOrgUrl("{yourOktaDomain}")
+    .setClientCredentials(new TokenClientCredentials("{apiToken}"))
     .build();
 ```
 [//]: # (end: createClient)
@@ -120,7 +120,7 @@ Once you initialize a `Client`, you can call methods to make requests to the Okt
 
 ### Authenticate a User
 
-This library should be used with the Okta management API. For authentication, we recommend using an OAuth2 or OIDC library such as [Spring Security OAuth](https://spring.io/projects/spring-security-oauth) or [Okta's Spring Boot integration](https://github.com/okta/okta-spring-boot).
+This library should be used with the Okta management API. For authentication, we recommend using an OAuth2 or OIDC library such as [Spring Security OAuth](https://spring.io/projects/spring-security-oauth) or [Okta's Spring Boot integration](https://github.com/okta/okta-spring-boot). For [Okta Authentcation API](https://developer.okta.com/docs/api/resources/authn) you can use [Authentication SDK](https://github.com/okta/okta-auth-java).
 
 ### Get a User
 
@@ -144,11 +144,17 @@ client.listUsers().stream()
 ```
 [//]: # (end: listAllUsers)
 
+For more examples of handling collections see the [paging](#paging) section below.
+
 ### Filter or search for Users
 
 [//]: # (method: userSearch)
 ```java
-UserList users = client.listUsers("query-string", null, null, null, null);
+// search by email
+UserList users = client.listUsers("jcoder@example.com", null, null, null, null);
+
+// filter parameter
+users = client.listUsers(null, "status eq \"ACTIVE\"", null, null, null);
 ```
 [//]: # (end: userSearch)
 
@@ -296,10 +302,11 @@ Not every API endpoint is represented by a method in this library. You can call 
 
 [//]: # (method: callAnotherEndpoint)
 ```java
-ExtensibleResource protocol = client.instantiate(ExtensibleResource.class);
-protocol.put("type", "OAUTH");
+// Create an IdP, see: https://developer.okta.com/docs/api/resources/idps#add-identity-provider
 ExtensibleResource resource = client.instantiate(ExtensibleResource.class);
-resource.put("protocol", protocol);
+ExtensibleResource protocolNode = client.instantiate(ExtensibleResource.class);
+protocolNode.put("type", "OAUTH");
+resource.put("protocol", protocolNode);
 ExtensibleResource result = client.http()
     .setBody(resource)
     .post("/api/v1/idps", ExtensibleResource.class);

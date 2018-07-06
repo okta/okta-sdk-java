@@ -51,8 +51,8 @@ public class ReadmeSnippets {
 
     private void createClient() {
         Client client = Clients.builder()
-            .setOrgUrl("https://dev-123456.oktapreview.com/")
-            .setClientCredentials(new TokenClientCredentials("your-api-token"))
+            .setOrgUrl("{yourOktaDomain}")
+            .setClientCredentials(new TokenClientCredentials("{apiToken}"))
             .build();
     }
 
@@ -71,7 +71,11 @@ public class ReadmeSnippets {
     }
 
     private void userSearch() {
-        UserList users = client.listUsers("query-string", null, null, null, null);
+        // search by email
+        UserList users = client.listUsers("jcoder@example.com", null, null, null, null);
+
+        // filter parameter
+        users = client.listUsers(null, "status eq \"ACTIVE\"", null, null, null);
     }
 
     private void createUser() {
@@ -155,10 +159,11 @@ public class ReadmeSnippets {
     }
 
     private void callAnotherEndpoint() {
-        ExtensibleResource protocol = client.instantiate(ExtensibleResource.class);
-        protocol.put("type", "OAUTH");
+        // Create an IdP, see: https://developer.okta.com/docs/api/resources/idps#add-identity-provider
         ExtensibleResource resource = client.instantiate(ExtensibleResource.class);
-        resource.put("protocol", protocol);
+        ExtensibleResource protocolNode = client.instantiate(ExtensibleResource.class);
+        protocolNode.put("type", "OAUTH");
+        resource.put("protocol", protocolNode);
 
         ExtensibleResource result = client.http()
             .setBody(resource)
