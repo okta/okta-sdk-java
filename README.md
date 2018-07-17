@@ -79,9 +79,9 @@ For Apache Maven:
 For Gradle:
 
 ```groovy
-compile 'com.okta.sdk:okta-sdk-api:${okta.version}'
-runtime 'com.okta.sdk:okta-sdk-impl:${okta.version}'
-runtime 'com.okta.sdk:okta-sdk-httpclient:${okta.version}'
+compile "com.okta.sdk:okta-sdk-api:${okta.version}"
+runtime "com.okta.sdk:okta-sdk-impl:${okta.version}"
+runtime "com.okta.sdk:okta-sdk-httpclient:${okta.version}"
 ```
 
 ### SNAPSHOT Dependencies
