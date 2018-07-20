@@ -386,7 +386,7 @@ Each one of of the configuration values written in 'dot' notation to be used as 
 
 By default this SDK will retry requests that are return with a `503`, `504`, `429`, or socket/connection exceptions.  To disable this functionality set `okta.client.requestTimeout` and `okta.client.rateLimit.maxRetries` to `0`.
 
-Setting an individual only one of the values to zero, will disable that check. Meaning by default four connection retry attempts will be made. If you set `okta.client.requestTimeout` to `45` seconds and `okta.client.rateLimit.maxRetries` to `0`. This SDK will continue to retry for `45` seconds.  If both values are non zero, this SDK will attempt to retry until either of the conditions are met.
+Setting only one of the values to zero will disable that check. Meaning, by default, four retry attempts will be made. If you set `okta.client.requestTimeout` to `45` seconds and `okta.client.rateLimit.maxRetries` to `0`. This SDK will continue to retry indefinitely for `45` seconds.  If both values are non zero, this SDK will attempt to retry until either of the conditions are met (not both).
 
 ## Building the SDK
  
@@ -399,5 +399,5 @@ We're happy to accept contributions and PRs! Please see the [contribution guide]
 [devforum]: https://devforum.okta.com/
 [javadocs]: https://developer.okta.com/okta-sdk-java/
 [lang-landing]: https://developer.okta.com/code/java/
-[github-issues]: /issues
-[github-releases]: /releases
+[github-issues]: https://github.com/okta/okta-sdk-java/issues
+[github-releases]: https://github.com/okta/okta-sdk-java/releases
