@@ -26,6 +26,7 @@ import com.okta.sdk.impl.http.HttpHeaders
 import com.okta.sdk.impl.http.QueryString
 import com.okta.sdk.impl.http.Request
 import com.okta.sdk.impl.http.Response
+import com.okta.sdk.impl.http.RestException
 import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory
 import com.okta.sdk.impl.http.authc.RequestAuthenticator
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
@@ -277,13 +278,26 @@ class HttpClientRequestExecutorTest {
 
         // maxElapsed enabled
         requestExecutor.maxRetries = 0
-        requestExecutor.maxElapsedMillis = 15000
+        requestExecutor.maxElapsedMillis = 15000L
         assertThat requestExecutor.shouldRetry(response, 1, 10000L), is(true)
 
         // maxRetries enabled
         requestExecutor.maxRetries = 4
         requestExecutor.maxElapsedMillis = 0
         assertThat requestExecutor.shouldRetry(response, 1, 10000L), is(true)
+
+        requestExecutor.maxRetries = 2
+        requestExecutor.maxElapsedMillis = 30L
+        assertThat requestExecutor.shouldRetry(1, 31L), is(false)
+    }
+
+    @Test
+    void pauseBeforeRetryNegativeDelay() {
+
+        def requestExecutor = createRequestExecutor()
+        requestExecutor.maxElapsedMillis = 30
+        def httpResponse = mockHttpResponse("mock error", 400)
+        expect RestException, {requestExecutor.pauseBeforeRetry(1, httpResponse, 31L)}
     }
 
     private static long time(Closure closure) {
@@ -306,6 +320,11 @@ class HttpClientRequestExecutorTest {
 
     private HttpClientRequestExecutor createRequestExecutor(RequestAuthenticator requestAuthenticator = mock(RequestAuthenticator), int maxElapsed = 15, int maxAttempts = 4) {
 
+        return new HttpClientRequestExecutor(createClientConfiguration(requestAuthenticator, maxElapsed, maxAttempts))
+    }
+
+    private ClientConfiguration createClientConfiguration(RequestAuthenticator requestAuthenticator = mock(RequestAuthenticator), int maxElapsed = 15, int maxAttempts = 4) {
+
         def clientCredentials = mock(ClientCredentials)
         def clientConfig = mock(ClientConfiguration)
         def requestAuthFactory = mock(RequestAuthenticatorFactory)
@@ -319,7 +338,7 @@ class HttpClientRequestExecutorTest {
 
         when(requestAuthFactory.create(AuthenticationScheme.SSWS, clientCredentials)).thenReturn(requestAuthenticator)
 
-        return new HttpClientRequestExecutor(clientConfig)
+        return clientConfig
     }
 
     private Request mockRequest(String uri = "https://example.com/a-resource",

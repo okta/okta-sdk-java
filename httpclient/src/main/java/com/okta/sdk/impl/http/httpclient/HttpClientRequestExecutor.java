@@ -429,19 +429,30 @@ public class HttpClientRequestExecutor implements RequestExecutor {
     private void pauseBeforeRetry(int retries, HttpResponse httpResponse, long timeElapsed) throws RestException {
         long delay = -1;
         long timeElapsedLeft = maxElapsedMillis - timeElapsed;
+
+        // check before continuing
+        if (!shouldRetry(retries, timeElapsed)) {
+            throw failedToRetry();
+        }
+
         if (backoffStrategy != null) {
             delay = Math.min(this.backoffStrategy.getDelayMillis(retries), timeElapsedLeft);
         } else if (httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 429) {
             delay = get429DelayMillis(httpResponse);
             if (!shouldRetry(retries, timeElapsed + delay)) {
-                throw new RestException("Cannot retry request, next request will exceed retry configuration.");
+                throw failedToRetry();
             }
             log.debug("429 detected, will retry in {}ms, attempt number: {}", delay, retries);
         }
 
-        // default / fallback strategy
+        // default / fallback strategy (backwards compatible implementation)
         if (delay < 0) {
             delay = Math.min(getDefaultDelayMillis(retries), timeElapsedLeft);
+        }
+
+        // this shouldn't happen, but guard against a negative delay at this point
+        if (delay < 0) {
+            throw failedToRetry();
         }
 
         log.debug("Retryable condition detected, will retry in {}ms, attempt number: {}", delay, retries);
@@ -452,6 +463,10 @@ public class HttpClientRequestExecutor implements RequestExecutor {
             Thread.currentThread().interrupt();
             throw new RestException(e.getMessage(), e);
         }
+    }
+
+    private RestException failedToRetry() {
+        return new RestException("Cannot retry request, next request will exceed retry configuration.");
     }
 
     private long get429DelayMillis(HttpResponse httpResponse) {
