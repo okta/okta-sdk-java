@@ -34,6 +34,7 @@ import java.util.stream.Stream
 import static org.hamcrest.MatcherAssert.*
 import static org.hamcrest.Matchers.*
 import static org.mockito.Mockito.*
+import static org.testng.Assert.fail
 
 
 /**
@@ -216,7 +217,11 @@ class GeneratedResourceTest {
                      value = property.type.getEnumConstants()[0]
                 }
 
-                method.invoke(resource, value)
+                try {
+                    method.invoke(resource, value)
+                } catch(IllegalArgumentException e) {
+                    fail("Illegal argument for method '${method.name}', resource class: '${resource.getClass()}', attempted value type '${value.getClass()}'", e)
+                }
             }
 
         }
