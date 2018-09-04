@@ -69,17 +69,17 @@ class GroupsIT implements CrudTestSupport {
 
     @Test
     @Scenario("list-groups")
-    @TestResources(groups = "List Test Group")
     void listGroupsTest() {
 
-        String groupName = "List Test Group"
+        String groupName = "sdk-java List Test Group ${UUID.randomUUID().toString()}"
 
         // 1. Create a new group
         Group createdGroup = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
+        registerForCleanup(createdGroup)
 
-        validateGroup(createdGroup, groupName);
+        validateGroup(createdGroup, groupName)
 
         // 2. List all groups and find the group created
         assertGroupPresent(client.listGroups(), createdGroup)
