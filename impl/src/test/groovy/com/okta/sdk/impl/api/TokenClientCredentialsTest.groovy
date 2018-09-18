@@ -20,6 +20,8 @@ import com.okta.sdk.authc.credentials.TokenClientCredentials
 import org.testng.annotations.Test
 
 import static org.testng.Assert.*
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.containsString
 
 /**
  * @since 0.5.0
@@ -32,7 +34,7 @@ class TokenClientCredentialsTest {
             new TokenClientCredentials(null);
             fail("Should have thrown due to null secret.")
         } catch (IllegalArgumentException ex) {
-            assertEquals(ex.getMessage(), "API token cannot be null or empty.")
+            assertThat(ex.getMessage(), containsString("Your Okta API token is missing"))
         }
     }
 
