@@ -73,9 +73,6 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
 
-    private CacheManager cacheManager;
-    private ClientCredentials clientCredentials;
-
     private static final  String ENVVARS_TOKEN  = "envvars";
     private static final  String SYSPROPS_TOKEN = "sysprops";
     private static final String OKTA_YAML      = "okta.yaml";
@@ -88,6 +85,10 @@ public class DefaultClientBuilder implements ClientBuilder {
                                                  ENVVARS_TOKEN,
                                                  SYSPROPS_TOKEN
     };
+
+
+    private CacheManager cacheManager;
+    private ClientCredentials clientCredentials;
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
 
@@ -303,7 +304,6 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (this.clientConfig.getBaseUrlResolver() == null) {
-            Assert.notNull(this.clientConfig.getBaseUrl(), "Okta org url must not be null.");
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 

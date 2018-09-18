@@ -35,6 +35,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.okta.commons</groupId>
+            <artifactId>okta-config-check</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>

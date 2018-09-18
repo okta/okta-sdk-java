@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.authc.credentials;
 
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.configcheck.ConfigurationValidator;
 
 /**
  * This implementation represents the api key that is used to authenticate a Tenant in Okta.
@@ -27,9 +27,7 @@ public class TokenClientCredentials implements ClientCredentials<String> {
     private final String secret;
 
     public TokenClientCredentials(String secret) {
-        if (!Strings.hasText(secret)) {
-            throw new IllegalArgumentException("API token cannot be null or empty.");
-        }
+        ConfigurationValidator.assertApiToken(secret);
         this.secret = secret;
     }
 

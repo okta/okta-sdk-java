@@ -1,6 +1,5 @@
 /*
- * Copyright 2014 Stormpath, Inc.
- * Modifications Copyright 2018 Okta, Inc.
+ * Copyright 2018-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.impl.util;
+package com.okta.sdk.impl
 
-import com.okta.commons.configcheck.ConfigurationValidator;
+import org.testng.Assert
 
-/**
- * @since 0.5.0
- */
-public class DefaultBaseUrlResolver implements BaseUrlResolver {
+class Util {
 
-    private final String baseUrl;
-
-    public DefaultBaseUrlResolver(String baseUrl) {
-        ConfigurationValidator.assertOrgUrl(baseUrl);
-        this.baseUrl = baseUrl;
-    }
-
-    @Override
-    public String getBaseUrl() {
-        return baseUrl;
+    static def expect = { Class<? extends Throwable> catchMe, Closure callMe ->
+        try {
+            callMe.call()
+            Assert.fail("Expected ${catchMe.getName()} to be thrown.")
+        } catch(e) {
+            if (!e.class.isAssignableFrom(catchMe)) {
+                throw e
+            }
+            return e
+        }
     }
 }

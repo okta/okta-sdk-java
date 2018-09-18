@@ -16,6 +16,7 @@
  */
 package com.okta.sdk.impl.client
 
+import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.Clients
 import com.okta.sdk.impl.io.DefaultResourceFactory
@@ -24,6 +25,8 @@ import com.okta.sdk.impl.io.ResourceFactory
 import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import com.okta.sdk.impl.test.RestoreSystemProperties
 import com.okta.sdk.impl.util.BaseUrlResolver
+import com.okta.sdk.impl.util.DefaultBaseUrlResolver
+import com.okta.sdk.impl.Util
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.testng.annotations.Listeners
@@ -101,6 +104,45 @@ class DefaultClientBuilderTest {
         clearOktaEnvAndSysProps()
         def client = new DefaultClientBuilder(noDefaultYamlResourceFactory()).build()
         assertEquals(client.dataStore.baseUrlResolver.getBaseUrl(), "https://api.okta.com/v42")
+    }
+
+    @Test
+    void testNullBaseUrl() {
+        clearOktaEnvAndSysProps()
+        Util.expect(IllegalArgumentException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setClientCredentials(new TokenClientCredentials("some-token"))
+                .build()
+        }
+    }
+
+    @Test
+    void testNullApiToken() {
+        clearOktaEnvAndSysProps()
+        Util.expect(IllegalArgumentException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setBaseUrlResolver(new DefaultBaseUrlResolver("https://okta.example.com"))
+                .build()
+        }
+    }
+
+    static ResourceFactory noDefaultYamlNoAppYamlResourceFactory() {
+        def resourceFactory = spy(new DefaultResourceFactory())
+        doAnswer(new Answer<Resource>() {
+            @Override
+            Resource answer(InvocationOnMock invocation) throws Throwable {
+                String arg = invocation.arguments[0].toString();
+                if (arg.endsWith("/.okta/okta.yaml") || arg.equals("classpath:okta.yaml")) {
+                    return mock(Resource)
+                }
+                else {
+                    return invocation.callRealMethod()
+                }
+            }
+        })
+        .when(resourceFactory).createResource(anyString())
+
+        return resourceFactory
     }
 
     static ResourceFactory noDefaultYamlResourceFactory() {
