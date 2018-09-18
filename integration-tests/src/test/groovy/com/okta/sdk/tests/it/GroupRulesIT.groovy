@@ -97,17 +97,14 @@ class GroupRulesIT implements CrudTestSupport {
 
     @Test
     @Scenario("group-rule-operations")
-    @TestResources(
-            users = "john-with-group-rule@example.com",
-            groups = "Group-Rule API Test Group",
-            rules = ["Test group rule", "Test group rule updated"])
+    @TestResources(rules = ["Test group rule", "Test group rule updated"])
     void groupRuleCrudTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'With-Group-Rule'
-        def email = 'john-with-group-rule@example.com'
-        def groupName = 'Group-Rule API Test Group'
+        def email = "john-${uniqueTestName}@example.com"
+        def groupName = "Group-Rule API Test Group ${uniqueTestName}"
 
         // 1. Create a user and a group
         User user = UserBuilder.instance()
