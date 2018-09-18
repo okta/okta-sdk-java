@@ -20,7 +20,6 @@ import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
-import com.okta.sdk.tests.TestResources
 import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.assertGroupPresent
@@ -41,7 +40,7 @@ class GroupsIT implements CrudTestSupport {
     @Override
     def create(Client client) {
         return GroupBuilder.instance()
-                .setName("my-user-group-" + UUID.randomUUID().toString())
+                .setName("my-user-group-${uniqueTestName}")
                 .setDescription("IT created Group")
                 .buildAndCreate(client)
     }
@@ -71,7 +70,7 @@ class GroupsIT implements CrudTestSupport {
     @Scenario("list-groups")
     void listGroupsTest() {
 
-        String groupName = "sdk-java List Test Group ${UUID.randomUUID().toString()}"
+        String groupName = "sdk-java List Test Group ${uniqueTestName}"
 
         // 1. Create a new group
         Group createdGroup = GroupBuilder.instance()
@@ -87,10 +86,9 @@ class GroupsIT implements CrudTestSupport {
 
     @Test
     @Scenario("search-groups")
-    @TestResources(groups = "Search Test Group")
     void searchGroupTest() {
 
-        String groupName = "Search Test Group"
+        String groupName = "Search Test Group ${uniqueTestName}"
 
         // 1. Create a new group
         Group group = GroupBuilder.instance()
@@ -105,11 +103,10 @@ class GroupsIT implements CrudTestSupport {
 
     @Test
     @Scenario("update-group")
-    @TestResources(groups = ["Update Test Group", "Update Test Group - Updated"])
     void updateGroupTest() {
 
-        String groupName = "Update Test Group"
-        String groupNameUpdated = "Update Test Group - Updated"
+        String groupName = "Update Test Group ${uniqueTestName}"
+        String groupNameUpdated = "${groupName} - Updated"
 
         // 1. Create a new group
         Group group = GroupBuilder.instance()
@@ -128,15 +125,12 @@ class GroupsIT implements CrudTestSupport {
 
     @Test
     @Scenario("group-user-operations")
-    @TestResources(
-            users = "john-with-group@example.com",
-            groups = ["Group-Member API Test Group"])
     void groupUserOperationsTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'With-Group'
-        def email = 'john-with-group@example.com'
+        def email = "john-with-group-${uniqueTestName}@example.com"
 
         // 1. Create a user and a group
         def user = UserBuilder.instance()
@@ -149,7 +143,7 @@ class GroupsIT implements CrudTestSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        String groupName = "Group-Member API Test Group"
+        String groupName = "Group-Member API Test Group ${uniqueTestName}"
 
         Group group = GroupBuilder.instance()
                 .setName(groupName)

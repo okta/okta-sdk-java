@@ -35,6 +35,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.testng.IHookCallBack
 import org.testng.IHookable
+import org.testng.ITestNGMethod
 import org.testng.ITestResult
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.Listeners
@@ -49,6 +50,7 @@ trait ClientProvider implements IHookable {
     private Logger log = LoggerFactory.getLogger(ClientProvider)
 
     private ThreadLocal<Client> threadLocal = new ThreadLocal<>()
+    private ThreadLocal<String> testName = new ThreadLocal<>()
     private List<Deletable> toBeDeleted = []
 
     Client getClient(String scenarioId = null) {
@@ -81,6 +83,8 @@ trait ClientProvider implements IHookable {
 
     @Override
     void run(IHookCallBack callBack, ITestResult testResult) {
+
+        testName.set(testResult.name)
 
         // Gets the current scenario (if one is defined)
         Scenario scenario = testResult.getMethod().getConstructorOrMethod().getMethod().getAnnotation(Scenario)
@@ -116,7 +120,16 @@ trait ClientProvider implements IHookable {
         finally {
             // cleanup the thread local
             threadLocal.remove()
+            testName.remove()
         }
+    }
+
+    def getTestName() {
+        return "java-sdk-" + testName.get()
+    }
+
+    def getUniqueTestName() {
+        return "${getTestName()}-${UUID.randomUUID()}"
     }
 
     /**

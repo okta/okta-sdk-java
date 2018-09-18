@@ -34,7 +34,6 @@ import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserList
 import com.okta.sdk.tests.Scenario
-import com.okta.sdk.tests.TestResources
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
@@ -59,7 +58,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Test
     void userProfileNumberValues() {
 
-        def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
+        def email = "joe.coder+${uniqueTestName}@example.com"
         User user = UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName("Joe")
@@ -125,7 +124,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Override
     def create(Client client) {
-        def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
+        def email = "joe.coder+${uniqueTestName}@example.com"
         User user = UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName("Joe")
@@ -161,13 +160,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test
     @Scenario("user-activate")
-    @TestResources(users = "john-activate@example.com")
     void userActivateTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Activate'
-        def email = 'john-activate@example.com'
+        def email = "john-activate=${uniqueTestName}@example.com"
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -191,13 +189,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test(enabled = false)
     @Scenario("user-role-assign")
-    @TestResources(users = "john-role@example.com")
     void roleAssignTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Role'
-        def email = 'john-role@example.com'
+        def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -226,13 +223,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test
     @Scenario("user-change-password")
-    @TestResources(users = "john-change-password@example.com")
     void changePasswordTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Change-Password'
-        def email = 'john-change-password@example.com'
+        def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -258,13 +254,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test
     @Scenario("user-change-recovery-question")
-    @TestResources(users = "john-change-recovery-question@example.com")
     void changeRecoveryQuestionTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Change-Recovery-Question'
-        def email = 'john-change-recovery-question@example.com'
+        def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create a user with password & recovery question
         User user = UserBuilder.instance()
@@ -300,13 +295,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     }
 
     @Test
-    @TestResources(users = "john-forgot-password@example.com")
     void forgotPasswordTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Forgot-Password'
-        def email = 'john-forgot-password@example.com'
+        def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -325,13 +319,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test
     @Scenario("user-expire-password")
-    @TestResources(users = "john-expire-password@example.com")
     void expirePasswordTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Expire-Password'
-        def email = 'john-expire-password@example.com'
+        def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -352,13 +345,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test
     @Scenario("user-get-reset-password-url")
-    @TestResources(users = "john-get-reset-password-url@example.com")
     void resetPasswordUrlTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Get-Reset-Password-URL'
-        def email = 'john-get-reset-password-url@example.com'
+        def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -378,13 +370,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test
     @Scenario("user-get")
-    @TestResources(users = "john-get-user@example.com")
     void getUserTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Get-User'
-        def email = 'john-get-user@example.com'
+        def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create a user
         User createUser = UserBuilder.instance()
@@ -417,17 +408,13 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test(enabled = false)
     @Scenario("user-group-target-role")
-    @TestResources(
-            users = "john-group-target@example.com",
-            groups = ["Group-Target User Admin Test Group",
-                      "Group-Target Test Group"])
     void groupTargetRoleTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Group-Target'
-        def email = 'john-group-target@example.com'
-        def groupName = 'Group-Target Test Group'
+        def email = "john-${uniqueTestName}@example.com"
+        def groupName = "Group-Target Test Group ${uniqueTestName}"
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -460,7 +447,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // Note: Don’t remove the last group target from a role assignment, as this causes an exception.
         // To get around this, create a new group and add this group target to user admin role
 
-        def adminGroupName = "Group-Target User Admin Test Group"
+        def adminGroupName = "Group-Target User Admin Test Group ${uniqueTestName}"
         deleteGroup(adminGroupName, client)
 
         Group adminGroup = GroupBuilder.instance()
@@ -477,13 +464,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test
     @Scenario("user-profile-update")
-    @TestResources(users = "john-profile-update@example.com")
     void userProfileUpdate() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Profile-Update'
-        def email = 'john-profile-update@example.com'
+        def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -510,13 +496,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Test
     @Scenario("user-suspend")
-    @TestResources(users = "john-suspend@example.com")
     void userSuspendTest() {
 
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Suspend'
-        def email = 'john-suspend@example.com'
+        def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -541,7 +526,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Test
     void getUserInvalidUserId() {
         try {
-            def userId = "invalid-user-id-" + UUID.randomUUID().toString() + "@example.com"
+            def userId = "invalid-user-id-${uniqueTestName}@example.com"
             getClient().getUser(userId)
             Assert.fail("Expected ResourceException")
         } catch(ResourceException e) {
@@ -570,15 +555,13 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     }
 
     @Test
-    @TestResources(users = "john-group-target@example.com",
-                   groups = ["Group-to-Assign"])
     void createUserWithGroups() {
 
-        def groupName = 'Group-to-Assign'
+        def groupName = "Group-to-Assign-${uniqueTestName}"
         def password = 'Abcd1234'
         def firstName = 'John'
         def lastName = 'Create-User-With-Group'
-        def email = 'john-create-user-with-groups@example.com'
+        def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create group
         Group group = GroupBuilder.instance()
