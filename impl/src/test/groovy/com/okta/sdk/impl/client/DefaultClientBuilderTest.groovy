@@ -18,6 +18,7 @@ package com.okta.sdk.impl.client
 
 import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.AuthenticationScheme
+import com.okta.sdk.client.ClientBuilder
 import com.okta.sdk.client.Clients
 import com.okta.sdk.impl.io.DefaultResourceFactory
 import com.okta.sdk.impl.io.Resource
@@ -117,11 +118,22 @@ class DefaultClientBuilderTest {
     }
 
     @Test
+    void testHttpBaseUrlForTesting() {
+        clearOktaEnvAndSysProps()
+        System.setProperty(ClientBuilder.DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME, "true")
+        // shouldn't throw IllegalArgumentException
+        new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+            .setOrgUrl("http://okta.example.com")
+            .setClientCredentials(new TokenClientCredentials("some-token"))
+            .build()
+    }
+
+    @Test
     void testNullApiToken() {
         clearOktaEnvAndSysProps()
         Util.expect(IllegalArgumentException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
-                .setBaseUrlResolver(new DefaultBaseUrlResolver("https://okta.example.com"))
+                .setOrgUrl("https://okta.example.com")
                 .build()
         }
     }

@@ -16,8 +16,6 @@
  */
 package com.okta.sdk.impl.util;
 
-import com.okta.commons.configcheck.ConfigurationValidator;
-
 /**
  * @since 0.5.0
  */
@@ -26,7 +24,6 @@ public class DefaultBaseUrlResolver implements BaseUrlResolver {
     private final String baseUrl;
 
     public DefaultBaseUrlResolver(String baseUrl) {
-        ConfigurationValidator.assertOrgUrl(baseUrl);
         this.baseUrl = baseUrl;
     }
 

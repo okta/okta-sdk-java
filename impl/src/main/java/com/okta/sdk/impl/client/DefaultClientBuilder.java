@@ -16,6 +16,7 @@
  */
 package com.okta.sdk.impl.client;
 
+import com.okta.commons.configcheck.ConfigurationValidator;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.cache.CacheManagerBuilder;
@@ -89,6 +90,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
+    private boolean allowNonHttpsForTesting = false;
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
 
@@ -168,10 +170,15 @@ public class DefaultClientBuilder implements ClientBuilder {
             }
         }
 
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME))) {
+            allowNonHttpsForTesting = Boolean.valueOf(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME));
+        }
+
         if (Strings.hasText(props.get(DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME))) {
             String baseUrl = props.get(DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME);
             // remove backslashes that can end up in file when it's written programmatically, e.g. in a test
             baseUrl = baseUrl.replace("\\:", ":");
+            ConfigurationValidator.assertOrgUrl(baseUrl, allowNonHttpsForTesting);
             clientConfig.setBaseUrl(baseUrl);
         }
 
@@ -304,6 +311,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (this.clientConfig.getBaseUrlResolver() == null) {
+            ConfigurationValidator.assertOrgUrl(this.clientConfig.getBaseUrl(), allowNonHttpsForTesting);
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
@@ -312,9 +320,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     @Override
     public ClientBuilder setOrgUrl(String baseUrl) {
-        if (baseUrl == null) {
-            throw new IllegalArgumentException("baseUrl argument cannot be null.");
-        }
+        ConfigurationValidator.assertOrgUrl(baseUrl, allowNonHttpsForTesting);
         this.clientConfig.setBaseUrl(baseUrl);
         return this;
     }

@@ -28,7 +28,7 @@ public class SystemPropertiesSource implements PropertiesSource {
     @Override
     public Map<String,String> getProperties() {
 
-        Map<String,String> properties = new LinkedHashMap<String, String>();
+        Map<String,String> properties = new LinkedHashMap<>();
 
         Properties systemProps = System.getProperties();
 
@@ -58,7 +58,7 @@ public class SystemPropertiesSource implements PropertiesSource {
     private static class OktaFilteredSystemPropertiesSource extends FilteredPropertiesSource {
 
         private OktaFilteredSystemPropertiesSource() {
-            super(new EnvironmentVariablesPropertiesSource(),
+            super(new SystemPropertiesSource(),
                     (key, value) -> {
                             if (key.startsWith("okta.")) {
                                 return new String[]{key, value};
