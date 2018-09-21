@@ -29,7 +29,7 @@ public class EnvironmentVariablesPropertiesSource implements PropertiesSource {
         Map<String,String> envVars = System.getenv();
 
         if (!Collections.isEmpty(envVars)) {
-            return new LinkedHashMap<String, String>(envVars);
+            return new LinkedHashMap<>(envVars);
         }
 
         return java.util.Collections.emptyMap();
