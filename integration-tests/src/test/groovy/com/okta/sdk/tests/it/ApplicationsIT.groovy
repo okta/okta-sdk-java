@@ -16,7 +16,6 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.AppUser
 import com.okta.sdk.resource.application.AppUserCredentials
@@ -68,9 +67,6 @@ import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
 
-import java.util.stream.Stream
-import java.util.stream.StreamSupport
-
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.notNullValue
@@ -106,7 +102,7 @@ class ApplicationsIT extends ITSupport {
     }
 
     def create(Client client, Application app) {
-        app.setLabel("app-${UUID.randomUUID().toString()}")
+        app.setLabel("app-${uniqueTestName}")
         registerForCleanup(app)
         return client.createApplication(app)
     }
@@ -268,6 +264,7 @@ class ApplicationsIT extends ITSupport {
     @Test
     void crudBrowserPlugin() {
         doCrudTest(client.instantiate(SwaApplication)
+                        .setLabel(uniqueTestName)
                         .setSettings(client.instantiate(SwaApplicationSettings)
                             .setApp(client.instantiate(SwaApplicationSettingsApplication)
                                 .setButtonField("btn-login")
@@ -324,7 +321,7 @@ class ApplicationsIT extends ITSupport {
         Client client = getClient()
 
         Application app1 = client.instantiate(AutoLoginApplication)
-                .setLabel("app-${UUID.randomUUID().toString()}")
+                .setLabel("app-${uniqueTestName}")
                 .setVisibility(client.instantiate(ApplicationVisibility)
                     .setAutoSubmitToolbar(false)
                     .setHide(client.instantiate(ApplicationVisibilityHide)
@@ -336,7 +333,7 @@ class ApplicationsIT extends ITSupport {
                         .setLoginUrl("http://swaprimaryloginurl.okta.com")))
 
         Application app2 = client.instantiate(AutoLoginApplication)
-                .setLabel("app-${UUID.randomUUID().toString()}")
+                .setLabel("app-${uniqueTestName}")
                 .setVisibility(client.instantiate(ApplicationVisibility)
                     .setAutoSubmitToolbar(false)
                     .setHide(client.instantiate(ApplicationVisibilityHide)
@@ -371,7 +368,7 @@ class ApplicationsIT extends ITSupport {
     @Test
     void deactivateActivateTest() {
         Application app = client.createApplication(client.instantiate(AutoLoginApplication)
-                .setLabel("app-${UUID.randomUUID().toString()}")
+                .setLabel("app-${uniqueTestName}")
                 .setVisibility(client.instantiate(ApplicationVisibility)
                     .setAutoSubmitToolbar(false)
                     .setHide(client.instantiate(ApplicationVisibilityHide)
@@ -398,7 +395,7 @@ class ApplicationsIT extends ITSupport {
     void groupAssignmentWithNullBodyTest() {
 
         Application app = client.createApplication(client.instantiate(AutoLoginApplication)
-                .setLabel("app-${UUID.randomUUID().toString()}")
+                .setLabel("app-${uniqueTestName}")
                 .setVisibility(client.instantiate(ApplicationVisibility)
                     .setAutoSubmitToolbar(false)
                     .setHide(client.instantiate(ApplicationVisibilityHide)
@@ -410,7 +407,7 @@ class ApplicationsIT extends ITSupport {
                         .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
 
         Group group = GroupBuilder.instance()
-                .setName("app-test-group-" + UUID.randomUUID().toString())
+                .setName("app-test-group-${uniqueTestName}")
                 .setDescription("IT created Group")
                 .buildAndCreate(client)
 
@@ -425,7 +422,7 @@ class ApplicationsIT extends ITSupport {
     void groupAssignmentTest() {
 
         Application app = client.createApplication(client.instantiate(AutoLoginApplication)
-                .setLabel("app-${UUID.randomUUID().toString()}")
+                .setLabel("app-${uniqueTestName}")
                 .setVisibility(client.instantiate(ApplicationVisibility)
                     .setAutoSubmitToolbar(false)
                     .setHide(client.instantiate(ApplicationVisibilityHide)
@@ -437,7 +434,7 @@ class ApplicationsIT extends ITSupport {
                         .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
 
         Group group = GroupBuilder.instance()
-                .setName("app-test-group-" + UUID.randomUUID().toString())
+                .setName("app-test-group-${uniqueTestName}")
                 .setDescription("IT created Group")
                 .buildAndCreate(client)
 
@@ -466,7 +463,7 @@ class ApplicationsIT extends ITSupport {
         User user1 = randomUser()
         User user2 = randomUser()
 
-        String label = "app-${UUID.randomUUID().toString()}"
+        String label = "app-${uniqueTestName}"
         Application app = client.instantiate(AutoLoginApplication)
                 .setLabel(label)
                 .setVisibility(client.instantiate(ApplicationVisibility)
