@@ -26,7 +26,6 @@ import com.okta.sdk.impl.io.ResourceFactory
 import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import com.okta.sdk.impl.test.RestoreSystemProperties
 import com.okta.sdk.impl.util.BaseUrlResolver
-import com.okta.sdk.impl.util.DefaultBaseUrlResolver
 import com.okta.sdk.impl.Util
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -126,6 +125,18 @@ class DefaultClientBuilderTest {
             .setOrgUrl("http://okta.example.com")
             .setClientCredentials(new TokenClientCredentials("some-token"))
             .build()
+    }
+
+    @Test
+    void testHttpBaseUrlForTestingDisabled() {
+        clearOktaEnvAndSysProps()
+        System.setProperty(ClientBuilder.DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME, "false")
+        Util.expect(IllegalArgumentException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                    .setOrgUrl("http://okta.example.com")
+                    .setClientCredentials(new TokenClientCredentials("some-token"))
+                    .build()
+        }
     }
 
     @Test
