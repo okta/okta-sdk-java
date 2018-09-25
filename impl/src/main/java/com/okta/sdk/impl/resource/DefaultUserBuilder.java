@@ -46,6 +46,7 @@ public class DefaultUserBuilder implements UserBuilder {
     private String mobilePhone;
     private Boolean active;
     private Boolean provider;
+    private UserCredentials userCredentials;
     private Set<String> groupIds = new HashSet<>();
 
     private Map<String, Object> customProfileAttributes = new LinkedHashMap<>();
@@ -132,6 +133,11 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
+    public UserBuilder setCredentials(UserCredentials userCredentials) {
+        this.userCredentials = userCredentials;
+        return this;
+    }
+
     private User build(Client client) {
 
         User user = client.instantiate(User.class);
@@ -160,9 +166,12 @@ public class DefaultUserBuilder implements UserBuilder {
 
         userProfile.putAll(customProfileAttributes);
 
+        if (userCredentials != null) {
+            user.setCredentials(userCredentials);
+        }
+
         if (password != null && password.length > 0 || Strings.hasText(securityQuestion)) {
-            UserCredentials credentials = client.instantiate(UserCredentials.class);
-            user.setCredentials(credentials);
+            UserCredentials credentials = userCredentials(client, user);
 
             if (Strings.hasText(securityQuestion)) {
                 RecoveryQuestionCredential question = client.instantiate(RecoveryQuestionCredential.class);
@@ -178,6 +187,18 @@ public class DefaultUserBuilder implements UserBuilder {
         }
 
         return user;
+    }
+
+    private static UserCredentials userCredentials(Client client, User user) {
+
+        UserCredentials credentials = user.getCredentials();
+
+        if (credentials == null) {
+            credentials = client.instantiate(UserCredentials.class);
+            user.setCredentials(credentials);
+        }
+
+        return credentials;
     }
 
     @Override
