@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2017 Okta
+# Copyright 2017-Present Okta, Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 # deploy snapshot from ONLY this branch
 SNAPSHOT_BRANCH="master"
+PROJECT_NAME="okta-sdk-java"
 
 # Get the slug from the TRAVIS var, or parse the 'origin' remote
 REPO_SLUG=${REPO_SLUG:-${TRAVIS_REPO_SLUG:-$(git remote get-url origin | sed 's_.*\:__; s_.*github.com/__; s_\.git__')}}
@@ -25,7 +26,7 @@ PULL_REQUEST=${PULL_REQUEST:-${TRAVIS_PULL_REQUEST:-true}} # default to true
 BRANCH=${TRAVIS_BRANCH:-"$(git rev-parse --abbrev-ref HEAD)"}
 
 # run the ITs if we have an ENV_VARS are set
-if [ $TRAVIS_SECURE_ENV_VARS = true ] ; then
+if [ "$TRAVIS_SECURE_ENV_VARS" = true ] ; then
     RUN_ITS=true
 fi
 RUN_ITS=${RUN_ITS:-false}

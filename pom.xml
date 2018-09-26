@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.okta</groupId>
         <artifactId>okta-parent</artifactId>
-        <version>7</version>
+        <version>8</version>
         <relativePath>../okta-java-parent</relativePath>
     </parent>
 
@@ -84,7 +84,7 @@
             <dependency>
                 <groupId>com.okta.commons</groupId>
                 <artifactId>okta-config-check</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
 
             <!-- ITs -->
