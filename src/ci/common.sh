@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 
+# ignore unused var in this script as this script defines common bits for our other scripts
+# shellcheck disable=SC2034
 
 # deploy snapshot from ONLY this branch
 SNAPSHOT_BRANCH="master"
