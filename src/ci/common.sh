@@ -20,7 +20,7 @@
 
 # deploy snapshot from ONLY this branch
 SNAPSHOT_BRANCH="master"
-PROJECT_NAME="okta-sdk-java"
+PROJECT_NAME="okta-sdk-root"
 
 # Get the slug from the TRAVIS var, or parse the 'origin' remote
 REPO_SLUG=${REPO_SLUG:-${TRAVIS_REPO_SLUG:-$(git remote get-url origin | sed 's_.*\:__; s_.*github.com/__; s_\.git__')}}
