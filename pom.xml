@@ -50,7 +50,7 @@
         <module>swagger-templates</module>
         <module>api</module>
         <module>impl</module>
-        <module>httpclient</module>
+        <module>httpclients/httpclient</module>
         <module>integration-tests</module>
         <module>examples</module>
         <module>coverage</module>

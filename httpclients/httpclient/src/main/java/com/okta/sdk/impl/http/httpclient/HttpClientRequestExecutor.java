@@ -157,13 +157,18 @@ public class HttpClientRequestExecutor extends RetryRequestExecutor {
         // Therefore, multiply it by 1000 to be milliseconds since RequestConfig expects milliseconds.
         int connectionTimeoutAsMilliseconds = connectionTimeout * 1000;
 
-        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(connectionTimeoutAsMilliseconds)
-                .setSocketTimeout(connectionTimeoutAsMilliseconds).setRedirectsEnabled(false).build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(connectionTimeoutAsMilliseconds)
+                .setSocketTimeout(connectionTimeoutAsMilliseconds)
+                .build();
 
         ConnectionConfig connectionConfig = ConnectionConfig.custom().setCharset(Consts.UTF_8).build();
 
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig)
-                .disableCookieManagement().setDefaultConnectionConfig(connectionConfig).setConnectionManager(connMgr);
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .disableCookieManagement()
+                .setDefaultConnectionConfig(connectionConfig)
+                .setConnectionManager(connMgr);
 
         this.httpClientRequestFactory = new HttpClientRequestFactory(requestConfig);
 
@@ -274,8 +279,6 @@ public class HttpClientRequestExecutor extends RetryRequestExecutor {
 
         Response response = new DefaultResponse(httpStatus, mediaType, body, contentLength);
         response.getHeaders().putAll(headers);
-        response.getHeaders().add(HttpHeaders.OKTA_REQUEST_ID, headers.getOktaRequestId());
-        response.getHeaders().put(HttpHeaders.LINK, headers.getLinkHeaders());
 
         return response;
     }
