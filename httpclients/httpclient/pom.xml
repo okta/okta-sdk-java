@@ -22,6 +22,7 @@
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
         <version>1.3.1-SNAPSHOT</version>
+        <relativePath>../..</relativePath>
     </parent>
 
     <artifactId>okta-sdk-httpclient</artifactId>
