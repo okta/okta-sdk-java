@@ -21,12 +21,12 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.http.RequestMethod
 import com.github.tomakehurst.wiremock.matching.RequestPattern
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
+import com.okta.commons.lang.Strings
 import de.sstoehr.harreader.HarReader
 import de.sstoehr.harreader.model.Har
 import de.sstoehr.harreader.model.HarRequest
 import de.sstoehr.harreader.model.HarResponse
 import de.sstoehr.harreader.model.HttpMethod
-import org.apache.commons.lang3.StringUtils
 import org.testng.collections.CollectionUtils
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
@@ -135,7 +135,7 @@ class TestServer {
             request.queryString.forEach {
                 builder.withQueryParam(it.name, equalTo(it.value))
             }
-            if (StringUtils.isNotEmpty(request.postData.text)) {
+            if (!Strings.isEmpty(request.postData.text)) {
                 builder.withRequestBody(equalToJson(request.postData.text, false, true))
             }
 
