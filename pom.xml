@@ -51,6 +51,7 @@
         <module>api</module>
         <module>impl</module>
         <module>httpclients/httpclient</module>
+        <module>httpclients/okhttp</module>
         <module>integration-tests</module>
         <module>examples</module>
         <module>coverage</module>
@@ -79,6 +80,11 @@
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-httpclient</artifactId>
                 <version>1.4.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.okta.sdk</groupId>
+                <artifactId>okta-sdk-okhttp</artifactId>
+                <version>1.3.1-SNAPSHOT</version>
             </dependency>
 
             <!-- Other Okta Projects -->
