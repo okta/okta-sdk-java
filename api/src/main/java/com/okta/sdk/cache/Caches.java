@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.cache;
 
-import com.okta.sdk.lang.Classes;
+import com.okta.commons.lang.Classes;
 import com.okta.sdk.resource.Resource;
 
 /**

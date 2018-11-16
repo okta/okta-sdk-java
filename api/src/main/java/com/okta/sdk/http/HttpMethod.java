@@ -22,7 +22,9 @@ package com.okta.sdk.http;
  * specification.
  *
  * @since 0.5.0
+ * @deprecated not used
  */
+@Deprecated
 public enum HttpMethod {
 
     GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE, CONNECT;

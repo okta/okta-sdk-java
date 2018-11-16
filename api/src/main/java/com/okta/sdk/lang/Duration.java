@@ -16,6 +16,8 @@
  */
 package com.okta.sdk.lang;
 
+import com.okta.commons.lang.Assert;
+
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +26,9 @@ import java.util.concurrent.TimeUnit;
  * durations (scalar + unit of time).
  *
  * @since 0.5.0
+ * @deprecated user java.time.Duration
  */
+@Deprecated
 public class Duration implements Comparable<Duration>, Cloneable {
 
     private final long value;

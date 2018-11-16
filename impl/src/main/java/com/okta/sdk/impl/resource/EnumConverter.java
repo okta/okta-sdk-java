@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.sdk.lang.Assert;
+import com.okta.commons.lang.Assert;
 
 import java.util.Arrays;
 import java.util.Map;

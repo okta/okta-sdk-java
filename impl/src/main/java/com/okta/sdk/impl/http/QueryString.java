@@ -17,8 +17,8 @@
 package com.okta.sdk.impl.http;
 
 import com.okta.sdk.impl.util.RequestUtils;
-import com.okta.sdk.lang.Collections;
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Collections;
+import com.okta.commons.lang.Strings;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

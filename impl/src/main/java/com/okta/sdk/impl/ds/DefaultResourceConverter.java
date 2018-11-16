@@ -18,7 +18,7 @@ package com.okta.sdk.impl.ds;
 
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.ReferenceFactory;
-import com.okta.sdk.lang.Assert;
+import com.okta.commons.lang.Assert;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;

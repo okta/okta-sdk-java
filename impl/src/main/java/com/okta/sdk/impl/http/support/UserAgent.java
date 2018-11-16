@@ -17,8 +17,8 @@
 package com.okta.sdk.impl.http.support;
 
 import com.okta.sdk.http.UserAgentProvider;
-import com.okta.sdk.lang.Classes;
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Classes;
+import com.okta.commons.lang.Strings;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

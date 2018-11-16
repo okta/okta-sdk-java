@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.client.Client;
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.group.Group;
 import com.okta.sdk.resource.group.GroupProfile;

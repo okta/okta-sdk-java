@@ -16,8 +16,8 @@
  */
 package com.okta.sdk.impl.config;
 
+import com.okta.commons.lang.Assert;
 import com.okta.sdk.impl.io.Resource;
-import com.okta.sdk.lang.Assert;
 
 import java.io.IOException;
 import java.util.Map;

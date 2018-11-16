@@ -26,6 +26,12 @@
     <Match><Class name="com.okta.sdk.impl.util.MimeType"/></Match>
     <Match><Class name="~com\.okta\.sdk\.impl\.util\.Mime.*"/></Match>
 
+    <!-- Class moved out of project, this exception extends the new one -->
+    <Match>
+        <Class name="com.okta.sdk.lang.UnknownClassException"/>
+        <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS" />
+    </Match>
+
     <!-- Copied from Common Codec -->
     <Match><Class name="~com\.okta\.sdk\.impl\.util\.BaseN.*"/></Match>
 

@@ -15,8 +15,8 @@
  */
 package com.okta.sdk.resource.group;
 
+import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.lang.Classes;
 
 public interface GroupBuilder {
 

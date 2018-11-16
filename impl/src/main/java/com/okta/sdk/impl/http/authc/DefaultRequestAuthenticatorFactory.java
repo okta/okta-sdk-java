@@ -19,7 +19,7 @@ package com.okta.sdk.impl.http.authc;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.http.support.RequestAuthenticationException;
-import com.okta.sdk.lang.Classes;
+import com.okta.commons.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

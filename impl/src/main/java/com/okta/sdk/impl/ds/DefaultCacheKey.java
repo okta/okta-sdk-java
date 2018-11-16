@@ -17,9 +17,9 @@
 package com.okta.sdk.impl.ds;
 
 import com.okta.sdk.impl.http.QueryString;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Collections;
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Collections;
+import com.okta.commons.lang.Strings;
 
 /**
  * @since 0.5.0

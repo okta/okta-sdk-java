@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.client;
 
-import com.okta.sdk.lang.Classes;
+import com.okta.commons.lang.Classes;
 
 /**
  * Static utility/helper class for working with {@link Client} resources. For example:

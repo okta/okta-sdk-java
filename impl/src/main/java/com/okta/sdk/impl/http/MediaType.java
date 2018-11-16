@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 import com.okta.sdk.impl.util.InvalidMimeTypeException;
 import com.okta.sdk.impl.util.MimeType;
 import com.okta.sdk.impl.util.MimeTypeUtils;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Strings;
 
 /**
  * A sub-class of {@link MimeType} that adds support for quality parameters as defined
@@ -546,7 +546,7 @@ public class MediaType extends MimeType implements Serializable {
      * @since 4.3.2
      */
     public static List<MediaType> parseMediaTypes(List<String> mediaTypes) {
-        if (com.okta.sdk.lang.Collections.isEmpty(mediaTypes)) {
+        if (com.okta.commons.lang.Collections.isEmpty(mediaTypes)) {
             return Collections.emptyList();
         }
         else if (mediaTypes.size() == 1) {

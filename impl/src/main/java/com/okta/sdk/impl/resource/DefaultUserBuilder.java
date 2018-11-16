@@ -17,8 +17,8 @@ package com.okta.sdk.impl.resource;
 
 
 import com.okta.sdk.client.Client;
-import com.okta.sdk.lang.Collections;
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Collections;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.user.RecoveryQuestionCredential;
 import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.user.PasswordCredential;

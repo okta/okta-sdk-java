@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.impl.io;
 
-import com.okta.sdk.lang.Assert;
+import com.okta.commons.lang.Assert;
 
 public abstract class AbstractResource implements Resource {
 

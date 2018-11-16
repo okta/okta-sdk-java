@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.sdk.lang.Collections;
+import com.okta.commons.lang.Collections;
 import com.okta.sdk.resource.Resource;
 
 import java.util.Map;

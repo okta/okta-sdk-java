@@ -16,6 +16,8 @@
  */
 package com.okta.sdk.impl.http.httpclient;
 
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Proxy;
 import com.okta.sdk.authc.credentials.ClientCredentials;
@@ -33,8 +35,6 @@ import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.http.support.BackoffStrategy;
 import com.okta.sdk.impl.http.support.DefaultRequest;
 import com.okta.sdk.impl.http.support.DefaultResponse;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Strings;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;

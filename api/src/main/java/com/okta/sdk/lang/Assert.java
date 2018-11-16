@@ -19,6 +19,10 @@ package com.okta.sdk.lang;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * @deprecated use com.okta.commons.lang.Assert
+ */
+@Deprecated
 public abstract class Assert {
 
     /**

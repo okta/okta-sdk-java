@@ -15,11 +15,11 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.okta.commons.lang.Strings
 import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.impl.cache.DisabledCacheManager
-import com.okta.sdk.lang.Strings
 import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.Application

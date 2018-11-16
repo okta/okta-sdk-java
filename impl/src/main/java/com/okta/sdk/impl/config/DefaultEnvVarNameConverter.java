@@ -16,8 +16,8 @@
  */
 package com.okta.sdk.impl.config;
 
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Strings;
 
 public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
 

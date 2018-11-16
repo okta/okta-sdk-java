@@ -25,7 +25,9 @@ import java.util.Locale;
  * Imported from Apache Commons Lang.
  *
  * <a href="https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/commons/lang3/LocaleUtils.java">LocaleUtils.java</a>
+ * @deprecated use com.okta.commons.lang.Locales
  */
+@Deprecated
 public final class Locales {
 
     private Locales() {}

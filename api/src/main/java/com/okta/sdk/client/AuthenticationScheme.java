@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.client;
 
-import com.okta.sdk.lang.Assert;
+import com.okta.commons.lang.Assert;
 
 /**
  * Enumeration that defines the available HTTP authentication schemes to be used when communicating with the Okta API server.

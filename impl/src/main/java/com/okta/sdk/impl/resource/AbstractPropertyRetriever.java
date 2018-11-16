@@ -17,7 +17,7 @@
 package com.okta.sdk.impl.resource;
 
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
-import com.okta.sdk.lang.Assert;
+import com.okta.commons.lang.Assert;
 import com.okta.sdk.resource.PropertyRetriever;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

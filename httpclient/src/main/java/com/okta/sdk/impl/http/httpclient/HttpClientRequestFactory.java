@@ -16,13 +16,13 @@
  */
 package com.okta.sdk.impl.http.httpclient;
 
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.http.HttpMethod;
 import com.okta.sdk.impl.http.QueryString;
 import com.okta.sdk.impl.http.Request;
 import com.okta.sdk.impl.http.RestException;
 import com.okta.sdk.impl.util.RequestUtils;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Strings;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.config.RequestConfig;

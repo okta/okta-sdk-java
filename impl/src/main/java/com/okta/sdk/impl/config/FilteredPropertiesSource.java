@@ -16,8 +16,8 @@
  */
 package com.okta.sdk.impl.config;
 
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Collections;
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Collections;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

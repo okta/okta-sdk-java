@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.impl.ds;
 
-import com.okta.sdk.lang.Classes;
+import com.okta.commons.lang.Classes;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;

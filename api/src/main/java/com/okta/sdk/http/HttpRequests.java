@@ -16,8 +16,8 @@
  */
 package com.okta.sdk.http;
 
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Classes;
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Classes;
 
 import java.lang.reflect.Constructor;
 

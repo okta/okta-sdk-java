@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.impl.io;
 
-import com.okta.sdk.lang.Classes;
+import com.okta.commons.lang.Classes;
 
 import java.io.InputStream;
 

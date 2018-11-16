@@ -19,7 +19,7 @@ package com.okta.sdk.impl.http;
 import com.okta.sdk.http.HttpMethod;
 import com.okta.sdk.http.HttpRequest;
 import com.okta.sdk.http.HttpRequestBuilder;
-import com.okta.sdk.lang.Assert;
+import com.okta.commons.lang.Assert;
 
 import java.util.HashMap;
 import java.util.Map;

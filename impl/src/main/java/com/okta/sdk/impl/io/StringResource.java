@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.impl.io;
 
-import com.okta.sdk.lang.Assert;
+import com.okta.commons.lang.Assert;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

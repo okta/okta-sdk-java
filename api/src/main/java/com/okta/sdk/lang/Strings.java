@@ -58,7 +58,9 @@ import java.util.TimeZone;
  * @author Sam Brannen
  * @author Brian Clozel
  * @since 16 April 2001
+ * @deprecated use com.okta.commons.lang.Strings
  */
+@Deprecated
 public abstract class Strings {
 
     private static final String FOLDER_SEPARATOR = "/";
