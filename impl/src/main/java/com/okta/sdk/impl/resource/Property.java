@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.sdk.lang.Assert;
+import com.okta.commons.lang.Assert;
 
 /**
  * @since 0.5.0

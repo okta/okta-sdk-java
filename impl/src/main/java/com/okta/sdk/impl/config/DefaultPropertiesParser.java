@@ -16,9 +16,9 @@
  */
 package com.okta.sdk.impl.config;
 
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.impl.io.Resource;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

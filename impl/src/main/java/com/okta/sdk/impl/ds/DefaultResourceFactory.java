@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.impl.ds;
 
-import com.okta.sdk.lang.Classes;
+import com.okta.commons.lang.Classes;
 import com.okta.sdk.resource.Resource;
 
 import java.lang.reflect.Constructor;

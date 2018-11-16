@@ -18,8 +18,8 @@ package com.okta.sdk.impl.http;
 
 import com.okta.sdk.http.HttpMethod;
 import com.okta.sdk.http.HttpRequest;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Collections;
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Collections;
 
 import java.util.ArrayList;
 import java.util.HashMap;

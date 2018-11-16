@@ -26,7 +26,9 @@ import java.util.TimeZone;
  * Utility class to create UTC-based dates and perform time conversions from UTC to other {@link TimeZone timezones} and vice versa
  *
  * @since 0.5.0
+ * @deprecated use com.okta.commons.lang.Instants
  */
+@Deprecated
 public abstract class Instants {
 
     public static final TimeZone UTC_TIMEZONE = TimeZone.getTimeZone("UTC");

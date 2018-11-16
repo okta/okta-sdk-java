@@ -18,7 +18,9 @@ package com.okta.sdk.authc.credentials;
 
 /**
  * @since 0.5.0
+ * @deprecated Use ClientCredentialsResolver
  */
+@Deprecated
 public interface ClientCredentialsProvider {
 
     ClientCredentials getClientCredentials();

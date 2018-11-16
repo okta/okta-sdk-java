@@ -41,7 +41,9 @@ import java.util.Map;
  * @see Classes
  * @see Collections
  * @see Strings
+ * @deprecated use com.okta.commons.lang.Objects
  */
+@Deprecated
 public abstract class Objects {
 
     private static final int INITIAL_HASH = 7;

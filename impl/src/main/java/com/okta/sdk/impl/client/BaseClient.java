@@ -16,6 +16,8 @@
  */
 package com.okta.sdk.impl.client;
 
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Classes;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.client.AuthenticationScheme;
@@ -31,8 +33,6 @@ import com.okta.sdk.impl.http.RequestExecutor;
 import com.okta.sdk.impl.http.RequestExecutorFactory;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Classes;
 import com.okta.sdk.resource.Resource;
 
 /**

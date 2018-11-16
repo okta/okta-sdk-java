@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.impl.http.support
 
-import com.okta.sdk.lang.Strings
+import com.okta.commons.lang.Strings
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat

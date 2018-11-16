@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.impl.http.support
 
-import com.okta.sdk.lang.Assert
+import com.okta.commons.lang.Assert
 import org.testng.annotations.Test
 
 /**

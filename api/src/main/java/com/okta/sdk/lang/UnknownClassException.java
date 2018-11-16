@@ -21,8 +21,10 @@ package com.okta.sdk.lang;
  * {@code ClassNotFoundException}, to maintain a RuntimeException paradigm.
  *
  * @since 0.5.0
+ * @deprecated use com.okta.commons.lang.UnknownClassException
  */
-public class UnknownClassException extends RuntimeException {
+@Deprecated
+public class UnknownClassException extends com.okta.commons.lang.UnknownClassException {
 
     /**
      * Creates a new UnknownClassException.

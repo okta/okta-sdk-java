@@ -28,6 +28,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * @deprecated use com.okta.commons.lang.Collections
+ */
+@Deprecated
 public abstract class Collections {
 
     /**

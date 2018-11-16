@@ -17,8 +17,8 @@
 
 package com.okta.sdk.impl.util;
 
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Objects;
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Objects;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -175,7 +175,7 @@ public class MimeType implements Comparable<MimeType>, Serializable {
         checkToken(subtype);
         this.type = type.toLowerCase(Locale.ENGLISH);
         this.subtype = subtype.toLowerCase(Locale.ENGLISH);
-        if (!com.okta.sdk.lang.Collections.isEmpty(parameters)) {
+        if (!com.okta.commons.lang.Collections.isEmpty(parameters)) {
             Map<String, String> map = new LinkedCaseInsensitiveMap<>(parameters.size(), Locale.ENGLISH);
             for (Map.Entry<String, String> entry : parameters.entrySet()) {
                 String attribute = entry.getKey();

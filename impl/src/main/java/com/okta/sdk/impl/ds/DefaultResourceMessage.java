@@ -18,7 +18,7 @@ package com.okta.sdk.impl.ds;
 
 import com.okta.sdk.impl.http.CanonicalUri;
 import com.okta.sdk.impl.http.HttpHeaders;
-import com.okta.sdk.lang.Assert;
+import com.okta.commons.lang.Assert;
 import com.okta.sdk.resource.Resource;
 
 import java.util.Map;

@@ -16,11 +16,11 @@
  */
 package com.okta.sdk.impl.http;
 
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.http.HttpMethod;
 import com.okta.sdk.impl.util.LinkedCaseInsensitiveMap;
 import com.okta.sdk.impl.util.MultiValueMap;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Strings;
 
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -510,7 +510,7 @@ public class HttpHeaders implements MultiValueMap<String, String> {
     public Map<String, String> getLinkMap() {
 
         List<String> links = getLinkHeaders();
-        if (!com.okta.sdk.lang.Collections.isEmpty(links)) {
+        if (!com.okta.commons.lang.Collections.isEmpty(links)) {
             List<String> headerValues = headers.get(LINK);
             return headerValues.stream()
                     .map(HttpHeaders::parseLinkHeader)

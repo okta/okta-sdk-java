@@ -18,7 +18,9 @@ package com.okta.sdk.lang;
 
 /**
  * @since 0.5.0
+ * @deprecated use com.okta.commons.lang.InstantiationException
  */
+@Deprecated
 public class InstantiationException extends RuntimeException {
 
     public InstantiationException(String s, Throwable t) {

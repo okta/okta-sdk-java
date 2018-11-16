@@ -16,10 +16,10 @@
  */
 package com.okta.sdk.impl.ds.cache;
 
+import com.okta.commons.lang.Assert;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.impl.ds.CacheRegionNameResolver;
-import com.okta.sdk.lang.Assert;
 
 import java.util.Map;
 

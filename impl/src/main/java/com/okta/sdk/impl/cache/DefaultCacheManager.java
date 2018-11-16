@@ -16,10 +16,10 @@
  */
 package com.okta.sdk.impl.cache;
 
+import com.okta.commons.lang.Assert;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.impl.util.SoftHashMap;
-import com.okta.sdk.lang.Assert;
 import com.okta.sdk.lang.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.impl.config;
 
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Strings;
 
 import java.util.Enumeration;
 import java.util.LinkedHashMap;

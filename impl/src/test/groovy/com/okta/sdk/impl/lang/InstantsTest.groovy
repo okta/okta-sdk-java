@@ -31,7 +31,7 @@
 */
 package com.okta.sdk.impl.lang
 
-import com.okta.sdk.lang.Instants
+import com.okta.commons.lang.Instants
 import org.testng.annotations.Test
 
 import static org.testng.Assert.assertEquals

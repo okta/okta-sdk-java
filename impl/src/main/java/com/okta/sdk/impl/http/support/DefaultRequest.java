@@ -20,7 +20,7 @@ import com.okta.sdk.http.HttpMethod;
 import com.okta.sdk.impl.http.HttpHeaders;
 import com.okta.sdk.impl.http.QueryString;
 import com.okta.sdk.impl.http.Request;
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Strings;
 
 import java.io.InputStream;
 import java.net.URI;

@@ -16,8 +16,8 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.impl.ds.InternalDataStore
-import com.okta.sdk.lang.Assert
-import com.okta.sdk.lang.Classes
+import com.okta.commons.lang.Assert
+import com.okta.commons.lang.Classes
 import com.okta.sdk.resource.Resource
 import org.mockito.Mockito
 import org.mockito.invocation.InvocationOnMock

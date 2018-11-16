@@ -22,7 +22,7 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver
 import com.okta.sdk.impl.http.RequestExecutorFactory
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
 import com.okta.sdk.impl.util.BaseUrlResolver
-import com.okta.sdk.lang.Classes
+import com.okta.commons.lang.Classes
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer

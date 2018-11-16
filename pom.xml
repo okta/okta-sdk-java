@@ -40,6 +40,7 @@
         <snakeyaml.version>1.17</snakeyaml.version>
         <jjwt.version>0.6.0</jjwt.version>
         <okta.sdk.pereviousVersion>1.0.0</okta.sdk.pereviousVersion>
+        <otka.commons.version>1.1.0-SNAPSHOT</otka.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
@@ -84,7 +85,12 @@
             <dependency>
                 <groupId>com.okta.commons</groupId>
                 <artifactId>okta-config-check</artifactId>
-                <version>1.0.0</version>
+                <version>${otka.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.okta.commons</groupId>
+                <artifactId>okta-commons-lang</artifactId>
+                <version>${otka.commons.version}</version>
             </dependency>
 
             <!-- ITs -->

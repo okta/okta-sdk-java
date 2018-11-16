@@ -16,11 +16,11 @@
  */
 package com.okta.sdk.resource;
 
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Collections;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.error.Error;
 import com.okta.sdk.error.ErrorCause;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Collections;
-import com.okta.sdk.lang.Strings;
 
 import java.util.List;
 import java.util.Map;

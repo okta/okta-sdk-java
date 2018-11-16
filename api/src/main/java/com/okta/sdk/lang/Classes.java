@@ -28,7 +28,9 @@ import java.util.stream.StreamSupport;
 
 /**
  * @since 0.5.0
+ * @deprecated use com.okta.commons.lang.Classes
  */
+@Deprecated
 public class Classes {
 
     /**

@@ -17,9 +17,9 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Collections;
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Collections;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
 

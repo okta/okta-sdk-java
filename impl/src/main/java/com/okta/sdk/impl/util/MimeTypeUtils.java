@@ -17,8 +17,8 @@
 
 package com.okta.sdk.impl.util;
 
-import com.okta.sdk.lang.Assert;
-import com.okta.sdk.lang.Strings;
+import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Strings;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;

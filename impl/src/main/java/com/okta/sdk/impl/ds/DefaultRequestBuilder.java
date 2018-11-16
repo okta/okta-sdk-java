@@ -55,7 +55,7 @@ class DefaultRequestBuilder implements RequestBuilder {
     @Override
     public RequestBuilder setQueryParameters(Map<String, String> queryParams) {
         this.queryParams.clear();
-        if (!com.okta.sdk.lang.Collections.isEmpty(queryParams)) {
+        if (!com.okta.commons.lang.Collections.isEmpty(queryParams)) {
             this.queryParams.putAll(queryParams);
         }
         return this;
