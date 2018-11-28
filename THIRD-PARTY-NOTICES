@@ -23,7 +23,6 @@ This project includes:
   Commons IO under The Apache Software License, Version 2.0
   Compiler assisted localization library (CAL10N) - API under MIT License
   FindBugs-jsr305 under The Apache Software License, Version 2.0
-  Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
   jackson-databind under The Apache Software License, Version 2.0
