@@ -27,6 +27,7 @@ import com.okta.sdk.resource.application.SwaApplicationSettingsApplication;
 import com.okta.sdk.resource.group.Group;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.group.GroupList;
+import com.okta.sdk.resource.log.LogEventList;
 import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.user.UserList;
@@ -156,6 +157,14 @@ public class ReadmeSnippets {
               .setPasswordField("txtbox-password")
               .setUsernameField("txtbox-username")
               .setUrl("https://example.com/login.html")));
+    }
+
+    private void listSysLogs() {
+        // page through all log events
+        LogEventList logEvents = client.getLogs();
+
+        // or use a filter (start date, end date, filter, or query, sort order) all options are nullable
+        logEvents = client.getLogs(null, null, null, "interestingURI.com", "ASCENDING");
     }
 
     private void callAnotherEndpoint() {

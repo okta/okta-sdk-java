@@ -296,6 +296,17 @@ SwaApplication swaApp = client.instantiate(SwaApplication.class)
 ```
 [//]: # (end: createSwaApplication)
 
+### List System Logs
+[//]: # (method: listSysLogs)
+```java
+// page through all log events
+LogEventList logEvents = client.getLogs();
+
+// or use a filter (start date, end date, filter, or query, sort order) all options are nullable
+logEvents = client.getLogs(null, null, null, "interestingURI.com", "ASCENDING");
+```
+[//]: # (end: listSysLogs)
+
 ### Call other API endpoints
 
 Not every API endpoint is represented by a method in this library. You can call any Okta management API endpoint using this generic syntax:
@@ -340,7 +351,7 @@ users.stream().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getE
 This library looks for configuration in the following sources:
 
 0. An `okta.yaml` at the root of the applications classpath
-0. An `okta.yaml` file in a `.okta` folder in the current user's home directory (`~/.okta/okta.yaml` or `%userprofile\.okta\okta.yaml`)
+0. An `okta.yaml` file in a `.okta` folder in the current user's home directory (`~/.okta/okta.yaml` or `%userprofile%\.okta\okta.yaml`)
 0. Environment variables
 0. Java System Properties
 0. Configuration explicitly set programmatically (see the example in [Getting started](#getting-started))
