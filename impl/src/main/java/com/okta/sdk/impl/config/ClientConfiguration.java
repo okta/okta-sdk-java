@@ -208,7 +208,7 @@ public class ClientConfiguration {
 
         Proxy proxy = null;
         // use proxy overrides if they're set
-        if (getProxyPort() > 0 || getProxyHost() != null && (getProxyUsername() == null || getProxyPassword() == null)) {
+        if ((getProxyPort() > 0 || getProxyHost() != null) && (getProxyUsername() == null || getProxyPassword() == null)) {
             proxy = new Proxy(getProxyHost(), getProxyPort());
         } else if (getProxyUsername() != null && getProxyPassword() != null) {
             proxy = new Proxy(getProxyHost(), getProxyPort(), getProxyUsername(), getProxyPassword());

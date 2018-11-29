@@ -34,6 +34,8 @@ import org.testng.annotations.Test
 
 import static org.testng.Assert.*
 import static org.mockito.Mockito.*
+import static org.hamcrest.Matchers.*
+import static org.hamcrest.MatcherAssert.assertThat
 
 @Listeners([RestoreSystemProperties, RestoreEnvironmentVariables])
 class DefaultClientBuilderTest {
@@ -79,10 +81,16 @@ class DefaultClientBuilderTest {
         clearOktaEnvAndSysProps()
         def builder = Clients.builder()
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
-        assertEquals clientBuilder.clientConfiguration.proxyHost, "proxyyaml" // from yaml
-        assertEquals clientBuilder.clientConfiguration.proxyPort, 9009 // from yaml
-        assertEquals clientBuilder.clientConfiguration.proxyUsername, "fooyaml" // from yaml
-        assertEquals clientBuilder.clientConfiguration.proxyPassword, "bar" // from properties
+        assertThat clientBuilder.clientConfiguration.proxyHost, is("proxyyaml") // from yaml
+        assertThat clientBuilder.clientConfiguration.proxyPort, is(9009) // from yaml
+        assertThat clientBuilder.clientConfiguration.proxyUsername, is("fooyaml") // from yaml
+        assertThat clientBuilder.clientConfiguration.proxyPassword, is("bar") // from properties
+
+        def proxy = clientBuilder.clientConfiguration.getProxy()
+        assertThat proxy.host, is("proxyyaml")
+        assertThat proxy.port, is(9009)
+        assertThat proxy.username, is("fooyaml")
+        assertThat proxy.password, is("bar")
     }
 
     @Test
