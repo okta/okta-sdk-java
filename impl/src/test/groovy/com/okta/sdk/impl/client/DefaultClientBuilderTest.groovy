@@ -94,6 +94,23 @@ class DefaultClientBuilderTest {
     }
 
     @Test
+    void testConfigureProxyWithoutPassword() {
+        clearOktaEnvAndSysProps()
+        def builder = Clients.builder()
+        DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
+        clientBuilder.clientConfiguration.setProxyPassword(null) // override config from properties
+        clientBuilder.clientConfiguration.setProxyUsername(null)
+        assertThat clientBuilder.clientConfiguration.proxyHost, is("proxyyaml") // from yaml
+        assertThat clientBuilder.clientConfiguration.proxyPort, is(9009) // from yaml
+
+        def proxy = clientBuilder.clientConfiguration.getProxy()
+        assertThat proxy.host, is("proxyyaml")
+        assertThat proxy.port, is(9009)
+        assertThat proxy.username, nullValue()
+        assertThat proxy.password, nullValue()
+    }
+
+    @Test
     void testConfigureBaseUrlResolver(){
         BaseUrlResolver baseUrlResolver = new BaseUrlResolver() {
             @Override
