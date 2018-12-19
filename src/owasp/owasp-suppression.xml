@@ -33,4 +33,20 @@
        <cve>CVE-2016-6199</cve>
     </suppress>
 
+    <!-- wrong GAV, this CVE effects slf4j-ext not the other slf4j- projects
+     https://nvd.nist.gov/vuln/detail/CVE-2018-8088
+
+     > org.slf4j.ext.EventData in the slf4j-ext module in QOS.CH SLF4J ...
+    -->
+    <suppress>
+        <notes><![CDATA[ file name: slf4j-api-1.7.25.jar ]]></notes>
+        <gav regex="true">^org\.slf4j:slf4j-api:.*$</gav>
+        <cve>CVE-2018-8088</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ file name: jcl-over-slf4j-1.7.25.jar ]]></notes>
+        <gav regex="true">^org\.slf4j:jcl-over-slf4j:.*$</gav>
+        <cve>CVE-2018-8088</cve>
+    </suppress>
+
 </suppressions>
