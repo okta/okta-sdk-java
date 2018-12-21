@@ -15,13 +15,14 @@
  */
 package com.okta.sdk.impl.ds;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
+
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -33,7 +34,7 @@ public class DiscriminatorConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DiscriminatorConfig.class);
 
-    private Map<String, ClassConfig> config;
+    private Map<String, ClassConfig> config = Collections.emptyMap();
 
     public Map<String, ClassConfig> getConfig() {
         return config;
@@ -67,19 +68,18 @@ public class DiscriminatorConfig {
     }
 
     /**
-     * Loads DiscriminatorConfig from the classpath file: {code}/com/okta/sdk/resource/discrimination.yaml{code}.
+     * Loads DiscriminatorConfig from the classpath file: {code}/com/okta/sdk/resource/discrimination.json{code}.
      * If this file cannot be found an empty DiscriminatorConfig is returned.
      *
-     * @return a DiscriminatorConfig based on the discrimination.yaml found on the classpath.
+     * @return a DiscriminatorConfig based on the discrimination.json found on the classpath.
      */
     static DiscriminatorConfig loadConfig() {
-        Yaml yaml = new Yaml();
-        String configFile = "/com/okta/sdk/resource/discrimination.yaml";
-        URL configYaml = DefaultDiscriminatorRegistry.class.getResource(configFile);
-        if (configYaml != null) {
-            try (InputStream is = configYaml.openStream()){
-                return yaml.loadAs(is, DiscriminatorConfig.class);
+        String configFile = "/com/okta/sdk/resource/discrimination.json";
+        URL configJson = DefaultDiscriminatorRegistry.class.getResource(configFile);
 
+        if (configJson != null) {
+            try {
+                return new ObjectMapper().readValue(configJson, DiscriminatorConfig.class);
             } catch (IOException e) {
                 logger.warn("Failed to load config file: {}", configFile, e);
             }
