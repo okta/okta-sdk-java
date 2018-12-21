@@ -15,6 +15,7 @@
  */
 package com.okta.swagger.codegen;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
@@ -303,16 +304,23 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         // cheat a little here because we are assuming we are using maven, replace the LAST index of /target/ (the
         // release process will have two 'target' directories in the path
         String mavenTargetDir = outputFolder().substring(0, outputFolder.lastIndexOf("/target/") + 8);
-        File destFile = new File(
-                new File(mavenTargetDir), "generated-resources/swagger/" + overrideModelPackage.replace('.', '/') +
-                "/discrimination.yaml");
+        File destDir = new File(mavenTargetDir, "generated-resources/swagger/" + overrideModelPackage.replace('.', '/'));
 
-        boolean folderCreated = destFile.getParentFile().mkdirs();
-        if (!folderCreated && !destFile.getParentFile().exists()) {
-            throw new RuntimeException("Directory does not exist and could not be created: " + destFile.getParentFile());
+        boolean folderCreated = destDir.mkdirs();
+        if (!folderCreated && !destDir.exists()) {
+            throw new RuntimeException("Directory does not exist and could not be created: " + destDir);
         }
 
-        try (OutputStream outputStream = new FileOutputStream(destFile)) {
+        File destFileJson = new File(destDir, "/discrimination.json");
+        try (OutputStream outputStream = new FileOutputStream(destFileJson)) {
+             new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(outputStream, rootConfigMap);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write discrimination map to json: "+ destFileJson.getAbsolutePath(), e);
+        }
+
+        // deprecated, use JSON going forward to remove the runtime dependency on a YAML parser
+        File destFileYaml = new File(destDir, "/discrimination.yaml");
+        try (OutputStream outputStream = new FileOutputStream(destFileYaml)) {
 
             // pretty print
             DumperOptions options = new DumperOptions();
@@ -321,9 +329,8 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             Yaml yaml = new Yaml(options);
             Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
             yaml.dump(rootConfigMap, writer);
-
         } catch (IOException e) {
-            throw new RuntimeException("Failed to write discrimination map to yaml: "+ destFile.getAbsolutePath(), e);
+            throw new RuntimeException("Failed to write discrimination map to yaml: "+ destFileYaml.getAbsolutePath(), e);
         }
     }
 }
