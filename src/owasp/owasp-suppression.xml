@@ -49,4 +49,15 @@
         <cve>CVE-2018-8088</cve>
     </suppress>
 
+    <!-- wrong GAV, this CVE affects a golang project named jsonpatch:
+     https://github.com/evanphx/json-patch
+
+     coordinate: cpe:2.3:a:json-patch_project:json-patch:-:*:*:*:*:*:*:go
+    -->
+    <suppress>
+        <notes><![CDATA[ file name: json-patch-1.6.jar ]]></notes>
+        <gav regex="true">^com\.github\.fge:json-patch:.*$</gav>
+        <cve>CVE-2018-14632</cve>
+    </suppress>
+
 </suppressions>
