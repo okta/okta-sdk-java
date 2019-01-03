@@ -59,10 +59,11 @@ import java.util.concurrent.TimeUnit;
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
  * in the following locations and order of precedence (last one wins).</p>
  * <ul>
+ * <li>classpath:com/okta/sdk/config/okta.properties</li>
  * <li>classpath:com/okta/sdk/config/okta.yaml</li>
+ * <li>classpath:okta.properties</li>
  * <li>classpath:okta.yaml</li>
  * <li>~/.okta/okta.yaml</li>
- * <li>~/okta.properties</li>
  * <li>Environment Variables (with dot notation converted to uppercase + underscores)</li>
  * <li>System Properties</li>
  * <li>Programmatically</li>
@@ -74,13 +75,17 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
 
-    private static final  String ENVVARS_TOKEN  = "envvars";
-    private static final  String SYSPROPS_TOKEN = "sysprops";
-    private static final String OKTA_YAML      = "okta.yaml";
-    private static final String USER_HOME      = System.getProperty("user.home") + File.separatorChar;
+    private static final String ENVVARS_TOKEN   = "envvars";
+    private static final String SYSPROPS_TOKEN  = "sysprops";
+    private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
+    private static final String OKTA_YAML       = "okta.yaml";
+    private static final String OKTA_PROPERTIES = "okta.properties";
+    private static final String USER_HOME       = System.getProperty("user.home") + File.separatorChar;
 
     private static final String[] DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS = {
-                                                 ClasspathResource.SCHEME_PREFIX + "com/okta/sdk/config/" + OKTA_YAML,
+                                                 ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_PROPERTIES,
+                                                 ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_YAML,
+                                                 ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
                                                  ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
                                                  USER_HOME + ".okta" + File.separatorChar + OKTA_YAML,
                                                  ENVVARS_TOKEN,
@@ -113,8 +118,7 @@ public class DefaultClientBuilder implements ClientBuilder {
                 Resource resource = resourceFactory.createResource(location);
 
                 PropertiesSource wrappedSource;
-                if (Strings.endsWithIgnoreCase(location, ".yaml") ||
-                        Strings.endsWithIgnoreCase(location, ".yml")) {
+                if (Strings.endsWithIgnoreCase(location, ".yaml")) {
                     wrappedSource = new YAMLPropertiesSource(resource);
                 } else {
                     wrappedSource = new ResourcePropertiesSource(resource);

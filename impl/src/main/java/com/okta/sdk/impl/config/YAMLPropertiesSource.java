@@ -17,8 +17,11 @@
 package com.okta.sdk.impl.config;
 
 import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.impl.io.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -29,6 +32,7 @@ import java.util.Map;
 
 public class YAMLPropertiesSource implements PropertiesSource {
 
+    private static final Logger log = LoggerFactory.getLogger(YAMLPropertiesSource.class);
     private final Resource resource;
 
     public YAMLPropertiesSource(Resource resource) {
@@ -42,9 +46,13 @@ public class YAMLPropertiesSource implements PropertiesSource {
         try (InputStream in = resource.getInputStream()) {
             // check to see if file exists
             if (in != null) { // if we have a yaml file.
-                Yaml yaml = new Yaml();
-                Map config = yaml.loadAs(in, Map.class);
-                return getFlattenedMap(config);
+                if (Classes.isAvailable("org.yaml.snakeyaml.Yaml")) {
+                    Yaml yaml = new Yaml();
+                    Map config = yaml.loadAs(in, Map.class);
+                    return getFlattenedMap(config);
+                } else {
+                    log.warn("YAML not found in classpath, add 'org.yaml.snakeyaml' to support YAML configuration");
+                }
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Unable to read resource [" + resource + "]: " + e.getMessage(), e);
@@ -62,7 +70,7 @@ public class YAMLPropertiesSource implements PropertiesSource {
      * @param source the source map
      * @return a flattened map
      */
-    private final Map<String, String> getFlattenedMap(Map<String, Object> source) {
+    private Map<String, String> getFlattenedMap(Map<String, Object> source) {
         Map<String, String> result = new LinkedHashMap<>();
         buildFlattenedMap(result, source, null);
         return result;
