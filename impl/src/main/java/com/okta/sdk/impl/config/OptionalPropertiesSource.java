@@ -41,6 +41,6 @@ public class OptionalPropertiesSource implements PropertiesSource {
         } catch (Exception e) {
             log.debug("Unable to obtain properties from optional properties source {}", propertiesSource);
         }
-        return new LinkedHashMap<String, String>();
+        return new LinkedHashMap<>();
     }
 }
