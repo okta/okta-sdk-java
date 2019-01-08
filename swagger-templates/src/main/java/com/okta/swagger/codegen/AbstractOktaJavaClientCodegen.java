@@ -53,6 +53,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -563,6 +564,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
        return codegenModel;
     }
 
+    private List<CodegenOperation> sortOperations(Collection<CodegenOperation> operations) {
+
+        return operations.stream()
+                .sorted(Comparator.comparing(o -> ((CodegenOperation) o).path)
+                                  .thenComparing(o -> ((CodegenOperation) o).httpMethod))
+                .collect(Collectors.toList());
+    }
+
     private String getRootDiscriminator(String name) {
         String result = reverseDiscriminatorMap.get(name);
 
@@ -606,6 +615,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             imports.add(listImport);
         });
 
+        operations.put("operation", sortOperations(codegenOperations));
         return resultMap;
     }
 
