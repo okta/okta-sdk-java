@@ -26,8 +26,6 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -319,10 +317,10 @@ public class RetryRequestExecutor implements RequestExecutor {
 
     private static class Timer {
 
-        private ZonedDateTime startTime = ZonedDateTime.now();
+        private long startTime = System.currentTimeMillis();
 
         long split() {
-            return startTime.until(ZonedDateTime.now(), ChronoUnit.MILLIS);
+            return System.currentTimeMillis() - startTime;
         }
     }
 
