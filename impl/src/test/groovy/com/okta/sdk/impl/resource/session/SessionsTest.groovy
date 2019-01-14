@@ -29,6 +29,7 @@ import com.okta.sdk.impl.http.RequestExecutor
 import com.okta.sdk.impl.resource.user.DefaultUser
 import com.okta.sdk.impl.util.BaseUrlResolver
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver
+import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.session.Session
 import com.okta.sdk.resource.session.SessionAuthenticationMethod
 import com.okta.sdk.resource.session.SessionIdentityProvider
@@ -86,7 +87,7 @@ class SessionsTest {
         assertSession(createdSession)
 
         createdSession.delete()
-        verify(client.dataStore).delete("/api/v1/sessions/${MOCK_SESSION_ID}", createdSession)
+        verify(client.dataStore).delete("/api/v1/sessions/${MOCK_SESSION_ID}", (Resource) createdSession)
     }
 
     @Test
@@ -136,22 +137,22 @@ class SessionsTest {
 
     void assertSession(Session session) {
 
-        assertThat session.id, equalTo(MOCK_SESSION_ID)
-        assertThat session.login, equalTo("joe.coder@example.com")
-        assertThat session.userId, equalTo("00ubgaSARVOQDIOXMORI")
-        assertThat session.createdAt, equalTo(parseDate("2015-08-30T18:41:35.818Z"))
-        assertThat session.expiresAt, equalTo(parseDate("2015-08-30T18:41:35.818Z"))
-        assertThat session.status, equalTo(SessionStatus.ACTIVE)
-        assertThat session.lastPasswordVerification, equalTo(parseDate("2015-08-30T18:41:35.818Z"))
-        assertThat session.lastFactorVerification, equalTo(parseDate("2015-08-30T18:41:35.818Z"))
+        assertThat session.getId(), equalTo(MOCK_SESSION_ID)
+        assertThat session.getLogin(), equalTo("joe.coder@example.com")
+        assertThat session.getUserId(), equalTo("00ubgaSARVOQDIOXMORI")
+        assertThat session.getCreatedAt(), equalTo(parseDate("2015-08-30T18:41:35.818Z"))
+        assertThat session.getExpiresAt(), equalTo(parseDate("2015-08-30T18:41:35.818Z"))
+        assertThat session.getStatus(), equalTo(SessionStatus.ACTIVE)
+        assertThat session.getLastPasswordVerification(), equalTo(parseDate("2015-08-30T18:41:35.818Z"))
+        assertThat session.getLastFactorVerification(), equalTo(parseDate("2015-08-30T18:41:35.818Z"))
         assertThat session.getAmr(), equalTo([
                                     SessionAuthenticationMethod.PWD,
                                     SessionAuthenticationMethod.OTP,
                                     SessionAuthenticationMethod.MFA
                                 ])
-        assertThat session.idp, notNullValue()
-        assertThat session.idp.id, equalTo("00oi5cpnylv792IcF0g3")
-        assertThat session.idp.type, equalTo(SessionIdentityProviderType.OKTA)
+        assertThat session.getIdp(), notNullValue()
+        assertThat session.getIdp().getId(), equalTo("00oi5cpnylv792IcF0g3")
+        assertThat session.getIdp().getType(), equalTo(SessionIdentityProviderType.OKTA)
     }
 
     private Date parseDate(String dateString) {

@@ -52,13 +52,13 @@ class GroupsIT implements CrudTestSupport {
 
     @Override
     void update(Client client, def group) {
-        group.profile.description = "IT created Group - Updated"
+        group.getProfile().description = "IT created Group - Updated"
         group.update()
     }
 
     @Override
     void assertUpdate(Client client, def resource) {
-        assertThat resource.profile.description, equalTo("IT created Group - Updated")
+        assertThat resource.getProfile().description, equalTo("IT created Group - Updated")
     }
 
     @Override
@@ -116,8 +116,8 @@ class GroupsIT implements CrudTestSupport {
         validateGroup(group, groupName)
 
         // 2. Update the group name and description
-        group.profile.name = groupNameUpdated
-        group.profile.description = 'Description updated'
+        group.getProfile().name = groupNameUpdated
+        group.getProfile().description = 'Description updated'
         group.update()
 
         validateGroup(group, groupNameUpdated, 'Description updated')
@@ -152,11 +152,11 @@ class GroupsIT implements CrudTestSupport {
         validateGroup(group, groupName)
 
         // 2. Add user to the group and validate user present in group
-        user.addToGroup(group.id)
+        user.addToGroup(group.getId())
         assertUserInGroup(user, group)
 
         // 3. Remove user from group and validate user removed
-        group.removeUser(user.id)
+        group.removeUser(user.getId())
         assertUserNotInGroup(user, group)
     }
 }

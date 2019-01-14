@@ -66,7 +66,7 @@ class GroupRulesIT implements CrudTestSupport {
 
         rule.setActions(client.instantiate(GroupRuleAction))
         rule.getActions().setAssignUserToGroups(client.instantiate(GroupRuleGroupAssignment))
-        rule.getActions().getAssignUserToGroups().setGroupIds(Collections.singletonList(group.id))
+        rule.getActions().getAssignUserToGroups().setGroupIds(Collections.singletonList(group.getId()))
 
         rule = client.createRule(rule)
         registerForCleanup(rule)
@@ -133,17 +133,17 @@ class GroupRulesIT implements CrudTestSupport {
                             .setGroups(client.instantiate(GroupRuleGroupCondition)
                                     .setExclude([])))
                         .setExpression(client.instantiate(GroupRuleExpression)
-                                .setValue("user.lastName==\"${user.profile.lastName}\"".toString())
+                                .setValue("user.lastName==\"${user.getProfile().lastName}\"".toString())
                                 .setType('urn:okta:expression:1.0')))
                 .setActions(client.instantiate(GroupRuleAction)
                         .setAssignUserToGroups(client.instantiate(GroupRuleGroupAssignment)
-                                .setGroupIds(Collections.singletonList(group.id))))
+                                .setGroupIds(Collections.singletonList(group.getId()))))
         rule = client.createRule(rule)
         registerForCleanup(rule)
         rule.activate()
 
-        GroupRule readRule = client.getRule(rule.id)
-        assertThat readRule.status, equalTo(GroupRuleStatus.ACTIVE)
+        GroupRule readRule = client.getRule(rule.getId())
+        assertThat readRule.getStatus(), equalTo(GroupRuleStatus.ACTIVE)
 
         // 3. List group rules
         assertPresent(client.listRules(), rule)
@@ -152,12 +152,12 @@ class GroupRulesIT implements CrudTestSupport {
         rule.deactivate()
 
         rule.name = 'Test group rule updated'
-        rule.conditions.expression.value = 'user.lastName==\"incorrect\"'
+        rule.getConditions().getExpression().value = 'user.lastName==\"incorrect\"'
         rule.update()
         rule.activate()
 
-        readRule = client.getRule(rule.id)
-        assertThat readRule.status, equalTo(GroupRuleStatus.ACTIVE)
+        readRule = client.getRule(rule.getId())
+        assertThat readRule.getStatus(), equalTo(GroupRuleStatus.ACTIVE)
 
         // 5. delete rule
         rule.deactivate()

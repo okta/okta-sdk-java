@@ -85,7 +85,7 @@ class ApplicationsIT extends ITSupport {
         registerForCleanup(resource)
 
         // getting the resource again should result in the same object
-        def readResource = read(client, resource.id)
+        def readResource = read(client, resource.getId())
         assertThat readResource, notNullValue()
 
         // OpenIdConnectApplication contains a password when created, so it will not be the same when retrieved)
@@ -117,7 +117,7 @@ class ApplicationsIT extends ITSupport {
         resource.update()
 
         // make sure the label was updated
-        assertThat read(client, resource.id).label, equalTo(newLabel)
+        assertThat read(client, resource.getId()).label, equalTo(newLabel)
     }
 
     void deleteAndValidate(def resource) {
@@ -125,7 +125,7 @@ class ApplicationsIT extends ITSupport {
         resource.delete()
 
         try {
-            read(client, resource.id)
+            read(client, resource.getId())
             Assert.fail("Expected ResourceException (404)")
         } catch (ResourceException e) {
             assertThat e.status, equalTo(404)
@@ -147,11 +147,11 @@ class ApplicationsIT extends ITSupport {
                                                     .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
         // search the resource collection looking for the new resource
         Optional optional = client.listApplications().stream()
-                                .filter {it.id == resource.id}
+                                .filter {it.getId() == resource.getId()}
                                 .findFirst()
 
         // make sure it exists
-        assertThat "New resource with id ${resource.id} was not found in list resource.", optional.isPresent()
+        assertThat "New resource with id ${resource.getId()} was not found in list resource.", optional.isPresent()
     }
 
     @Test
@@ -381,13 +381,13 @@ class ApplicationsIT extends ITSupport {
 
         registerForCleanup(app)
 
-        assertThat(app.status, equalTo(Application.StatusEnum.ACTIVE))
+        assertThat(app.getStatus(), equalTo(Application.StatusEnum.ACTIVE))
 
         app.deactivate()
-        assertThat(client.getApplication(app.getId()).status, equalTo(Application.StatusEnum.INACTIVE))
+        assertThat(client.getApplication(app.getId()).getStatus(), equalTo(Application.StatusEnum.INACTIVE))
 
         app.activate()
-        assertThat(client.getApplication(app.getId()).status, equalTo(Application.StatusEnum.ACTIVE))
+        assertThat(client.getApplication(app.getId()).getStatus(), equalTo(Application.StatusEnum.ACTIVE))
     }
 
     // disabled to do: https://github.com/okta/openapi/issues/107
@@ -414,7 +414,7 @@ class ApplicationsIT extends ITSupport {
         registerForCleanup(app)
         registerForCleanup(group)
 
-        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.id, null)
+        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId(), null)
         assertThat(groupAssignment, notNullValue())
     }
 
@@ -446,7 +446,7 @@ class ApplicationsIT extends ITSupport {
         ApplicationGroupAssignment aga = client.instantiate(ApplicationGroupAssignment)
                                             .setPriority(2)
 
-        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.id, aga)
+        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId(), aga)
         assertThat(groupAssignment, notNullValue())
         assertThat(groupAssignment.priority, equalTo(2))
         assertThat(app.listGroupAssignments().iterator().size(), equalTo(1))
@@ -483,7 +483,7 @@ class ApplicationsIT extends ITSupport {
 
         AppUser appUser1 = client.instantiate(AppUser)
             .setScope("USER")
-            .setId(user1.id)
+            .setId(user1.getId())
             .setCredentials(client.instantiate(AppUserCredentials)
                 .setUserName(user1.getProfile().getEmail())
                 .setPassword(client.instantiate(AppUserPasswordCredential)
@@ -492,7 +492,7 @@ class ApplicationsIT extends ITSupport {
 
         AppUser appUser2 = client.instantiate(AppUser)
             .setScope("USER")
-            .setId(user2.id)
+            .setId(user2.getId())
             .setCredentials(client.instantiate(AppUserCredentials)
                 .setUserName(user2.getProfile().getEmail())
                 .setPassword(client.instantiate(AppUserPasswordCredential)
@@ -513,7 +513,7 @@ class ApplicationsIT extends ITSupport {
         appUser2.getCredentials().setUserName("updated-"+user2.getProfile().getEmail())
         appUser2.update()
 
-        AppUser readAppUser = app.getApplicationUser(appUser2.id)
+        AppUser readAppUser = app.getApplicationUser(appUser2.getId())
         assertThat readAppUser.getCredentials().getUserName(), equalTo("updated-"+user2.getProfile().getEmail())
     }
 }

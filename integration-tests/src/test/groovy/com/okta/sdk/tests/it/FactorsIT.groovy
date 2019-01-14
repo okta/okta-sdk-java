@@ -54,11 +54,11 @@ class FactorsIT extends ITSupport {
         assertThat user.listFactors(), emptyIterable()
 
         SmsFactor smsFactor = client.instantiate(SmsFactor)
-        smsFactor.profile.phoneNumber = smsTestNumber
+        smsFactor.getProfile().phoneNumber = smsTestNumber
         user.addFactor(smsFactor)
 
         SecurityQuestionFactor securityQuestionFactor = client.instantiate(SecurityQuestionFactor)
-        securityQuestionFactor.profile
+        securityQuestionFactor.getProfile()
                 .setQuestion("disliked_food")
                 .setAnswer("pizza")
         user.addFactor(securityQuestionFactor)
@@ -82,7 +82,7 @@ class FactorsIT extends ITSupport {
         assertThat user.listFactors(), emptyIterable()
 
         SecurityQuestionFactor securityQuestionFactor = client.instantiate(SecurityQuestionFactor)
-        securityQuestionFactor.profile
+        securityQuestionFactor.getProfile()
                 .setQuestion("disliked_food")
                 .setAnswer("pizza")
 
@@ -99,7 +99,7 @@ class FactorsIT extends ITSupport {
         assertThat user.listFactors(), emptyIterable()
 
         CallFactor callFactor = client.instantiate(CallFactor)
-        callFactor.profile.phoneNumber = smsTestNumber
+        callFactor.getProfile().phoneNumber = smsTestNumber
 
         assertThat callFactor.id, nullValue()
         assertThat callFactor, sameInstance(user.addFactor(callFactor))
@@ -114,7 +114,7 @@ class FactorsIT extends ITSupport {
         assertThat user.listFactors(), emptyIterable()
 
         SmsFactor smsFactor = client.instantiate(SmsFactor)
-        smsFactor.profile.phoneNumber = smsTestNumber
+        smsFactor.getProfile().phoneNumber = smsTestNumber
 
         assertThat smsFactor.id, nullValue()
         assertThat smsFactor, sameInstance(user.addFactor(smsFactor))
@@ -154,13 +154,13 @@ class FactorsIT extends ITSupport {
         TotpFactor totpFactor = client.instantiate(TotpFactor)
         user.addFactor(totpFactor)
 
-        assertThat totpFactor.status, is(FactorStatus.PENDING_ACTIVATION)
-        Totp totp = new Totp(totpFactor.embedded.get("activation").get("sharedSecret"))
+        assertThat totpFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
+        Totp totp = new Totp(totpFactor.getEmbedded().get("activation").get("sharedSecret"))
 
         VerifyFactorRequest verifyFactorRequest = client.instantiate(VerifyFactorRequest)
         verifyFactorRequest.passCode = totp.now()
         Factor factorResult = totpFactor.activate(verifyFactorRequest)
-        assertThat factorResult.status, is(FactorStatus.ACTIVE)
+        assertThat factorResult.getStatus(), is(FactorStatus.ACTIVE)
         assertThat factorResult, instanceOf(TotpFactor)
     }
 
@@ -169,7 +169,7 @@ class FactorsIT extends ITSupport {
         User user = randomUser()
 
         SecurityQuestionFactor securityQuestionFactor = client.instantiate(SecurityQuestionFactor)
-        securityQuestionFactor.profile
+        securityQuestionFactor.getProfile()
                 .setQuestion("disliked_food")
                 .setAnswer("pizza")
         user.addFactor(securityQuestionFactor)
@@ -177,7 +177,7 @@ class FactorsIT extends ITSupport {
         VerifyFactorRequest request = client.instantiate(VerifyFactorRequest)
         request.answer = "pizza"
         VerifyFactorResponse response = securityQuestionFactor.verify(request)
-        assertThat response.factorResult, is(FactorResultType.SUCCESS)
+        assertThat response.getFactorResult(), is(FactorResultType.SUCCESS)
     }
 
     @Test
