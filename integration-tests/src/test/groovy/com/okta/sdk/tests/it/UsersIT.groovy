@@ -78,47 +78,47 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(user)
 
         // check the values after create
-        assertThat(user.profile.getString("firstName"), equalTo("Joe"))
-        assertThat(user.profile.getNumber("customNumber"), equalTo(1.5d))
-        assertThat(user.profile.getBoolean("customBoolean"), equalTo(true))
-        assertThat(user.profile.getInteger("customInteger"), equalTo(123))
-        assertThat(user.profile.getStringList("customStringArray"), equalTo(["one", "two", "three"]))
-        assertThat(user.profile.getNumberList("customNumberArray"), equalTo([1.5d, 2.5d, 3.5d]))
-        assertThat(user.profile.getIntegerList("customIntegerArray"), equalTo([1, 2, 3]))
+        assertThat(user.getProfile().getString("firstName"), equalTo("Joe"))
+        assertThat(user.getProfile().getNumber("customNumber"), equalTo(1.5d))
+        assertThat(user.getProfile().getBoolean("customBoolean"), equalTo(true))
+        assertThat(user.getProfile().getInteger("customInteger"), equalTo(123))
+        assertThat(user.getProfile().getStringList("customStringArray"), equalTo(["one", "two", "three"]))
+        assertThat(user.getProfile().getNumberList("customNumberArray"), equalTo([1.5d, 2.5d, 3.5d]))
+        assertThat(user.getProfile().getIntegerList("customIntegerArray"), equalTo([1, 2, 3]))
 
         // Use the 'get' to update the values to make sure there are no conversion issues
-        user.profile.putAll([
-                        customNumber: user.profile.getNumber("customNumber"),
+        user.getProfile().putAll([
+                        customNumber: user.getProfile().getNumber("customNumber"),
                         customBoolean: true,
-                        customStringArray: user.profile.getStringList("customStringArray"),
-                        customNumberArray: user.profile.getNumberList("customNumberArray"),
-                        customIntegerArray: user.profile.getIntegerList("customIntegerArray")])
+                        customStringArray: user.getProfile().getStringList("customStringArray"),
+                        customNumberArray: user.getProfile().getNumberList("customNumberArray"),
+                        customIntegerArray: user.getProfile().getIntegerList("customIntegerArray")])
         user.update()
 
         // same check as before
-        assertThat(user.profile.getNumber("customNumber"), equalTo(1.5d))
-        assertThat(user.profile.getBoolean("customBoolean"), equalTo(true))
-        assertThat(user.profile.getInteger("customInteger"), equalTo(123))
-        assertThat(user.profile.getStringList("customStringArray"), equalTo(["one", "two", "three"]))
-        assertThat(user.profile.getNumberList("customNumberArray"), equalTo([1.5d, 2.5d, 3.5d]))
-        assertThat(user.profile.getIntegerList("customIntegerArray"), equalTo([1, 2, 3]))
+        assertThat(user.getProfile().getNumber("customNumber"), equalTo(1.5d))
+        assertThat(user.getProfile().getBoolean("customBoolean"), equalTo(true))
+        assertThat(user.getProfile().getInteger("customInteger"), equalTo(123))
+        assertThat(user.getProfile().getStringList("customStringArray"), equalTo(["one", "two", "three"]))
+        assertThat(user.getProfile().getNumberList("customNumberArray"), equalTo([1.5d, 2.5d, 3.5d]))
+        assertThat(user.getProfile().getIntegerList("customIntegerArray"), equalTo([1, 2, 3]))
 
         // test again but null out all of the values
-        user.profile.remove("customNumber")
-        user.profile.remove("customBoolean")
-        user.profile.remove("customInteger")
-        user.profile.remove("customStringArray")
-        user.profile.remove("customNumberArray")
-        user.profile.remove("customIntegerArray")
+        user.getProfile().remove("customNumber")
+        user.getProfile().remove("customBoolean")
+        user.getProfile().remove("customInteger")
+        user.getProfile().remove("customStringArray")
+        user.getProfile().remove("customNumberArray")
+        user.getProfile().remove("customIntegerArray")
         user.update()
 
         // everything should be null
-        assertThat(user.profile.getNumber("customNumber"), nullValue())
-        assertThat(user.profile.getBoolean("customBoolean"), nullValue())
-        assertThat(user.profile.getInteger("customInteger"), nullValue())
-        assertThat(user.profile.getStringList("customStringArray"), nullValue())
-        assertThat(user.profile.getNumberList("customNumberArray"), nullValue())
-        assertThat(user.profile.getIntegerList("customIntegerArray"), nullValue())
+        assertThat(user.getProfile().getNumber("customNumber"), nullValue())
+        assertThat(user.getProfile().getBoolean("customBoolean"), nullValue())
+        assertThat(user.getProfile().getInteger("customInteger"), nullValue())
+        assertThat(user.getProfile().getStringList("customStringArray"), nullValue())
+        assertThat(user.getProfile().getNumberList("customNumberArray"), nullValue())
+        assertThat(user.getProfile().getIntegerList("customIntegerArray"), nullValue())
     }
 
 
@@ -144,13 +144,13 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     @Override
     void update(Client client, def user) {
-        user.profile.lastName = "Coder"
+        user.getProfile().lastName = "Coder"
         user.update()
     }
 
     @Override
     void assertUpdate(Client client, Object resource) {
-        assertThat resource.profile.lastName, equalTo("Coder")
+        assertThat resource.getProfile().lastName, equalTo("Coder")
     }
 
     @Override
@@ -215,7 +215,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertPresent(user.listRoles(), role)
 
         // 4. Remove role for the user
-        user.removeRole(role.id)
+        user.removeRole(role.getId())
 
         // 5. List roles for user and verify role was removed
         assertNotPresent(user.listRoles(), role)
@@ -245,11 +245,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         UserCredentials credentials = user.changePassword(client.instantiate(ChangePasswordRequest)
             .setOldPassword(client.instantiate(PasswordCredential).setValue('Abcd1234'.toCharArray()))
             .setNewPassword(client.instantiate(PasswordCredential).setValue('1234Abcd'.toCharArray())))
-        assertThat credentials.provider.type, equalTo(AuthenticationProviderType.OKTA)
+        assertThat credentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
         // TODO: fix har file
-        client.getUser(user.id)
+        client.getUser(user.getId())
     }
 
     @Test
@@ -280,18 +280,18 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setQuestion('How many roads must a man walk down?')
                 .setAnswer('forty two')))
 
-        assertThat userCredentials.provider.type, equalTo(AuthenticationProviderType.OKTA)
-        assertThat userCredentials.recoveryQuestion.question, equalTo('How many roads must a man walk down?')
+        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
+        assertThat userCredentials.getRecoveryQuestion().question, equalTo('How many roads must a man walk down?')
 
         // 3. Update the user password through updated recovery question
-        userCredentials.password.value = '1234Abcd'.toCharArray()
-        userCredentials.recoveryQuestion.answer = 'forty two'
+        userCredentials.getPassword().value = '1234Abcd'.toCharArray()
+        userCredentials.getRecoveryQuestion().answer = 'forty two'
         ForgotPasswordResponse response = user.forgotPassword(null, userCredentials)
         assertThat response.getResetPasswordUrl(), nullValue()
 
         // 4. make the test recording happy, and call a get on the user
         // TODO: fix har file
-        client.getUser(user.id)
+        client.getUser(user.getId())
     }
 
     @Test
@@ -389,11 +389,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(createUser, firstName, lastName, email)
 
         // 2. Get the user by user ID
-        User user = client.getUser(createUser.id)
+        User user = client.getUser(createUser.getId())
         validateUser(user, firstName, lastName, email)
 
         // 3. Get the user by user login
-        User userByLogin = client.getUser(createUser.profile.getLogin())
+        User userByLogin = client.getUser(createUser.getProfile().getLogin())
         validateUser(userByLogin, firstName, lastName, email)
 
         // 3. delete the user
@@ -456,8 +456,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(adminGroup)
         validateGroup(adminGroup, adminGroupName)
 
-        user.addGroupTargetToRole(role.id, adminGroup.id)
-        user.removeGroupTargetFromRole(role.id, adminGroup.id)
+        user.addGroupTargetToRole(role.getId(), adminGroup.getId())
+        user.removeGroupTargetFromRole(role.getId(), adminGroup.getId())
 
         assertGroupTargetPresent(user, group, role)
     }
@@ -487,11 +487,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 2. Update the user profile and verify that profile was updated
         // Need to wait 1 second here as that is the minimum time resolution of the 'lastUpdated' field
         sleep(1000)
-        user.profile.put("nickName", "Batman")
+        user.getProfile().put("nickName", "Batman")
         user.update()
         assertThat(user.lastUpdated, greaterThan(originalLastUpdated))
-        User updatedUser = client.getUser(user.id)
-        assertThat(updatedUser.profile.get("nickName"), equalTo("Batman"))
+        User updatedUser = client.getUser(user.getId())
+        assertThat(updatedUser.getProfile().get("nickName"), equalTo("Batman"))
     }
 
     @Test
@@ -577,14 +577,14 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setLastName(lastName)
                 .setPassword(password.toCharArray())
                 .setActive(false)
-                .addGroup(group.id)
+                .addGroup(group.getId())
                 .buildAndCreate(client)
         registerForCleanup(createUser)
         validateUser(createUser, firstName, lastName, email)
 
         List<Group> groups = createUser.listGroups().stream().collect(Collectors.toList())
         assertThat groups, allOf(hasSize(2))
-        assertThat groups.get(0).profile.name, equalTo("Everyone")
+        assertThat groups.get(0).getProfile().name, equalTo("Everyone")
         assertThat groups.get(1).getId(), equalTo(group.id)
     }
 

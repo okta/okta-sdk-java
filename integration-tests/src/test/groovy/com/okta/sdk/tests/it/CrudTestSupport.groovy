@@ -60,6 +60,8 @@ trait CrudTestSupport implements ClientProvider {
 
         // Create a resource
         def resource = create(client)
+        registerForCleanup(resource)
+
         // search the resource collection looking for the new resource
         Optional optional = getResourceListStream(client)
                                 .filter {it.id == resource.id}
@@ -87,7 +89,7 @@ trait CrudTestSupport implements ClientProvider {
 
     // delete
     void delete(Client client, def resource) {
-        if (resource.metaClass.respondsTo(resource, "deactivate")) {
+        if (resource.getMetaClass().respondsTo(resource, "deactivate")) {
             resource.deactivate()
         }
         resource.delete()
