@@ -13,4 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{>queryParamValidatePartial}}        String href = "{{{vendorExtensions.hrefFiltered}}}";
+{{>queryParamValidatePartial}}        QueryString queryArgs = new QueryString();
+{{#queryParams}}{{#required}}        queryArgs.put("{{baseName}}", {{paramName}});{{/required}}{{/queryParams}}
+
+        String href = QueryString.buildHref("{{{vendorExtensions.hrefFiltered}}}", queryArgs);

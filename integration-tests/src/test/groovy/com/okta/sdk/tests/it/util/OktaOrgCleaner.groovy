@@ -19,6 +19,7 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.rule.GroupRule
+import com.okta.sdk.resource.policy.PolicyType
 import com.okta.sdk.resource.user.UserStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -76,5 +77,12 @@ class OktaOrgCleaner {
                     }
                     rule.delete()
                 }
+
+        log.info("Deleting Policies:")
+        client.listPolicies(PolicyType.OKTA_SIGN_ON.toString()).stream()
+            .filter { it.getName().matches("policy\\+${uuidRegex}.*")}
+            .forEach {
+                it.delete()
+            }
     }
 }
