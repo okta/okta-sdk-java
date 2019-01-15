@@ -21,6 +21,10 @@ package com.okta.sdk.impl.http;
  */
 public class RestException extends RuntimeException {
 
+    private static final long serialVersionUID = 1583323200454875375L;
+
+    private boolean retryable;
+
     public RestException(String s) {
         super(s);
     }
@@ -31,5 +35,14 @@ public class RestException extends RuntimeException {
 
     public RestException(String s, Throwable cause) {
         super(s, cause);
+    }
+
+    public RestException(String s, Throwable cause, boolean retryable) {
+        this(s, cause);
+        this.retryable = retryable;
+    }
+
+    public boolean isRetryable() {
+        return retryable;
     }
 }

@@ -38,11 +38,6 @@
             <artifactId>okta-sdk-impl</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-httpclient</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
@@ -83,13 +78,43 @@
         </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock</artifactId>
-            <version>2.8.0</version>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>2.18.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <profiles>
+        <profile>
+            <id>okhttp</id>
+            <activation>
+                <property>
+                    <name>!httpclient</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.okta.sdk</groupId>
+                    <artifactId>okta-sdk-okhttp</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>httpclient</id>
+            <activation>
+                <property>
+                    <name>httpclient</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.okta.sdk</groupId>
+                    <artifactId>okta-sdk-httpclient</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>mock-server</id>
             <properties>

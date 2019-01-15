@@ -22,11 +22,18 @@
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
         <version>1.4.0-SNAPSHOT</version>
+        <relativePath>../..</relativePath>
     </parent>
 
-    <artifactId>okta-sdk-coverage</artifactId>
-    <name>Okta Java SDK :: Coverage</name>
-    <packaging>pom</packaging>
+    <artifactId>okta-sdk-okhttp</artifactId>
+    <name>Okta Java SDK :: Extensions :: OkHttp Client</name>
+    <description>
+        The Okta Java SDK OK HTTP implementation .jar is used at runtime to make HTTP calls to Okta's
+        REST API using the OkHttp Client library.  This implementation jar should be a runtime dependency only
+        and should NOT be depended on at compile time by your code.  The implementations within this jar can change at
+        any time without warning - use it with runtime scope only.
+    </description>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -38,41 +45,41 @@
             <artifactId>okta-sdk-impl</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-okhttp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-examples-quickstart</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-integration-tests</artifactId>
-            <scope>test</scope>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.11.0</version>
         </dependency>
 
+        <dependency>
+            <!-- Required for any libraries that expect to call the commons logging APIs -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Test deps -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>jacoco-report</id>
-                        <goals>
-                            <goal>report-aggregate</goal>
-                        </goals>
-                        <phase>verify</phase>
-                    </execution>
-                </executions>
-            </plugin>
+             <plugin>
+                <groupId>com.github.siom79.japicmp</groupId>
+                <artifactId>japicmp-maven-plugin</artifactId>
+                <configuration>
+                    <!-- there is no previous version so we must the backwards compatibility scan -->
+                    <skip>true</skip>
+                </configuration>
+             </plugin>
         </plugins>
     </build>
 </project>
