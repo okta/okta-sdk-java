@@ -1,0 +1,44 @@
+{{!
+    Copyright 2018-Present Okta, Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+}}
+
+    /**
+     * Verify MFA Factor
+     * Verifies an OTP for a &#x60;token&#x60; or &#x60;token:hardware&#x60; factor
+     * @param templateId  (required)
+     * @param body  (required)
+     * @return VerifyFactorResponse
+     * @deprecated use {@link Factor#verify(VerifyFactorRequest, String)}
+    */
+    @javax.annotation.Generated(
+            value    = "com.okta.swagger.codegen.OktaJavaClientApiCodegen",
+            comments = "POST - /api/v1/users/{userId}/factors/{factorId}/verify")
+    @Deprecated
+    VerifyFactorResponse verify(String templateId, VerifyFactorRequest body);
+
+    /**
+    * Verify MFA Factor
+    * Verifies an OTP for a &#x60;token&#x60; or &#x60;token:hardware&#x60; factor
+    * @param templateId  (optional)
+    * @param tokenLifetimeSeconds  (optional, default to 300)
+    * @param body  (required)
+    * @return VerifyFactorResponse
+     * @deprecated use {@link Factor#verify(VerifyFactorRequest, String, Integer)}
+    */
+    @javax.annotation.Generated(
+            value    = "com.okta.swagger.codegen.OktaJavaClientApiCodegen",
+            comments = "POST - /api/v1/users/{userId}/factors/{factorId}/verify")
+    @Deprecated
+    VerifyFactorResponse verify(String templateId, Integer tokenLifetimeSeconds, VerifyFactorRequest body);

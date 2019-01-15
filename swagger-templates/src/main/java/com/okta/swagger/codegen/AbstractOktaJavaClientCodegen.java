@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.samskivert.mustache.Mustache;
 import io.swagger.codegen.CodegenModel;
 import io.swagger.codegen.CodegenOperation;
 import io.swagger.codegen.CodegenParameter;
@@ -49,6 +50,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -383,8 +386,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 cgOperation.vendorExtensions.put("pathParents", pathParents);
                             }
 
-                            cgParamAllList.addAll(cgOperation.queryParams);
                             cgParamAllList.addAll(cgOperation.bodyParams);
+                            cgParamAllList.addAll(cgOperation.queryParams);
 
                             // set all params to have more
                             cgParamAllList.forEach(param -> param.hasMore = true);
@@ -659,6 +662,19 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 model.imports.add("JsonCreator");
             }
         }
+
+        model.vendorExtensions.put("optionalClassnamePartial", (Mustache.Lambda) (frag, out) -> {
+            String templateResource = "/" + templateDir + "/" + model.classname + ".mustache";
+            URL optionalClassnameTemplate = getClass().getResource(templateResource);
+
+            Mustache.Compiler compiler = Mustache.compiler().withLoader((name) -> {
+                if (optionalClassnameTemplate != null) {
+                    return new InputStreamReader(getClass().getResourceAsStream(templateResource), StandardCharsets.UTF_8);
+                }
+                return new StringReader("");
+            });
+            processCompiler(compiler).compile("{{> " + model.classname + "}}").execute(frag.context(), out);
+        });
     }
 
     @Override
