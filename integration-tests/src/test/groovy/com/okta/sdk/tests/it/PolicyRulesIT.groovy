@@ -217,7 +217,7 @@ class PolicyRulesIT implements CrudTestSupport {
     }
 
     @Test
-    def createOktaSignOnCloudPolicyRule() {
+    void createOktaSignOnCloudPolicyRule() {
 
         def policy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
             .setName("policy+" + UUID.randomUUID().toString())
@@ -240,7 +240,7 @@ class PolicyRulesIT implements CrudTestSupport {
                 .setNetwork(client.instantiate(PolicyNetworkCondition)
                     .setConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE))
                 .setAuthContext(client.instantiate(PolicyRuleAuthContextCondition)
-                    .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.RADIUS))
+                    .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY))
                 .setPeople(client.instantiate(PolicyPeopleCondition)
                     .setUsers(client.instantiate(UserCondition)
                         .setInclude(Collections.emptyList())
@@ -251,7 +251,7 @@ class PolicyRulesIT implements CrudTestSupport {
             .setName(policyRuleName))
         registerForCleanup(policyRule)
 
-        assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextCondition.AuthTypeEnum.RADIUS)
+        assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
         assertThat policyRule.getConditions().getNetwork().getConnection(), is(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
         assertThat policyRule.getConditions().getPeople().getUsers().getInclude(), is(Collections.emptyList())
         assertThat policyRule.getConditions().getPeople().getUsers().getExclude(), is(Collections.emptyList())
@@ -260,7 +260,6 @@ class PolicyRulesIT implements CrudTestSupport {
         assertThat policyRule.getActions().getSignon().getAccess(), is(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
         assertThat policyRule.getActions().getSignon().getRequireFactor(), is(true)
         assertThat policyRule.getActions().getSignon().getRememberDeviceByDefault(), is(false)
-        assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
         assertThat policyRule.getConditions().getNetwork().getConnection(), is(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
         assertThat policyRule.getActions().getSignon().getSession().getUsePersistentCookie(), is(false)
         assertThat policyRule.getActions().getSignon().getSession().getMaxSessionLifetimeMinutes(), is(0)
