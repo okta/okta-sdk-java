@@ -4722,7 +4722,6 @@ definitions:
         $ref: '#/definitions/RoleStatus'
         readOnly: true
       type:
-        readOnly: true
         type: string
     type: object
     x-okta-tags:
