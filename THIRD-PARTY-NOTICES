@@ -28,6 +28,7 @@ This project includes:
   Jackson-dataformat-YAML under The Apache Software License, Version 2.0
   JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
   JavaMail API jar under CDDL or GPLv2+CE
+  javax.annotation API under CDDL + GPLv2 with classpath exception
   JCL 1.2 implemented over SLF4J under MIT License
   jmustache under The (New) BSD License
   Joda-Time under Apache 2

@@ -88,6 +88,14 @@
         </Class>
     </Match>
 
+    <!-- only detected when running with Java 11, but this null check IS valid -->
+    <Match>
+        <Class name="com.okta.sdk.impl.config.YAMLPropertiesSource">
+            <Method name="getProperties" />
+            <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+        </Class>
+    </Match>
+
     <Match>
         <Class name="quickstart.ReadmeSnippets" />]
     </Match>
