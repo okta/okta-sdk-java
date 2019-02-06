@@ -1,18 +1,27 @@
 language: java
+
 jdk:
 - oraclejdk8
+- openjdk11
+
 addons:
   apt:
     packages:
     - libxml2-utils
+
 before_install:
 - source ./src/ci/before_install.sh
+
+# skip the Travis-CI install phase because Maven handles that directly
 install:
 - 'true'
+
 script:
 - "./src/ci/build.sh"
+
 after_success:
 - bash <(curl -s https://codecov.io/bash) -f coverage/target/site/jacoco-aggregate/jacoco.xml
+
 deploy:
 - provider: pages
   skip_cleanup: true
@@ -23,6 +32,7 @@ deploy:
   on:
     branch: master
     condition: "$TRAVIS_EVENT_TYPE != cron"
+
 notifications:
   slack:
     secure: ivOHHaQvSgTOVi1g/8pvvOigj/gkWdSy23fVTOSejahNO8w6PpVHrVE1mJk29RWFEZlY/xBNqx6Zm0H8XAAVOc12C1tgN2J0RQm4kHXc6t8zMOS5NkuV4V0azP6BdCkcAvBgaks+fx6BYOAzcbHZ7MyV+DrLLmXBQiWFRXL420k=

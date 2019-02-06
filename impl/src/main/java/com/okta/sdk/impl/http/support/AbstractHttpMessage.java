@@ -18,6 +18,7 @@ package com.okta.sdk.impl.http.support;
 
 import com.okta.sdk.impl.http.HttpMessage;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -28,6 +29,19 @@ public abstract class AbstractHttpMessage implements HttpMessage {
     @Override
     public boolean hasBody() {
         InputStream is = getBody();
-        return is != null && getHeaders().getContentLength() != 0;
+        return is != null
+            && getHeaders().getContentLength() != 0
+            && available(is);
+    }
+
+    private static boolean available(InputStream inputStream) {
+        try {
+            // NOTE: this will NOT work for all input stream types, currently this
+            // project only uses ByteArrayInputStreams which supports 'available' calls
+            return inputStream.available() > 0;
+        } catch (IOException e) {
+            // ignore exception nothing to read
+            return false;
+        }
     }
 }
