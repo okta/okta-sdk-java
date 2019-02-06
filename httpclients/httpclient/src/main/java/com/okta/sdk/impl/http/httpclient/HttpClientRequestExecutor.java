@@ -264,17 +264,20 @@ public class HttpClientRequestExecutor extends RetryRequestExecutor {
         HttpEntity entity = getHttpEntity(httpResponse);
 
         InputStream body = entity != null ? entity.getContent() : null;
-        long contentLength = entity != null ? entity.getContentLength() : -1;
+        long contentLength;
 
         //ensure that the content has been fully acquired before closing the http stream
         if (body != null) {
             byte[] bytes = toBytes(entity);
+            contentLength = entity.getContentLength();
 
             if(bytes != null) {
                 body = new ByteArrayInputStream(bytes);
             }  else {
                 body = null;
             }
+        } else {
+            contentLength = 0; // force 0 content length when there is no body
         }
 
         Response response = new DefaultResponse(httpStatus, mediaType, body, contentLength);
