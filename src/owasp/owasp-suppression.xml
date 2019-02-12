@@ -68,4 +68,11 @@
         <cve>CVE-2018-14632</cve>
     </suppress>
 
+    <!-- wrong GAV detection, processing != json-schema-core -->
+    <suppress>
+        <notes><![CDATA[ file name: json-schema-core-1.2.8.jar ]]></notes>
+        <gav regex="true">^com\.github\.java-json-tools:json-schema-core:.*$</gav>
+        <cpe>cpe:/a:processing:processing</cpe>
+    </suppress>
+
 </suppressions>
