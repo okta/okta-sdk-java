@@ -75,4 +75,11 @@
         <cpe>cpe:/a:processing:processing</cpe>
     </suppress>
 
+    <!-- wrong GAV detection, processing != commons-cli -->
+    <suppress>
+        <notes><![CDATA[ file name: commons-cli-1.2.jar ]]></notes>
+        <gav regex="true">^commons-cli:commons-cli:.*$</gav>
+        <cpe>cpe:/a:processing:processing</cpe>
+    </suppress>
+
 </suppressions>
