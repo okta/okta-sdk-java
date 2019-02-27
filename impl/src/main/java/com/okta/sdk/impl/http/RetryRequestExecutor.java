@@ -262,17 +262,6 @@ public class RetryRequestExecutor implements RequestExecutor {
             .orElse(-1L);
     }
 
-    private String getOnlySingleHeaderValue(Response response, String name) {
-
-        if (response.getHeaders() != null) {
-            List<String> values = response.getHeaders().get(name);
-            if (!Collections.isEmpty(values) && values.size() == 1) {
-                return values.get(0);
-            }
-        }
-        return null;
-    }
-
     private String getRequestId(Response response) {
         if (response != null) {
             return response.getHeaders().getFirst("X-Okta-Request-Id");
