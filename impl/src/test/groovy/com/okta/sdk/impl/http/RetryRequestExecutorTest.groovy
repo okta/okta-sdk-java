@@ -160,22 +160,56 @@ class RetryRequestExecutorTest {
         assertThat totalTime, lessThan(1000L)
     }
 
-        @Test
-    void test429RetryHeadersWithDuplicateXRateLimitRest() {
+    @Test
+    void test429RetryHeadersWithDuplicateXRateLimitReset() {
 
         long currentTime = System.currentTimeMillis()
-        long resetTime1 = ((currentTime / 1000L) + 10L) as Long // current time plus 10 seconds
-        long resetTime2 = ((currentTime / 1000L) + 20L) as Long // current time plus 20 seconds
+        long resetTime1 = ((currentTime / 1000L) + 20L) as Long // current time plus 20 seconds
+        long resetTime2 = ((currentTime / 1000L) + 10L) as Long // current time plus 10 seconds
 
         HttpHeaders headers = new HttpHeaders()
         headers.add("X-Rate-Limit-Reset", resetTime1.toString())
         headers.add("X-Rate-Limit-Reset", resetTime2.toString())
+        headers.setDate(currentTime)
 
         def httpResponse = stubResponse("content", 429, headers)
 
         def requestExecutor = createRequestExecutor()
-        assertThat requestExecutor.get429DelayMillis(httpResponse), is(-1L)
+        assertThat requestExecutor.get429DelayMillis(httpResponse), is(11000L) // 10 seconds + 1 second
+    }
 
+    @Test
+    void test429RetryHeadersZero() {
+
+        long currentTime = System.currentTimeMillis()
+        long resetTime1 = 0
+        long resetTime2 = ((currentTime / 1000L) + 10L) as Long // current time plus 10 seconds
+
+        HttpHeaders headers = new HttpHeaders()
+        headers.add("X-Rate-Limit-Reset", resetTime1.toString())
+        headers.add("X-Rate-Limit-Reset", resetTime2.toString())
+        headers.setDate(currentTime)
+
+        def httpResponse = stubResponse("content", 429, headers)
+
+        def requestExecutor = createRequestExecutor()
+        assertThat requestExecutor.get429DelayMillis(httpResponse), is(11000L) // 10 seconds + 1 second
+    }
+
+    @Test
+    void test429RetryHeadersBeforeDate() {
+
+        long currentTime = System.currentTimeMillis()
+        long resetTime1 = ((currentTime / 1000L) - 10L) as Long // current time minus 10 seconds
+
+        HttpHeaders headers = new HttpHeaders()
+        headers.add("X-Rate-Limit-Reset", resetTime1.toString())
+        headers.setDate(currentTime)
+
+        def httpResponse = stubResponse("content", 429, headers)
+
+        def requestExecutor = createRequestExecutor()
+        assertThat requestExecutor.get429DelayMillis(httpResponse), is(1000L) // 1 second minimum
     }
 
     @Test
