@@ -16,7 +16,6 @@
 package com.okta.sdk.impl.http;
 
 import com.okta.commons.lang.Assert;
-import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.http.support.BackoffStrategy;
@@ -26,9 +25,9 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 
 public class RetryRequestExecutor implements RequestExecutor {
 
@@ -253,7 +252,7 @@ public class RetryRequestExecutor implements RequestExecutor {
     }
 
     private long getRateLimitResetValue(Response response) {
-        return response.getHeaders().getOrDefault("X-Rate-Limit-Reset", java.util.Collections.emptyList()).stream()
+        return response.getHeaders().getOrDefault("X-Rate-Limit-Reset", Collections.emptyList()).stream()
             .filter(value -> !Strings.isEmpty(value))
             .filter(value -> value.chars().allMatch(Character::isDigit))
             .map(Long::parseLong)
