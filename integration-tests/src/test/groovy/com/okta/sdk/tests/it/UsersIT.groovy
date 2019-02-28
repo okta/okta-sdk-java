@@ -36,6 +36,7 @@ import com.okta.sdk.resource.user.UserList
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
+import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
 import java.util.stream.Collectors
@@ -54,6 +55,11 @@ import static org.hamcrest.Matchers.*
  * @since 0.5.0
  */
 class UsersIT extends ITSupport implements CrudTestSupport {
+
+    @BeforeClass
+    void initCustomProperties() {
+        ensureCustomProperties()
+    }
 
     @Test
     void userProfileNumberValues() {
@@ -606,5 +612,37 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                                     .post("/api/v1/users/"+ userId, User.class)
 
         assertThat(result, instanceOf(User))
+    }
+
+    private void ensureCustomProperties() {
+        def userSchemaUri = "/api/v1/meta/schemas/user/default"
+
+        ExtensibleResource userSchema = getClient().http().get(userSchemaUri, ExtensibleResource)
+        Map customProperties = userSchema.get("definitions").get("custom").get("properties")
+
+        boolean needsUpdate =
+            ensureCustomProperty("customNumber", [type: "number"], customProperties) &&
+            ensureCustomProperty("customBoolean", [type: "boolean"], customProperties) &&
+            ensureCustomProperty("customInteger", [type: "integer"], customProperties) &&
+            ensureCustomProperty("customStringArray", [type: "array", items: [type: "string"]], customProperties) &&
+            ensureCustomProperty("customNumberArray", [type: "array", items: [type: "number"]], customProperties) &&
+            ensureCustomProperty("customIntegerArray", [type: "array", items: [type: "integer"]], customProperties)
+
+        if (needsUpdate)  {
+            getClient().http()
+                .setBody(userSchema)
+                .post(userSchemaUri, ExtensibleResource)
+        }
+    }
+
+     private static boolean ensureCustomProperty(String name, Map body, Map<String, Object> customProperties) {
+        boolean addProperty = !customProperties.containsKey(name)
+        if (addProperty) {
+            body.putAll([
+                title: name
+            ])
+            customProperties.put(name, body)
+        }
+        return addProperty
     }
 }
