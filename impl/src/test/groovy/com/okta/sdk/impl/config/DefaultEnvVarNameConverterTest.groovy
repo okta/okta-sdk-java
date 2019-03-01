@@ -16,64 +16,66 @@
  */
 package com.okta.sdk.impl.config
 
+import com.okta.sdk.client.ClientBuilder
 import org.testng.annotations.Test
 
-import static org.testng.Assert.assertEquals
+import java.lang.reflect.Modifier
+
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.is
 
 class DefaultEnvVarNameConverterTest {
 
     @Test
     void testToEnvVarName() {
-        def factory = new DefaultEnvVarNameConverter()
-
-        def name = 'okta.client.apiKey.id'
-
-        def envVarName = factory.toEnvVarName(name);
-
-        assertEquals envVarName, 'OKTA_CLIENT_APIKEY_ID'
+        def converter = new DefaultEnvVarNameConverter()
+        def envVarName = converter.toEnvVarName('okta.client.apiKey.id')
+        assertThat envVarName, is('OKTA_CLIENT_APIKEY_ID')
     }
 
     @Test
     void testPropNameForApiKeyIdEnvVar() {
-        def factory = new DefaultEnvVarNameConverter()
-
-        def name = 'OKTA_API_KEY_ID'
-
-        def propName = factory.toDottedPropertyName(name);
-
-        assertEquals propName, 'okta.api.key.id'
+        def converter = new DefaultEnvVarNameConverter()
+        def propName = converter.toDottedPropertyName('OKTA_API_KEY_ID')
+        assertThat propName, is('okta.api.key.id')
     }
 
     @Test
     void testPropNameForApiKeySecretEnvVar() {
-        def factory = new DefaultEnvVarNameConverter()
-
-        def name = 'OKTA_CLIENT_TOKEN'
-
-        def propName = factory.toDottedPropertyName(name);
-
-        assertEquals propName, 'okta.client.token'
+        def converter = new DefaultEnvVarNameConverter()
+        def propName = converter.toDottedPropertyName('OKTA_CLIENT_TOKEN')
+        assertThat propName, is('okta.client.token')
     }
 
     @Test
     void testPropNameForApiKeyFileEnvVar() {
-        def factory = new DefaultEnvVarNameConverter()
-
-        def name = 'OKTA_CONFIG_FILE'
-
-        def propName = factory.toDottedPropertyName(name);
-
-        assertEquals propName, 'okta.config.file'
+        def converter = new DefaultEnvVarNameConverter()
+        def propName = converter.toDottedPropertyName('OKTA_CONFIG_FILE')
+        assertThat propName, is('okta.config.file')
     }
 
     @Test
     void testPropNameForNormalEnvVar() {
-        def factory = new DefaultEnvVarNameConverter()
+        def converter = new DefaultEnvVarNameConverter()
+        def propName = converter.toDottedPropertyName('OKTA_CLIENT_AUTHENTICATIONSCHEME')
+        assertThat propName, is('okta.client.authenticationScheme')
+    }
 
-        def name = 'OKTA_CLIENT_AUTHENTICATIONSCHEME'
-
-        def propName = factory.toDottedPropertyName(name);
-
-        assertEquals propName, 'okta.client.authenticationScheme'
+    @Test
+    void testAllClientBuilderStaticVars() {
+        def converter = new DefaultEnvVarNameConverter()
+        // loop over all the config property static fields ClientBuilder, and make sure they convert correctly
+        Arrays.stream(ClientBuilder.class.getDeclaredFields())
+            .filter { Modifier.isStatic(it.getModifiers()) }
+            .filter { String.class == it.getType() }
+            .filter { it.name.startsWith("DEFAULT_CLIENT_") }
+            .map {(String) it.get(null)}
+            .forEach {
+             println it
+                // we want to round trip these properties
+                def env = converter.toEnvVarName(it)
+                def backToDotted = converter.toDottedPropertyName(env)
+                assertThat backToDotted, is(it)
+            }
     }
 }

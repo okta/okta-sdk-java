@@ -18,8 +18,34 @@ package com.okta.sdk.impl.config;
 
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Strings;
+import com.okta.sdk.client.ClientBuilder;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
+
+    private final Map<String, String> envToDotPropMap;
+
+    public DefaultEnvVarNameConverter() {
+
+        // this dependency on ClientBuilder isn't great, in the future we can change the API to ONLY support a one way conversion
+        this.envToDotPropMap = buildReverseLookupToMap(
+            ClientBuilder.DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME,
+            ClientBuilder.DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME,
+            ClientBuilder.DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME,
+            ClientBuilder.DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME,
+            ClientBuilder.DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME,
+            ClientBuilder.DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME,
+            ClientBuilder.DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME,
+            ClientBuilder.DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME);
+    }
+
+    private Map<String, String> buildReverseLookupToMap(String... dottedPropertyNames) {
+        return Arrays.stream(dottedPropertyNames)
+            .collect(Collectors.toMap(this::toEnvVarName, dottedPropertyName -> dottedPropertyName));
+    }
 
     @Override
     public String toEnvVarName(String dottedPropertyName) {
@@ -45,14 +71,8 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
         envVarName = Strings.trimWhitespace(envVarName);
 
         //special cases (camel case):
-        if ("OKTA_CLIENT_TOKEN".equals(envVarName)) {
-            return "okta.client.token";
-        }
-        if ("OKTA_CLIENT_AUTHENTICATIONSCHEME".equals(envVarName)) {
-            return "okta.client.authenticationScheme";
-        }
-        if ("OKTA_CLIENT_ORGURL".equals(envVarName)) {
-            return "okta.client.orgUrl";
+        if (envToDotPropMap.containsKey(envVarName)) {
+            return envToDotPropMap.get(envVarName);
         }
 
         //default cases:
