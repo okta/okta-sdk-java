@@ -59,5 +59,7 @@ public interface UserBuilder {
 
     UserBuilder addGroup(String groupId);
 
+    UserBuilder setNextLogin(UserNextLogin nextLogin);
+
     User buildAndCreate(Client client);
 }
