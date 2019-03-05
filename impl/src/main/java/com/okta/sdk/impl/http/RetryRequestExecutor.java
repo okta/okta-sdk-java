@@ -16,7 +16,6 @@
 package com.okta.sdk.impl.http;
 
 import com.okta.commons.lang.Assert;
-import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.http.support.BackoffStrategy;
@@ -26,8 +25,9 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 
 public class RetryRequestExecutor implements RequestExecutor {
 
@@ -192,8 +192,8 @@ public class RetryRequestExecutor implements RequestExecutor {
     private long get429DelayMillis(Response response) {
 
         // the time at which the rate limit will reset, specified in UTC epoch time.
-        String resetLimit = getOnlySingleHeaderValue(response,"X-Rate-Limit-Reset");
-        if (resetLimit == null || !resetLimit.chars().allMatch(Character::isDigit)) {
+        long resetLimit = getRateLimitResetValue(response);
+        if (resetLimit == -1L) {
             return -1;
         }
 
@@ -203,10 +203,10 @@ public class RetryRequestExecutor implements RequestExecutor {
             return -1;
         }
 
-        long waitUntil = Long.parseLong(resetLimit) * 1000L;
+        long waitUntil = resetLimit * 1000L;
         long requestTime = requestDate.getTime();
-        long delay = waitUntil - requestTime + 1000;
-        log.debug("429 wait: {} - {} + {} = {}", waitUntil, requestTime, 1000, delay);
+        long delay = Math.max(waitUntil - requestTime + 1000, 1000);
+        log.debug("429 wait: Math.max({} - {} + 1s), 1s = {})", waitUntil, requestTime, delay);
 
         return delay;
     }
@@ -251,15 +251,14 @@ public class RetryRequestExecutor implements RequestExecutor {
         return new RestException("Cannot retry request, next request will exceed retry configuration.");
     }
 
-    private String getOnlySingleHeaderValue(Response response, String name) {
-
-        if (response.getHeaders() != null) {
-            List<String> values = response.getHeaders().get(name);
-            if (!Collections.isEmpty(values) && values.size() == 1) {
-                return values.get(0);
-            }
-        }
-        return null;
+    private long getRateLimitResetValue(Response response) {
+        return response.getHeaders().getOrDefault("X-Rate-Limit-Reset", Collections.emptyList()).stream()
+            .filter(value -> !Strings.isEmpty(value))
+            .filter(value -> value.chars().allMatch(Character::isDigit))
+            .map(Long::parseLong)
+            .filter(value -> value > 0)
+            .min(Comparator.naturalOrder())
+            .orElse(-1L);
     }
 
     private String getRequestId(Response response) {
