@@ -24,6 +24,7 @@ import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.user.PasswordCredential;
 import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserCredentials;
+import com.okta.sdk.resource.user.UserNextLogin;
 import com.okta.sdk.resource.user.UserProfile;
 
 import java.util.Arrays;
@@ -46,6 +47,7 @@ public class DefaultUserBuilder implements UserBuilder {
     private String mobilePhone;
     private Boolean active;
     private Boolean provider;
+    private UserNextLogin nextLogin;
     private Set<String> groupIds = new HashSet<>();
 
     private Map<String, Object> customProfileAttributes = new LinkedHashMap<>();
@@ -132,6 +134,12 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
+    @Override
+    public UserBuilder setNextLogin(UserNextLogin nextLogin) {
+        this.nextLogin = nextLogin;
+        return this;
+    }
+
     private User build(Client client) {
 
         User user = client.instantiate(User.class);
@@ -182,6 +190,6 @@ public class DefaultUserBuilder implements UserBuilder {
 
     @Override
     public User buildAndCreate(Client client) {
-        return client.createUser(build(client), active, provider);
+        return client.createUser(build(client), active, provider, nextLogin);
     }
 }
