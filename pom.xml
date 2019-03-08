@@ -236,6 +236,10 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <trimStackTrace>false</trimStackTrace>
+                        <reuseForks>true</reuseForks>
+                        <forkCount>1</forkCount>
+                        <parallel>classesAndMethods</parallel>
+                        <threadCount>5</threadCount>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -243,6 +247,10 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <configuration>
                         <trimStackTrace>false</trimStackTrace>
+                        <reuseForks>true</reuseForks>
+                        <forkCount>2C</forkCount>
+                        <parallel>classes</parallel>
+                        <threadCount>5</threadCount>
                     </configuration>
                 </plugin>
                 <plugin>
