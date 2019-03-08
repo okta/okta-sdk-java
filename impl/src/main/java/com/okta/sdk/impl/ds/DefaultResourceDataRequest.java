@@ -28,12 +28,16 @@ public class DefaultResourceDataRequest extends DefaultResourceMessage implement
     private final Class<? extends Resource> parentResourceClass;
 
     public DefaultResourceDataRequest(ResourceAction action, CanonicalUri uri, Class<? extends Resource> resourceClass, Map<String,Object> data) {
-        this(action, uri, null, resourceClass, null, data, null);
+        this(action, uri, resourceClass, data, null);
     }
 
-    public DefaultResourceDataRequest(ResourceAction action, CanonicalUri uri, CanonicalUri parrentUri, Class<? extends Resource> resourceClass, Class<? extends Resource> parentResourceClass, Map<String,Object> data, HttpHeaders customHeaders) {
+    public DefaultResourceDataRequest(ResourceAction action, CanonicalUri uri, Class<? extends Resource> resourceClass, Map<String,Object> data, HttpHeaders customHeaders) {
+        this(action, uri, null, resourceClass, null, data, customHeaders);
+    }
+
+    public DefaultResourceDataRequest(ResourceAction action, CanonicalUri uri, CanonicalUri parentUri, Class<? extends Resource> resourceClass, Class<? extends Resource> parentResourceClass, Map<String,Object> data, HttpHeaders customHeaders) {
         super(action, uri, resourceClass, data, customHeaders);
-        this.parentUri = parrentUri;
+        this.parentUri = parentUri;
         this.parentResourceClass = parentResourceClass;
     }
 

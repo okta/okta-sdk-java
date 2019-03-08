@@ -19,11 +19,12 @@ package com.okta.sdk.impl.ds
 import com.okta.sdk.authc.credentials.ClientCredentials
 import com.okta.sdk.impl.api.ClientCredentialsResolver
 import com.okta.sdk.impl.http.HttpHeaders
+import com.okta.sdk.impl.http.Request
 import com.okta.sdk.impl.http.RequestExecutor
 import com.okta.sdk.impl.http.Response
 import com.okta.sdk.impl.resource.TestResource
 import com.okta.sdk.impl.util.StringInputStream
-import com.okta.sdk.resource.Resource
+import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.testng.annotations.Test
 
@@ -68,8 +69,82 @@ class DefaultDataStoreTest {
 
         def testResource = defaultDataStore.getResource(resourceHref, TestResource)
         assertThat testResource.getResourceHref(), is(resourceHref)
-
-
     }
 
+    @Test
+    void testSettingRequestParamsForGetResource() {
+
+        def resourceHref = "https://api.okta.com/v1/testResource"
+        def requestExecutor = mock(RequestExecutor)
+        def apiKeyResolver = mock(ClientCredentialsResolver)
+        def response = mock(Response)
+        def responseBody = '{"name": "jcoder"}'
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
+        def requestCapture = ArgumentCaptor.forClass(Request)
+
+        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
+        when(response.hasBody()).thenReturn(true)
+        when(response.getBody()).thenReturn(new StringInputStream(responseBody))
+        when(response.getHeaders()).thenReturn(new HttpHeaders())
+
+        defaultDataStore.getResource(resourceHref, TestResource, [query1: "query-value1", query2: "query-value2"],
+                                                                 [header1: ["header-value1"], header2: ["header2-valueA", "header2-valueB"]])
+
+        def request = requestCapture.getValue()
+        assertThat request.headers, allOf(hasEntry("header1", ["header-value1"]),
+                                          hasEntry("header2", ["header2-valueA", "header2-valueB"]))
+        assertThat request.queryString, allOf(hasEntry("query1", "query-value1"),
+                                              hasEntry("query2", "query-value2"))
+    }
+
+    @Test
+    void testSettingRequestParamsForDeleteResource() {
+
+        def resourceHref = "https://api.okta.com/v1/testResource"
+        def requestExecutor = mock(RequestExecutor)
+        def apiKeyResolver = mock(ClientCredentialsResolver)
+        def response = mock(Response)
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
+        def requestCapture = ArgumentCaptor.forClass(Request)
+
+        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
+        when(response.hasBody()).thenReturn(false)
+        when(response.getHeaders()).thenReturn(new HttpHeaders())
+
+        defaultDataStore.delete(resourceHref, [query1: "query-value1", query2: "query-value2"],
+                                              [header1: ["header-value1"], header2: ["header2-valueA", "header2-valueB"]])
+
+        def request = requestCapture.getValue()
+        assertThat request.headers, allOf(hasEntry("header1", ["header-value1"]),
+                                          hasEntry("header2", ["header2-valueA", "header2-valueB"]))
+        assertThat request.queryString, allOf(hasEntry("query1", "query-value1"),
+                                              hasEntry("query2", "query-value2"))
+    }
+
+    @Test
+    void testSettingRequestParamsForPostResource() {
+
+        def resourceHref = "https://api.okta.com/v1/testResource"
+        def requestExecutor = mock(RequestExecutor)
+        def apiKeyResolver = mock(ClientCredentialsResolver)
+        def response = mock(Response)
+        def responseBody = '{"name": "jcoder"}'
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
+        def requestCapture = ArgumentCaptor.forClass(Request)
+        def resource = new TestResource(null, null)
+
+        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
+        when(response.hasBody()).thenReturn(true)
+        when(response.getBody()).thenReturn(new StringInputStream(responseBody))
+        when(response.getHeaders()).thenReturn(new HttpHeaders())
+
+        defaultDataStore.save(resourceHref, resource, null, [query1: "query-value1", query2: "query-value2"],
+                                                                          [header1: ["header-value1"], header2: ["header2-valueA", "header2-valueB"]])
+
+        def request = requestCapture.getValue()
+        assertThat request.headers, allOf(hasEntry("header1", ["header-value1"]),
+                                          hasEntry("header2", ["header2-valueA", "header2-valueB"]))
+        assertThat request.queryString, allOf(hasEntry("query1", "query-value1"),
+                                              hasEntry("query2", "query-value2"))
+    }
 }

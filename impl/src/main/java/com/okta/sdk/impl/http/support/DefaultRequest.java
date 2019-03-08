@@ -41,7 +41,11 @@ public class DefaultRequest extends AbstractHttpMessage implements Request {
     }
 
     public DefaultRequest(HttpMethod method, String href, QueryString query) {
-        this(method, href, query, null, null, -1L);
+        this(method, href, query, null);
+    }
+
+    public DefaultRequest(HttpMethod method, String href, QueryString query, HttpHeaders headers) {
+        this(method, href, query, headers, null, -1L);
     }
 
     public DefaultRequest(HttpMethod method, String href, QueryString query, HttpHeaders headers, InputStream body, long contentLength) {
