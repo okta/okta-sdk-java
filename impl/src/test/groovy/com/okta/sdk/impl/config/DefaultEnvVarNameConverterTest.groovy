@@ -71,7 +71,6 @@ class DefaultEnvVarNameConverterTest {
             .filter { it.name.startsWith("DEFAULT_CLIENT_") }
             .map {(String) it.get(null)}
             .forEach {
-             println it
                 // we want to round trip these properties
                 def env = converter.toEnvVarName(it)
                 def backToDotted = converter.toDottedPropertyName(env)
