@@ -19,6 +19,7 @@ package com.okta.sdk.impl.ds;
 import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.resource.Resource;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +42,11 @@ public interface InternalDataStore extends DataStore {
      */
     <T extends Resource, R extends Resource> R create(String parentHref, T resource, T parentResource, Class<? extends R> returnType, Map<String,Object> queryParameters);
 
+    /**
+     * @since 1.5.0
+     */
+    <T extends Resource, R extends Resource> R create(String parentHref, T resource, T parentResource, Class<? extends R> returnType, Map<String,Object> queryParameters, Map<String, List<String>> headerParameters);
+
     <T extends Resource> void save(T resource);
 
     <T extends Resource> void save(String href, T resource, T parentResource);
@@ -49,6 +55,11 @@ public interface InternalDataStore extends DataStore {
      * @since 1.2.0
      */
     <T extends Resource> void save(String href, T resource, T parentResource, Map<String,Object> queryParameters);
+
+    /**
+     * @since 1.5.0
+     */
+    <T extends Resource> void save(String href, T resource, T parentResource, Map<String,Object> queryParameters, Map<String, List<String>> headerParameters);
 
     <T extends Resource> void delete(T resource);
 
@@ -61,7 +72,17 @@ public interface InternalDataStore extends DataStore {
      */
     void delete(String href, Map<String,Object> queryParameters);
 
+    /**
+     * @since 1.5.0
+     */
+    void delete(String href, Map<String,Object> queryParameters, Map<String, List<String>> headerParameters);
+
     <T extends Resource> T getResource(String href, Class<T> clazz, Map<String,Object> queryParameters);
+
+    /**
+     * @since 1.5.0
+     */
+    <T extends Resource> T getResource(String href, Class<T> clazz, Map<String,Object> queryParameters, Map<String, List<String>> headerParameters);
 
     String getBaseUrl();
 

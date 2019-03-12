@@ -66,6 +66,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.okta.sdk.impl.http.HttpHeaders.OKTA_USER_AGENT;
+import static com.okta.sdk.impl.http.HttpHeaders.USER_AGENT;
 import static com.okta.sdk.impl.http.HttpHeaders.OKTA_AGENT;
 import static com.okta.sdk.impl.http.HttpHeaders.OKTA_CLIENT_REQUEST_ID;
 
@@ -164,17 +166,21 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     public <T extends Resource> T getResource(String href, Class<T> clazz, Map<String, Object> queryParameters) {
-        ResourceDataResult result = getResourceData(href, clazz, queryParameters);
+        return getResource(href, clazz, queryParameters, null);
+    }
+
+    @Override
+    public <T extends Resource> T getResource(String href, Class<T> clazz, Map<String, Object> queryParameters, Map<String, List<String>> headerParameters) {
+        ResourceDataResult result = getResourceData(href, clazz, queryParameters, headers(headerParameters));
         T resource = instantiate(clazz, result.getData(), result.getUri().getQuery());
 
         resource.setResourceHref(href);
 
         return resource;
-
     }
 
     @SuppressWarnings("unchecked")
-    private ResourceDataResult getResourceData(String href, Class<? extends Resource> clazz, Map<String,?> queryParameters) {
+    private ResourceDataResult getResourceData(String href, Class<? extends Resource> clazz, Map<String,?> queryParameters, HttpHeaders httpHeaders) {
 
         Assert.hasText(href, "href argument cannot be null or empty.");
         Assert.notNull(clazz, "Resource class argument cannot be null.");
@@ -183,7 +189,7 @@ public class DefaultDataStore implements InternalDataStore {
 
             CanonicalUri uri = req.getUri();
 
-            Request getRequest = new DefaultRequest(HttpMethod.GET, uri.getAbsolutePath(), uri.getQuery());
+            Request getRequest = new DefaultRequest(HttpMethod.GET, uri.getAbsolutePath(), uri.getQuery(), req.getHttpHeaders());
             Response getResponse = execute(getRequest);
             Map<String,?> body = getBody(getResponse);
 
@@ -195,7 +201,7 @@ public class DefaultDataStore implements InternalDataStore {
         });
 
         CanonicalUri uri = canonicalize(href, queryParameters);
-        ResourceDataRequest req = new DefaultResourceDataRequest(ResourceAction.READ, uri, clazz, new HashMap<>());
+        ResourceDataRequest req = new DefaultResourceDataRequest(ResourceAction.READ, uri, clazz, new HashMap<>(), httpHeaders);
         return chain.filter(req);
     }
 
@@ -230,7 +236,12 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public <T extends Resource, R extends Resource> R create(String parentHref, T resource, T parentResource, Class<? extends R> returnType, Map<String, Object> queryParameters) {
-        return save(parentHref, resource, parentResource, null, returnType,  new QueryString(queryParameters), true);
+        return create(parentHref, resource, parentResource, returnType, queryParameters, null);
+    }
+
+    @Override
+    public <T extends Resource, R extends Resource> R create(String parentHref, T resource, T parentResource, Class<? extends R> returnType, Map<String, Object> queryParameters, Map<String, List<String>> headerParameters) {
+        return save(parentHref, resource, parentResource, headers(headerParameters), returnType,  new QueryString(queryParameters), true);
     }
 
     @Override
@@ -245,8 +256,13 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public <T extends Resource> void save(String href, T resource, T parentResource, Map<String, Object> queryParameters) {
+        save(href, resource, parentResource, queryParameters, null);
+    }
+
+    @Override
+    public <T extends Resource> void save(String href, T resource, T parentResource, Map<String, Object> queryParameters, Map<String, List<String>> headerParameters) {
         Assert.hasText(href, HREF_REQD_MSG);
-        save(href, resource, parentResource, null, getResourceClass(resource), new QueryString(queryParameters), false);
+        save(href, resource, parentResource, headers(headerParameters), getResourceClass(resource), new QueryString(queryParameters), false);
     }
 
     @SuppressWarnings("unchecked")
@@ -350,7 +366,12 @@ public class DefaultDataStore implements InternalDataStore {
 
     @Override
     public void delete(String href, Map<String, Object> queryParameters) {
-        doDelete(href, VoidResource.class, new QueryString(queryParameters));
+        delete(href, queryParameters, null);
+    }
+
+    @Override
+    public void delete(String href, Map<String, Object> queryParameters, Map<String, List<String>> headerParameters) {
+        doDelete(href, VoidResource.class, new QueryString(queryParameters), headers(headerParameters));
     }
 
     @Override
@@ -363,7 +384,7 @@ public class DefaultDataStore implements InternalDataStore {
         doDelete(href, resource);
     }
 
-    private void doDelete(String resourceHref, Class resourceClass, QueryString qs) {
+    private void doDelete(String resourceHref, Class resourceClass, QueryString qs, HttpHeaders httpHeaders) {
 
         Assert.hasText(resourceHref, "This resource does not have an href value, therefore it cannot be deleted.");
 
@@ -371,7 +392,7 @@ public class DefaultDataStore implements InternalDataStore {
         final CanonicalUri uri = canonicalize(resourceHref, qs);
 
         FilterChain chain = new DefaultFilterChain(this.filters, request -> {
-            Request deleteRequest = new DefaultRequest(HttpMethod.DELETE, uri.getAbsolutePath(), uri.getQuery());
+            Request deleteRequest = new DefaultRequest(HttpMethod.DELETE, uri.getAbsolutePath(), uri.getQuery(), httpHeaders);
             execute(deleteRequest);
             //delete requests have HTTP 204 (no content), so just create an empty setBody for the result:
             return new DefaultResourceDataResult(request.getAction(), request.getUri(), request.getResourceClass(), new HashMap<>());
@@ -387,7 +408,7 @@ public class DefaultDataStore implements InternalDataStore {
         Assert.notNull(resource, "resource argument cannot be null.");
         Assert.isInstanceOf(AbstractResource.class, resource, "Resource argument must be an AbstractResource.");
 
-        doDelete(href != null ? href : resource.getResourceHref(), getResourceClass(resource), null);
+        doDelete(href != null ? href : resource.getResourceHref(), getResourceClass(resource), null, null);
     }
 
     /* =====================================================================
@@ -458,11 +479,12 @@ public class DefaultDataStore implements InternalDataStore {
             List<String> oktaAgents = headerMap.get(oktaAgentHeaderName);
             if (oktaAgents != null && !oktaAgents.isEmpty()) {
                 String oktaAgent = Strings.arrayToDelimitedString(oktaAgents.toArray(), " ");
-                request.getHeaders().set("User-Agent", oktaAgent + " " + USER_AGENT_STRING);
+                applyUserAgent(oktaAgent + " " + USER_AGENT_STRING, request);
             }
         } else {
-            request.getHeaders().set("User-Agent", USER_AGENT_STRING);
+            applyUserAgent(USER_AGENT_STRING, request);
         }
+
         if (request.getHeaders().getContentType() == null && request.getBody() != null) {
             // We only add the default content type (application/json) if a content type is not already in the request
             request.getHeaders().setContentType(MediaType.APPLICATION_JSON);
@@ -471,6 +493,15 @@ public class DefaultDataStore implements InternalDataStore {
         List<String> clientRequestId;
         if (headerMap != null && (clientRequestId = headerMap.get(OKTA_CLIENT_REQUEST_ID)) != null) {
             request.getHeaders().put(OKTA_CLIENT_REQUEST_ID, clientRequestId);
+        }
+    }
+
+    private void applyUserAgent(String userAgentString, Request request) {
+
+        if (request.getHeaders().containsKey(USER_AGENT)) {
+            request.getHeaders().set(OKTA_USER_AGENT, userAgentString);
+        } else {
+            request.getHeaders().set(USER_AGENT, userAgentString);
         }
     }
 
@@ -517,6 +548,15 @@ public class DefaultDataStore implements InternalDataStore {
             return ((AbstractInstanceResource)resource).getResourceClass();
         }
         return resource != null ? resource.getClass() : null;
+    }
+
+    private HttpHeaders headers(Map<String, List<String>> headerParameters) {
+        if (!Collections.isEmpty(headerParameters)) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.putAll(headerParameters);
+            return headers;
+        }
+        return null;
     }
 
     @Override

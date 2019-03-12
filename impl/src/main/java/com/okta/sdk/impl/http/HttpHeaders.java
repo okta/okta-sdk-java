@@ -86,6 +86,10 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 
     public static final String OKTA_CLIENT_REQUEST_ID = "X-Okta-Client-Request-Id";
 
+    public static final String OKTA_USER_AGENT = "X-Okta-User-Agent-Extended";
+
+    public static final String USER_AGENT = "User-Agent";
+
     private static final String[] DATE_FORMATS = new String[]{
             "EEE, dd MMM yyyy HH:mm:ss zzz",
             "EEE, dd-MMM-yy HH:mm:ss zzz",
