@@ -66,6 +66,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.okta.sdk.impl.http.HttpHeaders.OKTA_USER_AGENT;
+import static com.okta.sdk.impl.http.HttpHeaders.USER_AGENT;
 import static com.okta.sdk.impl.http.HttpHeaders.OKTA_AGENT;
 import static com.okta.sdk.impl.http.HttpHeaders.OKTA_CLIENT_REQUEST_ID;
 
@@ -477,11 +479,12 @@ public class DefaultDataStore implements InternalDataStore {
             List<String> oktaAgents = headerMap.get(oktaAgentHeaderName);
             if (oktaAgents != null && !oktaAgents.isEmpty()) {
                 String oktaAgent = Strings.arrayToDelimitedString(oktaAgents.toArray(), " ");
-                request.getHeaders().set("User-Agent", oktaAgent + " " + USER_AGENT_STRING);
+                applyUserAgent(oktaAgent + " " + USER_AGENT_STRING, request);
             }
         } else {
-            request.getHeaders().set("User-Agent", USER_AGENT_STRING);
+            applyUserAgent(USER_AGENT_STRING, request);
         }
+
         if (request.getHeaders().getContentType() == null && request.getBody() != null) {
             // We only add the default content type (application/json) if a content type is not already in the request
             request.getHeaders().setContentType(MediaType.APPLICATION_JSON);
@@ -490,6 +493,15 @@ public class DefaultDataStore implements InternalDataStore {
         List<String> clientRequestId;
         if (headerMap != null && (clientRequestId = headerMap.get(OKTA_CLIENT_REQUEST_ID)) != null) {
             request.getHeaders().put(OKTA_CLIENT_REQUEST_ID, clientRequestId);
+        }
+    }
+
+    private void applyUserAgent(String userAgentString, Request request) {
+
+        if (request.getHeaders().containsKey(USER_AGENT)) {
+            request.getHeaders().set(OKTA_USER_AGENT, userAgentString);
+        } else {
+            request.getHeaders().set(USER_AGENT, userAgentString);
         }
     }
 

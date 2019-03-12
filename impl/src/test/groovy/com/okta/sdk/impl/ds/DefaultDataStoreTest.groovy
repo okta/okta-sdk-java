@@ -24,6 +24,7 @@ import com.okta.sdk.impl.http.RequestExecutor
 import com.okta.sdk.impl.http.Response
 import com.okta.sdk.impl.resource.TestResource
 import com.okta.sdk.impl.util.StringInputStream
+import org.hamcrest.Matcher
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.testng.annotations.Test
@@ -146,5 +147,32 @@ class DefaultDataStoreTest {
                                           hasEntry("header2", ["header2-valueA", "header2-valueB"]))
         assertThat request.queryString, allOf(hasEntry("query1", "query-value1"),
                                               hasEntry("query2", "query-value2"))
+    }
+
+    @Test
+    void testOverrideUserAgentTest() {
+        def resourceHref = "https://api.okta.com/v1/testResource"
+        def requestExecutor = mock(RequestExecutor)
+        def apiKeyResolver = mock(ClientCredentialsResolver)
+        def response = mock(Response)
+        def responseBody = '{"name": "jcoder"}'
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
+        def requestCapture = ArgumentCaptor.forClass(Request)
+
+        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
+        when(response.hasBody()).thenReturn(true)
+        when(response.getBody()).thenReturn(new StringInputStream(responseBody))
+        when(response.getHeaders()).thenReturn(new HttpHeaders())
+
+        defaultDataStore.getResource(resourceHref, TestResource, null,
+                                                                 ["User-Agent": ["test-value"]])
+
+        def request = requestCapture.getValue()
+        assertThat request.headers, hasEntry("User-Agent", ["test-value"])
+        assertThat request.headers.get("X-Okta-User-Agent-Extended"), hasSize(1)
+        assertThat request.headers.getFirst("X-Okta-User-Agent-Extended"), allOf(
+                                        containsString("okta-sdk-java/"),
+                                        containsString("java/${System.getProperty("java.version")}"),
+                                        containsString("${System.getProperty("os.name")}/${System.getProperty("os.version")}"))
     }
 }
