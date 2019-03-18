@@ -26,7 +26,7 @@
 
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-root</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Okta Java SDK</name>
@@ -64,27 +64,27 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-api</artifactId>
-                <version>1.5.0</version>
+                <version>1.5.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-impl</artifactId>
-                <version>1.5.0</version>
+                <version>1.5.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-api-swagger-templates</artifactId>
-                <version>1.5.0</version>
+                <version>1.5.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-httpclient</artifactId>
-                <version>1.5.0</version>
+                <version>1.5.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-okhttp</artifactId>
-                <version>1.5.0</version>
+                <version>1.5.1-SNAPSHOT</version>
             </dependency>
 
             <!-- Other Okta Projects -->
@@ -108,14 +108,14 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-integration-tests</artifactId>
-                <version>1.5.0</version>
+                <version>1.5.1-SNAPSHOT</version>
             </dependency>
 
             <!-- Examples -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-examples-quickstart</artifactId>
-                <version>1.5.0</version>
+                <version>1.5.1-SNAPSHOT</version>
             </dependency>
 
             <!-- Logging -->
@@ -302,7 +302,7 @@
                         <dependency>
                             <groupId>com.okta.sdk</groupId>
                             <artifactId>okta-api-swagger-templates</artifactId>
-                            <version>1.5.0</version>
+                            <version>1.5.1-SNAPSHOT</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -408,8 +408,4 @@
             </build>
         </profile>
     </profiles>
-
-  <scm>
-    <tag>okta-sdk-root-1.5.0</tag>
-  </scm>
 </project>
