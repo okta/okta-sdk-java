@@ -46,7 +46,7 @@ public class DefaultPropertiesParser implements PropertiesParser {
     @Override
     public Map<String, String> parse(Resource resource) throws IOException {
         InputStream is = resource.getInputStream();
-        Scanner scanner = new Scanner(is, StandardCharsets.UTF_8.toString());
+        Scanner scanner = new Scanner(is, StandardCharsets.UTF_8.name());
         return parse(scanner);
     }
 
