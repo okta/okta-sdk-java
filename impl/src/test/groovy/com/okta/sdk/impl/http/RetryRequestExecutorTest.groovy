@@ -278,6 +278,16 @@ class RetryRequestExecutorTest {
         expect RestException, {requestExecutor.pauseBeforeRetry(1, httpResponse, 31L)}
     }
 
+    @Test
+    void retryDisabledFirstRequestFailed() {
+
+        def request = mockRequest()
+        def requestExecutor = createRequestExecutor(mock(RequestAuthenticator), 0, 0)
+        when(requestExecutor.delegate.executeRequest(request)).thenThrow(new RestException("expected test exception", new Throwable(), true))
+
+        expect RestException, {requestExecutor.executeRequest(request)}
+    }
+
     private static long time(Closure closure) {
         def startTime = System.currentTimeMillis()
         closure.call()
