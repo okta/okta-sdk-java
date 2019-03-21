@@ -106,6 +106,11 @@ public class RetryRequestExecutor implements RequestExecutor {
                             log.warn("Unable to pause for retry: {}", e.getMessage());
                         }
 
+                        // First attempt failed, and we were not able to retry
+                        if (response == null) {
+                            throw new RestException("Unable to execute HTTP request: " + e.getMessage(), e);
+                        }
+
                         return response;
                     }
                 }
