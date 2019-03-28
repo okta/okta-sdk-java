@@ -82,6 +82,10 @@ public class HttpClientRequestExecutor extends RetryRequestExecutor {
     private static final String MAX_CONNECTIONS_TOTAL_PROPERTY_KEY = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.maxTotal";
     private static final int MAX_CONNECTIONS_TOTAL;
 
+    private static final int DEFAULT_CONNECTION_VALIDATION_INACTIVITY = 5000; // 5sec
+    private static final String CONNECTION_VALIDATION_PROPERTY_KEY = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.validateAfterInactivity";
+    private static final int CONNECTION_VALIDATION_INACTIVITY;
+
     private final RequestAuthenticator requestAuthenticator;
 
     private HttpClient httpClient;
@@ -116,6 +120,20 @@ public class HttpClientRequestExecutor extends RetryRequestExecutor {
             }
         }
         MAX_CONNECTIONS_TOTAL = connectionMaxTotal;
+
+        int connectionValidationInactivity = DEFAULT_CONNECTION_VALIDATION_INACTIVITY;
+        String connectionValidationInactivityString = System.getProperty(CONNECTION_VALIDATION_PROPERTY_KEY);
+        if (connectionValidationInactivityString != null) {
+            try {
+                connectionValidationInactivity = Integer.parseInt(connectionValidationInactivityString);
+            } catch (NumberFormatException nfe) {
+                log.warn(
+                    "Invalid max connection inactivity validation value: {}. Using default: {}.",
+                    connectionValidationInactivityString, DEFAULT_CONNECTION_VALIDATION_INACTIVITY, nfe
+                );
+            }
+        }
+        CONNECTION_VALIDATION_INACTIVITY = connectionValidationInactivity;
     }
 
     @SuppressWarnings({"deprecation"})
@@ -138,6 +156,7 @@ public class HttpClientRequestExecutor extends RetryRequestExecutor {
         this.requestAuthenticator = factory.create(authenticationScheme, clientCredentials);
 
         PoolingHttpClientConnectionManager connMgr = new PoolingHttpClientConnectionManager();
+        connMgr.setValidateAfterInactivity(CONNECTION_VALIDATION_INACTIVITY);
 
         if (MAX_CONNECTIONS_TOTAL >= MAX_CONNECTIONS_PER_ROUTE) {
             connMgr.setDefaultMaxPerRoute(MAX_CONNECTIONS_PER_ROUTE);

@@ -28,5 +28,7 @@
         <appender-ref ref="STDOUT"/>
     </root>
     <logger name="com.okta.sdk.impl.ds.DefaultDataStore" level="INFO"/>
+    <!-- hide expected WARN messages when running tests -->
+    <logger name="com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor" level="ERROR"/>
 
 </configuration>
