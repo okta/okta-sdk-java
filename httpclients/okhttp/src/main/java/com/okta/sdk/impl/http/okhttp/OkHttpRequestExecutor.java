@@ -44,6 +44,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -142,6 +144,8 @@ public class OkHttpRequestExecutor implements RequestExecutor {
             okhttp3.Response okResponse = client.newCall(okRequestBuilder.build()).execute();
             return toSdkResponse(okResponse);
 
+        } catch (SocketException | SocketTimeoutException e) {
+            throw new RestException("Unable to execute HTTP request - retryable exception: " + e.getMessage(), e, true);
         } catch (IOException e) {
             throw new RestException(e.getMessage(), e);
         }

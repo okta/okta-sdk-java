@@ -26,6 +26,7 @@ import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.http.HttpHeaders
 import com.okta.sdk.impl.http.QueryString
 import com.okta.sdk.impl.http.Request
+import com.okta.sdk.impl.http.RestException
 import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory
 import com.okta.sdk.impl.http.authc.DisabledAuthenticator
 import com.okta.sdk.impl.http.authc.RequestAuthenticator
@@ -35,6 +36,8 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import okhttp3.ResponseBody
+import org.testng.Assert
+import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.*
@@ -128,6 +131,76 @@ class OkHttpRequestExecutorTest {
         verify(requestAuthenticator).authenticate(request)
     }
 
+    @Test(dataProvider = "retryableExceptions")
+    void throwRetryableExceptions(Exception e) {
+
+        def headers = mock(HttpHeaders)
+        def query = mock(QueryString)
+        def request = mock(Request)
+        def requestAuthenticator = mock(RequestAuthenticator)
+
+        when(request.getHeaders()).thenReturn(headers)
+        when(request.getResourceUrl()).thenReturn(new URI("https://testExecuteRequest.example.com"))
+        when(request.getQueryString()).thenReturn(query)
+        when(request.getMethod()).thenReturn(HttpMethod.GET)
+
+        def interceptor = new Interceptor() {
+            @Override
+            okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
+                throw e
+            }
+        }
+
+        def requestExecutor = createRequestExecutor(new OkHttpClient.Builder()
+                                                                    .addInterceptor(interceptor)
+                                                                    .build(),
+                                                    requestAuthenticator)
+
+        def restException = expect(RestException, {requestExecutor.executeRequest(request)})
+        assertThat "RestException.isRetryable expected to be true for: "+ e.getClass(), restException.isRetryable()
+
+        verify(requestAuthenticator).authenticate(request)
+    }
+
+    @Test
+    void throwIOExceptionNotRetryable() {
+
+        def headers = mock(HttpHeaders)
+        def query = mock(QueryString)
+        def request = mock(Request)
+        def requestAuthenticator = mock(RequestAuthenticator)
+
+        when(request.getHeaders()).thenReturn(headers)
+        when(request.getResourceUrl()).thenReturn(new URI("https://testExecuteRequest.example.com"))
+        when(request.getQueryString()).thenReturn(query)
+        when(request.getMethod()).thenReturn(HttpMethod.GET)
+
+        def interceptor = new Interceptor() {
+            @Override
+            okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
+                throw new IOException("expected test IOException")
+            }
+        }
+
+        def requestExecutor = createRequestExecutor(new OkHttpClient.Builder()
+                                                                    .addInterceptor(interceptor)
+                                                                    .build(),
+                                                    requestAuthenticator)
+
+        def restException = expect(RestException, {requestExecutor.executeRequest(request)})
+        assertThat "RestException.isRetryable expected to be false for: IOException", !restException.isRetryable()
+
+        verify(requestAuthenticator).authenticate(request)
+    }
+
+    @DataProvider
+    Object[][] retryableExceptions() {
+        return [
+            [new SocketException("expected test SocketException")],
+            [new SocketTimeoutException("expected test SocketTimeoutException")]
+        ]
+    }
+
     def stubResponse(String body = "some-content", int code = 200, String url = "https://test.example.com") {
 
         def responseBody = ResponseBody.create(MediaType.parse("text/plain"), body)
@@ -165,5 +238,17 @@ class OkHttpRequestExecutorTest {
 
         return client == null ? new OkHttpRequestExecutor(clientConfiguration)
                               : new OkHttpRequestExecutor(clientConfiguration, client)
+    }
+
+    static <T extends Throwable> T expect(Class<T> catchMe, Closure closure) {
+        try {
+            closure.call()
+            Assert.fail("Expected ${catchMe.getName()} to be thrown.")
+        } catch(e) {
+            if (!e.class.isAssignableFrom(catchMe)) {
+                throw e
+            }
+            return e
+        }
     }
 }

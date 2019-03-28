@@ -60,6 +60,8 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 /**
  * {@code RequestExecutor} implementation that uses the
@@ -238,10 +240,10 @@ public class HttpClientRequestExecutor extends RetryRequestExecutor {
         try {
             httpResponse = httpClient.execute(httpRequest);
             return toSdkResponse(httpResponse);
-
+        } catch (SocketException | SocketTimeoutException | NoHttpResponseException | ConnectTimeoutException e) {
+            throw new RestException("Unable to execute HTTP request - retryable exception: " + e.getMessage(), e, true);
         } catch (IOException e) {
-            boolean retryable = e instanceof NoHttpResponseException || e instanceof ConnectTimeoutException;
-            throw new RestException("Unable to execute HTTP request: " + e.getMessage(), e, retryable);
+            throw new RestException("Unable to execute HTTP request: " + e.getMessage(), e);
         } finally {
             try {
                 httpResponse.getEntity().getContent().close();
