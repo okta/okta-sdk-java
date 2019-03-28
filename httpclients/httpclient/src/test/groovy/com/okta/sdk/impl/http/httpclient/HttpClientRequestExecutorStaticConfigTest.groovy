@@ -18,7 +18,13 @@ package com.okta.sdk.impl.http.httpclient
 import org.testng.IHookCallBack
 import org.testng.IHookable
 import org.testng.ITestResult
+import org.testng.SkipException
 import org.testng.annotations.Test
+
+import java.lang.reflect.Field
+import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
+import java.util.stream.Collectors
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
@@ -79,6 +85,9 @@ class HttpClientRequestExecutorStaticConfigTest implements IHookable {
         System.setProperties(copy)
         try {
             // run the tests
+            if (!System.getProperty("java.version").startsWith("1.8")) {
+                throw new SkipException("Test test only supported on JDK 8")
+            }
             callBack.runTestMethod(testResult)
 
         } finally {
