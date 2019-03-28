@@ -86,7 +86,7 @@ class HttpClientRequestExecutorStaticConfigTest implements IHookable {
         try {
             // run the tests
             if (!System.getProperty("java.version").startsWith("1.8")) {
-                throw new SkipException("Test test only supported on JDK 8")
+                throw new SkipException("Test test only supported on JDK 8, see https://github.com/okta/okta-sdk-java/issues/276")
             }
             callBack.runTestMethod(testResult)
 
