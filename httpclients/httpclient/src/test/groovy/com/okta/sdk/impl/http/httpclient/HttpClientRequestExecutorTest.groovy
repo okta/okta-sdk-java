@@ -26,6 +26,7 @@ import com.okta.sdk.impl.http.HttpHeaders
 import com.okta.sdk.impl.http.QueryString
 import com.okta.sdk.impl.http.Request
 import com.okta.sdk.impl.http.Response
+import com.okta.sdk.impl.http.RestException
 import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory
 import com.okta.sdk.impl.http.authc.RequestAuthenticator
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
@@ -33,15 +34,21 @@ import com.okta.sdk.impl.http.support.DefaultResponse
 import org.apache.http.Header
 import org.apache.http.HttpEntity
 import org.apache.http.HttpResponse
+import org.apache.http.NoHttpResponseException
 import org.apache.http.StatusLine
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpRequestBase
+import org.apache.http.conn.ConnectTimeoutException
 import org.apache.http.message.BasicHeader
 import org.testng.Assert
+import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
+import java.time.Duration
+import java.time.temporal.TemporalUnit
+import java.util.concurrent.TimeUnit
 
 import static org.mockito.Mockito.*
 import static org.hamcrest.MatcherAssert.*
@@ -100,6 +107,8 @@ class HttpClientRequestExecutorTest {
 
         assertThat requestExecutor.maxElapsedMillis, is(2000)
         assertThat requestExecutor.numRetries, is(3)
+        assertThat requestExecutor.httpClient.connManager.pool.timeToLive, is(Duration.ofMinutes(5).toMillis())
+        assertThat requestExecutor.httpClient.connManager.pool.validateAfterInactivity, is(Duration.ofSeconds(2).toMillis() as int)
     }
 
     @Test
@@ -226,6 +235,65 @@ class HttpClientRequestExecutorTest {
 
         // should be almost instant, but we are just making sure we didn't sleep for 20 sec
         assertThat totalTime, lessThan(1000L)
+    }
+
+    @Test(dataProvider = "retryableExceptions")
+    void throwRetryableExceptions(Exception e) {
+
+        def request = mockRequest()
+        def requestAuthenticator = mock(RequestAuthenticator)
+        def httpRequest = mock(HttpRequestBase)
+        def httpClientRequestFactory = mock(HttpClientRequestFactory)
+        def httpClient = mock(HttpClient)
+
+        when(httpClientRequestFactory.createHttpClientRequest(request, null)).thenReturn(httpRequest)
+        when(httpClient.execute(httpRequest)).thenThrow(e)
+
+        def requestExecutor = createRequestExecutor(requestAuthenticator)
+        requestExecutor.httpClientRequestFactory = httpClientRequestFactory
+        requestExecutor.httpClient = httpClient
+
+        // disable retry, we just want to make sure the exception thrown is marked as retryable
+        // once we remove the parent class, we won't need to do this anymore
+        requestExecutor.numRetries = 0
+        requestExecutor.maxElapsedMillis = 0
+
+        def restException = expect(RestException, {requestExecutor.executeRequest(request)})
+        assertThat "RestException.isRetryable expected to be true for: "+ e.getClass(), restException.isRetryable()
+
+        verify(requestAuthenticator).authenticate(request)
+    }
+
+    @Test
+    void throwIOExceptionNotRetryable() {
+
+        def request = mockRequest()
+        def requestAuthenticator = mock(RequestAuthenticator)
+        def httpRequest = mock(HttpRequestBase)
+        def httpClientRequestFactory = mock(HttpClientRequestFactory)
+        def httpClient = mock(HttpClient)
+
+        when(httpClientRequestFactory.createHttpClientRequest(request, null)).thenReturn(httpRequest)
+        when(httpClient.execute(httpRequest)).thenThrow(new IOException("expected test IOException"))
+
+        def requestExecutor = createRequestExecutor(requestAuthenticator)
+        requestExecutor.httpClientRequestFactory = httpClientRequestFactory
+        requestExecutor.httpClient = httpClient
+
+        def restException = expect(RestException, {requestExecutor.executeRequest(request)})
+        assertThat "RestException.isRetryable expected to be false for: IOException", !restException.isRetryable()
+
+        verify(requestAuthenticator).authenticate(request)
+    }
+
+    @DataProvider
+    Object[][] retryableExceptions() {
+        return [
+            [new SocketException("expected test SocketException")],
+            [new SocketTimeoutException("expected test SocketTimeoutException")],
+            [new NoHttpResponseException("expected test NoHttpResponseException")],
+            [new ConnectTimeoutException("expected test ConnectTimeoutException")]
+        ]
     }
 
     private static long time(Closure closure) {
