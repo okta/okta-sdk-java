@@ -62,6 +62,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * {@code RequestExecutor} implementation that uses the
@@ -76,65 +77,33 @@ public class HttpClientRequestExecutor extends RetryRequestExecutor {
 
     private static final int DEFAULT_MAX_CONNECTIONS_PER_ROUTE = Integer.MAX_VALUE/2;
     private static final String MAX_CONNECTIONS_PER_ROUTE_PROPERTY_KEY = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.maxPerRoute";
-    private static final int MAX_CONNECTIONS_PER_ROUTE;
+    private static final int MAX_CONNECTIONS_PER_ROUTE = parseConfigValue(MAX_CONNECTIONS_PER_ROUTE_PROPERTY_KEY,
+                                                                          DEFAULT_MAX_CONNECTIONS_PER_ROUTE,
+                                                                         "Bad max connection per route value");
 
     private static final int DEFAULT_MAX_CONNECTIONS_TOTAL = Integer.MAX_VALUE;
     private static final String MAX_CONNECTIONS_TOTAL_PROPERTY_KEY = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.maxTotal";
-    private static final int MAX_CONNECTIONS_TOTAL;
+    private static final int MAX_CONNECTIONS_TOTAL = parseConfigValue(MAX_CONNECTIONS_TOTAL_PROPERTY_KEY,
+                                                                      DEFAULT_MAX_CONNECTIONS_TOTAL,
+                                                              "Bad max connection total value");
 
-    private static final int DEFAULT_CONNECTION_VALIDATION_INACTIVITY = 5000; // 5sec
+    private static final int DEFAULT_CONNECTION_VALIDATION_INACTIVITY = 2000; // 2sec
     private static final String CONNECTION_VALIDATION_PROPERTY_KEY = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.validateAfterInactivity";
-    private static final int CONNECTION_VALIDATION_INACTIVITY;
+    private static final int CONNECTION_VALIDATION_INACTIVITY = parseConfigValue(CONNECTION_VALIDATION_PROPERTY_KEY,
+                                                                                 DEFAULT_CONNECTION_VALIDATION_INACTIVITY,
+                                                                                "Invalid max connection inactivity validation value");
+
+    private static final int DEFAULT_CONNECTION_TIME_TO_LIVE = 5 * 1000 * 60; // 5 minutes
+    private static final String CONNECTION_TIME_TO_LIVE_PROPERTY_KEY = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.timeToLive";
+    private static final int CONNECTION_TIME_TO_LIVE = parseConfigValue(CONNECTION_TIME_TO_LIVE_PROPERTY_KEY,
+                                                                        DEFAULT_CONNECTION_TIME_TO_LIVE,
+                                                                        "Invalid connection time to live value");
 
     private final RequestAuthenticator requestAuthenticator;
 
     private HttpClient httpClient;
 
     private HttpClientRequestFactory httpClientRequestFactory;
-
-    static {
-        int connectionMaxPerRoute = DEFAULT_MAX_CONNECTIONS_PER_ROUTE;
-        String connectionMaxPerRouteString = System.getProperty(MAX_CONNECTIONS_PER_ROUTE_PROPERTY_KEY);
-        if (connectionMaxPerRouteString != null) {
-            try {
-                connectionMaxPerRoute = Integer.parseInt(connectionMaxPerRouteString);
-            } catch (NumberFormatException nfe) {
-                log.warn(
-                    "Bad max connection per route value: {}. Using default: {}.",
-                    connectionMaxPerRouteString, DEFAULT_MAX_CONNECTIONS_PER_ROUTE, nfe
-                );
-            }
-        }
-        MAX_CONNECTIONS_PER_ROUTE = connectionMaxPerRoute;
-
-        int connectionMaxTotal = DEFAULT_MAX_CONNECTIONS_TOTAL;
-        String connectionMaxTotalString = System.getProperty(MAX_CONNECTIONS_TOTAL_PROPERTY_KEY);
-        if (connectionMaxTotalString != null) {
-            try {
-                connectionMaxTotal = Integer.parseInt(connectionMaxTotalString);
-            } catch (NumberFormatException nfe) {
-                log.warn(
-                    "Bad max connection total value: {}. Using default: {}.",
-                    connectionMaxTotalString, DEFAULT_MAX_CONNECTIONS_TOTAL, nfe
-                );
-            }
-        }
-        MAX_CONNECTIONS_TOTAL = connectionMaxTotal;
-
-        int connectionValidationInactivity = DEFAULT_CONNECTION_VALIDATION_INACTIVITY;
-        String connectionValidationInactivityString = System.getProperty(CONNECTION_VALIDATION_PROPERTY_KEY);
-        if (connectionValidationInactivityString != null) {
-            try {
-                connectionValidationInactivity = Integer.parseInt(connectionValidationInactivityString);
-            } catch (NumberFormatException nfe) {
-                log.warn(
-                    "Invalid max connection inactivity validation value: {}. Using default: {}.",
-                    connectionValidationInactivityString, DEFAULT_CONNECTION_VALIDATION_INACTIVITY, nfe
-                );
-            }
-        }
-        CONNECTION_VALIDATION_INACTIVITY = connectionValidationInactivity;
-    }
 
     @SuppressWarnings({"deprecation"})
     public HttpClientRequestExecutor(ClientConfiguration clientConfiguration) {
@@ -155,7 +124,7 @@ public class HttpClientRequestExecutor extends RetryRequestExecutor {
 
         this.requestAuthenticator = factory.create(authenticationScheme, clientCredentials);
 
-        PoolingHttpClientConnectionManager connMgr = new PoolingHttpClientConnectionManager();
+        PoolingHttpClientConnectionManager connMgr = new PoolingHttpClientConnectionManager(CONNECTION_TIME_TO_LIVE, TimeUnit.MILLISECONDS);
         connMgr.setValidateAfterInactivity(CONNECTION_VALIDATION_INACTIVITY);
 
         if (MAX_CONNECTIONS_TOTAL >= MAX_CONNECTIONS_PER_ROUTE) {
@@ -335,5 +304,19 @@ public class HttpClientRequestExecutor extends RetryRequestExecutor {
         }
 
         return headers;
+    }
+
+    private static int parseConfigValue(String key, int defaultValue, String warning) {
+
+        int configuredValue = defaultValue;
+        String configuredValueString = System.getProperty(key);
+        if (configuredValueString != null) {
+            try {
+                configuredValue = Integer.parseInt(configuredValueString);
+            } catch (NumberFormatException nfe) {
+                log.warn("{}: {}. Using default: {}.", warning, configuredValueString, defaultValue, nfe);
+            }
+        }
+        return configuredValue;
     }
 }

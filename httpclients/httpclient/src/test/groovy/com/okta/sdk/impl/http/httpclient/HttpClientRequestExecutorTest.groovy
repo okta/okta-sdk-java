@@ -46,6 +46,9 @@ import org.testng.annotations.Test
 
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
+import java.time.Duration
+import java.time.temporal.TemporalUnit
+import java.util.concurrent.TimeUnit
 
 import static org.mockito.Mockito.*
 import static org.hamcrest.MatcherAssert.*
@@ -104,6 +107,8 @@ class HttpClientRequestExecutorTest {
 
         assertThat requestExecutor.maxElapsedMillis, is(2000)
         assertThat requestExecutor.numRetries, is(3)
+        assertThat requestExecutor.httpClient.connManager.pool.timeToLive, is(Duration.ofMinutes(5).toMillis())
+        assertThat requestExecutor.httpClient.connManager.pool.validateAfterInactivity, is(Duration.ofSeconds(2).toMillis() as int)
     }
 
     @Test

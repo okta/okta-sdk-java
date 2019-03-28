@@ -19,12 +19,8 @@ import org.testng.IHookCallBack
 import org.testng.IHookable
 import org.testng.ITestResult
 import org.testng.SkipException
+import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
-
-import java.lang.reflect.Field
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.Method
-import java.util.stream.Collectors
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
@@ -32,43 +28,76 @@ import static org.hamcrest.Matchers.is
 class HttpClientRequestExecutorStaticConfigTest implements IHookable {
 
     private static final String REQUEST_EXECUTOR_CLASSNAME = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor"
-    private static final String VALIDATE_AFTER_INACTIVITY_PROP = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.validateAfterInactivity"
 
-    @Test
-    void validateAfterInactivityTo4000() {
-
-        System.properties.setProperty(VALIDATE_AFTER_INACTIVITY_PROP, "4000")
+    @Test(dataProvider = "validateAfterInactivity")
+    void validateAfterInactivityIsEmpty(String configValue, int expectedValue) {
+        def prop = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.validateAfterInactivity"
+        if (configValue != null) {
+            System.properties.setProperty(prop, configValue)
+        }
         def requestExecutor = isolatedClassLoader().loadClass(REQUEST_EXECUTOR_CLASSNAME)
-        assertThat requestExecutor.CONNECTION_VALIDATION_INACTIVITY, is(4000)
+        assertThat requestExecutor.CONNECTION_VALIDATION_INACTIVITY, is(expectedValue)
+    }
+    @Test(dataProvider = "timeToLive")
+    void timeToLive(String configValue, int expectedValue) {
+        def prop = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.timeToLive"
+        if (configValue != null) {
+            System.properties.setProperty(prop, configValue)
+        }
+        def requestExecutor = isolatedClassLoader().loadClass(REQUEST_EXECUTOR_CLASSNAME)
+        assertThat requestExecutor.CONNECTION_TIME_TO_LIVE, is(expectedValue)
     }
 
-    @Test
-    void validateAfterInactivityDefaultValue() {
-
+    @Test(dataProvider = "maxConnections")
+    void maxConnections(String configValue, int expectedValue) {
+        def prop = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.maxTotal"
+        if (configValue != null) {
+            System.properties.setProperty(prop, configValue)
+        }
         def requestExecutor = isolatedClassLoader().loadClass(REQUEST_EXECUTOR_CLASSNAME)
-        assertThat requestExecutor.CONNECTION_VALIDATION_INACTIVITY, is(5000)
+        assertThat requestExecutor.MAX_CONNECTIONS_TOTAL, is(expectedValue)
     }
 
-    @Test
-    void validateAfterInactivityInvalidValue() {
-
-        System.properties.setProperty(VALIDATE_AFTER_INACTIVITY_PROP, "O'Doyle Rules!")
+    @Test(dataProvider = "maxConnectionsPerRoute")
+    void maxConnectionsPerRoute(String configValue, int expectedValue) {
+        def prop = "com.okta.sdk.impl.http.httpclient.HttpClientRequestExecutor.connPoolControl.maxPerRoute"
+        if (configValue != null) {
+            System.properties.setProperty(prop, configValue)
+        }
         def requestExecutor = isolatedClassLoader().loadClass(REQUEST_EXECUTOR_CLASSNAME)
-        assertThat requestExecutor.CONNECTION_VALIDATION_INACTIVITY, is(5000) // default value
+        assertThat requestExecutor.MAX_CONNECTIONS_PER_ROUTE, is(expectedValue)
     }
 
-    @Test
-    void validateAfterInactivityIsZero() {
-        System.properties.setProperty(VALIDATE_AFTER_INACTIVITY_PROP, "0")
-        def requestExecutor = isolatedClassLoader().loadClass(REQUEST_EXECUTOR_CLASSNAME)
-        assertThat requestExecutor.CONNECTION_VALIDATION_INACTIVITY, is(0)
+    @DataProvider
+    Object[][] validateAfterInactivity() {
+        return standardConfigTests(2000)
     }
 
-    @Test
-    void validateAfterInactivityIsEmpty() {
-        System.properties.setProperty(VALIDATE_AFTER_INACTIVITY_PROP, "")
-        def requestExecutor = isolatedClassLoader().loadClass(REQUEST_EXECUTOR_CLASSNAME)
-        assertThat requestExecutor.CONNECTION_VALIDATION_INACTIVITY, is(5000) // default value
+    @DataProvider
+    Object[][] maxConnectionsPerRoute() {
+        return standardConfigTests(Integer.MAX_VALUE/2 as int)
+    }
+
+    @DataProvider
+    Object[][] maxConnections() {
+        return standardConfigTests(Integer.MAX_VALUE)
+    }
+
+    @DataProvider
+    Object[][] timeToLive() {
+        return standardConfigTests(300000)
+    }
+
+    static Object[][] standardConfigTests(int defaultValue) {
+        return [
+               ["", defaultValue],
+               ["0", 0],
+               ["-1", -1],
+               ["😊", defaultValue],
+               ["O'Doyle Rules!", defaultValue],
+               ["12", 12],
+               [null, defaultValue]
+        ]
     }
 
     static ClassLoader isolatedClassLoader() {
@@ -91,7 +120,7 @@ class HttpClientRequestExecutorStaticConfigTest implements IHookable {
             callBack.runTestMethod(testResult)
 
         } finally {
-            System.setProperties(originalProperties);
+            System.setProperties(originalProperties)
         }
     }
 }
