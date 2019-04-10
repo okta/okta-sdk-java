@@ -38,7 +38,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 
 | Version | Status                    |
 | ------- | ------------------------- |
-| 0.0.x | :warning: Retiring on 2019-04-09 ([migration guide](https://github.com//okta/okta-sdk-java/wiki/Migration-from-v0.0.4-to-1.x)) |
+| 0.0.x | :warning: Retired ([migration guide](https://github.com//okta/okta-sdk-java/wiki/Migration-from-v0.0.4-to-1.x)) |
 | 1.x   | :heavy_check_mark: Stable |
  
 The latest release can always be found on the [releases page][github-releases].
