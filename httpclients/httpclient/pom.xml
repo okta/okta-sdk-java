@@ -58,7 +58,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
         </dependency>
-
+        <dependency>
+            <!-- compile time annotation processor -->
+            <groupId>com.google.auto.service</groupId>
+            <artifactId>auto-service</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <!-- Test deps -->
         <dependency>

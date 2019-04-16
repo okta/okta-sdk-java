@@ -19,10 +19,12 @@ import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.http.RequestExecutor;
 import com.okta.sdk.impl.http.RequestExecutorFactory;
 import com.okta.sdk.impl.http.RetryRequestExecutor;
+import com.google.auto.service.AutoService;
 
 /**
  * @since 1.2.0
  */
+@AutoService(RequestExecutorFactory.class)
 public class OkHttpRequestExecutorFactory implements RequestExecutorFactory {
 
     @Override

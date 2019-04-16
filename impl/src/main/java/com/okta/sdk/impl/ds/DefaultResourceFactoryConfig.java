@@ -17,10 +17,12 @@ package com.okta.sdk.impl.ds;
 
 import java.util.Collections;
 import java.util.Set;
+import com.google.auto.service.AutoService;
 
 /**
  * @since 1.1.0
  */
+@AutoService(ResourceFactoryConfig.class)
 public class DefaultResourceFactoryConfig implements ResourceFactoryConfig {
 
     @Override

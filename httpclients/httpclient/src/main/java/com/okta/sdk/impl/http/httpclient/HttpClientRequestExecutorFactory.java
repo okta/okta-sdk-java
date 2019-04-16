@@ -18,10 +18,12 @@ package com.okta.sdk.impl.http.httpclient;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.http.RequestExecutor;
 import com.okta.sdk.impl.http.RequestExecutorFactory;
+import com.google.auto.service.AutoService;
 
 /**
  * @since 1.2.0
  */
+@AutoService(RequestExecutorFactory.class)
 public class HttpClientRequestExecutorFactory implements RequestExecutorFactory {
 
     @Override
