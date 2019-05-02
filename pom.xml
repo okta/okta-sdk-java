@@ -156,8 +156,12 @@
                 <artifactId>snakeyaml</artifactId>
                 <version>${snakeyaml.version}</version>
             </dependency>
-
-
+            <dependency>
+                <groupId>com.google.auto.service</groupId>
+                <artifactId>auto-service</artifactId>
+                <version>1.0-rc5</version>
+                <optional>true</optional>
+            </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
@@ -351,6 +355,9 @@
                 <inherited>false</inherited>
                 <configuration>
                     <noticeTemplate>${root.dir}/src/license/NOTICE.template</noticeTemplate>
+                    <licenseMapping>
+                        <mapping>${root.dir}/src/license/mapping.xml</mapping>
+                    </licenseMapping>
                 </configuration>
                 <executions>
                     <execution>

@@ -57,6 +57,12 @@
             <artifactId>javax.annotation-api</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <!-- compile time annotation processor -->
+            <groupId>com.google.auto.service</groupId>
+            <artifactId>auto-service</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <!-- Test deps -->
         <dependency>

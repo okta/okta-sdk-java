@@ -16,10 +16,12 @@
 package com.okta.sdk.impl.http.support;
 
 import com.okta.sdk.http.UserAgentProvider;
+import com.google.auto.service.AutoService;
 
 /**
  * @since 1.1.0
  */
+@AutoService(UserAgentProvider.class)
 public class SdkUserAgentProvider implements UserAgentProvider {
 
     @Override

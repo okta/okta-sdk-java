@@ -17,6 +17,9 @@ This project includes:
   Apache Commons Lang under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpCore under Apache License, Version 2.0
+  Auto Common Libraries under Apache 2.0
+  AutoService under Apache 2.0
+  AutoService Processor under Apache 2.0
   Bean Validation API under The Apache Software License, Version 2.0
   commonmark-java core under BSD 2-Clause License
   Commons CLI under The Apache Software License, Version 2.0
