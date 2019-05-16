@@ -82,4 +82,12 @@
         <cpe>cpe:/a:processing:processing</cpe>
     </suppress>
 
+    <!-- Disputed CVE https://github.com/square/okhttp/issues/4967.
+    Requires custom code to bypass certificate pinning, this will not be addressed by the okhttp team -->
+    <suppress>
+        <notes><![CDATA[ file name: okhttp-3.11.0.jar ]]></notes>
+        <gav regex="true">^com\.squareup\.okhttp3:okhttp:.*$</gav>
+        <cve>CVE-2018-20200</cve>
+    </suppress>
+
 </suppressions>
