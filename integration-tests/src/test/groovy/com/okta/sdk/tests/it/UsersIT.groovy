@@ -48,6 +48,8 @@ import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
 import java.time.Duration
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 import java.util.stream.Collectors
 
 import static com.okta.sdk.tests.it.util.Util.assertGroupTargetPresent
@@ -682,6 +684,25 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat(result, instanceOf(User))
     }
 
+    @Test
+    void importUserWithSha512Password() {
+
+        def salt = "aSalt"
+        def hashedPassword = hashPassword("aPassword", salt)
+
+        def email = "joe.coder+${uniqueTestName}@example.com"
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName("Joe")
+                .setLastName("Code")
+                .setSha512PasswordHash(hashedPassword, salt, "PREFIX")
+                .buildAndCreate(getClient())
+        registerForCleanup(user)
+
+        assertThat user.getCredentials(), notNullValue()
+        assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.IMPORT)
+    }
+
     private void ensureCustomProperties() {
         def userSchemaUri = "/api/v1/meta/schemas/user/default"
 
@@ -712,5 +733,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             customProperties.put(name, body)
         }
         return addProperty
+    }
+
+    private String hashPassword(String password, String salt) {
+        def messageDigest = MessageDigest.getInstance("SHA-512")
+        messageDigest.update(salt.getBytes(StandardCharsets.UTF_8))
+        def bytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8))
+        return Base64.getEncoder().encodeToString(bytes)
     }
 }
