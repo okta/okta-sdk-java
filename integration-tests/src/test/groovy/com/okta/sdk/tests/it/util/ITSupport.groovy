@@ -16,6 +16,15 @@
 package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.group.Group
+import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.policy.GroupCondition
+import com.okta.sdk.resource.policy.OktaSignOnPolicy
+import com.okta.sdk.resource.policy.OktaSignOnPolicyConditions
+import com.okta.sdk.resource.policy.PasswordPolicy
+import com.okta.sdk.resource.policy.PasswordPolicyConditions
+import com.okta.sdk.resource.policy.Policy
+import com.okta.sdk.resource.policy.PolicyPeopleCondition
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
@@ -76,5 +85,50 @@ abstract class ITSupport implements ClientProvider {
         registerForCleanup(user)
 
         return user
+    }
+
+    Group randomGroup(String name = "group-${UUID.randomUUID().toString()}") {
+
+        Group group = GroupBuilder.instance()
+            .setName(name)
+            .setDescription(name)
+            .buildAndCreate(getClient())
+        registerForCleanup(group)
+
+        return group
+    }
+
+    PasswordPolicy randomPasswordPolicy(String groupId) {
+
+        PasswordPolicy policy = client.createPolicy(client.instantiate(PasswordPolicy)
+            .setConditions(client.instantiate(PasswordPolicyConditions)
+                .setPeople(client.instantiate(PolicyPeopleCondition)
+                    .setGroups(client.instantiate(GroupCondition)
+                        .setInclude([groupId]))))
+            .setName("policy+" + UUID.randomUUID().toString())
+            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setDescription("IT created Policy")
+            .setStatus(Policy.StatusEnum.ACTIVE))
+
+        registerForCleanup(policy)
+
+        return policy
+    }
+
+    OktaSignOnPolicy randomSignOnPolicy(String groupId) {
+
+        OktaSignOnPolicy policy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
+            .setConditions(client.instantiate(OktaSignOnPolicyConditions)
+                .setPeople(client.instantiate(PolicyPeopleCondition)
+                    .setGroups(client.instantiate(GroupCondition)
+                        .setInclude([groupId]))))
+            .setName("policy+" + UUID.randomUUID().toString())
+            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setDescription("IT created Policy")
+            .setStatus(Policy.StatusEnum.ACTIVE))
+
+        registerForCleanup(policy)
+
+        return policy
     }
 }

@@ -34,23 +34,21 @@ import com.okta.sdk.resource.policy.PolicyPeopleCondition
 import com.okta.sdk.resource.policy.PolicyRule
 import com.okta.sdk.resource.policy.PolicyRuleAuthContextCondition
 import com.okta.sdk.resource.policy.UserCondition
+import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
-class PolicyRulesIT implements CrudTestSupport {
+class PolicyRulesIT extends ITSupport implements CrudTestSupport {
 
     private OktaSignOnPolicy crudTestPolicy
 
     @Override
     def create(Client client) {
 
-        crudTestPolicy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
-            .setName("policy+" + UUID.randomUUID().toString())
-            .setStatus(Policy.StatusEnum.ACTIVE)
-            .setDescription("IT created Policy - CRUD rules"))
-        registerForCleanup(crudTestPolicy)
+        def group = randomGroup()
+        crudTestPolicy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = crudTestPolicy.createRule(client.instantiate(OktaSignOnPolicyRule)
@@ -89,11 +87,8 @@ class PolicyRulesIT implements CrudTestSupport {
     @Test
     void activateDeactivateTest() {
 
-        def policy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
-            .setName("policy+" + UUID.randomUUID().toString())
-            .setStatus(Policy.StatusEnum.ACTIVE)
-            .setDescription("IT created Policy - Rules activateDeactivateTest"))
-        registerForCleanup(policy)
+        def group = randomGroup()
+        def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
@@ -119,10 +114,8 @@ class PolicyRulesIT implements CrudTestSupport {
     @Test
     void createPasswordPolicyRule() {
 
-        def policy = client.createPolicy(client.instantiate(PasswordPolicy)
-            .setName("policy+" + UUID.randomUUID().toString())
-            .setDescription("IT created Policy - CRUD rules"))
-        registerForCleanup(policy)
+        def group = randomGroup()
+        def policy = randomPasswordPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
         PasswordPolicyRule policyRule = policy.createRule(client.instantiate(PasswordPolicyRule)
@@ -153,10 +146,8 @@ class PolicyRulesIT implements CrudTestSupport {
     @Test
     void createOktaSignOnOnPremPolicyRule() {
 
-        def policy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
-            .setName("policy+" + UUID.randomUUID().toString())
-            .setDescription("IT created Policy - CRUD rules"))
-        registerForCleanup(policy)
+        def group = randomGroup()
+        def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
@@ -187,10 +178,8 @@ class PolicyRulesIT implements CrudTestSupport {
     @Test
     void createOktaSignOnRadiusPolicyRule() {
 
-        def policy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
-            .setName("policy+" + UUID.randomUUID().toString())
-            .setDescription("IT created Policy - CRUD rules"))
-        registerForCleanup(policy)
+        def group = randomGroup()
+        def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
@@ -219,10 +208,8 @@ class PolicyRulesIT implements CrudTestSupport {
     @Test
     void createOktaSignOnCloudPolicyRule() {
 
-        def policy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
-            .setName("policy+" + UUID.randomUUID().toString())
-            .setDescription("IT created Policy - CRUD rules"))
-        registerForCleanup(policy)
+        def group = randomGroup()
+        def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
@@ -269,10 +256,8 @@ class PolicyRulesIT implements CrudTestSupport {
     @Test
     void createOktaSignOnDenyPolicyRule() {
 
-        def policy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
-            .setName("policy+" + UUID.randomUUID().toString())
-            .setDescription("IT created Policy - CRUD rules"))
-        registerForCleanup(policy)
+        def group = randomGroup()
+        def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
