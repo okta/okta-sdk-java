@@ -62,6 +62,61 @@ class AbstractCollectionResourceTest {
         verifyCollection(new TestCollectionResource(ds, page1), 13)
     }
 
+    @Test
+    void testSamePageForIteratorAndSingle() {
+
+        InternalDataStore ds = mock(InternalDataStore)
+        when(ds.getBaseUrl()).thenReturn("https://example.com/")
+
+        def page1 = createTestPage(0, 1, null)
+
+        expectPage(page1, ds)
+
+        def collectionResource = spy(new TestCollectionResource(ds, page1))
+
+        collectionResource.iterator().hasNext()
+        def single = collectionResource.single()
+        assertThat single.getName(), is("Name-0")
+
+        // make sure the current page is used for the call to the first iterator, and then again to the call to single()
+        verify(collectionResource, times(2)).getCurrentPage()
+    }
+
+    @Test
+    void testIsEmptyCall() {
+
+        InternalDataStore ds = mock(InternalDataStore)
+        when(ds.getBaseUrl()).thenReturn("https://example.com/")
+
+        def pageNotEmpty = createTestPage(0, 3, null)
+        expectPage(pageNotEmpty, ds)
+        assertThat "Expected TestCollectionResource.isEmpty() to return false", !new TestCollectionResource(ds, pageNotEmpty).isEmpty()
+
+        def pageEmpty = createTestPage(0, 0, null)
+        expectPage(pageEmpty, ds)
+        assertThat "Expected TestCollectionResource.isEmpty() to return true", new TestCollectionResource(ds, pageEmpty).isEmpty()
+    }
+
+    @Test
+    void testIteratorAndIsEmptyUseSamePage() {
+
+        InternalDataStore ds = mock(InternalDataStore)
+        when(ds.getBaseUrl()).thenReturn("https://example.com/")
+
+        def pageNotEmpty = createTestPage(0, 3, null)
+        expectPage(pageNotEmpty, ds)
+        def nonEmptyResource = spy(new TestCollectionResource(ds, pageNotEmpty))
+        assertThat "TestCollectionResource.iterator.hasNext() returns true", nonEmptyResource.iterator().hasNext()
+        assertThat "Expected TestCollectionResource.isEmpty() to return false", !nonEmptyResource.isEmpty()
+        verify(nonEmptyResource, times(2)).getCurrentPage()
+
+        def pageEmpty = createTestPage(0, 0, null)
+        expectPage(pageEmpty, ds)
+        def emptyResource = spy(new TestCollectionResource(ds, pageEmpty))
+        assertThat "TestCollectionResource.iterator.hasNext() returns false", !emptyResource.iterator().hasNext()
+        assertThat "Expected TestCollectionResource.isEmpty() to return true", emptyResource.isEmpty()
+        verify(emptyResource, times(2)).getCurrentPage()
+    }
 
     @Test
     void testEmptyLastPagedCollection() {
@@ -109,7 +164,5 @@ class AbstractCollectionResourceTest {
 
         return [items    : itemArray,
                 nextPage : nextHref]
-
     }
-
 }

@@ -77,7 +77,7 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
 
     @Override
     public T single() {
-        Iterator<T> iterator = iterator();
+        Iterator<T> iterator = iterator(false);
         if (!iterator.hasNext()) {
             throw new IllegalStateException("This list is empty while it was expected to contain one (and only one) element.");
         }
@@ -86,6 +86,11 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
             throw new IllegalStateException("Only a single resource was expected, but this list contains more than one item.");
         }
         return itemToReturn;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return getCurrentPage().getItems().isEmpty();
     }
 
     protected abstract Class<T> getItemType();
@@ -128,11 +133,14 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
         return new DefaultPage<>(items);
     }
 
+    private Iterator<T> iterator(boolean firstPageQueryRequired) {
+        return new PaginatedIterator<>(this, firstPageQueryRequired);
+    }
 
     @Override
     public Iterator<T> iterator() {
         //firstPageQueryRequired ensures that newly obtained collection resources don't need to query unnecessarily
-        return new PaginatedIterator<>(this, firstPageQueryRequired.getAndSet(true));
+        return iterator(firstPageQueryRequired.getAndSet(true));
     }
 
     @Override
