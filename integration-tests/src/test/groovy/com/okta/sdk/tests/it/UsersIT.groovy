@@ -21,6 +21,14 @@ import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettings
+import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettingsAge
+import com.okta.sdk.resource.policy.PasswordPolicyRule
+import com.okta.sdk.resource.policy.PasswordPolicyRuleAction
+import com.okta.sdk.resource.policy.PasswordPolicyRuleActions
+import com.okta.sdk.resource.policy.PasswordPolicyRuleConditions
+import com.okta.sdk.resource.policy.PasswordPolicySettings
+import com.okta.sdk.resource.policy.PolicyNetworkCondition
 import com.okta.sdk.resource.user.AuthenticationProviderType
 import com.okta.sdk.resource.user.ChangePasswordRequest
 import com.okta.sdk.resource.user.ForgotPasswordResponse
@@ -39,12 +47,13 @@ import org.testng.Assert
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
+import java.time.Duration
 import java.util.stream.Collectors
 
 import static com.okta.sdk.tests.it.util.Util.assertGroupTargetPresent
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
 import static com.okta.sdk.tests.it.util.Util.assertPresent
-import static com.okta.sdk.tests.it.util.Util.getExpect
+import static com.okta.sdk.tests.it.util.Util.expect
 import static com.okta.sdk.tests.it.util.Util.validateGroup
 import static com.okta.sdk.tests.it.util.Util.validateUser
 import static org.hamcrest.MatcherAssert.assertThat
@@ -250,7 +259,66 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 2. Change the user's password
         UserCredentials credentials = user.changePassword(client.instantiate(ChangePasswordRequest)
             .setOldPassword(client.instantiate(PasswordCredential).setValue('Abcd1234'.toCharArray()))
-            .setNewPassword(client.instantiate(PasswordCredential).setValue('1234Abcd'.toCharArray())))
+            .setNewPassword(client.instantiate(PasswordCredential).setValue('1234Abcd'.toCharArray())), true)
+        assertThat credentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
+
+        // 3. make the test recording happy, and call a get on the user
+        // TODO: fix har file
+        client.getUser(user.getId())
+    }
+
+    @Test
+    void changeStrictPasswordTest() {
+
+        def password = 'Abcd1234'
+        def firstName = 'John'
+        def lastName = 'Change-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        def group = randomGroup()
+        def policy = randomPasswordPolicy(group.getId())
+        policy.setSettings(client.instantiate(PasswordPolicySettings)
+            .setPassword(client.instantiate(PasswordPolicyPasswordSettings)
+                .setAge(client.instantiate(PasswordPolicyPasswordSettingsAge)
+                    .setMinAgeMinutes(Duration.ofDays(2L).toMinutes() as int))))
+            .update()
+
+        def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
+        PasswordPolicyRule policyRule = policy.createRule(client.instantiate(PasswordPolicyRule)
+            .setConditions(client.instantiate(PasswordPolicyRuleConditions)
+                .setNetwork(client.instantiate(PolicyNetworkCondition)
+                    .setConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)))
+                .setActions(client.instantiate(PasswordPolicyRuleActions)
+                    .setPasswordChange(client.instantiate(PasswordPolicyRuleAction)
+                        .setAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW))
+                    .setSelfServicePasswordReset(client.instantiate(PasswordPolicyRuleAction)
+                        .setAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW))
+                    .setSelfServiceUnlock(client.instantiate(PasswordPolicyRuleAction)
+                        .setAccess(PasswordPolicyRuleAction.AccessEnum.DENY)))
+            .setName(policyRuleName))
+        registerForCleanup(policyRule)
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password.toCharArray())
+                .setActive(true)
+                .setGroups(group.getId())
+                .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Change the user's password
+        def request = client.instantiate(ChangePasswordRequest)
+            .setOldPassword(client.instantiate(PasswordCredential).setValue('Abcd1234'.toCharArray()))
+            .setNewPassword(client.instantiate(PasswordCredential).setValue('1234Abcd'.toCharArray()))
+
+        def exception = expect ResourceException, {user.changePassword(request, true)}
+        assertThat exception.getMessage(), containsString("E0000014") // Update of credentials failed.
+
+        def credentials = user.changePassword(request, false)
         assertThat credentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user

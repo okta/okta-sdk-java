@@ -16,19 +16,29 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.policy.OktaSignOnPolicy
+import com.okta.sdk.resource.group.Group
+import com.okta.sdk.resource.policy.GroupCondition
 import com.okta.sdk.resource.policy.PasswordPolicy
+import com.okta.sdk.resource.policy.PasswordPolicyConditions
 import com.okta.sdk.resource.policy.Policy
+import com.okta.sdk.resource.policy.PolicyPeopleCondition
 import com.okta.sdk.resource.policy.PolicyType
+import com.okta.sdk.tests.it.util.ITSupport
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
 
-class PasswordPoliciesIT implements CrudTestSupport {
+class PasswordPoliciesIT extends ITSupport implements CrudTestSupport {
 
     @Override
     def create(Client client) {
+        Group group = randomGroup()
+
         return client.createPolicy(client.instantiate(PasswordPolicy)
+            .setConditions(client.instantiate(PasswordPolicyConditions)
+                .setPeople(client.instantiate(PolicyPeopleCondition)
+                    .setGroups(client.instantiate(GroupCondition)
+                        .setInclude([group.getId()]))))
             .setName("policy+" + UUID.randomUUID().toString())
             .setStatus(Policy.StatusEnum.ACTIVE)
             .setDescription("IT created Policy - password CRUD"))

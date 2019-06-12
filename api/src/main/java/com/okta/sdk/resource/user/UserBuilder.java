@@ -18,8 +18,10 @@ package com.okta.sdk.resource.user;
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public interface UserBuilder {
 
@@ -54,6 +56,10 @@ public interface UserBuilder {
     UserBuilder putAllProfileProperties(Map<String, Object> profileProperties);
 
     UserBuilder putProfileProperty(String key, Object value);
+
+    default UserBuilder setGroups(String... groupIds) {
+        return setGroups(Arrays.stream(groupIds).collect(Collectors.toSet()));
+    }
 
     UserBuilder setGroups(Set<String> groupIds);
 

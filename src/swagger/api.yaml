@@ -25,7 +25,7 @@ info:
   license:
     name: Apache-2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-  version: 1.9.0
+  version: 1.10.0
 externalDocs:
   description: Find more info here
   url: 'http://developer.okta.com/docs/api/getting_started/design_principles.html'
@@ -808,6 +808,7 @@ paths:
     put:
       consumes:
         - application/json
+      description: Success
       operationId: updateRule
       parameters:
         - in: path
@@ -1705,6 +1706,10 @@ paths:
           name: userId
           required: true
           type: string
+        - in: query
+          name: strict
+          type: boolean
+          x-okta-added-version: 1.10.0
       produces:
         - application/json
       responses:
@@ -1768,6 +1773,10 @@ paths:
           name: userId
           required: true
           type: string
+        - in: query
+          name: strict
+          type: boolean
+          x-okta-added-version: 1.10.0
       produces:
         - application/json
       responses:
@@ -2403,7 +2412,7 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        '201':
           description: Success
           schema:
             $ref: '#/definitions/Role'
@@ -2439,6 +2448,7 @@ paths:
     get:
       consumes:
         - application/json
+      description: Success
       operationId: listGroupTargetsForRole
       parameters:
         - in: path
@@ -2474,6 +2484,7 @@ paths:
     delete:
       consumes:
         - application/json
+      description: Success
       operationId: removeGroupTargetFromRole
       parameters:
         - in: path
@@ -2500,6 +2511,7 @@ paths:
     put:
       consumes:
         - application/json
+      description: Success
       operationId: addGroupTargetToRole
       parameters:
         - in: path
@@ -2936,6 +2948,8 @@ definitions:
         $ref: '#/definitions/ApplicationSettingsApplication'
       implicitAssignment:
         type: boolean
+      inlineHookId:
+        type: string
       notifications:
         $ref: '#/definitions/ApplicationSettingsNotifications'
     type: object
@@ -3223,6 +3237,7 @@ definitions:
         type: string
       mfaStateTokenId:
         type: string
+        x-okta-deprecated: 1.10.0
       profile:
         $ref: '#/definitions/FactorProfile'
       provider:
@@ -4441,13 +4456,10 @@ definitions:
     properties:
       delegation:
         $ref: '#/definitions/PasswordPolicyDelegationSettings'
-        readOnly: true
       password:
         $ref: '#/definitions/PasswordPolicyPasswordSettings'
-        readOnly: true
       recovery:
         $ref: '#/definitions/PasswordPolicyRecoverySettings'
-        readOnly: true
     type: object
     x-okta-tags:
       - Policy
@@ -4702,6 +4714,16 @@ definitions:
           type: object
         readOnly: true
         type: object
+      _links:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
+      assignmentType:
+        enum:
+          - GROUP
+          - USER
+        type: string
       created:
         format: date-time
         readOnly: true
