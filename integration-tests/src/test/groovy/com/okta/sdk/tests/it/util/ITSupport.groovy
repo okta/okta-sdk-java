@@ -87,7 +87,7 @@ abstract class ITSupport implements ClientProvider {
         return user
     }
 
-    Group randomGroup(String name = "group-${UUID.randomUUID().toString()}") {
+    Group randomGroup(String name = "group-java-sdk-${UUID.randomUUID().toString()}") {
 
         Group group = GroupBuilder.instance()
             .setName(name)
@@ -105,7 +105,7 @@ abstract class ITSupport implements ClientProvider {
                 .setPeople(client.instantiate(PolicyPeopleCondition)
                     .setGroups(client.instantiate(GroupCondition)
                         .setInclude([groupId]))))
-            .setName("policy+" + UUID.randomUUID().toString())
+            .setName("policy-java-" + UUID.randomUUID().toString())
             .setStatus(Policy.StatusEnum.ACTIVE)
             .setDescription("IT created Policy")
             .setStatus(Policy.StatusEnum.ACTIVE))
@@ -122,7 +122,7 @@ abstract class ITSupport implements ClientProvider {
                 .setPeople(client.instantiate(PolicyPeopleCondition)
                     .setGroups(client.instantiate(GroupCondition)
                         .setInclude([groupId]))))
-            .setName("policy+" + UUID.randomUUID().toString())
+            .setName("policy-java-" + UUID.randomUUID().toString())
             .setStatus(Policy.StatusEnum.ACTIVE)
             .setDescription("IT created Policy")
             .setStatus(Policy.StatusEnum.ACTIVE))

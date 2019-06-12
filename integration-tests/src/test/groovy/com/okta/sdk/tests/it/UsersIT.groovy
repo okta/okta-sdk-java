@@ -315,7 +315,6 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setOldPassword(client.instantiate(PasswordCredential).setValue('Abcd1234'.toCharArray()))
             .setNewPassword(client.instantiate(PasswordCredential).setValue('1234Abcd'.toCharArray()))
 
-        //
         def exception = expect ResourceException, {user.changePassword(request, true)}
         assertThat exception.getMessage(), containsString("E0000014") // Update of credentials failed.
 
