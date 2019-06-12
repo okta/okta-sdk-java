@@ -621,7 +621,10 @@ public class HttpHeaders implements MultiValueMap<String, String> {
     public Map<String, List<String>> getXHeaders() {
         return this.headers.entrySet().stream()
                 .filter(e -> e.getKey().toLowerCase(Locale.ENGLISH).startsWith("x-"))
-                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+                .collect(
+                    LinkedCaseInsensitiveMap::new,
+                    (map, entry) -> map.put(entry.getKey(), entry.getValue()),
+                    Map::putAll);
     }
 
     // Map implementation

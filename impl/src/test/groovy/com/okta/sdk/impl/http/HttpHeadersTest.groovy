@@ -431,5 +431,9 @@ class HttpHeadersTest {
                 hasEntry(is("x-header1"), equalTo(["value1", "value2"])),
                 hasEntry(is("x-header2"), equalTo(["single-value"])),
                 aMapWithSize(2))
+
+        assertThat httpHeaders.getXHeaders().get("x-header1"), equalTo(["value1", "value2"])
+        assertThat httpHeaders.getXHeaders().get("X-HEADER1"), equalTo(["value1", "value2"])
+        assertThat httpHeaders.getXHeaders().get("X-HeADeR2"), equalTo(["single-value"])
     }
 }
