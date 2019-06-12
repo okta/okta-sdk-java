@@ -16,6 +16,7 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.impl.Util
 import com.okta.sdk.resource.user.PasswordCredential
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserCredentials
@@ -27,6 +28,7 @@ import org.testng.annotations.Test
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 
+import static com.okta.sdk.impl.Util.expect
 import static org.hamcrest.Matchers.aMapWithSize
 import static org.hamcrest.Matchers.allOf
 import static org.hamcrest.Matchers.hasEntry
@@ -170,5 +172,35 @@ class DefaultUserBuilderTest {
                     hasEntry("value", hashedPassword),
                     hasEntry("algorithm", "BCRYPT"),
                     aMapWithSize(4))
+    }
+
+    @Test
+    void createUserWithClearAndImportPassword() {
+
+        def client = mock(Client)
+        def user = mock(User)
+        def profile = mock(UserProfile)
+        def passwordCredential = mock(PasswordCredential)
+        def userCredentials = mock(UserCredentials)
+        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(UserProfile)).thenReturn(profile)
+        when(client.instantiate(UserCredentials)).thenReturn(userCredentials)
+        when(client.instantiate(PasswordCredential)).thenReturn(passwordCredential)
+        when(user.getProfile()).thenReturn(profile)
+        when(user.getCredentials()).thenReturn(userCredentials)
+
+        String salt = "some-salt"
+        String hashedPassword = "a-hashed-password"
+        String password = "regularPassowrd"
+
+        expect IllegalArgumentException, {
+            new DefaultUserBuilder()
+                .setFirstName("Joe")
+                .setLastName("Coder")
+                .setEmail("joe.coder@example.com")
+                .setPassword(password.toCharArray())
+                .setSha512PasswordHash(hashedPassword, salt, "PREFIX")
+                .buildAndCreate(client)
+        }
     }
 }

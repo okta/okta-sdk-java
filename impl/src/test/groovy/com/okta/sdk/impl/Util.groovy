@@ -19,9 +19,9 @@ import org.testng.Assert
 
 class Util {
 
-    static def expect = { Class<? extends Throwable> catchMe, Closure callMe ->
+    static <T extends Throwable> T expect(Class<T> catchMe, Closure closure) {
         try {
-            callMe.call()
+            closure.call()
             Assert.fail("Expected ${catchMe.getName()} to be thrown.")
         } catch(e) {
             if (!e.class.isAssignableFrom(catchMe)) {
