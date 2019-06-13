@@ -182,7 +182,7 @@ public class DefaultUserBuilder implements UserBuilder {
         if (password != null && password.length > 0) {
 
             if (passwordHashProperties != null) {
-                throw new IllegalArgumentException("Cannot set password with both `setPassword()` and `set*PasswordHash()`, use one or the other.");
+                throw new IllegalArgumentException("Cannot specify both password and password hash, use one or the other.");
             }
 
             PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
