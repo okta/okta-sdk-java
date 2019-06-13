@@ -108,7 +108,8 @@ abstract class ITSupport implements ClientProvider {
             .setName("policy-java-" + UUID.randomUUID().toString())
             .setStatus(Policy.StatusEnum.ACTIVE)
             .setDescription("IT created Policy")
-            .setStatus(Policy.StatusEnum.ACTIVE))
+            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setPriority(1))
 
         registerForCleanup(policy)
 
