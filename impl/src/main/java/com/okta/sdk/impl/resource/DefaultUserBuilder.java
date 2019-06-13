@@ -28,6 +28,7 @@ import com.okta.sdk.resource.user.UserNextLogin;
 import com.okta.sdk.resource.user.UserProfile;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -49,6 +50,7 @@ public class DefaultUserBuilder implements UserBuilder {
     private Boolean provider;
     private UserNextLogin nextLogin;
     private Set<String> groupIds = new HashSet<>();
+    private Map<String, Object> passwordHashProperties;
 
     private Map<String, Object> customProfileAttributes = new LinkedHashMap<>();
 
@@ -168,24 +170,67 @@ public class DefaultUserBuilder implements UserBuilder {
 
         userProfile.putAll(customProfileAttributes);
 
-        if (password != null && password.length > 0 || Strings.hasText(securityQuestion)) {
-            UserCredentials credentials = client.instantiate(UserCredentials.class);
-            user.setCredentials(credentials);
+        // security question
+        if (Strings.hasText(securityQuestion)) {
+            RecoveryQuestionCredential question = client.instantiate(RecoveryQuestionCredential.class);
+            question.setQuestion(securityQuestion);
+            question.setAnswer(securityQuestionAnswer);
+            createCredentialsIfNeeded(user, client).setRecoveryQuestion(question);
+        }
 
-            if (Strings.hasText(securityQuestion)) {
-                RecoveryQuestionCredential question = client.instantiate(RecoveryQuestionCredential.class);
-                question.setQuestion(securityQuestion);
-                question.setAnswer(securityQuestionAnswer);
-                credentials.setRecoveryQuestion(question);
+        // user password
+        if (password != null && password.length > 0) {
+
+            if (passwordHashProperties != null) {
+                throw new IllegalArgumentException("Cannot specify both password and password hash, use one or the other.");
             }
 
-            if (password != null && password.length > 0) {
-                PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
-                credentials.setPassword(passwordCredential.setValue(password));
-            }
+            PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
+            createCredentialsIfNeeded(user, client).setPassword(passwordCredential.setValue(password));
+        }
+
+        // password import
+        if (passwordHashProperties != null) {
+            PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
+            passwordCredential.put("hash", passwordHashProperties);
+            createCredentialsIfNeeded(user, client).setPassword(passwordCredential);
         }
 
         return user;
+    }
+
+    private UserCredentials createCredentialsIfNeeded(User user, Client client) {
+        if (user.getCredentials() == null) {
+            UserCredentials credentials = client.instantiate(UserCredentials.class);
+            user.setCredentials(credentials);
+        }
+        return user.getCredentials();
+    }
+
+    public UserBuilder setBcryptPasswordHash(String value, String salt, int workFactor) {
+        passwordHashProperties = new HashMap<>();
+        passwordHashProperties.put("algorithm", "BCRYPT");
+        passwordHashProperties.put("workFactor", workFactor);
+        passwordHashProperties.put("salt", salt);
+        passwordHashProperties.put("value", value);
+        return this;
+    }
+
+    public UserBuilder setSha256PasswordHash(String value, String salt, String saltOrder) {
+        return setShaPasswordHash("SHA-256", value, salt, saltOrder);
+    }
+
+    public UserBuilder setSha512PasswordHash(String value, String salt, String saltOrder) {
+        return setShaPasswordHash("SHA-512", value, salt, saltOrder);
+    }
+
+    private UserBuilder setShaPasswordHash(String shaAlgorithm, String value, String salt, String saltOrder) {
+        passwordHashProperties = new HashMap<>();
+        passwordHashProperties.put("algorithm", shaAlgorithm);
+        passwordHashProperties.put("salt", salt);
+        passwordHashProperties.put("value", value);
+        passwordHashProperties.put("saltOrder", saltOrder);
+        return this;
     }
 
     @Override

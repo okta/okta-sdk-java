@@ -67,5 +67,11 @@ public interface UserBuilder {
 
     UserBuilder setNextLogin(UserNextLogin nextLogin);
 
+    UserBuilder setBcryptPasswordHash(String value, String salt, int workFactor);
+
+    UserBuilder setSha256PasswordHash(String value, String salt, String saltOrder);
+
+    UserBuilder setSha512PasswordHash(String value, String salt, String saltOrder);
+
     User buildAndCreate(Client client);
 }
