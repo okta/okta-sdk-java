@@ -178,12 +178,14 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{/vendorExtensions.hasOptional}}
 
 {{#vendorExtensions.hasBackwardsCompatibleParams}}
+    // modelImpl.mustache
+{{#vendorExtensions.backwardsCompatibleParamsEntrySet}}
     /**
     * {{summary}}
     * {{notes}}
-    {{#vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{#value}}
     * @param {{paramName}} {{description}} (required)
-    {{/vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{/value}}
     {{#returnType}}
     * @return {{returnType}}
     {{/returnType}}
@@ -193,7 +195,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.onlyBackwardsCompatibleParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.onlyBackwardsCompatibleParams}}) {
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#value}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/value}}) {
 
     {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
     {{#vendorExtensions.hasPathParents}}
@@ -216,6 +218,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{>apiMethodDelete}}
 {{/vendorExtensions.isDelete}}
     }
+{{/vendorExtensions.backwardsCompatibleParamsEntrySet}}
 {{/vendorExtensions.hasBackwardsCompatibleParams}}
 
 {{/.}}

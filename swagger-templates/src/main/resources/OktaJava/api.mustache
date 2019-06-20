@@ -87,13 +87,14 @@ public interface {{classname}} extends DataStore {
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
     {{/vendorExtensions.hasOptional}}
 
-    {{#vendorExtensions.hasBackwardsCompatibleParams}}
+{{#vendorExtensions.hasBackwardsCompatibleParams}}
+{{#vendorExtensions.backwardsCompatibleParamsEntrySet}}
     /**
     * {{summary}}
     * {{notes}}
-    {{#vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{#value}}
     * @param {{paramName}} {{description}} (required)
-    {{/vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{/value}}
     {{#returnType}}
     * @return {{returnType}}
     {{/returnType}}
@@ -102,8 +103,10 @@ public interface {{classname}} extends DataStore {
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.onlyBackwardsCompatibleParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.onlyBackwardsCompatibleParams}});
-    {{/vendorExtensions.hasBackwardsCompatibleParams}}
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#value}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/value}});
+
+{{/vendorExtensions.backwardsCompatibleParamsEntrySet}}
+{{/vendorExtensions.hasBackwardsCompatibleParams}}
 
 {{/vendorExtensions.moved}}
 {{/operation}}

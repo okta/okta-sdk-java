@@ -388,6 +388,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                             cgParamAllList.addAll(cgOperation.bodyParams);
                             cgParamAllList.addAll(cgOperation.queryParams);
+                            cgParamAllList.addAll(cgOperation.headerParams);
 
                             // set all params to have more
                             cgParamAllList.forEach(param -> param.hasMore = true);
@@ -740,12 +741,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             co.vendorExtensions.put("hasOptional", true);
 
             List<CodegenParameter> nonOptionalParams = params.stream()
-                    .filter(param -> param.required)
-                    .map(CodegenParameter::copy)
-                    .collect(Collectors.toList());
+                .filter(param -> param.required)
+                .map(CodegenParameter::copy)
+                .collect(Collectors.toList());
 
             if (!nonOptionalParams.isEmpty()) {
-                CodegenParameter param = nonOptionalParams.get(nonOptionalParams.size()-1);
+                CodegenParameter param = nonOptionalParams.get(nonOptionalParams.size() - 1);
                 param.hasMore = false;
                 co.vendorExtensions.put(NON_OPTIONAL_PRAMS, nonOptionalParams);
             }
@@ -761,16 +762,61 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             }
 
             if (params.parallelStream().anyMatch(param -> param.vendorExtensions.containsKey("x-okta-added-version"))) {
-                List<CodegenParameter> onlyBackwardsCompatibleParams = params.stream()
-                        .filter(param -> !param.vendorExtensions.containsKey("x-okta-added-version"))
-                        .map(CodegenParameter::copy)
-                        .collect(Collectors.toList());
 
-                if (onlyBackwardsCompatibleParams.stream().anyMatch(param -> param.isQueryParam)) {
-                    CodegenParameter lastItem = onlyBackwardsCompatibleParams.get(onlyBackwardsCompatibleParams.size() - 1);
-                    lastItem.hasMore = false;
+                // capture the backward compat params
+                Map<String, List<CodegenParameter>> versionedParamsMap = new LinkedHashMap<>();
+
+                // loop through first and build the keys
+                List<String> paramVersions = params.stream()
+                    .filter(param -> param.vendorExtensions.containsKey("x-okta-added-version"))
+                    .map(param -> param.vendorExtensions.get("x-okta-added-version").toString())
+                    .collect(Collectors.toList());
+                Collections.reverse(paramVersions);
+                paramVersions.add("preversion"); // anything without 'x-okta-added-version'
+
+                paramVersions.forEach(version -> versionedParamsMap.put(version, new ArrayList<>()));
+
+                // now loop through again and figure out which buckets each param goes into
+                params.stream().forEach(param -> {
+                    String version = param.vendorExtensions.getOrDefault("x-okta-added-version", "preversion").toString();
+                    for (Map.Entry<String, List<CodegenParameter>> entry : versionedParamsMap.entrySet()) {
+
+                        String versionKey = entry.getKey();
+                        List<CodegenParameter> versionedParams = entry.getValue();
+
+                        // add the param, the break if we are adding to the final version
+                        versionedParams.add(param.copy());
+                        if (version.equals(versionKey)) {
+                            break;
+                        }
+                    }
+                    });
+
+                // remove the latest version as this is equivalent to the expected swagger flow
+                String latestVersion = paramVersions.get(0);
+                versionedParamsMap.remove(latestVersion);
+                System.out.println("Removed latest version: "+ latestVersion +" from "+ co.path);
+
+                // also remove any versions that are empty
+                Map<String, List<CodegenParameter>> resultVersionedParamsMap = versionedParamsMap.entrySet().stream()
+                    .filter(entry ->
+                        !entry.getValue().isEmpty()
+                            && entry.getValue().stream().anyMatch(param -> param.isQueryParam || param.isHeaderParam))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+                if (resultVersionedParamsMap.size() > 0) {
+
+                    // mark the last parm on each versioned param list
+                    resultVersionedParamsMap.values().stream()
+                        .forEach(versionedParams -> {
+                            if (!versionedParams.isEmpty()) {
+                                CodegenParameter lastItem = versionedParams.get(versionedParams.size() - 1);
+                                lastItem.hasMore = false;
+                            }
+                        });
+
                     co.vendorExtensions.put("hasBackwardsCompatibleParams", true);
-                    co.vendorExtensions.put("onlyBackwardsCompatibleParams", onlyBackwardsCompatibleParams);
+                    co.vendorExtensions.put("backwardsCompatibleParamsEntrySet", resultVersionedParamsMap.entrySet());
                 }
             }
         }
