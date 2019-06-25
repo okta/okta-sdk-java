@@ -157,12 +157,13 @@ public class {{classname}} extends com.okta.sdk.impl.client.AbstractClient {
 {{/vendorExtensions.hasOptional}}
 
 {{#vendorExtensions.hasBackwardsCompatibleParams}}
+{{#vendorExtensions.backwardsCompatibleParamsEntrySet}}
     /**
     * {{summary}}
     * {{notes}}
-    {{#vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{#value}}
     * @param {{paramName}} {{description}} (required)
-    {{/vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{/value}}
     {{#returnType}}
     * @return {{returnType}}
     {{/returnType}}
@@ -172,7 +173,7 @@ public class {{classname}} extends com.okta.sdk.impl.client.AbstractClient {
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.onlyBackwardsCompatibleParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.onlyBackwardsCompatibleParams}}) {
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#value}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/value}}) {
 {{>queryPartialBackwardsCompat}}
 {{#vendorExtensions.isGet}}
 {{>apiMethodGet}}
@@ -187,6 +188,7 @@ public class {{classname}} extends com.okta.sdk.impl.client.AbstractClient {
 {{>apiMethodDelete}}
 {{/vendorExtensions.isDelete}}
     }
+{{/vendorExtensions.backwardsCompatibleParamsEntrySet}}
 {{/vendorExtensions.hasBackwardsCompatibleParams}}
 {{/vendorExtensions.moved}}
 {{/operation}}

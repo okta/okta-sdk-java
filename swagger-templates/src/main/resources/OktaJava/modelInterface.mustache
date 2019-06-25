@@ -83,21 +83,24 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
 {{/vendorExtensions.hasOptional}}
 {{#vendorExtensions.hasBackwardsCompatibleParams}}
+{{#vendorExtensions.backwardsCompatibleParamsEntrySet}}
     /**
     * {{summary}}
     * {{notes}}
-    {{#vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{#value}}
     * @param {{paramName}} {{description}} (required)
-    {{/vendorExtensions.onlyBackwardsCompatibleParams}}
+    {{/value}}
     {{#returnType}}
     * @return {{returnType}}
     {{/returnType}}
     */
+    // backwardsCompatible spec v{{key}}
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{vendorExtensions.alias}}({{#vendorExtensions.onlyBackwardsCompatibleParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.onlyBackwardsCompatibleParams}});
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{vendorExtensions.alias}}({{#value}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/value}});
+{{/vendorExtensions.backwardsCompatibleParamsEntrySet}}
 {{/vendorExtensions.hasBackwardsCompatibleParams}}
 {{/.}}
 {{/vendorExtensions.operations}}
