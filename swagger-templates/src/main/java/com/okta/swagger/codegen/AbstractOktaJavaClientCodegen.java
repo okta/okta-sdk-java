@@ -133,6 +133,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         moveOperationsToSingleClient(swagger);
         handleOktaLinkedOperations(swagger);
         buildDiscriminationMap(swagger);
+
+        addOptionalClassnamePartial(toApiName(""), vendorExtensions); // toApiName will return the generated client classname
     }
 
     /**
@@ -664,8 +666,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             }
         }
 
-        model.vendorExtensions.put("optionalClassnamePartial", (Mustache.Lambda) (frag, out) -> {
-            String templateResource = "/" + templateDir + "/" + model.classname + ".mustache";
+        addOptionalClassnamePartial(model.classname, model.vendorExtensions);
+    }
+
+    private void addOptionalClassnamePartial(String classname, Map<String, Object> vendorExtensions) {
+        vendorExtensions.put("optionalClassnamePartial", (Mustache.Lambda) (frag, out) -> {
+            String templateResource = "/" + templateDir + "/" + classname + ".mustache";
             URL optionalClassnameTemplate = getClass().getResource(templateResource);
 
             Mustache.Compiler compiler = Mustache.compiler().withLoader((name) -> {
@@ -674,7 +680,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 }
                 return new StringReader("");
             });
-            processCompiler(compiler).compile("{{> " + model.classname + "}}").execute(frag.context(), out);
+            processCompiler(compiler).compile("{{> " + classname + "}}").execute(frag.context(), out);
         });
     }
 

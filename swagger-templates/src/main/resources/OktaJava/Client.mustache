@@ -1,0 +1,35 @@
+    /**
+    * Query users in your organization.
+    * @param q Finds a user that matches firstName, lastName, and email properties (optional)
+    * @return UserList
+    */
+    @javax.annotation.Generated(
+            value    = "com.okta.swagger.codegen.OktaJavaClientApiCodegen",
+            comments = "GET - /api/v1/users")
+    default UserList queryUsers(String q) {
+        return listUsers(q, null, null, null, null);
+    }
+
+    /**
+    * Lists users in your organization with pagination.  A subset of users can be returned that match a supported search criteria.
+    * @param search Searches for users with a supported filtering  expression for most properties
+    * @return UserList
+    */
+    @javax.annotation.Generated(
+            value    = "com.okta.swagger.codegen.OktaJavaClientApiCodegen",
+            comments = "GET - /api/v1/users")
+    default UserList searchUsers(String search) {
+        return listUsers(null, null, null, search, null);
+    }
+
+    /**
+    * Lists users in your organization with pagination.  A subset of users can be returned that match a supported filter expression.
+    * @param filter Filters users with a supported expression for a subset of properties (optional)
+    * @return UserList
+    */
+    @javax.annotation.Generated(
+            value    = "com.okta.swagger.codegen.OktaJavaClientApiCodegen",
+            comments = "GET - /api/v1/users")
+    default UserList filterUsers(String filter) {
+        return listUsers(null, filter, null, null, null);
+    }
