@@ -13,4 +13,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-        {{#returnType}}return {{/returnType}}getDataStore().getResource(href, {{#returnType}}{{{returnType}}}.class{{/returnType}}{{^returnType}}VoidResource.class{{/returnType}});
+        {{#returnType}}return {{/returnType}}getDataStore().getResource(
+            "{{{vendorExtensions.hrefFiltered}}}",
+            {{#returnType}}{{{returnType}}}.class{{/returnType}}{{^returnType}}VoidResource.class{{/returnType}},
+            queryArgs,
+            headers);

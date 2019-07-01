@@ -23,6 +23,7 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.http.QueryString;
+import com.okta.sdk.impl.http.HttpHeaders;
 import com.okta.sdk.impl.config.ClientConfiguration;
 
 import {{vendorExtensions.overrideApiPackage}}.*;
@@ -103,7 +104,7 @@ public class {{classname}} extends com.okta.sdk.impl.client.AbstractClient {
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
-{{>queryPartial}}
+{{>paramPartial}}
 {{#vendorExtensions.isGet}}
 {{>apiMethodGet}}
 {{/vendorExtensions.isGet}}
@@ -135,7 +136,7 @@ public class {{classname}} extends com.okta.sdk.impl.client.AbstractClient {
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
-{{>queryPartialRequired}}
+{{>paramPartialOnlyRequired}}
 {{#vendorExtensions.isGet}}
 {{>apiMethodGet}}
 {{/vendorExtensions.isGet}}
@@ -174,7 +175,7 @@ public class {{classname}} extends com.okta.sdk.impl.client.AbstractClient {
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#value}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/value}}) {
-{{>queryPartialBackwardsCompat}}
+{{>paramPartialBackwardsCompat}}
 {{#vendorExtensions.isGet}}
 {{>apiMethodGet}}
 {{/vendorExtensions.isGet}}

@@ -19,6 +19,7 @@ import com.okta.sdk.impl.resource.Property;
 import com.okta.sdk.impl.resource.ResourceReference;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.http.QueryString;
+import com.okta.sdk.impl.http.HttpHeaders;
 
 {{! TODO: add these programatically when needed }}
 import com.okta.sdk.impl.resource.BooleanProperty;
@@ -38,6 +39,7 @@ import com.okta.sdk.resource.VoidResource;
 import com.okta.sdk.resource.Resource;
 {{/vendorExtensions.top-level}}
 import java.util.Map;
+import java.util.HashMap;
 
 import static com.okta.commons.lang.Assert.notNull;
 import static com.okta.commons.lang.Assert.hasText;
@@ -110,13 +112,13 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
-    {{#vendorExtensions.hasPathParents}}
+{{#vendorExtensions.hasPathParents}}
         Map<String, String> pathArgs = getParamsFromHref("{{path}}");
-    {{#vendorExtensions.pathParents}}
+{{#vendorExtensions.pathParents}}
         String {{.}} = pathArgs.get("{{.}}");
-    {{/vendorExtensions.pathParents}}
-    {{/vendorExtensions.hasPathParents}}
-{{>queryPartial}}
+{{/vendorExtensions.pathParents}}
+{{/vendorExtensions.hasPathParents}}
+{{>paramPartial}}
 {{#vendorExtensions.isGet}}
 {{>apiMethodGet}}
 {{/vendorExtensions.isGet}}
@@ -150,13 +152,13 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
-    {{#vendorExtensions.hasPathParents}}
+{{#vendorExtensions.hasPathParents}}
         Map<String, String> pathArgs = getParamsFromHref("{{path}}");
-        {{#vendorExtensions.pathParents}}
+{{#vendorExtensions.pathParents}}
         String {{.}} = pathArgs.get("{{.}}");
-        {{/vendorExtensions.pathParents}}
-    {{/vendorExtensions.hasPathParents}}
-{{>queryPartialRequired}}
+{{/vendorExtensions.pathParents}}
+{{/vendorExtensions.hasPathParents}}
+{{>paramPartialOnlyRequired}}
 {{#vendorExtensions.isGet}}
 {{>apiMethodGet}}
 {{/vendorExtensions.isGet}}
@@ -178,7 +180,6 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{/vendorExtensions.hasOptional}}
 
 {{#vendorExtensions.hasBackwardsCompatibleParams}}
-    // modelImpl.mustache
 {{#vendorExtensions.backwardsCompatibleParamsEntrySet}}
     /**
     * {{summary}}
@@ -197,14 +198,14 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
             comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#value}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/value}}) {
 
-    {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
-    {{#vendorExtensions.hasPathParents}}
+{{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
+{{#vendorExtensions.hasPathParents}}
         Map<String, String> pathArgs = getParamsFromHref("{{path}}");
-        {{#vendorExtensions.pathParents}}
+{{#vendorExtensions.pathParents}}
         String {{.}} = pathArgs.get("{{.}}");
-        {{/vendorExtensions.pathParents}}
-    {{/vendorExtensions.hasPathParents}}
-{{>queryPartialBackwardsCompat}}
+{{/vendorExtensions.pathParents}}
+{{/vendorExtensions.hasPathParents}}
+{{>paramPartialBackwardsCompat}}
 {{#vendorExtensions.isGet}}
 {{>apiMethodGet}}
 {{/vendorExtensions.isGet}}

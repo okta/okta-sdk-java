@@ -13,4 +13,15 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-        {{#returnType}}return {{/returnType}}getDataStore().create(href, {{#vendorExtensions.bodyIsSelf}}this{{/vendorExtensions.bodyIsSelf}}{{^vendorExtensions.bodyIsSelf}}new DefaultVoidResource(getDataStore()){{/vendorExtensions.bodyIsSelf}}, null{{#returnType}}, {{returnType}}.class{{/returnType}});
+        {{#returnType}}return {{/returnType}}getDataStore().create(
+            "{{{vendorExtensions.hrefFiltered}}}",
+{{#vendorExtensions.bodyIsSelf}}
+            this,
+{{/vendorExtensions.bodyIsSelf}}
+{{^vendorExtensions.bodyIsSelf}}
+            new DefaultVoidResource(getDataStore()),
+{{/vendorExtensions.bodyIsSelf}}
+            null,
+            {{#returnType}}{{returnType}}.class,{{/returnType}}
+            queryArgs,
+            headers);

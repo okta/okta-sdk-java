@@ -13,19 +13,21 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
+
+        String href = "{{{vendorExtensions.hrefFiltered}}}";
 {{#vendorExtensions.bodyIsSelf}}
-        getDataStore().save(href, this, null);
+        getDataStore().save(href, this, null, queryArgs, headers);
   {{#returnType}}
         return this;
   {{/returnType}}
 {{/vendorExtensions.bodyIsSelf}}
 {{^vendorExtensions.bodyIsSelf}}
   {{#bodyParam}}
-        getDataStore().save(href, {{bodyParam.paramName}}, this);
+        getDataStore().save(href, {{bodyParam.paramName}}, this, queryArgs, headers);
         {{#returnType}}return {{/returnType}} {{bodyParam.paramName}};
   {{/bodyParam}}
   {{^bodyParam}}
-        getDataStore().save(href, new DefaultVoidResource(getDataStore()), this);
+        getDataStore().save(href, new DefaultVoidResource(getDataStore()), this, queryArgs, headers);
     {{#returnType}}
         return this;
     {{/returnType}}
