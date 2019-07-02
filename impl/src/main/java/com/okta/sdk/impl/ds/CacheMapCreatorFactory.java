@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.impl.ds;
 
-import com.okta.sdk.impl.http.QueryString;
+import com.okta.commons.http.QueryString;
 import com.okta.sdk.resource.Resource;
 
 import java.util.Map;

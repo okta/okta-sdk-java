@@ -16,6 +16,8 @@
  */
 package com.okta.sdk.impl.util;
 
+import com.okta.commons.http.config.BaseUrlResolver;
+
 /**
  * @since 0.5.0
  */

@@ -25,7 +25,7 @@ import com.okta.sdk.impl.io.Resource
 import com.okta.sdk.impl.io.ResourceFactory
 import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import com.okta.sdk.impl.test.RestoreSystemProperties
-import com.okta.sdk.impl.util.BaseUrlResolver
+import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.impl.Util
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -42,7 +42,7 @@ class DefaultClientBuilderTest {
 
     /**
      * This method MUST be called from each test in order to work with with the Listeners defined above.
-     * If this method is invoked with an @BeforeMethod annotation the Listener will be invoked before and after this
+     * If this method is invoked with an @BDefaultClientTesteforeMethod annotation the Listener will be invoked before and after this
      * method as well.
      */
     void clearOktaEnvAndSysProps() {

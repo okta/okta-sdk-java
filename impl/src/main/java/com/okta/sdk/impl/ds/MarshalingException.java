@@ -16,12 +16,12 @@
  */
 package com.okta.sdk.impl.ds;
 
-import com.okta.sdk.impl.http.RestException;
+import com.okta.commons.http.HttpException;
 
 /**
  * @since 0.5.0
  */
-public class MarshalingException extends RestException {
+public class MarshalingException extends HttpException {
 
     public MarshalingException(String s) {
         super(s);

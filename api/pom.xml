@@ -40,6 +40,10 @@
         </dependency>
         <dependency>
             <groupId>com.okta.commons</groupId>
+            <artifactId>okta-http-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.okta.commons</groupId>
             <artifactId>okta-commons-lang</artifactId>
         </dependency>
         <dependency>
@@ -90,4 +94,25 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.siom79.japicmp</groupId>
+                        <artifactId>japicmp-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>japicmp</id>
+                                <goals>
+                                    <goal>cmp</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

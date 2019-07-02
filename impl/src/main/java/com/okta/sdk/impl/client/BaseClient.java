@@ -12,27 +12,23 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License.BaseClientTest
  */
 package com.okta.sdk.impl.client;
 
+import com.okta.commons.http.RequestExecutor;
+import com.okta.commons.http.RequestExecutorFactory;
+import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
-import com.okta.sdk.client.AuthenticationScheme;
-import com.okta.sdk.client.Proxy;
 import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.ds.RequestBuilder;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
-import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.ds.DefaultDataStore;
 import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.impl.http.RequestExecutor;
-import com.okta.sdk.impl.http.RequestExecutorFactory;
-import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
-import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.resource.Resource;
 
 /**
@@ -42,30 +38,6 @@ import com.okta.sdk.resource.Resource;
 public abstract class BaseClient implements DataStore {
 
     private final InternalDataStore dataStore;
-
-    /**
-     * Instantiates a new Client instance that will communicate with the Okta REST API.  See the class-level
-     * JavaDoc for a usage example.
-     *
-     * @param clientCredentialsResolver       Okta API Key resolver
-     * @param baseUrlResolver      Okta base URL resolver
-     * @param proxy                the HTTP proxy to be used when communicating with the Okta API server (can be
-     *                             null)
-     * @param cacheManager         the {@link CacheManager} that should be used to cache
-     *                             Okta REST resources (can be null)
-     * @param authenticationScheme the HTTP authentication scheme to be used when communicating with the Okta API
-     *                             server (can be null)
-     * @param requestAuthenticatorFactory factory used to handle creating autentication requests
-     * @param connectionTimeout    connection timeout in seconds
-     */
-    @Deprecated
-    public BaseClient(ClientCredentialsResolver clientCredentialsResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
-        Assert.notNull(clientCredentialsResolver, "clientCredentialsResolver argument cannot be null.");
-        Assert.notNull(baseUrlResolver, "baseUrlResolver argument cannot be null.");
-        Assert.isTrue(connectionTimeout >= 0, "connectionTimeout cannot be a negative number.");
-        RequestExecutor requestExecutor = createRequestExecutor(clientCredentialsResolver.getClientCredentials(), proxy, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
-        this.dataStore = createDataStore(requestExecutor, baseUrlResolver, clientCredentialsResolver, cacheManager);
-    }
 
     public BaseClient(ClientConfiguration clientConfiguration, CacheManager cacheManager) {
         Assert.notNull(clientConfiguration, "clientConfiguration argument cannot be null.");
@@ -99,22 +71,8 @@ public abstract class BaseClient implements DataStore {
 
         String msg = "Unable to find a '" + RequestExecutorFactory.class.getName() + "' " +
                 "implementation on the classpath.  Please ensure you have added the " +
-                "okta-sdk-httpclient.jar file to your runtime classpath.";
+                "okta-sdk-httpclient.jar file to your runtime classpath."; // TODO fix jar name
         return Classes.loadFromService(RequestExecutorFactory.class, msg).create(clientConfiguration);
-    }
-
-    @Deprecated
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    protected RequestExecutor createRequestExecutor(ClientCredentials clientCredentials, Proxy proxy, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
-
-        ClientConfiguration clientConfiguration = new ClientConfiguration();
-        clientConfiguration.setClientCredentialsResolver(new DefaultClientCredentialsResolver(clientCredentials));
-        clientConfiguration.setProxy(proxy);
-        clientConfiguration.setAuthenticationScheme(authenticationScheme);
-        clientConfiguration.setRequestAuthenticatorFactory(requestAuthenticatorFactory);
-        clientConfiguration.setConnectionTimeout(connectionTimeout);
-
-        return createRequestExecutor(clientConfiguration);
     }
 
     // ========================================================================

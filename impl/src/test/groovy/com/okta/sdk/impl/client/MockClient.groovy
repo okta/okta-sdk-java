@@ -15,19 +15,15 @@
  */
 package com.okta.sdk.impl.client
 
-import com.okta.sdk.authc.credentials.ClientCredentials
+import com.okta.commons.http.DefaultResponse
+import com.okta.commons.http.MediaType
+import com.okta.commons.http.Request
+import com.okta.commons.http.RequestExecutor
+import com.okta.commons.http.Response
 import com.okta.sdk.authc.credentials.TokenClientCredentials
-import com.okta.sdk.client.AuthenticationScheme
-import com.okta.sdk.client.Proxy
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
 import com.okta.sdk.impl.cache.DisabledCacheManager
 import com.okta.sdk.impl.config.ClientConfiguration
-import com.okta.sdk.impl.http.MediaType
-import com.okta.sdk.impl.http.Request
-import com.okta.sdk.impl.http.RequestExecutor
-import com.okta.sdk.impl.http.Response
-import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
-import com.okta.sdk.impl.http.support.DefaultResponse
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver
 import org.mockito.Mockito
 
@@ -39,19 +35,18 @@ class MockClient extends DefaultClient {
 
     RequestExecutor mockRequestExecutor
 
-    MockClient(ClientConfiguration clientConfig = new ClientConfiguration()) {
+    static ClientConfiguration defaultClientConfig = new ClientConfiguration() {{
+        setBaseUrlResolver(new DefaultBaseUrlResolver("https://okta.example.com"))
+        setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("api_client_key")))
+    }}
 
-        super(new DefaultClientCredentialsResolver(new TokenClientCredentials("api_client_key")),
-                new DefaultBaseUrlResolver("https://okta.example.com"),
-                null,
-                new DisabledCacheManager(),
-                clientConfig.getAuthenticationScheme(),
-                clientConfig.getRequestAuthenticatorFactory(),
-                clientConfig.getConnectionTimeout())
+
+    MockClient(ClientConfiguration clientConfig = defaultClientConfig) {
+        super(clientConfig, new DisabledCacheManager())
     }
 
     @Override
-    protected RequestExecutor createRequestExecutor(ClientCredentials clientCredentials, Proxy proxy, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
+    protected RequestExecutor createRequestExecutor(ClientConfiguration clientConfiguration) {
         mockRequestExecutor = Mockito.mock(RequestExecutor)
         return mockRequestExecutor
     }

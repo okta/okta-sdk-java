@@ -16,19 +16,20 @@
  */
 package com.okta.sdk.impl.http.authc;
 
-import com.okta.sdk.authc.credentials.ClientCredentials;
-import com.okta.sdk.impl.http.Request;
-import com.okta.sdk.impl.http.support.RequestAuthenticationException;
+import com.okta.commons.http.Request;
+import com.okta.commons.http.authc.RequestAuthenticationException;
+import com.okta.commons.http.authc.RequestAuthenticator;
 import com.okta.commons.lang.Assert;
+import com.okta.sdk.authc.credentials.ClientCredentials;
 
 
 public class SswsAuthenticator implements RequestAuthenticator {
 
     public static final String AUTHENTICATION_SCHEME = "SSWS";
 
-    private final ClientCredentials clientCredentials;
+    private final ClientCredentials<String> clientCredentials;
 
-    public SswsAuthenticator(ClientCredentials clientCredentials) {
+    public SswsAuthenticator(ClientCredentials<String> clientCredentials) {
         Assert.notNull(clientCredentials, "clientCredentials must be not be null.");
         this.clientCredentials = clientCredentials;
     }

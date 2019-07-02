@@ -16,8 +16,9 @@
  */
 package com.okta.sdk.impl.http.authc;
 
-import com.okta.sdk.client.AuthenticationScheme;
+import com.okta.commons.http.authc.RequestAuthenticator;
 import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.sdk.client.AuthenticationScheme;
 
 /**
  * Factory interface to create {@link RequestAuthenticator}s out of {@link AuthenticationScheme}s.

@@ -22,7 +22,7 @@ import com.okta.sdk.impl.ds.cache.DefaultCacheResolver
 import com.okta.sdk.impl.ds.cache.DefaultResourceCacheStrategy
 import com.okta.sdk.impl.ds.cache.ResourceCacheStrategy
 import com.okta.sdk.impl.ds.cache.WriteCacheFilter
-import com.okta.sdk.impl.http.QueryString
+import com.okta.commons.http.QueryString
 import com.okta.sdk.impl.http.support.DefaultCanonicalUri
 import com.okta.sdk.impl.resource.HalResourceHrefResolver
 import com.okta.sdk.impl.resource.StubEnum

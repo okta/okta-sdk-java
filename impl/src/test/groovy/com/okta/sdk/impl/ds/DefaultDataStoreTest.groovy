@@ -16,12 +16,12 @@
  */
 package com.okta.sdk.impl.ds
 
+import com.okta.commons.http.HttpHeaders
+import com.okta.commons.http.Request
+import com.okta.commons.http.RequestExecutor
+import com.okta.commons.http.Response
 import com.okta.sdk.authc.credentials.ClientCredentials
 import com.okta.sdk.impl.api.ClientCredentialsResolver
-import com.okta.sdk.impl.http.HttpHeaders
-import com.okta.sdk.impl.http.Request
-import com.okta.sdk.impl.http.RequestExecutor
-import com.okta.sdk.impl.http.Response
 import com.okta.sdk.impl.resource.TestResource
 import com.okta.sdk.impl.util.StringInputStream
 import org.hamcrest.Matcher

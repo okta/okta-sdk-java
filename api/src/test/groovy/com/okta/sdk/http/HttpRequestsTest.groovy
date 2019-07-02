@@ -1,6 +1,5 @@
 /*
- * Copyright 2014 Stormpath, Inc.
- * Modifications Copyright 2018 Okta, Inc.
+ * Copyright 2018-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.impl.http.support
+package com.okta.sdk.http
 
-import com.okta.commons.lang.Assert
 import org.testng.annotations.Test
 
-/**
- * @since 0.5.0
- */
-class VersionTest {
+import static org.testng.Assert.assertEquals
+import static org.testng.Assert.assertNotNull
+import static org.testng.Assert.assertTrue
+import static org.testng.Assert.fail
 
-    @Test
-    void testGetClientVersion() {
-        Assert.hasText(Version.clientVersion)
-        Assert.isTrue(Version.clientVersion.contains("."))
-    }
+class HttpRequestsTest {
+
 }

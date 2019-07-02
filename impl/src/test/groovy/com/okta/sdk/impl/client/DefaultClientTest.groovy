@@ -16,13 +16,14 @@
  */
 package com.okta.sdk.impl.client
 
+import com.okta.commons.http.RequestExecutorFactory
+import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.cache.CacheManager
 import com.okta.sdk.client.AuthenticationScheme
-import com.okta.sdk.impl.api.ClientCredentialsResolver
-import com.okta.sdk.impl.http.RequestExecutorFactory
-import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
-import com.okta.sdk.impl.util.BaseUrlResolver
 import com.okta.commons.lang.Classes
+import com.okta.sdk.impl.api.ClientCredentialsResolver
+import com.okta.sdk.impl.config.ClientConfiguration
+import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
 import org.mockito.Mock
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -64,8 +65,15 @@ class DefaultClientTest extends PowerMockTestCase {
         def baseUrlResolver = mock(BaseUrlResolver)
         def className = RequestExecutorFactory.name
 
+        ClientConfiguration clientConfiguration = new ClientConfiguration()
+        clientConfiguration.setClientCredentialsResolver(apiKeyResolver)
+        clientConfiguration.setRequestAuthenticatorFactory(requestAuthenticatorFactory)
+        clientConfiguration.setBaseUrlResolver(baseUrlResolver)
+        clientConfiguration.setConnectionTimeout(3600)
+        clientConfiguration.setAuthenticationScheme(AuthenticationScheme.SSWS)
+
         try {
-            new DefaultClient(apiKeyResolver, baseUrlResolver, null, cacheManager, AuthenticationScheme.SSWS, requestAuthenticatorFactory, 3600)
+            new DefaultClient(clientConfiguration, cacheManager)
             fail("shouldn't be here")
         } catch (Exception e) {
             assertThat e.getMessage(), is(("Unable to find a '${className}' " +

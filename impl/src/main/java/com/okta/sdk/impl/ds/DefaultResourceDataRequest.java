@@ -16,8 +16,8 @@
  */
 package com.okta.sdk.impl.ds;
 
+import com.okta.commons.http.HttpHeaders;
 import com.okta.sdk.impl.http.CanonicalUri;
-import com.okta.sdk.impl.http.HttpHeaders;
 import com.okta.sdk.resource.Resource;
 
 import java.util.Map;

@@ -100,4 +100,9 @@
         <Class name="quickstart.ReadmeSnippets" />]
     </Match>
 
+    <Match>
+        <Class name="com.okta.sdk.client.Proxy"/>
+            <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS" />
+    </Match>
+
 </FindBugsFilter>
