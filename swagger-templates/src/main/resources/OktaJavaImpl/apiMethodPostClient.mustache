@@ -20,29 +20,30 @@
         {{/vendorExtensions.bodyIsSelf}}
     {{/vendorExtensions.updateBody}}
 {{/returnType}}
-        {{#returnType}}{{^vendorExtensions.updateBody}}return {{/vendorExtensions.updateBody}}{{/returnType}}
-        getDataStore().create(
-            href,
-        {{#vendorExtensions.bodyIsSelf}}
+        {{#returnType}}{{^vendorExtensions.updateBody}}return {{/vendorExtensions.updateBody}}{{/returnType}}getDataStore().create(
+            "{{{vendorExtensions.hrefFiltered}}}",
+{{#vendorExtensions.bodyIsSelf}}
             this,
-        {{/vendorExtensions.bodyIsSelf}}
-        {{^vendorExtensions.bodyIsSelf}}
-            {{#bodyParam}}
+{{/vendorExtensions.bodyIsSelf}}
+{{^vendorExtensions.bodyIsSelf}}
+{{#bodyParam}}
             {{bodyParam.paramName}},
-            {{/bodyParam}}
-        {{/vendorExtensions.bodyIsSelf}}
-        {{^bodyParam}}
+{{/bodyParam}}
+{{/vendorExtensions.bodyIsSelf}}
+{{^bodyParam}}
             new DefaultVoidResource(getDataStore()),
-        {{/bodyParam}}
-            null{{#returnType}},
-        {{#vendorExtensions.updateBody}}
-            {{bodyParam.dataType}}.class
-        {{/vendorExtensions.updateBody}}
-        {{^vendorExtensions.updateBody}}
-            {{returnType}}.class
-        {{/vendorExtensions.updateBody}}
-        {{/returnType}}
-        );
+{{/bodyParam}}
+            null,
+{{#returnType}}
+{{#vendorExtensions.updateBody}}
+            {{bodyParam.dataType}}.class,
+{{/vendorExtensions.updateBody}}
+{{^vendorExtensions.updateBody}}
+            {{returnType}}.class,
+{{/vendorExtensions.updateBody}}
+{{/returnType}}
+            queryArgs,
+            headers);
 {{#returnType}}
     {{#vendorExtensions.updateBody}}
         return {{bodyParam.paramName}};

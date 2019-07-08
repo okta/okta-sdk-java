@@ -21,32 +21,37 @@
     {{/vendorExtensions.updateBody}}
 {{/returnType}}
         {{#returnType}}{{^vendorExtensions.updateBody}}return {{/vendorExtensions.updateBody}}{{/returnType}}getDataStore().create(
-            href,
-        {{#vendorExtensions.bodyIsSelf}}
+            "{{{vendorExtensions.hrefFiltered}}}",
+{{#vendorExtensions.bodyIsSelf}}
             this,
-        {{/vendorExtensions.bodyIsSelf}}
-        {{^vendorExtensions.bodyIsSelf}}
-            {{#bodyParam}}
-                {{#bodyParam.required}}
+{{/vendorExtensions.bodyIsSelf}}
+{{^vendorExtensions.bodyIsSelf}}
+{{#bodyParam}}
+{{#bodyParam.required}}
             {{bodyParam.paramName}},
-                {{/bodyParam.required}}
-                {{^bodyParam.required}}
+{{/bodyParam.required}}
+{{^bodyParam.required}}
             ({{bodyParam.paramName}} != null) ? {{bodyParam.paramName}} : getDataStore().instantiate(VoidResource.class),
-                {{/bodyParam.required}}
-            {{/bodyParam}}
-        {{/vendorExtensions.bodyIsSelf}}
-        {{^bodyParam}}
+{{/bodyParam.required}}
+{{/bodyParam}}
+{{/vendorExtensions.bodyIsSelf}}
+{{^bodyParam}}
             new DefaultVoidResource(getDataStore()),
-        {{/bodyParam}}
-            this{{^returnType}});{{/returnType}}{{#returnType}},
-        {{#vendorExtensions.updateBody}}
-            {{bodyParam.dataType}}.class
-        {{/vendorExtensions.updateBody}}
-        {{^vendorExtensions.updateBody}}
-            {{returnType}}.class
-        {{/vendorExtensions.updateBody}}
-        );
-        {{/returnType}}
+{{/bodyParam}}
+            this,
+{{^returnType}}
+            VoidResource.class,
+{{/returnType}}
+{{#returnType}}
+{{#vendorExtensions.updateBody}}
+            {{bodyParam.dataType}}.class,
+{{/vendorExtensions.updateBody}}
+{{^vendorExtensions.updateBody}}
+            {{returnType}}.class,
+{{/vendorExtensions.updateBody}}
+{{/returnType}}
+            queryArgs,
+            headers);
 {{#returnType}}
     {{#vendorExtensions.updateBody}}
         return {{bodyParam.paramName}};

@@ -375,6 +375,11 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     @Override
+    public <T extends Resource> void delete(String href, T resource, Map<String, Object> queryParameters, Map<String, List<String>> headerParameters) {
+        doDelete(href != null ? href : resource.getResourceHref(), getResourceClass(resource), new QueryString(queryParameters), headers(headerParameters));
+    }
+
+    @Override
     public <T extends Resource> void delete(T resource) {
         doDelete(resource.getResourceHref(), resource);
     }

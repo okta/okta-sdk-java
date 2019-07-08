@@ -1,5 +1,5 @@
 {{!
-    Copyright 2017 Okta
+    Copyright 2017-Present Okta, Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -13,7 +13,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{#queryParams}}{{#required}}
-        notNull({{paramName}}, "'{{paramName}}' is required and cannot be null.");{{/required}}{{/queryParams}}{{^vendorExtensions.bodyIsSelf}}{{#bodyParam}}{{#required}}
-        notNull({{bodyParam.paramName}}, "'{{paramName}}' is required and cannot be null.");{{/required}}{{/bodyParam}}{{/vendorExtensions.bodyIsSelf}}{{#pathParams}}
-        hasText({{paramName}}, "'{{paramName}}' is required and cannot be null or empty.");{{/pathParams}}
+{{>paramValidatePartial}}
+
+        Map<String, Object> queryArgs = new HashMap<>();
+        HttpHeaders headers = new HttpHeaders();
+{{#value}}{{#isQueryParam}}
+        if ({{paramName}} != null) queryArgs.put("{{baseName}}", {{paramName}});{{/isQueryParam}}{{#isHeaderParam}}
+        if ({{paramName}} != null) headers.add("{{baseName}}", {{paramName}});{{/isHeaderParam}}{{/value}}

@@ -77,6 +77,11 @@ public interface InternalDataStore extends DataStore {
      */
     void delete(String href, Map<String,Object> queryParameters, Map<String, List<String>> headerParameters);
 
+    /**
+     * @since 1.6.0
+     */
+    <T extends Resource> void delete(String href, T resource, Map<String,Object> queryParameters, Map<String, List<String>> headerParameters);
+
     <T extends Resource> T getResource(String href, Class<T> clazz, Map<String,Object> queryParameters);
 
     /**

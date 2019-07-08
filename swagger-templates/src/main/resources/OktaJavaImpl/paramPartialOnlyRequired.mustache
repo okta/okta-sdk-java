@@ -13,8 +13,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-{{>queryParamValidatePartial}}{{^queryParams.isEmpty}}        QueryString queryArgs = new QueryString();{{#queryParams}}
-        if ({{paramName}} != null) queryArgs.put("{{baseName}}", {{paramName}});{{/queryParams}}
+{{>paramValidatePartial}}
 
-        String href = QueryString.buildHref("{{{vendorExtensions.hrefFiltered}}}", queryArgs);{{/queryParams.isEmpty}}{{#queryParams.isEmpty}}
-        String href = "{{{vendorExtensions.hrefFiltered}}}";{{/queryParams.isEmpty}}
+        Map<String, Object> queryArgs = new HashMap<>();{{#queryParams}}{{#required}}
+        queryArgs.put("{{baseName}}", {{paramName}});{{/required}}{{/queryParams}}
+
+        HttpHeaders headers = new HttpHeaders();{{#headerParams}}{{#required}}
+        headers.add("{{baseName}}", {{paramName}});{{/required}}{{/headerParams}}
