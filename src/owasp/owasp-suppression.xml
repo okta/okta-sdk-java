@@ -90,4 +90,11 @@
         <cve>CVE-2018-20200</cve>
     </suppress>
 
+    <!-- build time dependency contains older version of gradle -->
+    <suppress>
+        <notes><![CDATA[ file name: swagger-codegen-2.2.3.jar: gradle-wrapper.jar ]]></notes>
+        <sha1>0f6f1fa2b59ae770ca14f975726bed8d6620ed9b</sha1>
+        <cve>CVE-2019-11065</cve>
+    </suppress>
+
 </suppressions>
