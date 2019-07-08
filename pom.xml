@@ -36,7 +36,7 @@
 
     <properties>
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.9.9.1</jackson.version>
         <snakeyaml.version>1.17</snakeyaml.version>
         <jjwt.version>0.6.0</jjwt.version>
         <okta.sdk.previousVersion>1.5.2</okta.sdk.previousVersion>
