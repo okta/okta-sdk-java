@@ -19,6 +19,7 @@ package com.okta.sdk.ds;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.VoidResource;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,7 +61,7 @@ public interface RequestBuilder {
     /**
      * Adds a query parameter to the request builder.
      *
-     * @param key the query paramter field name
+     * @param key the query parameter field name
      * @param value the query parameter field value
      * @return the RequestBuilder to allow for chaining methods.
      */
@@ -73,6 +74,32 @@ public interface RequestBuilder {
      * @return the RequestBuilder to allow for chaining methods.
      */
     RequestBuilder setQueryParameters(Map<String, String> queryParams);
+
+    /**
+     * Adds a header parameter to the request builder.
+     *
+     * @param key the header parameter field name
+     * @param value the header parameter field value
+     * @return the RequestBuilder to allow for chaining methods.
+     */
+    RequestBuilder addHeaderParameter(String key, String value);
+
+    /**
+     * Adds a header parameter to the request builder.
+     *
+     * @param key the header parameter field name
+     * @param values the header parameter field values
+     * @return the RequestBuilder to allow for chaining methods.
+     */
+    RequestBuilder addHeaderParameter(String key, List<String> values);
+
+    /**
+     * Sets the header parameters to be used for the request.
+     *
+     * @param headerParams the header parameters to be used for the request
+     * @return the RequestBuilder to allow for chaining methods.
+     */
+    RequestBuilder setHeaderParameters(Map<String, List<String>> headerParams);
 
     /**
      * Executes a {@code GET} request and returns a Resource.

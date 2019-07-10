@@ -91,23 +91,62 @@ class DefaultRequestBuilderTest {
     }
 
     @Test
+    void testAddHeaderParameter() {
+
+        def requestBuilder = createRequestBuilder()
+
+        requestBuilder.addHeaderParameter("key1", "value1")
+        requestBuilder.addHeaderParameter("key2", ["value21", "value22"])
+        requestBuilder.addHeaderParameter("key3", null)
+
+        assertThat requestBuilder.headerParameters.get("key1"), is(["value1"])
+        assertThat requestBuilder.headerParameters.get("key2"), is(["value21", "value22"])
+        assertThat requestBuilder.headerParameters.get("key3"), nullValue()
+        assertThat requestBuilder.headerParameters, aMapWithSize(3)
+    }
+
+    @Test
+    void testAddHeaderParameters() {
+
+        def requestBuilder = createRequestBuilder()
+        def params = [
+                key1: ["value1"],
+                key2: ["value21", "value22"],
+                key3: null
+        ]
+        requestBuilder.setHeaderParameters(params)
+
+        assertThat requestBuilder.headerParameters.get("key1"), is(["value1"])
+        assertThat requestBuilder.headerParameters.get("key2"), is(["value21", "value22"])
+        assertThat requestBuilder.headerParameters.get("key3"), nullValue()
+        assertThat requestBuilder.headerParameters, aMapWithSize(3)
+
+        requestBuilder.setHeaderParameters(null)
+        assertThat requestBuilder.headerParameters, anEmptyMap()
+    }
+
+    @Test
     void testGet() {
 
         def href = "/api/v1/foobar"
-        def params = [
+        def queryParams = [
                 key1: "value1",
                 key2: "value2",
                 key3: null
+        ]
+        def headerParams = [
+                header1: ["value1"],
+                header2: ["value21", "value22"],
         ]
         def dataStore = mock(InternalDataStore)
         def resource = mock(VoidResource)
         def returnValue = mock(ExtensibleResource)
         when(dataStore.instantiate(VoidResource)).thenReturn(resource)
-        when(dataStore.getResource(href, ExtensibleResource, params)).thenReturn(returnValue)
+        when(dataStore.getResource(href, ExtensibleResource, queryParams, headerParams)).thenReturn(returnValue)
 
         def requestBuilder = new DefaultRequestBuilder(dataStore)
-
-        requestBuilder.setQueryParameters(params)
+                .setQueryParameters(queryParams)
+                .setHeaderParameters(headerParams)
         def result = requestBuilder.get(href, ExtensibleResource)
         assertThat result, sameInstance(returnValue)
     }
@@ -116,10 +155,14 @@ class DefaultRequestBuilderTest {
     void testPut() {
 
         def href = "/api/v1/foobar"
-        def params = [
+        def queryParams = [
                 key1: "value1",
                 key2: "value2",
                 key3: null
+        ]
+        def headerParams = [
+                header1: ["value1"],
+                header2: ["value21", "value22"],
         ]
         def dataStore = mock(InternalDataStore)
         def resource = mock(VoidResource)
@@ -128,30 +171,36 @@ class DefaultRequestBuilderTest {
 
         def requestBuilder = new DefaultRequestBuilder(dataStore)
             .setBody(putResource)
-            .setQueryParameters(params)
+            .setQueryParameters(queryParams)
+            .setHeaderParameters(headerParams)
         requestBuilder.put(href)
-        verify(dataStore).save(href, putResource, null, params)
+        verify(dataStore).save(href, putResource, null, queryParams, headerParams)
     }
 
     @Test
     void testPostWithType() {
 
         def href = "/api/v1/foobar"
-        def params = [
+        def queryParams = [
                 key1: "value1",
                 key2: "value2",
                 key3: null
+        ]
+        def headerParams = [
+                header1: ["value1"],
+                header2: ["value21", "value22"],
         ]
         def dataStore = mock(InternalDataStore)
         def resource = mock(VoidResource)
         def postResource = mock(ExtensibleResource)
         def returnValue = mock(ExtensibleResource)
         when(dataStore.instantiate(VoidResource)).thenReturn(resource)
-        when(dataStore.create(href, postResource, null, ExtensibleResource, params)).thenReturn(returnValue)
+        when(dataStore.create(href, postResource, null, ExtensibleResource, queryParams, headerParams)).thenReturn(returnValue)
 
         def result = new DefaultRequestBuilder(dataStore)
             .setBody(postResource)
-            .setQueryParameters(params)
+            .setQueryParameters(queryParams)
+            .setHeaderParameters(headerParams)
             .post(href, ExtensibleResource)
 
         assertThat result, sameInstance(returnValue)
@@ -161,10 +210,14 @@ class DefaultRequestBuilderTest {
     void testPost() {
 
         def href = "/api/v1/foobar"
-        def params = [
+        def queryParams = [
                 key1: "value1",
                 key2: "value2",
                 key3: null
+        ]
+        def headerParams = [
+                header1: ["value1"],
+                header2: ["value21", "value22"],
         ]
         def dataStore = mock(InternalDataStore)
         def resource = mock(VoidResource)
@@ -173,30 +226,36 @@ class DefaultRequestBuilderTest {
 
         new DefaultRequestBuilder(dataStore)
             .setBody(postResource)
-            .setQueryParameters(params)
+            .setQueryParameters(queryParams)
+            .setHeaderParameters(headerParams)
             .post(href)
 
-        verify(dataStore).create(href, postResource, null, VoidResource, params)
+        verify(dataStore).create(href, postResource, null, VoidResource, queryParams, headerParams)
     }
 
     @Test
     void testDelete() {
 
         def href = "/api/v1/foobar"
-        def params = [
+        def queryParams = [
                 key1: "value1",
                 key2: "value2",
                 key3: null
+        ]
+        def headerParams = [
+                header1: ["value1"],
+                header2: ["value21", "value22"],
         ]
         def dataStore = mock(InternalDataStore)
         def resource = mock(VoidResource)
         when(dataStore.instantiate(VoidResource)).thenReturn(resource)
 
         new DefaultRequestBuilder(dataStore)
-            .setQueryParameters(params)
+            .setQueryParameters(queryParams)
+            .setHeaderParameters(headerParams)
             .delete(href)
 
-        verify(dataStore).delete(href, params)
+        verify(dataStore).delete(href, queryParams, headerParams)
     }
 
     private def createRequestBuilder() {

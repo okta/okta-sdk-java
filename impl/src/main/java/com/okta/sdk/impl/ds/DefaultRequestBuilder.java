@@ -16,11 +16,13 @@
 package com.okta.sdk.impl.ds;
 
 import com.okta.sdk.ds.RequestBuilder;
+import com.okta.sdk.impl.http.HttpHeaders;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.VoidResource;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,6 +36,7 @@ class DefaultRequestBuilder implements RequestBuilder {
 
     private Resource body;
     private Map<String, Object> queryParams = new HashMap<>();
+    private HttpHeaders headers = new HttpHeaders();
 
     DefaultRequestBuilder(InternalDataStore dataStore) {
         this.dataStore = dataStore;
@@ -62,23 +65,44 @@ class DefaultRequestBuilder implements RequestBuilder {
     }
 
     @Override
+    public RequestBuilder addHeaderParameter(String key, String value) {
+        this.headers.add(key, value);
+        return this;
+    }
+
+    @Override
+    public RequestBuilder addHeaderParameter(String key, List<String> values) {
+        this.headers.put(key, values);
+        return this;
+    }
+
+    @Override
+    public RequestBuilder setHeaderParameters(Map<String, List<String>> headerParams) {
+        this.headers.clear();
+        if (!com.okta.commons.lang.Collections.isEmpty(headerParams)) {
+            this.headers.putAll(headerParams);
+        }
+        return this;
+    }
+
+    @Override
     public <T extends Resource> T get(String href, Class<T> type) {
-        return dataStore.getResource(href, type, queryParams);
+        return dataStore.getResource(href, type, queryParams, headers);
     }
 
     @Override
     public void put(String href) {
-        dataStore.save(href, body, null, queryParams);
+        dataStore.save(href, body, null, queryParams, headers);
     }
 
     @Override
     public <T extends Resource> T post(String href, Class<T> type) {
-        return dataStore.create(href, body, null, type, queryParams);
+        return dataStore.create(href, body, null, type, queryParams, headers);
     }
 
     @Override
     public void delete(String href) {
-        dataStore.delete(href, queryParams);
+        dataStore.delete(href, queryParams, headers);
     }
 
     // exposed for testing
@@ -88,5 +112,9 @@ class DefaultRequestBuilder implements RequestBuilder {
 
     Map<String, Object> getQueryParameters() {
         return Collections.unmodifiableMap(queryParams);
+    }
+
+    Map<String, List<String>> getHeaderParameters() {
+        return Collections.unmodifiableMap(headers);
     }
 }
