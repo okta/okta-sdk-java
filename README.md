@@ -410,7 +410,7 @@ By default, a simple production-grade in-memory CacheManager will be enabled whe
 
 This is because the default implementation is 100% in-memory (in-process) in the current JVM. If more than one JVM is deployed with the same application codebase - for example, a web application deployed on multiple identical hosts for scaling or high availability - each JVM would have it's own in-memory cache.
 
-As a result, if your application that uses a Okta Client instance is deployed across multiple JVMs, you SHOULD ensure that the Client is configured with a CacheManager implementation that uses coherent and clustered/distributed memory.
+As a result, if your application that uses an Okta Client instance is deployed across multiple JVMs, you SHOULD ensure that the Client is configured with a CacheManager implementation that uses coherent and clustered/distributed memory.
 
 See the [`ClientBuilder` Javadoc](https://developer.okta.com/okta-sdk-java/apidocs/com/okta/sdk/client/ClientBuilder) for more details on caching. 
 
