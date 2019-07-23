@@ -15,8 +15,8 @@
  */
 package com.okta.sdk.impl.ds;
 
+import com.okta.commons.http.HttpHeaders;
 import com.okta.sdk.ds.RequestBuilder;
-import com.okta.sdk.impl.http.HttpHeaders;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.VoidResource;
 
