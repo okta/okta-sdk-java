@@ -16,6 +16,7 @@
 package quickstart;
 
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
+import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.ExtensibleResource;
@@ -39,8 +40,13 @@ import com.okta.sdk.resource.user.factor.VerifyFactorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.TimeUnit;
+
+import static com.okta.sdk.cache.Caches.forResource;
 /**
  * Example snippets used for this projects README.md.
+ * <p>
+ * Manually run {@code mvn okta-code-snippet:snip} after chaging this file to update the README.md.
  */
 @SuppressWarnings({"unused"})
 public class ReadmeSnippets {
@@ -193,5 +199,24 @@ public class ReadmeSnippets {
 
         // or via a stream
         users.stream().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
+    }
+
+    private void complexCaching() {
+         Caches.newCacheManager()
+             .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
+             .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
+             .withCache(forResource(User.class) //User-specific cache settings
+                 .withTimeToLive(1, TimeUnit.HOURS)
+                 .withTimeToIdle(30, TimeUnit.MINUTES))
+             .withCache(forResource(Group.class) //Group-specific cache settings
+                 .withTimeToLive(2, TimeUnit.HOURS))
+             //... etc ...
+             .build(); //build the CacheManager
+    }
+
+    private void disableCaching() {
+        Client client = Clients.builder()
+            .setCacheManager(Caches.newDisabledCacheManager())
+            .build();
     }
 }

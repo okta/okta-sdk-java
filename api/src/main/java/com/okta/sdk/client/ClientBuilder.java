@@ -75,10 +75,8 @@ import com.okta.sdk.cache.CacheManager;
  *
  * Client client = {@link Clients Clients}.builder().setClientCredentials(clientCredentials).build();
  * </pre>
- * *
- * <h1>Caching</h1>
  *
- * NOTE: Caching support is currently in Alpha status.
+ * <h1>Caching</h1>
  *
  * <p>By default, a simple production-grade in-memory {@code CacheManager} will be enabled when the Client instance is
  * created.  This {@code CacheManager} implementation has the following characteristics:</p>
@@ -128,7 +126,7 @@ import com.okta.sdk.cache.CacheManager;
  * {@link com.okta.sdk.cache.Caches Caches}.{@link com.okta.sdk.cache.Caches#newCacheManager() newCacheManager()}
  *     .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
  *     .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
- *     .withCache({@link com.okta.sdk.cache.Caches#forResource(Class) forResource}(Account.class) //Account-specific cache settings
+ *     .withCache({@link com.okta.sdk.cache.Caches#forResource(Class) forResource}(User.class) //User-specific cache settings
  *         .withTimeToLive(1, TimeUnit.HOURS)
  *         .withTimeToIdle(30, TimeUnit.MINUTES))
  *     .withCache({@link com.okta.sdk.cache.Caches#forResource(Class) forResource}(Group.class) //Group-specific cache settings
@@ -257,7 +255,7 @@ public interface ClientBuilder {
      *         {@link com.okta.sdk.cache.Caches#newCacheManager() newCacheManager()}
      *         .withDefaultTimeToLive(1, TimeUnit.DAYS) //general default
      *         .withDefaultTimeToIdle(2, TimeUnit.HOURS) //general default
-     *         .withCache({@link com.okta.sdk.cache.Caches#forResource(Class) forResource}(Account.class) //Account-specific cache settings
+     *         .withCache({@link com.okta.sdk.cache.Caches#forResource(Class) forResource}(User.class) //User-specific cache settings
      *             .withTimeToLive(1, TimeUnit.HOURS)
      *             .withTimeToIdle(30, TimeUnit.MINUTES))
      *         .withCache({@link com.okta.sdk.cache.Caches#forResource(Class) forResource}(Group.class) //Group-specific cache settings
