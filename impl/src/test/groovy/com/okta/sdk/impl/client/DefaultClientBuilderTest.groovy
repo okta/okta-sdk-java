@@ -42,7 +42,7 @@ class DefaultClientBuilderTest {
 
     /**
      * This method MUST be called from each test in order to work with with the Listeners defined above.
-     * If this method is invoked with an @BDefaultClientTesteforeMethod annotation the Listener will be invoked before and after this
+     * If this method is invoked with an @BeforeMethod annotation the Listener will be invoked before and after this
      * method as well.
      */
     void clearOktaEnvAndSysProps() {
