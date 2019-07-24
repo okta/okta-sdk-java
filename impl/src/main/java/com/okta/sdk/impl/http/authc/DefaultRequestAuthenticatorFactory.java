@@ -16,9 +16,11 @@
  */
 package com.okta.sdk.impl.http.authc;
 
-import com.okta.sdk.client.AuthenticationScheme;
+import com.okta.commons.http.authc.DisabledAuthenticator;
+import com.okta.commons.http.authc.RequestAuthenticationException;
+import com.okta.commons.http.authc.RequestAuthenticator;
 import com.okta.sdk.authc.credentials.ClientCredentials;
-import com.okta.sdk.impl.http.support.RequestAuthenticationException;
+import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.commons.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +55,12 @@ public class DefaultRequestAuthenticatorFactory implements RequestAuthenticatorF
 
         try {
             Class requestAuthenticatorClass = Classes.forName(scheme.getRequestAuthenticatorClassName());
+
+            // check if disabled and skip reflection
+            if (DisabledAuthenticator.class.equals(requestAuthenticatorClass)) {
+                return new DisabledAuthenticator();
+            }
+
             Constructor<RequestAuthenticator> ctor = Classes.getConstructor(requestAuthenticatorClass, ClientCredentials.class);
             return Classes.instantiate(ctor, clientCredentials);
         } catch (RuntimeException ex) {

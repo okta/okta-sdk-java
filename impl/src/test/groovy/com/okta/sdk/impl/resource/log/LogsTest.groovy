@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.resource.log
 
 import com.okta.sdk.impl.client.MockClient
-import com.okta.sdk.impl.http.Request
+import com.okta.commons.http.Request
 import com.okta.sdk.resource.log.LogActor
 import com.okta.sdk.resource.log.LogAuthenticationContext
 import com.okta.sdk.resource.log.LogClient

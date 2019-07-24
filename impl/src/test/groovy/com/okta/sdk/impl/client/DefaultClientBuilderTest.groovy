@@ -25,7 +25,7 @@ import com.okta.sdk.impl.io.Resource
 import com.okta.sdk.impl.io.ResourceFactory
 import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import com.okta.sdk.impl.test.RestoreSystemProperties
-import com.okta.sdk.impl.util.BaseUrlResolver
+import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.impl.Util
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer

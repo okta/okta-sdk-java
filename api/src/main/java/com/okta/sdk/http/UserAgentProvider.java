@@ -19,7 +19,9 @@ package com.okta.sdk.http;
  * Provides a portion of a User Agent string.
  *
  * @since 1.1.0
+ * @deprecated instead create a file named META-INF/okta/version.properties with a format of name=version
  */
+@Deprecated
 public interface UserAgentProvider {
 
     /**

@@ -16,12 +16,15 @@
  */
 package com.okta.sdk.impl.config;
 
+import com.okta.commons.http.authc.RequestAuthenticator;
+import com.okta.commons.http.config.BaseUrlResolver;
+import com.okta.commons.http.config.HttpClientConfiguration;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.client.AuthenticationScheme;
-import com.okta.sdk.client.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
+import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
-import com.okta.sdk.impl.util.BaseUrlResolver;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -35,7 +38,7 @@ import java.util.Map;
  *
  * @since 0.5.0
  */
-public class ClientConfiguration {
+public class ClientConfiguration extends HttpClientConfiguration {
 
     private String apiToken;
     private ClientCredentialsResolver clientCredentialsResolver;
@@ -43,18 +46,9 @@ public class ClientConfiguration {
     private long cacheManagerTtl;
     private long cacheManagerTti;
     private Map<String, CacheConfigurationBuilder> cacheManagerCaches = new LinkedHashMap<>();
-    private String baseUrl;
-    private int connectionTimeout;
+    private RequestAuthenticatorFactory requestAuthenticatorFactory = new DefaultRequestAuthenticatorFactory();
     private AuthenticationScheme authenticationScheme;
-    private RequestAuthenticatorFactory requestAuthenticatorFactory;
-    private int proxyPort;
-    private String proxyHost;
-    private String proxyUsername;
-    private String proxyPassword;
-    private Proxy proxy;
     private BaseUrlResolver baseUrlResolver;
-    private int retryMaxElapsed = 0;
-    private int retryMaxAttempts = 0;
 
     public String getApiToken() {
         return apiToken;
@@ -88,12 +82,12 @@ public class ClientConfiguration {
         this.requestAuthenticatorFactory = requestAuthenticatorFactory;
     }
 
-    public String getBaseUrl() {
-        return baseUrl;
+    public BaseUrlResolver getBaseUrlResolver() {
+        return baseUrlResolver;
     }
 
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public void setBaseUrlResolver(BaseUrlResolver baseUrlResolver) {
+        this.baseUrlResolver = baseUrlResolver;
     }
 
     public boolean isCacheManagerEnabled() {
@@ -144,101 +138,26 @@ public class ClientConfiguration {
         this.cacheManagerTtl = cacheManagerTtl;
     }
 
-    /**
-     * Connection timeout in seconds
-     * @return seconds until connection timeout
-     */
-    public int getConnectionTimeout() {
-        return connectionTimeout;
-    }
+    @Override
+    public RequestAuthenticator getRequestAuthenticator() {
+        RequestAuthenticator requestAuthenticator = super.getRequestAuthenticator();
 
-    /**
-     * Connection timeout in seconds.
-     *
-     * @param connectionTimeout the timeout value in seconds
-     */
-    public void setConnectionTimeout(int connectionTimeout) {
-        this.connectionTimeout = connectionTimeout;
-    }
-
-    public String getProxyHost() {
-        return proxyHost;
-    }
-
-    public void setProxyHost(String proxyHost) {
-        this.proxyHost = proxyHost;
-    }
-
-    public String getProxyPassword() {
-        return proxyPassword;
-    }
-
-    public void setProxyPassword(String proxyPassword) {
-        this.proxyPassword = proxyPassword;
-    }
-
-    public int getProxyPort() {
-        return proxyPort;
-    }
-
-    public void setProxyPort(int proxyPort) {
-        this.proxyPort = proxyPort;
-    }
-
-    public String getProxyUsername() {
-        return proxyUsername;
-    }
-
-    public void setProxyUsername(String proxyUsername) {
-        this.proxyUsername = proxyUsername;
-    }
-
-    public BaseUrlResolver getBaseUrlResolver() {
-        return baseUrlResolver;
-    }
-
-    public void setBaseUrlResolver(BaseUrlResolver baseUrlResolver) {
-        this.baseUrlResolver = baseUrlResolver;
-    }
-
-    public Proxy getProxy() {
-        if (this.proxy != null) {
-            return proxy;
+        if (requestAuthenticator == null) {
+            requestAuthenticator = requestAuthenticatorFactory.create(authenticationScheme, this.getClientCredentialsResolver().getClientCredentials());
         }
 
-        Proxy proxy = null;
-        // use proxy overrides if they're set
-        if ((getProxyPort() > 0 || getProxyHost() != null) && (getProxyUsername() == null || getProxyPassword() == null)) {
-            proxy = new Proxy(getProxyHost(), getProxyPort());
-        } else if (getProxyUsername() != null && getProxyPassword() != null) {
-            proxy = new Proxy(getProxyHost(), getProxyPort(), getProxyUsername(), getProxyPassword());
+        return requestAuthenticator;
+    }
+
+    @Override
+    public String getBaseUrl() {
+        String baseUrl = super.getBaseUrl();
+
+        if (Strings.isEmpty(baseUrl) && baseUrlResolver != null) {
+            baseUrl = baseUrlResolver.getBaseUrl();
         }
 
-        this.proxy = proxy;
-        return this.proxy;
-    }
-
-    public ClientConfiguration setProxy(Proxy proxy) {
-        this.proxy = proxy;
-        return this;
-    }
-
-    public int getRetryMaxElapsed() {
-        return retryMaxElapsed;
-    }
-
-    public ClientConfiguration setRetryMaxElapsed(int retryMaxElapsed) {
-        this.retryMaxElapsed = retryMaxElapsed;
-        return this;
-    }
-
-    public int getRetryMaxAttempts() {
-        return retryMaxAttempts;
-    }
-
-    public ClientConfiguration setRetryMaxAttempts(int retryMaxAttempts) {
-        this.retryMaxAttempts = retryMaxAttempts;
-        return this;
+        return baseUrl;
     }
 
     @Override
@@ -247,12 +166,13 @@ public class ClientConfiguration {
                 ", cacheManagerTtl=" + cacheManagerTtl +
                 ", cacheManagerTti=" + cacheManagerTti +
                 ", cacheManagerCaches=" + cacheManagerCaches +
-                ", baseUrl='" + baseUrl + '\'' +
-                ", connectionTimeout=" + connectionTimeout +
-                ", authenticationScheme=" + authenticationScheme +
-                ", retryMaxElapsed=" + retryMaxElapsed +
-                ", retryMaxAttempts=" + retryMaxAttempts +
-                ", proxy=" + proxy +
+                ", baseUrl='" + getBaseUrl() + '\'' +
+                ", connectionTimeout=" + getConnectionTimeout() +
+                ", requestAuthenticator=" + getRequestAuthenticator() +
+                ", retryMaxElapsed=" + getRetryMaxElapsed() +
+                ", retryMaxAttempts=" + getRetryMaxAttempts() +
+                ", proxy=" + getProxy() +
                 '}';
     }
+
 }

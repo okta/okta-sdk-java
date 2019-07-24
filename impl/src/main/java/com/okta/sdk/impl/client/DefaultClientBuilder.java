@@ -17,6 +17,7 @@
 package com.okta.sdk.impl.client;
 
 import com.okta.commons.configcheck.ConfigurationValidator;
+import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
@@ -43,7 +44,6 @@ import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
-import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

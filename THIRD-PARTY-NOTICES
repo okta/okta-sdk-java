@@ -44,6 +44,9 @@ This project includes:
   OkHttp under Apache 2.0
   Okio under Apache 2.0
   Okta Commons :: Config Check under The Apache License, Version 2.0
+  Okta Commons :: HTTP :: API under The Apache License, Version 2.0
+  Okta Commons :: HTTP :: HTTP Client under The Apache License, Version 2.0
+  Okta Commons :: HTTP :: OkHttp Client under The Apache License, Version 2.0
   Okta Commons :: Lang under The Apache License, Version 2.0
   SLF4J API Module under MIT License
   SnakeYAML under Apache License, Version 2.0
@@ -60,11 +63,7 @@ This project also includes modified code based on the following copyrights:
   Amazon AWS SDK for Java, Copyright 2010-2012 Amazon.com, Inc. or its
   affiliates.  Apache 2.0 licensed.
 - com.okta.sdk.impl.util.BaseNCodec, Copyright ASF. Apache 2.0 licensed.
-- *Util classes, HttpHeaders,
-  com.okta.sdk.http.InvalidMediaTypeException,
-  com.okta.sdk.http.InvalidMimeTypeException, com.okta.sdk.http.MediaType,
-  com.okta.sdk.http.MimeType classes and functions from the
-  Spring Framework project (http://www.springframework.org).  Copyright
+- *Util classes Spring Framework project (http://www.springframework.org).  Copyright
   2002-2017 SpringSource, Pivotal, and original authors.  Apache 2.0 licensed.
 - com.okta.sdk.impl.util.SoftHashMap, Apache Shiro. Apache 2.0 licensed.
 - com.okta.sdk.lang.Locales, Apache Commons Lang. Apache 2.0 licensed.

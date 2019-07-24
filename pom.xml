@@ -40,7 +40,7 @@
         <snakeyaml.version>1.17</snakeyaml.version>
         <jjwt.version>0.6.0</jjwt.version>
         <okta.sdk.previousVersion>1.5.2</okta.sdk.previousVersion>
-        <otka.commons.version>1.1.1</otka.commons.version>
+        <otka.commons.version>1.2.0-SNAPSHOT</otka.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
@@ -110,6 +110,16 @@
             <dependency>
                 <groupId>com.okta.commons</groupId>
                 <artifactId>okta-commons-lang</artifactId>
+                <version>${otka.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.okta.commons</groupId>
+                <artifactId>okta-http-api</artifactId>
+                <version>${otka.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.okta.commons</groupId>
+                <artifactId>okta-http-httpclient</artifactId>
                 <version>${otka.commons.version}</version>
             </dependency>
             <dependency>
@@ -261,11 +271,9 @@
                         <excludes>
                             <!-- lang contains a few files copied from other projects -->
                             <exclude>**/lang/*.java</exclude>
-                            <exclude>**/com/okta/sdk/impl/http/MediaType.java</exclude>
                             <exclude>**/com/okta/sdk/impl/util/Base64.java</exclude>
                             <exclude>**/com/okta/sdk/impl/util/BaseNCodec.java</exclude>
                             <exclude>**/com/okta/sdk/impl/util/LinkedCaseInsensitiveMap</exclude>
-                            <exclude>**/com/okta/sdk/impl/util/MimeType.java</exclude>
                             <!-- caching needs a little work -->
                             <exclude>**/com/okta/sdk/impl/ds/cache/WriteCacheFilter.java</exclude>
                         </excludes>
@@ -362,25 +370,6 @@
         </plugins>
     </build>
     <profiles>
-        <profile>
-            <id>ci</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.github.siom79.japicmp</groupId>
-                        <artifactId>japicmp-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>japicmp</id>
-                                <goals>
-                                    <goal>cmp</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>pub-docs</id>
             <build>

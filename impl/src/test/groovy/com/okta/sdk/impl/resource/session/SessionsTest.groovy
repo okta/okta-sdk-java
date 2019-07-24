@@ -17,6 +17,7 @@ package com.okta.sdk.impl.resource.session
 
 import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.cache.CacheManager
+import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.Client
 import com.okta.sdk.impl.api.ClientCredentialsResolver
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
@@ -25,9 +26,9 @@ import com.okta.sdk.impl.client.DefaultClient
 import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.ds.InternalDataStore
 import com.okta.sdk.impl.ds.JacksonMapMarshaller
-import com.okta.sdk.impl.http.RequestExecutor
+import com.okta.commons.http.RequestExecutor
 import com.okta.sdk.impl.resource.user.DefaultUser
-import com.okta.sdk.impl.util.BaseUrlResolver
+import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver
 import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.session.Session
@@ -58,14 +59,11 @@ class SessionsTest {
     void simpleCreateSessionTest() {
 
         ClientConfiguration clientConfig = new ClientConfiguration()
-        Client client = new DefaultClient(
-                new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")),
-                new DefaultBaseUrlResolver("https://example.com"),
-                null,
-                new DisabledCacheManager(),
-                clientConfig.getAuthenticationScheme(),
-                clientConfig.getRequestAuthenticatorFactory(),
-                clientConfig.getConnectionTimeout()) {
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
+
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
             protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
                                                         BaseUrlResolver baseUrlResolver,
                                                         ClientCredentialsResolver clientCredentialsResolver,
@@ -101,14 +99,11 @@ class SessionsTest {
     void simpleGetSessionTest() {
 
         ClientConfiguration clientConfig = new ClientConfiguration()
-        Client client = new DefaultClient(
-                new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")),
-                new DefaultBaseUrlResolver("https://example.com"),
-                null,
-                new DisabledCacheManager(),
-                clientConfig.getAuthenticationScheme(),
-                clientConfig.getRequestAuthenticatorFactory(),
-                clientConfig.getConnectionTimeout()) {
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
+
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
             protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
                                                         BaseUrlResolver baseUrlResolver,
                                                         ClientCredentialsResolver clientCredentialsResolver,

@@ -15,14 +15,14 @@
  */
 package com.okta.sdk.impl.http.stub
 
-import com.okta.sdk.impl.config.ClientConfiguration
-import com.okta.sdk.impl.http.RequestExecutor
-import com.okta.sdk.impl.http.RequestExecutorFactory
+import com.okta.commons.http.RequestExecutor
+import com.okta.commons.http.RequestExecutorFactory
+import com.okta.commons.http.config.HttpClientConfiguration
 
-public class StubRequestExecutorFactory implements RequestExecutorFactory {
+class StubRequestExecutorFactory implements RequestExecutorFactory {
 
     @Override
-    RequestExecutor create(ClientConfiguration clientConfiguration) {
+    RequestExecutor create(HttpClientConfiguration clientConfiguration) {
         return new StubRequestExecutor(clientConfiguration)
     }
 }

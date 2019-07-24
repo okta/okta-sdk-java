@@ -16,6 +16,8 @@
  */
 package com.okta.sdk.impl.http;
 
+import com.okta.commons.http.QueryString;
+
 /**
  * A canonical representation of a <a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI)</a>
  * suitable for the SDK's needs.

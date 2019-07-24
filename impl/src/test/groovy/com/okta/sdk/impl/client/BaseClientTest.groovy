@@ -18,10 +18,11 @@ package com.okta.sdk.impl.client
 import com.okta.sdk.cache.CacheManager
 import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.impl.api.ClientCredentialsResolver
+import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.ds.InternalDataStore
-import com.okta.sdk.impl.http.RequestExecutor
+import com.okta.commons.http.RequestExecutor
+import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory
-import com.okta.sdk.impl.util.BaseUrlResolver
 import com.okta.sdk.resource.Resource
 import org.testng.annotations.Test
 
@@ -84,7 +85,13 @@ class BaseClientTest {
         def requestAuthenticatorFactory = mock(RequestAuthenticatorFactory)
         def baseUrlResolver = mock(BaseUrlResolver)
 
-        return new BaseClient(apiKeyResolver, baseUrlResolver, null, cacheManager, AuthenticationScheme.NONE, requestAuthenticatorFactory, 30) {
+        def clientConfiguration = new ClientConfiguration()
+        clientConfiguration.setClientCredentialsResolver(apiKeyResolver)
+        clientConfiguration.setRequestAuthenticatorFactory(requestAuthenticatorFactory)
+        clientConfiguration.setAuthenticationScheme(AuthenticationScheme.NONE)
+        clientConfiguration.setBaseUrlResolver(baseUrlResolver)
+
+        return new BaseClient(clientConfiguration, cacheManager) {
             @Override
             protected InternalDataStore createDataStore(RequestExecutor requestExecutor, BaseUrlResolver baseUrlResolver1, ClientCredentialsResolver clientCredentialsResolver, CacheManager cacheManager1) {
                 return mock(InternalDataStore)

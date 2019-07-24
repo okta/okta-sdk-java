@@ -24,7 +24,7 @@ import com.okta.sdk.impl.ds.DefaultResourceDataResult
 import com.okta.sdk.impl.ds.ResourceAction
 import com.okta.sdk.impl.ds.ResourceDataRequest
 import com.okta.sdk.impl.ds.ResourceDataResult
-import com.okta.sdk.impl.http.QueryString
+import com.okta.commons.http.QueryString
 import com.okta.sdk.impl.http.support.DefaultCanonicalUri
 import com.okta.sdk.impl.resource.HalResourceHrefResolver
 import com.okta.sdk.impl.resource.StubEnum

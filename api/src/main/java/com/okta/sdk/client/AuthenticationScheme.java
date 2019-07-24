@@ -16,6 +16,8 @@
  */
 package com.okta.sdk.client;
 
+import com.okta.commons.http.authc.DisabledAuthenticator;
+import com.okta.commons.http.authc.RequestAuthenticator;
 import com.okta.commons.lang.Assert;
 
 /**
@@ -32,9 +34,13 @@ import com.okta.commons.lang.Assert;
 public enum AuthenticationScheme {
 
     SSWS("com.okta.sdk.impl.http.authc.SswsAuthenticator"), //SSWS Authentication
-    NONE("com.okta.sdk.impl.http.authc.DisabledAuthenticator");
+    NONE(DisabledAuthenticator.class);
 
     private final String requestAuthenticatorClassName;
+
+    AuthenticationScheme(Class<? extends RequestAuthenticator> requestAuthenticatorClass) {
+        this(requestAuthenticatorClass.getName());
+    }
 
     AuthenticationScheme(String requestAuthenticatorClassName) {
         Assert.notNull(requestAuthenticatorClassName, "requestAuthenticatorClassName cannot be null");

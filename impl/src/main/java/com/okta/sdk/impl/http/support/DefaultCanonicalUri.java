@@ -17,7 +17,7 @@
 package com.okta.sdk.impl.http.support;
 
 import com.okta.sdk.impl.http.CanonicalUri;
-import com.okta.sdk.impl.http.QueryString;
+import com.okta.commons.http.QueryString;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;

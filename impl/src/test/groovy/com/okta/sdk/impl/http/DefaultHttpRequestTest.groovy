@@ -17,10 +17,27 @@
 package com.okta.sdk.impl.http
 
 import com.okta.sdk.http.HttpMethod
+import com.okta.sdk.http.HttpRequestBuilder
+import com.okta.sdk.http.HttpRequests
 import org.testng.annotations.Test
 
 import static org.testng.Assert.assertEquals
+import static org.testng.Assert.assertNotNull
+import static org.testng.Assert.assertNotNull
+import static org.testng.Assert.assertNotNull
 import static org.testng.Assert.assertNull
+import static org.testng.Assert.assertTrue
+import static org.testng.Assert.assertTrue
+import static org.testng.Assert.assertTrue
+import static org.testng.Assert.assertTrue
+import static org.testng.Assert.assertTrue
+import static org.testng.Assert.assertTrue
+import static org.testng.Assert.assertTrue
+import static org.testng.Assert.fail
+import static org.testng.Assert.fail
+import static org.testng.Assert.fail
+import static org.testng.Assert.fail
+import static org.testng.Assert.fail
 
 /**
  * @since 0.5.0
@@ -63,5 +80,94 @@ class DefaultHttpRequestTest {
 
         def httpRequest = new DefaultHttpRequest([:], HttpMethod.GET, null, null)
         assertNull httpRequest.getParameter("My-Parameter")
+    }
+
+
+    @Test
+    void TestErrors(){
+
+        try {
+            HttpRequests.method(null);
+            fail("Exception expected.");
+        } catch (IllegalArgumentException expected) {
+            String msg = expected.getMessage()
+            assertTrue msg.startsWith("method argument is required")
+        }
+
+        try {
+            HttpRequests.method(HttpMethod.GET).addHeader("name", null);
+            fail("Exception expected.");
+        } catch (IllegalArgumentException expected) {
+            String msg = expected.getMessage()
+            assertTrue msg.startsWith("value argument is required")
+        }
+
+        try {
+            HttpRequests.method(HttpMethod.GET).addHeader(null, "value");
+            fail("Exception expected.");
+        } catch (IllegalArgumentException expected) {
+            String msg = expected.getMessage()
+            assertTrue msg.startsWith("key argument is required")
+        }
+
+        try {
+            HttpRequests.method(HttpMethod.GET).addParameter("name", null);
+            fail("Exception expected.");
+        } catch (IllegalArgumentException expected) {
+            String msg = expected.getMessage()
+            assertTrue msg.startsWith("value argument is required")
+        }
+
+        try {
+            HttpRequests.method(HttpMethod.GET).addParameter(null, "value");
+            fail("Exception expected.");
+        } catch (IllegalArgumentException expected) {
+            String msg = expected.getMessage()
+            assertTrue msg.startsWith("key argument is required")
+        }
+    }
+
+    @Test
+    void testConstructors(){
+        def builder = HttpRequests.method(HttpMethod.POST)
+        assertTrue builder instanceof HttpRequestBuilder
+
+        String[] value = ['test']
+        builder = HttpRequests.method(HttpMethod.GET).addParameter("name", value)
+        assertTrue builder instanceof HttpRequestBuilder
+    }
+
+    @Test
+    void testDefault(){
+        def request = HttpRequests.method(HttpMethod.POST).build()
+        assertNotNull request
+        assert request.getMethod().equals(HttpMethod.POST)
+
+        String[] headerValue = ['testHeader']
+        request = HttpRequests
+                .method(HttpMethod.POST)
+                .addHeader("name", headerValue).build()
+        assertNotNull request
+        assertEquals request.headers.size(), 1
+        assertEquals request.headers.get("name").getAt(0), 'testHeader'
+
+        String[] paramValue = ['testParam']
+        request = HttpRequests
+                .method(HttpMethod.POST)
+                .addParameter("paramName", paramValue).build()
+        assertNotNull request
+        assertEquals request.parameters.size(), 1
+        assertEquals request.parameters.get("paramName").getAt(0), 'testParam'
+
+        request = HttpRequests
+                .method(HttpMethod.POST)
+                .addHeader("addHeader", headerValue)
+                .addParameter("param", paramValue)
+                .build()
+
+        assertEquals request.parameters.size(), 1
+        assertEquals request.headers.size(), 1
+        assertEquals request.headers.get("addHeader").getAt(0), 'testHeader'
+        assertEquals request.parameters.get("param").getAt(0), 'testParam'
     }
 }

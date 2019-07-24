@@ -19,7 +19,7 @@ package com.okta.sdk.impl.resource
 import com.okta.sdk.impl.api.ClientCredentialsResolver
 import com.okta.sdk.impl.ds.DefaultDataStore
 import com.okta.sdk.impl.ds.InternalDataStore
-import com.okta.sdk.impl.http.RequestExecutor
+import com.okta.commons.http.RequestExecutor
 import com.okta.sdk.resource.Resource
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer

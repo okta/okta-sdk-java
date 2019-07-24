@@ -17,14 +17,9 @@
 package com.okta.sdk.impl.client;
 
 import com.okta.sdk.cache.CacheManager;
-import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.client.Proxy;
-import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
-import com.okta.sdk.impl.util.BaseUrlResolver;
 
 /**
  * Abstract client implementation, use BaseClient instead. Kept only for backwards compatibility, this class will
@@ -37,24 +32,6 @@ import com.okta.sdk.impl.util.BaseUrlResolver;
 @Deprecated
 public abstract class AbstractClient extends BaseClient implements Client {
 
-    /**
-     * Instantiates a new Client instance that will communicate with the Okta REST API.  See the class-level
-     * JavaDoc for a usage example.
-     *
-     * @param clientCredentialsResolver       Okta API Key resolver
-     * @param baseUrlResolver      Okta base URL resolver
-     * @param proxy                the HTTP proxy to be used when communicating with the Okta API server (can be
-     *                             null)
-     * @param cacheManager         the {@link com.okta.sdk.cache.CacheManager} that should be used to cache
-     *                             Okta REST resources (can be null)
-     * @param authenticationScheme the HTTP authentication scheme to be used when communicating with the Okta API
-     *                             server (can be null)
-     * @param requestAuthenticatorFactory factory used to handle creating autentication requests
-     * @param connectionTimeout    connection timeout in seconds
-     */
-    public AbstractClient(ClientCredentialsResolver clientCredentialsResolver, BaseUrlResolver baseUrlResolver, Proxy proxy, CacheManager cacheManager, AuthenticationScheme authenticationScheme, RequestAuthenticatorFactory requestAuthenticatorFactory, int connectionTimeout) {
-        super(clientCredentialsResolver, baseUrlResolver, proxy, cacheManager, authenticationScheme, requestAuthenticatorFactory, connectionTimeout);
-    }
 
     public AbstractClient(ClientConfiguration clientConfiguration, CacheManager cacheManager) {
         super(clientConfiguration, cacheManager);

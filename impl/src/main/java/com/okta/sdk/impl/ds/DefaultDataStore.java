@@ -16,11 +16,20 @@
  */
 package com.okta.sdk.impl.ds;
 
+import com.okta.commons.http.DefaultRequest;
+import com.okta.commons.http.HttpHeaders;
+import com.okta.commons.http.HttpMethod;
+import com.okta.commons.http.MediaType;
+import com.okta.commons.http.QueryString;
+import com.okta.commons.http.Request;
+import com.okta.commons.http.RequestExecutor;
+import com.okta.commons.http.Response;
+import com.okta.commons.http.config.BaseUrlResolver;
+import com.okta.commons.lang.ApplicationInfo;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.ds.RequestBuilder;
-import com.okta.sdk.http.HttpMethod;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.cache.DisabledCacheManager;
 import com.okta.sdk.impl.ds.cache.CacheResolver;
@@ -31,21 +40,12 @@ import com.okta.sdk.impl.ds.cache.ResourceCacheStrategy;
 import com.okta.sdk.impl.ds.cache.WriteCacheFilter;
 import com.okta.sdk.impl.error.DefaultError;
 import com.okta.sdk.impl.http.CanonicalUri;
-import com.okta.sdk.impl.http.HttpHeaders;
 import com.okta.sdk.impl.http.HttpHeadersHolder;
-import com.okta.sdk.impl.http.MediaType;
-import com.okta.sdk.impl.http.QueryString;
-import com.okta.sdk.impl.http.Request;
-import com.okta.sdk.impl.http.RequestExecutor;
-import com.okta.sdk.impl.http.Response;
 import com.okta.sdk.impl.http.support.DefaultCanonicalUri;
-import com.okta.sdk.impl.http.support.DefaultRequest;
-import com.okta.sdk.impl.http.support.UserAgent;
 import com.okta.sdk.impl.resource.AbstractInstanceResource;
 import com.okta.sdk.impl.resource.AbstractResource;
 import com.okta.sdk.impl.resource.HalResourceHrefResolver;
 import com.okta.sdk.impl.resource.ReferenceFactory;
-import com.okta.sdk.impl.util.BaseUrlResolver;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Collections;
@@ -65,11 +65,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import static com.okta.sdk.impl.http.HttpHeaders.OKTA_USER_AGENT;
-import static com.okta.sdk.impl.http.HttpHeaders.USER_AGENT;
-import static com.okta.sdk.impl.http.HttpHeaders.OKTA_AGENT;
-import static com.okta.sdk.impl.http.HttpHeaders.OKTA_CLIENT_REQUEST_ID;
+import static com.okta.commons.http.HttpHeaders.OKTA_USER_AGENT;
+import static com.okta.commons.http.HttpHeaders.USER_AGENT;
+import static com.okta.commons.http.HttpHeaders.OKTA_AGENT;
+import static com.okta.commons.http.HttpHeaders.OKTA_CLIENT_REQUEST_ID;
 
 /**
  * @since 0.5.0
@@ -91,7 +92,9 @@ public class DefaultDataStore implements InternalDataStore {
     private final ClientCredentialsResolver clientCredentialsResolver;
     private final BaseUrlResolver baseUrlResolver;
 
-    private static final String USER_AGENT_STRING = UserAgent.getUserAgentString();
+    private static final String USER_AGENT_STRING = ApplicationInfo.get().entrySet().stream()
+            .map(e -> e.getKey() + "/" + e.getValue())
+            .collect(Collectors.joining(" "));
 
     public DefaultDataStore(RequestExecutor requestExecutor, String baseUrl, ClientCredentialsResolver clientCredentialsResolver) {
         this(requestExecutor, new DefaultBaseUrlResolver(baseUrl), clientCredentialsResolver, new DisabledCacheManager());
