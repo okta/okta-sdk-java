@@ -40,7 +40,7 @@
         <snakeyaml.version>1.17</snakeyaml.version>
         <jjwt.version>0.6.0</jjwt.version>
         <okta.sdk.previousVersion>1.5.2</okta.sdk.previousVersion>
-        <otka.commons.version>1.2.0-SNAPSHOT</otka.commons.version>
+        <otka.commons.version>1.2.0</otka.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
