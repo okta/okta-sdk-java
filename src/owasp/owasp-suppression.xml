@@ -82,12 +82,11 @@
         <cpe>cpe:/a:processing:processing</cpe>
     </suppress>
 
-    <!-- Disputed CVE https://github.com/square/okhttp/issues/4967.
-    Requires custom code to bypass certificate pinning, this will not be addressed by the okhttp team -->
+    <!-- wrong GAV detection, obviously Okta's java client is NOT a ruby lib -->
     <suppress>
-        <notes><![CDATA[ file name: okhttp-3.11.0.jar ]]></notes>
-        <gav regex="true">^com\.squareup\.okhttp3:okhttp:.*$</gav>
-        <cve>CVE-2018-20200</cve>
+        <notes><![CDATA[ file name: okta-http-okhttp-1.2.0.jar ]]></notes>
+        <gav regex="true">^com\.okta\.commons:okta-http-okhttp:.*$</gav>
+        <cpe>cpe:/a:rest-client_project:rest-client</cpe>
     </suppress>
 
     <!-- build time dependency contains older version of gradle -->
