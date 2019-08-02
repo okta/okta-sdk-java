@@ -137,6 +137,7 @@ public class RetryRequestExecutor implements RequestExecutor {
                 if (!e.isRetryable() || !shouldRetry(retryCount, timer.split())) {
                     throw e;
                 }
+                log.debug("Retrying on {}: {}", e.getClass().getName(), e.getMessage());
             } catch (Exception e) {
                 throw new RestException("Unable to execute HTTP request: " + e.getMessage(), e);
             }
@@ -172,6 +173,8 @@ public class RetryRequestExecutor implements RequestExecutor {
                 throw failedToRetry();
             }
             log.debug("429 detected, will retry in {}ms, attempt number: {}", delay, retries);
+        } else {
+            log.debug("non 429 retry detected");
         }
 
         // default / fallback strategy (backwards compatible implementation)
@@ -181,6 +184,7 @@ public class RetryRequestExecutor implements RequestExecutor {
 
         // this shouldn't happen, but guard against a negative delay at this point
         if (delay < 0) {
+            log.error("Failed to calculate a retry delay, maxElapsedMillis: [{}], actual timeElapsedLeft: [{}], maxRetries: [{}], actual retries: [{}]", maxElapsedMillis, timeElapsedLeft, maxRetries, retries);
             throw failedToRetry();
         }
 
@@ -228,7 +232,9 @@ public class RetryRequestExecutor implements RequestExecutor {
     private long getDefaultDelayMillis(int retries) {
         long scaleFactor = 300;
         long result = (long) (Math.pow(2, retries) * scaleFactor);
-        return Math.min(result, DEFAULT_MAX_BACKOFF_IN_MILLISECONDS);
+        long millis = Math.min(result, DEFAULT_MAX_BACKOFF_IN_MILLISECONDS);
+        log.debug("getDefaultDelayMillis: [{}]", millis);
+        return millis;
     }
 
     private boolean shouldRetry(int retryCount, long timeElapsed) {
