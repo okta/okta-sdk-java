@@ -179,7 +179,10 @@ public class RetryRequestExecutor implements RequestExecutor {
 
         // default / fallback strategy (backwards compatible implementation)
         if (delay < 0) {
-            delay = Math.min(getDefaultDelayMillis(retries), timeElapsedLeft);
+            // if maxElapsedMillis is disabled (i.e. < 0, then we can ONLY use the default delay strategy
+            delay = maxElapsedMillis <= 0
+                ? getDefaultDelayMillis(retries)
+                : Math.min( getDefaultDelayMillis(retries), timeElapsedLeft);
         }
 
         // this shouldn't happen, but guard against a negative delay at this point
