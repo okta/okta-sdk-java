@@ -213,6 +213,34 @@ class RetryRequestExecutorTest {
     }
 
     @Test
+    void testSimulatedConnectionResetAndRetryOnlyMaxRetries() {
+
+        def requestExecutor = createRequestExecutor()
+        requestExecutor.numRetries = 4
+        requestExecutor.maxElapsedMillis = 0
+        def httpResponse = stubResponse("mock error", 400)
+
+        long currentTime = System.currentTimeMillis()
+        requestExecutor.pauseBeforeRetry(1, httpResponse, 31L)
+        long endTime = System.currentTimeMillis()
+        assertThat endTime - currentTime, greaterThanOrEqualTo(600L) // the first delay is 600ms
+    }
+
+    @Test
+    void testSimulatedConnectionResetAndRetryOnlyMaxMillis() {
+
+        def requestExecutor = createRequestExecutor()
+        requestExecutor.numRetries = 0
+        requestExecutor.maxElapsedMillis = 100
+        def httpResponse = stubResponse("mock error", 400)
+
+        long currentTime = System.currentTimeMillis()
+        requestExecutor.pauseBeforeRetry(1, httpResponse, 30L)
+        long endTime = System.currentTimeMillis()
+        assertThat endTime - currentTime, greaterThanOrEqualTo(70L) // Delay once to fit the window of `maxElapsed - actualTimeElapsed` 100 - 30 = 70
+    }
+
+    @Test
     void test429RetryHeadersMissing() {
 
         HttpHeaders headers = new HttpHeaders()
