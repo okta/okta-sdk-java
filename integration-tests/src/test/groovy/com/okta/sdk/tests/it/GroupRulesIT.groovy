@@ -100,7 +100,7 @@ class GroupRulesIT implements CrudTestSupport {
     @TestResources(rules = ["Test group rule", "Test group rule updated"])
     void groupRuleCrudTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'With-Group-Rule'
         def email = "john-${uniqueTestName}@example.com"

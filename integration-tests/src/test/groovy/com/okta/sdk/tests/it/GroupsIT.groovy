@@ -127,7 +127,7 @@ class GroupsIT implements CrudTestSupport {
     @Scenario("group-user-operations")
     void groupUserOperationsTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'With-Group'
         def email = "john-with-group-${uniqueTestName}@example.com"
