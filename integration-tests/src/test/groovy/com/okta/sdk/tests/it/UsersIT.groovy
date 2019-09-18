@@ -179,7 +179,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Scenario("user-activate")
     void userActivateTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Activate'
         def email = "john-activate=${uniqueTestName}@example.com"
@@ -208,7 +208,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Scenario("user-role-assign")
     void roleAssignTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Role'
         def email = "john-${uniqueTestName}@example.com"
@@ -242,7 +242,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Scenario("user-change-password")
     void changePasswordTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Change-Password'
         def email = "john-${uniqueTestName}@example.com"
@@ -260,8 +260,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
         // 2. Change the user's password
         UserCredentials credentials = user.changePassword(client.instantiate(ChangePasswordRequest)
-            .setOldPassword(client.instantiate(PasswordCredential).setValue('Abcd1234'.toCharArray()))
-            .setNewPassword(client.instantiate(PasswordCredential).setValue('1234Abcd'.toCharArray())), true)
+            .setOldPassword(client.instantiate(PasswordCredential).setValue('Passw0rd!2@3#'.toCharArray()))
+            .setNewPassword(client.instantiate(PasswordCredential).setValue('!2@3#Passw0rd'.toCharArray())), true)
         assertThat credentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
@@ -272,7 +272,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Test
     void changeStrictPasswordTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Change-Password'
         def email = "john-${uniqueTestName}@example.com"
@@ -314,8 +314,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
         // 2. Change the user's password
         def request = client.instantiate(ChangePasswordRequest)
-            .setOldPassword(client.instantiate(PasswordCredential).setValue('Abcd1234'.toCharArray()))
-            .setNewPassword(client.instantiate(PasswordCredential).setValue('1234Abcd'.toCharArray()))
+            .setOldPassword(client.instantiate(PasswordCredential).setValue('Passw0rd!2@3#'.toCharArray()))
+            .setNewPassword(client.instantiate(PasswordCredential).setValue('!2@3#Passw0rd'.toCharArray()))
 
         def exception = expect ResourceException, {user.changePassword(request, true)}
         assertThat exception.getMessage(), containsString("E0000014") // Update of credentials failed.
@@ -332,7 +332,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Scenario("user-change-recovery-question")
     void changeRecoveryQuestionTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Change-Recovery-Question'
         def email = "john-${uniqueTestName}@example.com"
@@ -351,7 +351,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 2. Change the recovery question
         UserCredentials userCredentials = user.changeRecoveryQuestion(client.instantiate(UserCredentials)
             .setPassword(client.instantiate(PasswordCredential)
-                .setValue('Abcd1234'.toCharArray()))
+                .setValue('Passw0rd!2@3#'.toCharArray()))
             .setRecoveryQuestion(client.instantiate(RecoveryQuestionCredential)
                 .setQuestion('How many roads must a man walk down?')
                 .setAnswer('forty two')))
@@ -360,7 +360,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat userCredentials.getRecoveryQuestion().question, equalTo('How many roads must a man walk down?')
 
         // 3. Update the user password through updated recovery question
-        userCredentials.getPassword().value = '1234Abcd'.toCharArray()
+        userCredentials.getPassword().value = '!2@3#Passw0rd'.toCharArray()
         userCredentials.getRecoveryQuestion().answer = 'forty two'
         ForgotPasswordResponse response = user.forgotPassword(null, userCredentials)
         assertThat response.getResetPasswordUrl(), nullValue()
@@ -373,7 +373,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Test
     void forgotPasswordTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Forgot-Password'
         def email = "john-${uniqueTestName}@example.com"
@@ -397,7 +397,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Scenario("user-expire-password")
     void expirePasswordTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Expire-Password'
         def email = "john-${uniqueTestName}@example.com"
@@ -423,7 +423,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Scenario("user-get-reset-password-url")
     void resetPasswordUrlTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Get-Reset-Password-URL'
         def email = "john-${uniqueTestName}@example.com"
@@ -448,7 +448,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Scenario("user-get")
     void getUserTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Get-User'
         def email = "john-${uniqueTestName}@example.com"
@@ -486,7 +486,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Scenario("user-group-target-role")
     void groupTargetRoleTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Group-Target'
         def email = "john-${uniqueTestName}@example.com"
@@ -542,7 +542,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Scenario("user-profile-update")
     void userProfileUpdate() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Profile-Update'
         def email = "john-${uniqueTestName}@example.com"
@@ -574,7 +574,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Scenario("user-suspend")
     void userSuspendTest() {
 
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Suspend'
         def email = "john-${uniqueTestName}@example.com"
@@ -634,7 +634,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     void createUserWithGroups() {
 
         def groupName = "Group-to-Assign-${uniqueTestName}"
-        def password = 'Abcd1234'
+        def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Create-User-With-Group'
         def email = "john-${uniqueTestName}@example.com"
