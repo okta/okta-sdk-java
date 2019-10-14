@@ -36,7 +36,7 @@
 
     <properties>
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.10.0</jackson.version>
         <snakeyaml.version>1.17</snakeyaml.version>
         <jjwt.version>0.6.0</jjwt.version>
         <okta.sdk.previousVersion>1.5.2</okta.sdk.previousVersion>
@@ -66,12 +66,6 @@
                 <version>${jackson.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
-            </dependency>
-            <!-- Once 2.9.9.x is included in the next version of the jackson-bom, this next dep can be removed -->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>2.9.9.3</version>
             </dependency>
 
             <!-- Inter project dependencies -->
