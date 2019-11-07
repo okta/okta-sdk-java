@@ -20,8 +20,7 @@
     <parent>
         <groupId>com.okta</groupId>
         <artifactId>okta-parent</artifactId>
-        <version>14</version>
-        <relativePath>../okta-java-parent</relativePath>
+        <version>16</version>
     </parent>
 
     <groupId>com.okta.sdk</groupId>
@@ -37,10 +36,10 @@
     <properties>
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
         <jackson.version>2.10.0</jackson.version>
-        <snakeyaml.version>1.17</snakeyaml.version>
-        <jjwt.version>0.6.0</jjwt.version>
-        <okta.sdk.previousVersion>1.5.2</okta.sdk.previousVersion>
-        <otka.commons.version>1.2.1</otka.commons.version>
+        <snakeyaml.version>1.25</snakeyaml.version>
+        <jjwt.version>0.10.7</jjwt.version>
+        <okta.sdk.previousVersion>1.6.0</okta.sdk.previousVersion>
+        <otka.commons.version>1.2.2</otka.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
@@ -172,20 +171,10 @@
             <dependency>
                 <groupId>com.google.auto.service</groupId>
                 <artifactId>auto-service</artifactId>
-                <version>1.0-rc5</version>
+                <version>1.0-rc6</version>
                 <optional>true</optional>
             </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.5.7</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>java-hamcrest</artifactId>
-                <version>2.0.0.0</version>
-            </dependency>
+            
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
@@ -201,7 +190,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>2.24.0</version>
+                <version>3.1.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -223,7 +212,7 @@
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>java-hamcrest</artifactId>
+            <artifactId>hamcrest</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
