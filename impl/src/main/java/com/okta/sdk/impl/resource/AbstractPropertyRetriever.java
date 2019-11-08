@@ -262,7 +262,7 @@ public abstract class AbstractPropertyRetriever implements PropertyRetriever {
             }
             String msg = "'" + key + "' property value type does not match the specified type. Specified type: Map. " +
                     "Existing type: " + value.getClass().getName();
-            msg += (isPrintableProperty(key) ? ".  Value: " + value : ".");
+            msg += isPrintableProperty(key) ? ".  Value: " + value : ".";
             throw new IllegalArgumentException(msg);
         }
         return null;

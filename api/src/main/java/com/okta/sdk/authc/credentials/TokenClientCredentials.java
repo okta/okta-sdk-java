@@ -52,7 +52,7 @@ public class TokenClientCredentials implements ClientCredentials<String> {
         }
         if (o instanceof TokenClientCredentials) {
             TokenClientCredentials other = (TokenClientCredentials)o;
-            return (secret != null ? secret.equals(other.secret) : other.secret == null);
+            return secret != null ? secret.equals(other.secret) : other.secret == null;
         }
 
         return false;

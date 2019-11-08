@@ -120,7 +120,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
         return this.dataStore;
     }
 
-    private final boolean isMaterialized() {
+    private boolean isMaterialized() {
         return this.materialized;
     }
 
@@ -339,7 +339,7 @@ public abstract class AbstractResource extends AbstractPropertyRetriever impleme
 
         String msg = "'" + key + "' property value type does not match the specified type.  Specified type: " +
             clazz.getName() + ".  Existing type: " + value.getClass().getName();
-        msg += (isPrintableProperty(key) ? ".  Value: " + value : ".");
+        msg += isPrintableProperty(key) ? ".  Value: " + value : ".";
         throw new IllegalArgumentException(msg);
     }
 
