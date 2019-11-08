@@ -162,7 +162,7 @@ public class DefaultResourceFactory implements ResourceFactory {
     }
 
     private Object[] createConstructorArgs(Object[] existing) {
-        int argsLength = (existing != null ? existing.length : 0);
+        int argsLength = existing != null ? existing.length : 0;
         argsLength += 1; //account for the 'DataStore' instance that is required for every implementation.
 
         List<Object> args = new ArrayList<>(argsLength);
