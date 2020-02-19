@@ -370,7 +370,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         client.getUser(user.getId())
     }
 
-    @Test
+    @Test (groups = "bacon")
     void forgotPasswordTest() {
 
         def password = 'Passw0rd!2@3#'
