@@ -105,6 +105,7 @@ class GroupRulesIT implements CrudTestSupport {
         def lastName = 'With-Group-Rule'
         def email = "john-${uniqueTestName}@example.com"
         def groupName = "Group-Rule API Test Group ${uniqueTestName}"
+        def groupRuleName = ("Group-Rule ${uniqueTestName}").substring(0, 49)
 
         // 1. Create a user and a group
         User user = UserBuilder.instance()
@@ -125,7 +126,7 @@ class GroupRulesIT implements CrudTestSupport {
         // 2. Create a group rule and verify rule executes
         GroupRule rule = client.instantiate(GroupRule)
                 .setType('group_rule')
-                .setName('Test group rule')
+                .setName(groupRuleName)
                 .setConditions(client.instantiate(GroupRuleConditions)
                         .setPeople(client.instantiate(GroupRulePeopleCondition)
                             .setUsers(client.instantiate(GroupRuleUserCondition)
