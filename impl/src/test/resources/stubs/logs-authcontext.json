@@ -1,0 +1,222 @@
+[
+  {
+    "actor": {
+      "id": "0000222244448888000",
+      "type": "User",
+      "alternateId": "joe.coder@example.com",
+      "displayName": "Joe Coder",
+      "detailEntry": null
+    },
+    "client": {
+      "userAgent": {
+        "rawUserAgent": "okta-sdk-java/0.9.0-SNAPSHOT okta-sdk-java/0.9.0-SNAPSHOT jetty/9.2.22.v20170606 java/1.8.0_121 Mac OS X/10.13.1",
+        "os": "Mac OS X",
+        "browser": "UNKNOWN"
+      },
+      "zone": "null",
+      "device": "Computer",
+      "id": null,
+      "ipAddress": "66.222.111.88",
+      "geographicalContext": {
+        "city": "Concord",
+        "state": "New Hampshire",
+        "country": "United States",
+        "postalCode": "03303",
+        "geolocation": {
+          "lat": 43.3091,
+          "lon": -71.6861
+        }
+      }
+    },
+    "authenticationContext": {
+      "authenticationProvider": null,
+      "credentialProvider": "OKTA_CREDENTIAL_PROVIDER",
+      "credentialType": null,
+      "issuer": null,
+      "interface": null,
+      "authenticationStep": 0,
+      "externalSessionId": "trsOkmn39aUSXecaGr5n-33Pg"
+    },
+    "displayMessage": "Update application",
+    "eventType": "application.lifecycle.update",
+    "outcome": {
+      "result": "SUCCESS",
+      "reason": null
+    },
+    "published": "2017-11-30T21:16:00.081Z",
+    "securityContext": {
+      "asNumber": null,
+      "asOrg": null,
+      "isp": null,
+      "domain": null,
+      "isProxy": null
+    },
+    "severity": "INFO",
+    "debugContext": {
+      "debugData": {
+        "requestUri": "/api/v1/apps"
+      }
+    },
+    "legacyEventType": "app.generic.config.app_updated",
+    "transaction": {
+      "type": "WEB",
+      "id": "WiB1DqBFbyQ@km2wp9zZ3gAACaM",
+      "detail": {}
+    },
+    "uuid": "ae1ede36-75a7-47ec-9242-f40671448fd2",
+    "version": "0",
+    "request": {
+      "ipChain": [
+        {
+          "ip": "66.222.111.88",
+          "geographicalContext": {
+            "city": "Concord",
+            "state": "New Hampshire",
+            "country": "United States",
+            "postalCode": "03303",
+            "geolocation": {
+              "lat": 43.3091,
+              "lon": -71.6861
+            }
+          },
+          "version": "V4",
+          "source": null
+        },
+        {
+          "ip": "50.17.226.145",
+          "geographicalContext": {
+            "city": "Ashburn",
+            "state": "Virginia",
+            "country": "United States",
+            "postalCode": "20149",
+            "geolocation": {
+              "lat": 39.0481,
+              "lon": -77.4728
+            }
+          },
+          "version": "V4",
+          "source": null
+        }
+      ]
+    },
+    "target": [
+      {
+        "id": "0oad384tn4u1ceiNo0h7",
+        "type": "AppInstance",
+        "alternateId": "app-054c846b-eb85-4f45-b4d6-ce4ae3a1f1ae",
+        "displayName": "app-054c846b-eb85-4f45-b4d6-ce4ae3a1f1ae",
+        "detailEntry": null
+      }
+    ]
+  },
+  {
+    "actor": {
+      "id": "0000222244448888000",
+      "type": "User",
+      "alternateId": "joe.coder@example.com",
+      "displayName": "Joe Coder",
+      "detailEntry": null
+    },
+    "client": {
+      "userAgent": {
+        "rawUserAgent": "okta-sdk-java/0.9.0-SNAPSHOT okta-sdk-java/0.9.0-SNAPSHOT jetty/9.2.22.v20170606 java/1.8.0_121 Mac OS X/10.13.1",
+        "os": "Mac OS X",
+        "browser": "UNKNOWN"
+      },
+      "zone": "null",
+      "device": "Computer",
+      "id": null,
+      "ipAddress": "66.222.111.88",
+      "geographicalContext": {
+        "city": "Concord",
+        "state": "New Hampshire",
+        "country": "United States",
+        "postalCode": "03303",
+        "geolocation": {
+          "lat": 43.3091,
+          "lon": -71.6861
+        }
+      }
+    },
+    "authenticationContext": {
+      "authenticationProvider": null,
+      "credentialProvider": null,
+      "credentialType": "ASSERTION",
+      "issuer": null,
+      "interface": null,
+      "authenticationStep": 0,
+      "externalSessionId": "trsOkmn39aUSXecaGr5n-33Pg"
+    },
+    "displayMessage": "Update application",
+    "eventType": "application.lifecycle.update",
+    "outcome": {
+      "result": "SUCCESS",
+      "reason": null
+    },
+    "published": "2017-11-30T21:16:00.081Z",
+    "securityContext": {
+      "asNumber": null,
+      "asOrg": null,
+      "isp": null,
+      "domain": null,
+      "isProxy": null
+    },
+    "severity": "INFO",
+    "debugContext": {
+      "debugData": {
+        "requestUri": "/api/v1/apps"
+      }
+    },
+    "legacyEventType": "app.generic.config.app_updated",
+    "transaction": {
+      "type": "WEB",
+      "id": "WiB1DqBFbyQ@km2wp9zZ3gAACaM",
+      "detail": {}
+    },
+    "uuid": "ae1ede36-75a7-47ec-9242-f40671448fd2",
+    "version": "0",
+    "request": {
+      "ipChain": [
+        {
+          "ip": "66.222.111.88",
+          "geographicalContext": {
+            "city": "Concord",
+            "state": "New Hampshire",
+            "country": "United States",
+            "postalCode": "03303",
+            "geolocation": {
+              "lat": 43.3091,
+              "lon": -71.6861
+            }
+          },
+          "version": "V4",
+          "source": null
+        },
+        {
+          "ip": "50.17.226.145",
+          "geographicalContext": {
+            "city": "Ashburn",
+            "state": "Virginia",
+            "country": "United States",
+            "postalCode": "20149",
+            "geolocation": {
+              "lat": 39.0481,
+              "lon": -77.4728
+            }
+          },
+          "version": "V4",
+          "source": null
+        }
+      ]
+    },
+    "target": [
+      {
+        "id": "0oad384tn4u1ceiNo0h7",
+        "type": "AppInstance",
+        "alternateId": "app-054c846b-eb85-4f45-b4d6-ce4ae3a1f1ae",
+        "displayName": "app-054c846b-eb85-4f45-b4d6-ce4ae3a1f1ae",
+        "detailEntry": null
+      }
+    ]
+  }
+]

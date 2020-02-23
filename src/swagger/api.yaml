@@ -3700,12 +3700,12 @@ definitions:
         items:
           $ref: '#/definitions/LogCredentialProvider'
         readOnly: true
-        type: array
+        type: string
       credentialType:
         items:
           $ref: '#/definitions/LogCredentialType'
         readOnly: true
-        type: array
+        type: string
       externalSessionId:
         readOnly: true
         type: string
