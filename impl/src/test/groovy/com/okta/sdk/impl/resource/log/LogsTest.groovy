@@ -145,4 +145,28 @@ class LogsTest {
         assertThat log.getRequest().getIpChain().get(0).getGeographicalContext().getGeolocation().lat, equalTo(43.3091d)
         assertThat log.getRequest().getIpChain().get(0).getGeographicalContext().getGeolocation().lon, equalTo(-71.6861d)
     }
+
+    @Test
+    void testAuthenticationContext() {
+
+        // Mock the response objects in the client
+        MockClient client = new MockClient()
+            .withMockResponse(Mockito.any(Request), '/stubs/logs-authcontext.json')
+
+        // get the list of logs
+        List<LogEvent> logs = client.getLogs().stream().collect(Collectors.toList())
+        assertThat logs, hasSize(2)
+        logs.forEach { assertThat it, instanceOf(LogEvent) }
+
+        // validate the authentication context credential provider
+        LogEvent credentialProvider = logs.get(0)
+        assertThat credentialProvider.getAuthenticationContext(), instanceOf(LogAuthenticationContext)
+        assertThat credentialProvider.getAuthenticationContext().getCredentialProvider(), equalTo("OKTA_CREDENTIAL_PROVIDER")
+
+        // validate the authentication context credential type
+        LogEvent credentialType = logs.get(1)
+        assertThat credentialType.getAuthenticationContext(), instanceOf(LogAuthenticationContext)
+        assertThat credentialType.getAuthenticationContext().getCredentialType(), equalTo("ASSERTION")
+    }
+
 }
