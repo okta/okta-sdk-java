@@ -390,7 +390,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         ForgotPasswordResponse response = user.forgotPassword(false, null)
-        assertThat response.getResetPasswordUrl(), containsString("/reset_password/")
+        assertThat response.getResetPasswordUrl(), containsString("/reset-password/")
     }
 
     @Test
