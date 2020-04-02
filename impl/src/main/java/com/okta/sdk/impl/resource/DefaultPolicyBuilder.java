@@ -24,42 +24,47 @@ import com.okta.sdk.resource.policy.PolicyType;
 import java.util.Objects;
 
 
-public class DefaultPolicyBuilder implements PolicyBuilder {
+public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuilder<T> {
 
-    private String name;
-    private String description;
-    private PolicyType policyType;
-    private Integer priority;
-    private Policy.StatusEnum status;
+    protected String name;
+    protected String description;
+    protected PolicyType policyType;
+    protected Integer priority;
+    protected Policy.StatusEnum status;
 
     @Override
-    public PolicyBuilder setName(String name) {
+    public T setName(String name) {
         this.name = name;
-        return this;
+        return self();
     }
 
     @Override
-    public PolicyBuilder setDescription(String description) {
+    public T setDescription(String description) {
         this.description = description;
-        return this;
+        return self();
     }
 
     @Override
-    public PolicyBuilder setType(PolicyType policyType) {
+    public T setType(PolicyType policyType) {
         this.policyType = policyType;
-        return this;
+        return self();
     }
 
     @Override
-    public PolicyBuilder setPriority(Integer priority) {
+    public T setPriority(Integer priority) {
         this.priority = priority;
-        return this;
+        return self();
     }
 
     @Override
-    public PolicyBuilder setStatus(Policy.StatusEnum status) {
+    public T setStatus(Policy.StatusEnum status) {
         this.status = status;
-        return this;
+        return self();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected T self() {
+        return (T) this;
     }
 
     @Override

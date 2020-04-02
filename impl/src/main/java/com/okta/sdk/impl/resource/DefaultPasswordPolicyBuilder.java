@@ -18,19 +18,36 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.policy.*;
+import com.okta.sdk.resource.policy.GroupCondition;
+import com.okta.sdk.resource.policy.PasswordDictionary;
+import com.okta.sdk.resource.policy.PasswordDictionaryCommon;
+import com.okta.sdk.resource.policy.PasswordPolicy;
+import com.okta.sdk.resource.policy.PasswordPolicyAuthenticationProviderCondition;
+import com.okta.sdk.resource.policy.PasswordPolicyBuilder;
+import com.okta.sdk.resource.policy.PasswordPolicyConditions;
+import com.okta.sdk.resource.policy.PasswordPolicyDelegationSettings;
+import com.okta.sdk.resource.policy.PasswordPolicyDelegationSettingsOptions;
+import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettings;
+import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettingsAge;
+import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettingsComplexity;
+import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettingsLockout;
+import com.okta.sdk.resource.policy.PasswordPolicyRecoveryEmail;
+import com.okta.sdk.resource.policy.PasswordPolicyRecoveryEmailProperties;
+import com.okta.sdk.resource.policy.PasswordPolicyRecoveryEmailRecoveryToken;
+import com.okta.sdk.resource.policy.PasswordPolicyRecoveryFactorSettings;
+import com.okta.sdk.resource.policy.PasswordPolicyRecoveryFactors;
+import com.okta.sdk.resource.policy.PasswordPolicyRecoverySettings;
+import com.okta.sdk.resource.policy.PasswordPolicySettings;
+import com.okta.sdk.resource.policy.Policy;
+import com.okta.sdk.resource.policy.PolicyPeopleCondition;
+import com.okta.sdk.resource.policy.PolicyType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DefaultPasswordPolicyBuilder implements PasswordPolicyBuilder {
+public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordPolicyBuilder> implements PasswordPolicyBuilder {
 
-    private String name;
-    private String description;
-    private PolicyType policyType;
-    private Integer priority;
-    private Policy.StatusEnum status;
     private PasswordPolicyAuthenticationProviderCondition.ProviderEnum provider;
     private List<String> groupIds = new ArrayList<>();
     private Boolean excludePasswordDictionary;
@@ -53,7 +70,7 @@ public class DefaultPasswordPolicyBuilder implements PasswordPolicyBuilder {
     private PasswordPolicyRecoveryFactorSettings.StatusEnum pwdPolicyRecoveryEmailStatus;
     private Integer pwdRecoveryTokenLifeMinutes;
 
-    DefaultPasswordPolicyBuilder() {
+    public DefaultPasswordPolicyBuilder() {
         this.policyType = PolicyType.PASSWORD;
     }
 
@@ -186,36 +203,6 @@ public class DefaultPasswordPolicyBuilder implements PasswordPolicyBuilder {
     @Override
     public PasswordPolicyBuilder setPasswordRecoveryTokenLifeMinutes(Integer pwdRecoveryTokenLifeMinutes) {
         this.pwdRecoveryTokenLifeMinutes = pwdRecoveryTokenLifeMinutes;
-        return this;
-    }
-
-    @Override
-    public PasswordPolicyBuilder setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public PasswordPolicyBuilder setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    @Override
-    public PasswordPolicyBuilder setType(PolicyType policyType) {
-        this.policyType = policyType;
-        return this;
-    }
-
-    @Override
-    public PasswordPolicyBuilder setPriority(Integer priority) {
-        this.priority = priority;
-        return this;
-    }
-
-    @Override
-    public PasswordPolicyBuilder setStatus(Policy.StatusEnum status) {
-        this.status = status;
         return this;
     }
 

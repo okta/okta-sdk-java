@@ -19,21 +19,21 @@ import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
 
 
-public interface PolicyBuilder {
+public interface PolicyBuilder<T extends PolicyBuilder> {
 
-    static PolicyBuilder instance() {
+    static PolicyBuilder<PolicyBuilder> instance() {
         return Classes.newInstance("com.okta.sdk.impl.resource.DefaultPolicyBuilder");
     }
 
-    PolicyBuilder setName(String name);
+    T setName(String name);
 
-    PolicyBuilder setDescription(String description);
+    T setDescription(String description);
 
-    PolicyBuilder setType(PolicyType policyType);
+    T setType(PolicyType policyType);
 
-    PolicyBuilder setPriority(Integer priority);
+    T setPriority(Integer priority);
 
-    PolicyBuilder setStatus(Policy.StatusEnum status);
+    T setStatus(Policy.StatusEnum status);
 
     Policy buildAndCreate(Client client);
 
