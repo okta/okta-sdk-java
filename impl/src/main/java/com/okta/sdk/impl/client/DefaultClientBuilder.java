@@ -17,10 +17,13 @@
 package com.okta.sdk.impl.client;
 
 import com.okta.commons.configcheck.ConfigurationValidator;
+import com.okta.commons.http.HttpException;
 import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
+import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.sdk.authc.credentials.OAuth2ClientCredentials;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.cache.CacheManagerBuilder;
@@ -31,7 +34,7 @@ import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
-import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.sdk.impl.api.OAuth2ClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
 import com.okta.sdk.impl.config.OptionalPropertiesSource;
@@ -39,6 +42,7 @@ import com.okta.sdk.impl.config.PropertiesSource;
 import com.okta.sdk.impl.config.ResourcePropertiesSource;
 import com.okta.sdk.impl.config.SystemPropertiesSource;
 import com.okta.sdk.impl.config.YAMLPropertiesSource;
+import com.okta.sdk.impl.http.authc.OAuth2RequestAuthenticator;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
@@ -49,11 +53,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+
+import static com.okta.sdk.impl.util.OAuth2Utils.createSignedJWT;
+import static com.okta.sdk.impl.util.OAuth2Utils.getOAuth2AccessToken;
+import static com.okta.sdk.impl.util.OAuth2Utils.validateOAuth2ClientConfig;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -210,6 +224,33 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setProxyPassword(props.get(DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME));
         }
 
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME))) {
+            clientConfig.setAuthorizationMode(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_CLIENT_ID_PROPERTY_NAME))) {
+            clientConfig.setClientId(props.get(DEFAULT_CLIENT_CLIENT_ID_PROPERTY_NAME));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
+            List<String> scopes = new ArrayList<>();
+            scopes.add(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
+            //TODO: how yaml parsing into properties works?
+            clientConfig.setScopes(scopes);
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME))) {
+            clientConfig.setPrivateKey(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_KEY_FILE_PATH_PROPERTY_NAME))) {
+            clientConfig.setKeyFilePath(props.get(DEFAULT_CLIENT_PRIVATE_KEY_KEY_FILE_PATH_PROPERTY_NAME));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_ALGORITHM_PROPERTY_NAME))) {
+            clientConfig.setAlgorithm(props.get(DEFAULT_CLIENT_PRIVATE_KEY_ALGORITHM_PROPERTY_NAME));
+        }
+
         if (Strings.hasText(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME))) {
             clientConfig.setRetryMaxElapsed(Integer.parseInt(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME)));
         }
@@ -319,6 +360,53 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
+        // OAuth2
+        if (this.clientConfig.getAuthenticationScheme() == AuthenticationScheme.OAUTH2) {
+            if (this.clientConfig.getAuthorizationMode() != null) {
+                if (this.clientConfig.getAuthorizationMode().equals("PrivateKey")) {
+                    // Validate client config
+                    validateOAuth2ClientConfig(this.clientConfig);
+
+                    // Get access token asynchronously
+                    CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+                        String accessToken;
+                        try {
+                            log.debug("Attempting to get OAuth2 access token for client id [{}]",
+                                this.getClientConfiguration().getClientId());
+                            accessToken = getOAuth2AccessToken(this.clientConfig);
+                        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
+                            log.error("Exception occurred:", e);
+                            throw new IllegalArgumentException("Exception occurred", e);
+                        } catch (HttpException e) {
+                            log.error("Exception occurred:", e);
+                            throw e;
+                        }
+                        log.debug("Got OAuth2 access token [{}] for client id [{}]",
+                            accessToken, this.getClientConfiguration().getClientId());
+                        return accessToken;
+                    }).whenComplete((accessTokenResult, ex) -> {
+                        log.debug("Executing whenComplete() after obtaining OAuth2 access token [{}] for client id [{}]",
+                            accessTokenResult, this.getClientConfiguration().getClientId());
+                        if (ex != null) {
+                            log.error("Exception occurred:", ex);
+                        } else {
+                            log.debug("Setting OAuth2 ClientCredentialsResolver for client id [{}] with OAuth2 access token [{}]",
+                                this.getClientConfiguration().getClientId(), accessTokenResult);
+                            OAuth2ClientCredentials oAuth2ClientCredentials =
+                                new OAuth2ClientCredentials(accessTokenResult);
+                            OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
+                                new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
+                            this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
+                        }
+                    });
+                } else {
+                    throw new IllegalArgumentException("Unknown authorizationMode '" +
+                        this.clientConfig.getAuthorizationMode() + "'");
+                }
+            } else {
+                throw new IllegalArgumentException("Missing authorizationMode");
+            }
+        }
         return new DefaultClient(clientConfig, cacheManager);
     }
 

@@ -26,7 +26,9 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,6 +51,12 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private RequestAuthenticatorFactory requestAuthenticatorFactory = new DefaultRequestAuthenticatorFactory();
     private AuthenticationScheme authenticationScheme;
     private BaseUrlResolver baseUrlResolver;
+    private String authorizationMode;
+    private String clientId;
+    private List<String> scopes = new ArrayList<>();
+    private String privateKey;
+    private String keyFilePath;
+    private String algorithm;
 
     public String getApiToken() {
         return apiToken;
@@ -88,6 +96,54 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     public void setBaseUrlResolver(BaseUrlResolver baseUrlResolver) {
         this.baseUrlResolver = baseUrlResolver;
+    }
+
+    public String getAuthorizationMode() {
+        return authorizationMode;
+    }
+
+    public void setAuthorizationMode(String authorizationMode) {
+        this.authorizationMode = authorizationMode;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public List<String> getScopes() {
+        return scopes;
+    }
+
+    public void setScopes(List<String> scopes) {
+        this.scopes = scopes;
+    }
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
+
+    public String getKeyFilePath() {
+        return keyFilePath;
+    }
+
+    public void setKeyFilePath(String keyFilePath) {
+        this.keyFilePath = keyFilePath;
+    }
+
+    public String getAlgorithm() {
+        return algorithm;
+    }
+
+    public void setAlgorithm(String algorithm) {
+        this.algorithm = algorithm;
     }
 
     public boolean isCacheManagerEnabled() {
@@ -167,6 +223,11 @@ public class ClientConfiguration extends HttpClientConfiguration {
                 ", cacheManagerTti=" + cacheManagerTti +
                 ", cacheManagerCaches=" + cacheManagerCaches +
                 ", baseUrl='" + getBaseUrl() + '\'' +
+                ", authorizationMode='" + getAuthorizationMode() +
+                ", clientId='" + getClientId() +
+                ", scopes='" + getScopes() +
+                ", keyFilePath=" + getKeyFilePath() +
+                ", algorithm=" + getAlgorithm() +
                 ", connectionTimeout=" + getConnectionTimeout() +
                 ", requestAuthenticator=" + getRequestAuthenticator() +
                 ", retryMaxElapsed=" + getRetryMaxElapsed() +

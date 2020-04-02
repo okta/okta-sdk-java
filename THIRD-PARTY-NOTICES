@@ -21,10 +21,14 @@ This project includes:
   AutoService under Apache 2.0
   AutoService Processor under Apache 2.0
   Bean Validation API under The Apache Software License, Version 2.0
+  Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
+  Bouncy Castle Provider under Bouncy Castle Licence
+  Bouncy Castle S/MIME API under Bouncy Castle Licence
   commonmark-java core under BSD 2-Clause License
   Commons CLI under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   FindBugs-jsr305 under The Apache Software License, Version 2.0
+  Gson under Apache 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
   jackson-databind under The Apache Software License, Version 2.0
@@ -36,6 +40,7 @@ This project includes:
   jmustache under The (New) BSD License
   Joda-Time under Apache 2
   JOpt Simple under The MIT License
+  JSON Web Token support for the JVM under Apache License, Version 2.0
   json-schema-core under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-validator under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   libphonenumber under The Apache Software License, Version 2.0

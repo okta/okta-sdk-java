@@ -43,6 +43,31 @@
         <license>Apache License, Version 2.0</license>
     </artifact>
     <artifact>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcmail-jdk15on</artifactId>
+        <license>Bouncy Castle/MIT License</license>
+    </artifact>
+    <artifact>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcpkix-jdk15on</artifactId>
+        <license>Bouncy Castle/MIT License</license>
+    </artifact>
+    <artifact>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk15on</artifactId>
+        <license>Bouncy Castle/MIT License</license>
+    </artifact>
+    <artifact>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt</artifactId>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
         <groupId>antlr</groupId>
         <artifactId>antlr</artifactId>
         <license>BSD 3-clause license</license>
