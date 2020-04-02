@@ -289,10 +289,10 @@ Application app = client.getApplication("appId");
 SwaApplication swaApp = client.instantiate(SwaApplication.class)
     .setSettings(client.instantiate(SwaApplicationSettings.class)
     .setApp(client.instantiate(SwaApplicationSettingsApplication.class)
-      .setButtonField("btn-login")
-      .setPasswordField("txtbox-password")
-      .setUsernameField("txtbox-username")
-      .setUrl("https://example.com/login.html")));
+    .setButtonField("btn-login")
+    .setPasswordField("txtbox-password")
+    .setUsernameField("txtbox-username")
+    .setUrl("https://example.com/login.html")));
 ```
 [//]: # (end: createSwaApplication)
 
@@ -360,7 +360,7 @@ Higher numbers win. In other words, configuration passed via the constructor wil
  
 ### YAML configuration
  
-When you use an API Token instead of OAuth 2.0 the full YAML configuration looks like:
+When you use an API Token instead of OAuth 2.0, the full YAML configuration would look like:
  
 ```yaml
 okta:
@@ -378,7 +378,7 @@ okta:
       maxRetries: 4
 ```
 
-When you use OAuth 2.0 the full YAML configuration looks like:
+When you use OAuth 2.0, the full YAML configuration would look like:
 
 ```yaml
 okta:
@@ -452,10 +452,10 @@ Caches.newCacheManager()
      .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
      .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
      .withCache(forResource(User.class) //User-specific cache settings
-         .withTimeToLive(1, TimeUnit.HOURS)
-         .withTimeToIdle(30, TimeUnit.MINUTES))
+     .withTimeToLive(1, TimeUnit.HOURS)
+     .withTimeToIdle(30, TimeUnit.MINUTES))
      .withCache(forResource(Group.class) //Group-specific cache settings
-         .withTimeToLive(2, TimeUnit.HOURS))
+     .withTimeToLive(2, TimeUnit.HOURS))
      //... etc ...
      .build();
 ```

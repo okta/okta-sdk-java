@@ -209,7 +209,6 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME = "okta.client.authorizationMode";
     String DEFAULT_CLIENT_CLIENT_ID_PROPERTY_NAME = "okta.client.clientId";
     String DEFAULT_CLIENT_SCOPES_PROPERTY_NAME = "okta.client.scopes";
-    String DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME = "okta.client.privateKey";
     String DEFAULT_CLIENT_PRIVATE_KEY_KEY_FILE_PATH_PROPERTY_NAME = "okta.client.privateKey.keyFilePath";
     String DEFAULT_CLIENT_PRIVATE_KEY_ALGORITHM_PROPERTY_NAME = "okta.client.privateKey.algorithm";
     String DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME = "okta.client.requestTimeout";

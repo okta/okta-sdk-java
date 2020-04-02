@@ -10,11 +10,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -29,6 +28,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class OAuth2Utils {
+    private static final Logger log = LoggerFactory.getLogger(OAuth2Utils.class);
+
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private static List<String> allowedSigningAlgorithms =
@@ -41,11 +42,20 @@ public class OAuth2Utils {
         return KeyFactory.getInstance("RSA");
     }
 
+    /**
+     * Create signed JWT string with the supplied {@link ClientConfiguration} details.
+     *
+     * @param {@link ClientConfiguration} object
+     * @return signed JWT string
+     * @throws {@link InvalidKeySpecException}
+     * @throws {@link NoSuchAlgorithmException}
+     * @throws {@link IOException}
+     */
     public static String createSignedJWT(ClientConfiguration clientConfiguration)
-        throws RuntimeException, InvalidKeySpecException, NoSuchAlgorithmException, IOException {
+        throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {
         String clientId = clientConfiguration.getClientId();
         SignatureAlgorithm signatureAlgorithm = getSignatureAlgorithm(clientConfiguration.getAlgorithm());
-        PrivateKey privateKey = createPrivateKeyFromPemFilePath(clientConfiguration.getPrivateKey());
+        PrivateKey privateKey = createPrivateKeyFromPemFilePath(clientConfiguration.getKeyFilePath());
         Instant now = Instant.now();
 
         String jwt = Jwts.builder()
@@ -61,8 +71,17 @@ public class OAuth2Utils {
         return jwt;
     }
 
+    /**
+     * Obtain OAuth2 access token from Authorization Server endpoint.
+     *
+     * @param {@link ClientConfiguration} object
+     * @return signed JWT string
+     * @throws {@link IOException}
+     * @throws {@link InvalidKeySpecException}
+     * @throws {@link NoSuchAlgorithmException}
+     */
     public static String getOAuth2AccessToken(ClientConfiguration clientConfiguration)
-        throws HttpException, IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+        throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
         String signedJwt = createSignedJWT(clientConfiguration);
 
         RequestExecutor requestExecutor = okHttpRequestExecutorFactory.create(clientConfiguration);
@@ -110,6 +129,12 @@ public class OAuth2Utils {
         }
     }
 
+    /**
+     * Validate Oauth2 specific configuration in {@link ClientConfiguration} object.
+     *
+     * @param {@link ClientConfiguration} object
+     * @throws {@link IllegalArgumentException}
+     */
     public static void validateOAuth2ClientConfig(ClientConfiguration clientConfiguration)
         throws IllegalArgumentException {
         if (clientConfiguration.getScopes() == null || clientConfiguration.getScopes().size() == 0) {
@@ -121,10 +146,17 @@ public class OAuth2Utils {
         }
 
         if (!allowedSigningAlgorithms.contains(clientConfiguration.getAlgorithm())) {
-            throw new IllegalArgumentException("Unsupported algorithm");
+            throw new IllegalArgumentException("Unsupported algorithm '" + clientConfiguration.getAlgorithm() + "'");
         }
     }
 
+    /**
+     * Get {@link SignatureAlgorithm} enum for a given algorithm string.
+     *
+     * @param algorithm string
+     * @throws {@link NoSuchAlgorithmException} if supplied algorithm string is not supported.
+     * Supported algorithms are "RS256", "RS384", "RS512", "ES256", "ES384" & "ES512".
+     */
     static SignatureAlgorithm getSignatureAlgorithm(String algorithm) throws NoSuchAlgorithmException {
         switch (algorithm) {
             case "RS256":
@@ -150,8 +182,23 @@ public class OAuth2Utils {
         }
     }
 
-    static PrivateKey createPrivateKeyFromPemFilePath(final String keyFileName) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-        PemReader pemReader = new PemReader(new FileReader(keyFileName));
+    /**
+     * Create {@link PrivateKey} instance from a given pem key file path.
+     *
+     * @param pemFilePath string
+     * @return {@link PrivateKey} instance
+     * @throws {@link IOException}
+     * @throws {@link InvalidKeySpecException}
+     * @throws {@link NoSuchAlgorithmException}
+     */
+    static PrivateKey createPrivateKeyFromPemFilePath(final String pemFilePath)
+        throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+        log.debug("Creating private key from pem file {}", pemFilePath);
+        File privateKeyFile = new File(pemFilePath);
+        if (!privateKeyFile.exists()) {
+            throw new FileNotFoundException(pemFilePath);
+        }
+        PemReader pemReader = new PemReader(new FileReader(pemFilePath));
         PemObject pemObject = pemReader.readPemObject();
         byte[] pemContent = pemObject.getContent();
         pemReader.close();

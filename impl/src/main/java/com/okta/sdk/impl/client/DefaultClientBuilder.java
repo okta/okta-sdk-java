@@ -35,14 +35,7 @@ import com.okta.sdk.client.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.api.OAuth2ClientCredentialsResolver;
-import com.okta.sdk.impl.config.ClientConfiguration;
-import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
-import com.okta.sdk.impl.config.OptionalPropertiesSource;
-import com.okta.sdk.impl.config.PropertiesSource;
-import com.okta.sdk.impl.config.ResourcePropertiesSource;
-import com.okta.sdk.impl.config.SystemPropertiesSource;
-import com.okta.sdk.impl.config.YAMLPropertiesSource;
-import com.okta.sdk.impl.http.authc.OAuth2RequestAuthenticator;
+import com.okta.sdk.impl.config.*;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
@@ -54,18 +47,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import static com.okta.sdk.impl.util.OAuth2Utils.createSignedJWT;
 import static com.okta.sdk.impl.util.OAuth2Utils.getOAuth2AccessToken;
 import static com.okta.sdk.impl.util.OAuth2Utils.validateOAuth2ClientConfig;
 
@@ -238,10 +225,6 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setScopes(scopes);
         }
 
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME))) {
-            clientConfig.setPrivateKey(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
-        }
-
         if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_KEY_FILE_PATH_PROPERTY_NAME))) {
             clientConfig.setKeyFilePath(props.get(DEFAULT_CLIENT_PRIVATE_KEY_KEY_FILE_PATH_PROPERTY_NAME));
         }
@@ -367,7 +350,7 @@ public class DefaultClientBuilder implements ClientBuilder {
                     validateOAuth2ClientConfig(this.clientConfig);
 
                     // Get access token asynchronously
-                    CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+                    CompletableFuture.supplyAsync(() -> {
                         String accessToken;
                         try {
                             log.debug("Attempting to get OAuth2 access token for client id [{}]",
@@ -406,6 +389,7 @@ public class DefaultClientBuilder implements ClientBuilder {
                 throw new IllegalArgumentException("Missing authorizationMode");
             }
         }
+
         return new DefaultClient(clientConfig, cacheManager);
     }
 
