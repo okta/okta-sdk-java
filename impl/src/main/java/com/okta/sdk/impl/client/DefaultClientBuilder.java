@@ -234,8 +234,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
             List<String> scopes = new ArrayList<>();
-            scopes.add(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
-            //TODO: how yaml parsing into properties works?
+            scopes.add(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME));
             clientConfig.setScopes(scopes);
         }
 

@@ -113,15 +113,15 @@ public class OAuth2Utils {
     public static void validateOAuth2ClientConfig(ClientConfiguration clientConfiguration)
         throws IllegalArgumentException {
         if (clientConfiguration.getScopes() == null || clientConfiguration.getScopes().size() == 0) {
-            throw new IllegalArgumentException("Invalid/missing scopes");
+            throw new IllegalArgumentException("Missing scopes");
         }
 
         if (clientConfiguration.getKeyFilePath() == null) {
-            throw new IllegalArgumentException("Invalid/missing keyFilePath");
+            throw new IllegalArgumentException("Missing keyFilePath");
         }
 
         if (!allowedSigningAlgorithms.contains(clientConfiguration.getAlgorithm())) {
-            throw new IllegalArgumentException("Invalid/unsupported algorithm");
+            throw new IllegalArgumentException("Unsupported algorithm");
         }
     }
 
