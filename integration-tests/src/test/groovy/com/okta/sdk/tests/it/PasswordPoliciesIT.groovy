@@ -28,7 +28,6 @@ class PasswordPoliciesIT extends ITSupport implements CrudTestSupport  {
     @Override
     def create(Client client) {
         Group group = randomGroup()
-        System.out.println("here")
         Policy passwordPolicy = PasswordPolicyBuilder.instance()
                                     .setAuthProvider(PasswordPolicyAuthenticationProviderCondition.ProviderEnum.OKTA)
                                     .setExcludePasswordDictionary(false)
@@ -38,7 +37,7 @@ class PasswordPoliciesIT extends ITSupport implements CrudTestSupport  {
                                     .setMinUpperCase(1)
                                     .setMinNumbers(1)
                                     .setMinSymbols(1)
-                                    .addGroup("00g3g8upt9KdhuSTE4x6")
+                                    .addGroup(group.getId())
                                     .setSkipUnlock(false)
                                     .setPasswordExpireWarnDays(85)
                                     .setPasswordHistoryCount(5)
@@ -81,6 +80,6 @@ class PasswordPoliciesIT extends ITSupport implements CrudTestSupport  {
         assertThat policy.description, is("Dummy policy for sdk test - Updated")
         assertThat policy.settings.password.lockout.maxAttempts, is(5)
         assertThat policy.settings.password.complexity.minLength, is(8)
-        assertThat policy.settings.recovery.Okta_email.status, is("ACTIVE")
+        assertThat policy.settings.recovery.factors.okta_email.status, is("ACTIVE")
     }
 }

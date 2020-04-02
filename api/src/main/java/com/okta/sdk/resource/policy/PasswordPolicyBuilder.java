@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public interface PasswordPolicyBuilder extends PolicyBuilder{
+public interface PasswordPolicyBuilder extends PolicyBuilder<PasswordPolicyBuilder> {
 
     static PasswordPolicyBuilder instance() {
         return Classes.newInstance("com.okta.sdk.impl.resource.DefaultPasswordPolicyBuilder");
