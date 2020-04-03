@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Okta
+ * Copyright 2020 Okta
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,6 +94,7 @@ class DefaultPasswordPolicyBuilderTest {
             .setPasswordMaxAttempts(3)
             .setShowLockoutFailures(true)
             .setPasswordRecoveryOktaSMS(PasswordPolicyRecoveryFactorSettings.StatusEnum.ACTIVE)
+            .setPasswordRecoveryOktaCall(PasswordPolicyRecoveryFactorSettings.StatusEnum.ACTIVE)
             .setPasswordRecoveryTokenLifeMinutes(500)
             .setType(PolicyType.PASSWORD)
             .setStatus(Policy.StatusEnum.ACTIVE)
@@ -111,6 +112,7 @@ class DefaultPasswordPolicyBuilderTest {
         verify(passwordPolicy).setType(PolicyType.PASSWORD)
         verify(passwordPolicyPasswordSettingsLockout).setShowLockoutFailures(true)
         verify(passwordPolicyRecoveryFactors).setOktaSms(passwordPolicyRecoveryFactorSettings.setStatus(PasswordPolicyRecoveryFactorSettings.StatusEnum.ACTIVE))
+        verify(passwordPolicyRecoveryFactors).setOktaCall(passwordPolicyRecoveryFactorSettings.setStatus(PasswordPolicyRecoveryFactorSettings.StatusEnum.ACTIVE))
         verify(passwordPolicyRecoveryEmailRecoveryToken).setTokenLifetimeMinutes(500)
         verify(passwordPolicyPasswordSettingsLockout).setMaxAttempts(3)
         verify(passwordPolicyPasswordSettingsLockout).setAutoUnlockMinutes(5)
@@ -140,12 +142,13 @@ class DefaultPasswordPolicyBuilderTest {
         def passwordPolicy = mock(PasswordPolicy)
         when(client.instantiate(Policy.class)).thenReturn(policy)
         when(client.instantiate(PasswordPolicy.class)).thenReturn(passwordPolicy)
-
+        List groupList = new ArrayList(Arrays.asList("dsfjhgsjhg"));
         expect IllegalArgumentException, {
             new DefaultPasswordPolicyBuilder()
                 .setName("Test Password Policy")
                 .setDescription("dummy policy for test")
                 .setPriority(1)
+                .setGroups(groupList)
                 .setType(PolicyType.OKTA_SIGN_ON)
                 .setStatus(Policy.StatusEnum.ACTIVE)
                 .buildAndCreate(client)

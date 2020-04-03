@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Okta
+ * Copyright 2020 Okta
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,29 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.policy.GroupCondition;
-import com.okta.sdk.resource.policy.PasswordDictionary;
-import com.okta.sdk.resource.policy.PasswordDictionaryCommon;
-import com.okta.sdk.resource.policy.PasswordPolicy;
-import com.okta.sdk.resource.policy.PasswordPolicyAuthenticationProviderCondition;
-import com.okta.sdk.resource.policy.PasswordPolicyBuilder;
-import com.okta.sdk.resource.policy.PasswordPolicyConditions;
-import com.okta.sdk.resource.policy.PasswordPolicyDelegationSettings;
-import com.okta.sdk.resource.policy.PasswordPolicyDelegationSettingsOptions;
-import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettings;
-import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettingsAge;
-import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettingsComplexity;
-import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettingsLockout;
-import com.okta.sdk.resource.policy.PasswordPolicyRecoveryEmail;
-import com.okta.sdk.resource.policy.PasswordPolicyRecoveryEmailProperties;
-import com.okta.sdk.resource.policy.PasswordPolicyRecoveryEmailRecoveryToken;
-import com.okta.sdk.resource.policy.PasswordPolicyRecoveryFactorSettings;
-import com.okta.sdk.resource.policy.PasswordPolicyRecoveryFactors;
-import com.okta.sdk.resource.policy.PasswordPolicyRecoverySettings;
-import com.okta.sdk.resource.policy.PasswordPolicySettings;
-import com.okta.sdk.resource.policy.Policy;
-import com.okta.sdk.resource.policy.PolicyPeopleCondition;
-import com.okta.sdk.resource.policy.PolicyType;
+import com.okta.sdk.resource.policy.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -227,13 +205,10 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
         if (priority != null)
             policy.setPriority(priority);
 
-        if (Objects.nonNull(policyType))
-            if (policyType.equals(PolicyType.PASSWORD))
+        if (policyType.equals(PolicyType.PASSWORD))
                 policy.setType(policyType);
-            else
-                throw new IllegalArgumentException("PolicyType should be 'PASSWORD', please use PolicyBuilder for other policy types.");
         else
-            throw new IllegalArgumentException("PolicyType cannot be blank, needs to be specified.");
+            throw new IllegalArgumentException("PolicyType should be 'PASSWORD', please use PolicyBuilder for other policy types.");
 
         if (Objects.nonNull(status))
             policy.setStatus(status);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Okta
+ * Copyright 2020 Okta
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,10 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     protected PolicyType policyType;
     protected Integer priority;
     protected Policy.StatusEnum status;
+
+    DefaultPolicyBuilder(){
+        this.status = Policy.StatusEnum.ACTIVE;
+    }
 
     @Override
     public T setName(String name) {
@@ -85,7 +89,7 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
         else
             throw new IllegalArgumentException("PolicyType cannot be blank, needs to be specified.");
 
-        if (Strings.hasText(status.toString()))
+        if (Objects.nonNull(status))
             policy.setStatus(status);
 
         return policy;
