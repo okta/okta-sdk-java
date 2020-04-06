@@ -51,7 +51,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.okta.sdk.impl.util.OAuth2Utils.getOAuth2AccessToken;
@@ -375,10 +374,9 @@ public class DefaultClientBuilder implements ClientBuilder {
                 OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
                     new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
                 this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 log.error("Exception occurred:", e);
-            } catch (ExecutionException e) {
-                log.error("Exception occurred:", e);
+                throw new RuntimeException(e);
             }
         }
 

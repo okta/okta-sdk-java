@@ -88,9 +88,11 @@ public class OAuth2Utils {
         OkHttpClient client = new OkHttpClient().newBuilder().build();
 
         Request accessTokenRequest = new Request.Builder()
-            .url("https://java-sdk.oktapreview.com/oauth2/v1/token?grant_type=client_credentials" +
+            .url(clientConfiguration.getBaseUrl() + "/oauth2/v1/token" +
+                "?grant_type=client_credentials" +
                 "&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer" +
-                "&client_assertion=" + signedJwt + "&scope=" + scopes)
+                "&client_assertion=" + signedJwt +
+                "&scope=" + scopes)
             .method("POST", body)
             .addHeader("Accept", "application/json")
             .addHeader("Content-Type", "application/x-www-form-urlencoded")
