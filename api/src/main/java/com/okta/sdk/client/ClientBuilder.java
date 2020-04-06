@@ -313,7 +313,7 @@ public interface ClientBuilder {
      * Sets both the timeout until a connection is established and the socket timeout (i.e. a maximum period of inactivity
      * between two consecutive data packets).  A timeout value of zero is interpreted as an infinite timeout.
      *
-     * @param timeout connection and socket timeout in milliseconds
+     * @param timeout connection and socket timeout in seconds
      * @return the ClientBuilder instance for method chaining
      */
     ClientBuilder setConnectionTimeout(int timeout);
@@ -331,9 +331,9 @@ public interface ClientBuilder {
     ClientBuilder setOrgUrl(String baseUrl);
 
     /**
-     * Sets the maximum number of milliseconds to wait when retrying before giving up.
+     * Sets the maximum number of seconds to wait when retrying before giving up.
      *
-     * @param maxElapsed retry max elapsed duration in milliseconds
+     * @param maxElapsed retry max elapsed duration in seconds
      * @return the ClientBuilder instance for method chaining
      */
     ClientBuilder setRetryMaxElapsed(int maxElapsed);
