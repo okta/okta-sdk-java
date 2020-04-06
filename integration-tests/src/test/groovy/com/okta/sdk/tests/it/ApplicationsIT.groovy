@@ -479,6 +479,7 @@ class ApplicationsIT extends ITSupport {
 
     @Test
     void testOAuth2Flow() {
+
         Client client = Clients.builder()
             .setOrgUrl("https://java-sdk.oktapreview.com")
             .setCacheManager(new DisabledCacheManager())

@@ -42,6 +42,7 @@ import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
+import com.okta.sdk.oauth2.OAuth2AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -343,12 +344,12 @@ public class DefaultClientBuilder implements ClientBuilder {
         // OAuth2
         if (this.clientConfig.getAuthenticationScheme() == AuthenticationScheme.OAUTH2) {
             // Get access token asynchronously
-            CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
-                String accessToken;
+            CompletableFuture<OAuth2AccessToken> completableFuture = CompletableFuture.supplyAsync(() -> {
+                OAuth2AccessToken oAuth2AccessToken;
                 try {
-                    log.debug("Attempting to get OAuth2 access token for client id [{}]",
+                    log.debug("Getting OAuth2 access token for client id [{}]",
                         this.getClientConfiguration().getClientId());
-                    accessToken = getOAuth2AccessToken(this.clientConfig);
+                    oAuth2AccessToken = getOAuth2AccessToken(this.clientConfig);
                 } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
                     log.error("Exception occurred:", e);
                     throw new IllegalArgumentException("Exception occurred", e);
@@ -357,8 +358,8 @@ public class DefaultClientBuilder implements ClientBuilder {
                     throw e;
                 }
                 log.debug("Got OAuth2 access token [{}] for client id [{}]",
-                    accessToken, this.getClientConfiguration().getClientId());
-                return accessToken;
+                    oAuth2AccessToken, this.getClientConfiguration().getClientId());
+                return oAuth2AccessToken;
             }).whenComplete((accessTokenResult, ex) -> {
                 log.debug("Executing whenComplete() after obtaining OAuth2 access token [{}] for client id [{}]",
                     accessTokenResult, this.getClientConfiguration().getClientId());
@@ -368,7 +369,7 @@ public class DefaultClientBuilder implements ClientBuilder {
             });
 
             try {
-                String accessToken = completableFuture.get();
+                OAuth2AccessToken accessToken = completableFuture.get();
                 OAuth2ClientCredentials oAuth2ClientCredentials =
                     new OAuth2ClientCredentials(accessToken);
                 OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
