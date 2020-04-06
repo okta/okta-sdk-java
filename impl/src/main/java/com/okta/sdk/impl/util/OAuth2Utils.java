@@ -4,10 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.okta.commons.http.*;
-import com.okta.commons.http.okhttp.OkHttpRequestExecutorFactory;
+import com.okta.commons.http.httpclient.HttpClientRequestExecutorFactory;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.Request;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.slf4j.Logger;
@@ -16,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -35,8 +38,8 @@ public class OAuth2Utils {
     private static List<String> allowedSigningAlgorithms =
         new ArrayList<>(Arrays.asList("RS256", "RS384", "RS512", "ES256", "ES384", "ES512"));
 
-    private static final OkHttpRequestExecutorFactory okHttpRequestExecutorFactory =
-        new OkHttpRequestExecutorFactory();
+    private static final HttpClientRequestExecutorFactory httpClientRequestExecutorFactory =
+        new HttpClientRequestExecutorFactory();
 
     private static KeyFactory getKeyFactoryInstance() throws NoSuchAlgorithmException {
         return KeyFactory.getInstance("RSA");
@@ -59,7 +62,7 @@ public class OAuth2Utils {
         Instant now = Instant.now();
 
         String jwt = Jwts.builder()
-            .setAudience(clientConfiguration.getBaseUrl() + "/oauth2/default/v1/token")
+            .setAudience(clientConfiguration.getBaseUrl() + "/oauth2/v1/token")
             .setIssuedAt(Date.from(now))
             .setExpiration(Date.from(now.plus(1L, ChronoUnit.HOURS)))
             .setIssuer(clientId)
@@ -83,43 +86,43 @@ public class OAuth2Utils {
     public static String getOAuth2AccessToken(ClientConfiguration clientConfiguration)
         throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
         String signedJwt = createSignedJWT(clientConfiguration);
+        String scopes = String.join(" ", clientConfiguration.getScopes());
 
-        RequestExecutor requestExecutor = okHttpRequestExecutorFactory.create(clientConfiguration);
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody body = RequestBody.create(mediaType, "");
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Accept", "application/json");
-        httpHeaders.add("Content-Type", "application/x-www-form-urlencoded");
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
 
-        QueryString queryString = new QueryString();
-        queryString.put("grant_type", "client_credentials");
-        queryString.put("scope", clientConfiguration.getScopes());
-        queryString.put("client_assertion_type",
-            URLEncoder.encode("urn:ietf:params:oauth:client-assertion-type:jwt-bearer", "UTF-8"));
-        queryString.put("client_assertion", signedJwt);
+        Request accessTokenRequest = new Request.Builder()
+            .url("https://java-sdk.oktapreview.com/oauth2/v1/token?grant_type=client_credentials" +
+                "&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer" +
+                "&client_assertion=" + signedJwt + "&scope=" + scopes)
+            .method("POST", body)
+            .addHeader("Accept", "application/json")
+            .addHeader("Content-Type", "application/x-www-form-urlencoded")
+            .build();
 
-        DefaultRequest accessTokenRequest =
-            new DefaultRequest(HttpMethod.POST, "/oauth2/v1/token", queryString, httpHeaders);
-        Response accessTokenResponse = requestExecutor.executeRequest(accessTokenRequest);
+        okhttp3.Response accessTokenResponse = client.newCall(accessTokenRequest).execute();
 
-        if (accessTokenResponse != null && accessTokenResponse.getBody() != null) {
-            Reader reader = new InputStreamReader(accessTokenResponse.getBody(), StandardCharsets.UTF_8);
+        if (accessTokenResponse != null && accessTokenResponse.body() != null) {
+            Reader reader = new InputStreamReader(accessTokenResponse.body().byteStream(), StandardCharsets.UTF_8);
             Type mapType = new TypeToken<Map<String, String>>(){}.getType();
             Map<String, String> responseMap = gson.fromJson(reader, mapType);
 
-            if (accessTokenResponse.getHttpStatus() == HttpURLConnection.HTTP_OK) {
+            if (accessTokenResponse.code() == HttpURLConnection.HTTP_OK) {
                 return responseMap.get("access_token");
             }
             else {
                 String error = responseMap.get("error");
-                String error_description = responseMap.get("error_description");
+                String errorDescription = responseMap.get("error_description");
                 if (error != null && error.length() > 0 &&
-                    error_description != null && error_description.length() > 0) {
-                    throw new HttpException("Received HTTP " + accessTokenResponse.getHttpStatus() +
+                    errorDescription != null && errorDescription.length() > 0) {
+                    throw new HttpException("Received HTTP " + accessTokenResponse.code() +
                         " response from Authorization Server. error - " + error +
-                        ", error_description - " + error_description);
+                        ", error_description - " + errorDescription);
                 }
                 else {
-                    throw new HttpException("Received HTTP " + accessTokenResponse.getHttpStatus() +
+                    throw new HttpException("Received HTTP " + accessTokenResponse.code() +
                         " response from Authorization Server");
                 }
             }

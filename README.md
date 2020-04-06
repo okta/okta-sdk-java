@@ -394,8 +394,8 @@ okta:
     authorizationMode: "PrivateKey"
     clientId: "{clientId}"
     scopes:
-    - scope1
-    - scope2
+    - okta.clients.read
+    - okta.clients.manage
     privateKey:
         # PEM format is recommended.
         # This SDK supports following RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.

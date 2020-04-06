@@ -17,6 +17,7 @@ package com.okta.sdk.tests.it.util
 
 import com.okta.commons.lang.Strings
 import com.okta.sdk.authc.credentials.TokenClientCredentials
+import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.impl.cache.DisabledCacheManager
@@ -59,6 +60,10 @@ trait ClientProvider implements IHookable {
             threadLocal.set(buildClient(scenarioId))
         }
         return threadLocal.get()
+    }
+
+    Client getOAuth2Client(String scenarioId = null) {
+        return buildOAuth2Client(scenarioId)
     }
 
     private isRunningWithTestServer() {

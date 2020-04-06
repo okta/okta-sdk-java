@@ -19,6 +19,8 @@ package com.okta.sdk.client;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 
+import java.util.List;
+
 /**
  * A <a href="http://en.wikipedia.org/wiki/Builder_pattern">Builder design pattern</a> used to
  * construct {@link com.okta.sdk.client.Client} instances.
@@ -313,6 +315,12 @@ public interface ClientBuilder {
      * @return the ClientBuilder instance for method chaining
      */
     ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme);
+
+    ClientBuilder setAuthorizationMode(String authorizationMode); //TODO: remove?
+    ClientBuilder setScopes(List<String> scopes); //TODO: remove?
+    ClientBuilder setKeyFilePath(String keyFilePath); //TODO: remove?
+    ClientBuilder setAlgorithm(String algorithm); //TODO: remove?
+    ClientBuilder setClientId(String clientId); //TODO: remove?
 
     /**
      * Sets both the timeout until a connection is established and the socket timeout (i.e. a maximum period of inactivity

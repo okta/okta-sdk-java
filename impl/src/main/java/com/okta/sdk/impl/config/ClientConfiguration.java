@@ -122,14 +122,6 @@ public class ClientConfiguration extends HttpClientConfiguration {
         this.scopes = scopes;
     }
 
-    public String getPrivateKey() {
-        return privateKey;
-    }
-
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
-    }
-
     public String getKeyFilePath() {
         return keyFilePath;
     }
