@@ -484,13 +484,16 @@ class ApplicationsIT extends ITSupport {
             .setCacheManager(new DisabledCacheManager())
             .setAuthenticationScheme(AuthenticationScheme.OAUTH2)
             .setAuthorizationMode("PrivateKey")
-            .setScopes(Arrays.asList("okta.users.read", "okta.users.manage"))
+            .setScopes(Arrays.asList("okta.apps.read", "okta.apps.manage"))
             .setKeyFilePath(getClass().getResource("/privateKey.pem").file)
             .setAlgorithm("RS256")
             .setClientId("0oaqqbwsfpD39wH8B0h7")
             .build()
 
-        client.listApplications();
-        //client.getApplication("0oaqqbwsfpD39wH8B0h7");
+        //client.listApplications();
+        for (int i = 0; i < 3605; i++) {
+            Thread.sleep(1000);
+            System.out.println("===== " + i + " \n" + client.getApplication("0oaqqbwsfpD39wH8B0h7"));
+        }
     }
 }

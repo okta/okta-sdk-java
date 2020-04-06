@@ -193,10 +193,6 @@ public class DefaultDataStore implements InternalDataStore {
             CanonicalUri uri = req.getUri();
 
             Request getRequest = new DefaultRequest(HttpMethod.GET, uri.getAbsolutePath(), uri.getQuery(), req.getHttpHeaders());
-            uri.getAbsolutePath();
-            uri.getQuery();
-            req.getHttpHeaders().toSingleValueMap();
-            log.debug("{}, {}, {}", uri.getAbsolutePath(), uri.getQuery(), req.getHttpHeaders().toSingleValueMap());
             Response getResponse = execute(getRequest);
             Map<String,?> body = getBody(getResponse);
 
