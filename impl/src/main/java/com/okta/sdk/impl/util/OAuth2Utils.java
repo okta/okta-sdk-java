@@ -2,6 +2,7 @@ package com.okta.sdk.impl.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.commons.http.HttpException;
+import com.okta.commons.http.HttpMethod;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -34,10 +34,6 @@ public class OAuth2Utils {
     private static final Logger log = LoggerFactory.getLogger(OAuth2Utils.class);
 
     private static ObjectMapper objectMapper = new ObjectMapper();
-
-    private static KeyFactory getKeyFactoryInstance() throws NoSuchAlgorithmException {
-        return KeyFactory.getInstance("RSA");
-    }
 
     /**
      * Create signed JWT string with the supplied {@link ClientConfiguration} details.
@@ -88,12 +84,13 @@ public class OAuth2Utils {
         OkHttpClient client = new OkHttpClient().newBuilder().build();
 
         Request accessTokenRequest = new Request.Builder()
-            .url(clientConfiguration.getBaseUrl() + "/oauth2/v1/token" +
+            .url(clientConfiguration.getBaseUrl() +
+                "/oauth2/v1/token" +
                 "?grant_type=client_credentials" +
                 "&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer" +
                 "&client_assertion=" + signedJwt +
                 "&scope=" + scopes)
-            .method("POST", body)
+            .method(HttpMethod.POST.name(), body)
             .addHeader("Accept", "application/json")
             .addHeader("Content-Type", "application/x-www-form-urlencoded")
             .build();
@@ -133,8 +130,8 @@ public class OAuth2Utils {
      * @param pemFilePath string
      * @return {@link PrivateKey} instance
      * @throws {@link IOException}
-     * @throws {@link InvalidKeySpecException}
-     * @throws {@link NoSuchAlgorithmException}
+     * @throws {@link InvalidKeySpecException} if private key is not RSA or EC based.
+     * @throws {@link NoSuchAlgorithmException} if an unsupported algorithm is detected.
      */
     static PrivateKey createPrivateKeyFromPemFilePath(final String pemFilePath)
         throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
@@ -143,13 +140,23 @@ public class OAuth2Utils {
         if (!privateKeyFile.exists()) {
             throw new FileNotFoundException(pemFilePath);
         }
+
         PemReader pemReader = new PemReader(new FileReader(pemFilePath));
         PemObject pemObject = pemReader.readPemObject();
         byte[] pemContent = pemObject.getContent();
         pemReader.close();
         PKCS8EncodedKeySpec encodedKeySpec = new PKCS8EncodedKeySpec(pemContent);
-        KeyFactory keyFactory = getKeyFactoryInstance();
-        return keyFactory.generatePrivate(encodedKeySpec);
+
+        try {
+            return KeyFactory.getInstance("RSA").generatePrivate(encodedKeySpec);
+        } catch (InvalidKeySpecException ex) {
+            log.warn("Supplied private key is not RSA based. Will check if it is EC based...");
+            try {
+                return KeyFactory.getInstance("EC").generatePrivate(encodedKeySpec);
+            } catch (InvalidKeySpecException e) {
+                throw new InvalidKeySpecException("Supplied private key must be either RSA or EC based", e);
+            }
+        }
     }
 
 }
