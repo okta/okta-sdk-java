@@ -22,7 +22,7 @@ public class OAuth2ClientCredentialsResolver implements ClientCredentialsResolve
 
     private final ClientCredentials clientCredentials;
 
-    public OAuth2ClientCredentialsResolver(final ClientCredentials clientCredentials) {
+    public OAuth2ClientCredentialsResolver(ClientCredentials clientCredentials) {
         this.clientCredentials = clientCredentials;
     }
 

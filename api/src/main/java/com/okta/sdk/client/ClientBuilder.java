@@ -311,16 +311,68 @@ public interface ClientBuilder {
      *    .build(); //build the Client
      * </pre>
      *
+     * <pre>
+     * Client client = Clients.builder()...
+     *    // setApiKey, etc...
+     *    .setAuthenticationScheme(AuthenticationScheme.OAUTH2) //set the OAUTH2 authentication scheme
+     *    .build(); //build the Client
+     * </pre>
+     *
      * @param authenticationScheme the type of authentication to be used for communication with the Okta API server.
      * @return the ClientBuilder instance for method chaining
      */
     ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme);
 
-    ClientBuilder setAuthorizationMode(String authorizationMode); //TODO: remove?
-    ClientBuilder setScopes(List<String> scopes); //TODO: remove?
-    ClientBuilder setKeyFilePath(String keyFilePath); //TODO: remove?
-    ClientBuilder setAlgorithm(String algorithm); //TODO: remove?
-    ClientBuilder setClientId(String clientId); //TODO: remove?
+    /**
+     * Allows specifying an authorization mode directly instead of relying on the
+     * default location + override/fallback behavior defined in the {@link ClientBuilder documentation above}.
+     *
+     * Authorization Mode could take one of values - SSWS (by default), PrivateKey (for OAUTH2).
+     *
+     * @param authorizationMode mode of authorization for requests to the Okta API server.
+     * @return the ClientBuilder instance for method chaining.
+     */
+    ClientBuilder setAuthorizationMode(String authorizationMode);
+
+    /**
+     * Allows specifying a list of scopes directly instead of relying on the
+     * default location + override/fallback behavior defined in the {@link ClientBuilder documentation above}.
+     *
+     * @param scopes list of scopes for which the client requests access.
+     * @return the ClientBuilder instance for method chaining.
+     */
+    ClientBuilder setScopes(List<String> scopes);
+
+    /**
+     * Allows specifying the private key (PEM file) path (for private key jwt authentication) directly instead
+     * of relying on the default location + override/fallback behavior defined
+     * in the {@link ClientBuilder documentation above}.
+     *
+     * @param keyFilePath the fully qualified string path to the private key (PEM file).
+     * @return the ClientBuilder instance for method chaining.
+     */
+    ClientBuilder setKeyFilePath(String keyFilePath);
+
+    /**
+     * Allows specifying the algorithm directly instead
+     * of relying on the default location + override/fallback behavior defined
+     * in the {@link ClientBuilder documentation above}.
+     *
+     * Supported algorithms are "RS256", "RS384", "RS512", "ES256", "ES384" & "ES512".
+     *
+     * @param algorithm string representing the algorithm to use for JWT generation (OAUTH2).
+     * @return the ClientBuilder instance for method chaining.
+     */
+    ClientBuilder setAlgorithm(String algorithm);
+
+    /**
+     * Allows specifying the client ID instead of relying on the default location + override/fallback behavior defined
+     * in the {@link ClientBuilder documentation above}.
+     *
+     * @param clientId string representing the client ID.
+     * @return the ClientBuilder instance for method chaining.
+     */
+    ClientBuilder setClientId(String clientId);
 
     /**
      * Sets both the timeout until a connection is established and the socket timeout (i.e. a maximum period of inactivity

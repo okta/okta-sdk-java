@@ -5,7 +5,6 @@ import com.okta.commons.http.authc.RequestAuthenticationException;
 import com.okta.commons.http.authc.RequestAuthenticator;
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.authc.credentials.ClientCredentials;
-import com.okta.sdk.impl.util.OAuth2Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,14 +16,13 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
     private final ClientCredentials<String> clientCredentials;
 
     public OAuth2RequestAuthenticator(ClientCredentials<String> clientCredentials) {
-        Assert.notNull(clientCredentials, "clientCredentials must be not be null.");
+        Assert.notNull(clientCredentials, "clientCredentials must not be null.");
         this.clientCredentials = clientCredentials;
     }
 
     @Override
     public void authenticate(Request request) throws RequestAuthenticationException {
-        //request.getHeaders().set(AUTHORIZATION_HEADER, AUTHENTICATION_SCHEME + " " + clientCredentials.getCredentials());
-        log.debug("Setting Bearer token [{}] in AUTH header...", clientCredentials.getCredentials());
+        log.debug("Setting Bearer token [{}] in Authorization header", clientCredentials.getCredentials());
         request.getHeaders().set(AUTHORIZATION_HEADER, "Bearer " + clientCredentials.getCredentials());
     }
 }

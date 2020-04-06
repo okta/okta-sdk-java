@@ -55,7 +55,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static com.okta.sdk.impl.util.OAuth2Utils.getOAuth2AccessToken;
-import static com.okta.sdk.impl.util.OAuth2Utils.validateOAuth2ClientConfig;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -344,49 +343,42 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         // OAuth2
         if (this.clientConfig.getAuthenticationScheme() == AuthenticationScheme.OAUTH2) {
-            if (this.clientConfig.getAuthorizationMode() != null) {
-                // Validate client config
-                validateOAuth2ClientConfig(this.clientConfig);
-
-                // Get access token asynchronously
-                CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
-                    String accessToken;
-                    try {
-                        log.debug("Attempting to get OAuth2 access token for client id [{}]",
-                            this.getClientConfiguration().getClientId());
-                        accessToken = getOAuth2AccessToken(this.clientConfig);
-                    } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-                        log.error("Exception occurred:", e);
-                        throw new IllegalArgumentException("Exception occurred", e);
-                    } catch (HttpException e) {
-                        log.error("Exception occurred:", e);
-                        throw e;
-                    }
-                    log.debug("Got OAuth2 access token [{}] for client id [{}]",
-                        accessToken, this.getClientConfiguration().getClientId());
-                    return accessToken;
-                }).whenComplete((accessTokenResult, ex) -> {
-                    log.debug("Executing whenComplete() after obtaining OAuth2 access token [{}] for client id [{}]",
-                        accessTokenResult, this.getClientConfiguration().getClientId());
-                    if (ex != null) {
-                        log.error("Exception occurred:", ex);
-                    }
-                });
-
+            // Get access token asynchronously
+            CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+                String accessToken;
                 try {
-                    String accessToken = completableFuture.get();
-                    OAuth2ClientCredentials oAuth2ClientCredentials =
-                        new OAuth2ClientCredentials(accessToken);
-                    OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
-                        new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
-                    this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
-                } catch (InterruptedException e) {
+                    log.debug("Attempting to get OAuth2 access token for client id [{}]",
+                        this.getClientConfiguration().getClientId());
+                    accessToken = getOAuth2AccessToken(this.clientConfig);
+                } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
                     log.error("Exception occurred:", e);
-                } catch (ExecutionException e) {
+                    throw new IllegalArgumentException("Exception occurred", e);
+                } catch (HttpException e) {
                     log.error("Exception occurred:", e);
+                    throw e;
                 }
-            } else {
-                throw new IllegalArgumentException("Missing authorizationMode");
+                log.debug("Got OAuth2 access token [{}] for client id [{}]",
+                    accessToken, this.getClientConfiguration().getClientId());
+                return accessToken;
+            }).whenComplete((accessTokenResult, ex) -> {
+                log.debug("Executing whenComplete() after obtaining OAuth2 access token [{}] for client id [{}]",
+                    accessTokenResult, this.getClientConfiguration().getClientId());
+                if (ex != null) {
+                    log.error("Exception occurred:", ex);
+                }
+            });
+
+            try {
+                String accessToken = completableFuture.get();
+                OAuth2ClientCredentials oAuth2ClientCredentials =
+                    new OAuth2ClientCredentials(accessToken);
+                OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
+                    new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
+                this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
+            } catch (InterruptedException e) {
+                log.error("Exception occurred:", e);
+            } catch (ExecutionException e) {
+                log.error("Exception occurred:", e);
             }
         }
 
@@ -400,30 +392,51 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this;
     }
 
-    // Used for testing, package private
-    ClientConfiguration getClientConfiguration() {
-        return clientConfig;
-    }
-
-    //TODO remove below methods (testing only)
+    @Override
     public ClientBuilder setAuthorizationMode(String authorizationMode) {
+        if (Strings.isEmpty(authorizationMode)) {
+            throw new IllegalArgumentException("Invalid AuthorizationMode");
+        }
         this.clientConfig.setAuthorizationMode(authorizationMode);
         return this;
     }
+
+    @Override
     public ClientBuilder setScopes(List<String> scopes) {
+        if (scopes == null || scopes.size() == 0) {
+            throw new IllegalArgumentException("Invalid Scopes");
+        }
         this.clientConfig.setScopes(scopes);
         return this;
     }
+
+    @Override
     public ClientBuilder setKeyFilePath(String keyFilePath) {
+        if (Strings.isEmpty(keyFilePath)) {
+            throw new IllegalArgumentException("Invalid KeyFilePath");
+        }
         this.clientConfig.setKeyFilePath(keyFilePath);
         return this;
     }
+
+    @Override
     public ClientBuilder setAlgorithm(String algorithm) {
+        if (Strings.isEmpty(algorithm)) {
+            throw new IllegalArgumentException("Invalid Algorithm");
+        }
         this.clientConfig.setAlgorithm(algorithm);
         return this;
     }
+
+    @Override
     public ClientBuilder setClientId(String clientId) {
+        ConfigurationValidator.assertClientId(clientId);
         this.clientConfig.setClientId(clientId);
         return this;
+    }
+
+    // Used for testing, package private
+    ClientConfiguration getClientConfiguration() {
+        return clientConfig;
     }
 }

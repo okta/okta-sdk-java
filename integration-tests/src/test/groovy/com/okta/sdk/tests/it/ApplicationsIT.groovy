@@ -490,10 +490,10 @@ class ApplicationsIT extends ITSupport {
             .setClientId("0oaqqbwsfpD39wH8B0h7")
             .build()
 
-        //client.listApplications();
-        for (int i = 0; i < 3605; i++) {
-            Thread.sleep(1000);
-            System.out.println("===== " + i + " \n" + client.getApplication("0oaqqbwsfpD39wH8B0h7"));
-        }
+        assertThat client, notNullValue()
+
+        Application application = client.getApplication("0oaqqbwsfpD39wH8B0h7");
+        assertThat application, notNullValue()
+
     }
 }
