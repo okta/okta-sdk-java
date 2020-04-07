@@ -54,7 +54,6 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private String authorizationMode;
     private String clientId;
     private List<String> scopes = new ArrayList<>();
-    private String privateKey;
     private String keyFilePath;
     private String algorithm;
 

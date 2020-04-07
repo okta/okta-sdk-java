@@ -493,8 +493,7 @@ class ApplicationsIT extends ITSupport {
 
         assertThat client, notNullValue()
 
-        Application application = client.getApplication("0oaqqbwsfpD39wH8B0h7");
-        assertThat application, notNullValue()
-
+        Application app = client.getApplication("0oaqqbwsfpD39wH8B0h7")
+        assertThat app, notNullValue()
     }
 }

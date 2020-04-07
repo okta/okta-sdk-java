@@ -17,13 +17,11 @@
 package com.okta.sdk.impl.client;
 
 import com.okta.commons.configcheck.ConfigurationValidator;
-import com.okta.commons.http.HttpException;
 import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.authc.credentials.ClientCredentials;
-import com.okta.sdk.authc.credentials.OAuth2ClientCredentials;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.cache.CacheManagerBuilder;
@@ -41,20 +39,16 @@ import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
+import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
+import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
+import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
-import com.okta.sdk.oauth2.OAuth2AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-import static com.okta.sdk.impl.util.OAuth2Utils.getOAuth2AccessToken;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -98,6 +92,8 @@ public class DefaultClientBuilder implements ClientBuilder {
     private boolean allowNonHttpsForTesting = false;
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
+
+    private AccessTokenRetrieverService accessTokenRetrieverService;
 
     public DefaultClientBuilder() {
         this(new DefaultResourceFactory());
@@ -343,42 +339,13 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         // OAuth2
         if (this.clientConfig.getAuthenticationScheme() == AuthenticationScheme.OAUTH2) {
-            // Get access token asynchronously
-            CompletableFuture<OAuth2AccessToken> completableFuture = CompletableFuture.supplyAsync(() -> {
-                OAuth2AccessToken oAuth2AccessToken;
-                try {
-                    log.debug("Getting OAuth2 access token for client id [{}]",
-                        this.getClientConfiguration().getClientId());
-                    oAuth2AccessToken = getOAuth2AccessToken(this.clientConfig);
-                } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-                    log.error("Exception occurred:", e);
-                    throw new IllegalArgumentException("Exception occurred", e);
-                } catch (HttpException e) {
-                    log.error("Exception occurred:", e);
-                    throw e;
-                }
-                log.debug("Got OAuth2 access token [{}] for client id [{}]",
-                    oAuth2AccessToken, this.getClientConfiguration().getClientId());
-                return oAuth2AccessToken;
-            }).whenComplete((accessTokenResult, ex) -> {
-                log.debug("Executing whenComplete() after obtaining OAuth2 access token [{}] for client id [{}]",
-                    accessTokenResult, this.getClientConfiguration().getClientId());
-                if (ex != null) {
-                    log.error("Exception occurred:", ex);
-                }
-            });
+            accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(this.clientConfig);
 
-            try {
-                OAuth2AccessToken accessToken = completableFuture.get();
-                OAuth2ClientCredentials oAuth2ClientCredentials =
-                    new OAuth2ClientCredentials(accessToken);
-                OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
-                    new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
-                this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
-            } catch (Exception e) {
-                log.error("Exception occurred:", e);
-                throw new RuntimeException(e);
-            }
+            OAuth2ClientCredentials oAuth2ClientCredentials =
+                new OAuth2ClientCredentials(accessTokenRetrieverService);
+            OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
+                new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
+            this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
         }
 
         return new DefaultClient(clientConfig, cacheManager);

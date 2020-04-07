@@ -1,26 +1,17 @@
 package com.okta.sdk.impl.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okta.commons.http.HttpException;
-import com.okta.commons.http.HttpMethod;
-import com.okta.commons.lang.Strings;
 import com.okta.sdk.impl.config.ClientConfiguration;
-import com.okta.sdk.oauth2.ErrorResponse;
-import com.okta.sdk.oauth2.OAuth2AccessToken;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -33,8 +24,6 @@ import java.util.UUID;
 
 public class OAuth2Utils {
     private static final Logger log = LoggerFactory.getLogger(OAuth2Utils.class);
-
-    private static ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Create signed JWT string with the supplied {@link ClientConfiguration} details.
@@ -63,67 +52,6 @@ public class OAuth2Utils {
             .compact();
 
         return jwt;
-    }
-
-    /**
-     * Obtain OAuth2 access token from Authorization Server endpoint.
-     *
-     * @param {@link ClientConfiguration} object
-     * @return {@link OAuth2AccessToken} object
-     * @throws {@link IOException}
-     * @throws {@link InvalidKeySpecException}
-     * @throws {@link NoSuchAlgorithmException}
-     */
-    public static OAuth2AccessToken getOAuth2AccessToken(ClientConfiguration clientConfiguration)
-        throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-        String signedJwt = createSignedJWT(clientConfiguration);
-        String scope = String.join(" ", clientConfiguration.getScopes());
-
-        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-        RequestBody body = RequestBody.create(mediaType, "");
-
-        OkHttpClient client = new OkHttpClient().newBuilder().build();
-
-        Request accessTokenRequest = new Request.Builder()
-            .url(clientConfiguration.getBaseUrl() +
-                "/oauth2/v1/token" +
-                "?grant_type=client_credentials" +
-                "&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer" +
-                "&client_assertion=" + signedJwt +
-                "&scope=" + scope)
-            .method(HttpMethod.POST.name(), body)
-            .addHeader("Accept", "application/json")
-            .addHeader("Content-Type", "application/x-www-form-urlencoded")
-            .build();
-
-        Response accessTokenResponse = client.newCall(accessTokenRequest).execute();
-
-        if (accessTokenResponse != null && accessTokenResponse.body() != null) {
-            Reader reader = new InputStreamReader(accessTokenResponse.body().byteStream(), StandardCharsets.UTF_8);
-
-            if (accessTokenResponse.isSuccessful()) {
-                log.debug("OAuth2 token request was successful");
-                OAuth2AccessToken oAuth2AccessToken = objectMapper.readValue(reader, OAuth2AccessToken.class);
-                return oAuth2AccessToken;
-            }
-            else {
-                log.debug("OAuth2 token request failed with error");
-                ErrorResponse errorResponse = objectMapper.readValue(reader, ErrorResponse.class);
-
-                if (!Strings.isEmpty(errorResponse.getError()) ||
-                    !Strings.isEmpty(errorResponse.getErrorDescription())) {
-                    throw new HttpException("Received HTTP " + accessTokenResponse.code() +
-                        " response from Authorization Server. error - " + errorResponse.getError() +
-                        ", error description - " + errorResponse.getErrorDescription());
-                } else {
-                    throw new HttpException("Received HTTP " + accessTokenResponse.code() +
-                        " response from Authorization Server");
-                }
-            }
-        }
-        else {
-            throw new HttpException("Could not retrieve access token from Authorization Server");
-        }
     }
 
     /**
