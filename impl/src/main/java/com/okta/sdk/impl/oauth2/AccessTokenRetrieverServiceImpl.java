@@ -66,9 +66,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
             if (accessTokenResponse.isSuccessful()) {
                 log.debug("Access token request was successful");
-                OAuth2AccessToken oAuth2AccessToken = objectMapper.readValue(reader, OAuth2AccessToken.class);
-                log.debug("Access Token {}", oAuth2AccessToken);
-                return oAuth2AccessToken;
+                return objectMapper.readValue(reader, OAuth2AccessToken.class);
             }
             else {
                 ErrorResponse errorResponse = objectMapper.readValue(reader, ErrorResponse.class);

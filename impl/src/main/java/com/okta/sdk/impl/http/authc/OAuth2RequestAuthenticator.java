@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OAuth2RequestAuthenticator implements RequestAuthenticator {
-    private static final Logger log = LoggerFactory.getLogger(OAuth2RequestAuthenticator.class);
 
     public static final String AUTHENTICATION_SCHEME = "OAUTH2";
 
@@ -22,7 +21,6 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
 
     @Override
     public void authenticate(Request request) throws RequestAuthenticationException {
-        log.debug("Setting Bearer token [{}] in Authorization header", clientCredentials.getCredentials());
         request.getHeaders().set(AUTHORIZATION_HEADER, "Bearer " + clientCredentials.getCredentials());
     }
 }
