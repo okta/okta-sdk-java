@@ -74,10 +74,6 @@ public class OAuth2AccessToken {
 
     public boolean hasExpired() {
         Duration duration = Duration.between(this.getIssuedAt(), Instant.now());
-        //System.out.println("++++++++++++++ duration diff between now() and issuedAt +++++++++++++ " + duration.getSeconds());
-        //System.out.println("++++++++++++++ duration.getSeconds() >= this.getExpiresIn() +++++++++++++ " + (duration.getSeconds() >= 10));
-        //System.out.println("++++++++++++++ duration.getSeconds() >= this.getExpiresIn() +++++++++++++ " + (duration.getSeconds() >= this.getExpiresIn()));
-        //return duration.getSeconds() >= 10;
         return duration.getSeconds() >= this.getExpiresIn();
     }
 

@@ -39,6 +39,7 @@ import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
+import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.OAuth2AccessToken;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
@@ -97,7 +98,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
 
-    private AccessTokenRetrieverServiceImpl accessTokenRetrieverService;
+    private AccessTokenRetrieverService accessTokenRetrieverService;
 
     public DefaultClientBuilder() {
         this(new DefaultResourceFactory());
@@ -343,7 +344,6 @@ public class DefaultClientBuilder implements ClientBuilder {
         // OAuth2
         if (isOAuth2Flow()) {
             this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
-
             accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig);
 
             // Get access token asynchronously
