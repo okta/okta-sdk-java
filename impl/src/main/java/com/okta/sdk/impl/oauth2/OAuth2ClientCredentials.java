@@ -17,33 +17,39 @@ package com.okta.sdk.impl.oauth2;
 
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.authc.credentials.ClientCredentials;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class OAuth2ClientCredentials implements ClientCredentials<String> {
-    private static final Logger log = LoggerFactory.getLogger(OAuth2ClientCredentials.class);
+public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessToken> {
 
-    private String accessToken;
-
+    private OAuth2AccessToken oAuth2AccessToken;
     private AccessTokenRetrieverService accessTokenRetrieverService;
 
-    public OAuth2ClientCredentials(String accessToken) {
-        Assert.notNull(accessToken, "accessToken must not be null.");
-        this.accessToken = accessToken;
-    }
-
-    public OAuth2ClientCredentials(AccessTokenRetrieverService accessTokenRetrieverService) {
+    public OAuth2ClientCredentials(OAuth2AccessToken oAuth2AccessToken,
+                                   AccessTokenRetrieverService accessTokenRetrieverService) {
+        Assert.notNull(oAuth2AccessToken, "oAuth2AccessToken must not be null.");
         Assert.notNull(accessTokenRetrieverService, "accessTokenRetrieverService must not be null.");
+        this.oAuth2AccessToken = oAuth2AccessToken;
         this.accessTokenRetrieverService = accessTokenRetrieverService;
     }
 
-    public String getCredentials() {
-        return accessToken;
+    public OAuth2AccessToken getCredentials() {
+        return oAuth2AccessToken;
+    }
+
+    public void setCredentials(OAuth2AccessToken oAuth2AccessToken) {
+        this.oAuth2AccessToken = oAuth2AccessToken;
+    }
+
+    public AccessTokenRetrieverService getAccessTokenRetrieverService() {
+        return accessTokenRetrieverService;
+    }
+
+    public void reset() {
+        setCredentials(null);
     }
 
     @Override
     public String toString() {
-        //never ever print the secret
+        // never ever print the secret
         return "<OAuth2ClientCredentials>";
     }
 }

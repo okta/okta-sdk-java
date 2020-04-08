@@ -87,10 +87,10 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             Reader reader = new InputStreamReader(accessTokenResponse.getBody(), StandardCharsets.UTF_8);
 
             if (accessTokenResponse.getHttpStatus() == HttpURLConnection.HTTP_OK) {
-                log.debug("Access token request was successful");
+                log.debug("OAuth2 access token request was successful");
                 return objectMapper.readValue(reader, OAuth2AccessToken.class);
             } else {
-                log.debug("Access token request failed with HTTP {} error", accessTokenResponse.getHttpStatus());
+                log.debug("OAuth2 access token request failed with HTTP {} error", accessTokenResponse.getHttpStatus());
 
                 OAuth2ErrorResponse errorResponse = objectMapper.readValue(reader, OAuth2ErrorResponse.class);
 

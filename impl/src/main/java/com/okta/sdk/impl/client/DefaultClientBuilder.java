@@ -40,6 +40,7 @@ import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
+import com.okta.sdk.impl.oauth2.OAuth2AccessToken;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import org.slf4j.Logger;
@@ -346,12 +347,10 @@ public class DefaultClientBuilder implements ClientBuilder {
             accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig);
 
             // Get access token asynchronously
-            CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
-                String accessToken;
+            CompletableFuture<OAuth2AccessToken> completableFuture = CompletableFuture.supplyAsync(() -> {
+                OAuth2AccessToken accessToken;
                 try {
-                    log.debug("Attempting to get OAuth2 access token for client id {}",
-                        this.getClientConfiguration().getClientId());
-                    accessToken = accessTokenRetrieverService.getOAuth2AccessToken().getAccessToken();
+                    accessToken = accessTokenRetrieverService.getOAuth2AccessToken();
                 } catch (IOException | InvalidKeyException e) {
                     log.error("Exception occurred:", e);
                     throw new IllegalArgumentException("Exception occurred", e);
@@ -364,14 +363,15 @@ public class DefaultClientBuilder implements ClientBuilder {
             }).whenComplete((accessTokenResult, e) -> {
                 if (e != null) {
                     log.error("Exception occurred:", e);
+                    throw new RuntimeException(e);
                 }
             });
 
             try {
-                String accessToken = completableFuture.get();
+                OAuth2AccessToken oAuth2AccessToken = completableFuture.get();
 
                 OAuth2ClientCredentials oAuth2ClientCredentials =
-                    new OAuth2ClientCredentials(accessToken);
+                    new OAuth2ClientCredentials(oAuth2AccessToken, accessTokenRetrieverService);
                 OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
                     new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
                 this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
@@ -394,8 +394,8 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     @Override
     public ClientBuilder setAuthorizationMode(String authorizationMode) {
-        // if authorizationMode is ever supplied, it should only be "PrivateKey" (OAUTH2 flow)
-        // else do not set it (default SSWS case)
+        // if 'authorizationMode' is ever supplied, it should only be "PrivateKey" (OAUTH2 flow);
+        // else do not set it as it defaults to SSWS flow.
         if (authorizationMode != null) {
             if (authorizationMode.equals("PrivateKey")) {
                 this.clientConfig.setAuthorizationMode(authorizationMode);
@@ -442,4 +442,5 @@ public class DefaultClientBuilder implements ClientBuilder {
     ClientConfiguration getClientConfiguration() {
         return clientConfig;
     }
+
 }

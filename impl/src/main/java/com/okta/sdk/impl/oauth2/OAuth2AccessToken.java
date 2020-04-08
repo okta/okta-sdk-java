@@ -18,6 +18,9 @@ package com.okta.sdk.impl.oauth2;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.Duration;
+import java.time.Instant;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OAuth2AccessToken {
     @JsonProperty("token_type")
@@ -30,6 +33,8 @@ public class OAuth2AccessToken {
     private String accessToken;
 
     private String scope;
+
+    private Instant issuedAt = Instant.now();
 
     public String getTokenType() {
         return tokenType;
@@ -63,9 +68,28 @@ public class OAuth2AccessToken {
         this.scope = scope;
     }
 
+    public Instant getIssuedAt() {
+        return issuedAt;
+    }
+
+    public boolean hasExpired() {
+        Duration duration = Duration.between(this.getIssuedAt(), Instant.now());
+        //System.out.println("++++++++++++++ duration diff between now() and issuedAt +++++++++++++ " + duration.getSeconds());
+        //System.out.println("++++++++++++++ duration.getSeconds() >= this.getExpiresIn() +++++++++++++ " + (duration.getSeconds() >= 10));
+        //System.out.println("++++++++++++++ duration.getSeconds() >= this.getExpiresIn() +++++++++++++ " + (duration.getSeconds() >= this.getExpiresIn()));
+        //return duration.getSeconds() >= 10;
+        return duration.getSeconds() >= this.getExpiresIn();
+    }
+
+    // for testing purposes
+    public void forceExpiryInNextSecs(Long expireInNextSecs) {
+        this.setExpiresIn(expireInNextSecs);
+    }
+
     @Override
     public String toString() {
         return "OAuth2AccessToken [tokenType=" + tokenType +
+            ", issuedAt=" + issuedAt +
             ", expiresIn=" + expiresIn +
             ", accessToken=xxxxx" +
             ", scope=" + scope + "]";
