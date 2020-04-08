@@ -26,7 +26,7 @@ import com.okta.commons.lang.Assert;
  * The Authentication Scheme setting is helpful in cases where the code is run in a platform where the header information for
  * outgoing HTTP requests is modified and thus causing communication issues.
  * <p>
- * One of SSWS (Okta session bearer token) (or) OAUTH2 authentication schemes should be used for the management SDK, {code NONE}
+ * One of SSWS (Okta session bearer token) (or) OAUTH2 authentication schemes should be used for the management SDK, {@code NONE}
  * should be used for unauthenticated requests.
  *
  * @since 0.5.0

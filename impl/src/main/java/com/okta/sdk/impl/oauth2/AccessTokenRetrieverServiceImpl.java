@@ -123,11 +123,11 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         String privateKeyFilePath = clientConfiguration.getPrivateKey();
 
         File privateKeyFile = new File(privateKeyFilePath);
-        if (privateKeyFile == null || !privateKeyFile.exists()) {
+        if (!privateKeyFile.exists()) {
             throw new FileNotFoundException("privateKeyFile " + privateKeyFile + " does not exist");
         }
 
-        Reader reader = new InputStreamReader(new FileInputStream(clientConfiguration.getPrivateKey()));
+        Reader reader = new InputStreamReader(new FileInputStream(clientConfiguration.getPrivateKey()), "UTF-8");
 
         PrivateKey privateKey = getPrivateKeyFromPEM(reader);
         String algorithm = privateKey.getAlgorithm();

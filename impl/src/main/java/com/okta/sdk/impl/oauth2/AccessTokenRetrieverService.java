@@ -22,8 +22,9 @@ public interface AccessTokenRetrieverService {
     /**
      * Obtain OAuth2 access token from Authorization Server endpoint.
      *
-     * @param {@link ClientConfiguration} object
      * @return {@link OAuth2AccessToken} object
+     * @throws IOException
+     * @throws InvalidKeyException
      */
     OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException;
 }

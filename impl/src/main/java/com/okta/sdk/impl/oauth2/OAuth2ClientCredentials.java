@@ -38,19 +38,6 @@ public class OAuth2ClientCredentials implements ClientCredentials<String> {
     }
 
     public String getCredentials() {
-//        log.debug("getCredentials() invoked");
-//        String accessToken;
-//
-//        try {
-//            OAuth2AccessToken oAuth2AccessToken = accessTokenRetrieverService.getOAuth2AccessToken();
-//            accessToken = oAuth2AccessToken.getAccessToken();
-//            log.debug("Returning access token {}", accessToken);
-//        } catch (IOException | InvalidKeyException e) {
-//            log.error("Exception occurred", e);
-//            throw new RuntimeException(e);
-//        }
-//
-//        return accessToken;
         return accessToken;
     }
 
