@@ -39,7 +39,6 @@ import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
-import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
@@ -324,8 +323,7 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.cacheManager = cacheManagerBuilder.build();
         }
 
-        if (this.clientConfig.getAuthorizationMode() != null &&
-            this.clientConfig.getAuthorizationMode().equals("PrivateKey")) {
+        if (isOAuth2Flow()) {
             this.clientConfig.setClientCredentialsResolver(new OAuth2ClientCredentialsResolver(this.clientCredentials));
         }
         else {
@@ -342,8 +340,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         // OAuth2
-        if (this.clientConfig.getAuthorizationMode() != null &&
-            this.clientConfig.getAuthorizationMode().equals("PrivateKey")) {
+        if (isOAuth2Flow()) {
             this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
 
             accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig);
