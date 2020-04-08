@@ -390,17 +390,12 @@ okta:
       host: null
       username: null
       password: null
-    authenticationScheme: "OAUTH2"
     authorizationMode: "PrivateKey"
     clientId: "{clientId}"
     scopes:
-    - okta.clients.read
-    - okta.clients.manage
-    privateKey:
-        # PEM format is recommended.
-        # This SDK supports following RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
-        keyFilePath: "~/.okta/privateKey.pem"
-        algorithm: "RS256"
+      - okta.clients.read
+      - okta.clients.manage
+    privateKey: "~/.okta/privateKey.pem" # PEM format is recommended. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
     requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4

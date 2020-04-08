@@ -54,8 +54,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private String authorizationMode;
     private String clientId;
     private List<String> scopes = new ArrayList<>();
-    private String keyFilePath;
-    private String algorithm;
+    private String privateKey;
 
     public String getApiToken() {
         return apiToken;
@@ -121,20 +120,12 @@ public class ClientConfiguration extends HttpClientConfiguration {
         this.scopes = scopes;
     }
 
-    public String getKeyFilePath() {
-        return keyFilePath;
+    public String getPrivateKey() {
+        return privateKey;
     }
 
-    public void setKeyFilePath(String keyFilePath) {
-        this.keyFilePath = keyFilePath;
-    }
-
-    public String getAlgorithm() {
-        return algorithm;
-    }
-
-    public void setAlgorithm(String algorithm) {
-        this.algorithm = algorithm;
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
     }
 
     public boolean isCacheManagerEnabled() {
@@ -217,8 +208,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
                 ", authorizationMode='" + getAuthorizationMode() +
                 ", clientId='" + getClientId() +
                 ", scopes='" + getScopes() +
-                ", keyFilePath=" + getKeyFilePath() +
-                ", algorithm=" + getAlgorithm() +
+                ", privateKey=" + getPrivateKey() +
                 ", connectionTimeout=" + getConnectionTimeout() +
                 ", requestAuthenticator=" + getRequestAuthenticator() +
                 ", retryMaxElapsed=" + getRetryMaxElapsed() +

@@ -211,8 +211,7 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME = "okta.client.authorizationMode";
     String DEFAULT_CLIENT_CLIENT_ID_PROPERTY_NAME = "okta.client.clientId";
     String DEFAULT_CLIENT_SCOPES_PROPERTY_NAME = "okta.client.scopes";
-    String DEFAULT_CLIENT_PRIVATE_KEY_KEY_FILE_PATH_PROPERTY_NAME = "okta.client.privateKey.keyFilePath";
-    String DEFAULT_CLIENT_PRIVATE_KEY_ALGORITHM_PROPERTY_NAME = "okta.client.privateKey.algorithm";
+    String DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME = "okta.client.privateKey";
     String DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME = "okta.client.requestTimeout";
     String DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME = "okta.client.rateLimit.maxRetries";
     String DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME = "okta.testing.disableHttpsCheck";
@@ -348,22 +347,10 @@ public interface ClientBuilder {
      * of relying on the default location + override/fallback behavior defined
      * in the {@link ClientBuilder documentation above}.
      *
-     * @param keyFilePath the fully qualified string path to the private key (PEM file).
+     * @param privateKey the fully qualified string path to the private key (PEM file).
      * @return the ClientBuilder instance for method chaining.
      */
-    ClientBuilder setKeyFilePath(String keyFilePath);
-
-    /**
-     * Allows specifying the algorithm directly instead
-     * of relying on the default location + override/fallback behavior defined
-     * in the {@link ClientBuilder documentation above}.
-     *
-     * Supported algorithms are "RS256", "RS384", "RS512", "ES256", "ES384" & "ES512".
-     *
-     * @param algorithm string representing the algorithm to use for JWT generation (OAUTH2).
-     * @return the ClientBuilder instance for method chaining.
-     */
-    ClientBuilder setAlgorithm(String algorithm);
+    ClientBuilder setPrivateKey(String privateKey);
 
     /**
      * Allows specifying the client ID instead of relying on the default location + override/fallback behavior defined

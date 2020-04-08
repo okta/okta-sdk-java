@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Okta
+ * Copyright 2017-Present Okta
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,7 @@
 package com.okta.sdk.tests.it
 
 
-import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.Client
-import com.okta.sdk.client.Clients
-import com.okta.sdk.impl.cache.DisabledCacheManager
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.group.Group
@@ -475,25 +472,5 @@ class ApplicationsIT extends ITSupport {
 
         AppUser readAppUser = app.getApplicationUser(appUser2.getId())
         assertThat readAppUser.getCredentials().getUserName(), equalTo("updated-"+user2.getProfile().getEmail())
-    }
-
-    @Test
-    void testOAuth2Flow() {
-
-        Client client = Clients.builder()
-            .setOrgUrl("https://java-sdk.oktapreview.com")
-            .setCacheManager(new DisabledCacheManager())
-            .setAuthenticationScheme(AuthenticationScheme.OAUTH2)
-            .setAuthorizationMode("PrivateKey")
-            .setScopes(Arrays.asList("okta.apps.read", "okta.apps.manage"))
-            .setKeyFilePath(getClass().getResource("/privateKey.pem").file)
-            .setAlgorithm("RS256")
-            .setClientId("0oaqqbwsfpD39wH8B0h7")
-            .build()
-
-        assertThat client, notNullValue()
-
-        ApplicationList applicationList = client.listApplications();
-        assertThat applicationList, notNullValue()
     }
 }

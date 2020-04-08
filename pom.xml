@@ -38,7 +38,7 @@
         <jackson.version>2.10.0</jackson.version>
         <snakeyaml.version>1.25</snakeyaml.version>
         <bouncycastle.version>1.64</bouncycastle.version>
-        <jjwt.version>0.9.1</jjwt.version>
+        <jjwt.version>0.11.1</jjwt.version>
         <okta.sdk.previousVersion>1.5.4</okta.sdk.previousVersion>
         <otka.commons.version>1.2.2</otka.commons.version>
 
@@ -93,11 +93,6 @@
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-okhttp</artifactId>
                 <version>1.6.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.squareup.okhttp3</groupId>
-                <artifactId>okhttp</artifactId>
-                <version>4.4.1</version>
             </dependency>
 
             <!-- Other Okta Projects -->
@@ -170,17 +165,29 @@
                 <version>${bouncycastle.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk15on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+
             <!-- JJWT -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
+                <artifactId>jjwt-api</artifactId>
                 <version>${jjwt.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.fasterxml.jackson.core</groupId>
-                        <artifactId>jackson-databind</artifactId>
-                    </exclusion>
-                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
             </dependency>
 
             <dependency>

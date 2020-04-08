@@ -1,19 +1,36 @@
+/*
+ * Copyright 2020 Okta, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.okta.sdk.impl.oauth2;
 
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.authc.credentials.ClientCredentials;
-import com.okta.sdk.oauth2.OAuth2AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 public class OAuth2ClientCredentials implements ClientCredentials<String> {
     private static final Logger log = LoggerFactory.getLogger(OAuth2ClientCredentials.class);
 
+    private String accessToken;
+
     private AccessTokenRetrieverService accessTokenRetrieverService;
+
+    public OAuth2ClientCredentials(String accessToken) {
+        Assert.notNull(accessToken, "accessToken must not be null.");
+        this.accessToken = accessToken;
+    }
 
     public OAuth2ClientCredentials(AccessTokenRetrieverService accessTokenRetrieverService) {
         Assert.notNull(accessTokenRetrieverService, "accessTokenRetrieverService must not be null.");
@@ -21,21 +38,25 @@ public class OAuth2ClientCredentials implements ClientCredentials<String> {
     }
 
     public String getCredentials() {
-        String accessToken;
-
-        try {
-            OAuth2AccessToken oAuth2AccessToken = accessTokenRetrieverService.getOAuth2AccessToken();
-            accessToken = oAuth2AccessToken.getAccessToken();
-        } catch (IOException | InvalidKeySpecException | NoSuchAlgorithmException e) {
-            log.error("Exception occurred", e);
-            throw new RuntimeException(e);
-        }
-
+//        log.debug("getCredentials() invoked");
+//        String accessToken;
+//
+//        try {
+//            OAuth2AccessToken oAuth2AccessToken = accessTokenRetrieverService.getOAuth2AccessToken();
+//            accessToken = oAuth2AccessToken.getAccessToken();
+//            log.debug("Returning access token {}", accessToken);
+//        } catch (IOException | InvalidKeyException e) {
+//            log.error("Exception occurred", e);
+//            throw new RuntimeException(e);
+//        }
+//
+//        return accessToken;
         return accessToken;
     }
 
     @Override
     public String toString() {
-        return "<OAuth2ClientCredentials>"; //never ever print the secret
+        //never ever print the secret
+        return "<OAuth2ClientCredentials>";
     }
 }

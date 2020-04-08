@@ -1,6 +1,5 @@
 /*
- * Copyright 2014 Stormpath, Inc.
- * Modifications Copyright 2018 Okta, Inc.
+ * Copyright 2017-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +16,7 @@
 package com.okta.sdk.impl.client;
 
 import com.okta.commons.configcheck.ConfigurationValidator;
+import com.okta.commons.http.HttpException;
 import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
@@ -47,7 +47,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -93,7 +97,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
 
-    private AccessTokenRetrieverService accessTokenRetrieverService;
+    private AccessTokenRetrieverServiceImpl accessTokenRetrieverService;
 
     public DefaultClientBuilder() {
         this(new DefaultResourceFactory());
@@ -215,17 +219,12 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
-            List<String> scopes = new ArrayList<>();
-            scopes.add(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME));
+            List<String> scopes = Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split(","));
             clientConfig.setScopes(scopes);
         }
 
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_KEY_FILE_PATH_PROPERTY_NAME))) {
-            clientConfig.setKeyFilePath(props.get(DEFAULT_CLIENT_PRIVATE_KEY_KEY_FILE_PATH_PROPERTY_NAME));
-        }
-
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_ALGORITHM_PROPERTY_NAME))) {
-            clientConfig.setAlgorithm(props.get(DEFAULT_CLIENT_PRIVATE_KEY_ALGORITHM_PROPERTY_NAME));
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME))) {
+            clientConfig.setPrivateKey(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME))) {
@@ -325,11 +324,16 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.cacheManager = cacheManagerBuilder.build();
         }
 
-        if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
-            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
+        if (this.clientConfig.getAuthorizationMode() != null &&
+            this.clientConfig.getAuthorizationMode().equals("PrivateKey")) {
+            this.clientConfig.setClientCredentialsResolver(new OAuth2ClientCredentialsResolver(this.clientCredentials));
         }
-        else if (this.clientConfig.getClientCredentialsResolver() == null) {
-            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(clientConfig));
+        else {
+            if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
+                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
+            } else if (this.clientConfig.getClientCredentialsResolver() == null) {
+                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
+            }
         }
 
         if (this.clientConfig.getBaseUrlResolver() == null) {
@@ -338,14 +342,47 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         // OAuth2
-        if (this.clientConfig.getAuthenticationScheme() == AuthenticationScheme.OAUTH2) {
-            accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(this.clientConfig);
+        if (this.clientConfig.getAuthorizationMode() != null &&
+            this.clientConfig.getAuthorizationMode().equals("PrivateKey")) {
+            this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
 
-            OAuth2ClientCredentials oAuth2ClientCredentials =
-                new OAuth2ClientCredentials(accessTokenRetrieverService);
-            OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
-                new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
-            this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
+            accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig);
+
+            // Get access token asynchronously
+            CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+                String accessToken;
+                try {
+                    log.debug("Attempting to get OAuth2 access token for client id {}",
+                        this.getClientConfiguration().getClientId());
+                    accessToken = accessTokenRetrieverService.getOAuth2AccessToken().getAccessToken();
+                } catch (IOException | InvalidKeyException e) {
+                    log.error("Exception occurred:", e);
+                    throw new IllegalArgumentException("Exception occurred", e);
+                } catch (HttpException e) {
+                    log.error("Exception occurred:", e);
+                    throw e;
+                }
+
+                return accessToken;
+            }).whenComplete((accessTokenResult, e) -> {
+                if (e != null) {
+                    log.error("Exception occurred:", e);
+                }
+            });
+
+            try {
+                String accessToken = completableFuture.get();
+
+                OAuth2ClientCredentials oAuth2ClientCredentials =
+                    new OAuth2ClientCredentials(accessToken);
+                OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
+                    new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
+                this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
+
+            } catch (InterruptedException | ExecutionException e) {
+                log.error("Exception occurred", e);
+                throw new RuntimeException(e);
+            }
         }
 
         return new DefaultClient(clientConfig, cacheManager);
@@ -360,37 +397,35 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     @Override
     public ClientBuilder setAuthorizationMode(String authorizationMode) {
-        if (Strings.isEmpty(authorizationMode)) {
-            throw new IllegalArgumentException("Invalid AuthorizationMode");
+        // if authorizationMode is ever supplied, it should only be "PrivateKey" (OAUTH2 flow)
+        // else do not set it (default SSWS case)
+        if (authorizationMode != null) {
+            if (authorizationMode.equals("PrivateKey")) {
+                this.clientConfig.setAuthorizationMode(authorizationMode);
+            }
+            else {
+                throw new IllegalArgumentException("Invalid authorizationMode");
+            }
         }
-        this.clientConfig.setAuthorizationMode(authorizationMode);
         return this;
     }
 
     @Override
     public ClientBuilder setScopes(List<String> scopes) {
-        if (scopes == null || scopes.size() == 0) {
-            throw new IllegalArgumentException("Invalid Scopes");
+        if (isOAuth2Flow()) {
+            Assert.notNull(scopes, "Missing scopes");
+            Assert.isTrue(scopes.size() > 0, "Empty scopes list");
+            this.clientConfig.setScopes(scopes);
         }
-        this.clientConfig.setScopes(scopes);
         return this;
     }
 
     @Override
-    public ClientBuilder setKeyFilePath(String keyFilePath) {
-        if (Strings.isEmpty(keyFilePath)) {
-            throw new IllegalArgumentException("Invalid KeyFilePath");
+    public ClientBuilder setPrivateKey(String privateKey) {
+        if (isOAuth2Flow()) {
+            Assert.notNull(privateKey, "Missing privateKey");
+            this.clientConfig.setPrivateKey(privateKey);
         }
-        this.clientConfig.setKeyFilePath(keyFilePath);
-        return this;
-    }
-
-    @Override
-    public ClientBuilder setAlgorithm(String algorithm) {
-        if (Strings.isEmpty(algorithm)) {
-            throw new IllegalArgumentException("Invalid Algorithm");
-        }
-        this.clientConfig.setAlgorithm(algorithm);
         return this;
     }
 
@@ -399,6 +434,11 @@ public class DefaultClientBuilder implements ClientBuilder {
         ConfigurationValidator.assertClientId(clientId);
         this.clientConfig.setClientId(clientId);
         return this;
+    }
+
+    boolean isOAuth2Flow() {
+        String authorizationMode = this.getClientConfiguration().getAuthorizationMode();
+        return authorizationMode != null && authorizationMode.equals("PrivateKey");
     }
 
     // Used for testing, package private
