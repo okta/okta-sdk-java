@@ -310,13 +310,6 @@ public interface ClientBuilder {
      *    .build(); //build the Client
      * </pre>
      *
-     * <pre>
-     * Client client = Clients.builder()...
-     *    // setApiKey, etc...
-     *    .setAuthenticationScheme(AuthenticationScheme.OAUTH2) //set the OAUTH2 authentication scheme
-     *    .build(); //build the Client
-     * </pre>
-     *
      * @param authenticationScheme the type of authentication to be used for communication with the Okta API server.
      * @return the ClientBuilder instance for method chaining
      */

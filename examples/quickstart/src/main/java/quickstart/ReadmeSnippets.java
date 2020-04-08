@@ -159,10 +159,10 @@ public class ReadmeSnippets {
         SwaApplication swaApp = client.instantiate(SwaApplication.class)
             .setSettings(client.instantiate(SwaApplicationSettings.class)
             .setApp(client.instantiate(SwaApplicationSettingsApplication.class)
-            .setButtonField("btn-login")
-            .setPasswordField("txtbox-password")
-            .setUsernameField("txtbox-username")
-            .setUrl("https://example.com/login.html")));
+              .setButtonField("btn-login")
+              .setPasswordField("txtbox-password")
+              .setUsernameField("txtbox-username")
+              .setUrl("https://example.com/login.html")));
     }
 
     private void listSysLogs() {
@@ -206,10 +206,10 @@ public class ReadmeSnippets {
              .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
              .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
              .withCache(forResource(User.class) //User-specific cache settings
-             .withTimeToLive(1, TimeUnit.HOURS)
-             .withTimeToIdle(30, TimeUnit.MINUTES))
+                 .withTimeToLive(1, TimeUnit.HOURS)
+                 .withTimeToIdle(30, TimeUnit.MINUTES))
              .withCache(forResource(Group.class) //Group-specific cache settings
-             .withTimeToLive(2, TimeUnit.HOURS))
+                 .withTimeToLive(2, TimeUnit.HOURS))
              //... etc ...
              .build(); //build the CacheManager
     }
