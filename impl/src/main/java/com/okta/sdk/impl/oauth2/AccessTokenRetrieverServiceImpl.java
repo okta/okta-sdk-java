@@ -16,7 +16,16 @@
 package com.okta.sdk.impl.oauth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okta.commons.http.*;
+import com.okta.commons.http.DefaultRequest;
+import com.okta.commons.http.HttpException;
+import com.okta.commons.http.HttpHeaders;
+import com.okta.commons.http.HttpMethod;
+import com.okta.commons.http.MediaType;
+import com.okta.commons.http.QueryString;
+import com.okta.commons.http.Request;
+import com.okta.commons.http.RequestExecutor;
+import com.okta.commons.http.RequestExecutorFactory;
+import com.okta.commons.http.Response;
 import com.okta.commons.http.authc.RequestAuthenticationException;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
@@ -62,7 +71,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * {@inheritDoc}
      */
     @Override
-    public OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, RequestAuthenticationException {
+    public OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, HttpException {
         log.info("Getting OAuth2 access token for client id {} from {}",
             clientConfiguration.getClientId(), clientConfiguration.getBaseUrl());
 

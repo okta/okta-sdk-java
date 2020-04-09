@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.impl.oauth2;
 
-import com.okta.commons.http.authc.RequestAuthenticationException;
+import com.okta.commons.http.HttpException;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -27,7 +27,7 @@ public interface AccessTokenRetrieverService {
      * @return {@link OAuth2AccessToken}
      * @throws IOException
      * @throws InvalidKeyException
-     * @throws RequestAuthenticationException
+     * @throws HttpException
      */
-    OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, RequestAuthenticationException;
+    OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, HttpException;
 }
