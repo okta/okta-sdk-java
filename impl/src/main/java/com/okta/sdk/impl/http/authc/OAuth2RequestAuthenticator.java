@@ -39,7 +39,7 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
     }
 
     @Override
-    public void authenticate(Request request) throws RequestAuthenticationException {
+    synchronized public void authenticate(Request request) throws RequestAuthenticationException {
 
         if (clientCredentials != null &&
             clientCredentials.getCredentials() != null) {

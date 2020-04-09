@@ -16,18 +16,10 @@
 package com.okta.sdk.impl.oauth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okta.commons.http.DefaultRequest;
-import com.okta.commons.http.HttpException;
-import com.okta.commons.http.HttpHeaders;
-import com.okta.commons.http.HttpMethod;
-import com.okta.commons.http.MediaType;
-import com.okta.commons.http.QueryString;
-import com.okta.commons.http.Request;
-import com.okta.commons.http.RequestExecutor;
-import com.okta.commons.http.Response;
+import com.okta.commons.http.*;
 import com.okta.commons.http.authc.RequestAuthenticationException;
-import com.okta.commons.http.okhttp.OkHttpRequestExecutorFactory;
 import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Classes;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import io.jsonwebtoken.Jwts;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -95,7 +87,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             new ByteArrayInputStream("".getBytes("UTF-8")),
             0);
 
-        RequestExecutor requestExecutor = new OkHttpRequestExecutorFactory().create(clientConfiguration);
+        RequestExecutor requestExecutor = createRequestExecutor(clientConfiguration);
 
         Response accessTokenResponse = requestExecutor.executeRequest(accessTokenRequest);
 
@@ -199,4 +191,12 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
         return privateKey;
     }
+
+    protected RequestExecutor createRequestExecutor(ClientConfiguration clientConfiguration) {
+        String msg = "Unable to find a '" + RequestExecutorFactory.class.getName() + "' " +
+            "implementation on the classpath.  Please ensure you have added the " +
+            "okta-sdk-httpclient.jar file to your runtime classpath."; // TODO fix jar name
+        return Classes.loadFromService(RequestExecutorFactory.class, msg).create(clientConfiguration);
+    }
+
 }
