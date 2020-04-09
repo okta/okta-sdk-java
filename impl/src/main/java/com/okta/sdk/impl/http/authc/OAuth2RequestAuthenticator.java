@@ -47,7 +47,7 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
 
             if (oAuth2AccessToken != null) {
                 if (oAuth2AccessToken.hasExpired()) {
-                    log.debug("OAuth2 access Token expiry detected! Will fetch a new token from Authorization server");
+                    log.debug("OAuth2 access token expiry detected. Will fetch a new token from Authorization server");
 
                     try {
                         OAuth2ClientCredentials oAuth2ClientCredentials = (OAuth2ClientCredentials) clientCredentials;
