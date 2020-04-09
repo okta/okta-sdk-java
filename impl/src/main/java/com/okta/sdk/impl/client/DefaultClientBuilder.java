@@ -232,6 +232,8 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
+            //TODO: below will work well with parsing .yaml properties (list of strings);
+            // but for unix env variable, we need to know the formatting/how to parse it here.
             List<String> scopes = Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split(","));
             clientConfig.setScopes(scopes);
         }
