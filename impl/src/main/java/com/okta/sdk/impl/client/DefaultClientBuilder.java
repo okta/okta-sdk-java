@@ -17,7 +17,6 @@
 package com.okta.sdk.impl.client;
 
 import com.okta.commons.configcheck.ConfigurationValidator;
-import com.okta.commons.http.HttpException;
 import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
@@ -48,23 +47,18 @@ import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
-import com.okta.sdk.impl.oauth2.OAuth2AccessToken;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -232,8 +226,8 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
-            //TODO: below will work well with parsing .yaml properties (list of strings);
-            // but for unix env variable, we need to know the formatting/how to parse it here.
+            // TODO: below will work well with parsing .yaml properties (list of strings);
+            // but for UNIX env variable, we need to know the formatting/how to parse it here.
             List<String> scopes = Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split(","));
             clientConfig.setScopes(scopes);
         }
@@ -394,8 +388,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     @Override
     public ClientBuilder setScopes(List<String> scopes) {
         if (isOAuth2Flow()) {
-            Assert.notNull(scopes, "Missing scopes");
-            Assert.isTrue(scopes.size() > 0, "Empty scopes list");
+            Assert.isTrue((scopes != null) && (!scopes.isEmpty()), "At least one scope is required");
             this.clientConfig.setScopes(scopes);
         }
         return this;

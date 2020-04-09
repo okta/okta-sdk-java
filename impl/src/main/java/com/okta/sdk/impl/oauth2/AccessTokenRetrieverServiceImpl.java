@@ -63,7 +63,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      */
     @Override
     public OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, RequestAuthenticationException {
-        log.debug("Getting OAuth2 access token for client id {} from {}",
+        log.info("Getting OAuth2 access token for client id {} from {}",
             clientConfiguration.getClientId(), clientConfiguration.getBaseUrl());
 
         String signedJwt = createSignedJWT(clientConfiguration);
@@ -95,10 +95,10 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             Reader reader = new InputStreamReader(accessTokenResponse.getBody(), StandardCharsets.UTF_8);
 
             if (accessTokenResponse.getHttpStatus() == HttpURLConnection.HTTP_OK) {
-                log.debug("OAuth2 access token request was successful");
+                log.info("OAuth2 access token request was successful");
                 return objectMapper.readValue(reader, OAuth2AccessToken.class);
             } else {
-                log.debug("OAuth2 access token request failed with HTTP {} error", accessTokenResponse.getHttpStatus());
+                log.error("OAuth2 access token request failed with HTTP {} error", accessTokenResponse.getHttpStatus());
                 OAuth2ErrorResponse errorResponse = objectMapper.readValue(reader, OAuth2ErrorResponse.class);
                 String errorDetails = errorResponse.getError() + ":" + errorResponse.getErrorDescription();
                 throw new RequestAuthenticationException(errorDetails);
