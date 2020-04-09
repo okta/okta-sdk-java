@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Okta, Inc.
+ * Copyright 2020-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.impl.oauth2;
 
+import com.okta.commons.http.authc.RequestAuthenticationException;
+
 import java.io.IOException;
 import java.security.InvalidKeyException;
 
@@ -22,9 +24,10 @@ public interface AccessTokenRetrieverService {
     /**
      * Obtain OAuth2 access token from Authorization Server endpoint.
      *
-     * @return {@link OAuth2AccessToken} object
+     * @return {@link OAuth2AccessToken}
      * @throws IOException
      * @throws InvalidKeyException
+     * @throws RequestAuthenticationException
      */
-    OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException;
+    OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, RequestAuthenticationException;
 }

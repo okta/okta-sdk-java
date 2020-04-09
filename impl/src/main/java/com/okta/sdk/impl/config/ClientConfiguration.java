@@ -208,7 +208,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
                 ", authorizationMode='" + getAuthorizationMode() +
                 ", clientId='" + getClientId() +
                 ", scopes='" + getScopes() +
-                ", privateKey=" + getPrivateKey() +
+                ", privateKey=xxxxx" +
                 ", connectionTimeout=" + getConnectionTimeout() +
                 ", requestAuthenticator=" + getRequestAuthenticator() +
                 ", retryMaxElapsed=" + getRetryMaxElapsed() +

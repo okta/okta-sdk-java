@@ -1,5 +1,6 @@
 /*
- * Copyright 2017-Present Okta, Inc.
+ * Copyright 2014 Stormpath, Inc.
+ * Modifications Copyright 2018 Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +34,13 @@ import com.okta.sdk.client.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.api.OAuth2ClientCredentialsResolver;
-import com.okta.sdk.impl.config.*;
+import com.okta.sdk.impl.config.ClientConfiguration;
+import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
+import com.okta.sdk.impl.config.OptionalPropertiesSource;
+import com.okta.sdk.impl.config.PropertiesSource;
+import com.okta.sdk.impl.config.ResourcePropertiesSource;
+import com.okta.sdk.impl.config.SystemPropertiesSource;
+import com.okta.sdk.impl.config.YAMLPropertiesSource;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
@@ -50,7 +57,12 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -215,8 +227,8 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setAuthorizationMode(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME));
         }
 
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_CLIENT_ID_PROPERTY_NAME))) {
-            clientConfig.setClientId(props.get(DEFAULT_CLIENT_CLIENT_ID_PROPERTY_NAME));
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_ID_PROPERTY_NAME))) {
+            clientConfig.setClientId(props.get(DEFAULT_CLIENT_ID_PROPERTY_NAME));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
@@ -328,12 +340,11 @@ public class DefaultClientBuilder implements ClientBuilder {
         if (isOAuth2Flow()) {
             this.clientConfig.setClientCredentialsResolver(new OAuth2ClientCredentialsResolver(this.clientCredentials));
         }
-        else {
-            if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
-                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
-            } else if (this.clientConfig.getClientCredentialsResolver() == null) {
-                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
-            }
+        else if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
+        }
+        else if (this.clientConfig.getClientCredentialsResolver() == null) {
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
         }
 
         if (this.clientConfig.getBaseUrlResolver() == null) {
@@ -346,40 +357,11 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
             accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig);
 
-            // Get access token asynchronously
-            CompletableFuture<OAuth2AccessToken> completableFuture = CompletableFuture.supplyAsync(() -> {
-                OAuth2AccessToken accessToken;
-                try {
-                    accessToken = accessTokenRetrieverService.getOAuth2AccessToken();
-                } catch (IOException | InvalidKeyException e) {
-                    log.error("Exception occurred:", e);
-                    throw new IllegalArgumentException("Exception occurred", e);
-                } catch (HttpException e) {
-                    log.error("Exception occurred:", e);
-                    throw e;
-                }
-
-                return accessToken;
-            }).whenComplete((accessTokenResult, e) -> {
-                if (e != null) {
-                    log.error("Exception occurred:", e);
-                    throw new RuntimeException(e);
-                }
-            });
-
-            try {
-                OAuth2AccessToken oAuth2AccessToken = completableFuture.get();
-
-                OAuth2ClientCredentials oAuth2ClientCredentials =
-                    new OAuth2ClientCredentials(oAuth2AccessToken, accessTokenRetrieverService);
-                OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
-                    new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
-                this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
-
-            } catch (InterruptedException | ExecutionException e) {
-                log.error("Exception occurred", e);
-                throw new RuntimeException(e);
-            }
+            OAuth2ClientCredentials oAuth2ClientCredentials =
+                new OAuth2ClientCredentials(accessTokenRetrieverService);
+            OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
+                new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
+            this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
         }
 
         return new DefaultClient(clientConfig, cacheManager);

@@ -395,7 +395,7 @@ okta:
     scopes:
       - okta.clients.read
       - okta.clients.manage
-    privateKey: "~/.okta/privateKey.pem" # PEM format is recommended. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
+    privateKey: "~/.okta/privateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
     requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4

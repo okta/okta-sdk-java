@@ -15,20 +15,59 @@
  */
 package com.okta.sdk.impl.oauth2;
 
+import com.okta.commons.http.HttpException;
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.authc.credentials.ClientCredentials;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessToken> {
+    private static final Logger log = LoggerFactory.getLogger(OAuth2ClientCredentials.class);
 
     private OAuth2AccessToken oAuth2AccessToken;
     private AccessTokenRetrieverService accessTokenRetrieverService;
 
-    public OAuth2ClientCredentials(OAuth2AccessToken oAuth2AccessToken,
-                                   AccessTokenRetrieverService accessTokenRetrieverService) {
-        Assert.notNull(oAuth2AccessToken, "oAuth2AccessToken must not be null.");
+    public OAuth2ClientCredentials(AccessTokenRetrieverService accessTokenRetrieverService) {
         Assert.notNull(accessTokenRetrieverService, "accessTokenRetrieverService must not be null.");
-        this.oAuth2AccessToken = oAuth2AccessToken;
         this.accessTokenRetrieverService = accessTokenRetrieverService;
+        this.oAuth2AccessToken = eagerFetchOAuth2AccessToken();
+    }
+
+    private OAuth2AccessToken eagerFetchOAuth2AccessToken() {
+
+        CompletableFuture<OAuth2AccessToken> completableFuture = CompletableFuture.supplyAsync(() -> {
+            OAuth2AccessToken accessToken;
+            try {
+                accessToken = accessTokenRetrieverService.getOAuth2AccessToken();
+            } catch (IOException | InvalidKeyException e) {
+                log.error("Exception occurred:", e);
+                throw new IllegalArgumentException("Exception occurred", e);
+            } catch (HttpException e) {
+                log.error("Exception occurred:", e);
+                throw e;
+            }
+
+            return accessToken;
+        }).whenComplete((result, e) -> {
+            if (e != null) {
+                throw new IllegalStateException(e);
+            }
+        });
+
+        OAuth2AccessToken oAuth2AccessTokenResult;
+
+        try {
+            oAuth2AccessTokenResult = completableFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return oAuth2AccessTokenResult;
     }
 
     public OAuth2AccessToken getCredentials() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Okta, Inc.
+ * Copyright 2020-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,18 @@
 package com.okta.sdk.impl.oauth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okta.commons.http.*;
+import com.okta.commons.http.DefaultRequest;
+import com.okta.commons.http.HttpException;
+import com.okta.commons.http.HttpHeaders;
+import com.okta.commons.http.HttpMethod;
+import com.okta.commons.http.MediaType;
+import com.okta.commons.http.QueryString;
+import com.okta.commons.http.Request;
+import com.okta.commons.http.RequestExecutor;
+import com.okta.commons.http.Response;
+import com.okta.commons.http.authc.RequestAuthenticationException;
 import com.okta.commons.http.okhttp.OkHttpRequestExecutorFactory;
-import com.okta.commons.lang.Strings;
+import com.okta.commons.lang.Assert;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import io.jsonwebtoken.Jwts;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -28,7 +37,13 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -47,6 +62,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     private ClientConfiguration clientConfiguration;
 
     public AccessTokenRetrieverServiceImpl(ClientConfiguration clientConfiguration) {
+        Assert.notNull(clientConfiguration, "clientConfiguration must not be null.");
         this.clientConfiguration = clientConfiguration;
     }
 
@@ -54,7 +70,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * {@inheritDoc}
      */
     @Override
-    public OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException {
+    public OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, RequestAuthenticationException {
         log.debug("Getting OAuth2 access token for client id {} from {}",
             clientConfiguration.getClientId(), clientConfiguration.getBaseUrl());
 
@@ -68,8 +84,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         queryString.put("scope", scope);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Accept", "application/json");
-        httpHeaders.add("Content-Type", "application/x-www-form-urlencoded");
+        httpHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        httpHeaders.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
         Request accessTokenRequest = new DefaultRequest(
             HttpMethod.POST,
@@ -91,18 +107,9 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
                 return objectMapper.readValue(reader, OAuth2AccessToken.class);
             } else {
                 log.debug("OAuth2 access token request failed with HTTP {} error", accessTokenResponse.getHttpStatus());
-
                 OAuth2ErrorResponse errorResponse = objectMapper.readValue(reader, OAuth2ErrorResponse.class);
-
-                if (!Strings.isEmpty(errorResponse.getError()) ||
-                    !Strings.isEmpty(errorResponse.getErrorDescription())) {
-                    throw new HttpException("Received HTTP " + accessTokenResponse.getHttpStatus() +
-                        " response from Authorization Server. error - " + errorResponse.getError() +
-                        ", error description - " + errorResponse.getErrorDescription());
-                } else {
-                    throw new HttpException("Received HTTP " + accessTokenResponse.getHttpStatus() +
-                        " response from Authorization Server");
-                }
+                String errorDetails = errorResponse.getError() + ":" + errorResponse.getErrorDescription();
+                throw new RequestAuthenticationException(errorDetails);
             }
         } else {
             throw new HttpException("Could not retrieve access token from Authorization Server");
@@ -112,31 +119,15 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     /**
      * Create signed JWT string with the supplied {@link ClientConfiguration} details.
      *
-     * @param {@link ClientConfiguration} object
+     * @param clientConfiguration
      * @return signed JWT string
-     * @throws {@link InvalidKeyException}
-     * @throws {@link IOException}
+     * @throws InvalidKeyException
+     * @throws IOException
      */
     private String createSignedJWT(ClientConfiguration clientConfiguration)
         throws InvalidKeyException, IOException {
         String clientId = clientConfiguration.getClientId();
-        String privateKeyFilePath = clientConfiguration.getPrivateKey();
-
-        File privateKeyFile = new File(privateKeyFilePath);
-        if (!privateKeyFile.exists()) {
-            throw new FileNotFoundException("privateKeyFile " + privateKeyFile + " does not exist");
-        }
-
-        Reader reader = new InputStreamReader(new FileInputStream(clientConfiguration.getPrivateKey()), "UTF-8");
-
-        PrivateKey privateKey = getPrivateKeyFromPEM(reader);
-        String algorithm = privateKey.getAlgorithm();
-
-        if (!algorithm.equals("RSA") &&
-            !algorithm.equals("EC")) {
-            throw new InvalidKeyException("Supplied privateKey is not an RSA or EC key - " + algorithm);
-        }
-
+        PrivateKey privateKey = parsePrivateKey(clientConfiguration.getPrivateKey());
         Instant now = Instant.now();
 
         String jwt = Jwts.builder()
@@ -153,9 +144,36 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     }
 
     /**
+     * Parse private key from the supplied path.
+     *
+     * @param privateKeyFilePath
+     * @return PrivateKey
+     * @throws IOException
+     * @throws InvalidKeyException
+     */
+    private PrivateKey parsePrivateKey(String privateKeyFilePath) throws IOException, InvalidKeyException {
+        File privateKeyFile = new File(privateKeyFilePath);
+        if (!privateKeyFile.exists()) {
+            throw new FileNotFoundException("privateKeyFile " + privateKeyFile + " does not exist");
+        }
+
+        Reader reader = new InputStreamReader(new FileInputStream(clientConfiguration.getPrivateKey()), "UTF-8");
+
+        PrivateKey privateKey = getPrivateKeyFromPEM(reader);
+        String algorithm = privateKey.getAlgorithm();
+
+        if (!algorithm.equals("RSA") &&
+            !algorithm.equals("EC")) {
+            throw new InvalidKeyException("Supplied privateKey is not an RSA or EC key - " + algorithm);
+        }
+
+        return privateKey;
+    }
+
+    /**
      * Get Private key from input PEM file.
      *
-     * @param {@link Reader} object
+     * @param reader
      * @return {@link PrivateKey} object
      * @throws {@link IOException}
      */
