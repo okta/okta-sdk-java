@@ -15,21 +15,16 @@
  */
 package com.okta.sdk.impl.oauth2;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okta.commons.http.DefaultRequest;
 import com.okta.commons.http.HttpException;
-import com.okta.commons.http.HttpHeaders;
-import com.okta.commons.http.HttpMethod;
 import com.okta.commons.http.MediaType;
-import com.okta.commons.http.QueryString;
-import com.okta.commons.http.Request;
-import com.okta.commons.http.RequestExecutor;
-import com.okta.commons.http.RequestExecutorFactory;
-import com.okta.commons.http.Response;
-import com.okta.commons.http.authc.RequestAuthenticationException;
 import com.okta.commons.lang.Assert;
-import com.okta.commons.lang.Classes;
+import com.okta.sdk.cache.Caches;
+import com.okta.sdk.error.authc.InvalidAuthenticationException;
+import com.okta.sdk.impl.client.BaseClient;
 import com.okta.sdk.impl.config.ClientConfiguration;
+import com.okta.sdk.impl.error.DefaultError;
+import com.okta.sdk.resource.ExtensibleResource;
+import com.okta.sdk.resource.ResourceException;
 import io.jsonwebtoken.Jwts;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMKeyPair;
@@ -38,15 +33,12 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -57,8 +49,6 @@ import java.util.UUID;
 
 public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverService {
     private static final Logger log = LoggerFactory.getLogger(AccessTokenRetrieverServiceImpl.class);
-
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private ClientConfiguration clientConfiguration;
 
@@ -78,42 +68,33 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         String signedJwt = createSignedJWT(clientConfiguration);
         String scope = String.join(" ", clientConfiguration.getScopes());
 
-        QueryString queryString = new QueryString();
-        queryString.put("grant_type", "client_credentials");
-        queryString.put("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
-        queryString.put("client_assertion", signedJwt);
-        queryString.put("scope", scope);
+        BaseClient tokenClient = new BaseClient(clientConfiguration, Caches.newDisabledCacheManager()) {};
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        httpHeaders.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        try {
+            ExtensibleResource accessTokenResponse = tokenClient.http()
+                .addHeaderParameter("Accept", MediaType.APPLICATION_JSON_VALUE)
+                .addHeaderParameter("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .addQueryParameter("grant_type", "client_credentials")
+                .addQueryParameter("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
+                .addQueryParameter("client_assertion", signedJwt)
+                .addQueryParameter("scope", scope)
+                .post(clientConfiguration.getBaseUrl() + "/oauth2/v1/token", ExtensibleResource.class);
 
-        Request accessTokenRequest = new DefaultRequest(
-            HttpMethod.POST,
-            clientConfiguration.getBaseUrl() + "/oauth2/v1/token",
-            queryString,
-            httpHeaders,
-            new ByteArrayInputStream("".getBytes("UTF-8")),
-            0);
+            OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken();
+            oAuth2AccessToken.setTokenType(accessTokenResponse.getString("token_type"));
+            oAuth2AccessToken.setExpiresIn(accessTokenResponse.getInteger("expires_in"));
+            oAuth2AccessToken.setAccessToken(accessTokenResponse.getString("access_token"));
+            oAuth2AccessToken.setScope(accessTokenResponse.getString("scope"));
 
-        RequestExecutor requestExecutor = createRequestExecutor(clientConfiguration);
+            return oAuth2AccessToken;
 
-        Response accessTokenResponse = requestExecutor.executeRequest(accessTokenRequest);
-
-        if (accessTokenResponse != null && accessTokenResponse.getBody() != null) {
-            Reader reader = new InputStreamReader(accessTokenResponse.getBody(), StandardCharsets.UTF_8);
-
-            if (accessTokenResponse.getHttpStatus() == HttpURLConnection.HTTP_OK) {
-                log.info("OAuth2 access token request was successful");
-                return objectMapper.readValue(reader, OAuth2AccessToken.class);
-            } else {
-                log.error("OAuth2 access token request failed with HTTP {} error", accessTokenResponse.getHttpStatus());
-                OAuth2ErrorResponse errorResponse = objectMapper.readValue(reader, OAuth2ErrorResponse.class);
-                String errorDetails = errorResponse.getError() + ":" + errorResponse.getErrorDescription();
-                throw new RequestAuthenticationException(errorDetails);
-            }
-        } else {
-            throw new HttpException("Could not retrieve access token from Authorization Server");
+        } catch (ResourceException e) {
+            //TODO: clean up the ugly casting and refactor code around it.
+            DefaultError error = (DefaultError) e.getError();
+            String errorMessage = error.getString("error");
+            String description = error.getString("error_description");
+            error.setMessage(errorMessage + " - " + description);
+            throw new InvalidAuthenticationException(error);
         }
     }
 
@@ -199,13 +180,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         }
 
         return privateKey;
-    }
-
-    protected RequestExecutor createRequestExecutor(ClientConfiguration clientConfiguration) {
-        String msg = "Unable to find a '" + RequestExecutorFactory.class.getName() + "' " +
-            "implementation on the classpath.  Please ensure you have added the " +
-            "okta-sdk-httpclient.jar file to your runtime classpath."; // TODO fix jar name
-        return Classes.loadFromService(RequestExecutorFactory.class, msg).create(clientConfiguration);
     }
 
 }
