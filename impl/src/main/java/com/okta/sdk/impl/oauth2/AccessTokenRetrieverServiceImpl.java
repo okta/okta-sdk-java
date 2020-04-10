@@ -47,6 +47,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.ACCESS_TOKEN_KEY;
+import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.ERROR_DESCRIPTION;
+import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.ERROR_KEY;
+import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.EXPIRES_IN_KEY;
+import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.SCOPE_KEY;
+import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.TOKEN_TYPE_KEY;
+
 public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverService {
     private static final Logger log = LoggerFactory.getLogger(AccessTokenRetrieverServiceImpl.class);
 
@@ -81,19 +88,19 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
                 .post(clientConfiguration.getBaseUrl() + "/oauth2/v1/token", ExtensibleResource.class);
 
             OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken();
-            oAuth2AccessToken.setTokenType(accessTokenResponse.getString("token_type"));
-            oAuth2AccessToken.setExpiresIn(accessTokenResponse.getInteger("expires_in"));
-            oAuth2AccessToken.setAccessToken(accessTokenResponse.getString("access_token"));
-            oAuth2AccessToken.setScope(accessTokenResponse.getString("scope"));
+            oAuth2AccessToken.setTokenType(accessTokenResponse.getString(TOKEN_TYPE_KEY));
+            oAuth2AccessToken.setExpiresIn(accessTokenResponse.getInteger(EXPIRES_IN_KEY));
+            oAuth2AccessToken.setAccessToken(accessTokenResponse.getString(ACCESS_TOKEN_KEY));
+            oAuth2AccessToken.setScope(accessTokenResponse.getString(SCOPE_KEY));
 
             return oAuth2AccessToken;
 
         } catch (ResourceException e) {
             //TODO: clean up the ugly casting and refactor code around it.
             DefaultError error = (DefaultError) e.getError();
-            String errorMessage = error.getString("error");
-            String description = error.getString("error_description");
-            error.setMessage(errorMessage + " - " + description);
+            String errorMessage = error.getString(ERROR_KEY);
+            String errorDescription = error.getString(ERROR_DESCRIPTION);
+            error.setMessage(errorMessage + " - " + errorDescription);
             throw new InvalidAuthenticationException(error);
         }
     }

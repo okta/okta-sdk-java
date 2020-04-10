@@ -15,21 +15,25 @@
  */
 package com.okta.sdk.impl.oauth2;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.Duration;
 import java.time.Instant;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class OAuth2AccessToken {
-    @JsonProperty("token_type")
+
+    /* Token body constants */
+    public static final String TOKEN_TYPE_KEY = "token_type";
+    public static final String EXPIRES_IN_KEY = "expires_in";
+    public static final String ACCESS_TOKEN_KEY = "access_token";
+    public static final String SCOPE_KEY = "scope";
+
+    /* Token error constants */
+    public static final String ERROR_KEY = "error";
+    public static final String ERROR_DESCRIPTION = "error_description";
+
     private String tokenType;
 
-    @JsonProperty("expires_in")
     private Integer expiresIn;
 
-    @JsonProperty("access_token")
     private String accessToken;
 
     private String scope;
