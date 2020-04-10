@@ -265,8 +265,10 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     @Override
     public ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme) {
-        this.clientConfig.setAuthenticationScheme(authenticationScheme);
-        return this;
+        Assert.notNull(authenticationScheme, "authenticationScheme cannot be null.");
+
+        return (authenticationScheme == AuthenticationScheme.OAUTH2) ?
+            setAuthorizationMode("PrivateKey") : setAuthorizationMode(null);
     }
 
     @Override
@@ -373,15 +375,18 @@ public class DefaultClientBuilder implements ClientBuilder {
     @Override
     public ClientBuilder setAuthorizationMode(String authorizationMode) {
         // if 'authorizationMode' is ever supplied, it should only be "PrivateKey" (OAUTH2 flow);
-        // else do not set it as it defaults to SSWS flow.
+        // else it defaults to SSWS flow.
         if (authorizationMode != null) {
             if (authorizationMode.equals("PrivateKey")) {
-                this.clientConfig.setAuthorizationMode(authorizationMode);
-            }
-            else {
+                this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
+            } else {
                 throw new IllegalArgumentException("Invalid authorizationMode");
             }
+        } else {
+            this.clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS);
         }
+
+        this.clientConfig.setAuthorizationMode(authorizationMode);
         return this;
     }
 
