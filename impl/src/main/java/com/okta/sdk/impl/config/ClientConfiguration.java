@@ -22,6 +22,7 @@ import com.okta.commons.http.config.HttpClientConfiguration;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.client.AuthenticationScheme;
+import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
@@ -51,7 +52,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private RequestAuthenticatorFactory requestAuthenticatorFactory = new DefaultRequestAuthenticatorFactory();
     private AuthenticationScheme authenticationScheme;
     private BaseUrlResolver baseUrlResolver;
-    private String authorizationMode;
+    private AuthorizationMode authorizationMode;
     private String clientId;
     private List<String> scopes = new ArrayList<>();
     private String privateKey;
@@ -96,11 +97,11 @@ public class ClientConfiguration extends HttpClientConfiguration {
         this.baseUrlResolver = baseUrlResolver;
     }
 
-    public String getAuthorizationMode() {
+    public AuthorizationMode getAuthorizationMode() {
         return authorizationMode;
     }
 
-    public void setAuthorizationMode(String authorizationMode) {
+    public void setAuthorizationMode(AuthorizationMode authorizationMode) {
         this.authorizationMode = authorizationMode;
     }
 

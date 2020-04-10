@@ -27,6 +27,7 @@ import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.cache.CacheManagerBuilder;
 import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthenticationScheme;
+import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Proxy;
@@ -218,7 +219,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME))) {
-            clientConfig.setAuthorizationMode(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME));
+            clientConfig.setAuthorizationMode(Enum.valueOf(AuthorizationMode.class, props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME)));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_ID_PROPERTY_NAME))) {
@@ -265,10 +266,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     @Override
     public ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme) {
-        Assert.notNull(authenticationScheme, "authenticationScheme cannot be null.");
-
-        return (authenticationScheme == AuthenticationScheme.OAUTH2) ?
-            setAuthorizationMode("PrivateKey") : setAuthorizationMode(null);
+        return setAuthorizationMode(AuthorizationMode.get(authenticationScheme));
     }
 
     @Override
@@ -373,20 +371,9 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
-    public ClientBuilder setAuthorizationMode(String authorizationMode) {
-        // if 'authorizationMode' is ever supplied, it should only be "PrivateKey" (OAUTH2 flow);
-        // else it defaults to SSWS flow.
-        if (authorizationMode != null) {
-            if (authorizationMode.equals("PrivateKey")) {
-                this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
-            } else {
-                throw new IllegalArgumentException("Invalid authorizationMode");
-            }
-        } else {
-            this.clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS);
-        }
-
+    public ClientBuilder setAuthorizationMode(AuthorizationMode authorizationMode) {
         this.clientConfig.setAuthorizationMode(authorizationMode);
+        this.clientConfig.setAuthenticationScheme(authorizationMode.getAuthenticationScheme());
         return this;
     }
 
@@ -416,8 +403,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     boolean isOAuth2Flow() {
-        String authorizationMode = this.getClientConfiguration().getAuthorizationMode();
-        return authorizationMode != null && authorizationMode.equals("PrivateKey");
+        return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PrivateKey;
     }
 
     // Used for testing, package private

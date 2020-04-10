@@ -295,9 +295,25 @@ public interface ClientBuilder {
     ClientBuilder setCacheManager(CacheManager cacheManager);
 
     /**
-     * @deprecated
+     * Overrides the default (very secure)
+     * <a href="https://developer.okta.com/docs/api/getting_started/design_principles#authentication">Okta SSWS Digest
+     * Authentication Scheme</a> used to authenticate every request sent to the Okta API server.
      *
-     * Use {@link #setAuthorizationMode(String)} instead.
+     * <p>It is not recommended that you override this setting <em>unless</em> your application is deployed in an
+     * environment that - outside of your application's control - manipulates request headers on outgoing HTTP requests.
+     * Google App Engine is one such environment, for example.</p>
+     *
+     * <pre>
+     * Client client = Clients.builder()...
+     *    // setApiKey, etc...
+     *    .setAuthenticationScheme(AuthenticationScheme.SSWS) //set the SSWS authentication scheme
+     *    .build(); //build the Client
+     * </pre>
+     *
+     * @param authenticationScheme the type of authentication to be used for communication with the Okta API server.
+     * @return the ClientBuilder instance for method chaining
+     *
+     * @deprecated use {@link #setAuthorizationMode(AuthorizationMode)} to indicate the authentication scheme.
      */
     @Deprecated
     ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme);
@@ -311,7 +327,7 @@ public interface ClientBuilder {
      * @param authorizationMode mode of authorization for requests to the Okta API server.
      * @return the ClientBuilder instance for method chaining.
      */
-    ClientBuilder setAuthorizationMode(String authorizationMode);
+    ClientBuilder setAuthorizationMode(AuthorizationMode authorizationMode);
 
     /**
      * Allows specifying a list of scopes directly instead of relying on the
