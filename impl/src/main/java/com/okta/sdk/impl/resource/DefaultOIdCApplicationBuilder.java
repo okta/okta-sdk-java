@@ -1,6 +1,5 @@
 package com.okta.sdk.impl.resource;
 
-import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.application.*;
@@ -175,15 +174,15 @@ public class DefaultOIdCApplicationBuilder extends DefaultApplicationBuilder<OId
         if (Strings.hasText(tosUri))
             openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setTosUri(tosUri));
 
-        if (!Collections.isEmpty(redirectUris))
+        if (Objects.nonNull(redirectUris))
             openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setRedirectUris(redirectUris));
 
-        if (!Collections.isEmpty(responseTypes))
+        if (Objects.nonNull(responseTypes) && responseTypes.size()>0)
             openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setResponseTypes(responseTypes));
         else
             throw new IllegalArgumentException("Response Type cannot be null, value should be of type OAuthResponseType");
 
-        if (!Collections.isEmpty(grantTypes))
+        if (Objects.nonNull(grantTypes) && grantTypes.size()>0)
             openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setGrantTypes(grantTypes));
         else
             throw new IllegalArgumentException("Grant Type cannot be null, value should be of type OAuthGrantType");
