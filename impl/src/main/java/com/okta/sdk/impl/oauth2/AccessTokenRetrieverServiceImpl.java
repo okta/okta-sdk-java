@@ -101,7 +101,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             error.setMessage(errorMessage + " - " + errorDescription);
             throw new InvalidAuthenticationException(error);
         } catch (Exception e) {
-            throw new OAuth2TokenRetrieverException(e);
+            throw new OAuth2TokenRetrieverException("Unexpected error while trying to retrieve OAuth2 access token", e);
         }
     }
 

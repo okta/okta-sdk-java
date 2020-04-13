@@ -83,7 +83,6 @@ class AccessTokenRetrieverServiceImplTest {
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
 
-        println(privateKeyPemFile.path)
         when(clientConfig.getBaseUrl()).thenReturn("https://okta.example.com")
         when(clientConfig.getClientId()).thenReturn("client12345")
         when(clientConfig.getPrivateKey()).thenReturn(privateKeyPemFile.path)

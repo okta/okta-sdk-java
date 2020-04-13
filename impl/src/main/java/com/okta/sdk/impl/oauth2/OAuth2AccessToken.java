@@ -82,7 +82,7 @@ public class OAuth2AccessToken {
     }
 
     // for testing purposes
-    public void expireNow() {
+    void expireNow() {
         this.setExpiresIn(Integer.MIN_VALUE);
     }
 
