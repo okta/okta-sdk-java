@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.impl.oauth2
 
-import com.okta.sdk.client.Client
 import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.config.ClientConfiguration
 import io.jsonwebtoken.Claims
@@ -26,10 +25,12 @@ import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
 
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.is
+import static org.hamcrest.Matchers.notNullValue
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
 import static org.testng.Assert.assertEquals
-import static org.testng.Assert.assertNotNull
-
-import static org.mockito.Mockito.*
 
 /**
  *
@@ -57,9 +58,9 @@ class AccessTokenRetrieverServiceImplTest {
 
         privateKeyPemFile.deleteOnExit()
 
-        assertNotNull(resultPrivateKey, "privateKey cannot be null")
-        assertEquals(resultPrivateKey.getAlgorithm(), "RSA", "privateKey algorithm is incorrect")
-        assertEquals(resultPrivateKey.getFormat(), "PKCS#8", "privateKey format is incorrect")
+        assertThat(resultPrivateKey, notNullValue())
+        assertThat(resultPrivateKey.getAlgorithm(), is("RSA"))
+        assertThat(resultPrivateKey.getFormat(), is("PKCS#8"))
     }
 
     @Test
@@ -71,9 +72,9 @@ class AccessTokenRetrieverServiceImplTest {
 
         privateKeyPemFile.deleteOnExit()
 
-        assertNotNull(parsedPrivateKey, "privateKey cannot be null")
-        assertEquals(parsedPrivateKey.getAlgorithm(), "RSA", "privateKey algorithm is incorrect")
-        assertEquals(parsedPrivateKey.getFormat(), "PKCS#8", "privateKey format is incorrect")
+        assertThat(parsedPrivateKey, notNullValue())
+        assertThat(parsedPrivateKey.getAlgorithm(), is("RSA"))
+        assertThat(parsedPrivateKey.getFormat(), is("PKCS#8"))
     }
 
     @Test
@@ -91,23 +92,24 @@ class AccessTokenRetrieverServiceImplTest {
 
         privateKeyPemFile.deleteOnExit()
 
-        assertNotNull(signedJwt, "signedJwt cannot be null")
+        assertThat(signedJwt, notNullValue())
 
         // decode the signed jwt and verify
         Claims claims = Jwts.parser()
             .setSigningKey(generatedPrivateKey)
             .parseClaimsJws(signedJwt).getBody()
 
-        assertNotNull(claims, "claims cannot be null")
-        assertEquals(claims.get("aud"), clientConfig.getBaseUrl() + "/oauth2/v1/token")
-        assertNotNull(claims.get("iat"), "iat cannot be null")
-        assertNotNull(claims.get("exp"), "exp cannot be null")
-        assertNotNull(claims.get("iss"), "iss cannot be null")
-        assertEquals(claims.get("iss"), clientConfig.getClientId(), "iss must be equal to client id")
-        assertNotNull(claims.get("sub"), "sub cannot be null")
-        assertEquals(claims.get("sub"), clientConfig.getClientId(), "sub must be equal to client id")
-        assertNotNull(claims.get("jti"), "jti cannot be null")
+        assertThat(claims, notNullValue())
 
+        assertEquals(claims.get("aud"), clientConfig.getBaseUrl() + "/oauth2/v1/token")
+        assertThat(claims.get("iat"), notNullValue())
+        assertThat(claims.get("exp"), notNullValue())
+        assertEquals(Integer.valueOf(claims.get("exp")) - Integer.valueOf(claims.get("iat")), 3600)
+        assertThat(claims.get("iss"), notNullValue())
+        assertEquals(claims.get("iss"), clientConfig.getClientId(), "iss must be equal to client id")
+        assertThat(claims.get("sub"), notNullValue())
+        assertEquals(claims.get("sub"), clientConfig.getClientId(), "sub must be equal to client id")
+        assertThat(claims.get("jti"), notNullValue())
     }
 
     // helper methods
