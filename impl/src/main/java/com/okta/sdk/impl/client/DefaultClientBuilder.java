@@ -351,6 +351,9 @@ public class DefaultClientBuilder implements ClientBuilder {
         // OAuth2
         if (isOAuth2Flow()) {
             this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
+
+            validateOAuth2ClientConfig(this.clientConfig);
+
             accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig);
 
             OAuth2ClientCredentials oAuth2ClientCredentials =
@@ -361,6 +364,13 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         return new DefaultClient(clientConfig, cacheManager);
+    }
+
+    private void validateOAuth2ClientConfig(ClientConfiguration clientConfiguration) {
+        Assert.notNull(clientConfiguration.getClientId(), "clientId cannot be null");
+        Assert.isTrue((clientConfiguration.getScopes() != null) && (!clientConfiguration.getScopes().isEmpty()),
+            "At least one scope is required");
+        Assert.notNull(clientConfiguration.getPrivateKey(), "privateKey cannot be null");
     }
 
     @Override

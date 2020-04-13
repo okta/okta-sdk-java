@@ -16,26 +16,34 @@
  */
 package com.okta.sdk.impl.client
 
+import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.AuthenticationScheme
+import com.okta.sdk.client.AuthorizationMode
 import com.okta.sdk.client.ClientBuilder
 import com.okta.sdk.client.Clients
+import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.io.DefaultResourceFactory
 import com.okta.sdk.impl.io.Resource
 import com.okta.sdk.impl.io.ResourceFactory
 import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import com.okta.sdk.impl.test.RestoreSystemProperties
-import com.okta.commons.http.config.BaseUrlResolver
-import com.okta.sdk.impl.Util
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.testng.annotations.Listeners
 import org.testng.annotations.Test
 
-import static org.testng.Assert.*
-import static org.mockito.Mockito.*
-import static org.hamcrest.Matchers.*
+import java.security.KeyPair
+import java.security.KeyPairGenerator
+import java.security.PrivateKey
+
 import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.is
+import static org.hamcrest.Matchers.nullValue
+import static org.mockito.ArgumentMatchers.anyString
+import static org.mockito.Mockito.*
+import static org.testng.Assert.assertEquals
+import static org.testng.Assert.assertTrue
 
 @Listeners([RestoreSystemProperties, RestoreEnvironmentVariables])
 class DefaultClientBuilderTest {
@@ -172,6 +180,120 @@ class DefaultClientBuilderTest {
                 .setOrgUrl("https://okta.example.com")
                 .build()
         }
+    }
+
+    @Test
+    void testOAuth2NullClientId() {
+        clearOktaEnvAndSysProps()
+        Util.expect(IllegalArgumentException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .build()
+        }
+    }
+
+    @Test
+    void testOAuth2NullScopes() {
+        clearOktaEnvAndSysProps()
+        Util.expect(IllegalArgumentException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setClientId("client12345")
+                .build()
+        }
+    }
+
+    @Test
+    void testOAuth2EmptyScopes() {
+        clearOktaEnvAndSysProps()
+        Util.expect(IllegalArgumentException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setClientId("client12345")
+                .setScopes(new ArrayList<String>())
+                .build()
+        }
+    }
+
+    @Test
+    void testOAuth2NullPrivateKey() {
+        clearOktaEnvAndSysProps()
+        Util.expect(IllegalArgumentException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setClientId("client12345")
+                .setScopes(Arrays.asList({"okta.apps.read"}))
+                .setPrivateKey(null)
+                .build()
+        }
+    }
+
+    @Test
+    void testOAuth2InvalidPrivateKeyPemFilePath() {
+        clearOktaEnvAndSysProps()
+        Util.expect(IllegalStateException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setClientId("client12345")
+                .setScopes(Arrays.asList({ "okta.apps.read" }))
+                .setPrivateKey("blahblah.pem")
+                .build()
+        }
+    }
+
+    @Test
+    void testOAuth2InvalidPrivateKeyPemFileContent() {
+        clearOktaEnvAndSysProps()
+        File file = File.createTempFile("tmp",".pem")
+        file.write("-----INVALID PEM CONTENT-----")
+        Util.expect(IllegalStateException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setClientId("client12345")
+                .setScopes(Arrays.asList({ "okta.apps.read" }))
+                .setPrivateKey(file.path)
+                .build()
+        }
+
+        file.delete()
+    }
+
+    @Test
+    void testOAuth2ValidInputParams() {
+        clearOktaEnvAndSysProps()
+
+        // generate private key and write it to pem file
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA")
+        keyGen.initialize(2048)
+        KeyPair key = keyGen.generateKeyPair()
+        PrivateKey privateKey = key.getPrivate()
+        String encodedString = "-----BEGIN PRIVATE KEY-----\n"
+        encodedString = encodedString + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
+        encodedString = encodedString + "-----END PRIVATE KEY-----\n"
+        File file = File.createTempFile("privatekey",".pem")
+        file.write(encodedString)
+
+        List<String> scopes = new ArrayList<String>();
+        scopes.add("okta.apps.read")
+        scopes.add("okta.apps.manage")
+
+        Util.expect(IllegalStateException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setClientId("client12345")
+                .setScopes(scopes)
+                .setPrivateKey(file.path)
+                .build()
+        }
+
+        file.delete()
     }
 
     static ResourceFactory noDefaultYamlNoAppYamlResourceFactory() {

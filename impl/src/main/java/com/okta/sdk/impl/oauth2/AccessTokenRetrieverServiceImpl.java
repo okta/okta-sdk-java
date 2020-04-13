@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.impl.oauth2;
 
-import com.okta.commons.http.HttpException;
 import com.okta.commons.http.MediaType;
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.cache.Caches;
@@ -35,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -68,11 +66,11 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * {@inheritDoc}
      */
     @Override
-    public OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, HttpException {
+    public OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, OAuth2TokenRetrieverException {
         log.info("Getting OAuth2 access token for client id {} from {}",
             clientConfiguration.getClientId(), clientConfiguration.getBaseUrl());
 
-        String signedJwt = createSignedJWT(clientConfiguration);
+        String signedJwt = createSignedJWT();
         String scope = String.join(" ", clientConfiguration.getScopes());
 
         BaseClient tokenClient = new BaseClient(clientConfiguration, Caches.newDisabledCacheManager()) {};
@@ -102,19 +100,19 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             String errorDescription = error.getString(ERROR_DESCRIPTION);
             error.setMessage(errorMessage + " - " + errorDescription);
             throw new InvalidAuthenticationException(error);
+        } catch (Exception e) {
+            throw new OAuth2TokenRetrieverException(e);
         }
     }
 
     /**
      * Create signed JWT string with the supplied {@link ClientConfiguration} details.
      *
-     * @param clientConfiguration
      * @return signed JWT string
      * @throws InvalidKeyException
      * @throws IOException
      */
-    private String createSignedJWT(ClientConfiguration clientConfiguration)
-        throws InvalidKeyException, IOException {
+    String createSignedJWT() throws InvalidKeyException, IOException {
         String clientId = clientConfiguration.getClientId();
         PrivateKey privateKey = parsePrivateKey(clientConfiguration.getPrivateKey());
         Instant now = Instant.now();
@@ -140,13 +138,15 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * @throws IOException
      * @throws InvalidKeyException
      */
-    private PrivateKey parsePrivateKey(String privateKeyFilePath) throws IOException, InvalidKeyException {
+    PrivateKey parsePrivateKey(String privateKeyFilePath) throws IOException, InvalidKeyException {
+        Assert.notNull(privateKeyFilePath, "privateKeyFilePath may not be null");
+
         File privateKeyFile = new File(privateKeyFilePath);
         if (!privateKeyFile.exists()) {
-            throw new FileNotFoundException("privateKeyFile " + privateKeyFile + " does not exist");
+            throw new IllegalArgumentException("privateKeyFile " + privateKeyFile + " does not exist");
         }
 
-        Reader reader = new InputStreamReader(new FileInputStream(clientConfiguration.getPrivateKey()), "UTF-8");
+        Reader reader = new InputStreamReader(new FileInputStream(privateKeyFilePath), "UTF-8");
 
         PrivateKey privateKey = getPrivateKeyFromPEM(reader);
         String algorithm = privateKey.getAlgorithm();
@@ -166,7 +166,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * @return {@link PrivateKey} object
      * @throws {@link IOException}
      */
-    private PrivateKey getPrivateKeyFromPEM(Reader reader) throws IOException {
+    PrivateKey getPrivateKeyFromPEM(Reader reader) throws IOException {
         PrivateKey privateKey;
 
         try (PEMParser pemParser = new PEMParser(reader)) {

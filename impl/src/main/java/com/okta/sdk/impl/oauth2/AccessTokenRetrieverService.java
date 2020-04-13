@@ -27,7 +27,7 @@ public interface AccessTokenRetrieverService {
      * @return {@link OAuth2AccessToken}
      * @throws IOException
      * @throws InvalidKeyException
-     * @throws HttpException
+     * @throws OAuth2TokenRetrieverException
      */
-    OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, HttpException;
+    OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, OAuth2TokenRetrieverException;
 }

@@ -82,8 +82,8 @@ public class OAuth2AccessToken {
     }
 
     // for testing purposes
-    public void forceExpiryInNextSecs(Integer expireInNextSecs) {
-        this.setExpiresIn(expireInNextSecs);
+    public void expireNow() {
+        this.setExpiresIn(Integer.MIN_VALUE);
     }
 
     @Override

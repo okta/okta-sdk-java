@@ -201,21 +201,20 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     @Override
     public String toString() {
-        return "ClientConfiguration{" +
-                ", cacheManagerTtl=" + cacheManagerTtl +
-                ", cacheManagerTti=" + cacheManagerTti +
-                ", cacheManagerCaches=" + cacheManagerCaches +
-                ", baseUrl='" + getBaseUrl() + '\'' +
-                ", authorizationMode='" + getAuthorizationMode() +
-                ", clientId='" + getClientId() +
-                ", scopes='" + getScopes() +
-                ", privateKey=xxxxx" +
-                ", connectionTimeout=" + getConnectionTimeout() +
-                ", requestAuthenticator=" + getRequestAuthenticator() +
-                ", retryMaxElapsed=" + getRetryMaxElapsed() +
-                ", retryMaxAttempts=" + getRetryMaxAttempts() +
-                ", proxy=" + getProxy() +
-                '}';
+        return "ClientConfiguration {cacheManagerTtl=" + cacheManagerTtl +
+            ", cacheManagerTti=" + cacheManagerTti +
+            ", cacheManagerCaches=" + cacheManagerCaches +
+            ", baseUrl='" + getBaseUrl() + '\'' +
+            ", authorizationMode=" + getAuthorizationMode() +
+            ", clientId=" + getClientId() +
+            ", scopes=" + getScopes() +
+            ", privateKey=" + ((getPrivateKey() != null) ? "xxxxx" : null) +
+            ", connectionTimeout=" + getConnectionTimeout() +
+            ", requestAuthenticator=" + getRequestAuthenticator() +
+            ", retryMaxElapsed=" + getRetryMaxElapsed() +
+            ", retryMaxAttempts=" + getRetryMaxAttempts() +
+            ", proxy=" + getProxy() +
+            " }";
     }
 
 }
