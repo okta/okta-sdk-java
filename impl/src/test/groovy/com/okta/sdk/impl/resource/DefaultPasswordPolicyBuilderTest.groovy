@@ -104,7 +104,7 @@ class DefaultPasswordPolicyBuilderTest {
             .buildAndCreate(client)
 
 
-        verify(client).createPolicy(eq(passwordPolicy))
+        verify(client).createPolicy(eq(passwordPolicy), eq(true))
         verify(passwordPolicy).setName("SDK created policy")
         verify(passwordPolicy).setDescription("Dummy policy for sdk test")
         verify(passwordPolicy).setPriority(1)
