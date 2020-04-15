@@ -41,7 +41,7 @@ class DefaultPolicyBuilderTest {
             .setStatus(Policy.StatusEnum.ACTIVE)
             .buildAndCreate(client)
 
-        verify(client).createPolicy(eq(policy))
+        verify(client).createPolicy(eq(policy), eq(true))
         verify(policy).setName("Test Policy")
         verify(policy).setDescription("dummy policy for test")
     }

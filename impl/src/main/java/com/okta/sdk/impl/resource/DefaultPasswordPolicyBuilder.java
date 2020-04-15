@@ -28,6 +28,7 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
 
     private PasswordPolicyAuthenticationProviderCondition.ProviderEnum provider;
     private List<String> groupIds = new ArrayList<>();
+    private List<String> userIds = new ArrayList<>();
     private Boolean excludePasswordDictionary;
     private Boolean excludeUserNameInPassword;
     private Integer minPasswordLength;
@@ -67,6 +68,18 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
     @Override
     public PasswordPolicyBuilder addGroup(String groupId) {
         this.groupIds.add(groupId);
+        return this;
+    }
+
+    @Override
+    public PasswordPolicyBuilder setUsers(List<String> userIds) {
+        this.userIds = userIds;
+        return this;
+    }
+
+    @Override
+    public PasswordPolicyBuilder addUser(String userId) {
+        this.userIds.add(userId);
         return this;
     }
 
@@ -186,7 +199,7 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
 
     @Override
     public PasswordPolicy buildAndCreate(Client client) {
-        return (PasswordPolicy) client.createPolicy(build(client));
+        return (PasswordPolicy) client.createPolicy(build(client), isActive);
     }
 
     private PasswordPolicy build(Client client) {
@@ -219,6 +232,10 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
         if (!Collections.isEmpty(groupIds))
             passwordPolicyConditions.setPeople(client.instantiate(PolicyPeopleCondition.class)
                                     .setGroups(client.instantiate(GroupCondition.class).setInclude(groupIds)));
+
+        if (!Collections.isEmpty(userIds))
+            passwordPolicyConditions.setPeople(client.instantiate(PolicyPeopleCondition.class)
+                .setUsers(client.instantiate(UserCondition.class).setInclude(userIds)));
 
         // Password Settings instantiation
         PasswordPolicyPasswordSettings passwordPolicyPasswordSettings = client.instantiate(PasswordPolicyPasswordSettings.class);

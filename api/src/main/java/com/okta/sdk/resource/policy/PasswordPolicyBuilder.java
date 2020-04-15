@@ -37,6 +37,14 @@ public interface PasswordPolicyBuilder extends PolicyBuilder<PasswordPolicyBuild
 
     PasswordPolicyBuilder addGroup(String groupId);
 
+    default PasswordPolicyBuilder setUsers(String... userIds) {
+        return setGroups(Arrays.stream(userIds).collect(Collectors.toList()));
+    }
+
+    PasswordPolicyBuilder setUsers(List<String> userIds);
+
+    PasswordPolicyBuilder addUser(String userId);
+
     PasswordPolicyBuilder setExcludePasswordDictionary(Boolean excludePasswordDictionary);
 
     PasswordPolicyBuilder setExcludeUserNameInPassword(Boolean excludeUserNameInPassword);

@@ -31,6 +31,7 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     protected PolicyType policyType;
     protected Integer priority;
     protected Policy.StatusEnum status;
+    protected Boolean isActive = true;
 
     DefaultPolicyBuilder(){
         this.status = Policy.StatusEnum.ACTIVE;
@@ -63,6 +64,10 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     @Override
     public T setStatus(Policy.StatusEnum status) {
         this.status = status;
+        if (Policy.StatusEnum.ACTIVE.equals(status))
+            this.isActive = true;
+        else
+            this.isActive = false;
         return self();
     }
 
@@ -73,7 +78,7 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
 
     @Override
     public Policy buildAndCreate(Client client) {
-        return client.createPolicy(build(client));
+        return client.createPolicy(build(client), isActive);
     }
 
     private Policy build(Client client) {

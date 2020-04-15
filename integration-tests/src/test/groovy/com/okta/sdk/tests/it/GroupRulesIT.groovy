@@ -16,17 +16,9 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.rule.GroupRule
-import com.okta.sdk.resource.group.rule.GroupRuleAction
-import com.okta.sdk.resource.group.rule.GroupRuleConditions
-import com.okta.sdk.resource.group.rule.GroupRuleExpression
-import com.okta.sdk.resource.group.rule.GroupRuleGroupAssignment
-import com.okta.sdk.resource.group.rule.GroupRuleGroupCondition
-import com.okta.sdk.resource.group.rule.GroupRulePeopleCondition
-import com.okta.sdk.resource.group.rule.GroupRuleStatus
-import com.okta.sdk.resource.group.rule.GroupRuleUserCondition
+import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.group.rule.*
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
@@ -36,7 +28,8 @@ import org.testng.annotations.Test
 import static com.okta.sdk.tests.it.util.Util.assertPresent
 import static com.okta.sdk.tests.it.util.Util.validateUser
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.*
+import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.Matchers.matchesPattern
 
 /**
  * Tests for /api/v1/groups/rules
@@ -124,22 +117,14 @@ class GroupRulesIT implements CrudTestSupport {
         registerForCleanup(group)
 
         // 2. Create a group rule and verify rule executes
-        GroupRule rule = client.instantiate(GroupRule)
-                .setType('group_rule')
-                .setName(groupRuleName)
-                .setConditions(client.instantiate(GroupRuleConditions)
-                        .setPeople(client.instantiate(GroupRulePeopleCondition)
-                            .setUsers(client.instantiate(GroupRuleUserCondition)
-                                    .setExclude([]))
-                            .setGroups(client.instantiate(GroupRuleGroupCondition)
-                                    .setExclude([])))
-                        .setExpression(client.instantiate(GroupRuleExpression)
-                                .setValue("user.lastName==\"${user.getProfile().lastName}\"".toString())
-                                .setType('urn:okta:expression:1.0')))
-                .setActions(client.instantiate(GroupRuleAction)
-                        .setAssignUserToGroups(client.instantiate(GroupRuleGroupAssignment)
-                                .setGroupIds(Collections.singletonList(group.getId()))))
-        rule = client.createRule(rule)
+        GroupRule rule = GroupRuleBuilder.instance()
+            .setType("group_rule")
+            .setName(groupRuleName)
+            .setGroupRuleExpressionType("urn:okta:expression:1.0")
+            .setGroupRuleExpressionValue("user.lastName==\"${user.getProfile().lastName}\"".toString())
+            .setAssignUserToGroups(Collections.singletonList(group.getId()))
+            .buildAndCreate(client)
+
         registerForCleanup(rule)
         rule.activate()
 
