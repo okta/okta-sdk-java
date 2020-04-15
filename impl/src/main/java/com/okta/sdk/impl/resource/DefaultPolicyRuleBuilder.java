@@ -48,7 +48,7 @@ public class DefaultPolicyRuleBuilder<T extends PolicyRuleBuilder> implements Po
     @Override
     public T setStatus(PolicyRule.StatusEnum status) {
         this.status = status;
-        if ((PolicyRule.StatusEnum.ACTIVE).equals(status))
+        if (PolicyRule.StatusEnum.ACTIVE.equals(status))
             isActive = true;
         else
             isActive = false;
