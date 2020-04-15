@@ -15,9 +15,12 @@
  */
 package com.okta.sdk.impl.oauth2;
 
-public class OAuth2TokenRetrieverException extends RuntimeException {
+import com.okta.commons.http.HttpException;
+import com.okta.sdk.impl.error.DefaultError;
 
-    public OAuth2TokenRetrieverException(String s, Throwable cause) {
-        super(s, cause);
+public class OAuth2HttpException extends HttpException {
+
+    public OAuth2HttpException(DefaultError e, Throwable cause, boolean retryable) {
+        super(e.getMessage(), cause, retryable);
     }
 }

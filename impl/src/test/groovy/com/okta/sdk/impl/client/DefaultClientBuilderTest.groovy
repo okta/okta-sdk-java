@@ -56,9 +56,11 @@ class DefaultClientBuilderTest {
     void clearOktaEnvAndSysProps() {
         System.clearProperty("okta.client.token")
         System.clearProperty("okta.client.orgUrl")
+        System.clearProperty("okta.client.authorizationMode")
 
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_TOKEN", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_ORGURL", null)
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_AUTHORIZATIONMODE", null)
     }
 
     @Test
@@ -120,6 +122,7 @@ class DefaultClientBuilderTest {
 
     @Test
     void testConfigureBaseUrlResolver(){
+        clearOktaEnvAndSysProps()
         BaseUrlResolver baseUrlResolver = new BaseUrlResolver() {
             @Override
             String getBaseUrl() {
@@ -235,7 +238,7 @@ class DefaultClientBuilderTest {
     @Test
     void testOAuth2InvalidPrivateKeyPemFilePath() {
         clearOktaEnvAndSysProps()
-        Util.expect(IllegalStateException) {
+        Util.expect(IllegalArgumentException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
                 .setAuthorizationMode(AuthorizationMode.PrivateKey)
@@ -265,7 +268,7 @@ class DefaultClientBuilderTest {
     }
 
     @Test
-    void testOAuth2ValidInputParams() {
+    void testOAuth2SemanticallyValidInputParams() {
         clearOktaEnvAndSysProps()
 
         // generate private key and write it to pem file
@@ -283,6 +286,7 @@ class DefaultClientBuilderTest {
         scopes.add("okta.apps.read")
         scopes.add("okta.apps.manage")
 
+        // expected because the URL is not an actual endpoint
         Util.expect(IllegalStateException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")

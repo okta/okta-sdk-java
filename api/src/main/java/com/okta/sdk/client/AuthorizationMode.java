@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Enumeration that defines the mapping between available Authentication schemes & Authorization modes.
+ * Enumeration that defines the mapping between available Authentication schemes and Authorization modes.
  */
 public enum AuthorizationMode {
 

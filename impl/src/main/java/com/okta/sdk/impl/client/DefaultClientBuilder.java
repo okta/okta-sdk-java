@@ -227,8 +227,6 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
-            // TODO: below will work well with parsing .yaml properties (list of strings);
-            // but for UNIX env variable, we need to know the formatting/how to parse it here.
             List<String> scopes = Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split(","));
             clientConfig.setScopes(scopes);
         }
@@ -371,6 +369,8 @@ public class DefaultClientBuilder implements ClientBuilder {
         Assert.isTrue((clientConfiguration.getScopes() != null) && (!clientConfiguration.getScopes().isEmpty()),
             "At least one scope is required");
         Assert.notNull(clientConfiguration.getPrivateKey(), "privateKey cannot be null");
+        File privateKeyPemFile = new File(clientConfiguration.getPrivateKey());
+        Assert.isTrue(privateKeyPemFile.exists(), "privateKey file does not exist");
     }
 
     @Override

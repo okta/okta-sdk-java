@@ -30,8 +30,6 @@ import java.security.InvalidKeyException;
 public class OAuth2RequestAuthenticator implements RequestAuthenticator {
     private static final Logger log = LoggerFactory.getLogger(OAuth2RequestAuthenticator.class);
 
-    public static final String AUTHENTICATION_SCHEME = "OAUTH2";
-
     private final ClientCredentials<OAuth2AccessToken> clientCredentials;
 
     public OAuth2RequestAuthenticator(ClientCredentials<OAuth2AccessToken> clientCredentials) {
@@ -39,7 +37,7 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
     }
 
     @Override
-    synchronized public void authenticate(Request request) throws RequestAuthenticationException {
+    public void authenticate(Request request) throws RequestAuthenticationException {
 
         if (clientCredentials != null &&
             clientCredentials.getCredentials() != null) {

@@ -15,8 +15,14 @@
  */
 package com.okta.sdk.impl.oauth2
 
+import com.okta.commons.http.config.BaseUrlResolver
+import com.okta.sdk.ds.RequestBuilder
 import com.okta.sdk.impl.Util
+import com.okta.sdk.impl.api.OAuth2ClientCredentialsResolver
+import com.okta.sdk.impl.client.BaseClient
 import com.okta.sdk.impl.config.ClientConfiguration
+import com.okta.sdk.impl.error.DefaultError
+import com.okta.sdk.resource.ResourceException
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import org.testng.annotations.Test
@@ -28,8 +34,9 @@ import java.security.PrivateKey
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
+import static org.mockito.ArgumentMatchers.any
+import static org.mockito.ArgumentMatchers.anyString
+import static org.mockito.Mockito.*
 import static org.testng.Assert.assertEquals
 
 /**
@@ -84,9 +91,19 @@ class AccessTokenRetrieverServiceImplTest {
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
 
-        when(clientConfig.getBaseUrl()).thenReturn("https://okta.example.com")
+        String baseUrl = "https://sample.okta.com"
+        BaseUrlResolver baseUrlResolver = new BaseUrlResolver() {
+            @Override
+            String getBaseUrl() {
+                return baseUrl
+            }
+        }
+
+        when(clientConfig.getBaseUrl()).thenReturn(baseUrl)
         when(clientConfig.getClientId()).thenReturn("client12345")
         when(clientConfig.getPrivateKey()).thenReturn(privateKeyPemFile.path)
+        when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
+        when(clientConfig.getClientCredentialsResolver()).thenReturn(new OAuth2ClientCredentialsResolver())
 
         String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
 
@@ -104,12 +121,94 @@ class AccessTokenRetrieverServiceImplTest {
         assertEquals(claims.get("aud"), clientConfig.getBaseUrl() + "/oauth2/v1/token")
         assertThat(claims.get("iat"), notNullValue())
         assertThat(claims.get("exp"), notNullValue())
-        assertEquals(Integer.valueOf(claims.get("exp")) - Integer.valueOf(claims.get("iat")), 3600)
+        assertEquals(Integer.valueOf(claims.get("exp")) - Integer.valueOf(claims.get("iat")), 3600,
+            "token expiry time is not 3600s")
         assertThat(claims.get("iss"), notNullValue())
         assertEquals(claims.get("iss"), clientConfig.getClientId(), "iss must be equal to client id")
         assertThat(claims.get("sub"), notNullValue())
         assertEquals(claims.get("sub"), clientConfig.getClientId(), "sub must be equal to client id")
         assertThat(claims.get("jti"), notNullValue())
+    }
+
+    @Test(expectedExceptions = OAuth2TokenRetrieverException.class)
+    void testGetOAuth2TokenRetrieverRuntimeException() {
+        def tokenClient = mock(BaseClient)
+        def requestBuilder = mock(RequestBuilder)
+        def clientConfig = mock(ClientConfiguration)
+
+        PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
+        File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
+
+        String baseUrl = "https://sample.okta.com"
+        BaseUrlResolver baseUrlResolver = new BaseUrlResolver() {
+            @Override
+            String getBaseUrl() {
+                return baseUrl
+            }
+        }
+
+        when(clientConfig.getBaseUrl()).thenReturn(baseUrl)
+        when(clientConfig.getClientId()).thenReturn("client12345")
+        when(clientConfig.getPrivateKey()).thenReturn(privateKeyPemFile.path)
+        when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
+        when(clientConfig.getClientCredentialsResolver()).thenReturn(new OAuth2ClientCredentialsResolver())
+
+        when(tokenClient.http()).thenReturn(requestBuilder)
+
+        when(requestBuilder.addHeaderParameter(anyString(), anyString())).thenReturn(requestBuilder)
+        when(requestBuilder.addQueryParameter(anyString(), anyString())).thenReturn(requestBuilder)
+
+        when(requestBuilder.post(anyString(), any())).thenThrow(new RuntimeException("Unexpected runtime error"))
+
+        def accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig, tokenClient)
+        accessTokenRetrieverService.getOAuth2AccessToken()
+
+        verify(tokenClient, times(1)).http()
+        verify(requestBuilder, times(1)).post()
+    }
+
+    @Test(expectedExceptions = OAuth2HttpException.class)
+    void testGetOAuth2ResourceException() {
+        def tokenClient = mock(BaseClient)
+        def requestBuilder = mock(RequestBuilder)
+        def clientConfig = mock(ClientConfiguration)
+
+        PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
+        File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
+
+        String baseUrl = "https://sample.okta.com"
+        BaseUrlResolver baseUrlResolver = new BaseUrlResolver() {
+            @Override
+            String getBaseUrl() {
+                return baseUrl
+            }
+        }
+
+        when(clientConfig.getBaseUrl()).thenReturn(baseUrl)
+        when(clientConfig.getClientId()).thenReturn("client12345")
+        when(clientConfig.getPrivateKey()).thenReturn(privateKeyPemFile.path)
+        when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
+        when(clientConfig.getClientCredentialsResolver()).thenReturn(new OAuth2ClientCredentialsResolver())
+
+        when(tokenClient.http()).thenReturn(requestBuilder)
+
+        when(requestBuilder.addHeaderParameter(anyString(), anyString())).thenReturn(requestBuilder)
+        when(requestBuilder.addQueryParameter(anyString(), anyString())).thenReturn(requestBuilder)
+
+        DefaultError defaultError = new DefaultError()
+        defaultError.setStatus(401)
+        defaultError.setProperty(OAuth2AccessToken.ERROR_KEY, "error key")
+        defaultError.setProperty(OAuth2AccessToken.ERROR_DESCRIPTION, "error desc")
+
+        ResourceException resourceException = new ResourceException(defaultError)
+
+        when(requestBuilder.post(anyString(), any())).thenThrow(resourceException)
+
+        def accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig, tokenClient)
+        accessTokenRetrieverService.getOAuth2AccessToken()
+
+        verify(tokenClient, times(1)).http()
+        verify(requestBuilder, times(1)).post()
     }
 
     // helper methods
@@ -133,8 +232,17 @@ class AccessTokenRetrieverServiceImplTest {
 
     AccessTokenRetrieverServiceImpl getAccessTokenRetrieverServiceInstance(ClientConfiguration clientConfiguration) {
         if (clientConfiguration == null) {
-            return new AccessTokenRetrieverServiceImpl(new ClientConfiguration())
+            ClientConfiguration cc = new ClientConfiguration()
+            cc.setBaseUrlResolver(new BaseUrlResolver() {
+                @Override
+                String getBaseUrl() {
+                    return "https://sample.okta.com"
+                }
+            })
+            cc.setClientCredentialsResolver(new OAuth2ClientCredentialsResolver())
+            return new AccessTokenRetrieverServiceImpl(cc)
         }
+
         return new AccessTokenRetrieverServiceImpl(clientConfiguration)
     }
 

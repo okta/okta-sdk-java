@@ -18,7 +18,8 @@ package com.okta.sdk.impl.oauth2;
 import com.okta.commons.http.MediaType;
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.cache.Caches;
-import com.okta.sdk.error.authc.InvalidAuthenticationException;
+import com.okta.sdk.client.AuthenticationScheme;
+import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.client.BaseClient;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.error.DefaultError;
@@ -55,11 +56,24 @@ import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.TOKEN_TYPE_KEY;
 public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverService {
     private static final Logger log = LoggerFactory.getLogger(AccessTokenRetrieverServiceImpl.class);
 
-    private ClientConfiguration clientConfiguration;
+    private static final String TOKEN_URI  = "/oauth2/v1/token";
 
-    public AccessTokenRetrieverServiceImpl(ClientConfiguration clientConfiguration) {
-        Assert.notNull(clientConfiguration, "clientConfiguration must not be null.");
-        this.clientConfiguration = clientConfiguration;
+    private ClientConfiguration tokenClientConfiguration;
+    private BaseClient tokenClient;
+
+    public AccessTokenRetrieverServiceImpl(ClientConfiguration apiClientConfiguration) {
+        Assert.notNull(apiClientConfiguration, "apiClientConfiguration must not be null.");
+        ClientConfiguration tokenClientConfig = constructTokenClientConfig(apiClientConfiguration);
+        this.tokenClient = new BaseClient(tokenClientConfig, Caches.newDisabledCacheManager()) {};
+        this.tokenClientConfiguration = tokenClientConfig;
+    }
+
+    public AccessTokenRetrieverServiceImpl(ClientConfiguration apiClientConfiguration, BaseClient tokenClient) {
+        Assert.notNull(apiClientConfiguration, "apiClientConfiguration must not be null.");
+        Assert.notNull(tokenClient, "tokenClient must not be null.");
+        this.tokenClient = tokenClient;
+        ClientConfiguration tokenClientConfig = constructTokenClientConfig(apiClientConfiguration);
+        this.tokenClientConfiguration = tokenClientConfig;
     }
 
     /**
@@ -67,13 +81,11 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      */
     @Override
     public OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, OAuth2TokenRetrieverException {
-        log.info("Getting OAuth2 access token for client id {} from {}",
-            clientConfiguration.getClientId(), clientConfiguration.getBaseUrl());
+        log.info("Attempting to get OAuth2 access token for client id {} from {}",
+            tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
 
         String signedJwt = createSignedJWT();
-        String scope = String.join(" ", clientConfiguration.getScopes());
-
-        BaseClient tokenClient = new BaseClient(clientConfiguration, Caches.newDisabledCacheManager()) {};
+        String scope = String.join(" ", tokenClientConfiguration.getScopes());
 
         try {
             ExtensibleResource accessTokenResponse = tokenClient.http()
@@ -83,7 +95,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
                 .addQueryParameter("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
                 .addQueryParameter("client_assertion", signedJwt)
                 .addQueryParameter("scope", scope)
-                .post(clientConfiguration.getBaseUrl() + "/oauth2/v1/token", ExtensibleResource.class);
+                .post(tokenClientConfiguration.getBaseUrl() + TOKEN_URI, ExtensibleResource.class);
 
             OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken();
             oAuth2AccessToken.setTokenType(accessTokenResponse.getString(TOKEN_TYPE_KEY));
@@ -91,34 +103,47 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             oAuth2AccessToken.setAccessToken(accessTokenResponse.getString(ACCESS_TOKEN_KEY));
             oAuth2AccessToken.setScope(accessTokenResponse.getString(SCOPE_KEY));
 
-            return oAuth2AccessToken;
+            log.info("Got OAuth2 access token for client id {} from {}",
+                tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
 
-        } catch (ResourceException e) {
-            //TODO: clean up the ugly casting and refactor code around it.
-            DefaultError error = (DefaultError) e.getError();
-            String errorMessage = error.getString(ERROR_KEY);
-            String errorDescription = error.getString(ERROR_DESCRIPTION);
-            error.setMessage(errorMessage + " - " + errorDescription);
-            throw new InvalidAuthenticationException(error);
+            return oAuth2AccessToken;
         } catch (Exception e) {
-            throw new OAuth2TokenRetrieverException("Unexpected error while trying to retrieve OAuth2 access token", e);
+            log.error("Exception occurred while trying to get OAuth2 access token for client id {}",
+                tokenClientConfiguration.getClientId(), e);
+
+            if (e instanceof ResourceException) {
+                ResourceException resourceException = (ResourceException) e;
+                log.error("Exception occurred while trying to get OAuth2 access token for client id {}",
+                    tokenClientConfiguration.getClientId(), resourceException);
+
+                //TODO: clean up the ugly casting and refactor code around it.
+                DefaultError defaultError = (DefaultError) resourceException.getError();
+                String errorMessage = defaultError.getString(ERROR_KEY);
+                String errorDescription = defaultError.getString(ERROR_DESCRIPTION);
+                defaultError.setMessage(errorMessage + " - " + errorDescription);
+                boolean retryable = (resourceException.getStatus() == 401);
+                throw new OAuth2HttpException(defaultError, resourceException, retryable);
+            } else {
+                throw new OAuth2TokenRetrieverException("Exception while trying to get " +
+                    "OAuth2 access token for client id " + tokenClientConfiguration.getClientId(), e);
+            }
         }
     }
 
     /**
-     * Create signed JWT string with the supplied {@link ClientConfiguration} details.
+     * Create signed JWT string with the supplied token client configuration details.
      *
      * @return signed JWT string
      * @throws InvalidKeyException
      * @throws IOException
      */
     String createSignedJWT() throws InvalidKeyException, IOException {
-        String clientId = clientConfiguration.getClientId();
-        PrivateKey privateKey = parsePrivateKey(clientConfiguration.getPrivateKey());
+        String clientId = tokenClientConfiguration.getClientId();
+        PrivateKey privateKey = parsePrivateKey(tokenClientConfiguration.getPrivateKey());
         Instant now = Instant.now();
 
         String jwt = Jwts.builder()
-            .setAudience(clientConfiguration.getBaseUrl() + "/oauth2/v1/token")
+            .setAudience(tokenClientConfiguration.getBaseUrl() + "/oauth2/v1/token")
             .setIssuedAt(Date.from(now))
             .setExpiration(Date.from(now.plus(1L, ChronoUnit.HOURS)))
             .setIssuer(clientId)
@@ -134,7 +159,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * Parse private key from the supplied path.
      *
      * @param privateKeyFilePath
-     * @return PrivateKey
+     * @return {@link PrivateKey}
      * @throws IOException
      * @throws InvalidKeyException
      */
@@ -163,8 +188,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * Get Private key from input PEM file.
      *
      * @param reader
-     * @return {@link PrivateKey} object
-     * @throws {@link IOException}
+     * @return {@link PrivateKey}
+     * @throws IOException
      */
     PrivateKey getPrivateKeyFromPEM(Reader reader) throws IOException {
         PrivateKey privateKey;
@@ -187,6 +212,51 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         }
 
         return privateKey;
+    }
+
+    /**
+     * Create token client config from the supplied API client config.
+     *
+     * Token client needs to retry http 401 errors only once which is not the case with the API client.
+     * We therefore effect this token client specific config by setting 'retryMaxElapsed'
+     * & 'retryMaxAttempts' fields.
+     *
+     * @param apiClientConfiguration
+     * @return ClientConfiguration to be used by token retrieval client.
+     */
+    ClientConfiguration constructTokenClientConfig(ClientConfiguration apiClientConfiguration) {
+        ClientConfiguration tokenClientConfiguration = new ClientConfiguration();
+
+        if (apiClientConfiguration.getClientCredentialsResolver() != null)
+            tokenClientConfiguration.setClientCredentialsResolver(apiClientConfiguration.getClientCredentialsResolver());
+
+        if (apiClientConfiguration.isCacheManagerEnabled())
+            tokenClientConfiguration.setCacheManagerEnabled(apiClientConfiguration.isCacheManagerEnabled());
+
+        tokenClientConfiguration.setCacheManagerTti(apiClientConfiguration.getCacheManagerTti());
+        tokenClientConfiguration.setCacheManagerTtl(apiClientConfiguration.getCacheManagerTtl());
+
+        if (apiClientConfiguration.getCacheManagerCaches() != null)
+            tokenClientConfiguration.setCacheManagerCaches(apiClientConfiguration.getCacheManagerCaches());
+
+        if (apiClientConfiguration.getRequestAuthenticatorFactory() != null)
+            tokenClientConfiguration.setRequestAuthenticatorFactory(apiClientConfiguration.getRequestAuthenticatorFactory());
+
+        if (apiClientConfiguration.getBaseUrlResolver() != null)
+            tokenClientConfiguration.setBaseUrlResolver(apiClientConfiguration.getBaseUrlResolver());
+
+        tokenClientConfiguration.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
+        tokenClientConfiguration.setAuthorizationMode(AuthorizationMode.PrivateKey);
+        tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
+        tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());
+        tokenClientConfiguration.setPrivateKey(apiClientConfiguration.getPrivateKey());
+
+        // setting this to '0' will disable this check and only 'retryMaxAttempts' will be effective
+        tokenClientConfiguration.setRetryMaxElapsed(0);
+        // retry only once for token requests (http 401 errors)
+        tokenClientConfiguration.setRetryMaxAttempts(1);
+
+        return tokenClientConfiguration;
     }
 
 }
