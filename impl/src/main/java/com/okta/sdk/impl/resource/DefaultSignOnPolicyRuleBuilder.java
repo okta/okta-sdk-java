@@ -143,6 +143,19 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
 
         if (Strings.hasText(name)) policyRule.setName(name);
 
+        if (Strings.hasText(id)) policyRule.setId(id);
+
+        if (Objects.nonNull(priority)) policyRule.setPriority(priority);
+
+        if (Objects.nonNull(status)) policyRule.setStatus(status);
+
+        if (Objects.nonNull(type))
+            if(type.equals(PolicyRule.TypeEnum.SIGN_ON))
+                policyRule.setType(type);
+            else
+                throw new IllegalArgumentException("Type should be SIGN_ON while using SignOnPolicyRuleBuilder.");
+
+
         // Actions
         policyRule.setActions(client.instantiate(OktaSignOnPolicyRuleActions.class));
         OktaSignOnPolicyRuleActions oktaSignOnPolicyRuleActions = policyRule.getActions();

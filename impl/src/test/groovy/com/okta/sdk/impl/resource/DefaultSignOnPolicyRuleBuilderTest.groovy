@@ -19,6 +19,7 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.resource.policy.*
 import org.testng.annotations.Test
 
+import static com.okta.sdk.impl.Util.expect
 import static org.mockito.ArgumentMatchers.eq
 import static org.mockito.Mockito.*
 
@@ -56,6 +57,7 @@ class DefaultSignOnPolicyRuleBuilderTest {
             .setId("id here")
             .setName("name here")
             .setStatus(PolicyRule.StatusEnum.ACTIVE)
+            .setType(PolicyRule.TypeEnum.SIGN_ON)
             .setPriority(1)
             .addGroup("sdjfsdyfjsfsj")
             .setNetworkConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
@@ -72,6 +74,7 @@ class DefaultSignOnPolicyRuleBuilderTest {
 
         verify(policy).createRule(eq(signOnPolicyRule), eq(true))
         verify(signOnPolicyRule).setName("name here")
+        verify(signOnPolicyRule).setType(PolicyRule.TypeEnum.SIGN_ON)
         verify(oktaSignOnPolicyRuleSignonActions).setFactorLifetime(1)
         verify(oktaSignOnPolicyRuleSignonActions).setRememberDeviceByDefault(true)
         verify(oktaSignOnPolicyRuleSignonActions).setRequireFactor(true)
@@ -80,5 +83,22 @@ class DefaultSignOnPolicyRuleBuilderTest {
         verify(oktaSignOnPolicyRuleSignonSessionActions).setMaxSessionLifetimeMinutes(10)
         verify(policyRuleAuthContextCondition).setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
         verify(oktaSignOnPolicyRuleSignonActions).setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
+    }
+
+    @Test
+    void createWithPasswordType(){
+        def client = mock(Client)
+        def policy = mock(Policy)
+        def signOnPolicyRule = mock(OktaSignOnPolicyRule)
+
+        when(client.instantiate(OktaSignOnPolicyRule.class)).thenReturn(signOnPolicyRule)
+        expect IllegalArgumentException, {
+            new DefaultSignOnPolicyRuleBuilder()
+                .setName("test name")
+                .setStatus(PolicyRule.StatusEnum.ACTIVE)
+                .setType(PolicyRule.TypeEnum.PASSWORD)
+            .buildAndCreate(client, policy);
+        }
+
     }
 }

@@ -107,10 +107,16 @@ public class DefaultPasswordPolicyRuleBuilder extends DefaultPolicyRuleBuilder<P
 
         if (Strings.hasText(name)) policyRule.setName(name);
 
+        if (Objects.nonNull(type))
+            if(type.equals(PolicyRule.TypeEnum.PASSWORD))
+                policyRule.setType(type);
+            else
+                throw new IllegalArgumentException("Type should be specified as PASSWORD while using PasswordPolicyRuleBuilder.");
+
+
         // Actions
         policyRule.setActions(client.instantiate(PasswordPolicyRuleActions.class));
         PasswordPolicyRuleActions passwordPolicyRuleActions = policyRule.getActions();
-        PasswordPolicyRuleAction passwordPolicyRuleAction = client.instantiate(PasswordPolicyRuleAction.class);
 
         if (Objects.nonNull(passwordChangeAccess))
             passwordPolicyRuleActions.setPasswordChange(client.instantiate(PasswordPolicyRuleAction.class).setAccess(passwordChangeAccess));

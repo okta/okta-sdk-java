@@ -19,6 +19,7 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.resource.policy.*
 import org.testng.annotations.Test
 
+import static com.okta.sdk.impl.Util.expect
 import static org.mockito.ArgumentMatchers.eq
 import static org.mockito.Mockito.*
 
@@ -53,6 +54,7 @@ class DefaultPasswordPolicyRuleBuilderTest {
             .setId("id here")
             .setName("name here")
             .setStatus(PolicyRule.StatusEnum.ACTIVE)
+            .setType(PolicyRule.TypeEnum.PASSWORD)
             .setPriority(1)
             .addGroup("sdjfsdyfjsfsj")
             .setNetworkConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
@@ -63,7 +65,39 @@ class DefaultPasswordPolicyRuleBuilderTest {
 
         verify(policy).createRule(eq(passwordPolicyRule), eq(true))
         verify(passwordPolicyRule).setName("name here")
+        verify(passwordPolicyRule).setType(PolicyRule.TypeEnum.PASSWORD)
         verify(passwordPolicyRuleActions).setSelfServicePasswordReset(passwordPolicyRuleAction.setAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW))
         verify(passwordPolicyRuleConditions).setNetwork(policyNetworkCondition.setConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE))
+    }
+
+    @Test
+    void createWithoutType(){
+        def client = mock(Client)
+        def policy = mock(Policy)
+        def passwordPolicyRule = mock(PasswordPolicyRule)
+
+        when(client.instantiate(PasswordPolicyRule.class)).thenReturn(passwordPolicyRule)
+        expect IllegalArgumentException, {
+            new DefaultPasswordPolicyRuleBuilder()
+                .setName("test rule")
+                .setStatus(PolicyRule.StatusEnum.ACTIVE)
+            .buildAndCreate(client, policy)
+        }
+    }
+
+    @Test
+    void createWithSignOnType(){
+        def client = mock(Client)
+        def policy = mock(Policy)
+        def passwordPolicyRule = mock(PasswordPolicyRule)
+
+        when(client.instantiate(PasswordPolicyRule.class)).thenReturn(passwordPolicyRule)
+        expect IllegalArgumentException, {
+            new DefaultPasswordPolicyRuleBuilder()
+                .setName("test rule")
+                .setStatus(PolicyRule.StatusEnum.ACTIVE)
+                .setType(PolicyRule.TypeEnum.SIGN_ON)
+                .buildAndCreate(client, policy)
+        }
     }
 }
