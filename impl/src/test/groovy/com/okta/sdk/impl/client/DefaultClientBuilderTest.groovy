@@ -300,6 +300,30 @@ class DefaultClientBuilderTest {
         file.delete()
     }
 
+    @Test
+    void testOAuth2WithEnvVariables() {
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_ORGURL",
+            "https://okta.example.com")
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_AUTHORIZATIONMODE",
+            AuthorizationMode.PRIVATE_KEY.getLabel()) // "PrivateKey"
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_CLIENTID",
+            "client12345")
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_SCOPES",
+            "okta.users.read okta.users.manage okta.apps.read okta.apps.manage")
+
+        File file = File.createTempFile("privatekey",".pem")
+        file.write("test file")
+
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_PRIVATEKEY", file.path)
+
+        // expected because the URL is not an actual endpoint
+        Util.expect(IllegalStateException) {
+            new DefaultClientBuilder().build()
+        }
+
+        file.delete()
+    }
+
     static ResourceFactory noDefaultYamlNoAppYamlResourceFactory() {
         def resourceFactory = spy(new DefaultResourceFactory())
         doAnswer(new Answer<Resource>() {
