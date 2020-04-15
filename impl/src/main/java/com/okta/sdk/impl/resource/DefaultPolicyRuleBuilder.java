@@ -31,6 +31,8 @@ public class DefaultPolicyRuleBuilder<T extends PolicyRuleBuilder> implements Po
     protected PolicyRule.StatusEnum status;
     protected Boolean isActive = true;
 
+    DefaultPolicyRuleBuilder(){ this.type = PolicyRule.TypeEnum.SIGN_ON; }
+
     @Override
     public T setId(String id) {
         this.id = id;
