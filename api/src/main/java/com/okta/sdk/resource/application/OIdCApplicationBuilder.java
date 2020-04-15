@@ -4,8 +4,6 @@ import com.okta.commons.lang.Classes;
 
 import java.util.List;
 
-;
-
 public interface OIdCApplicationBuilder extends ApplicationBuilder<OIdCApplicationBuilder> {
 
     static OIdCApplicationBuilder instance() {
