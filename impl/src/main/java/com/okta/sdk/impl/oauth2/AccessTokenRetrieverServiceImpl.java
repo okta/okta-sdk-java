@@ -246,7 +246,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             tokenClientConfiguration.setBaseUrlResolver(apiClientConfiguration.getBaseUrlResolver());
 
         tokenClientConfiguration.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
-        tokenClientConfiguration.setAuthorizationMode(AuthorizationMode.PrivateKey);
+        tokenClientConfiguration.setAuthorizationMode(AuthorizationMode.PRIVATE_KEY);
         tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
         tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());
         tokenClientConfiguration.setPrivateKey(apiClientConfiguration.getPrivateKey());

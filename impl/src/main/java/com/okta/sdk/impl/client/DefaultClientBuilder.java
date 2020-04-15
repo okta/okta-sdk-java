@@ -219,7 +219,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME))) {
-            clientConfig.setAuthorizationMode(Enum.valueOf(AuthorizationMode.class, props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME)));
+            clientConfig.setAuthorizationMode(AuthorizationMode.getAuthorizationMode(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME)));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_ID_PROPERTY_NAME))) {
@@ -413,7 +413,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     boolean isOAuth2Flow() {
-        return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PrivateKey;
+        return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
     }
 
     // Used for testing, package private

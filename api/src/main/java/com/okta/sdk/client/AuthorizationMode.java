@@ -23,10 +23,11 @@ import java.util.Map;
  */
 public enum AuthorizationMode {
 
-    SSWS(AuthenticationScheme.SSWS), // SSWS
-    PrivateKey(AuthenticationScheme.OAUTH2), // OAuth2
-    NONE(AuthenticationScheme.NONE); // None
+    SSWS("SSWS", AuthenticationScheme.SSWS), // SSWS
+    PRIVATE_KEY("PrivateKey", AuthenticationScheme.OAUTH2), // OAuth2
+    NONE("NONE", AuthenticationScheme.NONE); // None
 
+    private final String label;
     private final AuthenticationScheme authenticationScheme;
 
     private static final Map<AuthenticationScheme, AuthorizationMode> lookup = new HashMap<>();
@@ -37,8 +38,13 @@ public enum AuthorizationMode {
         }
     }
 
-    AuthorizationMode(AuthenticationScheme authenticationScheme) {
+    AuthorizationMode(String label, AuthenticationScheme authenticationScheme) {
+        this.label = label;
         this.authenticationScheme = authenticationScheme;
+    }
+
+    public String getLabel() {
+        return this.label;
     }
 
     public AuthenticationScheme getAuthenticationScheme() {
@@ -47,5 +53,14 @@ public enum AuthorizationMode {
 
     public static AuthorizationMode get(AuthenticationScheme authenticationScheme) {
         return lookup.get(authenticationScheme);
+    }
+
+    public static AuthorizationMode getAuthorizationMode(String label) {
+        for (AuthorizationMode authorizationMode : values()) {
+            if (authorizationMode.getLabel().equals(label)) {
+                return authorizationMode;
+            }
+        }
+        throw new IllegalArgumentException();
     }
 }

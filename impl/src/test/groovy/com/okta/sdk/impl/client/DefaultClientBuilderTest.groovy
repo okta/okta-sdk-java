@@ -191,7 +191,7 @@ class DefaultClientBuilderTest {
         Util.expect(IllegalArgumentException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .build()
         }
     }
@@ -202,7 +202,7 @@ class DefaultClientBuilderTest {
         Util.expect(IllegalArgumentException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
                 .build()
         }
@@ -214,7 +214,7 @@ class DefaultClientBuilderTest {
         Util.expect(IllegalArgumentException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
                 .setScopes(new ArrayList<String>())
                 .build()
@@ -227,7 +227,7 @@ class DefaultClientBuilderTest {
         Util.expect(IllegalArgumentException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
                 .setScopes(Arrays.asList({"okta.apps.read"}))
                 .setPrivateKey(null)
@@ -241,7 +241,7 @@ class DefaultClientBuilderTest {
         Util.expect(IllegalArgumentException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
                 .setScopes(Arrays.asList({ "okta.apps.read" }))
                 .setPrivateKey("blahblah.pem")
@@ -257,7 +257,7 @@ class DefaultClientBuilderTest {
         Util.expect(IllegalStateException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
                 .setScopes(Arrays.asList({ "okta.apps.read" }))
                 .setPrivateKey(file.path)
@@ -290,7 +290,7 @@ class DefaultClientBuilderTest {
         Util.expect(IllegalStateException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PrivateKey)
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
                 .setScopes(scopes)
                 .setPrivateKey(file.path)
