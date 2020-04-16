@@ -227,7 +227,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
-            List<String> scopes = Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split(","));
+            List<String> scopes = Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split(" "));
             clientConfig.setScopes(scopes);
         }
 
@@ -348,7 +348,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         // OAuth2
         if (isOAuth2Flow()) {
-            this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
+            this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
 
             validateOAuth2ClientConfig(this.clientConfig);
 

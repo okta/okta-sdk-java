@@ -24,7 +24,7 @@ import java.util.Map;
 public enum AuthorizationMode {
 
     SSWS("SSWS", AuthenticationScheme.SSWS), // SSWS
-    PRIVATE_KEY("PrivateKey", AuthenticationScheme.OAUTH2), // OAuth2
+    PRIVATE_KEY("PrivateKey", AuthenticationScheme.OAUTH2_PRIVATE_KEY), // OAuth2
     NONE("NONE", AuthenticationScheme.NONE); // None
 
     private final String label;

@@ -108,9 +108,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
             return oAuth2AccessToken;
         } catch (Exception e) {
-            log.error("Exception occurred while trying to get OAuth2 access token for client id {}",
-                tokenClientConfiguration.getClientId(), e);
-
             if (e instanceof ResourceException) {
                 ResourceException resourceException = (ResourceException) e;
                 log.error("Exception occurred while trying to get OAuth2 access token for client id {}",
@@ -230,9 +227,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         if (apiClientConfiguration.getClientCredentialsResolver() != null)
             tokenClientConfiguration.setClientCredentialsResolver(apiClientConfiguration.getClientCredentialsResolver());
 
-        if (apiClientConfiguration.isCacheManagerEnabled())
-            tokenClientConfiguration.setCacheManagerEnabled(apiClientConfiguration.isCacheManagerEnabled());
-
+        tokenClientConfiguration.setCacheManagerEnabled(false);
         tokenClientConfiguration.setCacheManagerTti(apiClientConfiguration.getCacheManagerTti());
         tokenClientConfiguration.setCacheManagerTtl(apiClientConfiguration.getCacheManagerTtl());
 
@@ -245,7 +240,12 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         if (apiClientConfiguration.getBaseUrlResolver() != null)
             tokenClientConfiguration.setBaseUrlResolver(apiClientConfiguration.getBaseUrlResolver());
 
-        tokenClientConfiguration.setAuthenticationScheme(AuthenticationScheme.OAUTH2);
+        if (apiClientConfiguration.getProxy() != null)
+            tokenClientConfiguration.setProxy(apiClientConfiguration.getProxy());
+
+        if (apiClientConfiguration.getAuthenticationScheme() != null)
+            tokenClientConfiguration.setAuthenticationScheme(apiClientConfiguration.getAuthenticationScheme());
+
         tokenClientConfiguration.setAuthorizationMode(AuthorizationMode.PRIVATE_KEY);
         tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
         tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());

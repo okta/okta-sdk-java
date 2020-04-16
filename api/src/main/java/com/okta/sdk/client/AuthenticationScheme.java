@@ -34,7 +34,7 @@ import com.okta.commons.lang.Assert;
 public enum AuthenticationScheme {
 
     SSWS("com.okta.sdk.impl.http.authc.SswsAuthenticator"), //SSWS Authentication
-    OAUTH2("com.okta.sdk.impl.http.authc.OAuth2RequestAuthenticator"), //OAuth2
+    OAUTH2_PRIVATE_KEY("com.okta.sdk.impl.http.authc.OAuth2RequestAuthenticator"), //OAuth2
     NONE(DisabledAuthenticator.class);
 
     private final String requestAuthenticatorClassName;

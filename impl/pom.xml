@@ -45,11 +45,6 @@
             <artifactId>okta-http-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.okta.commons</groupId>
-            <artifactId>okta-http-okhttp</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
