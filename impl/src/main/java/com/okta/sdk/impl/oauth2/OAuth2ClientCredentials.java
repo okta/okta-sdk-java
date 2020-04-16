@@ -26,6 +26,11 @@ import java.security.InvalidKeyException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * This implementation represents client credentials specific to OAuth2 Authentication scheme.
+ *
+ * @since 0.6.0
+ */
 public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessToken> {
     private static final Logger log = LoggerFactory.getLogger(OAuth2ClientCredentials.class);
 

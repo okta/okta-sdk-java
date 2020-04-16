@@ -18,7 +18,6 @@ package com.okta.sdk.impl.oauth2;
 import com.okta.commons.http.MediaType;
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.cache.Caches;
-import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.client.BaseClient;
 import com.okta.sdk.impl.config.ClientConfiguration;
@@ -53,6 +52,13 @@ import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.EXPIRES_IN_KEY;
 import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.SCOPE_KEY;
 import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.TOKEN_TYPE_KEY;
 
+/**
+ * Implementation of {@link AccessTokenRetrieverService} interface.
+ *
+ * This has logic to fetch OAuth2 access token from the Authorization server endpoint.
+ *
+ * @since 0.6.0
+ */
 public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverService {
     private static final Logger log = LoggerFactory.getLogger(AccessTokenRetrieverServiceImpl.class);
 

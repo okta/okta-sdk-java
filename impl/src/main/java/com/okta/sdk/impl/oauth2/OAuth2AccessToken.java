@@ -18,6 +18,11 @@ package com.okta.sdk.impl.oauth2;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * Represents the OAuth2 access token returned by Authorization server.
+ *
+ * @since 0.6.0
+ */
 public class OAuth2AccessToken {
 
     /* Token body constants */

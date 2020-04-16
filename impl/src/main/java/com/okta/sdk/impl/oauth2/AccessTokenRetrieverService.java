@@ -15,11 +15,14 @@
  */
 package com.okta.sdk.impl.oauth2;
 
-import com.okta.commons.http.HttpException;
-
 import java.io.IOException;
 import java.security.InvalidKeyException;
 
+/**
+ * Abstraction for OAuth2 access token retrieval service function.
+ *
+ * @since 0.6.0
+ */
 public interface AccessTokenRetrieverService {
     /**
      * Obtain OAuth2 access token from Authorization Server endpoint.

@@ -15,6 +15,9 @@
  */
 package com.okta.sdk.impl.oauth2;
 
+/**
+ * @since 0.6.0
+ */
 public class OAuth2TokenRetrieverException extends RuntimeException {
 
     public OAuth2TokenRetrieverException(String s, Throwable cause) {

@@ -27,6 +27,13 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 
+/**
+ * This implementation used by OAuth2 flow adds Bearer header with access token as the
+ * value in all outgoing requests. This has logic to fetch a new token and store it in
+ * {@link OAuth2ClientCredentials} object if the existing one has expired.
+ *
+ * @since 0.6.0
+ */
 public class OAuth2RequestAuthenticator implements RequestAuthenticator {
     private static final Logger log = LoggerFactory.getLogger(OAuth2RequestAuthenticator.class);
 

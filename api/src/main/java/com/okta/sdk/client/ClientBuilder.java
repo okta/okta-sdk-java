@@ -313,7 +313,7 @@ public interface ClientBuilder {
      * @param authenticationScheme the type of authentication to be used for communication with the Okta API server.
      * @return the ClientBuilder instance for method chaining
      *
-     * @deprecated use {@link #setAuthorizationMode(AuthorizationMode)} to indicate the authentication scheme.
+     * @deprecated since 0.6.0 use {@link #setAuthorizationMode(AuthorizationMode)} to indicate the authentication scheme.
      */
     @Deprecated
     ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme);
@@ -326,6 +326,8 @@ public interface ClientBuilder {
      *
      * @param authorizationMode mode of authorization for requests to the Okta API server.
      * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 0.6.0
      */
     ClientBuilder setAuthorizationMode(AuthorizationMode authorizationMode);
 
@@ -335,6 +337,8 @@ public interface ClientBuilder {
      *
      * @param scopes list of scopes for which the client requests access.
      * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 0.6.0
      */
     ClientBuilder setScopes(List<String> scopes);
 
@@ -345,6 +349,8 @@ public interface ClientBuilder {
      *
      * @param privateKey the fully qualified string path to the private key (PEM file).
      * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 0.6.0
      */
     ClientBuilder setPrivateKey(String privateKey);
 
@@ -354,6 +360,8 @@ public interface ClientBuilder {
      *
      * @param clientId string representing the client ID.
      * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 0.6.0
      */
     ClientBuilder setClientId(String clientId);
 

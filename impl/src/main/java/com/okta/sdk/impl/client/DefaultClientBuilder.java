@@ -364,6 +364,9 @@ public class DefaultClientBuilder implements ClientBuilder {
         return new DefaultClient(clientConfig, cacheManager);
     }
 
+    /**
+     * @since 0.6.0
+     */
     private void validateOAuth2ClientConfig(ClientConfiguration clientConfiguration) {
         Assert.notNull(clientConfiguration.getClientId(), "clientId cannot be null");
         Assert.isTrue((clientConfiguration.getScopes() != null) && (!clientConfiguration.getScopes().isEmpty()),
@@ -412,6 +415,9 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this;
     }
 
+    /**
+     * @since 0.6.0
+     */
     boolean isOAuth2Flow() {
         return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
     }
