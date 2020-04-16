@@ -27,10 +27,11 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class holds the default configuration properties.
@@ -54,7 +55,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private BaseUrlResolver baseUrlResolver;
     private AuthorizationMode authorizationMode;
     private String clientId;
-    private List<String> scopes = new ArrayList<>();
+    private Set<String> scopes = new HashSet<>();
     private String privateKey;
 
     public String getApiToken() {
@@ -113,11 +114,11 @@ public class ClientConfiguration extends HttpClientConfiguration {
         this.clientId = clientId;
     }
 
-    public List<String> getScopes() {
+    public Set<String> getScopes() {
         return scopes;
     }
 
-    public void setScopes(List<String> scopes) {
+    public void setScopes(Set<String> scopes) {
         this.scopes = scopes;
     }
 

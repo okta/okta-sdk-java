@@ -216,7 +216,7 @@ class DefaultClientBuilderTest {
                 .setOrgUrl("https://okta.example.com")
                 .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
-                .setScopes(new ArrayList<String>())
+                .setScopes(new HashSet<String>())
                 .build()
         }
     }
@@ -229,7 +229,7 @@ class DefaultClientBuilderTest {
                 .setOrgUrl("https://okta.example.com")
                 .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
-                .setScopes(Arrays.asList({"okta.apps.read"}))
+                .setScopes(new HashSet<>(Arrays.asList({"okta.apps.read"})))
                 .setPrivateKey(null)
                 .build()
         }
@@ -243,7 +243,7 @@ class DefaultClientBuilderTest {
                 .setOrgUrl("https://okta.example.com")
                 .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
-                .setScopes(Arrays.asList({ "okta.apps.read" }))
+                .setScopes(new HashSet<>(Arrays.asList({"okta.apps.read"})))
                 .setPrivateKey("blahblah.pem")
                 .build()
         }
@@ -259,7 +259,7 @@ class DefaultClientBuilderTest {
                 .setOrgUrl("https://okta.example.com")
                 .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
-                .setScopes(Arrays.asList({ "okta.apps.read" }))
+                .setScopes(new HashSet<>(Arrays.asList({"okta.apps.read"})))
                 .setPrivateKey(file.path)
                 .build()
         }
@@ -282,7 +282,7 @@ class DefaultClientBuilderTest {
         File file = File.createTempFile("privatekey",".pem")
         file.write(encodedString)
 
-        List<String> scopes = new ArrayList<String>();
+        Set<String> scopes = new HashSet<>();
         scopes.add("okta.apps.read")
         scopes.add("okta.apps.manage")
 

@@ -20,6 +20,7 @@ import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * A <a href="http://en.wikipedia.org/wiki/Builder_pattern">Builder design pattern</a> used to
@@ -335,12 +336,12 @@ public interface ClientBuilder {
      * Allows specifying a list of scopes directly instead of relying on the
      * default location + override/fallback behavior defined in the {@link ClientBuilder documentation above}.
      *
-     * @param scopes list of scopes for which the client requests access.
+     * @param scopes set of scopes for which the client requests access.
      * @return the ClientBuilder instance for method chaining.
      *
      * @since 0.6.0
      */
-    ClientBuilder setScopes(List<String> scopes);
+    ClientBuilder setScopes(Set<String> scopes);
 
     /**
      * Allows specifying the private key (PEM file) path (for private key jwt authentication) directly instead

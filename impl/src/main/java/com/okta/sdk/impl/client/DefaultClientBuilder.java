@@ -57,9 +57,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -227,7 +229,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
-            List<String> scopes = Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split(" "));
+            Set<String> scopes = new HashSet<>(Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split(" ")));
             clientConfig.setScopes(scopes);
         }
 
@@ -391,7 +393,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
-    public ClientBuilder setScopes(List<String> scopes) {
+    public ClientBuilder setScopes(Set<String> scopes) {
         if (isOAuth2Flow()) {
             Assert.isTrue((scopes != null) && (!scopes.isEmpty()), "At least one scope is required");
             this.clientConfig.setScopes(scopes);
