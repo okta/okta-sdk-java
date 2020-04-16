@@ -54,12 +54,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -371,11 +374,12 @@ public class DefaultClientBuilder implements ClientBuilder {
      */
     private void validateOAuth2ClientConfig(ClientConfiguration clientConfiguration) {
         Assert.notNull(clientConfiguration.getClientId(), "clientId cannot be null");
-        Assert.isTrue((clientConfiguration.getScopes() != null) && (!clientConfiguration.getScopes().isEmpty()),
+        Assert.isTrue(clientConfiguration.getScopes() != null && !clientConfiguration.getScopes().isEmpty(),
             "At least one scope is required");
         Assert.notNull(clientConfiguration.getPrivateKey(), "privateKey cannot be null");
-        File privateKeyPemFile = new File(clientConfiguration.getPrivateKey());
-        Assert.isTrue(privateKeyPemFile.exists(), "privateKey file does not exist");
+        Path privateKeyPemFilePath = Paths.get(clientConfiguration.getPrivateKey());
+        boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, new LinkOption[]{ LinkOption.NOFOLLOW_LINKS });
+        Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
     }
 
     @Override
@@ -395,7 +399,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     @Override
     public ClientBuilder setScopes(Set<String> scopes) {
         if (isOAuth2Flow()) {
-            Assert.isTrue((scopes != null) && (!scopes.isEmpty()), "At least one scope is required");
+            Assert.isTrue(scopes != null && !scopes.isEmpty(), "At least one scope is required");
             this.clientConfig.setScopes(scopes);
         }
         return this;

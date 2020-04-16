@@ -19,7 +19,6 @@ package com.okta.sdk.client;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 
-import java.util.List;
 import java.util.Set;
 
 /**

@@ -19,7 +19,6 @@ import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.ds.RequestBuilder
 import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.api.OAuth2ClientCredentialsResolver
-import com.okta.sdk.impl.client.BaseClient
 import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.error.DefaultError
 import com.okta.sdk.resource.ResourceException
@@ -135,7 +134,7 @@ class AccessTokenRetrieverServiceImplTest {
 
     @Test(expectedExceptions = OAuth2TokenRetrieverException.class)
     void testGetOAuth2TokenRetrieverRuntimeException() {
-        def tokenClient = mock(BaseClient)
+        def tokenClient = mock(OAuth2TokenClient)
         def requestBuilder = mock(RequestBuilder)
         def clientConfig = mock(ClientConfiguration)
 
@@ -172,7 +171,7 @@ class AccessTokenRetrieverServiceImplTest {
 
     @Test(expectedExceptions = OAuth2HttpException.class)
     void testGetOAuth2ResourceException() {
-        def tokenClient = mock(BaseClient)
+        def tokenClient = mock(OAuth2TokenClient)
         def requestBuilder = mock(RequestBuilder)
         def clientConfig = mock(ClientConfiguration)
 

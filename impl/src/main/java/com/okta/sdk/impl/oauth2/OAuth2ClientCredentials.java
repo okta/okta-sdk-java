@@ -17,8 +17,6 @@ package com.okta.sdk.impl.oauth2;
 
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.authc.credentials.ClientCredentials;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -29,7 +27,6 @@ import java.security.InvalidKeyException;
  * @since 0.6.0
  */
 public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessToken> {
-    private static final Logger log = LoggerFactory.getLogger(OAuth2ClientCredentials.class);
 
     private OAuth2AccessToken oAuth2AccessToken;
     private AccessTokenRetrieverService accessTokenRetrieverService;
@@ -51,8 +48,9 @@ public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessTo
             throw e;
         }
 
-        if (accessToken == null)
+        if (accessToken == null) {
             throw new IllegalStateException();
+        }
 
         return accessToken;
     }

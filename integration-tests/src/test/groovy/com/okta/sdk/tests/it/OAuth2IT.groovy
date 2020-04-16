@@ -34,14 +34,18 @@ import static org.hamcrest.Matchers.notNullValue
  *
  * Below env variables need to be set for OAUTH2 flow to be enabled:
  *
- * OKTA_CLIENT_ORGURL (org url)
- * OKTA_CLIENT_AUTHORIZATIONMODE (should take the value "PrivateKey")
- * OKTA_CLIENT_CLIENTID (client id)
- * OKTA_CLIENT_SCOPES="okta.apps.read okta.apps.manage okta.users.read okta.users.manage" (e.g.)
- * OKTA_CLIENT_PRIVATEKEY="~/.okta/privateKey.pem" (e.g.)
+ * - OKTA_CLIENT_ORGURL (org url)
+ * - OKTA_CLIENT_AUTHORIZATIONMODE (should take the value "PrivateKey")
+ * - OKTA_CLIENT_CLIENTID (client id)
+ * - OKTA_CLIENT_SCOPES="okta.apps.read okta.apps.manage okta.users.read okta.users.manage" (e.g.)
+ * - OKTA_CLIENT_PRIVATEKEY="~/.okta/privateKey.pem" (e.g.)
+ *
+ * Note that this test will pass successfully even if OAUTH2 flow is not enabled (SSWS flow).
+ *
+ * @since 0.6.0
  */
 class OAuth2IT extends ITSupport {
-    @Test
+    @Test(groups = "bacon")
     @Scenario("oauth2-flow")
     void testOAuth2Flow() {
         // 1. create OAuth2 client

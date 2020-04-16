@@ -17,9 +17,7 @@ package com.okta.sdk.impl.oauth2;
 
 import com.okta.commons.http.MediaType;
 import com.okta.commons.lang.Assert;
-import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthorizationMode;
-import com.okta.sdk.impl.client.BaseClient;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.error.DefaultError;
 import com.okta.sdk.resource.ExtensibleResource;
@@ -32,11 +30,12 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -44,13 +43,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
-
-import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.ACCESS_TOKEN_KEY;
-import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.ERROR_DESCRIPTION;
-import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.ERROR_KEY;
-import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.EXPIRES_IN_KEY;
-import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.SCOPE_KEY;
-import static com.okta.sdk.impl.oauth2.OAuth2AccessToken.TOKEN_TYPE_KEY;
 
 /**
  * Implementation of {@link AccessTokenRetrieverService} interface.
@@ -65,16 +57,16 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     private static final String TOKEN_URI  = "/oauth2/v1/token";
 
     private ClientConfiguration tokenClientConfiguration;
-    private BaseClient tokenClient;
+    private OAuth2TokenClient tokenClient;
 
     public AccessTokenRetrieverServiceImpl(ClientConfiguration apiClientConfiguration) {
         Assert.notNull(apiClientConfiguration, "apiClientConfiguration must not be null.");
         ClientConfiguration tokenClientConfig = constructTokenClientConfig(apiClientConfiguration);
-        this.tokenClient = new BaseClient(tokenClientConfig, Caches.newDisabledCacheManager()) {};
+        this.tokenClient = new OAuth2TokenClient(tokenClientConfig);
         this.tokenClientConfiguration = tokenClientConfig;
     }
 
-    public AccessTokenRetrieverServiceImpl(ClientConfiguration apiClientConfiguration, BaseClient tokenClient) {
+    public AccessTokenRetrieverServiceImpl(ClientConfiguration apiClientConfiguration, OAuth2TokenClient tokenClient) {
         Assert.notNull(apiClientConfiguration, "apiClientConfiguration must not be null.");
         Assert.notNull(tokenClient, "tokenClient must not be null.");
         this.tokenClient = tokenClient;
@@ -104,10 +96,10 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
                 .post(tokenClientConfiguration.getBaseUrl() + TOKEN_URI, ExtensibleResource.class);
 
             OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken();
-            oAuth2AccessToken.setTokenType(accessTokenResponse.getString(TOKEN_TYPE_KEY));
-            oAuth2AccessToken.setExpiresIn(accessTokenResponse.getInteger(EXPIRES_IN_KEY));
-            oAuth2AccessToken.setAccessToken(accessTokenResponse.getString(ACCESS_TOKEN_KEY));
-            oAuth2AccessToken.setScope(accessTokenResponse.getString(SCOPE_KEY));
+            oAuth2AccessToken.setTokenType(accessTokenResponse.getString(OAuth2AccessToken.TOKEN_TYPE_KEY));
+            oAuth2AccessToken.setExpiresIn(accessTokenResponse.getInteger(OAuth2AccessToken.EXPIRES_IN_KEY));
+            oAuth2AccessToken.setAccessToken(accessTokenResponse.getString(OAuth2AccessToken.ACCESS_TOKEN_KEY));
+            oAuth2AccessToken.setScope(accessTokenResponse.getString(OAuth2AccessToken.SCOPE_KEY));
 
             log.info("Got OAuth2 access token for client id {} from {}",
                 tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
@@ -121,11 +113,10 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
                 //TODO: clean up the ugly casting and refactor code around it.
                 DefaultError defaultError = (DefaultError) resourceException.getError();
-                String errorMessage = defaultError.getString(ERROR_KEY);
-                String errorDescription = defaultError.getString(ERROR_DESCRIPTION);
+                String errorMessage = defaultError.getString(OAuth2AccessToken.ERROR_KEY);
+                String errorDescription = defaultError.getString(OAuth2AccessToken.ERROR_DESCRIPTION);
                 defaultError.setMessage(errorMessage + " - " + errorDescription);
-                boolean retryable = (resourceException.getStatus() == 401);
-                throw new OAuth2HttpException(defaultError, resourceException, retryable);
+                throw new OAuth2HttpException(defaultError, resourceException, resourceException.getStatus() == 401);
             } else {
                 throw new OAuth2TokenRetrieverException("Exception while trying to get " +
                     "OAuth2 access token for client id " + tokenClientConfiguration.getClientId(), e);
@@ -169,12 +160,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     PrivateKey parsePrivateKey(String privateKeyFilePath) throws IOException, InvalidKeyException {
         Assert.notNull(privateKeyFilePath, "privateKeyFilePath may not be null");
 
-        File privateKeyFile = new File(privateKeyFilePath);
-        if (!privateKeyFile.exists()) {
-            throw new IllegalArgumentException("privateKeyFile " + privateKeyFile + " does not exist");
-        }
-
-        Reader reader = new InputStreamReader(new FileInputStream(privateKeyFilePath), "UTF-8");
+        Path privateKeyPemFilePath = Paths.get(privateKeyFilePath);
+        Reader reader = Files.newBufferedReader(privateKeyPemFilePath, Charset.defaultCharset());
 
         PrivateKey privateKey = getPrivateKeyFromPEM(reader);
         String algorithm = privateKey.getAlgorithm();
