@@ -201,6 +201,10 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             JcaPEMKeyConverter jcaPEMKeyConverter = new JcaPEMKeyConverter();
             Object pemContent = pemParser.readObject();
 
+            if (pemContent == null) {
+                throw new IllegalArgumentException("Invalid Private Key PEM file");
+            }
+
             if (pemContent instanceof PEMKeyPair) {
                 PEMKeyPair pemKeyPair = (PEMKeyPair) pemContent;
                 KeyPair keyPair = jcaPEMKeyConverter.getKeyPair(pemKeyPair);
@@ -224,7 +228,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * We therefore effect this token client specific config by setting 'retryMaxElapsed'
      * & 'retryMaxAttempts' fields.
      *
-     * @param apiClientConfiguration
+     * @param apiClientConfiguration supplied in the client configuration.
      * @return ClientConfiguration to be used by token retrieval client.
      */
     ClientConfiguration constructTokenClientConfig(ClientConfiguration apiClientConfiguration) {

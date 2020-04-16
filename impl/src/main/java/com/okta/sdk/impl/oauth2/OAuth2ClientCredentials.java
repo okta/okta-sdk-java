@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.impl.oauth2;
 
-import com.okta.commons.http.HttpException;
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import org.slf4j.Logger;
@@ -23,8 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * This implementation represents client credentials specific to OAuth2 Authentication scheme.
@@ -44,29 +41,20 @@ public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessTo
     }
 
     private OAuth2AccessToken eagerFetchOAuth2AccessToken() {
-
-        CompletableFuture<OAuth2AccessToken> completableFuture = CompletableFuture.supplyAsync(() -> {
-            OAuth2AccessToken accessToken;
-            try {
-                accessToken = accessTokenRetrieverService.getOAuth2AccessToken();
-            } catch (IOException | InvalidKeyException e) {
-                throw new IllegalArgumentException(e);
-            } catch (HttpException e) {
-                throw e;
-            }
-
-            return accessToken;
-        });
-
-        OAuth2AccessToken oAuth2AccessTokenResult;
+        OAuth2AccessToken accessToken;
 
         try {
-            oAuth2AccessTokenResult = completableFuture.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IllegalStateException(e);
+            accessToken = accessTokenRetrieverService.getOAuth2AccessToken();
+        } catch (IOException | InvalidKeyException e) {
+            throw new IllegalArgumentException(e);
+        } catch (OAuth2TokenRetrieverException e) {
+            throw e;
         }
 
-        return oAuth2AccessTokenResult;
+        if (accessToken == null)
+            throw new IllegalStateException();
+
+        return accessToken;
     }
 
     public OAuth2AccessToken getCredentials() {

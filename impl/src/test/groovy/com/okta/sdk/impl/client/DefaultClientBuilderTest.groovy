@@ -26,6 +26,7 @@ import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.io.DefaultResourceFactory
 import com.okta.sdk.impl.io.Resource
 import com.okta.sdk.impl.io.ResourceFactory
+import com.okta.sdk.impl.oauth2.OAuth2TokenRetrieverException
 import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import com.okta.sdk.impl.test.RestoreSystemProperties
 import org.mockito.invocation.InvocationOnMock
@@ -252,52 +253,67 @@ class DefaultClientBuilderTest {
     @Test
     void testOAuth2InvalidPrivateKeyPemFileContent() {
         clearOktaEnvAndSysProps()
-        File file = File.createTempFile("tmp",".pem")
-        file.write("-----INVALID PEM CONTENT-----")
-        Util.expect(IllegalStateException) {
+        File privateKeyFile = File.createTempFile("tmp",".pem")
+        privateKeyFile.write("-----INVALID PEM CONTENT-----")
+        Util.expect(IllegalArgumentException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
                 .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
                 .setScopes(new HashSet<>(Arrays.asList({"okta.apps.read"})))
-                .setPrivateKey(file.path)
+                .setPrivateKey(privateKeyFile.path)
                 .build()
         }
 
-        file.delete()
+        privateKeyFile.delete()
+    }
+
+    @Test
+    void testOAuth2UnsupportedPrivateKeyAlgorithm() {
+        clearOktaEnvAndSysProps()
+
+        // DSA algorithm is unsupported (we support only RSA & EC)
+        File privateKeyFile = generatePrivateKey("DSA", 2048, "privateKey", ".pem")
+
+        Set<String> scopes = new HashSet<>();
+        scopes.add("okta.apps.read")
+        scopes.add("okta.apps.manage")
+
+        Util.expect(IllegalArgumentException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+                .setClientId("client12345")
+                .setScopes(scopes)
+                .setPrivateKey(privateKeyFile.path)
+                .build()
+        }
+
+        privateKeyFile.delete()
     }
 
     @Test
     void testOAuth2SemanticallyValidInputParams() {
         clearOktaEnvAndSysProps()
 
-        // generate private key and write it to pem file
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA")
-        keyGen.initialize(2048)
-        KeyPair key = keyGen.generateKeyPair()
-        PrivateKey privateKey = key.getPrivate()
-        String encodedString = "-----BEGIN PRIVATE KEY-----\n"
-        encodedString = encodedString + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
-        encodedString = encodedString + "-----END PRIVATE KEY-----\n"
-        File file = File.createTempFile("privatekey",".pem")
-        file.write(encodedString)
+        File privateKeyFile = generatePrivateKey("RSA", 2048, "privateKey", ".pem")
 
         Set<String> scopes = new HashSet<>();
         scopes.add("okta.apps.read")
         scopes.add("okta.apps.manage")
 
         // expected because the URL is not an actual endpoint
-        Util.expect(IllegalStateException) {
+        Util.expect(OAuth2TokenRetrieverException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
                 .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
                 .setClientId("client12345")
                 .setScopes(scopes)
-                .setPrivateKey(file.path)
+                .setPrivateKey(privateKeyFile.path)
                 .build()
         }
 
-        file.delete()
+        privateKeyFile.delete()
     }
 
     @Test
@@ -311,17 +327,31 @@ class DefaultClientBuilderTest {
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_SCOPES",
             "okta.users.read okta.users.manage okta.apps.read okta.apps.manage")
 
-        File file = File.createTempFile("privatekey",".pem")
-        file.write("test file")
+        File privateKeyFile = generatePrivateKey("RSA", 2048, "privateKey", ".pem")
 
-        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_PRIVATEKEY", file.path)
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_PRIVATEKEY", privateKeyFile.path)
 
         // expected because the URL is not an actual endpoint
-        Util.expect(IllegalStateException) {
+        Util.expect(OAuth2TokenRetrieverException) {
             new DefaultClientBuilder().build()
         }
 
-        file.delete()
+        privateKeyFile.delete()
+    }
+
+    // helper methods
+
+    static generatePrivateKey(String algorithm, int keySize, String fileNamePrefix, String fileNameSuffix) {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(algorithm)
+        keyGen.initialize(keySize)
+        KeyPair key = keyGen.generateKeyPair()
+        PrivateKey privateKey = key.getPrivate()
+        String encodedString = "-----BEGIN PRIVATE KEY-----\n"
+        encodedString = encodedString + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
+        encodedString = encodedString + "-----END PRIVATE KEY-----\n"
+        File file = File.createTempFile(fileNamePrefix,fileNameSuffix)
+        file.write(encodedString)
+        return file
     }
 
     static ResourceFactory noDefaultYamlNoAppYamlResourceFactory() {
