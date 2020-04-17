@@ -17,6 +17,7 @@ package com.okta.sdk.tests.it.util
 
 import com.okta.commons.lang.Strings
 import com.okta.sdk.authc.credentials.TokenClientCredentials
+import com.okta.sdk.client.AuthorizationMode
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.impl.cache.DisabledCacheManager
@@ -53,10 +54,10 @@ trait ClientProvider implements IHookable {
     private ThreadLocal<String> testName = new ThreadLocal<>()
     private List<Deletable> toBeDeleted = []
 
-    Client getClient(String scenarioId = null) {
+    Client getClient(String scenarioId = null, String authorizationMode = null) {
         Client client = threadLocal.get()
         if (client == null) {
-            threadLocal.set(buildClient(scenarioId))
+            threadLocal.set(buildClient(scenarioId, authorizationMode))
         }
         return threadLocal.get()
     }
@@ -65,7 +66,12 @@ trait ClientProvider implements IHookable {
         return Strings.hasText(System.getProperty(TestServer.TEST_SERVER_BASE_URL))
     }
 
-    private Client buildClient(String scenarioId = null) {
+    private Client buildClient(String scenarioId = null, String authorizationMode = null) {
+        if (authorizationMode == null) {
+            System.setProperty("okta.client.authorizationMode", AuthorizationMode.NONE.getLabel())
+        } else {
+            System.setProperty("okta.client.authorizationMode", authorizationMode)
+        }
 
         String testServerBaseUrl = System.getProperty(TestServer.TEST_SERVER_BASE_URL)
         if (isRunningWithTestServer() && scenarioId != null) {

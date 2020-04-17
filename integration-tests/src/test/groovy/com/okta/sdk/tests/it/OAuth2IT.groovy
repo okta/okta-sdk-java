@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.client.AuthorizationMode
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.user.User
@@ -32,24 +33,22 @@ import static org.hamcrest.Matchers.notNullValue
 /**
  * Tests for OAuth2 flow
  *
- * Below env variables need to be set for OAUTH2 flow to be enabled:
+ * Below additional env variables (or equivalent system properties) need to be set for OAUTH2 flow to be executed:
  *
- * - OKTA_CLIENT_ORGURL (org url)
  * - OKTA_CLIENT_AUTHORIZATIONMODE (should take the value "PrivateKey")
  * - OKTA_CLIENT_CLIENTID (client id)
- * - OKTA_CLIENT_SCOPES="okta.apps.read okta.apps.manage okta.users.read okta.users.manage" (e.g.)
+ * - OKTA_CLIENT_SCOPES="okta.apps.read okta.apps.manage okta.users.read okta.users.manage okta.groups.read okta.groups.manage" (e.g.)
  * - OKTA_CLIENT_PRIVATEKEY="~/.okta/privateKey.pem" (e.g.)
- *
- * Note that this test will pass successfully even if OAUTH2 flow is not enabled (SSWS flow).
  *
  * @since 0.6.0
  */
 class OAuth2IT extends ITSupport {
+
     @Test(groups = "bacon")
-    @Scenario("oauth2-flow")
     void testOAuth2Flow() {
+
         // 1. create OAuth2 client
-        Client client = getClient()
+        Client client = getClient("oauth2-flow", AuthorizationMode.PRIVATE_KEY.getLabel())
         assertThat client, notNullValue()
 
         // 2. create an OIDC application with the OAuth2 client
@@ -71,6 +70,8 @@ class OAuth2IT extends ITSupport {
                     .setClientId(UUID.randomUUID().toString())
                     .setAutoKeyRotation(true)
                     .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_JWT)))
+
+        // oidcApp.getSettings().put("jwks", "blahblahblah") //TODO: generate key pair dynamically and set the JWKS here
 
         // 3. create an OIDC app
         oidcApp = client.createApplication(oidcApp)
@@ -105,5 +106,4 @@ class OAuth2IT extends ITSupport {
         // 7. cleanup
         registerForCleanup(oidcApp)
     }
-
 }
