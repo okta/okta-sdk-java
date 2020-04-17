@@ -20,7 +20,7 @@ import com.okta.sdk.impl.client.BaseClient;
 import com.okta.sdk.impl.config.ClientConfiguration;
 
 /**
- * @since 0.6.0
+ * @since 1.6.0
  */
 public class OAuth2TokenClient extends BaseClient {
 

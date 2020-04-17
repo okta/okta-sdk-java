@@ -40,7 +40,7 @@ import static org.hamcrest.Matchers.notNullValue
  * - OKTA_CLIENT_SCOPES="okta.apps.read okta.apps.manage okta.users.read okta.users.manage okta.groups.read okta.groups.manage" (e.g.)
  * - OKTA_CLIENT_PRIVATEKEY="~/.okta/privateKey.pem" (e.g.)
  *
- * @since 0.6.0
+ * @since 1.6.0
  */
 class OAuth2IT extends ITSupport {
 

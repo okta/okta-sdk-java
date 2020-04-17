@@ -19,7 +19,7 @@ import com.okta.commons.http.HttpException;
 import com.okta.sdk.impl.error.DefaultError;
 
 /**
- * @since 0.6.0
+ * @since 1.6.0
  */
 public class OAuth2HttpException extends HttpException {
 

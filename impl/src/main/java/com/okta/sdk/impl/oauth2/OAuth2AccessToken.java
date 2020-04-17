@@ -21,7 +21,7 @@ import java.time.Instant;
 /**
  * Represents the OAuth2 access token returned by Authorization server.
  *
- * @since 0.6.0
+ * @since 1.6.0
  */
 public class OAuth2AccessToken {
 

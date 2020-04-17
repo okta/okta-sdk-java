@@ -49,7 +49,7 @@ import java.util.UUID;
  *
  * This has logic to fetch OAuth2 access token from the Authorization server endpoint.
  *
- * @since 0.6.0
+ * @since 1.6.0
  */
 public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverService {
     private static final Logger log = LoggerFactory.getLogger(AccessTokenRetrieverServiceImpl.class);

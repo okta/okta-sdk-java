@@ -24,7 +24,7 @@ import java.security.InvalidKeyException;
 /**
  * This implementation represents client credentials specific to OAuth2 Authentication scheme.
  *
- * @since 0.6.0
+ * @since 1.6.0
  */
 public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessToken> {
 

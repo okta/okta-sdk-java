@@ -21,7 +21,7 @@ import java.security.InvalidKeyException;
 /**
  * Abstraction for OAuth2 access token retrieval service function.
  *
- * @since 0.6.0
+ * @since 1.6.0
  */
 public interface AccessTokenRetrieverService {
     /**
