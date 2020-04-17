@@ -58,10 +58,16 @@ class DefaultClientBuilderTest {
         System.clearProperty("okta.client.token")
         System.clearProperty("okta.client.orgUrl")
         System.clearProperty("okta.client.authorizationMode")
+        System.clearProperty("okta.client.clientId")
+        System.clearProperty("okta.client.scopes")
+        System.clearProperty("okta.client.privateKey")
 
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_TOKEN", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_ORGURL", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_AUTHORIZATIONMODE", null)
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_CLIENTID", null)
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_SCOPES", null)
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_PRIVATEKEY", null)
     }
 
     @Test
