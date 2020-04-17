@@ -21,6 +21,9 @@ IS_RELEASE=$([ "${ARTIFACT_VERSION/SNAPSHOT}" == "${ARTIFACT_VERSION}" ] && [ "$
 export ARTIFACT_VERSION
 export IS_RELEASE
 
+#Decrypt the privateKey.pem used in OAuth2 ITs to /tmp/privateKey.pem
+openssl aes-256-cbc -K $encrypted_0a6446eb3ae3_key -iv $encrypted_0a6446eb3ae3_iv -in privateKey.pem.enc -out /tmp/privateKey.pem -d
+
 echo "Build configuration:"
 echo "Version:             ${ARTIFACT_VERSION}"
 echo "Is release:          ${IS_RELEASE:-false}"
