@@ -319,10 +319,7 @@ public interface ClientBuilder {
     ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme);
 
     /**
-     * Allows specifying an authorization mode directly instead of relying on the
-     * default location + override/fallback behavior defined in the {@link ClientBuilder documentation above}.
-     *
-     * Authorization Mode could take one of values - SSWS (by default), PrivateKey (for OAUTH2).
+     * Allows specifying an authorization mode.
      *
      * @param authorizationMode mode of authorization for requests to the Okta API server.
      * @return the ClientBuilder instance for method chaining.
