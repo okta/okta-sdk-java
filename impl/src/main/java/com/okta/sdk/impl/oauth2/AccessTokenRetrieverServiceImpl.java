@@ -101,7 +101,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             oAuth2AccessToken.setAccessToken(accessTokenResponse.getString(OAuth2AccessToken.ACCESS_TOKEN_KEY));
             oAuth2AccessToken.setScope(accessTokenResponse.getString(OAuth2AccessToken.SCOPE_KEY));
 
-            log.info("Got OAuth2 access token for client id {} from {}",
+            log.debug("Got OAuth2 access token for client id {} from {}",
                 tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
 
             return oAuth2AccessToken;
