@@ -70,8 +70,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         Assert.notNull(apiClientConfiguration, "apiClientConfiguration must not be null.");
         Assert.notNull(tokenClient, "tokenClient must not be null.");
         this.tokenClient = tokenClient;
-        ClientConfiguration tokenClientConfig = constructTokenClientConfig(apiClientConfiguration);
-        this.tokenClientConfiguration = tokenClientConfig;
+        this.tokenClientConfiguration = constructTokenClientConfig(apiClientConfiguration);
     }
 
     /**
