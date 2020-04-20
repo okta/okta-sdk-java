@@ -21,7 +21,6 @@ import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.resource.user.UserList
-import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
