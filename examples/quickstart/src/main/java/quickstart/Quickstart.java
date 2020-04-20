@@ -47,7 +47,6 @@ public class Quickstart {
             Client client = builder.build();
 
             // Create a group
-            // For OAuth2 flow, ensure that you enable 'group' scopes otherwise the below group creation call would fail with HTTP 403 error.
             Group group = GroupBuilder.instance()
                     .setName("my-user-group-" + UUID.randomUUID().toString())
                     .setDescription("Quickstart created Group")

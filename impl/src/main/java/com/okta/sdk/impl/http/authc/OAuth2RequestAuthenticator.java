@@ -65,7 +65,7 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
                             oAuth2ClientCredentials.setCredentials(oAuth2AccessToken);
 
                         } catch (IOException | InvalidKeyException e) {
-                            throw new RuntimeException(e);
+                            throw new IllegalStateException(e);
                         }
                     }
                 }

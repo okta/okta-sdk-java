@@ -337,7 +337,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (isOAuth2Flow()) {
-            this.clientConfig.setClientCredentialsResolver(new OAuth2ClientCredentialsResolver(this.clientCredentials));
+            this.clientConfig.setClientCredentialsResolver(new OAuth2ClientCredentialsResolver());
         }
         else if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
             this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));

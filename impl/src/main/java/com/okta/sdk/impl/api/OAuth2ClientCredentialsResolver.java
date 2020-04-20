@@ -19,7 +19,9 @@ import com.okta.sdk.authc.credentials.ClientCredentials;
 
 public class OAuth2ClientCredentialsResolver implements ClientCredentialsResolver {
 
-    private final ClientCredentials clientCredentials;
+    private ClientCredentials clientCredentials;
+
+    public OAuth2ClientCredentialsResolver() { }
 
     public OAuth2ClientCredentialsResolver(ClientCredentials clientCredentials) {
         this.clientCredentials = clientCredentials;
