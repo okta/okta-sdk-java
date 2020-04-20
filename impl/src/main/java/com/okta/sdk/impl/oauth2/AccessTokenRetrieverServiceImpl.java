@@ -136,7 +136,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         Instant now = Instant.now();
 
         String jwt = Jwts.builder()
-            .setAudience(tokenClientConfiguration.getBaseUrl() + "/oauth2/v1/token")
+            .setAudience(tokenClientConfiguration.getBaseUrl() + TOKEN_URI)
             .setIssuedAt(Date.from(now))
             .setExpiration(Date.from(now.plus(1L, ChronoUnit.HOURS)))
             .setIssuer(clientId)

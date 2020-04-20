@@ -54,10 +54,10 @@ trait ClientProvider implements IHookable {
     private ThreadLocal<String> testName = new ThreadLocal<>()
     private List<Deletable> toBeDeleted = []
 
-    Client getClient(String scenarioId = null, String authorizationMode = null) {
+    Client getClient(String scenarioId = null) {
         Client client = threadLocal.get()
         if (client == null) {
-            threadLocal.set(buildClient(scenarioId, authorizationMode))
+            threadLocal.set(buildClient(scenarioId))
         }
         return threadLocal.get()
     }
@@ -66,12 +66,7 @@ trait ClientProvider implements IHookable {
         return Strings.hasText(System.getProperty(TestServer.TEST_SERVER_BASE_URL))
     }
 
-    private Client buildClient(String scenarioId = null, String authorizationMode = null) {
-        if (authorizationMode == null) {
-            System.setProperty("okta.client.authorizationMode", AuthorizationMode.NONE.getLabel())
-        } else {
-            System.setProperty("okta.client.authorizationMode", authorizationMode)
-        }
+    private Client buildClient(String scenarioId = null) {
 
         String testServerBaseUrl = System.getProperty(TestServer.TEST_SERVER_BASE_URL)
         if (isRunningWithTestServer() && scenarioId != null) {
