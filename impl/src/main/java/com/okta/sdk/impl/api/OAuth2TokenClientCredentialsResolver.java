@@ -19,6 +19,9 @@ import com.okta.sdk.authc.credentials.ClientCredentials;
 
 import java.util.Optional;
 
+/**
+ * @since 1.6.0
+ */
 public class OAuth2TokenClientCredentialsResolver implements ClientCredentialsResolver {
 
     @Override

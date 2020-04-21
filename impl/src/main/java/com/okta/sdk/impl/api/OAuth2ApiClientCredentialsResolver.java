@@ -17,6 +17,9 @@ package com.okta.sdk.impl.api;
 
 import com.okta.sdk.authc.credentials.ClientCredentials;
 
+/**
+ * @since 1.6.0
+ */
 public class OAuth2ApiClientCredentialsResolver implements ClientCredentialsResolver {
 
     private final ClientCredentials clientCredentials;
