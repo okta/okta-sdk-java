@@ -103,7 +103,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             oAuth2AccessToken.setScope(accessTokenResponse.getString(OAuth2AccessToken.SCOPE_KEY));
 
             log.debug("Got OAuth2 access token for client id {} from {}",
-                tokenClientConfiguration.getClientId(), TOKEN_URI);
+                tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
 
             return oAuth2AccessToken;
         } catch (Exception e) {
