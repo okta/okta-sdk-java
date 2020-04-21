@@ -80,7 +80,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      */
     @Override
     public OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, OAuth2TokenRetrieverException {
-        log.info("Attempting to get OAuth2 access token for client id {} from {}",
+        log.debug("Attempting to get OAuth2 access token for client id {} from {}",
             tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
 
         String signedJwt = createSignedJWT();

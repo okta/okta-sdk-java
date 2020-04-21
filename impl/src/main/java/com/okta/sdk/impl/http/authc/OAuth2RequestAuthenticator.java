@@ -66,7 +66,7 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
                             oAuth2ClientCredentials.setCredentials(oAuth2AccessToken);
 
                         } catch (IOException | InvalidKeyException e) {
-                            throw new IllegalStateException(e);
+                            throw new IllegalStateException("Failed to retrieve OAuth2 access token", e);
                         }
                     }
                 }
