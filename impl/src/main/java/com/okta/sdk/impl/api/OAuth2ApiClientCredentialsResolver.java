@@ -17,13 +17,11 @@ package com.okta.sdk.impl.api;
 
 import com.okta.sdk.authc.credentials.ClientCredentials;
 
-public class OAuth2ClientCredentialsResolver implements ClientCredentialsResolver {
+public class OAuth2ApiClientCredentialsResolver implements ClientCredentialsResolver {
 
-    private ClientCredentials clientCredentials;
+    private final ClientCredentials clientCredentials;
 
-    public OAuth2ClientCredentialsResolver() { }
-
-    public OAuth2ClientCredentialsResolver(ClientCredentials clientCredentials) {
+    public OAuth2ApiClientCredentialsResolver(ClientCredentials clientCredentials) {
         this.clientCredentials = clientCredentials;
     }
 

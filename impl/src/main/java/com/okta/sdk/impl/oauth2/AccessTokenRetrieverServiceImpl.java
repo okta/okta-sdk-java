@@ -16,8 +16,11 @@
 package com.okta.sdk.impl.oauth2;
 
 import com.okta.commons.http.MediaType;
+import com.okta.commons.http.authc.DisabledAuthenticator;
 import com.okta.commons.lang.Assert;
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.client.AuthorizationMode;
+import com.okta.sdk.impl.api.OAuth2TokenClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.error.DefaultError;
 import com.okta.sdk.resource.ExtensibleResource;
@@ -42,6 +45,7 @@ import java.security.PrivateKey;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -220,8 +224,9 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     ClientConfiguration constructTokenClientConfig(ClientConfiguration apiClientConfiguration) {
         ClientConfiguration tokenClientConfiguration = new ClientConfiguration();
 
-        if (apiClientConfiguration.getClientCredentialsResolver() != null)
-            tokenClientConfiguration.setClientCredentialsResolver(apiClientConfiguration.getClientCredentialsResolver());
+        tokenClientConfiguration.setClientCredentialsResolver(new OAuth2TokenClientCredentialsResolver());
+
+        tokenClientConfiguration.setRequestAuthenticator(new DisabledAuthenticator());
 
         tokenClientConfiguration.setCacheManagerEnabled(false);
         tokenClientConfiguration.setCacheManagerTti(apiClientConfiguration.getCacheManagerTti());
@@ -229,9 +234,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
         if (apiClientConfiguration.getCacheManagerCaches() != null)
             tokenClientConfiguration.setCacheManagerCaches(apiClientConfiguration.getCacheManagerCaches());
-
-        if (apiClientConfiguration.getRequestAuthenticatorFactory() != null)
-            tokenClientConfiguration.setRequestAuthenticatorFactory(apiClientConfiguration.getRequestAuthenticatorFactory());
 
         if (apiClientConfiguration.getBaseUrlResolver() != null)
             tokenClientConfiguration.setBaseUrlResolver(apiClientConfiguration.getBaseUrlResolver());
@@ -255,4 +257,12 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         return tokenClientConfiguration;
     }
 
+    static ClientCredentials emptyClientCredentials() {
+        return new ClientCredentials() {
+            @Override
+            public Object getCredentials() {
+                return Optional.empty();
+            }
+        };
+    }
 }

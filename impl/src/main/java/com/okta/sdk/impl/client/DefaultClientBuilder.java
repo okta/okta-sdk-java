@@ -33,7 +33,7 @@ import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
-import com.okta.sdk.impl.api.OAuth2ClientCredentialsResolver;
+import com.okta.sdk.impl.api.OAuth2ApiClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
 import com.okta.sdk.impl.config.OptionalPropertiesSource;
@@ -336,23 +336,18 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.cacheManager = cacheManagerBuilder.build();
         }
 
-        if (isOAuth2Flow()) {
-            this.clientConfig.setClientCredentialsResolver(new OAuth2ClientCredentialsResolver());
-        }
-        else if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
-            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
-        }
-        else if (this.clientConfig.getClientCredentialsResolver() == null) {
-            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
-        }
-
         if (this.clientConfig.getBaseUrlResolver() == null) {
             ConfigurationValidator.assertOrgUrl(this.clientConfig.getBaseUrl(), allowNonHttpsForTesting);
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
-        // OAuth2
-        if (isOAuth2Flow()) {
+        if (!isOAuth2Flow()) {
+            if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
+                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
+            } else if (this.clientConfig.getClientCredentialsResolver() == null) {
+                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
+            }
+        } else {
             this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
 
             validateOAuth2ClientConfig(this.clientConfig);
@@ -361,9 +356,9 @@ public class DefaultClientBuilder implements ClientBuilder {
 
             OAuth2ClientCredentials oAuth2ClientCredentials =
                 new OAuth2ClientCredentials(accessTokenRetrieverService);
-            OAuth2ClientCredentialsResolver oAuth2ClientCredentialsResolver =
-                new OAuth2ClientCredentialsResolver(oAuth2ClientCredentials);
-            this.clientConfig.setClientCredentialsResolver(oAuth2ClientCredentialsResolver);
+            OAuth2ApiClientCredentialsResolver oAuth2ApiClientCredentialsResolver =
+                new OAuth2ApiClientCredentialsResolver(oAuth2ClientCredentials);
+            this.clientConfig.setClientCredentialsResolver(oAuth2ApiClientCredentialsResolver);
         }
 
         return new DefaultClient(clientConfig, cacheManager);

@@ -18,6 +18,7 @@ package com.okta.sdk.impl.http.authc;
 import com.okta.commons.http.Request;
 import com.okta.commons.http.authc.RequestAuthenticationException;
 import com.okta.commons.http.authc.RequestAuthenticator;
+import com.okta.commons.lang.Assert;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.oauth2.OAuth2AccessToken;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
@@ -40,21 +41,21 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
     private final ClientCredentials<OAuth2AccessToken> clientCredentials;
 
     public OAuth2RequestAuthenticator(ClientCredentials<OAuth2AccessToken> clientCredentials) {
+        Assert.notNull(clientCredentials, "clientCredentials may not be null");
         this.clientCredentials = clientCredentials;
     }
 
     @Override
     public void authenticate(Request request) throws RequestAuthenticationException {
 
-        if (clientCredentials != null &&
-            clientCredentials.getCredentials() != null) {
+        if (clientCredentials.getCredentials() != null) {
             OAuth2AccessToken oAuth2AccessToken = clientCredentials.getCredentials();
 
-            if (oAuth2AccessToken != null) {
-                if (oAuth2AccessToken.hasExpired()) {
-                    log.debug("OAuth2 access token expiry detected. Will fetch a new token from Authorization server");
+            if (oAuth2AccessToken.hasExpired()) {
+                log.debug("OAuth2 access token expiry detected. Will fetch a new token from Authorization server");
 
-                    synchronized(this) {
+                synchronized(this) {
+                    if (oAuth2AccessToken.hasExpired()) {
                         try {
                             OAuth2ClientCredentials oAuth2ClientCredentials = (OAuth2ClientCredentials) clientCredentials;
                             // clear old token
@@ -69,11 +70,12 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
                         }
                     }
                 }
-
-                request.getHeaders()
-                    .set(AUTHORIZATION_HEADER, "Bearer " + oAuth2AccessToken.getAccessToken());
             }
+
+            request.getHeaders()
+                .set(AUTHORIZATION_HEADER, "Bearer " + oAuth2AccessToken.getAccessToken());
         }
+
     }
 
 }
