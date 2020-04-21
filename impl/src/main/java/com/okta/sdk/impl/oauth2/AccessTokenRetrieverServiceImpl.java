@@ -94,7 +94,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
                 .addQueryParameter("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
                 .addQueryParameter("client_assertion", signedJwt)
                 .addQueryParameter("scope", scope)
-                .post(tokenClientConfiguration.getBaseUrl() + TOKEN_URI, ExtensibleResource.class);
+                .post(TOKEN_URI, ExtensibleResource.class);
 
             OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken();
             oAuth2AccessToken.setTokenType(accessTokenResponse.getString(OAuth2AccessToken.TOKEN_TYPE_KEY));
@@ -103,7 +103,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             oAuth2AccessToken.setScope(accessTokenResponse.getString(OAuth2AccessToken.SCOPE_KEY));
 
             log.debug("Got OAuth2 access token for client id {} from {}",
-                tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
+                tokenClientConfiguration.getClientId(), TOKEN_URI);
 
             return oAuth2AccessToken;
         } catch (Exception e) {
