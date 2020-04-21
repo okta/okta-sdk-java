@@ -18,7 +18,6 @@ package com.okta.sdk.impl.oauth2;
 import com.okta.commons.http.MediaType;
 import com.okta.commons.http.authc.DisabledAuthenticator;
 import com.okta.commons.lang.Assert;
-import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.api.OAuth2TokenClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
@@ -257,12 +256,4 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         return tokenClientConfiguration;
     }
 
-    static ClientCredentials emptyClientCredentials() {
-        return new ClientCredentials() {
-            @Override
-            public Object getCredentials() {
-                return Optional.empty();
-            }
-        };
-    }
 }
