@@ -47,35 +47,30 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
 
     @Override
     public void authenticate(Request request) throws RequestAuthenticationException {
+        OAuth2AccessToken oAuth2AccessToken = clientCredentials.getCredentials();
 
-        if (clientCredentials.getCredentials() != null) {
-            OAuth2AccessToken oAuth2AccessToken = clientCredentials.getCredentials();
+        if (oAuth2AccessToken.hasExpired()) {
+            log.debug("OAuth2 access token expiry detected. Will fetch a new token from Authorization server");
 
-            if (oAuth2AccessToken.hasExpired()) {
-                log.debug("OAuth2 access token expiry detected. Will fetch a new token from Authorization server");
+            synchronized(this) {
+                if (oAuth2AccessToken.hasExpired()) {
+                    try {
+                        OAuth2ClientCredentials oAuth2ClientCredentials = (OAuth2ClientCredentials) clientCredentials;
+                        // clear old token
+                        oAuth2ClientCredentials.reset();
+                        // get a new token
+                        oAuth2AccessToken = oAuth2ClientCredentials.getAccessTokenRetrieverService().getOAuth2AccessToken();
+                        // store the new token
+                        oAuth2ClientCredentials.setCredentials(oAuth2AccessToken);
 
-                synchronized(this) {
-                    if (oAuth2AccessToken.hasExpired()) {
-                        try {
-                            OAuth2ClientCredentials oAuth2ClientCredentials = (OAuth2ClientCredentials) clientCredentials;
-                            // clear old token
-                            oAuth2ClientCredentials.reset();
-                            // get a new token
-                            oAuth2AccessToken = oAuth2ClientCredentials.getAccessTokenRetrieverService().getOAuth2AccessToken();
-                            // store the new token
-                            oAuth2ClientCredentials.setCredentials(oAuth2AccessToken);
-
-                        } catch (IOException | InvalidKeyException e) {
-                            throw new IllegalStateException("Failed to retrieve OAuth2 access token", e);
-                        }
+                    } catch (IOException | InvalidKeyException e) {
+                        throw new IllegalStateException("Failed to retrieve OAuth2 access token", e);
                     }
                 }
             }
-
-            request.getHeaders()
-                .set(AUTHORIZATION_HEADER, "Bearer " + oAuth2AccessToken.getAccessToken());
         }
 
+        request.getHeaders()
+            .set(AUTHORIZATION_HEADER, "Bearer " + oAuth2AccessToken.getAccessToken());
     }
-
 }
