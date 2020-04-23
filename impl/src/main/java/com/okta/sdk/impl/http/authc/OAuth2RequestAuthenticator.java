@@ -58,11 +58,11 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
             }
         }
 
-        if (oAuth2AccessToken.hasExpired()) {
+        if (oAuth2AccessToken != null && oAuth2AccessToken.hasExpired()) {
             log.debug("OAuth2 access token expiry detected. Will fetch a new token from Authorization server");
 
             synchronized (this) {
-                if (oAuth2AccessToken.hasExpired()) {
+                if (oAuth2AccessToken != null && oAuth2AccessToken.hasExpired()) {
                     try {
                         OAuth2ClientCredentials oAuth2ClientCredentials = (OAuth2ClientCredentials) clientCredentials;
                         // clear old token

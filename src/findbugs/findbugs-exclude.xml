@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2017 Okta
+  ~ Copyright 2017-Present Okta, Inc.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -103,6 +103,13 @@
     <Match>
         <Class name="com.okta.sdk.client.Proxy"/>
             <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS" />
+    </Match>
+
+    <!-- intentional double checking of null for the sake of use in multithreaded env -->
+    <Match>
+        <Class name="com.okta.sdk.impl.http.authc.OAuth2RequestAuthenticator" />
+        <Method name="authenticate" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE,NP_NULL_ON_SOME_PATH" />
     </Match>
 
 </FindBugsFilter>
