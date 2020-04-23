@@ -285,7 +285,7 @@ class DefaultClientBuilderTest {
         scopes.add("okta.apps.read")
         scopes.add("okta.apps.manage")
 
-        Util.expect(IllegalArgumentException) {
+        Util.expect(OAuth2TokenRetrieverException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
                 .setOrgUrl("https://okta.example.com")
                 .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)

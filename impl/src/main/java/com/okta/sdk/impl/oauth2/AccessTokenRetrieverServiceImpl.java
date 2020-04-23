@@ -18,6 +18,7 @@ package com.okta.sdk.impl.oauth2;
 import com.okta.commons.http.MediaType;
 import com.okta.commons.http.authc.DisabledAuthenticator;
 import com.okta.commons.lang.Assert;
+import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.api.OAuth2TokenClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
@@ -106,22 +107,19 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
                 tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
 
             return oAuth2AccessToken;
-        } catch (Exception e) {
-            if (e instanceof ResourceException) {
-                ResourceException resourceException = (ResourceException) e;
-                log.error("Exception occurred while trying to get OAuth2 access token for client id {}",
-                    tokenClientConfiguration.getClientId(), resourceException);
+        } catch (ResourceException e) {
+            log.error("Exception occurred while trying to get OAuth2 access token for client id {}",
+                tokenClientConfiguration.getClientId(), e);
 
-                //TODO: clean up the ugly casting and refactor code around it.
-                DefaultError defaultError = (DefaultError) resourceException.getError();
-                String errorMessage = defaultError.getString(OAuth2AccessToken.ERROR_KEY);
-                String errorDescription = defaultError.getString(OAuth2AccessToken.ERROR_DESCRIPTION);
-                defaultError.setMessage(errorMessage + " - " + errorDescription);
-                throw new OAuth2HttpException(defaultError, resourceException, resourceException.getStatus() == 401);
-            } else {
-                throw new OAuth2TokenRetrieverException("Exception while trying to get " +
-                    "OAuth2 access token for client id " + tokenClientConfiguration.getClientId(), e);
-            }
+            //TODO: clean up the ugly casting and refactor code around it.
+            DefaultError defaultError = (DefaultError) e.getError();
+            String errorMessage = defaultError.getString(OAuth2AccessToken.ERROR_KEY);
+            String errorDescription = defaultError.getString(OAuth2AccessToken.ERROR_DESCRIPTION);
+            defaultError.setMessage(errorMessage + " - " + errorDescription);
+            throw new OAuth2HttpException(defaultError, e, e.getStatus() == 401);
+        } catch (Exception e) {
+            throw new OAuth2TokenRetrieverException("Exception while trying to get " +
+                "OAuth2 access token for client id " + tokenClientConfiguration.getClientId(), e);
         }
     }
 
@@ -227,11 +225,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         tokenClientConfiguration.setRequestAuthenticator(new DisabledAuthenticator());
 
         tokenClientConfiguration.setCacheManagerEnabled(false);
-        tokenClientConfiguration.setCacheManagerTti(apiClientConfiguration.getCacheManagerTti());
-        tokenClientConfiguration.setCacheManagerTtl(apiClientConfiguration.getCacheManagerTtl());
-
-        if (apiClientConfiguration.getCacheManagerCaches() != null)
-            tokenClientConfiguration.setCacheManagerCaches(apiClientConfiguration.getCacheManagerCaches());
 
         if (apiClientConfiguration.getBaseUrlResolver() != null)
             tokenClientConfiguration.setBaseUrlResolver(apiClientConfiguration.getBaseUrlResolver());
@@ -239,10 +232,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         if (apiClientConfiguration.getProxy() != null)
             tokenClientConfiguration.setProxy(apiClientConfiguration.getProxy());
 
-        if (apiClientConfiguration.getAuthenticationScheme() != null)
-            tokenClientConfiguration.setAuthenticationScheme(apiClientConfiguration.getAuthenticationScheme());
-
-        tokenClientConfiguration.setAuthorizationMode(AuthorizationMode.PRIVATE_KEY);
+        tokenClientConfiguration.setAuthenticationScheme(AuthenticationScheme.NONE);
+        tokenClientConfiguration.setAuthorizationMode(AuthorizationMode.get(tokenClientConfiguration.getAuthenticationScheme()));
         tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
         tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());
         tokenClientConfiguration.setPrivateKey(apiClientConfiguration.getPrivateKey());

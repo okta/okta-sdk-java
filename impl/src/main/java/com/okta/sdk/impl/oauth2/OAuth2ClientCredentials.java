@@ -43,11 +43,11 @@ public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessTo
         try {
             accessToken = accessTokenRetrieverService.getOAuth2AccessToken();
         } catch (IOException | InvalidKeyException e) {
-            throw new IllegalArgumentException(e);
+            throw new OAuth2TokenRetrieverException("Failed to fetch OAuth2 access token eagerly", e);
         }
 
         if (accessToken == null) {
-            throw new IllegalStateException();
+            throw new OAuth2TokenRetrieverException("Failed to fetch OAuth2 access token eagerly");
         }
 
         return accessToken;

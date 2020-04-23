@@ -17,7 +17,6 @@ package com.okta.sdk.tests.it.util
 
 import com.okta.commons.lang.Strings
 import com.okta.sdk.authc.credentials.TokenClientCredentials
-import com.okta.sdk.client.AuthorizationMode
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.impl.cache.DisabledCacheManager
@@ -36,7 +35,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.testng.IHookCallBack
 import org.testng.IHookable
-import org.testng.ITestNGMethod
 import org.testng.ITestResult
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.Listeners

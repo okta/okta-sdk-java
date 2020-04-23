@@ -22,6 +22,7 @@ import com.okta.commons.lang.Assert;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.oauth2.OAuth2AccessToken;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
+import com.okta.sdk.impl.oauth2.OAuth2TokenRetrieverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,10 +50,18 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
     public void authenticate(Request request) throws RequestAuthenticationException {
         OAuth2AccessToken oAuth2AccessToken = clientCredentials.getCredentials();
 
+        if (oAuth2AccessToken == null) {
+            try {
+                oAuth2AccessToken = ((OAuth2ClientCredentials) clientCredentials).getAccessTokenRetrieverService().getOAuth2AccessToken();
+            } catch (IOException | InvalidKeyException e) {
+                throw new OAuth2TokenRetrieverException("Failed to get OAuth2 access token", e);
+            }
+        }
+
         if (oAuth2AccessToken.hasExpired()) {
             log.debug("OAuth2 access token expiry detected. Will fetch a new token from Authorization server");
 
-            synchronized(this) {
+            synchronized (this) {
                 if (oAuth2AccessToken.hasExpired()) {
                     try {
                         OAuth2ClientCredentials oAuth2ClientCredentials = (OAuth2ClientCredentials) clientCredentials;
@@ -64,7 +73,7 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
                         oAuth2ClientCredentials.setCredentials(oAuth2AccessToken);
 
                     } catch (IOException | InvalidKeyException e) {
-                        throw new IllegalStateException("Failed to retrieve OAuth2 access token", e);
+                        throw new OAuth2TokenRetrieverException("Failed to renew expired OAuth2 access token", e);
                     }
                 }
             }
