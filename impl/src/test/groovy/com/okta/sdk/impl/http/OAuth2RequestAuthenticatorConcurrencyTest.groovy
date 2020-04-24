@@ -42,8 +42,6 @@ class OAuth2RequestAuthenticatorConcurrencyTest {
 
     OAuth2RequestAuthenticator oAuth2RequestAuthenticator
 
-    private static final int PPP = 1000
-
     def initialAccessTokenStr = "initial-token-12345"
     def refreshedAccessTokenStr = "refreshed-token-12345"
 
@@ -70,18 +68,19 @@ class OAuth2RequestAuthenticatorConcurrencyTest {
         when(request.getHeaders()).thenReturn(httpHeaders)
     }
 
-    @Test(threadPoolSize = 5, invocationCount = 100)
+    @Test(threadPoolSize = 5, invocationCount = 10)
     void testAuthenticateRequestWithExpiredInitialToken() {
         oAuth2RequestAuthenticator.authenticate(request)
+        Thread.sleep((long)(Math.random() * 1000)) /* sleep random time (max 1000 ms) */
     }
 
     @AfterTest
     void verifyMocks() {
-        verify(clientCredentials, times(100)).getCredentials()
-        verify(initialAccessTokenObj, times(200)).hasExpired() // double locking
-        verify(accessTokenRetrievalService, times(100)).getOAuth2AccessToken()
-        verify(clientCredentials, times(100)).setCredentials(refreshedAccessTokenObj)
-        verify(request.getHeaders(), times(100))
+        verify(clientCredentials, times(10)).getCredentials()
+        verify(initialAccessTokenObj, times(20)).hasExpired() // double locking
+        verify(accessTokenRetrievalService, times(10)).getOAuth2AccessToken()
+        verify(clientCredentials, times(10)).setCredentials(refreshedAccessTokenObj)
+        verify(request.getHeaders(), times(10))
             .set(RequestAuthenticator.AUTHORIZATION_HEADER, "Bearer " + refreshedAccessTokenStr)
     }
     
