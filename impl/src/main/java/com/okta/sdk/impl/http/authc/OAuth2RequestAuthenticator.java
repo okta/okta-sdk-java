@@ -50,28 +50,17 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
     public void authenticate(Request request) throws RequestAuthenticationException {
         OAuth2AccessToken oAuth2AccessToken = clientCredentials.getCredentials();
 
-        if (oAuth2AccessToken == null) {
-            try {
-                oAuth2AccessToken = ((OAuth2ClientCredentials) clientCredentials).getAccessTokenRetrieverService().getOAuth2AccessToken();
-            } catch (IOException | InvalidKeyException e) {
-                throw new OAuth2TokenRetrieverException("Failed to get OAuth2 access token", e);
-            }
-        }
-
-        if (oAuth2AccessToken != null && oAuth2AccessToken.hasExpired()) {
+        if (oAuth2AccessToken.hasExpired()) {
             log.debug("OAuth2 access token expiry detected. Will fetch a new token from Authorization server");
 
             synchronized (this) {
-                if (oAuth2AccessToken != null && oAuth2AccessToken.hasExpired()) {
+                if (oAuth2AccessToken.hasExpired()) {
                     try {
                         OAuth2ClientCredentials oAuth2ClientCredentials = (OAuth2ClientCredentials) clientCredentials;
-                        // clear old token
-                        oAuth2ClientCredentials.reset();
-                        // get a new token
+                        // fetch new token
                         oAuth2AccessToken = oAuth2ClientCredentials.getAccessTokenRetrieverService().getOAuth2AccessToken();
                         // store the new token
                         oAuth2ClientCredentials.setCredentials(oAuth2AccessToken);
-
                     } catch (IOException | InvalidKeyException e) {
                         throw new OAuth2TokenRetrieverException("Failed to renew expired OAuth2 access token", e);
                     }
@@ -79,7 +68,8 @@ public class OAuth2RequestAuthenticator implements RequestAuthenticator {
             }
         }
 
-        request.getHeaders()
-            .set(AUTHORIZATION_HEADER, "Bearer " + oAuth2AccessToken.getAccessToken());
+        // add Bearer header with token value
+        request.getHeaders().set(AUTHORIZATION_HEADER, "Bearer " + oAuth2AccessToken.getAccessToken());
     }
+
 }

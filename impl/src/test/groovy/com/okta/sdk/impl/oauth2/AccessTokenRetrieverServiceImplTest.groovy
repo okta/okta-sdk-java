@@ -42,8 +42,9 @@ import static org.mockito.Mockito.times
 import static org.testng.Assert.assertEquals
 
 /**
- *
  * Test for {@link AccessTokenRetrieverServiceImpl} class
+ *
+ * @since 1.6.0
  */
 class AccessTokenRetrieverServiceImplTest {
 

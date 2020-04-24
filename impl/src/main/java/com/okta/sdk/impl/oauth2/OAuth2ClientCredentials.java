@@ -65,10 +65,6 @@ public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessTo
         return accessTokenRetrieverService;
     }
 
-    public void reset() {
-        setCredentials(null);
-    }
-
     @Override
     public String toString() {
         // never ever print the secret
