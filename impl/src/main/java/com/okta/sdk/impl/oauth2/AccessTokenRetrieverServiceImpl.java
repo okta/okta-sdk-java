@@ -20,7 +20,7 @@ import com.okta.commons.http.authc.DisabledAuthenticator;
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
-import com.okta.sdk.impl.api.OAuth2TokenClientCredentialsResolver;
+import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.error.DefaultError;
 import com.okta.sdk.resource.ExtensibleResource;
@@ -45,6 +45,7 @@ import java.security.PrivateKey;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -59,8 +60,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
     private static final String TOKEN_URI  = "/oauth2/v1/token";
 
-    private ClientConfiguration tokenClientConfiguration;
-    private OAuth2TokenClient tokenClient;
+    private final ClientConfiguration tokenClientConfiguration;
+    private final OAuth2TokenClient tokenClient;
 
     public AccessTokenRetrieverServiceImpl(ClientConfiguration apiClientConfiguration) {
         Assert.notNull(apiClientConfiguration, "apiClientConfiguration must not be null.");
@@ -108,9 +109,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
             return oAuth2AccessToken;
         } catch (ResourceException e) {
-            log.error("Exception occurred while trying to get OAuth2 access token for client id {}",
-                tokenClientConfiguration.getClientId(), e);
-
             //TODO: clean up the ugly casting and refactor code around it.
             DefaultError defaultError = (DefaultError) e.getError();
             String errorMessage = defaultError.getString(OAuth2AccessToken.ERROR_KEY);
@@ -220,7 +218,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     ClientConfiguration constructTokenClientConfig(ClientConfiguration apiClientConfiguration) {
         ClientConfiguration tokenClientConfiguration = new ClientConfiguration();
 
-        tokenClientConfiguration.setClientCredentialsResolver(new OAuth2TokenClientCredentialsResolver());
+        tokenClientConfiguration.setClientCredentialsResolver(
+            new DefaultClientCredentialsResolver(() -> Optional.empty()));
 
         tokenClientConfiguration.setRequestAuthenticator(new DisabledAuthenticator());
 

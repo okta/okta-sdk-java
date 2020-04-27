@@ -18,7 +18,7 @@ package com.okta.sdk.impl.oauth2
 import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.ds.RequestBuilder
 import com.okta.sdk.impl.Util
-import com.okta.sdk.impl.api.OAuth2TokenClientCredentialsResolver
+import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
 import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.error.DefaultError
 import com.okta.sdk.resource.ResourceException
@@ -106,7 +106,8 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getClientId()).thenReturn("client12345")
         when(clientConfig.getPrivateKey()).thenReturn(privateKeyPemFile.path)
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
-        when(clientConfig.getClientCredentialsResolver()).thenReturn(new OAuth2TokenClientCredentialsResolver())
+        when(clientConfig.getClientCredentialsResolver()).thenReturn(
+            new DefaultClientCredentialsResolver({ -> Optional.empty() }))
 
         String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
 
@@ -154,7 +155,8 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getClientId()).thenReturn("client12345")
         when(clientConfig.getPrivateKey()).thenReturn(privateKeyPemFile.path)
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
-        when(clientConfig.getClientCredentialsResolver()).thenReturn(new OAuth2TokenClientCredentialsResolver())
+        when(clientConfig.getClientCredentialsResolver()).thenReturn(
+            new DefaultClientCredentialsResolver({ -> Optional.empty() }))
 
         when(tokenClient.http()).thenReturn(requestBuilder)
 
@@ -191,7 +193,8 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getClientId()).thenReturn("client12345")
         when(clientConfig.getPrivateKey()).thenReturn(privateKeyPemFile.path)
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
-        when(clientConfig.getClientCredentialsResolver()).thenReturn(new OAuth2TokenClientCredentialsResolver())
+        when(clientConfig.getClientCredentialsResolver()).thenReturn(
+            new DefaultClientCredentialsResolver({ -> Optional.empty() }))
 
         when(tokenClient.http()).thenReturn(requestBuilder)
 
@@ -242,7 +245,7 @@ class AccessTokenRetrieverServiceImplTest {
                     return "https://sample.okta.com"
                 }
             })
-            cc.setClientCredentialsResolver(new OAuth2TokenClientCredentialsResolver())
+            cc.setClientCredentialsResolver(new DefaultClientCredentialsResolver({ -> Optional.empty() }))
             return new AccessTokenRetrieverServiceImpl(cc)
         }
 

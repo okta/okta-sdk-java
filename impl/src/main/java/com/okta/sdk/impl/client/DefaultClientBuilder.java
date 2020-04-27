@@ -33,7 +33,6 @@ import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
-import com.okta.sdk.impl.api.OAuth2ApiClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
 import com.okta.sdk.impl.config.OptionalPropertiesSource;
@@ -356,9 +355,8 @@ public class DefaultClientBuilder implements ClientBuilder {
 
             OAuth2ClientCredentials oAuth2ClientCredentials =
                 new OAuth2ClientCredentials(accessTokenRetrieverService);
-            OAuth2ApiClientCredentialsResolver oAuth2ApiClientCredentialsResolver =
-                new OAuth2ApiClientCredentialsResolver(oAuth2ClientCredentials);
-            this.clientConfig.setClientCredentialsResolver(oAuth2ApiClientCredentialsResolver);
+
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
         }
 
         return new DefaultClient(clientConfig, cacheManager);
