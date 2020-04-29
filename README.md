@@ -360,7 +360,7 @@ Higher numbers win. In other words, configuration passed via the constructor wil
  
 ### YAML configuration
  
-When you use an API Token instead of OAuth 2.0, the full YAML configuration would look like:
+The full YAML configuration looks like:
  
 ```yaml
 okta:
@@ -373,29 +373,6 @@ okta:
       username: null
       password: null
     token: {apiToken}
-    requestTimeout: 0 # seconds
-    rateLimit:
-      maxRetries: 4
-```
-
-When you use OAuth 2.0, the full YAML configuration would look like:
-
-```yaml
-okta:
-  client:
-    connectionTimeout: 30 # seconds
-    orgUrl: "https://{yourOktaDomain}" # i.e. https://dev-123456.oktapreview.com
-    proxy:
-      port: null
-      host: null
-      username: null
-      password: null
-    authorizationMode: "PrivateKey"
-    clientId: "{clientId}"
-    scopes:
-      - okta.clients.read
-      - okta.clients.manage
-    privateKey: "~/.okta/privateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
     requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4
