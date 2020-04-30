@@ -21,17 +21,18 @@ import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
+import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.cache.CacheManagerBuilder;
 import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthenticationScheme;
+import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
-import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
 import com.okta.sdk.impl.config.OptionalPropertiesSource;
@@ -44,15 +45,25 @@ import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
+import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
+import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
+import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -92,12 +103,13 @@ public class DefaultClientBuilder implements ClientBuilder {
                                                  SYSPROPS_TOKEN
     };
 
-
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
+
+    private AccessTokenRetrieverService accessTokenRetrieverService;
 
     public DefaultClientBuilder() {
         this(new DefaultResourceFactory());
@@ -210,6 +222,23 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setProxyPassword(props.get(DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME));
         }
 
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME))) {
+            clientConfig.setAuthorizationMode(AuthorizationMode.getAuthorizationMode(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME)));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_ID_PROPERTY_NAME))) {
+            clientConfig.setClientId(props.get(DEFAULT_CLIENT_ID_PROPERTY_NAME));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
+            Set<String> scopes = new HashSet<>(Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split(" ")));
+            clientConfig.setScopes(scopes);
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME))) {
+            clientConfig.setPrivateKey(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
+        }
+
         if (Strings.hasText(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME))) {
             clientConfig.setRetryMaxElapsed(Integer.parseInt(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME)));
         }
@@ -239,8 +268,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     @Override
     public ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme) {
-        this.clientConfig.setAuthenticationScheme(authenticationScheme);
-        return this;
+        return setAuthorizationMode(AuthorizationMode.get(authenticationScheme));
     }
 
     @Override
@@ -307,19 +335,44 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.cacheManager = cacheManagerBuilder.build();
         }
 
-        if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
-            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
-        }
-        else if (this.clientConfig.getClientCredentialsResolver() == null) {
-            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(clientConfig));
-        }
-
         if (this.clientConfig.getBaseUrlResolver() == null) {
             ConfigurationValidator.assertOrgUrl(this.clientConfig.getBaseUrl(), allowNonHttpsForTesting);
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
+        if (!isOAuth2Flow()) {
+            if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
+                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
+            } else if (this.clientConfig.getClientCredentialsResolver() == null) {
+                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
+            }
+        } else {
+            this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
+
+            validateOAuth2ClientConfig(this.clientConfig);
+
+            accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig);
+
+            OAuth2ClientCredentials oAuth2ClientCredentials =
+                new OAuth2ClientCredentials(accessTokenRetrieverService);
+
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
+        }
+
         return new DefaultClient(clientConfig, cacheManager);
+    }
+
+    /**
+     * @since 1.6.0
+     */
+    private void validateOAuth2ClientConfig(ClientConfiguration clientConfiguration) {
+        Assert.notNull(clientConfiguration.getClientId(), "clientId cannot be null");
+        Assert.isTrue(clientConfiguration.getScopes() != null && !clientConfiguration.getScopes().isEmpty(),
+            "At least one scope is required");
+        Assert.notNull(clientConfiguration.getPrivateKey(), "privateKey cannot be null");
+        Path privateKeyPemFilePath = Paths.get(clientConfiguration.getPrivateKey());
+        boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, new LinkOption[]{ LinkOption.NOFOLLOW_LINKS });
+        Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
     }
 
     @Override
@@ -329,8 +382,45 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this;
     }
 
+    @Override
+    public ClientBuilder setAuthorizationMode(AuthorizationMode authorizationMode) {
+        this.clientConfig.setAuthorizationMode(authorizationMode);
+        this.clientConfig.setAuthenticationScheme(authorizationMode.getAuthenticationScheme());
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setScopes(Set<String> scopes) {
+        if (isOAuth2Flow()) {
+            Assert.isTrue(scopes != null && !scopes.isEmpty(), "At least one scope is required");
+            this.clientConfig.setScopes(scopes);
+        }
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setPrivateKey(String privateKey) {
+        if (isOAuth2Flow()) {
+            Assert.notNull(privateKey, "Missing privateKey");
+            this.clientConfig.setPrivateKey(privateKey);
+        }
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setClientId(String clientId) {
+        ConfigurationValidator.assertClientId(clientId);
+        this.clientConfig.setClientId(clientId);
+        return this;
+    }
+
+    boolean isOAuth2Flow() {
+        return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
+    }
+
     // Used for testing, package private
     ClientConfiguration getClientConfiguration() {
         return clientConfig;
     }
+
 }

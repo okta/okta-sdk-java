@@ -1,4 +1,4 @@
-Copyright 2017 Okta
+Copyright 2017-Present Okta, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ This project includes:
   AutoService under Apache 2.0
   AutoService Processor under Apache 2.0
   Bean Validation API under The Apache Software License, Version 2.0
+  Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
+  Bouncy Castle Provider under Bouncy Castle Licence
   commonmark-java core under BSD 2-Clause License
   Commons CLI under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
@@ -33,6 +35,7 @@ This project includes:
   JavaMail API jar under CDDL or GPLv2+CE
   javax.annotation API under CDDL + GPLv2 with classpath exception
   JCL 1.2 implemented over SLF4J under Apache License, Version 2.0
+  JJWT :: API under Apache License, Version 2.0
   jmustache under The (New) BSD License
   Joda-Time under Apache 2
   JOpt Simple under The MIT License

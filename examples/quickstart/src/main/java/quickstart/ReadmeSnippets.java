@@ -46,7 +46,7 @@ import static com.okta.sdk.cache.Caches.forResource;
 /**
  * Example snippets used for this projects README.md.
  * <p>
- * Manually run {@code mvn okta-code-snippet:snip} after chaging this file to update the README.md.
+ * Manually run {@code mvn okta-code-snippet:snip} after changing this file to update the README.md.
  */
 @SuppressWarnings({"unused"})
 public class ReadmeSnippets {
@@ -220,3 +220,4 @@ public class ReadmeSnippets {
             .build();
     }
 }
+

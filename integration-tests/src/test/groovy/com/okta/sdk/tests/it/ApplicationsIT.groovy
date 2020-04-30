@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Okta
+ * Copyright 2017-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package com.okta.sdk.tests.it
+
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.ResourceException
