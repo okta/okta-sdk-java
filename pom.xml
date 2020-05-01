@@ -355,6 +355,14 @@
                         <sourceFile>examples/quickstart/src/main/java/quickstart/ReadmeSnippets.java</sourceFile>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <configuration>
+                        <!-- no js is used in this project -->
+                        <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
