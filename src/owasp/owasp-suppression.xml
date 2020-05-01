@@ -105,6 +105,7 @@
         <cve>CVE-2012-6708</cve>
         <cve>CVE-2015-9251</cve>
         <cve>CVE-2019-11358</cve>
+        <cve>CVE-2020-11022</cve>
     </suppress>
 
 </suppressions>
