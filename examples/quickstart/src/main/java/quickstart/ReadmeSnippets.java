@@ -17,6 +17,7 @@ package quickstart;
 
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.cache.Caches;
+import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.ExtensibleResource;
@@ -40,6 +41,8 @@ import com.okta.sdk.resource.user.factor.VerifyFactorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 import static com.okta.sdk.cache.Caches.forResource;
@@ -60,6 +63,16 @@ public class ReadmeSnippets {
         Client client = Clients.builder()
             .setOrgUrl("{yourOktaDomain}")
             .setClientCredentials(new TokenClientCredentials("{apiToken}"))
+            .build();
+    }
+
+    private void createOAuth2Client() {
+        Client client = Clients.builder()
+            .setOrgUrl("{yourOktaDomain}")
+            .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+            .setClientId("{clientId}")
+            .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
+            .setPrivateKey("{pathToYourPrivateKeyPemFile}")
             .build();
     }
 
