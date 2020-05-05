@@ -152,7 +152,7 @@ class GroupRulesIT implements CrudTestSupport {
         // 4. Deactivate the rule and update it
         rule.deactivate()
 
-        rule.name = 'Test group rule updated'
+        rule.name = 'Test group rule updated ${uniqueTestName}'
         rule.getConditions().getExpression().value = 'user.lastName==\"incorrect\"'
         rule.update()
         rule.activate()

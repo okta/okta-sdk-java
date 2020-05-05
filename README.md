@@ -111,6 +111,26 @@ Client client = Clients.builder()
 [//]: # (end: createClient)
  
 Hard-coding the Okta domain and API token works for quick tests, but for real projects you should use a more secure way of storing these values (such as environment variables). This library supports a few different configuration sources, covered in the [configuration reference](#configuration-reference) section.
+
+## OAuth 2.0
+
+Okta allows you to interact with Okta APIs using scoped OAuth 2.0 access tokens. Each access token enables the bearer to perform specific actions on specific Okta endpoints, with that ability controlled by which scopes the access token contains.
+
+This SDK supports this feature only for service-to-service applications. Check out [our guides](https://developer.okta.com/docs/guides/implement-oauth-for-okta/overview/) to learn more about how to register a new service application using a private and public key pair.
+
+When using this approach you won't need an API Token because the SDK will request an access token for you. In order to use OAuth 2.0, construct a client instance by passing the following parameters:
+
+[//]: # (method: createOAuth2Client)
+```java
+Client client = Clients.builder()
+    .setOrgUrl("{yourOktaDomain}")
+    .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+    .setClientId("{clientId}")
+    .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
+    .setPrivateKey("{pathToYourPrivateKeyPemFile}")
+    .build();
+```
+[//]: # (end: createOAuth2Client)
  
 ## Usage guide
 
@@ -373,6 +393,29 @@ okta:
       username: null
       password: null
     token: {apiToken}
+    requestTimeout: 0 # seconds
+    rateLimit:
+      maxRetries: 4
+```
+
+When you use OAuth 2.0, the full YAML configuration looks like:
+
+```yaml
+okta:
+  client:
+    connectionTimeout: 30 # seconds
+    orgUrl: "https://{yourOktaDomain}" # i.e. https://dev-123456.oktapreview.com
+    proxy:
+      port: null
+      host: null
+      username: null
+      password: null
+    authorizationMode: "PrivateKey"
+    clientId: "{clientId}"
+    scopes:
+      - okta.users.read
+      - okta.apps.read
+    privateKey: "~/.okta/privateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
     requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4

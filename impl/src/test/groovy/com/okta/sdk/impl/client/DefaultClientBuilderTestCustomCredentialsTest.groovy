@@ -18,6 +18,7 @@ package com.okta.sdk.impl.client
 import com.okta.sdk.authc.credentials.ClientCredentials
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
 import com.okta.sdk.authc.credentials.TokenClientCredentials
+import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
@@ -29,6 +30,7 @@ class DefaultClientBuilderTestCustomCredentialsTest {
 
     @BeforeMethod
     void before() {
+        clearOktaEnvAndSysProps()
 
         id = UUID.randomUUID().toString()
         secret = UUID.randomUUID().toString()
@@ -47,6 +49,8 @@ class DefaultClientBuilderTestCustomCredentialsTest {
 
     @Test
     void testCustomClientCredentialsAllowedWithApiKeyResolver(){
+        clearOktaEnvAndSysProps()
+
         def credentialsSecret = UUID.randomUUID().toString()
 
         ClientCredentials customCredentials = new ClientCredentials<String>() {
@@ -64,8 +68,14 @@ class DefaultClientBuilderTestCustomCredentialsTest {
         builder = new DefaultClientBuilder()
         builder.setClientCredentials(customCredentials)
         builder.setClientCredentialsResolver(apiKeyResolver)
+
         def testClient = builder.build()
 
         assertEquals testClient.dataStore.clientCredentials.credentials, keySecret
+    }
+
+    void clearOktaEnvAndSysProps() {
+        System.clearProperty("okta.client.authorizationMode")
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_AUTHORIZATIONMODE", null)
     }
 }

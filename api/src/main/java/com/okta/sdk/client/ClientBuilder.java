@@ -19,6 +19,8 @@ package com.okta.sdk.client;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 
+import java.util.Set;
+
 /**
  * A <a href="http://en.wikipedia.org/wiki/Builder_pattern">Builder design pattern</a> used to
  * construct {@link com.okta.sdk.client.Client} instances.
@@ -206,6 +208,10 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_PROXY_HOST_PROPERTY_NAME = "okta.client.proxy.host";
     String DEFAULT_CLIENT_PROXY_USERNAME_PROPERTY_NAME = "okta.client.proxy.username";
     String DEFAULT_CLIENT_PROXY_PASSWORD_PROPERTY_NAME = "okta.client.proxy.password";
+    String DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME = "okta.client.authorizationMode";
+    String DEFAULT_CLIENT_ID_PROPERTY_NAME = "okta.client.clientId";
+    String DEFAULT_CLIENT_SCOPES_PROPERTY_NAME = "okta.client.scopes";
+    String DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME = "okta.client.privateKey";
     String DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME = "okta.client.requestTimeout";
     String DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME = "okta.client.rateLimit.maxRetries";
     String DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME = "okta.testing.disableHttpsCheck";
@@ -306,14 +312,61 @@ public interface ClientBuilder {
      *
      * @param authenticationScheme the type of authentication to be used for communication with the Okta API server.
      * @return the ClientBuilder instance for method chaining
+     *
+     * @deprecated since 1.6.0 use {@link #setAuthorizationMode(AuthorizationMode)} to indicate the authentication scheme.
      */
+    @Deprecated
     ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme);
+
+    /**
+     * Allows specifying an authorization mode.
+     *
+     * @param authorizationMode mode of authorization for requests to the Okta API server.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 1.6.0
+     */
+    ClientBuilder setAuthorizationMode(AuthorizationMode authorizationMode);
+
+    /**
+     * Allows specifying a list of scopes directly instead of relying on the
+     * default location + override/fallback behavior defined in the {@link ClientBuilder documentation above}.
+     *
+     * @param scopes set of scopes for which the client requests access.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 1.6.0
+     */
+    ClientBuilder setScopes(Set<String> scopes);
+
+    /**
+     * Allows specifying the private key (PEM file) path (for private key jwt authentication) directly instead
+     * of relying on the default location + override/fallback behavior defined
+     * in the {@link ClientBuilder documentation above}.
+     *
+     * @param privateKey the fully qualified string path to the private key (PEM file).
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 1.6.0
+     */
+    ClientBuilder setPrivateKey(String privateKey);
+
+    /**
+     * Allows specifying the client ID instead of relying on the default location + override/fallback behavior defined
+     * in the {@link ClientBuilder documentation above}.
+     *
+     * @param clientId string representing the client ID.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 1.6.0
+     */
+    ClientBuilder setClientId(String clientId);
 
     /**
      * Sets both the timeout until a connection is established and the socket timeout (i.e. a maximum period of inactivity
      * between two consecutive data packets).  A timeout value of zero is interpreted as an infinite timeout.
      *
-     * @param timeout connection and socket timeout in milliseconds
+     * @param timeout connection and socket timeout in seconds
      * @return the ClientBuilder instance for method chaining
      */
     ClientBuilder setConnectionTimeout(int timeout);
@@ -331,9 +384,9 @@ public interface ClientBuilder {
     ClientBuilder setOrgUrl(String baseUrl);
 
     /**
-     * Sets the maximum number of milliseconds to wait when retrying before giving up.
+     * Sets the maximum number of seconds to wait when retrying before giving up.
      *
-     * @param maxElapsed retry max elapsed duration in milliseconds
+     * @param maxElapsed retry max elapsed duration in seconds
      * @return the ClientBuilder instance for method chaining
      */
     ClientBuilder setRetryMaxElapsed(int maxElapsed);
