@@ -381,13 +381,36 @@ paths:
       summary: List Key Credentials for Application
       tags:
         - Application
+  '/api/v1/apps/{appId}/credentials/keys/generate':
+    post:
+      consumes:
+        - application/json
+      description: Generates a new X.509 certificate for an application key credential
+      operationId: generateApplicationKey
+      parameters:
+        - in: path
+          name: appId
+          required: true
+          type: string
+        - in: query
+          name: validityYears
+          type: integer
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/JsonWebKey'
+      security:
+        - api_token: []
+      tags:
+        - Application
   '/api/v1/apps/{appId}/credentials/keys/{keyId}':
     get:
       consumes:
         - application/json
-      description: >-
-        Gets a specific [application key
-        credential](#application-key-credential-model) by `kid`
+      description: Gets a specific application key credential by kid
       operationId: getApplicationKey
       parameters:
         - in: path
@@ -717,6 +740,36 @@ paths:
       summary: Deactivate Application
       tags:
         - Application
+#  '/api/v1/apps/{appId}/sso/saml/metadata':
+#    get:
+#      consumes:
+#        - application/json
+#      description: >-
+#        Previews SAML metadata based on a specific key credential for an
+#        application
+#      operationId: previewSamlMetadataForApplication
+#      parameters:
+#        - description: unique key of an Application
+#          in: path
+#          name: appId
+#          required: true
+#          type: string
+#        - description: unique key of an Application Key Credential
+#          in: query
+#          name: kid
+#          required: true
+#          type: string
+#      produces:
+#        - application/xml
+#      responses:
+#        '200':
+#          description: Success
+#          schema:
+#            type: string
+#      security:
+#        - api_token: []
+#      tags:
+#        - Application
   '/api/v1/apps/{appId}/tokens':
     delete:
       consumes:
@@ -753,7 +806,7 @@ paths:
         - in: query
           name: after
           type: string
-        - default: -1
+        - default: 20
           format: int32
           in: query
           name: limit
@@ -3007,26 +3060,26 @@ paths:
       tags:
         - IdentityProvider
   '/api/v1/idps/{idpId}':
-    delete:
-      consumes:
-        - application/json
-      description: Removes an IdP from your organization.
-      operationId: deleteIdentityProvider
-      parameters:
-        - in: path
-          name: idpId
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Success
-      security:
-        - api_token: []
-      summary: Delete Identity Provider
-      tags:
-        - IdentityProvider
+#    delete:
+#      consumes:
+#        - application/json
+#      description: Removes an IdP from your organization.
+#      operationId: deleteIdentityProvider
+#      parameters:
+#        - in: path
+#          name: idpId
+#          required: true
+#          type: string
+#      produces:
+#        - application/json
+#      responses:
+#        '200':
+#          description: Success
+#      security:
+#        - api_token: []
+#      summary: Delete Identity Provider
+#      tags:
+#        - IdentityProvider
     get:
       consumes:
         - application/json
@@ -4828,7 +4881,7 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/CreateUserRequest'
+            $ref: '#/definitions/User'
         - default: true
           description: Executes activation lifecycle operation when creating the user
           in: query
@@ -4863,37 +4916,37 @@ paths:
       summary: Create User
       tags:
         - User
-  /api/v1/users/me/lifecycle/delete_sessions:
-    post:
-      consumes:
-        - application/json
-      description: >-
-        Clears Okta sessions for the currently logged in user. By default, the
-        current session remains active. Use this method in a browser-based
-        application.
-      operationId: clearCurrentUserSessions
-      parameters:
-        - default: true
-          in: query
-          name: keepCurrent
-          type: boolean
-        - description: Okta Sessions Cookie
-          in: header
-          name: Cookie
-          type: string
-        - description: Trusted Cors Origin
-          in: header
-          name: Origin
-          type: string
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: OK
-      security:
-        - api_token: []
-      tags:
-        - User
+#  /api/v1/users/me/lifecycle/delete_sessions:
+#    post:
+#      consumes:
+#        - application/json
+#      description: >-
+#        Clears Okta sessions for the currently logged in user. By default, the
+#        current session remains active. Use this method in a browser-based
+#        application.
+#      operationId: clearCurrentUserSessions
+#      parameters:
+#        - default: true
+#          in: query
+#          name: keepCurrent
+#          type: boolean
+#        - description: Okta Sessions Cookie
+#          in: header
+#          name: Cookie
+#          type: string
+#        - description: Trusted Cors Origin
+#          in: header
+#          name: Origin
+#          type: string
+#      produces:
+#        - application/json
+#      responses:
+#        '200':
+#          description: OK
+#      security:
+#        - api_token: []
+#      tags:
+#        - User
   '/api/v1/users/{associatedUserId}/linkedObjects/{primaryRelationshipName}/{primaryUserId}':
     put:
       consumes:
@@ -5583,7 +5636,7 @@ paths:
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/VerifyFactorRequest'
+            $ref: '#/definitions/ActivateFactorRequest'
       produces:
         - application/json
       responses:
@@ -6559,6 +6612,20 @@ paths:
       tags:
         - User
 definitions:
+  ActivateFactorRequest:
+    properties:
+      attestation:
+        type: string
+      clientData:
+        type: string
+      passCode:
+        type: string
+      registrationData:
+        type: string
+      stateToken:
+        type: string
+    x-okta-tags:
+      - UserFactor
   AppAndInstanceConditionEvaluatorAppOrInstance:
     properties:
       id:
@@ -6846,6 +6913,56 @@ definitions:
           - dest: appId
             src: id
         operationId: listApplicationKeys
+      - alias: generateKey
+        arguments:
+          - dest: appId
+            src: id
+        operationId: generateApplicationKey
+      - alias: generateCsr
+        arguments:
+          - dest: appId
+            src: id
+        operationId: generateCsrForApplication
+      - alias: getCsr
+        arguments:
+          - dest: appId
+            src: id
+        operationId: getCsrForApplication
+      - alias: revokeCSR
+        arguments:
+          - dest: appId
+            src: id
+        operationId: revokeCSRFromApplication
+      - alias: listCsrs
+        arguments:
+          - dest: appId
+            src: id
+        operationId: listCsrsForApplication
+      - alias: publishCerCert
+        arguments:
+          - dest: appId
+            src: id
+        operationId: publishCerCert
+      - alias: publishBinaryCerCert
+        arguments:
+          - dest: appId
+            src: id
+        operationId: publishBinaryCerCert
+      - alias: publishDerCert
+        arguments:
+          - dest: appId
+            src: id
+        operationId: publishDerCert
+      - alias: publishBinaryDerCert
+        arguments:
+          - dest: appId
+            src: id
+        operationId: publishBinaryDerCert
+      - alias: publishBinaryPemCert
+        arguments:
+          - dest: appId
+            src: id
+        operationId: publishBinaryPemCert
       - alias: listOAuth2Tokens
         arguments:
           - dest: appId
@@ -7552,17 +7669,18 @@ definitions:
       - Session
   CreateUserRequest:
     properties:
-      credentials:
-        $ref: '#/definitions/UserCredentials'
+#      credentials:
+#        $ref: '#/definitions/UserCredentials'
       groupIds:
         items:
           type: string
         type: array
-      profile:
-        $ref: '#/definitions/UserProfile'
-      type:
-        $ref: '#/definitions/UserType'
+#      profile:
+#        $ref: '#/definitions/UserProfile'
+#      type:
+#        $ref: '#/definitions/UserType'
     type: object
+    x-okta-parent: '#/definitions/User'
     x-okta-tags:
       - User
   DevicePolicyRuleCondition:
@@ -7583,20 +7701,11 @@ definitions:
     properties:
       supportedMDMFrameworks:
         items:
-          enum:
-            - AFW
-            - SAFE
-            - NATIVE
-          type: string
+          $ref: '#/definitions/MDMFrameworks'
         type: array
       types:
         items:
-          enum:
-            - IOS
-            - ANDROID
-            - OSX
-            - WINDOWS
-          type: string
+          $ref: '#/definitions/Platforms'
         type: array
     type: object
   Duration:
@@ -7641,8 +7750,8 @@ definitions:
         type: string
       createdBy:
         type: string
-      events:
-        $ref: '#/definitions/EventSubscriptions'
+#      events:
+#        $ref: '#/definitions/EventSubscriptions'
       id:
         readOnly: true
         type: string
@@ -7725,7 +7834,7 @@ definitions:
         items:
           $ref: '#/definitions/EventHookChannelConfigHeader'
         type: array
-      url:
+      uri:
         type: string
     type: object
   EventHookChannelConfigAuthScheme:
@@ -7750,19 +7859,19 @@ definitions:
       value:
         type: string
     type: object
-  EventSubscriptions:
-    discriminator: type
-    properties:
-      items:
-        items:
-          type: string
-        type: array
-      type:
-        enum:
-          - EVENT_TYPE
-          - FLOW_EVENT
-        type: string
-    type: object
+#  EventSubscriptions:
+#    discriminator: type
+#    properties:
+#      items:
+#        items:
+#          type: string
+#        type: array
+#      type:
+#        enum:
+#          - EVENT_TYPE
+#          - FLOW_EVENT
+#        type: string
+#    type: object
   FactorProvider:
     enum:
       - OKTA
@@ -7771,6 +7880,21 @@ definitions:
       - SYMANTEC
       - DUO
       - YUBICO
+    type: string
+    x-okta-tags:
+      - UserFactor
+  FactorResultType:
+    enum:
+      - SUCCESS
+      - CHALLENGE
+      - WAITING
+      - FAILED
+      - REJECTED
+      - TIMEOUT
+      - TIME_WINDOW_EXCEEDED
+      - PASSCODE_REPLAYED
+      - ERROR
+      - CANCELLED
     type: string
     x-okta-tags:
       - UserFactor
@@ -8669,6 +8793,8 @@ definitions:
           type: object
         readOnly: true
         type: object
+      name:
+        type: string
       associated:
         $ref: '#/definitions/LinkedObjectDetails'
       primary:
@@ -8686,7 +8812,7 @@ definitions:
       - alias: delete
         arguments:
           - dest: linkedObjectName
-            self: true
+            src: name
         operationId: deleteLinkedObjectDefinition
     x-okta-tags:
       - LinkedObject
@@ -9049,6 +9175,14 @@ definitions:
           - ANY_OR_NONE
         type: string
     type: object
+  MDMFrameworks:
+    enum:
+      - authorization_code
+      - implicit
+      - password
+      - refresh_token
+      - client_credentials
+    type: string
   OAuth2Actor:
     properties:
       id:
@@ -9350,6 +9484,7 @@ definitions:
     properties:
       people:
         $ref: '#/definitions/PolicyPeopleCondition'
+    x-okta-parent: '#/definition/PolicyRuleConditions'
     x-okta-tags:
       - Policy
   OktaSignOnPolicyRule:
@@ -9439,6 +9574,11 @@ definitions:
     type: string
     x-okta-tags:
       - Application
+  OpenIdConnectApplicationIssuerMode:
+    enum:
+      - CUSTOM_URL
+      - ORG_URL
+    type: string
   OpenIdConnectApplicationSettings:
     properties:
       oauthClient:
@@ -9458,6 +9598,10 @@ definitions:
         items:
           $ref: '#/definitions/OAuthGrantType'
         type: array
+      initiate_login_uri:
+        type: string
+      issuer_mode:
+        $ref: '#/definitions/OpenIdConnectApplicationIssuerMode'
       logo_uri:
         type: string
       policy_uri:
@@ -9585,6 +9729,7 @@ definitions:
         $ref: '#/definitions/PasswordPolicyAuthenticationProviderCondition'
       people:
         $ref: '#/definitions/PolicyPeopleCondition'
+    x-okta-parent: '#/definition/PolicyRuleConditions'
     x-okta-tags:
       - Policy
   PasswordPolicyDelegationSettings:
@@ -9817,6 +9962,13 @@ definitions:
     type: object
     x-okta-tags:
       - Policy
+  Platforms:
+    enum:
+      - IOS
+      - ANDROID
+      - OSX
+      - WINDOWS
+    type: string
   PlatformConditionEvaluatorPlatform:
     properties:
       os:
@@ -9878,8 +10030,8 @@ definitions:
           type: object
         readOnly: true
         type: object
-      conditions:
-        $ref: '#/definitions/PolicyRuleConditions'
+#      conditions:
+#        $ref: '#/definitions/PolicyRuleConditions'
       created:
         format: date-time
         readOnly: true
@@ -10132,6 +10284,8 @@ definitions:
       users:
         $ref: '#/definitions/UserPolicyRuleCondition'
     type: object
+    x-okta-tags:
+      - Policy
   PolicySubject:
     properties:
       filter:
@@ -10326,6 +10480,11 @@ definitions:
     type: object
   PushUserFactor:
     properties:
+      expiresAt:
+        format: date-time
+        type: string
+      factorResult:
+        $ref: '#/definitions/FactorResultType'
       profile:
         $ref: '#/definitions/PushUserFactorProfile'
     x-okta-parent: '#/definitions/UserFactor'
@@ -10420,6 +10579,49 @@ definitions:
     type: object
     x-okta-tags:
       - User
+    x-okta-operations:
+      - alias: addAdminGroup
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: groupId
+            parentSrc: id
+        operationId: addGroupTargetToGroupAdministratorRoleForGroup
+      - alias: addAppInstanceTargetToAdminRole
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: groupId
+            parentSrc: id
+        operationId: addApplicationInstanceTargetToAppAdminRoleGivenToGroup
+      - alias: addAppTargetToAdminRole
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: groupId
+            parentSrc: id
+        operationId: addApplicationTargetToAdminRoleGivenToGroup
+      - alias: addAllAppsAsTargetToRole
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: userId
+            parentSrc: id
+        operationId: addAllAppsAsTargetToRole
+      - alias: addAppTargetToAppAdminRoleForUser
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: userId
+            parentSrc: id
+        operationId: addApplicationTargetToAppAdminRoleForUser
+      - alias: addAppTargetToAdminRoleForUser
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: userId
+            parentSrc: id
+        operationId: addApplicationTargetToAdminRoleForUser
   RoleAssignmentType:
     enum:
       - GROUP
@@ -11247,11 +11449,11 @@ definitions:
           - dest: userId
             src: id
         operationId: resetFactors
-      - alias: deleteFactor
-        arguments:
-          - dest: userId
-            src: id
-        operationId: deleteFactor
+#      - alias: deleteFactor
+#        arguments:
+#          - dest: userId
+#            src: id
+#        operationId: deleteFactor
       - alias: addToGroup
         arguments:
           - dest: userId
@@ -11614,6 +11816,12 @@ definitions:
           - dest: typeId
             src: id
         operationId: deleteUserType
+    x-okta-operations:
+      - alias: replaceUserType
+        arguments:
+          - dest: roleId
+            src: id
+        operationId: replaceUserType
   VerifyFactorRequest:
     properties:
       activationToken:
@@ -11624,12 +11832,39 @@ definitions:
         type: string
       clientData:
         type: string
+      nextPassCode:
+        type: string
       passCode:
         type: string
       registrationData:
         type: string
       stateToken:
         type: string
+    x-okta-tags:
+      - UserFactor
+  VerifyFactorResponse:
+    properties:
+      _embedded:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
+      _links:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
+      expiresAt:
+        format: date-time
+        readOnly: true
+        type: string
+      factorResult:
+        $ref: '#/definitions/FactorResultType'
+        readOnly: true
+      factorResultMessage:
+        readOnly: true
+        type: string
+    type: object
     x-okta-tags:
       - UserFactor
   VerifyUserFactorResponse:

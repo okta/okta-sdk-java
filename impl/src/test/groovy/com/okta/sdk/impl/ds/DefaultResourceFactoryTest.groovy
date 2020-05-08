@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.ds
 
 import com.okta.sdk.resource.user.factor.Factor
-import com.okta.sdk.resource.user.factor.FactorType
+
 import com.okta.sdk.resource.user.factor.TotpFactor
 import org.testng.annotations.Test
 

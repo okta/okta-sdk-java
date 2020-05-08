@@ -34,10 +34,7 @@ import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.user.UserList;
 import com.okta.sdk.resource.user.factor.Factor;
-import com.okta.sdk.resource.user.factor.FactorList;
 import com.okta.sdk.resource.user.factor.SmsFactor;
-import com.okta.sdk.resource.user.factor.VerifyFactorRequest;
-import com.okta.sdk.resource.user.factor.VerifyFactorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

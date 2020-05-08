@@ -29,7 +29,7 @@
             value    = "com.okta.swagger.codegen.OktaJavaClientApiCodegen",
             comments = "POST - /api/v1/users/{userId}/factors")
     @Deprecated
-    Factor addFactor(Boolean updatePhone, String templateId, Integer tokenLifetimeSeconds, Boolean activate, Factor body);
+    com.okta.sdk.resource.user.factor.Factor addFactor(Boolean updatePhone, String templateId, Integer tokenLifetimeSeconds, Boolean activate, com.okta.sdk.resource.user.factor.Factor body);
 
     /**
      * Enroll Factor
@@ -44,7 +44,7 @@
             value    = "com.okta.swagger.codegen.OktaJavaClientApiCodegen",
             comments = "POST - /api/v1/users/{userId}/factors")
     @Deprecated
-    Factor addFactor(Boolean updatePhone, String templateId, Factor body);
+    com.okta.sdk.resource.user.factor.Factor addFactor(Boolean updatePhone, String templateId, com.okta.sdk.resource.user.factor.Factor body);
 
     /**
      * Forgot Password
