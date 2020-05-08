@@ -310,10 +310,6 @@
                         <additionalProperties>
                             <apiFile>${project.basedir}/../src/swagger/api.yaml</apiFile>
                         </additionalProperties>
-                        <!-- model-definitions to exclude from generation -->
-                        <excludedModels>
-                            <excludedModel>todo</excludedModel>
-                        </excludedModels>
                     </configuration>
                     <dependencies>
                         <dependency>
