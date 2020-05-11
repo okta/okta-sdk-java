@@ -740,36 +740,6 @@ paths:
       summary: Deactivate Application
       tags:
         - Application
-#  '/api/v1/apps/{appId}/sso/saml/metadata':
-#    get:
-#      consumes:
-#        - application/json
-#      description: >-
-#        Previews SAML metadata based on a specific key credential for an
-#        application
-#      operationId: previewSamlMetadataForApplication
-#      parameters:
-#        - description: unique key of an Application
-#          in: path
-#          name: appId
-#          required: true
-#          type: string
-#        - description: unique key of an Application Key Credential
-#          in: query
-#          name: kid
-#          required: true
-#          type: string
-#      produces:
-#        - application/xml
-#      responses:
-#        '200':
-#          description: Success
-#          schema:
-#            type: string
-#      security:
-#        - api_token: []
-#      tags:
-#        - Application
   '/api/v1/apps/{appId}/tokens':
     delete:
       consumes:
@@ -2913,7 +2883,7 @@ paths:
           in: query
           name: after
           type: string
-        - default: -1
+        - default: 20
           description: Specifies the number of IdP results in a page
           format: int32
           in: query
@@ -3060,26 +3030,26 @@ paths:
       tags:
         - IdentityProvider
   '/api/v1/idps/{idpId}':
-#    delete:
-#      consumes:
-#        - application/json
-#      description: Removes an IdP from your organization.
-#      operationId: deleteIdentityProvider
-#      parameters:
-#        - in: path
-#          name: idpId
-#          required: true
-#          type: string
-#      produces:
-#        - application/json
-#      responses:
-#        '200':
-#          description: Success
-#      security:
-#        - api_token: []
-#      summary: Delete Identity Provider
-#      tags:
-#        - IdentityProvider
+    delete:
+      consumes:
+        - application/json
+      description: Removes an IdP from your organization.
+      operationId: deleteIdentityProvider
+      parameters:
+        - in: path
+          name: idpId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+      security:
+        - api_token: []
+      summary: Delete Identity Provider
+      tags:
+        - IdentityProvider
     get:
       consumes:
         - application/json
@@ -7669,16 +7639,10 @@ definitions:
       - Session
   CreateUserRequest:
     properties:
-#      credentials:
-#        $ref: '#/definitions/UserCredentials'
       groupIds:
         items:
           type: string
         type: array
-#      profile:
-#        $ref: '#/definitions/UserProfile'
-#      type:
-#        $ref: '#/definitions/UserType'
     type: object
     x-okta-parent: '#/definitions/User'
     x-okta-tags:
@@ -7750,8 +7714,8 @@ definitions:
         type: string
       createdBy:
         type: string
-#      events:
-#        $ref: '#/definitions/EventSubscriptions'
+      events:
+        $ref: '#/definitions/EventSubscriptions'
       id:
         readOnly: true
         type: string
@@ -7859,19 +7823,18 @@ definitions:
       value:
         type: string
     type: object
-#  EventSubscriptions:
-#    discriminator: type
-#    properties:
-#      items:
-#        items:
-#          type: string
-#        type: array
-#      type:
-#        enum:
-#          - EVENT_TYPE
-#          - FLOW_EVENT
-#        type: string
-#    type: object
+  EventSubscriptions:
+    properties:
+      items:
+        items:
+          type: string
+        type: array
+      type:
+        enum:
+          - EVENT_TYPE
+          - FLOW_EVENT
+        type: string
+    type: object
   FactorProvider:
     enum:
       - OKTA
@@ -8328,90 +8291,90 @@ definitions:
         operationId: getIdentityProvider
       - alias: update
         arguments:
-          - dest: idpid
+          - dest: idpId
             src: id
           - dest: idpTrust
             self: true
         operationId: updateIdentityProvider
       - alias: delete
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: deleteIdentityProvider
     x-okta-operations:
       - alias: listSigningCsrs
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: listCsrsForIdentityProvider
       - alias: generateCsr
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: generateCsrForIdentityProvider
       - alias: deleteSigningCsr
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: revokeCsrForIdentityProvider
       - alias: getSigningCsr
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: getCsrForIdentityProvider
       - alias: listSigningKeys
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: listIdentityProviderSigningKeys
       - alias: generateSigningKey
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: generateIdentityProviderSigningKey
       - alias: getSigningKey
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: getIdentityProviderSigningKey
       - alias: cloneKey
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: cloneIdentityProviderKey
       - alias: activate
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: activateIdentityProvider
       - alias: deactivate
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: deactivateIdentityProvider
       - alias: listUsers
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: listIdentityProviderApplicationUsers
       - alias: unlinkUser
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: unlinkUserFromIdentityProvider
       - alias: getUser
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: getIdentityProviderApplicationUser
       - alias: linkUser
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: linkUserToIdentityProvider
       - alias: listSocialAuthTokens
         arguments:
-          - dest: idpTrust
+          - dest: idpId
             src: id
         operationId: listSocialAuthTokens
     x-okta-tags:
@@ -8757,7 +8720,7 @@ definitions:
       x5c:
         items:
           type: string
-        readOnly: true
+        readOnly: false
         type: array
       x5t:
         readOnly: true
@@ -10030,8 +9993,6 @@ definitions:
           type: object
         readOnly: true
         type: object
-#      conditions:
-#        $ref: '#/definitions/PolicyRuleConditions'
       created:
         format: date-time
         readOnly: true
@@ -10290,6 +10251,10 @@ definitions:
     properties:
       filter:
         type: string
+      format:
+        items:
+          type: string
+        type: array
       matchAttribute:
         type: string
       matchType:
@@ -11449,11 +11414,6 @@ definitions:
           - dest: userId
             src: id
         operationId: resetFactors
-#      - alias: deleteFactor
-#        arguments:
-#          - dest: userId
-#            src: id
-#        operationId: deleteFactor
       - alias: addToGroup
         arguments:
           - dest: userId
