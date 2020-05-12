@@ -8306,6 +8306,11 @@ definitions:
           - dest: idpId
             src: id
         operationId: getIdentityProviderSigningKey
+      - alias: deleteSigningKey
+        arguments:
+          - dest: idpId
+            src: id
+        operationId: deleteIdentityProviderKey
       - alias: cloneKey
         arguments:
           - dest: idpId
