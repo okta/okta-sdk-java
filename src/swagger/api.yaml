@@ -10422,6 +10422,7 @@ definitions:
       expiresAt:
         format: date-time
         type: string
+        readOnly: true
       factorResult:
         $ref: '#/definitions/FactorResultType'
       profile:
