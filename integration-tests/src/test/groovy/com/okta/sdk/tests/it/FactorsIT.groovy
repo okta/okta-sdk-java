@@ -145,7 +145,7 @@ class FactorsIT extends ITSupport {
         assertThat factors, iterableWithSize(greaterThan(1))
     }
 
-    @Test //TODO: check why this fails
+    @Test
     void activateTotpFactor() {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
