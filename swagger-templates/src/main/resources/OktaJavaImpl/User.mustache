@@ -30,7 +30,7 @@
         ResetPasswordToken resetPasswordToken = resetPassword(sendEmail);
 
         if (resetPasswordToken != null && resetPasswordToken.getResetPasswordUrl() != null) {
-            Map properties = new HashMap<>();
+            Map properties = new HashMap();
             properties.put("resetPasswordUrl", resetPasswordToken.getResetPasswordUrl());
             forgotPasswordResponse = new com.okta.sdk.impl.resource.user.DefaultForgotPasswordResponse(getDataStore(), properties);
         }

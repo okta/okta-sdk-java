@@ -265,7 +265,7 @@ class ApplicationsIT extends ITSupport {
     @Test
     void crudBrowserPlugin() {
         doCrudTest(client.instantiate(SwaApplication)
-                        //.setLabel(uniqueTestName)
+                        .setLabel(uniqueTestName)
                         .setSettings(client.instantiate(SwaApplicationSettings)
                             .setApp(client.instantiate(SwaApplicationSettingsApplication)
                                 .setButtonField("btn-login")

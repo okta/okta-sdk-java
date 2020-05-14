@@ -16,15 +16,13 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.impl.resource.group.rule.DefaultGroupRule
-import com.okta.sdk.impl.resource.group.rule.DefaultGroupRuleConditions
-import com.okta.sdk.impl.resource.group.rule.DefaultGroupRuleExpression
-import com.okta.sdk.impl.resource.group.rule.DefaultGroupRuleAction
-import com.okta.sdk.impl.resource.group.rule.DefaultGroupRuleGroupAssignment
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.rule.GroupRule
 import com.okta.sdk.resource.group.rule.GroupRuleAction
+import com.okta.sdk.resource.group.rule.GroupRuleConditions
+import com.okta.sdk.resource.group.rule.GroupRuleExpression
+import com.okta.sdk.resource.group.rule.GroupRuleGroupAssignment
 import com.okta.sdk.resource.group.rule.GroupRuleGroupCondition
 import com.okta.sdk.resource.group.rule.GroupRulePeopleCondition
 import com.okta.sdk.resource.group.rule.GroupRuleStatus
@@ -58,16 +56,16 @@ class GroupRulesIT implements CrudTestSupport {
     @Override
     def create(Client client) {
 
-        GroupRule rule = client.instantiate(DefaultGroupRule)
+        GroupRule rule = client.instantiate(GroupRule)
         rule.setName("rule+" + UUID.randomUUID().toString() )
         rule.setType("group_rule")
 
-        rule.setConditions(client.instantiate(DefaultGroupRuleConditions))
-        rule.getConditions().setExpression(client.instantiate(DefaultGroupRuleExpression))
+        rule.setConditions(client.instantiate(GroupRuleConditions))
+        rule.getConditions().setExpression(client.instantiate(GroupRuleExpression))
         rule.getConditions().getExpression().setValue("user.firstName==\"Joe\"")
 
-        rule.setActions(client.instantiate(DefaultGroupRuleAction))
-        rule.getActions().setAssignUserToGroups(client.instantiate(DefaultGroupRuleGroupAssignment))
+        rule.setActions(client.instantiate(GroupRuleAction))
+        rule.getActions().setAssignUserToGroups(client.instantiate(GroupRuleGroupAssignment))
         rule.getActions().getAssignUserToGroups().setGroupIds(Collections.singletonList(group.getId()))
 
         rule = client.createGroupRule(rule)
@@ -126,20 +124,20 @@ class GroupRulesIT implements CrudTestSupport {
         registerForCleanup(group)
 
         // 2. Create a group rule and verify rule executes
-        GroupRule rule = client.instantiate(DefaultGroupRule)
+        GroupRule rule = client.instantiate(GroupRule)
                 .setType('group_rule')
                 .setName(groupRuleName)
-                .setConditions(client.instantiate(DefaultGroupRuleConditions)
+                .setConditions(client.instantiate(GroupRuleConditions)
                         .setPeople(client.instantiate(GroupRulePeopleCondition)
                             .setUsers(client.instantiate(GroupRuleUserCondition)
                                     .setExclude([]))
                             .setGroups(client.instantiate(GroupRuleGroupCondition)
                                     .setExclude([])))
-                        .setExpression(client.instantiate(DefaultGroupRuleExpression)
+                        .setExpression(client.instantiate(GroupRuleExpression)
                                 .setValue("user.lastName==\"${user.getProfile().lastName}\"".toString())
                                 .setType('urn:okta:expression:1.0')))
                 .setActions(client.instantiate(GroupRuleAction)
-                        .setAssignUserToGroups(client.instantiate(DefaultGroupRuleGroupAssignment)
+                        .setAssignUserToGroups(client.instantiate(GroupRuleGroupAssignment)
                                 .setGroupIds(Collections.singletonList(group.getId()))))
         rule = client.createGroupRule(rule)
         registerForCleanup(rule)

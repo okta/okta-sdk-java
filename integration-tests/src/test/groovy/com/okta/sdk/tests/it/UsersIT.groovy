@@ -363,7 +363,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         userCredentials.getPassword().value = '!2@3#Passw0rd'.toCharArray()
         userCredentials.getRecoveryQuestion().answer = 'forty two'
         ForgotPasswordResponse response = user.forgotPassword(false, userCredentials)
-        //assertThat response.getResetPasswordUrl(), nullValue()
+        assertThat response.getResetPasswordUrl(), notNullValue()
 
         // 4. make the test recording happy, and call a get on the user
         // TODO: fix har file
