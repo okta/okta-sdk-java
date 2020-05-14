@@ -82,11 +82,11 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         return crudTestPolicy.listPolicyRules().iterator()
     }
 
-    //@Test
-    void activateDeactivateTest() {
+    @Test
+    void deactivateTest() {
 
         def group = randomGroup()
-        OktaSignOnPolicy policy = randomSignOnPolicy(group.getId())
+        def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
@@ -94,13 +94,10 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
                 .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
                     .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
-                    .setRequireFactor(false))), false)
+                    .setRequireFactor(false))))
         registerForCleanup(policyRule)
-        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.INACTIVE))
 
-        // activate
-        policyRule.activate()
-        policyRule = policy.getPolicyRule(policyRule.getId())
+        // policy rule is ACTIVE by default
         assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.ACTIVE))
 
         // deactivate
