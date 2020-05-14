@@ -13,7 +13,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-
     @Override
     public com.okta.sdk.resource.user.factor.Factor addFactor(Boolean updatePhone, String templateId, Integer tokenLifetimeSeconds, Boolean activate, com.okta.sdk.resource.user.factor.Factor body) {
         return addFactor(updatePhone, templateId, tokenLifetimeSeconds, activate, body);
@@ -26,5 +25,15 @@
 
     @Override
     public com.okta.sdk.resource.user.ForgotPasswordResponse forgotPassword(Boolean sendEmail, UserCredentials userCredentials) {
-        return forgotPassword(sendEmail, userCredentials);
+        com.okta.sdk.resource.user.ForgotPasswordResponse forgotPasswordResponse = null;
+
+        ResetPasswordToken resetPasswordToken = resetPassword(sendEmail);
+
+        if (resetPasswordToken != null && resetPasswordToken.getResetPasswordUrl() != null) {
+            Map properties = new HashMap<>();
+            properties.put("resetPasswordUrl", resetPasswordToken.getResetPasswordUrl());
+            forgotPasswordResponse = new com.okta.sdk.impl.resource.user.DefaultForgotPasswordResponse(getDataStore(), properties);
+        }
+
+        return forgotPasswordResponse;
     }

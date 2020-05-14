@@ -15,26 +15,35 @@
  */
 package com.okta.sdk.tests.it
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Lists
+
 import com.okta.sdk.client.Client
+import com.okta.sdk.impl.resource.user.factor.DefaultActivateFactorRequest
+import com.okta.sdk.impl.resource.user.factor.DefaultCallUserFactor
+import com.okta.sdk.impl.resource.user.factor.DefaultPushUserFactor
+import com.okta.sdk.impl.resource.user.factor.DefaultVerifyFactorRequest
+import com.okta.sdk.resource.VerifyUserFactorResponse
 import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserBuilder
-import com.okta.sdk.resource.user.factor.CallFactor
+import com.okta.sdk.impl.resource.user.factor.DefaultSmsUserFactor
+import com.okta.sdk.resource.user.factor.ActivateFactorRequest
+import com.okta.sdk.resource.user.factor.CallUserFactor
 import com.okta.sdk.resource.user.factor.Factor
-import com.okta.sdk.resource.user.factor.FactorList
+import com.okta.sdk.resource.user.factor.FactorProvider
 import com.okta.sdk.resource.user.factor.FactorResultType
 import com.okta.sdk.resource.user.factor.FactorStatus
-import com.okta.sdk.resource.user.factor.PushFactor
-import com.okta.sdk.resource.user.factor.SecurityQuestionFactor
+import com.okta.sdk.resource.user.factor.PushUserFactor
+import com.okta.sdk.resource.user.factor.SecurityQuestionUserFactor
+import com.okta.sdk.impl.resource.user.factor.DefaultSecurityQuestionUserFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionList
-import com.okta.sdk.resource.user.factor.SmsFactor
-import com.okta.sdk.resource.user.factor.SmsFactorProfile
-import com.okta.sdk.resource.user.factor.TotpFactor
+import com.okta.sdk.resource.user.factor.SmsUserFactor
+import com.okta.sdk.resource.user.factor.TotpUserFactor
+import com.okta.sdk.impl.resource.user.factor.DefaultTotpUserFactor
+import com.okta.sdk.resource.user.factor.UserFactor
+import com.okta.sdk.resource.user.factor.UserFactorList
 import com.okta.sdk.resource.user.factor.VerifyFactorRequest
 import com.okta.sdk.resource.user.factor.VerifyFactorResponse
 import com.okta.sdk.tests.it.util.ITSupport
 import org.jboss.aerogear.security.otp.Totp
-import org.jboss.aerogear.security.otp.api.Base32
 import org.testng.annotations.Test
 
 import static org.hamcrest.Matchers.*
@@ -53,25 +62,25 @@ class FactorsIT extends ITSupport {
 
         assertThat user.listFactors(), emptyIterable()
 
-        SmsFactor smsFactor = client.instantiate(SmsFactor)
-        smsFactor.getProfile().phoneNumber = smsTestNumber
-        user.addFactor(smsFactor)
+        SmsUserFactor smsUserFactor = client.instantiate(DefaultSmsUserFactor)
+        smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
+        user.enrollFactor(smsUserFactor)
 
-        SecurityQuestionFactor securityQuestionFactor = client.instantiate(SecurityQuestionFactor)
-        securityQuestionFactor.getProfile()
+        SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(DefaultSecurityQuestionUserFactor)
+        securityQuestionUserFactor.getProfile()
                 .setQuestion("disliked_food")
                 .setAnswer("pizza")
-        user.addFactor(securityQuestionFactor)
+        user.enrollFactor(securityQuestionUserFactor)
 
-        FactorList factorsList = user.listFactors()
-        List<Factor> factorsArrayList = Lists.newArrayList(factorsList)
+        UserFactorList factorsList = user.listFactors()
+        List<UserFactor> factorsArrayList = Lists.newArrayList(factorsList)
         assertThat factorsArrayList, allOf(hasSize(2), containsInAnyOrder(
                 allOf(
-                        instanceOf(SmsFactor),
-                        hasProperty("id", is(smsFactor.getId()))),
+                        instanceOf(SmsUserFactor),
+                        hasProperty("id", is(smsUserFactor.getId()))),
                 allOf(
-                        instanceOf(SecurityQuestionFactor),
-                        hasProperty("id", is(securityQuestionFactor.getId())))))
+                        instanceOf(SecurityQuestionUserFactor),
+                        hasProperty("id", is(securityQuestionUserFactor.getId())))))
     }
 
     @Test
@@ -81,14 +90,14 @@ class FactorsIT extends ITSupport {
 
         assertThat user.listFactors(), emptyIterable()
 
-        SecurityQuestionFactor securityQuestionFactor = client.instantiate(SecurityQuestionFactor)
-        securityQuestionFactor.getProfile()
+        SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(DefaultSecurityQuestionUserFactor)
+        securityQuestionUserFactor.getProfile()
                 .setQuestion("disliked_food")
                 .setAnswer("pizza")
 
-        assertThat securityQuestionFactor.id, nullValue()
-        assertThat securityQuestionFactor, sameInstance(user.addFactor(securityQuestionFactor))
-        assertThat securityQuestionFactor.id, notNullValue()
+        assertThat securityQuestionUserFactor.id, nullValue()
+        assertThat securityQuestionUserFactor, sameInstance(user.enrollFactor(securityQuestionUserFactor))
+        assertThat securityQuestionUserFactor.id, notNullValue()
     }
 
     @Test
@@ -98,12 +107,12 @@ class FactorsIT extends ITSupport {
 
         assertThat user.listFactors(), emptyIterable()
 
-        CallFactor callFactor = client.instantiate(CallFactor)
-        callFactor.getProfile().phoneNumber = smsTestNumber
+        CallUserFactor callUserFactor = client.instantiate(DefaultCallUserFactor)
+        callUserFactor.getProfile().setPhoneNumber(smsTestNumber)
 
-        assertThat callFactor.id, nullValue()
-        assertThat callFactor, sameInstance(user.addFactor(callFactor))
-        assertThat callFactor.id, notNullValue()
+        assertThat callUserFactor.id, nullValue()
+        assertThat callUserFactor, sameInstance(user.enrollFactor(callUserFactor))
+        assertThat callUserFactor.id, notNullValue()
     }
 
     @Test
@@ -113,12 +122,12 @@ class FactorsIT extends ITSupport {
 
         assertThat user.listFactors(), emptyIterable()
 
-        SmsFactor smsFactor = client.instantiate(SmsFactor)
-        smsFactor.getProfile().phoneNumber = smsTestNumber
+        SmsUserFactor smsUserFactor = client.instantiate(DefaultSmsUserFactor)
+        smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
 
-        assertThat smsFactor.id, nullValue()
-        assertThat smsFactor, sameInstance(user.addFactor(smsFactor))
-        assertThat smsFactor.id, notNullValue()
+        assertThat smsUserFactor.id, nullValue()
+        assertThat smsUserFactor, sameInstance(user.enrollFactor(smsUserFactor))
+        assertThat smsUserFactor.id, notNullValue()
     }
 
     @Test
@@ -127,10 +136,10 @@ class FactorsIT extends ITSupport {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
 
-        PushFactor pushFactor = client.instantiate(PushFactor)
-        assertThat pushFactor.id, nullValue()
-        assertThat pushFactor, sameInstance(user.addFactor(pushFactor))
-        assertThat pushFactor.id, notNullValue()
+        PushUserFactor pushUserFactor = client.instantiate(DefaultPushUserFactor)
+        assertThat pushUserFactor.id, nullValue()
+        assertThat pushUserFactor, sameInstance(user.enrollFactor(pushUserFactor))
+        assertThat pushUserFactor.id, notNullValue()
     }
 
     @Test
@@ -143,41 +152,41 @@ class FactorsIT extends ITSupport {
     @Test
     void testAvailableFactorsNotEmpty() {
         User user = randomUser()
-        FactorList factors = user.listSupportedFactors()
+        UserFactorList factors = user.listSupportedFactors()
         assertThat factors, iterableWithSize(greaterThan(1))
     }
 
-    @Test
+    @Test //TODO: check why this fails
     void activateTotpFactor() {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
-        TotpFactor totpFactor = client.instantiate(TotpFactor)
-        user.addFactor(totpFactor)
+        TotpUserFactor totpUserFactor = client.instantiate(DefaultTotpUserFactor)
+        user.enrollFactor(totpUserFactor)
 
-        assertThat totpFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
-        Totp totp = new Totp(totpFactor.getEmbedded().get("activation").get("sharedSecret"))
+        assertThat totpUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
+        Totp totp = new Totp(totpUserFactor.getEmbedded().get("activation").get("sharedSecret"))
 
-        VerifyFactorRequest verifyFactorRequest = client.instantiate(VerifyFactorRequest)
-        verifyFactorRequest.passCode = totp.now()
-        Factor factorResult = totpFactor.activate(verifyFactorRequest)
+        ActivateFactorRequest activateFactorRequest = client.instantiate(DefaultActivateFactorRequest)
+        activateFactorRequest.setPassCode(totp.now())
+        UserFactor factorResult = totpUserFactor.activate(activateFactorRequest)
         assertThat factorResult.getStatus(), is(FactorStatus.ACTIVE)
-        assertThat factorResult, instanceOf(TotpFactor)
+        assertThat factorResult, instanceOf(TotpUserFactor)
     }
 
     @Test
     void verifyQuestionFactor() {
         User user = randomUser()
 
-        SecurityQuestionFactor securityQuestionFactor = client.instantiate(SecurityQuestionFactor)
-        securityQuestionFactor.getProfile()
+        SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(DefaultSecurityQuestionUserFactor)
+        securityQuestionUserFactor.getProfile()
                 .setQuestion("disliked_food")
                 .setAnswer("pizza")
-        user.addFactor(securityQuestionFactor)
+        user.enrollFactor(securityQuestionUserFactor)
 
-        VerifyFactorRequest request = client.instantiate(VerifyFactorRequest)
-        request.answer = "pizza"
-        VerifyFactorResponse response = securityQuestionFactor.verify(request)
-        assertThat response.getFactorResult(), is(FactorResultType.SUCCESS)
+        VerifyFactorRequest request = client.instantiate(DefaultVerifyFactorRequest)
+        request.setAnswer("pizza")
+        VerifyUserFactorResponse response = securityQuestionUserFactor.verify(request, null, null)
+        assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
     }
 
     @Test
@@ -185,9 +194,9 @@ class FactorsIT extends ITSupport {
 
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
-        TotpFactor totpFactor = client.instantiate(TotpFactor)
-        totpFactor.provider = "OKTA"
-        user.addFactor(totpFactor)
-        totpFactor.delete()
+        TotpUserFactor totpUserFactor = client.instantiate(DefaultTotpUserFactor)
+        totpUserFactor.setProvider(FactorProvider.OKTA)
+        user.enrollFactor(totpUserFactor)
+        totpUserFactor.delete()
     }
 }

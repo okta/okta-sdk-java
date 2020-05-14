@@ -36,11 +36,11 @@ import com.okta.sdk.resource.user.PasswordCredential
 import com.okta.sdk.resource.user.RecoveryQuestionCredential
 import com.okta.sdk.resource.user.ResetPasswordToken
 import com.okta.sdk.resource.user.Role
-import com.okta.sdk.resource.user.TempPassword
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserList
+import com.okta.sdk.resource.user.UserStatus
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
@@ -362,8 +362,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 3. Update the user password through updated recovery question
         userCredentials.getPassword().value = '!2@3#Passw0rd'.toCharArray()
         userCredentials.getRecoveryQuestion().answer = 'forty two'
-        ForgotPasswordResponse response = user.forgotPassword(null, userCredentials)
-        assertThat response.getResetPasswordUrl(), nullValue()
+        ForgotPasswordResponse response = user.forgotPassword(false, userCredentials)
+        //assertThat response.getResetPasswordUrl(), nullValue()
 
         // 4. make the test recording happy, and call a get on the user
         // TODO: fix har file
@@ -390,7 +390,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         ForgotPasswordResponse response = user.forgotPassword(false, null)
-        assertThat response.getResetPasswordUrl(), containsString("/reset-password/")
+        assertThat response.getResetPasswordUrl(), containsString("/reset_password/")
     }
 
     @Test
@@ -413,9 +413,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        // 2. Expire the user's password with tempPassword=true
-        TempPassword tempPassword = user.expirePassword(true)
-        assertThat tempPassword.getTempPassword(), notNullValue()
+        // 2. Expire the user's password
+        User updatedUser = user.expirePassword()
+        assertThat updatedUser, notNullValue()
+        assertThat updatedUser.getStatus(), is(UserStatus.PASSWORD_EXPIRED)
     }
 
 
@@ -440,7 +441,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Get the reset password link
-        ResetPasswordToken token = user.resetPassword(null, false)
+        ResetPasswordToken token = user.resetPassword(false)
         assertThat token.getResetPasswordUrl(), notNullValue()
     }
 

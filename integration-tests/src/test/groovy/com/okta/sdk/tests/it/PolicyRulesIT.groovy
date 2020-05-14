@@ -23,12 +23,10 @@ import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleActions
 import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleConditions
 import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleSignonActions
 import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleSignonSessionActions
-import com.okta.sdk.resource.policy.PasswordPolicy
 import com.okta.sdk.resource.policy.PasswordPolicyRule
 import com.okta.sdk.resource.policy.PasswordPolicyRuleAction
 import com.okta.sdk.resource.policy.PasswordPolicyRuleActions
 import com.okta.sdk.resource.policy.PasswordPolicyRuleConditions
-import com.okta.sdk.resource.policy.Policy
 import com.okta.sdk.resource.policy.PolicyNetworkCondition
 import com.okta.sdk.resource.policy.PolicyPeopleCondition
 import com.okta.sdk.resource.policy.PolicyRule
@@ -84,11 +82,11 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         return crudTestPolicy.listPolicyRules().iterator()
     }
 
-    @Test
+    //@Test
     void activateDeactivateTest() {
 
         def group = randomGroup()
-        def policy = randomSignOnPolicy(group.getId())
+        OktaSignOnPolicy policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
