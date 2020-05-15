@@ -29,6 +29,8 @@ import com.okta.sdk.resource.policy.PasswordPolicyRuleActions
 import com.okta.sdk.resource.policy.PasswordPolicyRuleConditions
 import com.okta.sdk.resource.policy.PasswordPolicySettings
 import com.okta.sdk.resource.policy.PolicyNetworkCondition
+import com.okta.sdk.resource.role.AssignRoleRequest
+import com.okta.sdk.resource.role.RoleType
 import com.okta.sdk.resource.user.AuthenticationProviderType
 import com.okta.sdk.resource.user.ChangePasswordRequest
 import com.okta.sdk.resource.user.ForgotPasswordResponse
@@ -199,12 +201,9 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         user.activate(false)
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
-
-
-
     }
 
-    @Test(enabled = false)
+    @Test(enabled = true)
     @Scenario("user-role-assign")
     void roleAssignTest() {
 
@@ -225,8 +224,9 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Assign USER_ADMIN role to the user
-        Role role = user.addRole(client.instantiate(Role)
-                .setType('USER_ADMIN'))
+        AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
+        assignRoleRequest.setType(RoleType.USER_ADMIN)
+        Role role = user.assignRole(assignRoleRequest)
 
         // 3. List roles for the user and verify added role
         assertPresent(user.listRoles(), role)
@@ -235,6 +235,19 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         user.removeRole(role.getId())
 
         // 5. List roles for user and verify role was removed
+        assertNotPresent(user.listRoles(), role)
+
+        // 6. Now, assign SUPER_ADMIN role to the user
+        assignRoleRequest.setType(RoleType.SUPER_ADMIN)
+        role = user.assignRole(assignRoleRequest)
+
+        // 7. Again, list roles for the user and verify added role
+        assertPresent(user.listRoles(), role)
+
+        // 8. Remove role for the user
+        user.removeRole(role.getId())
+
+        // 9. List roles for user and verify role was removed
         assertNotPresent(user.listRoles(), role)
     }
 
