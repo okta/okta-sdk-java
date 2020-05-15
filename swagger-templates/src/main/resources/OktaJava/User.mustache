@@ -13,37 +13,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
-    /**
-     * Enroll Factor
-     * Enrolls a user with a supported factor.
-     * @param updatePhone  (optional, default to false)
-     * @param templateId id of SMS template (only for SMS factor) (optional)
-     * @param tokenLifetimeSeconds  (optional, default to 300)
-     * @param activate  (optional, default to false)
-     * @param body Factor (required)
-     * @return Factor
-     * @deprecated use {@link User#addFactor(Factor, Boolean, String, Integer, Boolean)}
-    */
-    @javax.annotation.Generated(
-            value    = "com.okta.swagger.codegen.OktaJavaClientApiCodegen",
-            comments = "POST - /api/v1/users/{userId}/factors")
-    @Deprecated
-    com.okta.sdk.resource.user.factor.Factor addFactor(Boolean updatePhone, String templateId, Integer tokenLifetimeSeconds, Boolean activate, com.okta.sdk.resource.user.factor.Factor body);
-
-    /**
-     * Enroll Factor
-     * Enrolls a user with a supported factor.
-     * @param updatePhone  (optional, default to false)
-     * @param templateId id of SMS template (only for SMS factor) (optional)
-     * @param body Factor (required)
-     * @return Factor
-     * @deprecated use {@link User#addFactor(Factor, Boolean, String)}
-    */
-    @javax.annotation.Generated(
-            value    = "com.okta.swagger.codegen.OktaJavaClientApiCodegen",
-            comments = "POST - /api/v1/users/{userId}/factors")
-    @Deprecated
-    com.okta.sdk.resource.user.factor.Factor addFactor(Boolean updatePhone, String templateId, com.okta.sdk.resource.user.factor.Factor body);
 
     /**
      * Forgot Password
@@ -52,7 +21,7 @@
      * @param sendEmail  (optional, default to true)
      * @param userCredentials  (optional)
      * @return ForgotPasswordResponse
-     * @deprecated use {@link User#forgotPassword(UserCredentials, Boolean)}
+     * @deprecated use {@link #resetPassword(Boolean)}
     */
     @javax.annotation.Generated(
             value    = "com.okta.swagger.codegen.OktaJavaClientApiCodegen",
