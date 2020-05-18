@@ -7624,10 +7624,16 @@ definitions:
       - Session
   CreateUserRequest:
     properties:
+      credentials:
+        $ref: '#/definitions/UserCredentials'
       groupIds:
         items:
           type: string
         type: array
+      profile:
+        $ref: '#/definitions/UserProfile'
+      type:
+        $ref: '#/definitions/UserType'
     type: object
     x-okta-parent: '#/definitions/User'
     x-okta-tags:
@@ -9978,6 +9984,8 @@ definitions:
           type: object
         readOnly: true
         type: object
+      conditions:
+        $ref: '#/definitions/PolicyRuleConditions'
       created:
         format: date-time
         readOnly: true
