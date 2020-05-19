@@ -2163,7 +2163,7 @@ paths:
       consumes:
         - application/json
       description: Lists all group rules for your organization.
-      operationId: listGroupRules
+      operationId: listRules
       parameters:
         - default: 50
           description: Specifies the number of rule results in a page
@@ -2204,7 +2204,7 @@ paths:
       description: >-
         Creates a group rule to dynamically add users to the specified group if
         they match the condition
-      operationId: createGroupRule
+      operationId: createRule
       parameters:
         - in: body
           name: groupRule
@@ -2228,7 +2228,7 @@ paths:
       consumes:
         - application/json
       description: Removes a specific group rule by id from your organization
-      operationId: deleteGroupRule
+      operationId: deleteRule
       parameters:
         - in: path
           name: ruleId
@@ -2248,7 +2248,7 @@ paths:
       consumes:
         - application/json
       description: Fetches a specific group rule by id from your organization
-      operationId: getGroupRule
+      operationId: getRule
       parameters:
         - in: path
           name: ruleId
@@ -2273,7 +2273,7 @@ paths:
       consumes:
         - application/json
       description: Updates a group rule. Only `INACTIVE` rules can be updated.
-      operationId: updateGroupRule
+      operationId: updateRule
       parameters:
         - in: path
           name: ruleId
@@ -2300,7 +2300,7 @@ paths:
       consumes:
         - application/json
       description: Activates a specific group rule by id from your organization
-      operationId: activateGroupRule
+      operationId: activateRule
       parameters:
         - in: path
           name: ruleId
@@ -2321,7 +2321,7 @@ paths:
       consumes:
         - application/json
       description: Deactivates a specific group rule by id from your organization
-      operationId: deactivateGroupRule
+      operationId: deactivateRule
       parameters:
         - in: path
           name: ruleId
@@ -8106,23 +8106,23 @@ definitions:
             src: id
           - dest: groupRule
             self: true
-        operationId: updateGroupRule
+        operationId: updateRule
       - alias: delete
         arguments:
           - dest: ruleId
             src: id
-        operationId: deleteGroupRule
+        operationId: deleteRule
     x-okta-operations:
       - alias: activate
         arguments:
           - dest: ruleId
             src: id
-        operationId: activateGroupRule
+        operationId: activateRule
       - alias: deactivate
         arguments:
           - dest: ruleId
             src: id
-        operationId: deactivateGroupRule
+        operationId: deactivateRule
     x-okta-tags:
       - GroupRule
   GroupRuleAction:

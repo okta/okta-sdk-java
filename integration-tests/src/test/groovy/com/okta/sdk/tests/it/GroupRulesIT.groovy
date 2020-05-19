@@ -68,7 +68,7 @@ class GroupRulesIT implements CrudTestSupport {
         rule.getActions().setAssignUserToGroups(client.instantiate(GroupRuleGroupAssignment))
         rule.getActions().getAssignUserToGroups().setGroupIds(Collections.singletonList(group.getId()))
 
-        rule = client.createGroupRule(rule)
+        rule = client.createRule(rule)
         registerForCleanup(rule)
 
         return rule
@@ -76,7 +76,7 @@ class GroupRulesIT implements CrudTestSupport {
 
     @Override
     def read(Client client, String id) {
-        return client.getGroupRule(id)
+        return client.getRule(id)
     }
 
     @Override
@@ -92,7 +92,7 @@ class GroupRulesIT implements CrudTestSupport {
 
     @Override
     Iterator getResourceCollectionIterator(Client client) {
-        return client.listGroupRules().iterator()
+        return client.listRules().iterator()
     }
 
     @Test
@@ -139,15 +139,15 @@ class GroupRulesIT implements CrudTestSupport {
                 .setActions(client.instantiate(GroupRuleAction)
                         .setAssignUserToGroups(client.instantiate(GroupRuleGroupAssignment)
                                 .setGroupIds(Collections.singletonList(group.getId()))))
-        rule = client.createGroupRule(rule)
+        rule = client.createRule(rule)
         registerForCleanup(rule)
         rule.activate()
 
-        GroupRule readRule = client.getGroupRule(rule.getId())
+        GroupRule readRule = client.getRule(rule.getId())
         assertThat readRule.getStatus(), equalTo(GroupRuleStatus.ACTIVE)
 
         // 3. List group rules
-        assertPresent(client.listGroupRules(), rule)
+        assertPresent(client.listRules(), rule)
 
         // 4. Deactivate the rule and update it
         rule.deactivate()
@@ -157,7 +157,7 @@ class GroupRulesIT implements CrudTestSupport {
         rule.update()
         rule.activate()
 
-        readRule = client.getGroupRule(rule.getId())
+        readRule = client.getRule(rule.getId())
         assertThat readRule.getStatus(), equalTo(GroupRuleStatus.ACTIVE)
 
         // 5. delete rule

@@ -162,7 +162,7 @@ trait ClientProvider implements IHookable {
 
     void deleteRule(String ruleName, Client client) {
         Util.ignoring(ResourceException) {
-            GroupRuleList rules = client.listGroupRules()
+            GroupRuleList rules = client.listRules()
             rules.each {rule ->
                 if (ruleName.equals(rule.name)) {
                     if (rule.status == GroupRuleStatus.ACTIVE) {
