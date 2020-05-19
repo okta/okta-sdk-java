@@ -5360,10 +5360,18 @@ paths:
       consumes:
         - application/json
       parameters:
+        - in: body
+          name: userCredentials
+          schema:
+            $ref: '#/definitions/UserCredentials'
         - in: path
           name: userId
           required: true
           type: string
+        - default: true
+          in: query
+          name: sendEmail
+          type: boolean
       produces:
         - application/json
       responses:
@@ -5915,7 +5923,7 @@ paths:
       summary: Deactivate User
       tags:
         - User
-  '/api/v1/users/{userId}/lifecycle/expire_password?tempPassword=false':
+  '/api/v1/users/{userId}/lifecycle/expire_password':
     post:
       consumes:
         - application/json
@@ -5929,13 +5937,18 @@ paths:
           name: userId
           required: true
           type: string
+        - default: false
+          description: 'Sets the user''s password to a temporary password,  if true'
+          in: query
+          name: tempPassword
+          type: boolean
       produces:
         - application/json
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/TempPassword'
       security:
         - api_token: []
       summary: Expire Password
@@ -6038,6 +6051,10 @@ paths:
           name: userId
           required: true
           type: string
+        - in: query
+          name: provider
+          type: string
+          x-openapi-v3-schema-ref: '#/definitions/AuthenticationProviderType'
         - in: query
           name: sendEmail
           required: true
@@ -10536,7 +10553,6 @@ definitions:
         $ref: '#/definitions/RoleStatus'
         readOnly: true
       type:
-        $ref: '#/definitions/RoleType'
         type: string
     type: object
     x-okta-tags:
@@ -11276,6 +11292,11 @@ definitions:
           - dest: userId
             src: id
         operationId: changeRecoveryQuestion
+      - alias: forgotPassword
+        arguments:
+          - dest: userId
+            src: id
+        operationId: forgotPassword
       - alias: forgotPasswordSetNewPassword
         arguments:
           - dest: userId

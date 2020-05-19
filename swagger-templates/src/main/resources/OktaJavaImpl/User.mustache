@@ -16,15 +16,18 @@
 
     @Override
     public com.okta.sdk.resource.user.ForgotPasswordResponse forgotPassword(Boolean sendEmail, UserCredentials userCredentials) {
-        com.okta.sdk.resource.user.ForgotPasswordResponse forgotPasswordResponse = null;
+        if (sendEmail == null) {
+            sendEmail = true; /* default */
+        }
 
         ResetPasswordToken resetPasswordToken = resetPassword(sendEmail);
 
-        if (resetPasswordToken != null && resetPasswordToken.getResetPasswordUrl() != null) {
-            Map properties = new HashMap();
+        if (resetPasswordToken != null) {
             properties.put("resetPasswordUrl", resetPasswordToken.getResetPasswordUrl());
-            forgotPasswordResponse = new com.okta.sdk.impl.resource.user.DefaultForgotPasswordResponse(getDataStore(), properties);
         }
+
+        com.okta.sdk.resource.user.ForgotPasswordResponse forgotPasswordResponse =
+            new com.okta.sdk.impl.resource.user.DefaultForgotPasswordResponse(getDataStore(), properties);
 
         return forgotPasswordResponse;
     }

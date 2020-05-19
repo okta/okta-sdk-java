@@ -29,8 +29,6 @@ import com.okta.sdk.resource.policy.PasswordPolicyRuleActions
 import com.okta.sdk.resource.policy.PasswordPolicyRuleConditions
 import com.okta.sdk.resource.policy.PasswordPolicySettings
 import com.okta.sdk.resource.policy.PolicyNetworkCondition
-import com.okta.sdk.resource.role.AssignRoleRequest
-import com.okta.sdk.resource.role.RoleType
 import com.okta.sdk.resource.user.AuthenticationProviderType
 import com.okta.sdk.resource.user.ChangePasswordRequest
 import com.okta.sdk.resource.user.ForgotPasswordResponse
@@ -38,11 +36,11 @@ import com.okta.sdk.resource.user.PasswordCredential
 import com.okta.sdk.resource.user.RecoveryQuestionCredential
 import com.okta.sdk.resource.user.ResetPasswordToken
 import com.okta.sdk.resource.user.Role
+import com.okta.sdk.resource.user.TempPassword
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserList
-import com.okta.sdk.resource.user.UserStatus
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
@@ -201,9 +199,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         user.activate(false)
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
+
+
+
     }
 
-    @Test(enabled = true)
+    @Test(enabled = false)
     @Scenario("user-role-assign")
     void roleAssignTest() {
 
@@ -224,9 +225,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Assign USER_ADMIN role to the user
-        AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
-        assignRoleRequest.setType(RoleType.USER_ADMIN)
-        Role role = user.assignRole(assignRoleRequest)
+        Role role = user.addRole(client.instantiate(Role)
+                .setType('USER_ADMIN'))
 
         // 3. List roles for the user and verify added role
         assertPresent(user.listRoles(), role)
@@ -235,19 +235,6 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         user.removeRole(role.getId())
 
         // 5. List roles for user and verify role was removed
-        assertNotPresent(user.listRoles(), role)
-
-        // 6. Now, assign SUPER_ADMIN role to the user
-        assignRoleRequest.setType(RoleType.SUPER_ADMIN)
-        role = user.assignRole(assignRoleRequest)
-
-        // 7. Again, list roles for the user and verify added role
-        assertPresent(user.listRoles(), role)
-
-        // 8. Remove role for the user
-        user.removeRole(role.getId())
-
-        // 9. List roles for user and verify role was removed
         assertNotPresent(user.listRoles(), role)
     }
 
@@ -375,8 +362,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 3. Update the user password through updated recovery question
         userCredentials.getPassword().value = '!2@3#Passw0rd'.toCharArray()
         userCredentials.getRecoveryQuestion().answer = 'forty two'
-        ForgotPasswordResponse response = user.forgotPassword(false, userCredentials)
-        assertThat response.getResetPasswordUrl(), notNullValue()
+        ForgotPasswordResponse response = user.forgotPassword(null, userCredentials)
+        assertThat response.getResetPasswordUrl(), nullValue()
 
         // 4. make the test recording happy, and call a get on the user
         // TODO: fix har file
@@ -426,10 +413,9 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        // 2. Expire the user's password
-        User updatedUser = user.expirePassword()
-        assertThat updatedUser, notNullValue()
-        assertThat updatedUser.getStatus(), is(UserStatus.PASSWORD_EXPIRED)
+        // 2. Expire the user's password with tempPassword=true
+        TempPassword tempPassword = user.expirePassword(true)
+        assertThat tempPassword.getTempPassword(), notNullValue()
     }
 
 
@@ -454,7 +440,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Get the reset password link
-        ResetPasswordToken token = user.resetPassword(false)
+        ResetPasswordToken token = user.resetPassword(null, false)
         assertThat token.getResetPasswordUrl(), notNullValue()
     }
 
