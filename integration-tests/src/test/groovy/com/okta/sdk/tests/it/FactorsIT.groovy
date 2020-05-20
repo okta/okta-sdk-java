@@ -18,7 +18,6 @@ package com.okta.sdk.tests.it
 import com.google.common.collect.Lists;
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.resource.user.factor.CallFactor
 import com.okta.sdk.resource.user.factor.Factor
 import com.okta.sdk.resource.user.factor.FactorList
@@ -28,13 +27,11 @@ import com.okta.sdk.resource.user.factor.PushFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionList
 import com.okta.sdk.resource.user.factor.SmsFactor
-import com.okta.sdk.resource.user.factor.SmsFactorProfile
 import com.okta.sdk.resource.user.factor.TotpFactor
 import com.okta.sdk.resource.user.factor.VerifyFactorRequest
 import com.okta.sdk.resource.user.factor.VerifyFactorResponse
 import com.okta.sdk.tests.it.util.ITSupport
 import org.jboss.aerogear.security.otp.Totp
-import org.jboss.aerogear.security.otp.api.Base32
 import org.testng.annotations.Test
 
 import static org.hamcrest.Matchers.*
