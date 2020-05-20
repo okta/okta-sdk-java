@@ -15,23 +15,21 @@
  */
 package com.okta.sdk.tests.it
 
-import com.google.common.collect.Lists
-
+import com.google.common.collect.Lists;
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.VerifyUserFactorResponse
 import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.factor.ActivateFactorRequest
-import com.okta.sdk.resource.user.factor.CallUserFactor
-import com.okta.sdk.resource.user.factor.FactorProvider
+import com.okta.sdk.resource.user.factor.CallFactor
+import com.okta.sdk.resource.user.factor.Factor
+import com.okta.sdk.resource.user.factor.FactorList
+import com.okta.sdk.resource.user.factor.FactorResultType
 import com.okta.sdk.resource.user.factor.FactorStatus
-import com.okta.sdk.resource.user.factor.PushUserFactor
-import com.okta.sdk.resource.user.factor.SecurityQuestionUserFactor
+import com.okta.sdk.resource.user.factor.PushFactor
+import com.okta.sdk.resource.user.factor.SecurityQuestionFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionList
-import com.okta.sdk.resource.user.factor.SmsUserFactor
-import com.okta.sdk.resource.user.factor.TotpUserFactor
-import com.okta.sdk.resource.user.factor.UserFactor
-import com.okta.sdk.resource.user.factor.UserFactorList
+import com.okta.sdk.resource.user.factor.SmsFactor
+import com.okta.sdk.resource.user.factor.TotpFactor
 import com.okta.sdk.resource.user.factor.VerifyFactorRequest
+import com.okta.sdk.resource.user.factor.VerifyFactorResponse
 import com.okta.sdk.tests.it.util.ITSupport
 import org.jboss.aerogear.security.otp.Totp
 import org.testng.annotations.Test
@@ -40,6 +38,7 @@ import static org.hamcrest.Matchers.*
 import static org.hamcrest.MatcherAssert.assertThat
 
 class FactorsIT extends ITSupport {
+
 
     private String smsTestNumber = "162 840 01133"
 
@@ -51,25 +50,25 @@ class FactorsIT extends ITSupport {
 
         assertThat user.listFactors(), emptyIterable()
 
-        SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor)
-        smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
-        user.enrollFactor(smsUserFactor)
+        SmsFactor smsFactor = client.instantiate(SmsFactor)
+        smsFactor.getProfile().phoneNumber = smsTestNumber
+        user.addFactor(smsFactor)
 
-        SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
-        securityQuestionUserFactor.getProfile()
+        SecurityQuestionFactor securityQuestionFactor = client.instantiate(SecurityQuestionFactor)
+        securityQuestionFactor.getProfile()
                 .setQuestion("disliked_food")
                 .setAnswer("pizza")
-        user.enrollFactor(securityQuestionUserFactor)
+        user.addFactor(securityQuestionFactor)
 
-        UserFactorList factorsList = user.listFactors()
-        List<UserFactor> factorsArrayList = Lists.newArrayList(factorsList)
+        FactorList factorsList = user.listFactors()
+        List<Factor> factorsArrayList = Lists.newArrayList(factorsList)
         assertThat factorsArrayList, allOf(hasSize(2), containsInAnyOrder(
                 allOf(
-                        instanceOf(SmsUserFactor),
-                        hasProperty("id", is(smsUserFactor.getId()))),
+                        instanceOf(SmsFactor),
+                        hasProperty("id", is(smsFactor.getId()))),
                 allOf(
-                        instanceOf(SecurityQuestionUserFactor),
-                        hasProperty("id", is(securityQuestionUserFactor.getId())))))
+                        instanceOf(SecurityQuestionFactor),
+                        hasProperty("id", is(securityQuestionFactor.getId())))))
     }
 
     @Test
@@ -79,14 +78,14 @@ class FactorsIT extends ITSupport {
 
         assertThat user.listFactors(), emptyIterable()
 
-        SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
-        securityQuestionUserFactor.getProfile()
+        SecurityQuestionFactor securityQuestionFactor = client.instantiate(SecurityQuestionFactor)
+        securityQuestionFactor.getProfile()
                 .setQuestion("disliked_food")
                 .setAnswer("pizza")
 
-        assertThat securityQuestionUserFactor.id, nullValue()
-        assertThat securityQuestionUserFactor, sameInstance(user.enrollFactor(securityQuestionUserFactor))
-        assertThat securityQuestionUserFactor.id, notNullValue()
+        assertThat securityQuestionFactor.id, nullValue()
+        assertThat securityQuestionFactor, sameInstance(user.addFactor(securityQuestionFactor))
+        assertThat securityQuestionFactor.id, notNullValue()
     }
 
     @Test
@@ -96,12 +95,12 @@ class FactorsIT extends ITSupport {
 
         assertThat user.listFactors(), emptyIterable()
 
-        CallUserFactor callUserFactor = client.instantiate(CallUserFactor)
-        callUserFactor.getProfile().setPhoneNumber(smsTestNumber)
+        CallFactor callFactor = client.instantiate(CallFactor)
+        callFactor.getProfile().phoneNumber = smsTestNumber
 
-        assertThat callUserFactor.id, nullValue()
-        assertThat callUserFactor, sameInstance(user.enrollFactor(callUserFactor))
-        assertThat callUserFactor.id, notNullValue()
+        assertThat callFactor.id, nullValue()
+        assertThat callFactor, sameInstance(user.addFactor(callFactor))
+        assertThat callFactor.id, notNullValue()
     }
 
     @Test
@@ -111,12 +110,12 @@ class FactorsIT extends ITSupport {
 
         assertThat user.listFactors(), emptyIterable()
 
-        SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor)
-        smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
+        SmsFactor smsFactor = client.instantiate(SmsFactor)
+        smsFactor.getProfile().phoneNumber = smsTestNumber
 
-        assertThat smsUserFactor.id, nullValue()
-        assertThat smsUserFactor, sameInstance(user.enrollFactor(smsUserFactor))
-        assertThat smsUserFactor.id, notNullValue()
+        assertThat smsFactor.id, nullValue()
+        assertThat smsFactor, sameInstance(user.addFactor(smsFactor))
+        assertThat smsFactor.id, notNullValue()
     }
 
     @Test
@@ -125,10 +124,10 @@ class FactorsIT extends ITSupport {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
 
-        PushUserFactor pushUserFactor = client.instantiate(PushUserFactor)
-        assertThat pushUserFactor.id, nullValue()
-        assertThat pushUserFactor, sameInstance(user.enrollFactor(pushUserFactor))
-        assertThat pushUserFactor.id, notNullValue()
+        PushFactor pushFactor = client.instantiate(PushFactor)
+        assertThat pushFactor.id, nullValue()
+        assertThat pushFactor, sameInstance(user.addFactor(pushFactor))
+        assertThat pushFactor.id, notNullValue()
     }
 
     @Test
@@ -141,7 +140,7 @@ class FactorsIT extends ITSupport {
     @Test
     void testAvailableFactorsNotEmpty() {
         User user = randomUser()
-        UserFactorList factors = user.listSupportedFactors()
+        FactorList factors = user.listSupportedFactors()
         assertThat factors, iterableWithSize(greaterThan(1))
     }
 
@@ -149,33 +148,33 @@ class FactorsIT extends ITSupport {
     void activateTotpFactor() {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
-        TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
-        user.enrollFactor(totpUserFactor)
+        TotpFactor totpFactor = client.instantiate(TotpFactor)
+        user.addFactor(totpFactor)
 
-        assertThat totpUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
-        Totp totp = new Totp(totpUserFactor.getEmbedded().get("activation").get("sharedSecret"))
+        assertThat totpFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
+        Totp totp = new Totp(totpFactor.getEmbedded().get("activation").get("sharedSecret"))
 
-        ActivateFactorRequest activateFactorRequest = client.instantiate(ActivateFactorRequest)
-        activateFactorRequest.setPassCode(totp.now())
-        UserFactor factorResult = totpUserFactor.activate(activateFactorRequest)
+        VerifyFactorRequest verifyFactorRequest = client.instantiate(VerifyFactorRequest)
+        verifyFactorRequest.passCode = totp.now()
+        Factor factorResult = totpFactor.activate(verifyFactorRequest)
         assertThat factorResult.getStatus(), is(FactorStatus.ACTIVE)
-        assertThat factorResult, instanceOf(TotpUserFactor)
+        assertThat factorResult, instanceOf(TotpFactor)
     }
 
     @Test
     void verifyQuestionFactor() {
         User user = randomUser()
 
-        SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
-        securityQuestionUserFactor.getProfile()
+        SecurityQuestionFactor securityQuestionFactor = client.instantiate(SecurityQuestionFactor)
+        securityQuestionFactor.getProfile()
                 .setQuestion("disliked_food")
                 .setAnswer("pizza")
-        user.enrollFactor(securityQuestionUserFactor)
+        user.addFactor(securityQuestionFactor)
 
         VerifyFactorRequest request = client.instantiate(VerifyFactorRequest)
-        request.setAnswer("pizza")
-        VerifyUserFactorResponse response = securityQuestionUserFactor.verify(request, null, null)
-        assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
+        request.answer = "pizza"
+        VerifyFactorResponse response = securityQuestionFactor.verify(request)
+        assertThat response.getFactorResult(), is(FactorResultType.SUCCESS)
     }
 
     @Test
@@ -183,9 +182,9 @@ class FactorsIT extends ITSupport {
 
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
-        TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
-        totpUserFactor.setProvider(FactorProvider.OKTA)
-        user.enrollFactor(totpUserFactor)
-        totpUserFactor.delete()
+        TotpFactor totpFactor = client.instantiate(TotpFactor)
+        totpFactor.provider = "OKTA"
+        user.addFactor(totpFactor)
+        totpFactor.delete()
     }
 }

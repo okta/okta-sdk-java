@@ -5426,7 +5426,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/UserFactor'
+              $ref: '#/definitions/Factor'
             type: array
       security:
         - api_token: []
@@ -5436,7 +5436,7 @@ paths:
       consumes:
         - application/json
       description: Enrolls a user with a supported factor.
-      operationId: enrollFactor
+      operationId: addFactor
       parameters:
         - in: path
           name: userId
@@ -5447,7 +5447,7 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/UserFactor'
+            $ref: '#/definitions/Factor'
         - default: false
           in: query
           name: updatePhone
@@ -5473,7 +5473,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/UserFactor'
+            $ref: '#/definitions/Factor'
       security:
         - api_token: []
       summary: Enroll Factor
@@ -5499,7 +5499,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/UserFactor'
+              $ref: '#/definitions/Factor'
             type: array
       security:
         - api_token: []
@@ -5577,7 +5577,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/UserFactor'
+            $ref: '#/definitions/Factor'
       security:
         - api_token: []
       tags:
@@ -5602,14 +5602,14 @@ paths:
         - in: body
           name: body
           schema:
-            $ref: '#/definitions/ActivateFactorRequest'
+            $ref: '#/definitions/VerifyFactorRequest'
       produces:
         - application/json
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/UserFactor'
+            $ref: '#/definitions/Factor'
       security:
         - api_token: []
       summary: Activate Factor
@@ -5640,7 +5640,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/VerifyUserFactorResponse'
+            $ref: '#/definitions/VerifyFactorResponse'
       security:
         - api_token: []
       tags:
@@ -5671,6 +5671,7 @@ paths:
           x-okta-added-version: 1.3.0
         - in: body
           name: body
+          required: true
           schema:
             $ref: '#/definitions/VerifyFactorRequest'
         - in: header
@@ -5681,16 +5682,13 @@ paths:
           name: User-Agent
           type: string
           x-okta-added-version: 1.11.0
-        - in: header
-          name: Accept-Language
-          type: string
       produces:
         - application/json
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/VerifyUserFactorResponse'
+            $ref: '#/definitions/VerifyFactorResponse'
       security:
         - api_token: []
       summary: Verify MFA Factor
@@ -7599,14 +7597,14 @@ definitions:
         type: array
     x-okta-tags:
       - Apps
-  CallUserFactor:
+  CallFactor:
     properties:
       profile:
-        $ref: '#/definitions/CallUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
+        $ref: '#/definitions/CallFactorProfile'
+    x-okta-parent: '#/definitions/Factor'
     x-okta-tags:
       - UserFactor
-  CallUserFactorProfile:
+  CallFactorProfile:
     properties:
       phoneExtension:
         type: string
@@ -7690,14 +7688,14 @@ definitions:
       unit:
         type: string
     type: object
-  EmailUserFactor:
+  EmailFactor:
     properties:
       profile:
-        $ref: '#/definitions/EmailUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
+        $ref: '#/definitions/EmailFactorProfile'
+    x-okta-parent: '#/definitions/Factor'
     x-okta-tags:
       - UserFactor
-  EmailUserFactorProfile:
+  EmailFactorProfile:
     properties:
       email:
         type: string
@@ -8230,14 +8228,14 @@ definitions:
     type: string
     x-okta-tags:
       - Group
-  HardwareUserFactor:
+  HardwareFactor:
     properties:
       profile:
-        $ref: '#/definitions/HardwareUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
+        $ref: '#/definitions/HardwareFactorProfile'
+    x-okta-parent: '#/definitions/Factor'
     x-okta-tags:
       - UserFactor
-  HardwareUserFactorProfile:
+  HardwareFactorProfile:
     properties:
       credentialId:
         type: string
@@ -10456,7 +10454,7 @@ definitions:
           - UNSUSPEND
         type: string
     type: object
-  PushUserFactor:
+  PushFactor:
     properties:
       expiresAt:
         format: date-time
@@ -10465,11 +10463,11 @@ definitions:
       factorResult:
         $ref: '#/definitions/FactorResultType'
       profile:
-        $ref: '#/definitions/PushUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
+        $ref: '#/definitions/PushFactorProfile'
+    x-okta-parent: '#/definitions/Factor'
     x-okta-tags:
       - UserFactor
-  PushUserFactorProfile:
+  PushFactorProfile:
     properties:
       credentialId:
         type: string
@@ -10802,14 +10800,14 @@ definitions:
         type: string
     x-okta-tags:
       - UserFactor
-  SecurityQuestionUserFactor:
+  SecurityQuestionFactor:
     properties:
       profile:
-        $ref: '#/definitions/SecurityQuestionUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
+        $ref: '#/definitions/SecurityQuestionFactorProfile'
+    x-okta-parent: '#/definitions/Factor'
     x-okta-tags:
       - UserFactor
-  SecurityQuestionUserFactorProfile:
+  SecurityQuestionFactorProfile:
     properties:
       answer:
         type: string
@@ -10988,14 +10986,14 @@ definitions:
     type: string
     x-okta-tags:
       - Template
-  SmsUserFactor:
+  SmsFactor:
     properties:
       profile:
-        $ref: '#/definitions/SmsUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
+        $ref: '#/definitions/SmsFactorProfile'
+    x-okta-parent: '#/definitions/Factor'
     x-okta-tags:
       - UserFactor
-  SmsUserFactorProfile:
+  SmsFactorProfile:
     properties:
       phoneNumber:
         type: string
@@ -11101,27 +11099,27 @@ definitions:
         type: string
     x-okta-tags:
       - User
-  TokenUserFactor:
+  TokenFactor:
     properties:
       profile:
-        $ref: '#/definitions/TokenUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
+        $ref: '#/definitions/TokenFactorProfile'
+    x-okta-parent: '#/definitions/Factor'
     x-okta-tags:
       - UserFactor
-  TokenUserFactorProfile:
+  TokenFactorProfile:
     properties:
       credentialId:
         type: string
     x-okta-tags:
       - UserFactor
-  TotpUserFactor:
+  TotpFactor:
     properties:
       profile:
-        $ref: '#/definitions/TotpUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
+        $ref: '#/definitions/TotpFactorProfile'
+    x-okta-parent: '#/definitions/Factor'
     x-okta-tags:
       - UserFactor
-  TotpUserFactorProfile:
+  TotpFactorProfile:
     properties:
       credentialId:
         type: string
@@ -11183,14 +11181,14 @@ definitions:
         operationId: deleteOrigin
     x-okta-tags:
       - TrustedOrigin
-  U2fUserFactor:
+  U2fFactor:
     properties:
       profile:
-        $ref: '#/definitions/U2fUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
+        $ref: '#/definitions/U2fFactorProfile'
+    x-okta-parent: '#/definitions/Factor'
     x-okta-tags:
       - UserFactor
-  U2fUserFactorProfile:
+  U2fFactorProfile:
     properties:
       credentialId:
         type: string
@@ -11438,6 +11436,11 @@ definitions:
             src: id
         description: Adds a user to a group with 'OKTA_GROUP' type
         operationId: addUserToGroup
+      - alias: addFactor
+        arguments:
+          - dest: userId
+            src: id
+        operationId: addFactor
       - alias: enrollFactor
         arguments:
           - dest: userId
@@ -11514,7 +11517,7 @@ definitions:
     type: object
     x-okta-tags:
       - User
-  UserFactor:
+  Factor:
     properties:
       _embedded:
         additionalProperties:
@@ -11575,16 +11578,16 @@ definitions:
       - UserFactor
     x-openapi-v3-discriminator:
       mapping:
-        call: '#/definitions/CallUserFactor'
-        email: '#/definitions/EmailUserFactor'
-        push: '#/definitions/PushUserFactor'
-        question: '#/definitions/SecurityQuestionUserFactor'
-        sms: '#/definitions/SmsUserFactor'
-        token: '#/definitions/TokenUserFactor'
-        'token:hardware': '#/definitions/HardwareUserFactor'
-        'token:software:totp': '#/definitions/TotpUserFactor'
-        u2f: '#/definitions/U2fUserFactor'
-        web: '#/definitions/WebUserFactor'
+        call: '#/definitions/CallFactor'
+        email: '#/definitions/EmailFactor'
+        push: '#/definitions/PushFactor'
+        question: '#/definitions/SecurityQuestionFactor'
+        sms: '#/definitions/SmsFactor'
+        token: '#/definitions/TokenFactor'
+        'token:hardware': '#/definitions/HardwareFactor'
+        'token:software:totp': '#/definitions/TotpFactor'
+        u2f: '#/definitions/U2fFactor'
+        web: '#/definitions/WebFactor'
       propertyName: factorType
   UserIdentifierConditionEvaluatorPattern:
     properties:
@@ -11845,44 +11848,14 @@ definitions:
     type: object
     x-okta-tags:
       - UserFactor
-  VerifyUserFactorResponse:
-    properties:
-      _embedded:
-        additionalProperties:
-          type: object
-        readOnly: true
-        type: object
-      _links:
-        additionalProperties:
-          type: object
-        readOnly: true
-        type: object
-      expiresAt:
-        type: string
-      factorResult:
-        enum:
-          - SUCCESS
-          - EXPIRED
-          - CHALLENGE
-          - WAITING
-          - FAILED
-          - REJECTED
-          - TIMEOUT
-          - TIME_WINDOW_EXCEEDED
-          - PASSCODE_REPLAYED
-          - ERROR
-        type: string
-      factorResultMessage:
-        type: string
-    type: object
-  WebUserFactor:
+  WebFactor:
     properties:
       profile:
-        $ref: '#/definitions/WebUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
+        $ref: '#/definitions/WebFactorProfile'
+    x-okta-parent: '#/definitions/Factor'
     x-okta-tags:
       - UserFactor
-  WebUserFactorProfile:
+  WebFactorProfile:
     properties:
       credentialId:
         type: string

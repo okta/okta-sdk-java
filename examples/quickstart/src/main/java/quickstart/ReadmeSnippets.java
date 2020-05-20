@@ -33,11 +33,11 @@ import com.okta.sdk.resource.log.LogEventList;
 import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.user.UserList;
-import com.okta.sdk.resource.user.factor.ActivateFactorRequest;
-import com.okta.sdk.resource.user.factor.SmsUserFactor;
-import com.okta.sdk.resource.user.factor.UserFactor;
-import com.okta.sdk.resource.user.factor.UserFactorList;
+import com.okta.sdk.resource.user.factor.Factor;
+import com.okta.sdk.resource.user.factor.FactorList;
+import com.okta.sdk.resource.user.factor.SmsFactor;
 import com.okta.sdk.resource.user.factor.VerifyFactorRequest;
+import com.okta.sdk.resource.user.factor.VerifyFactorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,6 @@ import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 import static com.okta.sdk.cache.Caches.forResource;
-
 /**
  * Example snippets used for this projects README.md.
  * <p>
@@ -138,27 +137,27 @@ public class ReadmeSnippets {
     }
 
     private void listUserFactors() {
-        UserFactorList factors = user.listFactors();
+        FactorList factors = user.listFactors();
     }
 
     private void enrollUserInFactor() {
-        SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor.class);
-        smsUserFactor.getProfile().setPhoneNumber("555 867 5309");
-        user.enrollFactor(smsUserFactor);
+        SmsFactor smsFactor = client.instantiate(SmsFactor.class);
+        smsFactor.getProfile().setPhoneNumber("555 867 5309");
+        user.addFactor(smsFactor);
     }
 
     private void activateFactor() {
-        UserFactor factor = user.getFactor("factorId");
-        ActivateFactorRequest activateFactorRequest =client.instantiate(ActivateFactorRequest.class);
-        activateFactorRequest.setPassCode("123456");
-        factor.activate(activateFactorRequest);
+        Factor factor = user.getFactor("factorId");
+        VerifyFactorRequest verifyFactorRequest = client.instantiate(VerifyFactorRequest.class);
+        verifyFactorRequest.setPassCode("123456");
+        factor.activate(verifyFactorRequest);
     }
 
     private void verifyFactor() {
-        UserFactor factor = user.getFactor("factorId");
+        Factor factor = user.getFactor("factorId");
         VerifyFactorRequest verifyFactorRequest = client.instantiate(VerifyFactorRequest.class);
         verifyFactorRequest.setPassCode("123456");
-        UserFactor response = factor.setVerify(verifyFactorRequest);
+        VerifyFactorResponse response = factor.verify(verifyFactorRequest);
     }
 
     private void listApplication() {
