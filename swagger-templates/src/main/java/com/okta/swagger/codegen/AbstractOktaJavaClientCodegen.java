@@ -282,10 +282,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     }
 
     private void handleOktaLinkedOperations(Swagger swagger) {
-        // we want to move any operations defined by the 'x-okta-operations' or 'x-okta-crud' vendor extension to the model
+        // we want to move any operations defined by the 'x-okta-operations' or 'x-okta-crud'
+        // or 'x-okta-multi-operation' vendor extension to the model
         Map<String, Model> modelMap = swagger.getDefinitions().entrySet().stream()
                 .filter(e -> e.getValue().getVendorExtensions().containsKey("x-okta-operations")
-                        || e.getValue().getVendorExtensions().containsKey("x-okta-crud"))
+                        || e.getValue().getVendorExtensions().containsKey("x-okta-crud")
+                        || e.getValue().getVendorExtensions().containsKey("x-okta-multi-operation"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
 
@@ -294,6 +296,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
             addAllIfNotNull(linkNodes, (List<ObjectNode>) model.getVendorExtensions().get("x-okta-operations"));
             addAllIfNotNull(linkNodes, (List<ObjectNode>) model.getVendorExtensions().get("x-okta-crud"));
+            addAllIfNotNull(linkNodes, (List<ObjectNode>) model.getVendorExtensions().get("x-okta-multi-operation"));
 
             Map<String, CodegenOperation> operationMap = new HashMap<>();
 
@@ -302,7 +305,10 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                 // find the swagger path operation
                 swagger.getPaths().forEach((pathName, path) -> {
-                    Optional<Map.Entry<HttpMethod, Operation>> operationEntry = path.getOperationMap().entrySet().stream().filter(e -> e.getValue().getOperationId().equals(operationId)).findFirst();
+                    Optional<Map.Entry<HttpMethod, Operation>> operationEntry =
+                        path.getOperationMap().entrySet().stream().filter(
+                            e -> e.getValue().getOperationId() != null &&
+                                e.getValue().getOperationId().equals(operationId)).findFirst();
 
                     if (operationEntry.isPresent()) {
 
