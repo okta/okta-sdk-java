@@ -4876,7 +4876,7 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/CreateUserRequest'
+            $ref: '#/definitions/User'
         - default: true
           description: Executes activation lifecycle operation when creating the user
           in: query
@@ -7649,6 +7649,7 @@ definitions:
       type:
         $ref: '#/definitions/UserType'
     type: object
+    x-okta-parent: '#/definitions/User'
     x-okta-tags:
       - User
   DevicePolicyRuleCondition:
@@ -7669,20 +7670,11 @@ definitions:
     properties:
       supportedMDMFrameworks:
         items:
-          enum:
-            - AFW
-            - SAFE
-            - NATIVE
-          type: string
+          $ref: '#/definitions/MDMFrameworks'
         type: array
       types:
         items:
-          enum:
-            - IOS
-            - ANDROID
-            - OSX
-            - WINDOWS
-          type: string
+          $ref: '#/definitions/Platforms'
         type: array
     type: object
   Duration:
@@ -7837,7 +7829,6 @@ definitions:
         type: string
     type: object
   EventSubscriptions:
-    discriminator: type
     properties:
       items:
         items:
@@ -8770,6 +8761,8 @@ definitions:
           type: object
         readOnly: true
         type: object
+      name:
+        type: string
       associated:
         $ref: '#/definitions/LinkedObjectDetails'
       primary:
@@ -8787,7 +8780,7 @@ definitions:
       - alias: delete
         arguments:
           - dest: linkedObjectName
-            self: true
+            src: name
         operationId: deleteLinkedObjectDefinition
     x-okta-tags:
       - LinkedObject
@@ -9150,6 +9143,14 @@ definitions:
           - ANY_OR_NONE
         type: string
     type: object
+  MDMFrameworks:
+    enum:
+      - authorization_code
+      - implicit
+      - password
+      - refresh_token
+      - client_credentials
+    type: string
   OAuth2Actor:
     properties:
       id:
@@ -9451,6 +9452,7 @@ definitions:
     properties:
       people:
         $ref: '#/definitions/PolicyPeopleCondition'
+    x-okta-parent: '#/definition/PolicyRuleConditions'
     x-okta-tags:
       - Policy
   OktaSignOnPolicyRule:
@@ -9544,6 +9546,7 @@ definitions:
     enum:
       - CUSTOM_URL
       - ORG_URL
+    type: string
   OpenIdConnectApplicationSettings:
     properties:
       oauthClient:
@@ -9694,6 +9697,7 @@ definitions:
         $ref: '#/definitions/PasswordPolicyAuthenticationProviderCondition'
       people:
         $ref: '#/definitions/PolicyPeopleCondition'
+    x-okta-parent: '#/definition/PolicyRuleConditions'
     x-okta-tags:
       - Policy
   PasswordPolicyDelegationSettings:
@@ -9926,6 +9930,13 @@ definitions:
     type: object
     x-okta-tags:
       - Policy
+  Platforms:
+    enum:
+      - IOS
+      - ANDROID
+      - OSX
+      - WINDOWS
+    type: string
   PlatformConditionEvaluatorPlatform:
     properties:
       os:
@@ -10242,6 +10253,8 @@ definitions:
       users:
         $ref: '#/definitions/UserPolicyRuleCondition'
     type: object
+    x-okta-tags:
+      - Policy
   PolicySubject:
     properties:
       filter:
@@ -10539,6 +10552,49 @@ definitions:
     type: object
     x-okta-tags:
       - User
+    x-okta-operations:
+      - alias: addAdminGroup
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: groupId
+            parentSrc: id
+        operationId: addGroupTargetToGroupAdministratorRoleForGroup
+      - alias: addAppInstanceTargetToAdminRole
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: groupId
+            parentSrc: id
+        operationId: addApplicationInstanceTargetToAppAdminRoleGivenToGroup
+      - alias: addAppTargetToAdminRole
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: groupId
+            parentSrc: id
+        operationId: addApplicationTargetToAdminRoleGivenToGroup
+      - alias: addAllAppsAsTargetToRole
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: userId
+            parentSrc: id
+        operationId: addAllAppsAsTargetToRole
+      - alias: addAppTargetToAppAdminRoleForUser
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: userId
+            parentSrc: id
+        operationId: addApplicationTargetToAppAdminRoleForUser
+      - alias: addAppTargetToAdminRoleForUser
+        arguments:
+          - dest: roleId
+            src: id
+          - dest: userId
+            parentSrc: id
+        operationId: addApplicationTargetToAdminRoleForUser
   RoleAssignmentType:
     enum:
       - GROUP
@@ -11488,7 +11544,7 @@ definitions:
         $ref: '#/definitions/VerifyFactorRequest'
     type: object
     x-okta-crud:
-      - alias: delete
+      - alias: deleteFactor
         arguments:
           - dest: factorId
             src: id
@@ -11734,6 +11790,12 @@ definitions:
           - dest: typeId
             src: id
         operationId: deleteUserType
+    x-okta-operations:
+      - alias: replaceUserType
+        arguments:
+          - dest: roleId
+            src: id
+        operationId: replaceUserType
   VerifyFactorRequest:
     properties:
       activationToken:
@@ -11784,6 +11846,8 @@ definitions:
       factorResultMessage:
         type: string
     type: object
+    x-okta-tags:
+      - UserFactor
   WebUserFactor:
     properties:
       profile:
