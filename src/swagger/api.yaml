@@ -2479,7 +2479,7 @@ paths:
       operationId: assignRoleToGroup
       parameters:
         - in: body
-          name: type
+          name: assignRoleRequest
           required: true
           schema:
             $ref: '#/definitions/AssignRoleRequest'
@@ -2574,7 +2574,7 @@ paths:
         - in: query
           name: after
           type: string
-        - default: -1
+        - default: 20
           format: int32
           in: query
           name: limit
@@ -2730,7 +2730,7 @@ paths:
         - in: query
           name: after
           type: string
-        - default: -1
+        - default: 20
           format: int32
           in: query
           name: limit
@@ -6299,7 +6299,7 @@ paths:
         - in: query
           name: after
           type: string
-        - default: -1
+        - default: 20
           format: int32
           in: query
           name: limit
@@ -6478,7 +6478,7 @@ paths:
         - in: query
           name: after
           type: string
-        - default: -1
+        - default: 20
           format: int32
           in: query
           name: limit
@@ -8341,6 +8341,11 @@ definitions:
           - dest: idpId
             src: id
         operationId: getIdentityProviderSigningKey
+      - alias: deleteSigningKey
+        arguments:
+          - dest: idpId
+            src: id
+        operationId: deleteIdentityProviderKey
       - alias: cloneKey
         arguments:
           - dest: idpId
@@ -11762,7 +11767,6 @@ definitions:
       displayName:
         type: string
       id:
-        readOnly: true
         type: string
       lastUpdated:
         format: date-time
