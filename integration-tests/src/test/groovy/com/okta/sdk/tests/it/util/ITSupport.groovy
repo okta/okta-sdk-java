@@ -124,7 +124,6 @@ abstract class ITSupport implements ClientProvider {
                     .setGroups(client.instantiate(GroupCondition)
                         .setInclude([groupId]))))
             .setName("policy-java-" + UUID.randomUUID().toString())
-            .setStatus(Policy.StatusEnum.ACTIVE)
             .setDescription("IT created Policy")
             .setStatus(Policy.StatusEnum.ACTIVE))
 

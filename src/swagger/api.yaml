@@ -6686,7 +6686,6 @@ definitions:
         readOnly: true
         type: string
       id:
-        readOnly: true
         type: string
       lastSync:
         format: date-time
@@ -10456,6 +10455,7 @@ definitions:
       expiresAt:
         format: date-time
         type: string
+        readOnly: true
       factorResult:
         $ref: '#/definitions/FactorResultType'
       profile:

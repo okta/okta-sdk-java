@@ -23,12 +23,10 @@ import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleActions
 import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleConditions
 import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleSignonActions
 import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleSignonSessionActions
-import com.okta.sdk.resource.policy.PasswordPolicy
 import com.okta.sdk.resource.policy.PasswordPolicyRule
 import com.okta.sdk.resource.policy.PasswordPolicyRuleAction
 import com.okta.sdk.resource.policy.PasswordPolicyRuleActions
 import com.okta.sdk.resource.policy.PasswordPolicyRuleConditions
-import com.okta.sdk.resource.policy.Policy
 import com.okta.sdk.resource.policy.PolicyNetworkCondition
 import com.okta.sdk.resource.policy.PolicyPeopleCondition
 import com.okta.sdk.resource.policy.PolicyRule
@@ -85,7 +83,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
     }
 
     @Test
-    void activateDeactivateTest() {
+    void deactivateTest() {
 
         def group = randomGroup()
         def policy = randomSignOnPolicy(group.getId())
@@ -96,13 +94,10 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
                 .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
                     .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
-                    .setRequireFactor(false))), false)
+                    .setRequireFactor(false))))
         registerForCleanup(policyRule)
-        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.INACTIVE))
 
-        // activate
-        policyRule.activate()
-        policyRule = policy.getPolicyRule(policyRule.getId())
+        // policy rule is ACTIVE by default
         assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.ACTIVE))
 
         // deactivate
