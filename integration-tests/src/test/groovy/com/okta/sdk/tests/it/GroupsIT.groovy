@@ -153,7 +153,7 @@ class GroupsIT implements CrudTestSupport {
 
         // 2. Add user to the group and validate user present in group
         user.addToGroup(group.getId())
-        assertUserInGroup(user, group)
+        assertUserInGroup(user, group, 5, 2000)
 
         // 3. Remove user from group and validate user removed
         group.removeUser(user.getId())
