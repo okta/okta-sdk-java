@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.client.Client
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.role.AssignRoleRequest
@@ -32,49 +31,12 @@ import static com.okta.sdk.tests.it.util.Util.assertGroupAbsent
 import static com.okta.sdk.tests.it.util.Util.validateGroup
 import static com.okta.sdk.tests.it.util.Util.validateUser
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.*
 
 /**
  * Tests for /api/v1/users/roles
  * @since 2.0.0
  */
-class UserRolesIT extends ITSupport implements CrudTestSupport {
-
-    @Override
-    def create(Client client) {
-        def email = "joe.coder+${uniqueTestName}@example.com"
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Joe")
-            .setLastName("Code")
-            .setPassword("Password1".toCharArray())
-            .setSecurityQuestion("Favorite security question?")
-            .setSecurityQuestionAnswer("None of them!")
-            .buildAndCreate(client)
-        registerForCleanup(user)
-        return user
-    }
-
-    @Override
-    def read(Client client, String id) {
-        return client.getUser(id)
-    }
-
-    @Override
-    void update(Client client, def user) {
-        user.getProfile().lastName = "Coder"
-        user.update()
-    }
-
-    @Override
-    void assertUpdate(Client client, Object resource) {
-        assertThat resource.getProfile().lastName, equalTo("Coder")
-    }
-
-    @Override
-    Iterator getResourceCollectionIterator(Client client) {
-        return client.listUsers().iterator()
-    }
+class UserRolesIT extends ITSupport {
 
     @Test
     @Scenario("assign-super-admin-role-to-user")

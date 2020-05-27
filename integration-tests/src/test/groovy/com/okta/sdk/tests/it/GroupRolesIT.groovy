@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.client.Client
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.role.AssignRoleRequest
@@ -31,43 +30,12 @@ import static com.okta.sdk.tests.it.util.Util.assertGroupAbsent
 import static com.okta.sdk.tests.it.util.Util.assertRolePresent
 import static com.okta.sdk.tests.it.util.Util.assertRoleAbsent
 import static com.okta.sdk.tests.it.util.Util.validateGroup
-import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.*
 
 /**
  * Tests for /api/v1/groups/roles
  * @since 2.0.0
  */
-class GroupRolesIT extends ITSupport implements CrudTestSupport {
-
-    @Override
-    def create(Client client) {
-        return GroupBuilder.instance()
-            .setName("my-user-group-${uniqueTestName}")
-            .setDescription("IT created Group")
-            .buildAndCreate(client)
-    }
-
-    @Override
-    def read(Client client, String id) {
-        return client.getGroup(id)
-    }
-
-    @Override
-    void update(Client client, def group) {
-        group.getProfile().description = "IT created Group - Updated"
-        group.update()
-    }
-
-    @Override
-    void assertUpdate(Client client, def resource) {
-        assertThat resource.getProfile().description, equalTo("IT created Group - Updated")
-    }
-
-    @Override
-    Iterator getResourceCollectionIterator(Client client) {
-        return client.listGroups().iterator()
-    }
+class GroupRolesIT extends ITSupport {
 
     @Test
     @Scenario("list-roles-assigned-to-group")
