@@ -1,0 +1,149 @@
+package com.okta.sdk.tests.it
+
+import com.okta.sdk.client.Client
+import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.group.Group
+import com.okta.sdk.resource.role.AssignRoleRequest
+import com.okta.sdk.resource.role.RoleType
+import com.okta.sdk.resource.user.Role
+import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.user.UserBuilder
+import com.okta.sdk.tests.Scenario
+import com.okta.sdk.tests.it.util.ITSupport
+import org.testng.annotations.Test
+
+import static com.okta.sdk.tests.it.util.Util.assertGroupPresent
+import static com.okta.sdk.tests.it.util.Util.assertGroupAbsent
+import static com.okta.sdk.tests.it.util.Util.validateGroup
+import static com.okta.sdk.tests.it.util.Util.validateUser
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.*
+
+/**
+ * Tests for /api/v1/users/roles
+ * @since 2.0.0
+ */
+class UserRolesIT extends ITSupport implements CrudTestSupport {
+
+    @Override
+    def create(Client client) {
+        def email = "joe.coder+${uniqueTestName}@example.com"
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName("Joe")
+            .setLastName("Code")
+            .setPassword("Password1".toCharArray())
+            .setSecurityQuestion("Favorite security question?")
+            .setSecurityQuestionAnswer("None of them!")
+            .buildAndCreate(client)
+        registerForCleanup(user)
+        return user
+    }
+
+    @Override
+    def read(Client client, String id) {
+        return client.getUser(id)
+    }
+
+    @Override
+    void update(Client client, def user) {
+        user.getProfile().lastName = "Coder"
+        user.update()
+    }
+
+    @Override
+    void assertUpdate(Client client, Object resource) {
+        assertThat resource.getProfile().lastName, equalTo("Coder")
+    }
+
+    @Override
+    Iterator getResourceCollectionIterator(Client client) {
+        return client.listUsers().iterator()
+    }
+
+    @Test
+    @Scenario("assign-super-admin-role-to-user")
+    void assignSuperAdminRoleToUserTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Role'
+        def email = "john-${uniqueTestName}@example.com"
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Assign SUPER_ADMIN role
+        AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
+        assignRoleRequest.setType(RoleType.SUPER_ADMIN)
+
+        Role assignedRole = user.assignRole(assignRoleRequest)
+        assertThat("Incorrect RoleType", assignedRole.getType() == RoleType.SUPER_ADMIN)
+    }
+
+    @Test
+    @Scenario("group-targets-for-role")
+    void groupTargetsForRoleTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Role'
+        def email = "john-${uniqueTestName}@example.com"
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Create two groups
+        String groupName1 = "Group-Member API Test Group ${uniqueTestName}-1"
+        String groupName2 = "Group-Member API Test Group ${uniqueTestName}-2"
+
+        Group group1 = GroupBuilder.instance()
+            .setName(groupName1)
+            .buildAndCreate(client)
+        Group group2 = GroupBuilder.instance()
+            .setName(groupName2)
+            .buildAndCreate(client)
+        registerForCleanup(group1)
+        registerForCleanup(group2)
+
+        validateGroup(group1, groupName1)
+        validateGroup(group2, groupName2)
+
+        // 3. Assign a role
+        AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
+        assignRoleRequest.setType(RoleType.USER_ADMIN)
+
+        Role superAdminRole = user.assignRole(assignRoleRequest)
+
+        // 4. Add the created groups as role targets
+        // Need 2 groups, because if you remove the last one it throws an (expected) exception.
+        user.addGroupTargetToRole(superAdminRole.getId(), group1.getId())
+        user.addGroupTargetToRole(superAdminRole.getId(), group2.getId())
+
+        assertGroupPresent(user.listGroupTargetsForRole(superAdminRole.getId()), group1)
+        assertGroupPresent(user.listGroupTargetsForRole(superAdminRole.getId()), group2)
+
+        // 5. Remove the target
+        user.removeGroupTargetFromRole(superAdminRole.getId(), group1.getId())
+
+        assertGroupAbsent(user.listGroupTargetsForRole(superAdminRole.getId()), group1)
+    }
+}
+
+

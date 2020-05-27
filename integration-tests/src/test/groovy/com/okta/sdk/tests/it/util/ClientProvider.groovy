@@ -151,7 +151,7 @@ trait ClientProvider implements IHookable {
 
     void deleteGroup(String groupName, Client client) {
         Util.ignoring(ResourceException) {
-            GroupList groups = client.listGroups(groupName, null, null)
+            GroupList groups = client.listGroups(groupName, null)
             groups.each {group ->
                 if (groupName.equals(group.profile.name)) {
                     group.delete()

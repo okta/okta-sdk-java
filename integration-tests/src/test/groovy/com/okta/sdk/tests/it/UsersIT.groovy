@@ -29,9 +29,10 @@ import com.okta.sdk.resource.policy.PasswordPolicyRuleActions
 import com.okta.sdk.resource.policy.PasswordPolicyRuleConditions
 import com.okta.sdk.resource.policy.PasswordPolicySettings
 import com.okta.sdk.resource.policy.PolicyNetworkCondition
+import com.okta.sdk.resource.role.AssignRoleRequest
+import com.okta.sdk.resource.role.RoleType
 import com.okta.sdk.resource.user.AuthenticationProviderType
 import com.okta.sdk.resource.user.ChangePasswordRequest
-import com.okta.sdk.resource.user.ForgotPasswordResponse
 import com.okta.sdk.resource.user.PasswordCredential
 import com.okta.sdk.resource.user.RecoveryQuestionCredential
 import com.okta.sdk.resource.user.ResetPasswordToken
@@ -204,7 +205,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
     }
 
-    @Test(enabled = false)
+    @Test
     @Scenario("user-role-assign")
     void roleAssignTest() {
 
@@ -225,8 +226,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Assign USER_ADMIN role to the user
-        Role role = user.addRole(client.instantiate(Role)
-                .setType('USER_ADMIN'))
+        AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
+        assignRoleRequest.setType(RoleType.USER_ADMIN)
+
+        Role role = user.assignRole(assignRoleRequest)
 
         // 3. List roles for the user and verify added role
         assertPresent(user.listRoles(), role)
@@ -484,7 +487,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         }
     }
 
-    @Test(enabled = false)
+    @Test
     @Scenario("user-group-target-role")
     void groupTargetRoleTest() {
 
@@ -512,8 +515,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateGroup(group, groupName)
 
         // 2. Assign USER_ADMIN role to the user
-        Role role = user.addRole(client.instantiate(Role)
-            .setType('USER_ADMIN'))
+        AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
+        assignRoleRequest.setType(RoleType.USER_ADMIN)
+
+        Role role = user.assignRole(assignRoleRequest)
 
         // 3. Add Group Target to User Admin Role
         user.addGroupTargetToRole(role.id, group.id)
