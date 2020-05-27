@@ -343,7 +343,7 @@
                         <parameter>
                             <onlyModified>true</onlyModified>
                             <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications> <!-- TODO: revert to true after v2.0.0 major release -->
-                            <breakBuildBasedOnSemanticVersioning>false</breakBuildBasedOnSemanticVersioning> <!-- TODO: revert to true after v2.0.0 major release -->
+                            <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
                             <postAnalysisScript>${root.dir}/src/japicmp/postAnalysisScript.groovy</postAnalysisScript>
                         </parameter>
                     </configuration>
