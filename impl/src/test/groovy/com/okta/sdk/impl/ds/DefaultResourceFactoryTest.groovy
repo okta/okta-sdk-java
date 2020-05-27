@@ -15,9 +15,9 @@
  */
 package com.okta.sdk.impl.ds
 
-import com.okta.sdk.resource.user.factor.Factor
+import com.okta.sdk.resource.user.factor.UserFactor
 import com.okta.sdk.resource.user.factor.FactorType
-import com.okta.sdk.resource.user.factor.TotpFactor
+import com.okta.sdk.resource.user.factor.TotpUserFactor
 import org.testng.annotations.Test
 
 import static org.hamcrest.Matchers.equalTo
@@ -39,8 +39,8 @@ class DefaultResourceFactoryTest {
         def map = [
                 factorType: "token:software:totp"
         ]
-        Factor factor = resourceFactory.instantiate(Factor, map)
-        assertThat factor, instanceOf(TotpFactor)
+        UserFactor factor = resourceFactory.instantiate(UserFactor, map)
+        assertThat factor, instanceOf(TotpUserFactor)
         assertThat factor.getFactorType(), equalTo(FactorType.TOKEN_SOFTWARE_TOTP)
     }
 }
