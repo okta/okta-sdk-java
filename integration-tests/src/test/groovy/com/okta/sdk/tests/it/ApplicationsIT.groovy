@@ -16,6 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.CSR
 import com.okta.sdk.resource.OAuth2ScopeConsentGrant
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.AppUser
@@ -62,6 +63,9 @@ import com.okta.sdk.resource.application.SwaApplicationSettingsApplication
 import com.okta.sdk.resource.application.WsFederationApplication
 import com.okta.sdk.resource.application.WsFederationApplicationSettings
 import com.okta.sdk.resource.application.WsFederationApplicationSettingsApplication
+import com.okta.sdk.resource.apps.CSRMetadata
+import com.okta.sdk.resource.apps.CSRMetadataSubject
+import com.okta.sdk.resource.apps.CSRMetadataSubjectAltNames
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.User
@@ -523,13 +527,63 @@ class ApplicationsIT extends ITSupport {
     }
 
     @Test
-    void keyCredentialsTest() {
-        ///api/v1/apps/{appId}/credentials/keys/generate
-        ///api/v1/apps/{appId}/credentials/csrs
+    void csrTest() {
+        Client client = getClient()
+
+        String label = "app-${uniqueTestName}"
+        Application app = client.instantiate(OpenIdConnectApplication)
+            .setLabel(label)
+            .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
+                .setOAuthClient(client.instantiate(OpenIdConnectApplicationSettingsClient)
+                    .setClientUri("https://example.com/client")
+                    .setLogoUri("https://example.com/assets/images/logo-new.png")
+                    .setRedirectUris(["https://example.com/oauth2/callback",
+                                      "myapp://callback"])
+                    .setResponseTypes([OAuthResponseType.TOKEN,
+                                       OAuthResponseType.ID_TOKEN,
+                                       OAuthResponseType.CODE])
+                    .setGrantTypes([OAuthGrantType.IMPLICIT,
+                                    OAuthGrantType.AUTHORIZATION_CODE])
+                    .setApplicationType(OpenIdConnectApplicationType.NATIVE)
+                    .setTosUri("https://example.com/client/tos")
+                    .setPolicyUri("https://example.com/client/policy")))
+            .setCredentials(client.instantiate(OAuthApplicationCredentials)
+                .setOAuthClient(client.instantiate(ApplicationCredentialsOAuthClient)
+                    .setClientId(UUID.randomUUID().toString())
+                    .setAutoKeyRotation(true)
+                    .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))
+        client.createApplication(app)
+        registerForCleanup(app)
+
+        assertThat(app.getStatus(), equalTo(Application.StatusEnum.ACTIVE))
+
+        // create csr metadata
+        CSRMetadata csrMetadata = client.instantiate(CSRMetadata)
+              .setSubject(client.instantiate(CSRMetadataSubject)
+                  .setCountryName("US")
+                  .setStateOrProvinceName("California")
+                  .setLocalityName("San Francisco")
+                  .setOrganizationName("Okta, Inc.")
+                  .setOrganizationalUnitName("Dev")
+                  .setCommonName("SP Issuer"))
+              .setSubjectAltNames(client.instantiate(CSRMetadataSubjectAltNames)
+                  .setDnsNames(["dev.okta.com"]))
+
+        // generate csr with metadata
+        CSR csr = app.generateCsr(csrMetadata)
+
+        // verify
+        assertPresent(app.listCsrs(), csr)
+
+        // revoke csr
+        app.revokeCSR(csr.getId())
+
+        // verify
+        assertNotPresent(app.listCsrs(), csr)
     }
 
     @Test
-    void oAuth2ScopeConsentGrantOperationsTest() {
+    void oAuth2ScopeConsentGrantTest() {
         Client client = getClient()
 
         String label = "app-${uniqueTestName}"
@@ -564,16 +618,18 @@ class ApplicationsIT extends ITSupport {
             .setIssuer(client.dataStore.baseUrlResolver.baseUrl)
             .setScopeId("okta.apps.manage"))
 
+        // verify
         assertPresent(app.listScopeConsentGrants(), app.getScopeConsentGrant(oAuth2ScopeConsentGrant.getId()))
 
         // revoke consent
         app.revokeScopeConsentGrant(oAuth2ScopeConsentGrant.getId())
 
+        // verify
         assertNotPresent(app.listScopeConsentGrants(), app.getScopeConsentGrant(oAuth2ScopeConsentGrant.getId()))
     }
 
     @Test
-    void oAuth2TokenOperationsTest() {
+    void oAuth2TokenTest() {
         Client client = getClient()
 
         String label = "app-${uniqueTestName}"
@@ -599,19 +655,17 @@ class ApplicationsIT extends ITSupport {
                     .setAutoKeyRotation(true)
                     .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))
         client.createApplication(app)
-
         registerForCleanup(app)
 
         assertThat(app.getStatus(), equalTo(Application.StatusEnum.ACTIVE))
 
+        // list all OAuth2 tokens
         OAuth2TokenList oAuth2TokenList = app.listOAuth2Tokens()
 
         assertThat("oAuth2TokenList must be empty", oAuth2TokenList.properties.empty)
 
         //TODO: create a token (need to figure out how) and then test a get.
-
         //TODO: revoke the above token (app.revokeOAuth2TokenForApplication(token)) and then test a get.
-
         //TODO: create more than one token, then revoke all the tokens (app.revokeOAuth2Tokens()) and then test a get.
     }
 
