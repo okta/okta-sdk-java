@@ -153,6 +153,7 @@ class GroupsIT implements CrudTestSupport {
 
         // 2. Add user to the group and validate user present in group
         user.addToGroup(group.getId())
+        // fix OKTA-279039
         // try upto 5 times with a delay of 2000ms after each failed attempt
         assertUserInGroup(user, group, 5, 2000)
 
