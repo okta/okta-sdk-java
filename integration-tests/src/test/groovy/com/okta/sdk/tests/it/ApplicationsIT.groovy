@@ -479,6 +479,9 @@ class ApplicationsIT extends ITSupport {
         client.createApplication(app)
         registerForCleanup(app)
 
+        // fix OKTA-279039
+        sleep(2000)
+        
         AppUserList appUserList = app.listApplicationUsers()
         assertThat appUserList.iterator().size(), equalTo(0)
 
