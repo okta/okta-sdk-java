@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-Present Okta, Inc.
+ * Copyright 2017 Okta
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ class OktaOrgCleaner {
                 }
 
         log.info("Deleting Group Rules:")
-        client.listGroupRules().stream()
+        client.listRules().stream()
                 .filter { it.getName().matches("rule\\+${uuidRegex}.*")}
                 .forEach {
                     GroupRule rule = it
