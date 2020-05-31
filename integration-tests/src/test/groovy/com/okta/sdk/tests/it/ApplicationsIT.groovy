@@ -575,7 +575,7 @@ class ApplicationsIT extends ITSupport {
         assertPresent(app.listCsrs(), csr)
 
         // revoke csr
-        app.revokeCSR(csr.getId())
+        app.revokeCsr(csr.getId())
 
         // verify
         assertNotPresent(app.listCsrs(), csr)
