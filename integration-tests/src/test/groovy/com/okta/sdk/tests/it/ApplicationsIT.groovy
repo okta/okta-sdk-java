@@ -486,6 +486,11 @@ class ApplicationsIT extends ITSupport {
         client.createApplication(app)
         registerForCleanup(app)
 
+        // fix OKTA-279039
+        // issue: listApplicationUsers() occasionally throws HTTP 404, Okta E0000007 - Resource not found error.
+        // adding a sleep after createApplication() helps resolve the above issue.
+        sleep(2000)
+        
         AppUserList appUserList = app.listApplicationUsers()
         assertThat appUserList.iterator().size(), equalTo(0)
 
@@ -627,3 +632,4 @@ class ApplicationsIT extends ITSupport {
         assertNotPresent(app.listScopeConsentGrants(), app.getScopeConsentGrant(oAuth2ScopeConsentGrant.getId()))
     }
 }
+
