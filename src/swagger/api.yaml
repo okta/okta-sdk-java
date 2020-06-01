@@ -218,7 +218,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/CSR'
+              $ref: '#/definitions/Csr'
             type: array
       security:
         - api_token: []
@@ -241,14 +241,14 @@ paths:
           name: metadata
           required: true
           schema:
-            $ref: '#/definitions/CSRMetadata'
+            $ref: '#/definitions/CsrMetadata'
       produces:
         - application/json
       responses:
         '201':
           description: Created
           schema:
-            $ref: '#/definitions/CSR'
+            $ref: '#/definitions/Csr'
       security:
         - api_token: []
       summary: Generate CSR for Application
@@ -258,7 +258,7 @@ paths:
     delete:
       consumes:
         - application/json
-      operationId: revokeCSRFromApplication
+      operationId: revokeCsrFromApplication
       parameters:
         - in: path
           name: appId
@@ -296,7 +296,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/CSR'
+            $ref: '#/definitions/Csr'
       security:
         - api_token: []
       tags:
@@ -3136,7 +3136,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/CSR'
+              $ref: '#/definitions/Csr'
             type: array
       security:
         - api_token: []
@@ -3159,14 +3159,14 @@ paths:
           name: metadata
           required: true
           schema:
-            $ref: '#/definitions/CSRMetadata'
+            $ref: '#/definitions/CsrMetadata'
       produces:
         - application/pkcs10
       responses:
         '201':
           description: Created
           schema:
-            $ref: '#/definitions/CSR'
+            $ref: '#/definitions/Csr'
       security:
         - api_token: []
       summary: Generate Signing CSR for IdP
@@ -3216,7 +3216,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/CSR'
+            $ref: '#/definitions/Csr'
       security:
         - api_token: []
       tags:
@@ -6894,11 +6894,11 @@ definitions:
           - dest: appId
             src: id
         operationId: getCsrForApplication
-      - alias: revokeCSR
+      - alias: revokeCsr
         arguments:
           - dest: appId
             src: id
-        operationId: revokeCSRFromApplication
+        operationId: revokeCsrFromApplication
       - alias: listCsrs
         arguments:
           - dest: appId
@@ -7542,7 +7542,7 @@ definitions:
         template_swa: '#/definitions/SwaApplication'
         template_swa3field: '#/definitions/SwaThreeFieldApplication'
       propertyName: name
-  CSR:
+  Csr:
     properties:
       created:
         format: date-time
@@ -7558,15 +7558,17 @@ definitions:
         readOnly: true
         type: string
     type: object
-  CSRMetadata:
+    x-okta-tags:
+      - Application
+  CsrMetadata:
     properties:
       subject:
-        $ref: '#/definitions/CSRMetadataSubject'
+        $ref: '#/definitions/CsrMetadataSubject'
       subjectAltNames:
-        $ref: '#/definitions/CSRMetadataSubjectAltNames'
+        $ref: '#/definitions/CsrMetadataSubjectAltNames'
     x-okta-tags:
-      - Apps
-  CSRMetadataSubject:
+      - Application
+  CsrMetadataSubject:
     properties:
       commonName:
         type: string
@@ -7581,15 +7583,15 @@ definitions:
       stateOrProvinceName:
         type: string
     x-okta-tags:
-      - Apps
-  CSRMetadataSubjectAltNames:
+      - Application
+  CsrMetadataSubjectAltNames:
     properties:
       dnsNames:
         items:
           type: string
         type: array
     x-okta-tags:
-      - Apps
+      - Application
   CallUserFactor:
     properties:
       profile:
@@ -9342,16 +9344,22 @@ definitions:
       status:
         $ref: '#/definitions/OAuth2ScopeConsentGrantStatus'
     type: object
+    x-okta-tags:
+      - Application
   OAuth2ScopeConsentGrantSource:
     enum:
       - END_USER
       - ADMIN
     type: string
+    x-okta-tags:
+      - Application
   OAuth2ScopeConsentGrantStatus:
     enum:
       - ACTIVE
       - REVOKED
     type: string
+    x-okta-tags:
+      - Application
   OAuth2ScopesMediationPolicyRuleCondition:
     properties:
       include:
