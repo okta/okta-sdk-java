@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.tests.it
 
-
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.AppUser
@@ -37,8 +36,13 @@ import com.okta.sdk.resource.application.BasicAuthApplication
 import com.okta.sdk.resource.application.BookmarkApplication
 import com.okta.sdk.resource.application.BookmarkApplicationSettings
 import com.okta.sdk.resource.application.BookmarkApplicationSettingsApplication
+import com.okta.sdk.resource.application.Csr
+import com.okta.sdk.resource.application.CsrMetadata
+import com.okta.sdk.resource.application.CsrMetadataSubject
+import com.okta.sdk.resource.application.CsrMetadataSubjectAltNames
 import com.okta.sdk.resource.application.JsonWebKey
 import com.okta.sdk.resource.application.JsonWebKeyList
+import com.okta.sdk.resource.application.OAuth2ScopeConsentGrant
 import com.okta.sdk.resource.application.OAuthApplicationCredentials
 import com.okta.sdk.resource.application.OAuthEndpointAuthenticationMethod
 import com.okta.sdk.resource.application.OAuthGrantType
@@ -68,13 +72,16 @@ import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
 
+import static com.okta.sdk.tests.it.util.Util.assertPresent
+import static com.okta.sdk.tests.it.util.Util.assertNotPresent
+
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.notNullValue
 import static org.hamcrest.Matchers.sameInstance
 
 /**
- * Tests for /api/v1/apps.
+ * Tests for {@code /api/v1/apps}.
  * @since 0.9.0
  */
 class ApplicationsIT extends ITSupport {
@@ -479,6 +486,11 @@ class ApplicationsIT extends ITSupport {
         client.createApplication(app)
         registerForCleanup(app)
 
+        // fix OKTA-279039
+        // issue: listApplicationUsers() occasionally throws HTTP 404, Okta E0000007 - Resource not found error.
+        // adding a sleep after createApplication() helps resolve the above issue.
+        sleep(2000)
+        
         AppUserList appUserList = app.listApplicationUsers()
         assertThat appUserList.iterator().size(), equalTo(0)
 
@@ -517,4 +529,107 @@ class ApplicationsIT extends ITSupport {
         AppUser readAppUser = app.getApplicationUser(appUser2.getId())
         assertThat readAppUser.getCredentials().getUserName(), equalTo("updated-"+user2.getProfile().getEmail())
     }
+
+    @Test
+    void csrTest() {
+        Client client = getClient()
+
+        String label = "app-${uniqueTestName}"
+        Application app = client.instantiate(OpenIdConnectApplication)
+            .setLabel(label)
+            .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
+                .setOAuthClient(client.instantiate(OpenIdConnectApplicationSettingsClient)
+                    .setClientUri("https://example.com/client")
+                    .setLogoUri("https://example.com/assets/images/logo-new.png")
+                    .setRedirectUris(["https://example.com/oauth2/callback",
+                                      "myapp://callback"])
+                    .setResponseTypes([OAuthResponseType.TOKEN,
+                                       OAuthResponseType.ID_TOKEN,
+                                       OAuthResponseType.CODE])
+                    .setGrantTypes([OAuthGrantType.IMPLICIT,
+                                    OAuthGrantType.AUTHORIZATION_CODE])
+                    .setApplicationType(OpenIdConnectApplicationType.NATIVE)
+                    .setTosUri("https://example.com/client/tos")
+                    .setPolicyUri("https://example.com/client/policy")))
+            .setCredentials(client.instantiate(OAuthApplicationCredentials)
+                .setOAuthClient(client.instantiate(ApplicationCredentialsOAuthClient)
+                    .setClientId(UUID.randomUUID().toString())
+                    .setAutoKeyRotation(true)
+                    .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))
+        client.createApplication(app)
+        registerForCleanup(app)
+
+        assertThat(app.getStatus(), equalTo(Application.StatusEnum.ACTIVE))
+
+        // create csr metadata
+        CsrMetadata csrMetadata = client.instantiate(CsrMetadata)
+              .setSubject(client.instantiate(CsrMetadataSubject)
+                  .setCountryName("US")
+                  .setStateOrProvinceName("California")
+                  .setLocalityName("San Francisco")
+                  .setOrganizationName("Okta, Inc.")
+                  .setOrganizationalUnitName("Dev")
+                  .setCommonName("SP Issuer"))
+              .setSubjectAltNames(client.instantiate(CsrMetadataSubjectAltNames)
+                  .setDnsNames(["dev.okta.com"]))
+
+        // generate csr with metadata
+        Csr csr = app.generateCsr(csrMetadata)
+
+        // verify
+        assertPresent(app.listCsrs(), csr)
+
+        // revoke csr
+        app.revokeCsr(csr.getId())
+
+        // verify
+        assertNotPresent(app.listCsrs(), csr)
+    }
+
+    @Test
+    void oAuth2ScopeConsentGrantTest() {
+        Client client = getClient()
+
+        String label = "app-${uniqueTestName}"
+        Application app = client.instantiate(OpenIdConnectApplication)
+            .setLabel(label)
+            .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
+                .setOAuthClient(client.instantiate(OpenIdConnectApplicationSettingsClient)
+                    .setClientUri("https://example.com/client")
+                    .setLogoUri("https://example.com/assets/images/logo-new.png")
+                    .setRedirectUris(["https://example.com/oauth2/callback",
+                                      "myapp://callback"])
+                    .setResponseTypes([OAuthResponseType.TOKEN,
+                                       OAuthResponseType.ID_TOKEN,
+                                       OAuthResponseType.CODE])
+                    .setGrantTypes([OAuthGrantType.IMPLICIT,
+                                    OAuthGrantType.AUTHORIZATION_CODE])
+                    .setApplicationType(OpenIdConnectApplicationType.NATIVE)
+                    .setTosUri("https://example.com/client/tos")
+                    .setPolicyUri("https://example.com/client/policy")))
+            .setCredentials(client.instantiate(OAuthApplicationCredentials)
+                .setOAuthClient(client.instantiate(ApplicationCredentialsOAuthClient)
+                    .setClientId(UUID.randomUUID().toString())
+                    .setAutoKeyRotation(true)
+                    .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))
+        client.createApplication(app)
+        registerForCleanup(app)
+
+        assertThat(app.getStatus(), equalTo(Application.StatusEnum.ACTIVE))
+
+        // grant consent
+        OAuth2ScopeConsentGrant oAuth2ScopeConsentGrant = app.grantConsentToScope(client.instantiate(OAuth2ScopeConsentGrant)
+            .setIssuer(client.dataStore.baseUrlResolver.baseUrl)
+            .setScopeId("okta.apps.manage"))
+
+        // verify
+        assertPresent(app.listScopeConsentGrants(), app.getScopeConsentGrant(oAuth2ScopeConsentGrant.getId()))
+
+        // revoke consent
+        app.revokeScopeConsentGrant(oAuth2ScopeConsentGrant.getId())
+
+        // verify
+        assertNotPresent(app.listScopeConsentGrants(), app.getScopeConsentGrant(oAuth2ScopeConsentGrant.getId()))
+    }
 }
+
