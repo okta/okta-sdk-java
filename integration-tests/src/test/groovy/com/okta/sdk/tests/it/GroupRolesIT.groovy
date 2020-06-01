@@ -127,23 +127,14 @@ class GroupRolesIT extends ITSupport {
         validateGroup(createdGroup2, groupName2)
 
         // 2. List all groups and find the groups created
-//        assertGroupPresent(client.listGroups(), createdGroup1)
-//        assertGroupPresent(client.listGroups(), createdGroup2)
+        assertGroupPresent(client.listGroups(), createdGroup1)
+        assertGroupPresent(client.listGroups(), createdGroup2)
 
-        // 3. Create a USER_ADMIN role request & assign it to the first group
+        // 3. Create a USER_ADMIN role & assign it to the first group
         Role userAdminRole = createdGroup1.assignRole(client.instantiate(AssignRoleRequest)
             .setType(RoleType.USER_ADMIN))
 
-        // 4. Add second group as the admin target
-//        String href = "/api/v1/groups/" + createdGroup1.getId() + "/roles/" + userAdminRole.getId() +
-//            "/targets/groups/" + createdGroup2.getId() + ""
-//        userAdminRole.setResourceHref(href) //TODO: find the right way of doing this!
-//
-//        userAdminRole.addAdminGroup(createdGroup2.getId())
-
-        //addGroupTargetToGroupAdministratorRoleForGroup
-        //createdGroup1.getRole(userAdminRole.getId()).targetGroup(createdGroup2.getId())
-
+        // 4. Add second group as the admin target for the user admin role
         userAdminRole.addAdminGroup(createdGroup2.getId())
 
         // 5. Verify the same
@@ -181,35 +172,24 @@ class GroupRolesIT extends ITSupport {
         assertGroupPresent(client.listGroups(), createdGroup2)
         assertGroupPresent(client.listGroups(), createdGroup3)
 
-        // 3. Create a USER_ADMIN role request
-        AssignRoleRequest userAdminRoleRequest = client.instantiate(AssignRoleRequest)
-        userAdminRoleRequest.setType(RoleType.USER_ADMIN)
+        // 3. Create a USER_ADMIN role & assign it to the first group
+        Role userAdminRole = createdGroup1.assignRole(client.instantiate(AssignRoleRequest)
+            .setType(RoleType.USER_ADMIN))
 
-        // 4. Assign the above role to the first group
-        Role userAdminRole = createdGroup1.assignRole(userAdminRoleRequest)
-
-        // 5. Add second group as the admin target for the first group
-        String href1 = "/api/v1/groups/" + createdGroup1.getId() + "/roles/" + userAdminRole.getId() +
-            "/targets/groups/" + createdGroup2.getId() + ""
-        userAdminRole.setResourceHref(href1) //TODO: find the right way of doing this!
-
+        // 4. Add second group as the admin target for the user admin role
         userAdminRole.addAdminGroup(createdGroup2.getId())
 
-        // 6. Add third group as the admin target for the first group
-        String href2 = "/api/v1/groups/" + createdGroup1.getId() + "/roles/" + userAdminRole.getId() +
-            "/targets/groups/" + createdGroup3.getId() + ""
-        userAdminRole.setResourceHref(href2) //TODO: find the right way of doing this!
-
+        // 5. Add third group as the admin target for the user admin role
         userAdminRole.addAdminGroup(createdGroup3.getId())
 
-        // 7. Verify if both the above targets (group 2 & group 3) are added
+        // 6. Verify if both the above targets (group 2 & group 3) are added
         assertGroupPresent(client.listGroupTargetsForGroupRole(createdGroup1.getId(), userAdminRole.getId()), createdGroup2)
         assertGroupPresent(client.listGroupTargetsForGroupRole(createdGroup1.getId(), userAdminRole.getId()), createdGroup3)
 
-        // 8. Remove group 2 from the target
+        // 7. Remove group 2 from the target
         client.removeGroupTargetFromGroupAdministratorRoleGivenToGroup(createdGroup1.getId(), userAdminRole.getId(), createdGroup2.getId())
 
-        // 9. Verify that group 2 is removed from the target
+        // 8. Verify that group 2 is removed from the target
         assertGroupAbsent(client.listGroupTargetsForGroupRole(createdGroup1.getId(), userAdminRole.getId()), createdGroup2)
     }
 }
