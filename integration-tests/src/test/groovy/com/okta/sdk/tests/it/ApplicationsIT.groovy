@@ -81,7 +81,7 @@ import static org.hamcrest.Matchers.notNullValue
 import static org.hamcrest.Matchers.sameInstance
 
 /**
- * Tests for /api/v1/apps
+ * Tests for {@code /api/v1/apps}.
  * @since 0.9.0
  */
 class ApplicationsIT extends ITSupport {
