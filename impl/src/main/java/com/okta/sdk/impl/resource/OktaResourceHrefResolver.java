@@ -21,6 +21,7 @@ import com.okta.sdk.resource.application.AppUser;
 import com.okta.sdk.resource.application.Application;
 import com.okta.sdk.resource.group.Group;
 import com.okta.sdk.resource.group.rule.GroupRule;
+import com.okta.sdk.resource.user.Role;
 
 import java.util.Map;
 
@@ -67,6 +68,13 @@ public class OktaResourceHrefResolver implements ResourceHrefResolver {
                 if (!Collections.isEmpty(self)) {
                     String href = self.get("href").toString();
                     return href.substring(0, href.lastIndexOf("/users"));
+                }
+            }
+            if (Role.class.isAssignableFrom(clazz)) {
+                Map<String, ?> assignee = getMapValue(links, "assignee");
+                if (!Collections.isEmpty(assignee)) {
+                    String href = assignee.get("href").toString();
+                    return href + "/roles/" + properties.get("id");
                 }
             }
         }

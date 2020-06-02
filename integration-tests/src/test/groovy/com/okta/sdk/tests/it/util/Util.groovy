@@ -20,6 +20,7 @@ import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupList
 import com.okta.sdk.resource.user.Role
+import com.okta.sdk.resource.user.RoleList
 import com.okta.sdk.resource.user.User
 import org.testng.Assert
 
@@ -69,6 +70,33 @@ class Util {
                 .collect(Collectors.toList())
 
         assertThat(groupsFound, hasSize(1))
+    }
+
+    static void assertGroupAbsent(GroupList results, Group expectedGroup) {
+
+        List<Group> groupsFound = StreamSupport.stream(results.spliterator(), false)
+            .filter {group -> group.id == expectedGroup.id}
+            .collect(Collectors.toList())
+
+        assertThat(groupsFound, hasSize(0))
+    }
+
+    static void assertRolePresent(RoleList results, Role expectedRole) {
+
+        List<Role> rolesFound = StreamSupport.stream(results.spliterator(), false)
+            .filter {role -> role.id == expectedRole.id}
+            .collect(Collectors.toList())
+
+        assertThat(rolesFound, hasSize(1))
+    }
+
+    static void assertRoleAbsent(RoleList results, Role expectedRole) {
+
+        List<Role> rolesFound = StreamSupport.stream(results.spliterator(), false)
+            .filter {role -> role.id == expectedRole.id}
+            .collect(Collectors.toList())
+
+        assertThat(rolesFound, hasSize(0))
     }
 
     static <T extends Resource, C extends CollectionResource<T>> void assertPresent(C results, T expected) {
