@@ -135,7 +135,7 @@ class GroupRolesIT extends ITSupport {
             .setType(RoleType.USER_ADMIN))
 
         // 4. Add second group as the admin target for the user admin role
-        userAdminRole.addAdminGroup(createdGroup2.getId())
+        userAdminRole.addAdminGroupTarget(createdGroup2.getId())
 
         // 5. Verify the same
         assertGroupPresent(client.listGroupTargetsForGroupRole(createdGroup1.getId(), userAdminRole.getId()), createdGroup2)
@@ -177,10 +177,10 @@ class GroupRolesIT extends ITSupport {
             .setType(RoleType.USER_ADMIN))
 
         // 4. Add second group as the admin target for the user admin role
-        userAdminRole.addAdminGroup(createdGroup2.getId())
+        userAdminRole.addAdminGroupTarget(createdGroup2.getId())
 
         // 5. Add third group as the admin target for the user admin role
-        userAdminRole.addAdminGroup(createdGroup3.getId())
+        userAdminRole.addAdminGroupTarget(createdGroup3.getId())
 
         // 6. Verify if both the above targets (group 2 & group 3) are added
         assertGroupPresent(client.listGroupTargetsForGroupRole(createdGroup1.getId(), userAdminRole.getId()), createdGroup2)

@@ -10564,7 +10564,7 @@ definitions:
     x-okta-tags:
       - User
     x-okta-operations:
-      - alias: addAdminGroup
+      - alias: addAdminGroupTarget
         arguments:
           - dest: roleId
             src: id
