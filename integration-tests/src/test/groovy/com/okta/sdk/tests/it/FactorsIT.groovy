@@ -21,17 +21,27 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.factor.ActivateFactorRequest
 import com.okta.sdk.resource.user.factor.CallUserFactor
+import com.okta.sdk.resource.user.factor.EmailUserFactor
+import com.okta.sdk.resource.user.factor.EmailUserFactorProfile
 import com.okta.sdk.resource.user.factor.FactorProvider
 import com.okta.sdk.resource.user.factor.FactorStatus
+import com.okta.sdk.resource.user.factor.FactorType
+import com.okta.sdk.resource.user.factor.HardwareUserFactor
+import com.okta.sdk.resource.user.factor.HardwareUserFactorProfile
 import com.okta.sdk.resource.user.factor.PushUserFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionUserFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionList
 import com.okta.sdk.resource.user.factor.SmsUserFactor
+import com.okta.sdk.resource.user.factor.TokenUserFactor
 import com.okta.sdk.resource.user.factor.TotpUserFactor
+import com.okta.sdk.resource.user.factor.U2fUserFactor
+import com.okta.sdk.resource.user.factor.U2fUserFactorProfile
 import com.okta.sdk.resource.user.factor.UserFactor
 import com.okta.sdk.resource.user.factor.UserFactorList
 import com.okta.sdk.resource.user.factor.VerifyFactorRequest
 import com.okta.sdk.resource.user.factor.VerifyUserFactorResponse
+import com.okta.sdk.resource.user.factor.WebUserFactor
+import com.okta.sdk.resource.user.factor.WebUserFactorProfile
 import com.okta.sdk.tests.it.util.ITSupport
 import org.jboss.aerogear.security.otp.Totp
 import org.testng.annotations.Test
@@ -176,6 +186,62 @@ class FactorsIT extends ITSupport {
         request.setAnswer("pizza")
         VerifyUserFactorResponse response = securityQuestionUserFactor.verify(request, null, null)
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
+    }
+
+    @Test
+    void testEmailUserFactor() {
+        User user = randomUser()
+        assertThat user.listFactors(), emptyIterable()
+
+        EmailUserFactorProfile emailUserFactorProfile = client.instantiate(EmailUserFactorProfile)
+        emailUserFactorProfile.setEmail(user.getProfile().getEmail())
+
+        EmailUserFactor emailUserFactor = client.instantiate(EmailUserFactor)
+        emailUserFactor.setFactorType(FactorType.EMAIL)
+        emailUserFactor.setProvider(FactorProvider.OKTA)
+        emailUserFactor.setProfile(emailUserFactorProfile)
+
+        assertThat emailUserFactor.id, nullValue()
+        // enroll and activate
+        assertThat emailUserFactor, sameInstance(user.enrollFactor(emailUserFactor, false, null, null, true))
+        assertThat emailUserFactor.getStatus(), is(FactorStatus.ACTIVE)
+        assertThat emailUserFactor.id, notNullValue()
+
+        VerifyFactorRequest request = client.instantiate(VerifyFactorRequest)
+        VerifyUserFactorResponse response = emailUserFactor.verify(request, null, null)
+        assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.CHALLENGE)
+    }
+
+    @Test
+    void testU2fUserFactorCreation() {
+        User user = randomUser()
+        assertThat user.listFactors(), emptyIterable()
+
+        U2fUserFactor u2fUserFactor = client.instantiate(U2fUserFactor)
+        u2fUserFactor.setFactorType(FactorType.U2F)
+        u2fUserFactor.setProvider(FactorProvider.GOOGLE)
+        u2fUserFactor.setProfile(client.instantiate(U2fUserFactorProfile))
+
+        assertThat u2fUserFactor.id, nullValue()
+        assertThat u2fUserFactor, sameInstance(user.enrollFactor(u2fUserFactor)) //TODO: check why Okta core responds with -  HTTP 400, Okta E0000001 (Api validation failed: factorEnrollRequest - Invalid Factor.), ErrorId oaeV_agqOzrSL-dXGwvdDLpSg
+        assertThat u2fUserFactor.id, notNullValue()
+        assertThat u2fUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
+    }
+
+    @Test
+    void testWebUserFactorCreation() {
+        User user = randomUser()
+        assertThat user.listFactors(), emptyIterable()
+
+        WebUserFactor webUserFactor = client.instantiate(WebUserFactor)
+        webUserFactor.setFactorType(FactorType.WEBAUTHN)
+        webUserFactor.setProvider(FactorProvider.DUO)
+        webUserFactor.setProfile(client.instantiate(WebUserFactorProfile))
+
+        assertThat webUserFactor.id, nullValue()
+        assertThat webUserFactor, sameInstance(user.enrollFactor(webUserFactor)) //TODO: enable this factor in oktapreview org; until then this test will fail.
+        assertThat webUserFactor.id, notNullValue()
+        assertThat webUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
     }
 
     @Test
