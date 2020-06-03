@@ -507,11 +507,17 @@ class ApplicationsIT extends ITSupport {
         assertThat(app.assignUserToApplication(appUser1), sameInstance(appUser1))
         assertThat(app.assignUserToApplication(appUser2), sameInstance(appUser2))
 
+        // PDV test fails sometimes in the following assertion (actual is 1 instead of 2)
+        sleep(2000)
+
         // now we should have 2
         assertThat appUserList.iterator().size(), equalTo(2)
 
         // delete just one
         appUser1.delete()
+
+        // added to fix PDV test failure
+        sleep(2000)
 
         // now we should have 1
         assertThat appUserList.iterator().size(), equalTo(1)
