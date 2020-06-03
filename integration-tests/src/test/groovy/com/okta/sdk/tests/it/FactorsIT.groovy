@@ -193,13 +193,11 @@ class FactorsIT extends ITSupport {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
 
-        EmailUserFactorProfile emailUserFactorProfile = client.instantiate(EmailUserFactorProfile)
-        emailUserFactorProfile.setEmail(user.getProfile().getEmail())
-
         EmailUserFactor emailUserFactor = client.instantiate(EmailUserFactor)
-        emailUserFactor.setFactorType(FactorType.EMAIL)
-        emailUserFactor.setProvider(FactorProvider.OKTA)
-        emailUserFactor.setProfile(emailUserFactorProfile)
+            .setFactorType(FactorType.EMAIL)
+            .setProvider(FactorProvider.OKTA)
+            .setProfile(client.instantiate(EmailUserFactorProfile)
+                .setEmail(user.getProfile().getEmail()))
 
         assertThat emailUserFactor.id, nullValue()
         // enroll and activate
@@ -218,9 +216,9 @@ class FactorsIT extends ITSupport {
         assertThat user.listFactors(), emptyIterable()
 
         U2fUserFactor u2fUserFactor = client.instantiate(U2fUserFactor)
-        u2fUserFactor.setFactorType(FactorType.U2F)
-        u2fUserFactor.setProvider(FactorProvider.GOOGLE)
-        u2fUserFactor.setProfile(client.instantiate(U2fUserFactorProfile))
+            .setFactorType(FactorType.U2F)
+            .setProvider(FactorProvider.GOOGLE)
+            .setProfile(client.instantiate(U2fUserFactorProfile))
 
         assertThat u2fUserFactor.id, nullValue()
         assertThat u2fUserFactor, sameInstance(user.enrollFactor(u2fUserFactor)) //TODO: check why Okta core responds with -  HTTP 400, Okta E0000001 (Api validation failed: factorEnrollRequest - Invalid Factor.), ErrorId oaeV_agqOzrSL-dXGwvdDLpSg
@@ -234,9 +232,9 @@ class FactorsIT extends ITSupport {
         assertThat user.listFactors(), emptyIterable()
 
         WebUserFactor webUserFactor = client.instantiate(WebUserFactor)
-        webUserFactor.setFactorType(FactorType.WEBAUTHN)
-        webUserFactor.setProvider(FactorProvider.DUO)
-        webUserFactor.setProfile(client.instantiate(WebUserFactorProfile))
+            .setFactorType(FactorType.WEBAUTHN)
+            .setProvider(FactorProvider.DUO)
+            .setProfile(client.instantiate(WebUserFactorProfile))
 
         assertThat webUserFactor.id, nullValue()
         assertThat webUserFactor, sameInstance(user.enrollFactor(webUserFactor)) //TODO: enable this factor in oktapreview org; until then this test will fail.
