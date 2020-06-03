@@ -204,7 +204,7 @@ paths:
     get:
       consumes:
         - application/json
-      description: Enumerates CSRs for an application
+      description: Enumerates Certificate Signing Requests for an application
       operationId: listCsrsForApplication
       parameters:
         - in: path
@@ -218,11 +218,11 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/Csr'
+              $ref: '#/definitions/CertificateSigningRequest'
             type: array
       security:
         - api_token: []
-      summary: List CSRs for Application
+      summary: List Certificate Signing Requests for Application
       tags:
         - Application
     post:
@@ -241,17 +241,17 @@ paths:
           name: metadata
           required: true
           schema:
-            $ref: '#/definitions/CsrMetadata'
+            $ref: '#/definitions/CertificateSigningRequestMetadata'
       produces:
         - application/json
       responses:
         '201':
           description: Created
           schema:
-            $ref: '#/definitions/Csr'
+            $ref: '#/definitions/CertificateSigningRequest'
       security:
         - api_token: []
-      summary: Generate CSR for Application
+      summary: Generate Certificate Signing Request for Application
       tags:
         - Application
   '/api/v1/apps/{appId}/credentials/csrs/{csrId}':
@@ -296,7 +296,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/Csr'
+            $ref: '#/definitions/CertificateSigningRequest'
       security:
         - api_token: []
       tags:
@@ -3122,7 +3122,7 @@ paths:
     get:
       consumes:
         - application/json
-      description: Enumerates signing CSRs for an IdP
+      description: Enumerates Certificate Signing Requests for an IdP
       operationId: listCsrsForIdentityProvider
       parameters:
         - in: path
@@ -3136,11 +3136,11 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/Csr'
+              $ref: '#/definitions/CertificateSigningRequest'
             type: array
       security:
         - api_token: []
-      summary: List Signing CSRs for IdP
+      summary: List Signing Certificate Signing Requests for IdP
       tags:
         - IdentityProvider
     post:
@@ -3159,24 +3159,24 @@ paths:
           name: metadata
           required: true
           schema:
-            $ref: '#/definitions/CsrMetadata'
+            $ref: '#/definitions/CertificateSigningRequestMetadata'
       produces:
         - application/pkcs10
       responses:
         '201':
           description: Created
           schema:
-            $ref: '#/definitions/Csr'
+            $ref: '#/definitions/CertificateSigningRequest'
       security:
         - api_token: []
-      summary: Generate Signing CSR for IdP
+      summary: Generate Certificate Signing Request for IdP
       tags:
         - IdentityProvider
   '/api/v1/idps/{idpId}/credentials/csrs/{csrId}':
     delete:
       consumes:
         - application/json
-      description: Revoke a CSR and delete the key pair from the IdP
+      description: Revoke a Certificate Signing Request and delete the key pair from the IdP
       operationId: revokeCsrForIdentityProvider
       parameters:
         - in: path
@@ -3199,7 +3199,7 @@ paths:
     get:
       consumes:
         - application/json
-      description: Gets a specific CSR model by id
+      description: Gets a specific Certificate Signing Request model by id
       operationId: getCsrForIdentityProvider
       parameters:
         - in: path
@@ -3216,7 +3216,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/Csr'
+            $ref: '#/definitions/CertificateSigningRequest'
       security:
         - api_token: []
       tags:
@@ -3226,7 +3226,7 @@ paths:
       consumes:
         - application/json
       description: >-
-        Update the CSR with a signed X.509 certificate and add it into the
+        Update the Certificate Signing Request with a signed X.509 certificate and add it into the
         signing key credentials for the IdP.
       parameters:
         - in: path
@@ -7542,7 +7542,7 @@ definitions:
         template_swa: '#/definitions/SwaApplication'
         template_swa3field: '#/definitions/SwaThreeFieldApplication'
       propertyName: name
-  Csr:
+  CertificateSigningRequest:
     properties:
       created:
         format: date-time
@@ -7560,15 +7560,15 @@ definitions:
     type: object
     x-okta-tags:
       - Application
-  CsrMetadata:
+  CertificateSigningRequestMetadata:
     properties:
       subject:
-        $ref: '#/definitions/CsrMetadataSubject'
+        $ref: '#/definitions/CertificateSigningRequestMetadataSubject'
       subjectAltNames:
-        $ref: '#/definitions/CsrMetadataSubjectAltNames'
+        $ref: '#/definitions/CertificateSigningRequestMetadataSubjectAltNames'
     x-okta-tags:
       - Application
-  CsrMetadataSubject:
+  CertificateSigningRequestMetadataSubject:
     properties:
       commonName:
         type: string
@@ -7584,7 +7584,7 @@ definitions:
         type: string
     x-okta-tags:
       - Application
-  CsrMetadataSubjectAltNames:
+  CertificateSigningRequestMetadataSubjectAltNames:
     properties:
       dnsNames:
         items:
