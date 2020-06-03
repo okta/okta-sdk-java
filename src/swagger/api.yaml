@@ -3161,6 +3161,7 @@ paths:
           schema:
             $ref: '#/definitions/CsrMetadata'
       produces:
+        - application/pkcs10
         - application/json
       responses:
         '201':
