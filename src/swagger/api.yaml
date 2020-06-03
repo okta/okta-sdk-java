@@ -3140,7 +3140,7 @@ paths:
             type: array
       security:
         - api_token: []
-      summary: List Signing Certificate Signing Requests for IdP
+      summary: List Certificate Signing Requests for IdP
       tags:
         - IdentityProvider
     post:
