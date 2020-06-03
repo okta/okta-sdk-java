@@ -198,6 +198,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 2. Activate the user and verify user in list of active users
         user.activate(false)
 
+        // PDV tests fail sometimes, so adding a delay here to be safe
         sleep(2000)
 
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
