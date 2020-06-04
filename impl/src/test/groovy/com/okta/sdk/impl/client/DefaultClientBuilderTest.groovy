@@ -89,7 +89,7 @@ class DefaultClientBuilderTest {
         def builder = new DefaultClientBuilder(noDefaultYamlResourceFactory())
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
         assertEquals clientBuilder.clientConfiguration.baseUrl, "https://api.okta.com/v42"
-        assertEquals clientBuilder.clientConfiguration.connectionTimeout, 10
+        assertEquals clientBuilder.clientConfiguration.connectionTimeout, 100
         assertEquals clientBuilder.clientConfiguration.authenticationScheme, AuthenticationScheme.SSWS
     }
 
