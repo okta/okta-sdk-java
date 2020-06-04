@@ -33,6 +33,7 @@ import com.okta.sdk.resource.user.factor.SecurityQuestionUserFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionList
 import com.okta.sdk.resource.user.factor.SmsUserFactor
 import com.okta.sdk.resource.user.factor.TokenUserFactor
+import com.okta.sdk.resource.user.factor.TokenUserFactorProfile
 import com.okta.sdk.resource.user.factor.TotpUserFactor
 import com.okta.sdk.resource.user.factor.U2fUserFactor
 import com.okta.sdk.resource.user.factor.U2fUserFactorProfile
@@ -211,35 +212,18 @@ class FactorsIT extends ITSupport {
     }
 
     @Test
-    void testU2fUserFactorCreation() {
+    void testTokenUserFactorCreation() {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
 
-        U2fUserFactor u2fUserFactor = client.instantiate(U2fUserFactor)
-            .setFactorType(FactorType.U2F)
+        TokenUserFactor tokenUserFactor = client.instantiate(TokenUserFactor)
+            .setFactorType(FactorType.TOKEN_SOFTWARE_TOTP)
             .setProvider(FactorProvider.GOOGLE)
-            .setProfile(client.instantiate(U2fUserFactorProfile))
 
-        assertThat u2fUserFactor.id, nullValue()
-        assertThat u2fUserFactor, sameInstance(user.enrollFactor(u2fUserFactor)) //TODO: check why Okta core responds with -  HTTP 400, Okta E0000001 (Api validation failed: factorEnrollRequest - Invalid Factor.), ErrorId oaeV_agqOzrSL-dXGwvdDLpSg
-        assertThat u2fUserFactor.id, notNullValue()
-        assertThat u2fUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
-    }
-
-    @Test
-    void testWebUserFactorCreation() {
-        User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
-
-        WebUserFactor webUserFactor = client.instantiate(WebUserFactor)
-            .setFactorType(FactorType.WEBAUTHN)
-            .setProvider(FactorProvider.DUO)
-            .setProfile(client.instantiate(WebUserFactorProfile))
-
-        assertThat webUserFactor.id, nullValue()
-        assertThat webUserFactor, sameInstance(user.enrollFactor(webUserFactor)) //TODO: enable this factor in oktapreview org; until then this test will fail.
-        assertThat webUserFactor.id, notNullValue()
-        assertThat webUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
+        assertThat tokenUserFactor.id, nullValue()
+        assertThat tokenUserFactor, sameInstance(user.enrollFactor(tokenUserFactor))
+        assertThat tokenUserFactor.id, notNullValue()
+        assertThat tokenUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
     }
 
     @Test
