@@ -57,31 +57,42 @@ class SmsTemplateIT extends ITSupport {
         // retrieve template
         SmsTemplate retrievedSmsTemplate = client.getSmsTemplate(smsTemplate.getId())
         assertThat(retrievedSmsTemplate, notNullValue())
-        assertThat("Incorrect Translations Count", retrievedSmsTemplate.getTranslations().size() == 2)
+        assertThat(retrievedSmsTemplate.getTranslations().keySet(), hasSize(2))
 
-        // partial update template
-        retrievedSmsTemplate.getTranslations().put("es", "\${org.name}: su código de inscripción es \${code}")
-        retrievedSmsTemplate.partialUpdate()
-        assertThat("Incorrect Translations Count", retrievedSmsTemplate.getTranslations().size() == 3)
+        // partial update template with 1 empty translation
+        SmsTemplateTranslations partialUpdateTranslations = client.instantiate(SmsTemplateTranslations)
+        partialUpdateTranslations.put("de", "")  // supplying empty value here so it gets removed by partial update operation (by design)
+
+        smsTemplate.setTranslations(partialUpdateTranslations)
+
+        smsTemplate.partialUpdate()
+        assertThat(smsTemplate.getTranslations().keySet(), hasSize(1))
+
+        // partial update again with 2 new translations
+        smsTemplate.getTranslations().put("es", "\${org.name}: su código de inscripción es \${code}")
+        smsTemplate.getTranslations().put("fr", "\${org.name}: votre code d'inscription est \${code}",)
+
+        smsTemplate.partialUpdate()
+        assertThat(smsTemplate.getTranslations().keySet(), hasSize(3))
 
         // full update template
-        SmsTemplateTranslations newSmsTemplateTranslations = client.instantiate(SmsTemplateTranslations)
-        newSmsTemplateTranslations.put("fr", "\${org.name}: votre code d'inscription est \${code}")
+        SmsTemplateTranslations fullUpdateTranslations = client.instantiate(SmsTemplateTranslations)
+        fullUpdateTranslations.put("de", "\${org.name}: Hier ist Ihr Registrierungscode: \${code}")
 
-        retrievedSmsTemplate.setName("new-" + templateName)
-            .setType(SmsTemplateType.CODE)
-            .setTemplate("\${org.name}: your verification code is \${code}")
-            .setTranslations(newSmsTemplateTranslations)
+        smsTemplate.setName("new-" + templateName)
+        smsTemplate.setType(SmsTemplateType.CODE)
+        smsTemplate.setTemplate("\${org.name}: Here is your enrollment code: \${code}")
+        smsTemplate.setTranslations(fullUpdateTranslations)
 
-        retrievedSmsTemplate.update()
-        assertThat(retrievedSmsTemplate.getName(), equalTo("new-" + templateName))
-        assertThat("Incorrect Translations Count", retrievedSmsTemplate.getTranslations().size() == 1)
+        smsTemplate.update()
+        assertThat(smsTemplate.getName(), is("new-" + templateName))
+        assertThat(smsTemplate.getTranslations().keySet(), hasSize(1))
 
         // list templates
-        assertPresent(client.listSmsTemplates(), retrievedSmsTemplate)
+        assertPresent(client.listSmsTemplates(), smsTemplate)
 
         // delete template
-        retrievedSmsTemplate.delete()
-        assertNotPresent(client.listSmsTemplates(), retrievedSmsTemplate)
+        smsTemplate.delete()
+        assertNotPresent(client.listSmsTemplates(), smsTemplate)
     }
 }
