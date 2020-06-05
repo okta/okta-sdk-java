@@ -218,7 +218,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/CertificateSigningRequest'
+              $ref: '#/definitions/Csr'
             type: array
       security:
         - api_token: []
@@ -241,14 +241,14 @@ paths:
           name: metadata
           required: true
           schema:
-            $ref: '#/definitions/CertificateSigningRequestMetadata'
+            $ref: '#/definitions/CsrMetadata'
       produces:
         - application/json
       responses:
         '201':
           description: Created
           schema:
-            $ref: '#/definitions/CertificateSigningRequest'
+            $ref: '#/definitions/Csr'
       security:
         - api_token: []
       summary: Generate Certificate Signing Request for Application
@@ -296,7 +296,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/CertificateSigningRequest'
+            $ref: '#/definitions/Csr'
       security:
         - api_token: []
       tags:
@@ -3136,7 +3136,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/CertificateSigningRequest'
+              $ref: '#/definitions/Csr'
             type: array
       security:
         - api_token: []
@@ -3159,14 +3159,14 @@ paths:
           name: metadata
           required: true
           schema:
-            $ref: '#/definitions/CertificateSigningRequestMetadata'
+            $ref: '#/definitions/CsrMetadata'
       produces:
         - application/pkcs10
       responses:
         '201':
           description: Created
           schema:
-            $ref: '#/definitions/CertificateSigningRequest'
+            $ref: '#/definitions/Csr'
       security:
         - api_token: []
       summary: Generate Certificate Signing Request for IdP
@@ -3216,7 +3216,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/CertificateSigningRequest'
+            $ref: '#/definitions/Csr'
       security:
         - api_token: []
       tags:
@@ -7542,7 +7542,7 @@ definitions:
         template_swa: '#/definitions/SwaApplication'
         template_swa3field: '#/definitions/SwaThreeFieldApplication'
       propertyName: name
-  CertificateSigningRequest:
+  Csr:
     properties:
       created:
         format: date-time
@@ -7560,15 +7560,15 @@ definitions:
     type: object
     x-okta-tags:
       - Application
-  CertificateSigningRequestMetadata:
+  CsrMetadata:
     properties:
       subject:
-        $ref: '#/definitions/CertificateSigningRequestMetadataSubject'
+        $ref: '#/definitions/CsrMetadataSubject'
       subjectAltNames:
-        $ref: '#/definitions/CertificateSigningRequestMetadataSubjectAltNames'
+        $ref: '#/definitions/CsrMetadataSubjectAltNames'
     x-okta-tags:
       - Application
-  CertificateSigningRequestMetadataSubject:
+  CsrMetadataSubject:
     properties:
       commonName:
         type: string
@@ -7584,7 +7584,7 @@ definitions:
         type: string
     x-okta-tags:
       - Application
-  CertificateSigningRequestMetadataSubjectAltNames:
+  CsrMetadataSubjectAltNames:
     properties:
       dnsNames:
         items:
