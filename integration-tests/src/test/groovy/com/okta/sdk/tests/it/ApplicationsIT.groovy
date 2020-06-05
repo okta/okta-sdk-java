@@ -531,6 +531,62 @@ class ApplicationsIT extends ITSupport {
     }
 
     @Test
+    void csrTest() {
+        Client client = getClient()
+
+        String label = "app-${uniqueTestName}"
+        Application app = client.instantiate(OpenIdConnectApplication)
+            .setLabel(label)
+            .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
+                .setOAuthClient(client.instantiate(OpenIdConnectApplicationSettingsClient)
+                    .setClientUri("https://example.com/client")
+                    .setLogoUri("https://example.com/assets/images/logo-new.png")
+                    .setRedirectUris(["https://example.com/oauth2/callback",
+                                      "myapp://callback"])
+                    .setResponseTypes([OAuthResponseType.TOKEN,
+                                       OAuthResponseType.ID_TOKEN,
+                                       OAuthResponseType.CODE])
+                    .setGrantTypes([OAuthGrantType.IMPLICIT,
+                                    OAuthGrantType.AUTHORIZATION_CODE])
+                    .setApplicationType(OpenIdConnectApplicationType.NATIVE)
+                    .setTosUri("https://example.com/client/tos")
+                    .setPolicyUri("https://example.com/client/policy")))
+            .setCredentials(client.instantiate(OAuthApplicationCredentials)
+                .setOAuthClient(client.instantiate(ApplicationCredentialsOAuthClient)
+                    .setClientId(UUID.randomUUID().toString())
+                    .setAutoKeyRotation(true)
+                    .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))
+        client.createApplication(app)
+        registerForCleanup(app)
+
+        assertThat(app.getStatus(), equalTo(Application.StatusEnum.ACTIVE))
+
+        // create csr metadata
+        CsrMetadata csrMetadata = client.instantiate(CsrMetadata)
+            .setSubject(client.instantiate(CsrMetadataSubject)
+                .setCountryName("US")
+                .setStateOrProvinceName("California")
+                .setLocalityName("San Francisco")
+                .setOrganizationName("Okta, Inc.")
+                .setOrganizationalUnitName("Dev")
+                .setCommonName("SP Issuer"))
+            .setSubjectAltNames(client.instantiate(CsrMetadataSubjectAltNames)
+                .setDnsNames(["dev.okta.com"]))
+
+        // generate csr with metadata
+        Csr csr = app.generateCsr(csrMetadata)
+
+        // verify
+        assertPresent(app.listCsrs(), csr)
+
+        // revoke csr
+        app.revokeCsr(csr.getId())
+
+        // verify
+        assertNotPresent(app.listCsrs(), csr)
+    }
+
+    @Test
     void oAuth2ScopeConsentGrantTest() {
         Client client = getClient()
 
