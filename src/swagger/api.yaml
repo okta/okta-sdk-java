@@ -204,7 +204,7 @@ paths:
     get:
       consumes:
         - application/json
-      description: Enumerates CSRs for an application
+      description: Enumerates Certificate Signing Requests for an application
       operationId: listCsrsForApplication
       parameters:
         - in: path
@@ -222,7 +222,7 @@ paths:
             type: array
       security:
         - api_token: []
-      summary: List CSRs for Application
+      summary: List Certificate Signing Requests for Application
       tags:
         - Application
     post:
@@ -251,7 +251,7 @@ paths:
             $ref: '#/definitions/Csr'
       security:
         - api_token: []
-      summary: Generate CSR for Application
+      summary: Generate Certificate Signing Request for Application
       tags:
         - Application
   '/api/v1/apps/{appId}/credentials/csrs/{csrId}':
@@ -3122,7 +3122,7 @@ paths:
     get:
       consumes:
         - application/json
-      description: Enumerates signing CSRs for an IdP
+      description: Enumerates Certificate Signing Requests for an IdP
       operationId: listCsrsForIdentityProvider
       parameters:
         - in: path
@@ -3140,7 +3140,7 @@ paths:
             type: array
       security:
         - api_token: []
-      summary: List Signing CSRs for IdP
+      summary: List Certificate Signing Requests for IdP
       tags:
         - IdentityProvider
     post:
@@ -3169,14 +3169,14 @@ paths:
             $ref: '#/definitions/Csr'
       security:
         - api_token: []
-      summary: Generate Signing CSR for IdP
+      summary: Generate Certificate Signing Request for IdP
       tags:
         - IdentityProvider
   '/api/v1/idps/{idpId}/credentials/csrs/{csrId}':
     delete:
       consumes:
         - application/json
-      description: Revoke a CSR and delete the key pair from the IdP
+      description: Revoke a Certificate Signing Request and delete the key pair from the IdP
       operationId: revokeCsrForIdentityProvider
       parameters:
         - in: path
@@ -3199,7 +3199,7 @@ paths:
     get:
       consumes:
         - application/json
-      description: Gets a specific CSR model by id
+      description: Gets a specific Certificate Signing Request model by id
       operationId: getCsrForIdentityProvider
       parameters:
         - in: path
@@ -3226,7 +3226,7 @@ paths:
       consumes:
         - application/json
       description: >-
-        Update the CSR with a signed X.509 certificate and add it into the
+        Update the Certificate Signing Request with a signed X.509 certificate and add it into the
         signing key credentials for the IdP.
       parameters:
         - in: path
