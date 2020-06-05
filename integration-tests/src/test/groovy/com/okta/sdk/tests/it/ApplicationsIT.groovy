@@ -36,10 +36,10 @@ import com.okta.sdk.resource.application.BasicAuthApplication
 import com.okta.sdk.resource.application.BookmarkApplication
 import com.okta.sdk.resource.application.BookmarkApplicationSettings
 import com.okta.sdk.resource.application.BookmarkApplicationSettingsApplication
-import com.okta.sdk.resource.application.Csr
-import com.okta.sdk.resource.application.CsrMetadata
-import com.okta.sdk.resource.application.CsrMetadataSubject
-import com.okta.sdk.resource.application.CsrMetadataSubjectAltNames
+import com.okta.sdk.resource.application.CertificateSigningRequest
+import com.okta.sdk.resource.application.CertificateSigningRequestMetadata
+import com.okta.sdk.resource.application.CertificateSigningRequestMetadataSubject
+import com.okta.sdk.resource.application.CertificateSigningRequestMetadataSubjectAltNames
 import com.okta.sdk.resource.application.JsonWebKey
 import com.okta.sdk.resource.application.JsonWebKeyList
 import com.okta.sdk.resource.application.OAuth2ScopeConsentGrant
@@ -531,7 +531,7 @@ class ApplicationsIT extends ITSupport {
     }
 
     @Test
-    void csrTest() {
+    void certificateSigningRequestTest() {
         Client client = getClient()
 
         String label = "app-${uniqueTestName}"
@@ -562,19 +562,19 @@ class ApplicationsIT extends ITSupport {
         assertThat(app.getStatus(), equalTo(Application.StatusEnum.ACTIVE))
 
         // create csr metadata
-        CsrMetadata csrMetadata = client.instantiate(CsrMetadata)
-              .setSubject(client.instantiate(CsrMetadataSubject)
+        CertificateSigningRequestMetadata csrMetadata = client.instantiate(CertificateSigningRequestMetadata)
+              .setSubject(client.instantiate(CertificateSigningRequestMetadataSubject)
                   .setCountryName("US")
                   .setStateOrProvinceName("California")
                   .setLocalityName("San Francisco")
                   .setOrganizationName("Okta, Inc.")
                   .setOrganizationalUnitName("Dev")
                   .setCommonName("SP Issuer"))
-              .setSubjectAltNames(client.instantiate(CsrMetadataSubjectAltNames)
+              .setSubjectAltNames(client.instantiate(CertificateSigningRequestMetadataSubjectAltNames)
                   .setDnsNames(["dev.okta.com"]))
 
         // generate csr with metadata
-        Csr csr = app.generateCsr(csrMetadata)
+        CertificateSigningRequest csr = app.generateCsr(csrMetadata)
 
         // verify
         assertPresent(app.listCsrs(), csr)
