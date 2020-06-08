@@ -20,7 +20,6 @@ import com.okta.sdk.resource.InlineHookChannelConfig
 import com.okta.sdk.resource.InlineHookChannelConfigAuthScheme
 import com.okta.sdk.resource.InlineHookChannelConfigHeaders
 import com.okta.sdk.resource.InlineHookChannel
-import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
@@ -237,7 +236,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook retrievedInlineHook = client.getEventHook(createdInlineHook.getId())
 
-        assertThat(retrievedInlineHook.getStatus(), equalTo(EventHook.StatusEnum.INACTIVE))
+        assertThat(retrievedInlineHook.getStatus(), equalTo(InlineHook.StatusEnum.INACTIVE))
 
         retrievedInlineHook.delete()
     }
