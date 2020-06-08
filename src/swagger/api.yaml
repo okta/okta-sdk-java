@@ -7352,6 +7352,11 @@ definitions:
           - dest: authServerId
             src: id
         operationId: deactivateAuthorizationServer
+      - alias: delete
+        arguments:
+          - dest: authServerId
+            src: id
+        operationId: deleteAuthorizationServer
       - alias: listPolicies
         arguments:
           - dest: authServerId
@@ -10066,6 +10071,11 @@ definitions:
           - dest: policyId
             src: id
         operationId: deactivatePolicy
+      - alias: delete
+        arguments:
+          - dest: policyId
+            src: id
+        operationId: deletePolicy
       - alias: listPolicyRules
         arguments:
           - dest: policyId
