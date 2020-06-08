@@ -7294,8 +7294,6 @@ definitions:
         arguments:
           - dest: authServerId
             src: id
-          - dest: claimId
-            src: id
         operationId: deleteOAuth2Claim
       - alias: getOAuth2Claim
         arguments:
@@ -7370,8 +7368,6 @@ definitions:
       - alias: deletePolicy
         arguments:
           - dest: authServerId
-            src: id
-          - dest: policyId
             src: id
         operationId: deleteAuthorizationServerPolicy
       - alias: getPolicy
