@@ -531,7 +531,7 @@ class ApplicationsIT extends ITSupport {
     }
 
     @Test
-    void CsrTest() {
+    void csrTest() {
         Client client = getClient()
 
         String label = "app-${uniqueTestName}"
