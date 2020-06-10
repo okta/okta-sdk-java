@@ -8,7 +8,6 @@ Please help us process GitHub Issues faster by providing the following informati
 Note: If you have a question about your entire application or use case, please post it on the Okta Developer Forum (https://devforum.okta.com) instead. For urgent issues contact support@okta.com. Issues in this repository are reserved for bug reports and feature requests.
 -->
 
-
 ## Issue(s)
 <!-- Reference any existing issue(s) here. -->
 
@@ -17,8 +16,8 @@ Note: If you have a question about your entire application or use case, please p
 
 ## Category
 <!-- If possible, commit unit tests separately from the implementation to simplify validation. -->
-- [ ] Enhancement
 - [ ] Bugfix
+- [ ] Enhancement
 - [ ] New Feature
 - [ ] Configuration Change
 - [ ] Versioning Change
