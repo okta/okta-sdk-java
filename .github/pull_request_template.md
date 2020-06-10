@@ -17,10 +17,10 @@ Note: If you have a question about your entire application or use case, please p
 
 ## Category
 <!-- If possible, commit unit tests separately from the implementation to simplify validation. -->
-- [ ] New Feature
 - [ ] Enhancement
-- [ ] Configuration Change
 - [ ] Bugfix
-- [ ] Version Upgrade
+- [ ] New Feature
+- [ ] Configuration Change
+- [ ] Versioning Change
 - [ ] Unit Test(s)
 - [ ] Documentation
