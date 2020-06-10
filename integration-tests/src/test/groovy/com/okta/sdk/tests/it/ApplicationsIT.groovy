@@ -563,15 +563,15 @@ class ApplicationsIT extends ITSupport {
 
         // create csr metadata
         CsrMetadata csrMetadata = client.instantiate(CsrMetadata)
-            .setSubject(client.instantiate(CsrMetadataSubject)
-                .setCountryName("US")
-                .setStateOrProvinceName("California")
-                .setLocalityName("San Francisco")
-                .setOrganizationName("Okta, Inc.")
-                .setOrganizationalUnitName("Dev")
-                .setCommonName("SP Issuer"))
-            .setSubjectAltNames(client.instantiate(CsrMetadataSubjectAltNames)
-                .setDnsNames(["dev.okta.com"]))
+              .setSubject(client.instantiate(CsrMetadataSubject)
+                  .setCountryName("US")
+                  .setStateOrProvinceName("California")
+                  .setLocalityName("San Francisco")
+                  .setOrganizationName("Okta, Inc.")
+                  .setOrganizationalUnitName("Dev")
+                  .setCommonName("SP Issuer"))
+              .setSubjectAltNames(client.instantiate(CsrMetadataSubjectAltNames)
+                  .setDnsNames(["dev.okta.com"]))
 
         // generate csr with metadata
         Csr csr = app.generateCsr(csrMetadata)
