@@ -40,6 +40,7 @@ class IdpIT extends ITSupport {
     @Test
     void idpLifecycleTest() {
 
+        // create idp
         IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider)
             .setType(IdentityProvider.TypeEnum.OIDC)
             .setName("Mock OpenID Connect Id")
@@ -82,7 +83,6 @@ class IdpIT extends ITSupport {
                 .setAccountLink(client.instantiate(PolicyAccountLink)
                     .setAction(PolicyAccountLink.ActionEnum.AUTO)
                     .setFilter(null))
-                    //.setFilter(client.instantiate(PolicyAccountLinkFilter)))
                 .setProvisioning(client.instantiate(Provisioning)
                     .setAction(Provisioning.ActionEnum.AUTO)
                     .setConditions(client.instantiate(ProvisioningConditions)
@@ -101,6 +101,18 @@ class IdpIT extends ITSupport {
 
         assertThat(createdIdp, notNullValue())
         assertThat(createdIdp.getId(), notNullValue())
+        assertThat(createdIdp.getStatus(), equalTo(IdentityProvider.StatusEnum.ACTIVE))
+
+        // deactivate
+        createdIdp.deactivate()
+
+        // delete
+        createdIdp.delete()
+
+        // earlier operation may not complete immediately, so sleep for 2s
+        sleep(2000)
+
+        assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 
 }
