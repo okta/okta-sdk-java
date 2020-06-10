@@ -9,13 +9,13 @@ Note: If you have a question about your entire application or use case, please p
 -->
 
 
-## Issue(s) \#
+## Issue(s)
 <!-- Reference any existing issue(s) here. -->
 
 ## Description
 <!-- Add a brief description of the issue. -->
 
-## What is done
+## Category
 <!-- If possible, commit unit tests separately from the implementation to simplify validation. -->
 - [ ] New Feature
 - [ ] Enhancement
