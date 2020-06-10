@@ -19,6 +19,8 @@ Note: If you have a question about your entire application or use case, please p
 <!-- If possible, commit unit tests separately from the implementation to simplify validation. -->
 - [ ] New Feature
 - [ ] Enhancement
+- [ ] Configuration Change
 - [ ] Bugfix
+- [ ] Version Upgrade
 - [ ] Unit Test(s)
 - [ ] Documentation
