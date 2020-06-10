@@ -9,7 +9,7 @@ Note: If you have a question about your entire application or use case, please p
 -->
 
 
-## Issue \#
+## Issue(s) \#
 <!-- Reference any existing issue(s) here. -->
 
 ## Description
