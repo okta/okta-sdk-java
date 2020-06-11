@@ -11299,11 +11299,6 @@ definitions:
           - dest: userId
             src: id
         operationId: forgotPasswordGenerateOneTimeToken
-      - alias: listRoles
-        arguments:
-          - dest: userId
-            src: id
-        operationId: listAssignedRolesForUser
       - alias: assignRole
         arguments:
           - dest: userId
@@ -11314,17 +11309,17 @@ definitions:
           - dest: userId
             src: id
         operationId: removeRoleFromUser
-      - alias: listGroupTargetsForRole
+      - alias: listGroupTargets
         arguments:
           - dest: userId
             src: id
         operationId: listGroupTargetsForRole
-      - alias: removeGroupTargetFromRole
+      - alias: removeGroupTarget
         arguments:
           - dest: userId
             src: id
         operationId: removeGroupTargetFromRole
-      - alias: addGroupTargetToRole
+      - alias: addGroupTarget
         arguments:
           - dest: userId
             src: id
@@ -11334,7 +11329,7 @@ definitions:
           - dest: userId
             src: id
         operationId: listAssignedRolesForUser
-      - alias: addAllAppsAsTargetToRole
+      - alias: addAllAppsAsTarget
         arguments:
           - dest: userId
             src: id
