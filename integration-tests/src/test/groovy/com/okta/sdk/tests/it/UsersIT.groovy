@@ -232,13 +232,13 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         Role role = user.assignRole(assignRoleRequest)
 
         // 3. List roles for the user and verify added role
-        assertPresent(user.listRoles(), role)
+        assertPresent(user.listAssignedRoles(), role)
 
         // 4. Remove role for the user
         user.removeRole(role.getId())
 
         // 5. List roles for user and verify role was removed
-        assertNotPresent(user.listRoles(), role)
+        assertNotPresent(user.listAssignedRoles(), role)
     }
 
     @Test
@@ -521,7 +521,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         Role role = user.assignRole(assignRoleRequest)
 
         // 3. Add Group Target to User Admin Role
-        user.addGroupTargetToRole(role.id, group.id)
+        user.addGroupTarget(role.id, group.id)
 
         // 4. List Group Targets for Role
         assertGroupTargetPresent(user, group, role)
@@ -539,8 +539,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(adminGroup)
         validateGroup(adminGroup, adminGroupName)
 
-        user.addGroupTargetToRole(role.getId(), adminGroup.getId())
-        user.removeGroupTargetFromRole(role.getId(), adminGroup.getId())
+        user.addGroupTarget(role.getId(), adminGroup.getId())
+        user.removeGroupTarget(role.getId(), adminGroup.getId())
 
         assertGroupTargetPresent(user, group, role)
     }
