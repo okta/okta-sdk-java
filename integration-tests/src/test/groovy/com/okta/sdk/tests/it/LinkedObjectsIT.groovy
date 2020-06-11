@@ -22,7 +22,7 @@ import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils
 
-import static com.okta.sdk.tests.it.util.Util.assertPresent
+import static com.okta.sdk.tests.it.util.Util.assertLinkedObjectPresent
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.notNullValue
@@ -91,7 +91,7 @@ class LinkedObjectsIT extends ITSupport {
             .setAssociated(associated)
         registerForCleanup(linkedObject)
 
-        LinkedObject createdLinkedObjectDefinition = client.addLinkedObjectDefinition(linkedObject)
+        client.addLinkedObjectDefinition(linkedObject)
 
         LinkedObject retrievedLinkedObject = client.getLinkedObjectDefinition(primaryName)
 
@@ -129,6 +129,8 @@ class LinkedObjectsIT extends ITSupport {
             .setAssociated(associated)
         registerForCleanup(linkedObject)
 
+        client.addLinkedObjectDefinition(linkedObject)
+
         LinkedObject retrievedLinkedObject = client.getLinkedObjectDefinition(associatedName)
 
         assertThat(retrievedLinkedObject.getPrimary(), notNullValue())
@@ -147,8 +149,8 @@ class LinkedObjectsIT extends ITSupport {
     void getAllLinkedObjectDefinitionsTest() {
         // create first linked object definition
 
-        String primaryName1 = "manager-1-" + RandomStringUtils.randomAlphanumeric(25)
-        String associatedName1 = "subordinate-1-" + RandomStringUtils.randomAlphanumeric(25)
+        String primaryName1 = "manager" + RandomStringUtils.randomAlphanumeric(25)
+        String associatedName1 = "subordinate" + RandomStringUtils.randomAlphanumeric(25)
 
         LinkedObjectDetails primary1 = client.instantiate(LinkedObjectDetails)
             .setName(primaryName1)
@@ -171,8 +173,8 @@ class LinkedObjectsIT extends ITSupport {
 
         // create second linked object definition
 
-        String primaryName2 = "manager-2-" + RandomStringUtils.randomAlphanumeric(25)
-        String associatedName2 = "subordinate-2-" + RandomStringUtils.randomAlphanumeric(25)
+        String primaryName2 = "manager" + RandomStringUtils.randomAlphanumeric(25)
+        String associatedName2 = "subordinate" + RandomStringUtils.randomAlphanumeric(25)
 
         LinkedObjectDetails primary2 = client.instantiate(LinkedObjectDetails)
             .setName(primaryName2)
@@ -193,7 +195,7 @@ class LinkedObjectsIT extends ITSupport {
 
         LinkedObject createdLinkedObjectDefinition2 = client.addLinkedObjectDefinition(linkedObject2)
 
-        assertPresent(client.listLinkedObjectDefinitions(), createdLinkedObjectDefinition1)
-        assertPresent(client.listLinkedObjectDefinitions(), createdLinkedObjectDefinition2)
+        assertLinkedObjectPresent(client.listLinkedObjectDefinitions(), createdLinkedObjectDefinition1)
+        assertLinkedObjectPresent(client.listLinkedObjectDefinitions(), createdLinkedObjectDefinition2)
     }
 }
