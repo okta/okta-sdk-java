@@ -11274,11 +11274,6 @@ definitions:
             self: true
         operationId: deactivateOrDeleteUser
     x-okta-operations:
-      - alias: endAllSessions
-        arguments:
-          - dest: userId
-            src: id
-        operationId: clearUserSessions
       - alias: listAppLinks
         arguments:
           - dest: userId
@@ -11334,6 +11329,16 @@ definitions:
           - dest: userId
             src: id
         operationId: addGroupTargetToRole
+      - alias: listAssignedRoles
+        arguments:
+          - dest: userId
+            src: id
+        operationId: listAssignedRolesForUser
+      - alias: addAllAppsAsTargetToRole
+        arguments:
+          - dest: userId
+            src: id
+        operationId: addAllAppsAsTargetToRole
       - alias: listGroups
         arguments:
           - dest: userId
@@ -11419,6 +11424,11 @@ definitions:
           - dest: userId
             src: id
         operationId: expirePassword
+      - alias: expirePasswordAndGetTemporaryPassword
+        arguments:
+          - dest: userId
+            src: id
+        operationId: expirePasswordAndGetTemporaryPassword
       - alias: unlock
         arguments:
           - dest: userId
@@ -11480,6 +11490,16 @@ definitions:
           - dest: userId
             src: id
         operationId: getLinkedObjectsForUser
+      - alias: clearSessions
+        arguments:
+          - dest: userId
+            src: id
+        operationId: clearUserSessions
+      - alias: removeLinkedObject
+        arguments:
+          - dest: userId
+            src: id
+        operationId: removeLinkedObjectForUser
     x-okta-tags:
       - User
   UserActivationToken:
