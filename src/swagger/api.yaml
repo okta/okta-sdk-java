@@ -10352,8 +10352,8 @@ definitions:
     properties:
       binding:
         enum:
-          - POST
-          - REDIRECT
+          - HTTP-POST
+          - HTTP-REDIRECT
         type: string
       destination:
         type: string
