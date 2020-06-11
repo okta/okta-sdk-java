@@ -75,17 +75,12 @@ class UserTypesIT extends ITSupport {
 
         assertThat(createdUserType.getId(), notNullValue())
 
-        UserType updatesToUserType = client.instantiate(UserType)
-            .setDisplayName(name + "_updated")
-            .setDescription(name + "_test_description_updated")
-        registerForCleanup(updatesToUserType)
+        createdUserType.setDisplayName(name + "_updated").setDescription(name + "_test_description_updated")
+            .update()
 
-        UserType updatedUserType = createdUserType.update(updatesToUserType)
-        assertThat(updatedUserType, notNullValue())
-        assertThat(updatedUserType.getId(), equalTo(createdUserType.getId()))
-        assertThat(updatedUserType.getName(), equalTo(updatesToUserType.getName()))
-        assertThat(updatedUserType.getDisplayName(), equalTo(updatesToUserType.getDisplayName()))
-        assertThat(updatedUserType.getDescription(), equalTo(updatesToUserType.getDescription()))
+        assertThat(createdUserType.getId(), notNullValue())
+        assertThat(createdUserType.getDisplayName(), equalTo(name + "_updated"))
+        assertThat(createdUserType.getDescription(), equalTo(name + "_test_description_updated"))
     }
 
     @Test

@@ -11781,10 +11781,17 @@ definitions:
         type: string
     type: object
     x-okta-crud:
+      - alias: create
+        arguments:
+          - dest: userType
+            self: true
+        operationId: createUserType
       - alias: update
         arguments:
           - dest: typeId
             src: id
+          - dest: userType
+            self: true
         operationId: updateUserType
       - alias: read
         arguments:
