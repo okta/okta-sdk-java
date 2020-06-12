@@ -24,7 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 /**
- * Tests for /api/v1/features
+ * Tests for {@code /api/v1/features}.
  * @since 2.0.0
  */
 class FeaturesIT extends ITSupport {
