@@ -33,7 +33,7 @@ import static com.okta.sdk.tests.it.util.Util.validateUser
 import static org.hamcrest.MatcherAssert.assertThat
 
 /**
- * Tests for /api/v1/users/roles
+ * Tests for {@code /api/v1/users/roles}.
  * @since 2.0.0
  */
 class UserRolesIT extends ITSupport {

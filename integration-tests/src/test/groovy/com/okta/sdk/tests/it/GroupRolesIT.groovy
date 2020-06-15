@@ -32,7 +32,7 @@ import static com.okta.sdk.tests.it.util.Util.assertRoleAbsent
 import static com.okta.sdk.tests.it.util.Util.validateGroup
 
 /**
- * Tests for /api/v1/groups/roles
+ * Tests for {@code /api/v1/groups/roles}.
  * @since 2.0.0
  */
 class GroupRolesIT extends ITSupport {

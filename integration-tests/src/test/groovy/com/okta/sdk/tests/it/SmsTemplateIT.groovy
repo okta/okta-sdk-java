@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.SmsTemplateTranslations
+import com.okta.sdk.resource.template.SmsTemplateTranslations
 import com.okta.sdk.resource.template.SmsTemplate
 import com.okta.sdk.resource.template.SmsTemplateType
 import com.okta.sdk.tests.it.util.ITSupport
@@ -27,7 +27,7 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 /**
- * Tests for /api/v1/templates/sms
+ * Tests for {@code /api/v1/templates/sms}.
  * @since 2.0.0
  */
 class SmsTemplateIT extends ITSupport {

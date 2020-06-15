@@ -6605,6 +6605,8 @@ definitions:
           - APP
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   AppAndInstancePolicyRuleCondition:
     properties:
       exclude:
@@ -6616,6 +6618,8 @@ definitions:
           $ref: '#/definitions/AppAndInstanceConditionEvaluatorAppOrInstance'
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   AppInstancePolicyRuleCondition:
     properties:
       exclude:
@@ -6627,6 +6631,8 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   AppLink:
     properties:
       appAssignmentId:
@@ -7499,6 +7505,8 @@ definitions:
       lifecycleAction:
         $ref: '#/definitions/ScheduledUserLifecycleAction'
     type: object
+    x-okta-tags:
+      - Policy
   BookmarkApplication:
     properties:
       name:
@@ -7619,11 +7627,15 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   ContextPolicyRuleCondition:
     properties:
       expression:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   CreateSessionRequest:
     properties:
       sessionToken:
@@ -7661,6 +7673,8 @@ definitions:
           - TRUSTED
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   DevicePolicyRuleConditionPlatform:
     properties:
       supportedMDMFrameworks:
@@ -7672,6 +7686,8 @@ definitions:
           $ref: '#/definitions/Platforms'
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   Duration:
     properties:
       number:
@@ -7679,6 +7695,8 @@ definitions:
       unit:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   EmailUserFactor:
     properties:
       profile:
@@ -7789,6 +7807,8 @@ definitions:
         readOnly: false
         type: string
     type: object
+    x-okta-tags:
+      - EventHook
   EventHookChannelConfig:
     properties:
       authScheme:
@@ -7801,6 +7821,8 @@ definitions:
       uri:
         type: string
     type: object
+    x-okta-tags:
+      - EventHook
   EventHookChannelConfigAuthScheme:
     properties:
       key:
@@ -7810,6 +7832,8 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - EventHook
   EventHookChannelConfigAuthSchemeType:
     enum:
       - HEADER
@@ -7823,6 +7847,8 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - EventHook
   EventSubscriptions:
     properties:
       items:
@@ -7835,6 +7861,8 @@ definitions:
           - FLOW_EVENT
         type: string
     type: object
+    x-okta-tags:
+      - EventHook
   FactorProvider:
     enum:
       - OKTA
@@ -7976,6 +8004,8 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   Group:
     properties:
       _embedded:
@@ -8074,6 +8104,8 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   GroupProfile:
     properties:
       description:
@@ -8410,6 +8442,8 @@ definitions:
           type: object
         type: object
     type: object
+    x-okta-tags:
+      - IdentityProvider
   IdentityProviderCredentials:
     properties:
       client:
@@ -8419,6 +8453,8 @@ definitions:
       trust:
         $ref: '#/definitions/IdentityProviderCredentialsTrust'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   IdentityProviderCredentialsClient:
     properties:
       client_id:
@@ -8426,11 +8462,15 @@ definitions:
       client_secret:
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   IdentityProviderCredentialsSigning:
     properties:
       kid:
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   IdentityProviderCredentialsTrust:
     properties:
       audience:
@@ -8448,6 +8488,8 @@ definitions:
       revocationCacheLifetime:
         type: integer
     type: object
+    x-okta-tags:
+      - IdentityProvider
   IdentityProviderPolicy:
     properties:
       accountLink:
@@ -8475,6 +8517,8 @@ definitions:
           - SPECIFIC_IDP
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   InactivityPolicyRuleCondition:
     properties:
       number:
@@ -8482,6 +8526,8 @@ definitions:
       unit:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   InlineHook:
     properties:
       _links:
@@ -8560,6 +8606,8 @@ definitions:
           - dest: inlineHookId
             src: id
         operationId: executeInlineHook
+    x-okta-tags:
+      - InlineHook
   InlineHookChannel:
     properties:
       config:
@@ -8574,6 +8622,8 @@ definitions:
         readOnly: false
         type: string
     type: object
+    x-okta-tags:
+      - InlineHook
   InlineHookChannelConfig:
     properties:
       authScheme:
@@ -8586,6 +8636,8 @@ definitions:
       uri:
         type: string
     type: object
+    x-okta-tags:
+      - InlineHook
   InlineHookChannelConfigAuthScheme:
     properties:
       key:
@@ -8595,6 +8647,8 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - InlineHook
   InlineHookChannelConfigHeaders:
     properties:
       key:
@@ -8602,9 +8656,13 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - InlineHook
   InlineHookPayload:
     type: object
     x-okta-extensible: true
+    x-okta-tags:
+      - InlineHook
   InlineHookResponse:
     properties:
       commands:
@@ -8612,6 +8670,8 @@ definitions:
           $ref: '#/definitions/InlineHookResponseCommands'
         type: array
     type: object
+    x-okta-tags:
+      - InlineHook
   InlineHookResponseCommandValue:
     properties:
       op:
@@ -8620,6 +8680,8 @@ definitions:
         type: string
       value:
         type: string
+    x-okta-tags:
+      - InlineHook
   InlineHookResponseCommands:
     properties:
       type:
@@ -8628,6 +8690,8 @@ definitions:
         items:
           $ref: '#/definitions/InlineHookResponseCommandValue'
         type: array
+    x-okta-tags:
+      - InlineHook
   IonField:
     properties:
       form:
@@ -8651,6 +8715,8 @@ definitions:
       visible:
         type: boolean
     type: object
+    x-okta-tags:
+      - Ion
   IonForm:
     properties:
       accepts:
@@ -8679,6 +8745,8 @@ definitions:
         readOnly: true
         type: array
     type: object
+    x-okta-tags:
+      - Ion
   JsonWebKey:
     properties:
       _links:
@@ -8745,6 +8813,8 @@ definitions:
         enum:
           - sig
         type: string
+    x-okta-tags:
+      - Application
   LifecycleExpirationPolicyRuleCondition:
     properties:
       lifecycleStatus:
@@ -8754,6 +8824,8 @@ definitions:
       unit:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   LinkedObject:
     properties:
       _links:
@@ -8795,10 +8867,14 @@ definitions:
       type:
         $ref: '#/definitions/LinkedObjectDetailsType'
     type: object
+    x-okta-tags:
+      - LinkedObject
   LinkedObjectDetailsType:
     enum:
       - USER
     type: string
+    x-okta-tags:
+      - LinkedObject
   LogActor:
     properties:
       alternateId:
@@ -9143,6 +9219,8 @@ definitions:
           - ANY_OR_NONE
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   MDMFrameworks:
     enum:
       - authorization_code
@@ -9151,6 +9229,8 @@ definitions:
       - refresh_token
       - client_credentials
     type: string
+    x-okta-tags:
+      - Policy
   OAuth2Actor:
     properties:
       id:
@@ -9159,6 +9239,8 @@ definitions:
       type:
         type: string
     type: object
+    x-okta-tags:
+      - Application
   OAuth2Claim:
     properties:
       _links:
@@ -9203,6 +9285,8 @@ definitions:
           - SYSTEM
         type: string
     type: object
+    x-okta-tags:
+      - Application
   OAuth2ClaimConditions:
     properties:
       scopes:
@@ -9211,7 +9295,7 @@ definitions:
         type: array
     type: object
     x-okta-tags:
-      - AuthorizationServer
+      - Application
   OAuth2Client:
     properties:
       _links:
@@ -9232,6 +9316,8 @@ definitions:
         readOnly: true
         type: string
     type: object
+    x-okta-tags:
+      - Application
   OAuth2RefreshToken:
     properties:
       _embedded:
@@ -9277,6 +9363,8 @@ definitions:
       userId:
         type: string
     type: object
+    x-okta-tags:
+      - Application
   OAuth2Scope:
     properties:
       consent:
@@ -9304,6 +9392,8 @@ definitions:
       system:
         type: boolean
     type: object
+    x-okta-tags:
+      - Application
   OAuth2ScopeConsentGrant:
     properties:
       _embedded:
@@ -9365,6 +9455,8 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Application
   OAuth2Token:
     properties:
       _embedded:
@@ -9555,6 +9647,8 @@ definitions:
       - CUSTOM_URL
       - ORG_URL
     type: string
+    x-okta-tags:
+      - Application
   OpenIdConnectApplicationSettings:
     properties:
       oauthClient:
@@ -9673,6 +9767,8 @@ definitions:
       unit:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   PasswordPolicy:
     properties:
       conditions:
@@ -9945,6 +10041,8 @@ definitions:
       - OSX
       - WINDOWS
     type: string
+    x-okta-tags:
+      - Policy
   PlatformConditionEvaluatorPlatform:
     properties:
       os:
@@ -9957,6 +10055,8 @@ definitions:
           - ANY
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   PlatformConditionEvaluatorPlatformOperatingSystem:
     properties:
       expression:
@@ -9973,6 +10073,8 @@ definitions:
       version:
         $ref: '#/definitions/PlatformConditionEvaluatorPlatformOperatingSystemVersion'
     type: object
+    x-okta-tags:
+      - Policy
   PlatformConditionEvaluatorPlatformOperatingSystemVersion:
     properties:
       matchType:
@@ -9983,6 +10085,8 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   PlatformPolicyRuleCondition:
     properties:
       exclude:
@@ -9994,6 +10098,8 @@ definitions:
           $ref: '#/definitions/PlatformConditionEvaluatorPlatform'
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   Policy:
     properties:
       _embedded:
@@ -10098,11 +10204,15 @@ definitions:
       filter:
         $ref: '#/definitions/PolicyAccountLinkFilter'
     type: object
+    x-okta-tags:
+      - Policy
   PolicyAccountLinkFilter:
     properties:
       groups:
         $ref: '#/definitions/PolicyAccountLinkFilterGroups'
     type: object
+    x-okta-tags:
+      - Policy
   PolicyAccountLinkFilterGroups:
     properties:
       include:
@@ -10110,6 +10220,8 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   PolicyNetworkCondition:
     properties:
       connection:
@@ -10278,6 +10390,8 @@ definitions:
       userNameTemplate:
         $ref: '#/definitions/PolicyUserNameTemplate'
     type: object
+    x-okta-tags:
+      - Policy
   PolicySubjectMatchType:
     enum:
       - USERNAME
@@ -10285,6 +10399,8 @@ definitions:
       - USERNAME_OR_EMAIL
       - CUSTOM_ATTRIBUTE
     type: string
+    x-okta-tags:
+      - Policy
   PolicyType:
     enum:
       - OAUTH_AUTHORIZATION_POLICY
@@ -10299,6 +10415,8 @@ definitions:
       template:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   Protocol:
     properties:
       algorithms:
@@ -10325,11 +10443,15 @@ definitions:
           - MTLS
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolAlgorithmType:
     properties:
       signature:
         $ref: '#/definitions/ProtocolAlgorithmTypeSignature'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolAlgorithmTypeSignature:
     properties:
       algorithm:
@@ -10343,6 +10465,8 @@ definitions:
           - NONE
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolAlgorithms:
     properties:
       request:
@@ -10350,6 +10474,8 @@ definitions:
       response:
         $ref: '#/definitions/ProtocolAlgorithmType'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolEndpoint:
     properties:
       binding:
@@ -10367,6 +10493,8 @@ definitions:
       url:
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolEndpoints:
     properties:
       acs:
@@ -10386,21 +10514,29 @@ definitions:
       userInfo:
         $ref: '#/definitions/ProtocolEndpoint'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolRelayState:
     properties:
       format:
         $ref: '#/definitions/ProtocolRelayStateFormat'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolRelayStateFormat:
     enum:
       - OPAQUE
       - FROM_URL
     type: string
+    x-okta-tags:
+      - IdentityProvider
   ProtocolSettings:
     properties:
       nameFormat:
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   Provisioning:
     properties:
       action:
@@ -10416,6 +10552,8 @@ definitions:
       profileMaster:
         type: boolean
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProvisioningConditions:
     properties:
       deprovisioned:
@@ -10423,6 +10561,8 @@ definitions:
       suspended:
         $ref: '#/definitions/ProvisioningSuspendedCondition'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProvisioningDeprovisionedCondition:
     properties:
       action:
@@ -10431,6 +10571,8 @@ definitions:
           - REACTIVATE
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProvisioningGroups:
     properties:
       action:
@@ -10451,6 +10593,8 @@ definitions:
       sourceAttributeName:
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProvisioningSuspendedCondition:
     properties:
       action:
@@ -10459,6 +10603,8 @@ definitions:
           - UNSUSPEND
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   PushUserFactor:
     properties:
       expiresAt:
@@ -10508,6 +10654,8 @@ definitions:
   ResponseLinks:
     properties: {}
     type: object
+    x-okta-tags:
+      - User
   RiskPolicyRuleCondition:
     properties:
       behaviors:
@@ -10516,11 +10664,15 @@ definitions:
         type: array
         uniqueItems: true
     type: object
+    x-okta-tags:
+      - Policy
   RiskScorePolicyRuleCondition:
     properties:
       level:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   Role:
     properties:
       _embedded:
@@ -10722,6 +10874,8 @@ definitions:
           - DELETING
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   SchemeApplicationCredentials:
     properties:
       password:
@@ -10986,6 +11140,8 @@ definitions:
   SmsTemplateTranslations:
     type: object
     x-okta-extensible: true
+    x-okta-tags:
+      - Template
   SmsTemplateType:
     enum:
       - SMS_VERIFY_CODE
@@ -11028,6 +11184,8 @@ definitions:
           - REFRESH
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   SwaApplication:
     properties:
       name:
@@ -11618,6 +11776,8 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   UserIdentifierPolicyRuleCondition:
     properties:
       attribute:
@@ -11632,11 +11792,15 @@ definitions:
           - ATTRIBUTE
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   UserIdentityProviderLinkRequest:
     properties:
       externalId:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   UserLifecycleAttributePolicyRuleCondition:
     properties:
       attributeName:
@@ -11644,6 +11808,8 @@ definitions:
       matchingValue:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   UserNextLogin:
     enum:
       - changePassword
@@ -11669,6 +11835,8 @@ definitions:
       userLifecycleAttribute:
         $ref: '#/definitions/UserLifecycleAttributePolicyRuleCondition'
     type: object
+    x-okta-tags:
+      - Policy
   UserProfile:
     properties:
       city:
@@ -11764,6 +11932,8 @@ definitions:
           - DELETING
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   UserType:
     properties:
       _links:
@@ -11826,6 +11996,8 @@ definitions:
           - dest: roleId
             src: id
         operationId: replaceUserType
+    x-okta-tags:
+      - UserType
   VerifyFactorRequest:
     properties:
       activationToken:
