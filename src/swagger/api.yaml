@@ -473,8 +473,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '201':
+          description: Created
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -527,8 +527,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '201':
+          description: Created
           schema:
             $ref: '#/definitions/OAuth2ScopeConsentGrant'
       security:
@@ -646,8 +646,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Remove Group from Application
@@ -769,8 +769,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -827,8 +827,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -965,8 +965,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Remove User from Application
@@ -1080,7 +1080,7 @@ paths:
           schema:
             $ref: '#/definitions/AuthorizationServer'
         '201':
-          description: Success
+          description: Created
       security:
         - api_token: []
       tags:
@@ -1099,8 +1099,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1195,7 +1195,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: Success
+          description: Created
           schema:
             $ref: '#/definitions/OAuth2Claim'
         '201':
@@ -1222,8 +1222,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1325,8 +1325,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1391,8 +1391,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1569,7 +1569,7 @@ paths:
           schema:
             $ref: '#/definitions/Policy'
         '201':
-          description: Success
+          description: Created
       security:
         - api_token: []
       tags:
@@ -1592,8 +1592,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1737,8 +1737,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1854,8 +1854,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -2519,8 +2519,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -2612,8 +2612,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -3019,8 +3019,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Delete Key
@@ -3062,8 +3062,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Delete Identity Provider
@@ -3161,7 +3161,7 @@ paths:
           schema:
             $ref: '#/definitions/CsrMetadata'
       produces:
-        - application/pkcs10
+        - application/json
       responses:
         '201':
           description: Created
@@ -3401,8 +3401,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '201':
+          description: Created
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -3499,8 +3499,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Unlink User from IdP
@@ -3657,8 +3657,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -3756,7 +3756,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: successful operation
+          description: Success
           schema:
             $ref: '#/definitions/InlineHook'
       security:
@@ -3778,7 +3778,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: successful operation
+          description: Success
           schema:
             $ref: '#/definitions/InlineHook'
       security:
@@ -3865,8 +3865,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '201':
+          description: Created
           schema:
             $ref: '#/definitions/LinkedObject'
       security:
@@ -3887,8 +3887,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -4198,8 +4198,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -4218,8 +4218,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -4292,8 +4292,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -4395,8 +4395,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -4443,8 +4443,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Close Session
@@ -4558,8 +4558,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Remove SMS Template
@@ -4958,7 +4958,7 @@ paths:
       produces:
         - application/json
       responses:
-        '204':
+        '202':
           description: ACCEPTED
       security:
         - api_token: []
@@ -5122,8 +5122,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -5551,8 +5551,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -5861,8 +5861,8 @@ paths:
         - application/json
       description: >-
         Activates a user.  This operation can only be performed on users with a
-        `STAGED` status.  Activation of a user is an asynchronous operation. The
-        user will have the `transitioningToStatus` property with a value of
+        `STAGED` status.  Activation of a user is an asynchronous operation.
+        The user will have the `transitioningToStatus` property with a value of
         `ACTIVE` during activation to indicate that the user hasn't completed
         the asynchronous operation.  The user will have a status of `ACTIVE`
         when the activation process is complete.
@@ -6103,7 +6103,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: OK
+          description: Success
       security:
         - api_token: []
       summary: Unlock User
@@ -6126,7 +6126,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: OK
+          description: Success
       security:
         - api_token: []
       summary: Unsuspend User
@@ -6153,7 +6153,7 @@ paths:
         - application/json
       responses:
         '204':
-          description: Success
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -6244,7 +6244,7 @@ paths:
         - application/json
       responses:
         '201':
-          description: Success
+          description: Created
           schema:
             $ref: '#/definitions/Role'
       security:
@@ -6269,8 +6269,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -6360,8 +6360,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -6516,8 +6516,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -6571,8 +6571,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
