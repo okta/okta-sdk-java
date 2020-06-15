@@ -9318,6 +9318,8 @@ definitions:
         type: object
       clientId:
         type: string
+      userId:
+        type: string
       created:
         format: date-time
         readOnly: true
