@@ -130,7 +130,7 @@ class Util {
     }
 
     static void assertGroupTargetPresent(User user, Group group, Role role) {
-        def groupTargets = user.listGroupTargetsForRole(role.id)
+        def groupTargets = user.listGroupTargets(role.id)
 
         assertThat "GroupTarget Present not found in User role",
                 StreamSupport.stream(groupTargets.spliterator(), false)

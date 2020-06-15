@@ -110,16 +110,16 @@ class UserRolesIT extends ITSupport {
 
         // 4. Add the created groups as role targets
         // Need 2 groups, because if you remove the last one it throws an (expected) exception.
-        user.addGroupTargetToRole(superAdminRole.getId(), group1.getId())
-        user.addGroupTargetToRole(superAdminRole.getId(), group2.getId())
+        user.addGroupTarget(superAdminRole.getId(), group1.getId())
+        user.addGroupTarget(superAdminRole.getId(), group2.getId())
 
-        assertGroupPresent(user.listGroupTargetsForRole(superAdminRole.getId()), group1)
-        assertGroupPresent(user.listGroupTargetsForRole(superAdminRole.getId()), group2)
+        assertGroupPresent(user.listGroupTargets(superAdminRole.getId()), group1)
+        assertGroupPresent(user.listGroupTargets(superAdminRole.getId()), group2)
 
         // 5. Remove the target
-        user.removeGroupTargetFromRole(superAdminRole.getId(), group1.getId())
+        user.removeGroupTarget(superAdminRole.getId(), group1.getId())
 
-        assertGroupAbsent(user.listGroupTargetsForRole(superAdminRole.getId()), group1)
+        assertGroupAbsent(user.listGroupTargets(superAdminRole.getId()), group1)
     }
 }
 
