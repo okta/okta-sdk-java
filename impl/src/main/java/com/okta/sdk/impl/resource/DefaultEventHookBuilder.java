@@ -19,6 +19,7 @@ import com.google.common.net.HttpHeaders;
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.event.hook.EventHook;
+import com.okta.sdk.resource.event.hook.EventHookBuilder;
 import com.okta.sdk.resource.event.hook.EventHookChannel;
 import com.okta.sdk.resource.event.hook.EventHookChannelConfig;
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigHeader;
@@ -33,7 +34,7 @@ import java.util.List;
  * Builder for {@link EventHook}.
  * @since 2.0.0
  */
-public class EventHookBuilder {
+public class DefaultEventHookBuilder implements EventHookBuilder {
 
     private static final String LIFECYCLE_EVENT_CREATE = "user.lifecycle.create";
     private static final String LIFECYCLE_EVENT_ACTIVATE = "user.lifecycle.activate";
@@ -44,31 +45,37 @@ public class EventHookBuilder {
     private List<EventHookChannelConfigHeader> headers;
     private String version;
 
+    @Override
     public EventHookBuilder setName(String name) {
         this.name = name;
         return this;
     }
 
+    @Override
     public EventHookBuilder setUrl(String url) {
         this.url = url;
         return this;
     }
 
+    @Override
     public EventHookBuilder setAuthorizationHeaderValue(String authorizationHeaderValue) {
         this.authorizationHeaderValue = authorizationHeaderValue;
         return this;
     }
 
-    private EventHookBuilder setHeaders(List<EventHookChannelConfigHeader> headers) {
+    @Override
+    public EventHookBuilder setHeaders(List<EventHookChannelConfigHeader> headers) {
         this.headers = headers;
         return this;
     }
 
+    @Override
     public EventHookBuilder setVersion(String version) {
         this.version = version;
         return this;
     }
 
+    @Override
     public EventHook buildAndCreate(Client client) {
 
         EventSubscriptions eventSubscriptions = client.instantiate(EventSubscriptions.class)
