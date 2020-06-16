@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.impl.resource;
+package com.okta.sdk.impl.resource.event.hook;
 
+import com.google.common.collect.Maps;
 import com.google.common.net.HttpHeaders;
+
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.event.hook.EventHook;
 import com.okta.sdk.resource.event.hook.EventHookBuilder;
@@ -26,8 +28,10 @@ import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme;
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthSchemeType;
 import com.okta.sdk.resource.event.hook.EventSubscriptions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Builder for {@link EventHook}.
@@ -41,7 +45,7 @@ public class DefaultEventHookBuilder implements EventHookBuilder {
     private String name;
     private String url;
     private String authorizationHeaderValue;
-    private List<EventHookChannelConfigHeader> headers;
+    private Map<String, String> headerMap = Maps.newHashMap();
     private String version;
 
     @Override
@@ -63,8 +67,8 @@ public class DefaultEventHookBuilder implements EventHookBuilder {
     }
 
     @Override
-    public EventHookBuilder setHeaders(List<EventHookChannelConfigHeader> headers) {
-        this.headers = headers;
+    public EventHookBuilder addHeader(String name, String value) {
+        headerMap.put(name, value);
         return this;
     }
 
@@ -86,6 +90,14 @@ public class DefaultEventHookBuilder implements EventHookBuilder {
                 .setType(EventHookChannelConfigAuthSchemeType.HEADER)
                 .setKey(HttpHeaders.AUTHORIZATION)
                 .setValue(authorizationHeaderValue);
+
+        List<EventHookChannelConfigHeader> headers = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+            headers.add(client.instantiate(EventHookChannelConfigHeader.class)
+                .setKey(entry.getKey())
+                .setValue(entry.getValue()));
+        }
 
         EventHookChannelConfig eventHookChannelConfig = client.instantiate(EventHookChannelConfig.class)
             .setUri(url)

@@ -15,12 +15,11 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.impl.resource.DefaultEventHookBuilder
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme
-import com.okta.sdk.resource.event.hook.EventHookChannelConfigHeader
 import com.okta.sdk.resource.event.hook.EventHook
+import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthSchemeType
+import com.okta.sdk.impl.resource.event.hook.DefaultEventHookBuilder
 
 import com.okta.sdk.tests.it.util.ITSupport
 
@@ -48,9 +47,7 @@ class EventHooksIT extends ITSupport {
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
-            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
-                .setKey("X-Test-Header")
-                .setValue("Test header value")))
+            .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
@@ -72,9 +69,7 @@ class EventHooksIT extends ITSupport {
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
-            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
-                .setKey("X-Test-Header")
-                .setValue("Test header value")))
+            .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
@@ -100,9 +95,7 @@ class EventHooksIT extends ITSupport {
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
-            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
-                .setKey("X-Test-Header")
-                .setValue("Test header value")))
+            .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
@@ -137,9 +130,7 @@ class EventHooksIT extends ITSupport {
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
-            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
-                .setKey("X-Test-Header")
-                .setValue("Test header value")))
+            .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
@@ -169,9 +160,7 @@ class EventHooksIT extends ITSupport {
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
-            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
-                .setKey("X-Test-Header")
-                .setValue("Test header value")))
+            .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
@@ -191,9 +180,7 @@ class EventHooksIT extends ITSupport {
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
-            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
-                .setKey("X-Test-Header")
-                .setValue("Test header value")))
+            .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
