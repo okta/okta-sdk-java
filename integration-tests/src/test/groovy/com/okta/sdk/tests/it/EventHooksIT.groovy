@@ -16,24 +16,27 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.EventHookChannel
-import com.okta.sdk.resource.EventHookChannelConfig
-import com.okta.sdk.resource.EventHookChannelConfigAuthScheme
-import com.okta.sdk.resource.EventHookChannelConfigHeader
-import com.okta.sdk.resource.EventSubscriptions
+import com.okta.sdk.resource.event.hook.EventHookChannel
+import com.okta.sdk.resource.event.hook.EventHookChannelConfig
+import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme
+import com.okta.sdk.resource.event.hook.EventHookChannelConfigHeader
+import com.okta.sdk.resource.event.hook.EventSubscriptions
 import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthSchemeType
 import com.okta.sdk.resource.event.hook.EventHookList
 import com.okta.sdk.tests.it.util.ITSupport
+
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
-import static org.hamcrest.Matchers.hasSize
+import static org.hamcrest.Matchers.iterableWithSize
 import static org.hamcrest.Matchers.notNullValue
 
+import static com.okta.sdk.tests.it.util.Util.assertPresent
+
 /**
- * Tests for /api/v1/eventHooks
+ * Tests for {@code /api/v1/eventHooks}.
  * @since 2.0.0
  */
 class EventHooksIT extends ITSupport {
@@ -42,7 +45,7 @@ class EventHooksIT extends ITSupport {
     void createEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = client.instantiate(EventHook)
+        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
             .setName(name)
             .setEvents(client.instantiate(EventSubscriptions)
                 .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
@@ -58,20 +61,23 @@ class EventHooksIT extends ITSupport {
                     .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
                 .setType(EventHookChannelConfigAuthSchemeType.HEADER)
                 .setKey("Authorization")
-                .setValue("Test-Api-Key"))))
+                .setValue("Test-Api-Key")))))
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
         assertThat(createdEventHook.getName(), equalTo(name))
-        assertThat(createdEventHook.getEvents(), hasSize(2))
+        assertThat(createdEventHook.getStatus(), equalTo(EventHook.StatusEnum.ACTIVE))
+        assertThat(createdEventHook.getEvents().getItems(), iterableWithSize(2))
         assertThat(createdEventHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooks"))
+
+        createdEventHook.deactivate()
     }
 
     @Test
     void getEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = client.instantiate(EventHook)
+        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
             .setName(name)
             .setEvents(client.instantiate(EventSubscriptions)
                 .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
@@ -87,7 +93,7 @@ class EventHooksIT extends ITSupport {
                     .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
                         .setType(EventHookChannelConfigAuthSchemeType.HEADER)
                         .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+                        .setValue("Test-Api-Key")))))
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -96,15 +102,18 @@ class EventHooksIT extends ITSupport {
 
         assertThat(retrievedEventHook.getId(), notNullValue())
         assertThat(retrievedEventHook.getName(), equalTo(name))
-        assertThat(retrievedEventHook.getEvents(), hasSize(2))
+        assertThat(createdEventHook.getStatus(), equalTo(EventHook.StatusEnum.ACTIVE))
+        assertThat(retrievedEventHook.getEvents().getItems(), iterableWithSize(2))
         assertThat(retrievedEventHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooks"))
+
+        createdEventHook.deactivate()
     }
 
     @Test
     void updateEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = client.instantiate(EventHook)
+        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
             .setName(name)
             .setEvents(client.instantiate(EventSubscriptions)
                 .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
@@ -120,7 +129,7 @@ class EventHooksIT extends ITSupport {
                     .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
                         .setType(EventHookChannelConfigAuthSchemeType.HEADER)
                         .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+                        .setValue("Test-Api-Key")))))
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -137,16 +146,19 @@ class EventHooksIT extends ITSupport {
 
         assertThat(updatedEventHook.getId(), notNullValue())
         assertThat(updatedEventHook.getId(), equalTo(createdEventHook.getId()))
+        assertThat(createdEventHook.getStatus(), equalTo(EventHook.StatusEnum.ACTIVE))
         assertThat(updatedEventHook.getName(), equalTo("updated-" + name))
-        assertThat(updatedEventHook.getEvents(), hasSize(3))
+        assertThat(updatedEventHook.getEvents().getItems(), iterableWithSize(3))
         assertThat(updatedEventHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooksUpdated"))
+
+        createdEventHook.deactivate()
     }
 
     @Test
     void deleteEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = client.instantiate(EventHook)
+        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
             .setName(name)
             .setEvents(client.instantiate(EventSubscriptions)
                 .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
@@ -162,13 +174,14 @@ class EventHooksIT extends ITSupport {
                     .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
                         .setType(EventHookChannelConfigAuthSchemeType.HEADER)
                         .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+                        .setValue("Test-Api-Key")))))
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
 
         EventHook retrievedEventHook = client.getEventHook(createdEventHook.getId())
         assertThat(retrievedEventHook.getId(), equalTo(createdEventHook.getId()))
+        assertThat(retrievedEventHook.getStatus(), equalTo(EventHook.StatusEnum.ACTIVE))
 
         createdEventHook.deactivate()
         createdEventHook.delete()
@@ -191,7 +204,7 @@ class EventHooksIT extends ITSupport {
 
         int listSize = eventHookList.size()
 
-        EventHook createdEventHook = client.instantiate(EventHook)
+        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
             .setName(name)
             .setEvents(client.instantiate(EventSubscriptions)
                 .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
@@ -207,21 +220,23 @@ class EventHooksIT extends ITSupport {
                     .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
                         .setType(EventHookChannelConfigAuthSchemeType.HEADER)
                         .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+                        .setValue("Test-Api-Key")))))
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
 
         sleep(2000)
 
-        assertThat(client.listEventHooks(), hasSize(listSize + 1))
+        assertPresent(client.listEventHooks(), createdEventHook)
+
+        createdEventHook.deactivate()
     }
 
     @Test
     void activateDeactivateEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = client.instantiate(EventHook)
+        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
             .setName(name)
             .setEvents(client.instantiate(EventSubscriptions)
                 .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
@@ -237,7 +252,7 @@ class EventHooksIT extends ITSupport {
                     .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
                         .setType(EventHookChannelConfigAuthSchemeType.HEADER)
                         .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+                        .setValue("Test-Api-Key")))))
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -248,7 +263,5 @@ class EventHooksIT extends ITSupport {
         EventHook retrievedEventHook = client.getEventHook(createdEventHook.getId())
 
         assertThat(retrievedEventHook.getStatus(), equalTo(EventHook.StatusEnum.INACTIVE))
-
-        retrievedEventHook.delete()
     }
 }
