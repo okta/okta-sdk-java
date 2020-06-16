@@ -15,15 +15,14 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.impl.resource.EventHookBuilder
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.event.hook.EventHookChannel
-import com.okta.sdk.resource.event.hook.EventHookChannelConfig
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigHeader
-import com.okta.sdk.resource.event.hook.EventSubscriptions
 import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthSchemeType
 import com.okta.sdk.resource.event.hook.EventHookList
+
 import com.okta.sdk.tests.it.util.ITSupport
 
 import org.testng.annotations.Test
@@ -45,23 +44,15 @@ class EventHooksIT extends ITSupport {
     void createEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
-            .setEvents(client.instantiate(EventSubscriptions)
-                .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
-                .setItems(["user.lifecycle.create", "user.lifecycle.activate"]))
-            .setChannel(client.instantiate(EventHookChannel)
-                .setType(EventHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(EventHookChannelConfig)
-                    .setUri("https://www.example.com/eventHooks")
-                    .setHeaders([ client.instantiate(EventHookChannelConfigHeader)
-                                      .setKey("X-Test-Header")
-                                      .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
-                .setType(EventHookChannelConfigAuthSchemeType.HEADER)
-                .setKey("Authorization")
-                .setValue("Test-Api-Key")))))
+            .setUrl("https://www.example.com/eventHooks")
+            .setVersion("1.0.0")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
+                .setKey("X-Test-Header")
+                .setValue("Test header value")))
+            .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -77,23 +68,15 @@ class EventHooksIT extends ITSupport {
     void getEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
-            .setEvents(client.instantiate(EventSubscriptions)
-                .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
-                .setItems(["user.lifecycle.create", "user.lifecycle.activate"]))
-            .setChannel(client.instantiate(EventHookChannel)
-                .setType(EventHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(EventHookChannelConfig)
-                    .setUri("https://www.example.com/eventHooks")
-                    .setHeaders([ client.instantiate(EventHookChannelConfigHeader)
-                                      .setKey("X-Test-Header")
-                                      .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
-                        .setType(EventHookChannelConfigAuthSchemeType.HEADER)
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key")))))
+            .setUrl("https://www.example.com/eventHooks")
+            .setVersion("1.0.0")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
+                .setKey("X-Test-Header")
+                .setValue("Test header value")))
+            .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -113,23 +96,15 @@ class EventHooksIT extends ITSupport {
     void updateEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
-            .setEvents(client.instantiate(EventSubscriptions)
-                .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
-                .setItems(["user.lifecycle.create", "user.lifecycle.activate"]))
-            .setChannel(client.instantiate(EventHookChannel)
-                .setType(EventHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(EventHookChannelConfig)
-                    .setUri("https://www.example.com/eventHooks")
-                    .setHeaders([ client.instantiate(EventHookChannelConfigHeader)
-                                      .setKey("X-Test-Header")
-                                      .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
-                        .setType(EventHookChannelConfigAuthSchemeType.HEADER)
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key")))))
+            .setUrl("https://www.example.com/eventHooks")
+            .setVersion("1.0.0")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
+                .setKey("X-Test-Header")
+                .setValue("Test header value")))
+            .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -158,23 +133,15 @@ class EventHooksIT extends ITSupport {
     void deleteEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
-            .setEvents(client.instantiate(EventSubscriptions)
-                .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
-                .setItems(["user.lifecycle.create", "user.lifecycle.activate"]))
-            .setChannel(client.instantiate(EventHookChannel)
-                .setType(EventHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(EventHookChannelConfig)
-                    .setUri("https://www.example.com/eventHooks")
-                    .setHeaders([ client.instantiate(EventHookChannelConfigHeader)
-                                      .setKey("X-Test-Header")
-                                      .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
-                        .setType(EventHookChannelConfigAuthSchemeType.HEADER)
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key")))))
+            .setUrl("https://www.example.com/eventHooks")
+            .setVersion("1.0.0")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
+                .setKey("X-Test-Header")
+                .setValue("Test header value")))
+            .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -202,25 +169,15 @@ class EventHooksIT extends ITSupport {
 
         EventHookList eventHookList = client.listEventHooks()
 
-        int listSize = eventHookList.size()
-
-        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
-            .setEvents(client.instantiate(EventSubscriptions)
-                .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
-                .setItems(["user.lifecycle.create", "user.lifecycle.activate"]))
-            .setChannel(client.instantiate(EventHookChannel)
-                .setType(EventHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(EventHookChannelConfig)
-                    .setUri("https://www.example.com/eventHooks")
-                    .setHeaders([ client.instantiate(EventHookChannelConfigHeader)
-                                      .setKey("X-Test-Header")
-                                      .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
-                        .setType(EventHookChannelConfigAuthSchemeType.HEADER)
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key")))))
+            .setUrl("https://www.example.com/eventHooks")
+            .setVersion("1.0.0")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
+                .setKey("X-Test-Header")
+                .setValue("Test header value")))
+            .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -236,23 +193,15 @@ class EventHooksIT extends ITSupport {
     void activateDeactivateEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook)
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
-            .setEvents(client.instantiate(EventSubscriptions)
-                .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
-                .setItems(["user.lifecycle.create", "user.lifecycle.activate"]))
-            .setChannel(client.instantiate(EventHookChannel)
-                .setType(EventHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(EventHookChannelConfig)
-                    .setUri("https://www.example.com/eventHooks")
-                    .setHeaders([ client.instantiate(EventHookChannelConfigHeader)
-                                      .setKey("X-Test-Header")
-                                      .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(EventHookChannelConfigAuthScheme)
-                        .setType(EventHookChannelConfigAuthSchemeType.HEADER)
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key")))))
+            .setUrl("https://www.example.com/eventHooks")
+            .setVersion("1.0.0")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .setHeaders(Arrays.asList(client.instantiate(EventHookChannelConfigHeader)
+                .setKey("X-Test-Header")
+                .setValue("Test header value")))
+            .buildAndCreate(client);
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
