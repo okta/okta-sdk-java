@@ -16,7 +16,6 @@
 package com.okta.sdk.impl.resource;
 
 import com.google.common.net.HttpHeaders;
-import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.event.hook.EventHook;
 import com.okta.sdk.resource.event.hook.EventHookBuilder;
@@ -106,7 +105,4 @@ public class DefaultEventHookBuilder implements EventHookBuilder {
         return createdEventHook;
     }
 
-    static EventHookBuilder instance() {
-        return Classes.newInstance("com.okta.sdk.impl.resource.EventHookBuilder");
-    }
 }
