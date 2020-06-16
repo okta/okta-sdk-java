@@ -15,13 +15,12 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.impl.resource.EventHookBuilder
+import com.okta.sdk.impl.resource.DefaultEventHookBuilder
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigHeader
 import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthSchemeType
-import com.okta.sdk.resource.event.hook.EventHookList
 
 import com.okta.sdk.tests.it.util.ITSupport
 
@@ -44,7 +43,7 @@ class EventHooksIT extends ITSupport {
     void createEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = EventHookBuilder.instance()
+        EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
@@ -68,7 +67,7 @@ class EventHooksIT extends ITSupport {
     void getEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = EventHookBuilder.instance()
+        EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
@@ -96,7 +95,7 @@ class EventHooksIT extends ITSupport {
     void updateEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = EventHookBuilder.instance()
+        EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
@@ -133,7 +132,7 @@ class EventHooksIT extends ITSupport {
     void deleteEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = EventHookBuilder.instance()
+        EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
@@ -165,9 +164,7 @@ class EventHooksIT extends ITSupport {
     void listAllEventHooksTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHookList eventHookList = client.listEventHooks()
-
-        EventHook createdEventHook = EventHookBuilder.instance()
+        EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
@@ -189,7 +186,7 @@ class EventHooksIT extends ITSupport {
     void activateDeactivateEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = EventHookBuilder.instance()
+        EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setVersion("1.0.0")
