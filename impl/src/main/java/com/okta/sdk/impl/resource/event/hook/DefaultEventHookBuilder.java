@@ -42,11 +42,12 @@ public class DefaultEventHookBuilder implements EventHookBuilder {
     private static final String LIFECYCLE_EVENT_CREATE = "user.lifecycle.create";
     private static final String LIFECYCLE_EVENT_ACTIVATE = "user.lifecycle.activate";
 
+    private static final String VERSION = "1.0.0";
+
     private String name;
     private String url;
     private String authorizationHeaderValue;
     private Map<String, String> headerMap = Maps.newHashMap();
-    private String version;
 
     @Override
     public EventHookBuilder setName(String name) {
@@ -69,12 +70,6 @@ public class DefaultEventHookBuilder implements EventHookBuilder {
     @Override
     public EventHookBuilder addHeader(String name, String value) {
         headerMap.put(name, value);
-        return this;
-    }
-
-    @Override
-    public EventHookBuilder setVersion(String version) {
-        this.version = version;
         return this;
     }
 
@@ -106,7 +101,7 @@ public class DefaultEventHookBuilder implements EventHookBuilder {
 
         EventHookChannel eventHookChannel = client.instantiate(EventHookChannel.class)
             .setType(EventHookChannel.TypeEnum.HTTP)
-            .setVersion(version)
+            .setVersion(VERSION)
             .setConfig(eventHookChannelConfig);
 
         EventHook createdEventHook = client.createEventHook(client.instantiate(EventHook.class)

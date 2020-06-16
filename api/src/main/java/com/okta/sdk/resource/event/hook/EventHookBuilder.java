@@ -27,8 +27,6 @@ public interface EventHookBuilder {
 
     EventHookBuilder addHeader(String name, String value);
 
-    EventHookBuilder setVersion(String version);
-
     EventHook buildAndCreate(Client client);
 
     static EventHookBuilder instance() {

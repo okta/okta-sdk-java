@@ -45,7 +45,6 @@ class EventHooksIT extends ITSupport {
         EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
-            .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
@@ -67,7 +66,6 @@ class EventHooksIT extends ITSupport {
         EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
-            .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
@@ -93,7 +91,6 @@ class EventHooksIT extends ITSupport {
         EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
-            .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
@@ -128,7 +125,6 @@ class EventHooksIT extends ITSupport {
         EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
-            .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
@@ -158,7 +154,6 @@ class EventHooksIT extends ITSupport {
         EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
-            .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
@@ -178,7 +173,6 @@ class EventHooksIT extends ITSupport {
         EventHook createdEventHook = DefaultEventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
-            .setVersion("1.0.0")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client);
