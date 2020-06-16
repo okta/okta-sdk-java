@@ -2584,7 +2584,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/Application'
+              $ref: '#/definitions/CatalogApplication'
             type: array
       security:
         - api_token: []
@@ -6309,7 +6309,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/Application'
+              $ref: '#/definitions/CatalogApplication'
             type: array
       security:
         - api_token: []
@@ -7546,6 +7546,51 @@ definitions:
         template_swa: '#/definitions/SwaApplication'
         template_swa3field: '#/definitions/SwaThreeFieldApplication'
       propertyName: name
+  CatalogApplication:
+    properties:
+      id:
+        type: string
+        readOnly: true
+      name:
+        type: string
+      displayName:
+        type: string
+      description:
+        type: string
+      status:
+        $ref: '#/definitions/CatalogApplicationStatus'
+      lastUpdated:
+        format: date-time
+        readOnly: true
+        type: string
+      category:
+        type: string
+      verificationStatus:
+        type: string
+      website:
+        type: string
+      signOnModes:
+        items:
+          type: string
+        type: array
+      features:
+        items:
+          type: string
+        type: array
+      _links:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
+    x-okta-tags:
+      - Role
+  CatalogApplicationStatus:
+    enum:
+      - ACTIVE
+      - INACTIVE
+    type: string
+    x-okta-tags:
+      - Role
   Csr:
     properties:
       created:
