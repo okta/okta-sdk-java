@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.impl.resource.event.hook;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.HttpHeaders;
 
@@ -28,7 +29,6 @@ import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme;
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthSchemeType;
 import com.okta.sdk.resource.event.hook.EventSubscriptions;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +86,7 @@ public class DefaultEventHookBuilder implements EventHookBuilder {
                 .setKey(HttpHeaders.AUTHORIZATION)
                 .setValue(authorizationHeaderValue);
 
-        List<EventHookChannelConfigHeader> headers = new ArrayList<>();
+        List<EventHookChannelConfigHeader> headers = Lists.newArrayList();
 
         for (Map.Entry<String, String> entry : headerMap.entrySet()) {
             headers.add(client.instantiate(EventHookChannelConfigHeader.class)
