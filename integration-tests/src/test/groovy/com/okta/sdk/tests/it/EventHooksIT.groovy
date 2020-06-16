@@ -153,8 +153,6 @@ class EventHooksIT extends ITSupport {
         createdEventHook.deactivate()
         createdEventHook.delete()
 
-        sleep(2000)
-
         try {
             client.getEventHook(createdEventHook.getId())
         }
@@ -181,8 +179,6 @@ class EventHooksIT extends ITSupport {
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
-
-        sleep(2000)
 
         assertPresent(client.listEventHooks(), createdEventHook)
 
