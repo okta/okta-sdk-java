@@ -18,7 +18,6 @@ package com.okta.sdk.tests.it
 import com.okta.sdk.resource.policy.ClientPolicyCondition
 import com.okta.sdk.resource.application.OAuth2Claim
 import com.okta.sdk.resource.application.OAuth2Scope
-import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.authorization.server.AuthorizationServer
 import com.okta.sdk.resource.policy.Policy
 import com.okta.sdk.resource.policy.PolicyRuleConditions
@@ -35,7 +34,6 @@ import static org.hamcrest.Matchers.notNullValue
 
 import static com.okta.sdk.tests.it.util.Util.assertPresent
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
-import static com.okta.sdk.tests.it.util.Util.expect
 
 /**
  * Tests for {@code /api/v1/authorizationServers}.
@@ -133,12 +131,10 @@ class AuthorizationServerIT extends ITSupport {
         createdAuthorizationServer.deactivate()
         createdAuthorizationServer.delete()
 
-        // delete operation may not effect immediately in the backend, so sleep
+        // delete operation may not effect immediately in the backend
         sleep(2000)
 
-        expect(ResourceException) {
-            client.getAuthorizationServer(createdAuthorizationServer.getId())
-        }
+        assertNotPresent(client.listAuthorizationServers(), createdAuthorizationServer)
     }
 
     // Policy operations
@@ -267,12 +263,10 @@ class AuthorizationServerIT extends ITSupport {
 
         createdAuthorizationServer.deletePolicy(createdPolicy.getId())
 
-        // delete may not effect immediately in the backend, so sleep
+        // delete may not effect immediately in the backend
         sleep(2000)
 
-        expect(ResourceException) {
-            client.getPolicy(createdPolicy.getId())
-        }
+        assertNotPresent(createdAuthorizationServer.listPolicies(), createdPolicy)
     }
 
     // Scope operations
@@ -379,7 +373,7 @@ class AuthorizationServerIT extends ITSupport {
 
         createdAuthorizationServer.deleteOAuth2Scope(createdOAuth2Scope.getId())
 
-        // delete may not effect immediately in the backend, so sleep
+        // delete may not effect immediately in the backend
         sleep(2000)
 
         assertNotPresent(createdAuthorizationServer.listOAuth2Scopes(), createdOAuth2Scope)
@@ -405,7 +399,7 @@ class AuthorizationServerIT extends ITSupport {
             .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
             .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
             .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
-            .setValue("\"driving!\"")
+            .setValue("\"driving!\"") // value must be an Okta EL expression if valueType is EXPRESSION
 
         OAuth2Claim createdOAuth2Claim = createdAuthorizationServer.createOAuth2Claim(oAuth2Claim)
         assertThat(createdOAuth2Claim, notNullValue())
@@ -502,7 +496,7 @@ class AuthorizationServerIT extends ITSupport {
 
         createdAuthorizationServer.deleteOAuth2Claim(createdOAuth2Claim.getId())
 
-        // delete may not effect immediately in the backend, so sleep
+        // delete may not effect immediately in the backend
         sleep(2000)
 
         assertNotPresent(createdAuthorizationServer.listOAuth2Claims(), createdOAuth2Claim)
