@@ -17,9 +17,9 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.event.hook.EventHook
+import com.okta.sdk.resource.event.hook.EventHookBuilder
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthSchemeType
-import com.okta.sdk.impl.resource.event.hook.DefaultEventHookBuilder
 
 import com.okta.sdk.tests.it.util.ITSupport
 
@@ -42,7 +42,7 @@ class EventHooksIT extends ITSupport {
     void createEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = DefaultEventHookBuilder.instance()
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -63,7 +63,7 @@ class EventHooksIT extends ITSupport {
     void getEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = DefaultEventHookBuilder.instance()
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -88,7 +88,7 @@ class EventHooksIT extends ITSupport {
     void updateEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = DefaultEventHookBuilder.instance()
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -122,7 +122,7 @@ class EventHooksIT extends ITSupport {
     void deleteEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = DefaultEventHookBuilder.instance()
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -151,7 +151,7 @@ class EventHooksIT extends ITSupport {
     void listAllEventHooksTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = DefaultEventHookBuilder.instance()
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -170,7 +170,7 @@ class EventHooksIT extends ITSupport {
     void activateDeactivateEventHookTest() {
         String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        EventHook createdEventHook = DefaultEventHookBuilder.instance()
+        EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
