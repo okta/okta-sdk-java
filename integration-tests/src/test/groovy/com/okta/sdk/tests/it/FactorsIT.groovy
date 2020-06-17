@@ -21,17 +21,28 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.factor.ActivateFactorRequest
 import com.okta.sdk.resource.user.factor.CallUserFactor
+import com.okta.sdk.resource.user.factor.EmailUserFactor
+import com.okta.sdk.resource.user.factor.EmailUserFactorProfile
 import com.okta.sdk.resource.user.factor.FactorProvider
 import com.okta.sdk.resource.user.factor.FactorStatus
+import com.okta.sdk.resource.user.factor.FactorType
+import com.okta.sdk.resource.user.factor.HardwareUserFactor
+import com.okta.sdk.resource.user.factor.HardwareUserFactorProfile
 import com.okta.sdk.resource.user.factor.PushUserFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionUserFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionList
 import com.okta.sdk.resource.user.factor.SmsUserFactor
+import com.okta.sdk.resource.user.factor.TokenUserFactor
+import com.okta.sdk.resource.user.factor.TokenUserFactorProfile
 import com.okta.sdk.resource.user.factor.TotpUserFactor
+import com.okta.sdk.resource.user.factor.U2fUserFactor
+import com.okta.sdk.resource.user.factor.U2fUserFactorProfile
 import com.okta.sdk.resource.user.factor.UserFactor
 import com.okta.sdk.resource.user.factor.UserFactorList
 import com.okta.sdk.resource.user.factor.VerifyFactorRequest
 import com.okta.sdk.resource.user.factor.VerifyUserFactorResponse
+import com.okta.sdk.resource.user.factor.WebUserFactor
+import com.okta.sdk.resource.user.factor.WebUserFactorProfile
 import com.okta.sdk.tests.it.util.ITSupport
 import org.jboss.aerogear.security.otp.Totp
 import org.testng.annotations.Test
@@ -176,6 +187,43 @@ class FactorsIT extends ITSupport {
         request.setAnswer("pizza")
         VerifyUserFactorResponse response = securityQuestionUserFactor.verify(request, null, null)
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
+    }
+
+    @Test
+    void testEmailUserFactor() {
+        User user = randomUser()
+        assertThat user.listFactors(), emptyIterable()
+
+        EmailUserFactor emailUserFactor = client.instantiate(EmailUserFactor)
+            .setFactorType(FactorType.EMAIL)
+            .setProvider(FactorProvider.OKTA)
+            .setProfile(client.instantiate(EmailUserFactorProfile)
+                .setEmail(user.getProfile().getEmail()))
+
+        assertThat emailUserFactor.id, nullValue()
+        // enroll and activate
+        assertThat emailUserFactor, sameInstance(user.enrollFactor(emailUserFactor, false, null, null, true))
+        assertThat emailUserFactor.getStatus(), is(FactorStatus.ACTIVE)
+        assertThat emailUserFactor.id, notNullValue()
+
+        VerifyFactorRequest request = client.instantiate(VerifyFactorRequest)
+        VerifyUserFactorResponse response = emailUserFactor.verify(request, null, null)
+        assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.CHALLENGE)
+    }
+
+    @Test
+    void testGoogleTotpUserFactorCreation() {
+        User user = randomUser()
+        assertThat user.listFactors(), emptyIterable()
+
+        TokenUserFactor tokenUserFactor = client.instantiate(TokenUserFactor)
+            .setFactorType(FactorType.TOKEN_SOFTWARE_TOTP)
+            .setProvider(FactorProvider.GOOGLE)
+
+        assertThat tokenUserFactor.id, nullValue()
+        assertThat tokenUserFactor, sameInstance(user.enrollFactor(tokenUserFactor))
+        assertThat tokenUserFactor.id, notNullValue()
+        assertThat tokenUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
     }
 
     @Test
