@@ -490,7 +490,7 @@ class ApplicationsIT extends ITSupport {
         // issue: listApplicationUsers() occasionally throws HTTP 404, Okta E0000007 - Resource not found error.
         // adding a sleep after createApplication() helps resolve the above issue.
         sleep(2000)
-        
+
         AppUserList appUserList = app.listApplicationUsers()
         assertThat appUserList.iterator().size(), equalTo(0)
 
