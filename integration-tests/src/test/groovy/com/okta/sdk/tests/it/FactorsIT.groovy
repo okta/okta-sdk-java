@@ -212,7 +212,7 @@ class FactorsIT extends ITSupport {
     }
 
     @Test
-    void testTokenUserFactorCreation() {
+    void testGoogleTotpUserFactorCreation() {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
 
