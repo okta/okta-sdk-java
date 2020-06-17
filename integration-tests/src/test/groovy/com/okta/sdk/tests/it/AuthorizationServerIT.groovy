@@ -15,16 +15,15 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.ClientPolicyCondition
-import com.okta.sdk.resource.OAuth2Claim
-import com.okta.sdk.resource.OAuth2Scope
+import com.okta.sdk.resource.policy.ClientPolicyCondition
+import com.okta.sdk.resource.application.OAuth2Claim
+import com.okta.sdk.resource.application.OAuth2Scope
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.authorization.server.AuthorizationServer
 import com.okta.sdk.resource.policy.Policy
 import com.okta.sdk.resource.policy.PolicyRuleConditions
 import com.okta.sdk.resource.policy.PolicyType
 import com.okta.sdk.tests.it.util.ITSupport
-import org.testng.Assert
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils
 
@@ -35,9 +34,11 @@ import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.notNullValue
 
 import static com.okta.sdk.tests.it.util.Util.assertPresent
+import static com.okta.sdk.tests.it.util.Util.assertNotPresent
+import static com.okta.sdk.tests.it.util.Util.expect
 
 /**
- * Tests for {@code /api/v1/authorizationServers}
+ * Tests for {@code /api/v1/authorizationServers}.
  * @since 2.0.0
  */
 class AuthorizationServerIT extends ITSupport {
@@ -52,7 +53,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -60,7 +61,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer.getName(), equalTo(name))
         assertThat(createdAuthorizationServer.getDescription(), equalTo("Test Authorization Server"))
         assertThat(createdAuthorizationServer.getAudiences(), hasSize(1))
-        assertThat(createdAuthorizationServer.getAudiences(), contains("api://default"))
+        assertThat(createdAuthorizationServer.getAudiences(), contains("api://example"))
     }
 
     @Test
@@ -71,7 +72,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -86,7 +87,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -103,7 +104,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -123,7 +124,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -132,13 +133,11 @@ class AuthorizationServerIT extends ITSupport {
         createdAuthorizationServer.deactivate()
         createdAuthorizationServer.delete()
 
+        // delete operation may not effect immediately in the backend, so sleep
         sleep(2000)
 
-        try {
+        expect(ResourceException) {
             client.getAuthorizationServer(createdAuthorizationServer.getId())
-        }
-        catch (ResourceException e) {
-            assertThat(e.status, equalTo(404))
         }
     }
 
@@ -160,7 +159,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -188,7 +187,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -219,7 +218,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -256,7 +255,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -268,13 +267,11 @@ class AuthorizationServerIT extends ITSupport {
 
         createdAuthorizationServer.deletePolicy(createdPolicy.getId())
 
+        // delete may not effect immediately in the backend, so sleep
         sleep(2000)
 
-        try {
+        expect(ResourceException) {
             client.getPolicy(createdPolicy.getId())
-        }
-        catch (ResourceException e) {
-            assertThat(e.status, equalTo(404))
         }
     }
 
@@ -288,7 +285,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -310,7 +307,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -335,7 +332,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -368,7 +365,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -382,12 +379,10 @@ class AuthorizationServerIT extends ITSupport {
 
         createdAuthorizationServer.deleteOAuth2Scope(createdOAuth2Scope.getId())
 
-        try {
-            createdAuthorizationServer.getOAuth2Scope(createdOAuth2Scope.getId())
-        }
-        catch (ResourceException e) {
-            assertThat(e.status, equalTo(404))
-        }
+        // delete may not effect immediately in the backend, so sleep
+        sleep(2000)
+
+        assertNotPresent(createdAuthorizationServer.listOAuth2Scopes(), createdOAuth2Scope)
     }
 
     // Claim operations
@@ -400,7 +395,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -426,7 +421,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -454,7 +449,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -490,7 +485,7 @@ class AuthorizationServerIT extends ITSupport {
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
-                .setAudiences(["api://default"]))
+                .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())
@@ -507,11 +502,9 @@ class AuthorizationServerIT extends ITSupport {
 
         createdAuthorizationServer.deleteOAuth2Claim(createdOAuth2Claim.getId())
 
-        try {
-            createdAuthorizationServer.getOAuth2Claim(createdOAuth2Claim.getId())
-        }
-        catch (ResourceException e) {
-            assertThat(e.status, equalTo(404))
-        }
+        // delete may not effect immediately in the backend, so sleep
+        sleep(2000)
+
+        assertNotPresent(createdAuthorizationServer.listOAuth2Claims(), createdOAuth2Claim)
     }
 }
