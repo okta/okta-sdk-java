@@ -111,7 +111,7 @@ class InlineHooksIT extends ITSupport {
         assertThat(updatedInlineHook.getId(), equalTo(createdInlineHook.getId()))
         assertThat(updatedInlineHook.getName(), equalTo("updated-" + name))
         assertThat(updatedInlineHook.getType(), equalTo(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM))
-        assertThat(updatedInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooksUpdated"))
+        assertThat(updatedInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooksUpdated"))
     }
 
     @Test
@@ -130,7 +130,7 @@ class InlineHooksIT extends ITSupport {
 
         assertThat(createdInlineHook.getId(), notNullValue())
 
-        InlineHook retrievedInlineHook = client.getEventHook(createdInlineHook.getId())
+        InlineHook retrievedInlineHook = client.getInlineHook(createdInlineHook.getId())
         assertThat(retrievedInlineHook.getId(), equalTo(createdInlineHook.getId()))
 
         createdInlineHook.deactivate()
@@ -176,7 +176,7 @@ class InlineHooksIT extends ITSupport {
 
         createdInlineHook.deactivate()
 
-        InlineHook retrievedInlineHook = client.getEventHook(createdInlineHook.getId())
+        InlineHook retrievedInlineHook = client.getInlineHook(createdInlineHook.getId())
 
         assertThat(retrievedInlineHook.getStatus(), equalTo(InlineHook.StatusEnum.INACTIVE))
 
