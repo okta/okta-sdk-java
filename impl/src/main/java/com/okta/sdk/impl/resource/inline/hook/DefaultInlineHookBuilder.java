@@ -25,6 +25,7 @@ import com.okta.sdk.resource.inline.hook.InlineHookChannel;
 import com.okta.sdk.resource.inline.hook.InlineHookChannelConfig;
 import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigAuthScheme;
 import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigHeaders;
+import com.okta.sdk.resource.inline.hook.InlineHookType;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class DefaultInlineHookBuilder implements InlineHookBuilder {
     private static final String VERSION = "1.0.0";
 
     private String name;
-    private InlineHook.TypeEnum hookType;
+    private InlineHookType hookType;
     private InlineHookChannel.TypeEnum channelType;
     private String url;
     private String authorizationHeaderValue;
@@ -51,7 +52,7 @@ public class DefaultInlineHookBuilder implements InlineHookBuilder {
     }
 
     @Override
-    public InlineHookBuilder setHookType(InlineHook.TypeEnum hookType) {
+    public InlineHookBuilder setHookType(InlineHookType hookType) {
         this.hookType = hookType;
         return this;
     }

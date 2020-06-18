@@ -22,7 +22,7 @@ public interface InlineHookBuilder {
 
     InlineHookBuilder setName(String name);
 
-    InlineHookBuilder setHookType(InlineHook.TypeEnum hookType);
+    InlineHookBuilder setHookType(InlineHookType hookType);
 
     InlineHookBuilder setChannelType(InlineHookChannel.TypeEnum channelType);
 

@@ -8596,18 +8596,9 @@ definitions:
       name:
         type: string
       status:
-        enum:
-          - ACTIVE
-          - INACTIVE
-        type: string
+        $ref: '#/definitions/InlineHookStatus'
       type:
-        enum:
-          - com.okta.oauth2.tokens.transform
-          - com.okta.import.transform
-          - com.okta.saml.tokens.transform
-          - com.okta.user.pre-registration
-          - com.okta.user.credential.password.import
-        type: string
+        $ref: '#/definitions/InlineHookType'
       version:
         type: string
     type: object
@@ -8732,6 +8723,23 @@ definitions:
         items:
           $ref: '#/definitions/InlineHookResponseCommandValue'
         type: array
+    x-okta-tags:
+      - InlineHook
+  InlineHookStatus:
+    enum:
+      - ACTIVE
+      - INACTIVE
+    type: string
+    x-okta-tags:
+      - InlineHook
+  InlineHookType:
+    enum:
+      - com.okta.oauth2.tokens.transform
+      - com.okta.import.transform
+      - com.okta.saml.tokens.transform
+      - com.okta.user.pre-registration
+      - com.okta.user.credential.password.import
+    type: string
     x-okta-tags:
       - InlineHook
   IonField:

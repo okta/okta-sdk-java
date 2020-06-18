@@ -20,6 +20,8 @@ import com.okta.sdk.resource.inline.hook.InlineHookBuilder
 import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigAuthScheme
 import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigHeaders
 import com.okta.sdk.resource.inline.hook.InlineHookChannel
+import com.okta.sdk.resource.inline.hook.InlineHookStatus
+import com.okta.sdk.resource.inline.hook.InlineHookType
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
@@ -42,7 +44,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
+            .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -61,7 +63,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
+            .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -84,7 +86,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
+            .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -110,7 +112,7 @@ class InlineHooksIT extends ITSupport {
         assertThat(updatedInlineHook.getId(), notNullValue())
         assertThat(updatedInlineHook.getId(), equalTo(createdInlineHook.getId()))
         assertThat(updatedInlineHook.getName(), equalTo("updated-" + name))
-        assertThat(updatedInlineHook.getType(), equalTo(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM))
+        assertThat(updatedInlineHook.getType(), equalTo(InlineHookType.OAUTH2_TOKENS_TRANSFORM))
         assertThat(updatedInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooksUpdated"))
     }
 
@@ -120,7 +122,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
+            .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -145,7 +147,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
+            .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -163,7 +165,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
+            .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -172,13 +174,13 @@ class InlineHooksIT extends ITSupport {
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
-        assertThat(createdInlineHook.getStatus(), equalTo(InlineHook.StatusEnum.ACTIVE))
+        assertThat(createdInlineHook.getStatus(), equalTo(InlineHookStatus.ACTIVE))
 
         createdInlineHook.deactivate()
 
         InlineHook retrievedInlineHook = client.getInlineHook(createdInlineHook.getId())
 
-        assertThat(retrievedInlineHook.getStatus(), equalTo(InlineHook.StatusEnum.INACTIVE))
+        assertThat(retrievedInlineHook.getStatus(), equalTo(InlineHookStatus.INACTIVE))
 
         retrievedInlineHook.delete()
     }
