@@ -15,21 +15,23 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.InlineHook
-import com.okta.sdk.resource.InlineHookChannelConfig
-import com.okta.sdk.resource.InlineHookChannelConfigAuthScheme
-import com.okta.sdk.resource.InlineHookChannelConfigHeaders
-import com.okta.sdk.resource.InlineHookChannel
+import com.okta.sdk.resource.inline.hook.InlineHook
+import com.okta.sdk.resource.inline.hook.InlineHookBuilder
+import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigAuthScheme
+import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigHeaders
+import com.okta.sdk.resource.inline.hook.InlineHookChannel
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
-import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.notNullValue
 
+import static com.okta.sdk.tests.it.util.Util.assertPresent
+import static com.okta.sdk.tests.it.util.Util.assertNotPresent
+
 /**
- * Tests for /api/v1/inlineHooks
+ * Tests for {@code /api/v1/inlineHooks}.
  * @since 2.0.0
  */
 class InlineHooksIT extends ITSupport {
@@ -38,27 +40,18 @@ class InlineHooksIT extends ITSupport {
     void createInlineHookTest() {
         String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        InlineHook createdInlineHook = client.instantiate(InlineHook)
+        InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
-            .setVersion("1.0.0")
-            .setChannel(client.instantiate(InlineHookChannel)
-                .setType(InlineHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(InlineHookChannelConfig)
-                    .setUri("https://www.example.com/inlineHooks")
-                    .setHeaders([client.instantiate(InlineHookChannelConfigHeaders)
-                                     .setKey("X-Test-Header")
-                                     .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(InlineHookChannelConfigAuthScheme)
-                        .setType("Header")
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setUrl("https://www.example.com/inlineHooks")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .addHeader("X-Test-Header", "Test header value")
+            .buildAndCreate(client);
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
         assertThat(createdInlineHook.getName(), equalTo(name))
-        assertThat(createdInlineHook.getEvents(), hasSize(2))
         assertThat(createdInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooks"))
     }
 
@@ -66,54 +59,37 @@ class InlineHooksIT extends ITSupport {
     void getInlineHookTest() {
         String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        InlineHook createdInlineHook = client.instantiate(InlineHook)
+        InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
-            .setVersion("1.0.0")
-            .setChannel(client.instantiate(InlineHookChannel)
-                .setType(InlineHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(InlineHookChannelConfig)
-                    .setUri("https://www.example.com/inlineHooks")
-                    .setHeaders([client.instantiate(InlineHookChannelConfigHeaders)
-                                     .setKey("X-Test-Header")
-                                     .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(InlineHookChannelConfigAuthScheme)
-                        .setType("Header")
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setUrl("https://www.example.com/inlineHooks")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .addHeader("X-Test-Header", "Test header value")
+            .buildAndCreate(client);
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
 
-        EventHook retrievedEventHook = client.getEventHook(createdInlineHook.getId())
+        InlineHook retrievedInlineHook = client.getInlineHook(createdInlineHook.getId())
 
-        assertThat(retrievedEventHook.getId(), notNullValue())
-        assertThat(retrievedEventHook.getName(), equalTo(name))
-        assertThat(retrievedEventHook.getEvents(), hasSize(2))
-        assertThat(retrievedEventHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooks")
+        assertThat(retrievedInlineHook.getId(), notNullValue())
+        assertThat(retrievedInlineHook.getName(), equalTo(name))
+        assertThat(retrievedInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooks"))
     }
 
     @Test
     void updateInlineHookTest() {
-        String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        InlineHook createdInlineHook = client.instantiate(InlineHook)
+        InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
-            .setVersion("1.0.0")
-            .setChannel(client.instantiate(InlineHookChannel)
-                .setType(InlineHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(InlineHookChannelConfig)
-                    .setUri("https://www.example.com/inlineHooks")
-                    .setHeaders([client.instantiate(InlineHookChannelConfigHeaders)
-                                     .setKey("X-Test-Header")
-                                     .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(InlineHookChannelConfigAuthScheme)
-                        .setType("Header")
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setUrl("https://www.example.com/inlineHooks")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .addHeader("X-Test-Header", "Test header value")
+            .buildAndCreate(client);
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
@@ -140,24 +116,16 @@ class InlineHooksIT extends ITSupport {
 
     @Test
     void deleteInlineHookTest() {
-        String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        InlineHook createdInlineHook = client.instantiate(InlineHook)
+        InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
-            .setVersion("1.0.0")
-            .setChannel(client.instantiate(InlineHookChannel)
-                .setType(InlineHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(InlineHookChannelConfig)
-                    .setUri("https://www.example.com/inlineHooks")
-                    .setHeaders([client.instantiate(InlineHookChannelConfigHeaders)
-                                     .setKey("X-Test-Header")
-                                     .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(InlineHookChannelConfigAuthScheme)
-                        .setType("Header")
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setUrl("https://www.example.com/inlineHooks")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .addHeader("X-Test-Header", "Test header value")
+            .buildAndCreate(client);
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
@@ -168,65 +136,39 @@ class InlineHooksIT extends ITSupport {
         createdInlineHook.deactivate()
         createdInlineHook.delete()
 
-        sleep(2000)
-
-        try {
-            client.getEventHook(createdInlineHook.getId())
-        }
-        catch (ResourceException e) {
-            assertThat(e.status, equalTo(404))
-        }
+        assertNotPresent(client.listInlineHooks(), createdInlineHook)
     }
 
     @Test
     void listAllInlineHooksTest() {
-        String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        InlineHook createdInlineHook = client.instantiate(InlineHook)
+        InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
-            .setVersion("1.0.0")
-            .setChannel(client.instantiate(InlineHookChannel)
-                .setType(InlineHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(InlineHookChannelConfig)
-                    .setUri("https://www.example.com/inlineHooks")
-                    .setHeaders([client.instantiate(InlineHookChannelConfigHeaders)
-                                     .setKey("X-Test-Header")
-                                     .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(InlineHookChannelConfigAuthScheme)
-                        .setType("Header")
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setUrl("https://www.example.com/inlineHooks")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .addHeader("X-Test-Header", "Test header value")
+            .buildAndCreate(client);
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
-
-        sleep(2000)
-
-        assertThat(client.listInlineHooks().any{ createdInlineHook.getId().equals(it.id) })
+        assertPresent(client.listInlineHooks(), createdInlineHook)
     }
 
     @Test
     void activateDeactivateInlineHookTest() {
-        String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
 
-        InlineHook createdInlineHook = client.instantiate(InlineHook)
+        InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
-            .setVersion("1.0.0")
-            .setChannel(client.instantiate(InlineHookChannel)
-                .setType(InlineHookChannel.TypeEnum.HTTP)
-                .setVersion("1.0.0")
-                .setConfig(client.instantiate(InlineHookChannelConfig)
-                    .setUri("https://www.example.com/inlineHooks")
-                    .setHeaders([client.instantiate(InlineHookChannelConfigHeaders)
-                                     .setKey("X-Test-Header")
-                                     .setValue("Test header value")])
-                    .setAuthScheme(client.instantiate(InlineHookChannelConfigAuthScheme)
-                        .setType("Header")
-                        .setKey("Authorization")
-                        .setValue("Test-Api-Key"))))
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setUrl("https://www.example.com/inlineHooks")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .addHeader("X-Test-Header", "Test header value")
+            .buildAndCreate(client);
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
