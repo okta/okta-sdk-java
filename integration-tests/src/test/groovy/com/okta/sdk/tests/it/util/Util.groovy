@@ -19,6 +19,7 @@ import com.okta.sdk.resource.CollectionResource
 import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupList
+import com.okta.sdk.resource.linked.object.LinkedObject
 import com.okta.sdk.resource.user.Role
 import com.okta.sdk.resource.user.RoleList
 import com.okta.sdk.resource.user.User
@@ -117,8 +118,19 @@ class Util {
         assertThat(resourcesFound, hasSize(0))
     }
 
+    static <T extends Resource, C extends CollectionResource<T>> void assertLinkedObjectPresent(C results, T expected) {
+
+        List<T> resourcesFound = StreamSupport.stream(results.spliterator(), false)
+                .filter { listItem ->
+                    ((listItem.primary.name == expected.primary.name) &&
+                            (listItem.associated.name == expected.associated.name))}
+                .collect(Collectors.toList())
+
+        assertThat(resourcesFound, hasSize(1))
+    }
+
     static void assertGroupTargetPresent(User user, Group group, Role role) {
-        def groupTargets = user.listGroupTargetsForRole(role.id)
+        def groupTargets = user.listGroupTargets(role.id)
 
         assertThat "GroupTarget Present not found in User role",
                 StreamSupport.stream(groupTargets.spliterator(), false)

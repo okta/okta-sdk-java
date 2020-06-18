@@ -147,7 +147,7 @@ class SessionsTest {
 
         InternalDataStore dataStore = mock(InternalDataStore)
 
-        new DefaultUser(dataStore, [id: "test_user_id"]).endAllSessions()
+        new DefaultUser(dataStore, [id: "test_user_id"]).clearSessions()
         verify(dataStore).delete("/api/v1/users/test_user_id/sessions", Collections.emptyMap(),  Collections.emptyMap())
     }
 
