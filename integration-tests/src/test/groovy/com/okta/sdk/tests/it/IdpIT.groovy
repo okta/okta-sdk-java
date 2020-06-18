@@ -15,9 +15,8 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.*
-import com.okta.sdk.resource.identity.provider.IdentityProvider
-import com.okta.sdk.resource.policy.IdentityProviderPolicy
+import com.okta.sdk.resource.identity.provider.*
+import com.okta.sdk.resource.policy.*
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.it.util.ITSupport
@@ -37,9 +36,47 @@ class IdpIT extends ITSupport {
     void idpLifecycleTest() {
 
         // create idp
-        IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider)
+        IdentityProvider createdIdp = IdentityProviderBuilder.instance()
             .setType(IdentityProvider.TypeEnum.OIDC)
             .setName("Mock OpenID Connect Id")
+            .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
+            .setRequestSignatureAlgorithm("SHA-256")
+            .setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum.REQUEST)
+            .setResponseSignatureAlgorithm("SHA-256")
+            .setResponseSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum.ANY)
+            .setAcsEndpointBinding(ProtocolEndpoint.BindingEnum.POST)
+            .setAcsEndpointType(ProtocolEndpoint.TypeEnum.INSTANCE)
+            .setAuthorizationEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
+            .setAuthorizationEndpointUrl("https://idp.example.com/authorize")
+            .setTokenEndpointBinding(ProtocolEndpoint.BindingEnum.POST)
+            .setTokenEndpointUrl("https://idp.example.com/token")
+            .setUserInfoEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
+            .setUserInfoEndpointUrl("https://idp.example.com/userinfo")
+            .setJwksEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
+            .setJwksEndpointUrl("https://idp.example.com/keys")
+            .setScopes(["openid", "profile", "email"])
+            .setProtocolType(Protocol.TypeEnum.OIDC)
+            .setClientId("your-client-id")
+            .setClientSecret("your-client-secret")
+            .setBaseUrl("https://idp.example.com")
+            .setMaxClockSkew(120000)
+            .setSubjectTemplate("idpuser.email")
+            .setPolicySubjectMatchType(PolicySubjectMatchType.USERNAME)
+            .buildAndCreate(client)
+        registerForCleanup(createdIdp)
+
+        assertThat(createdIdp, notNullValue())
+        assertThat(createdIdp.getId(), notNullValue())
+        assertThat(createdIdp.getStatus(), equalTo(IdentityProvider.StatusEnum.ACTIVE))
+
+        // get
+        IdentityProvider retrievedIdp = client.getIdentityProvider(createdIdp.getId())
+        assertThat(retrievedIdp.getId(), equalTo(createdIdp.getId()))
+
+        // update
+        IdentityProvider updatedIdp = createdIdp.update(client.instantiate(IdentityProvider)
+            .setType(IdentityProvider.TypeEnum.OIDC)
+            .setName("Mock OpenID Connect Id - NEW")
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
             .setProtocol(client.instantiate(Protocol)
                 .setAlgorithms(client.instantiate(ProtocolAlgorithms)
@@ -57,24 +94,24 @@ class IdpIT extends ITSupport {
                         .setType(ProtocolEndpoint.TypeEnum.INSTANCE))
                     .setAuthorization(client.instantiate(ProtocolEndpoint)
                         .setBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-                        .setUrl("https://idp.example.com/authorize"))
+                        .setUrl("https://idp.example.com/authorize_new"))
                     .setToken(client.instantiate(ProtocolEndpoint)
                         .setBinding(ProtocolEndpoint.BindingEnum.POST)
-                        .setUrl("https://idp.example.com/token"))
+                        .setUrl("https://idp.example.com/token_new"))
                     .setUserInfo(client.instantiate(ProtocolEndpoint)
                         .setBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-                        .setUrl("https://idp.example.com/userinfo"))
+                        .setUrl("https://idp.example.com/userinfo_new"))
                     .setJwks(client.instantiate(ProtocolEndpoint)
                         .setBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-                        .setUrl("https://idp.example.com/keys")))
+                        .setUrl("https://idp.example.com/keys_new")))
                 .setScopes(["openid", "profile", "email"])
                 .setType(Protocol.TypeEnum.OIDC)
                 .setCredentials(client.instantiate(IdentityProviderCredentials)
                     .setClient(client.instantiate(IdentityProviderCredentialsClient)
-                        .setClientId("your-client-id")
-                        .setClientSecret("your-client-secret")))
+                        .setClientId("your-new-client-id")
+                        .setClientSecret("your-new-client-secret")))
                 .setIssuer(client.instantiate(ProtocolEndpoint)
-                    .setUrl("https://idp.example.com")))
+                    .setUrl("https://idp.example.com/new")))
             .setPolicy(client.instantiate(IdentityProviderPolicy)
                 .setAccountLink(client.instantiate(PolicyAccountLink)
                     .setAction(PolicyAccountLink.ActionEnum.AUTO)
@@ -93,15 +130,27 @@ class IdpIT extends ITSupport {
                     .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate)
                         .setTemplate("idpuser.email"))
                     .setMatchType(PolicySubjectMatchType.USERNAME))))
-        registerForCleanup(createdIdp)
+        registerForCleanup(updatedIdp)
 
-        assertThat(createdIdp, notNullValue())
-        assertThat(createdIdp.getId(), notNullValue())
-        assertThat(createdIdp.getStatus(), equalTo(IdentityProvider.StatusEnum.ACTIVE))
+        IdentityProvider retrievedUpdatedIdp = client.getIdentityProvider(updatedIdp.getId())
+        assertThat(retrievedUpdatedIdp.getId(), equalTo(createdIdp.getId()))
+        assertThat(retrievedUpdatedIdp.getName(), equalTo("Mock OpenID Connect Id - NEW"))
+        assertThat(retrievedUpdatedIdp.getProtocol().getEndpoints().getAuthorization().getUrl(),
+            equalTo("https://idp.example.com/authorize_new"))
+        assertThat(retrievedUpdatedIdp.getProtocol().getEndpoints().getToken().getUrl(),
+            equalTo("https://idp.example.com/token_new"))
+        assertThat(retrievedUpdatedIdp.getProtocol().getEndpoints().getUserInfo().getUrl(),
+            equalTo("https://idp.example.com/userinfo_new"))
+        assertThat(retrievedUpdatedIdp.getProtocol().getEndpoints().getJwks().getUrl(),
+            equalTo("https://idp.example.com/keys_new"))
+        assertThat(retrievedUpdatedIdp.getProtocol().getCredentials().getClient().getClientId(),
+            equalTo("your-new-client-id"))
+        assertThat(retrievedUpdatedIdp.getProtocol().getCredentials().getClient().getClientSecret(),
+            equalTo("your-new-client-secret"))
+        assertThat(retrievedUpdatedIdp.getProtocol().getIssuer().getUrl(),
+            equalTo("https://idp.example.com/new"))
 
-        // get
-        IdentityProvider retrievedIdp = client.getIdentityProvider(createdIdp.getId())
-        assertThat(retrievedIdp.getId(), equalTo(createdIdp.getId()))
+        assertPresent(client.listIdentityProviders(), updatedIdp)
 
         // deactivate
         createdIdp.deactivate()
@@ -109,12 +158,8 @@ class IdpIT extends ITSupport {
         // delete
         createdIdp.delete()
 
-        // earlier operation may not complete immediately, so sleep for 2s
+        // earlier operation may not complete immediately
         sleep(2000)
-
-        expect(ResourceException) {
-            client.getIdentityProvider(createdIdp.getId())
-        }
 
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
@@ -133,62 +178,33 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create idp
-        IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider)
+        IdentityProvider createdIdp = IdentityProviderBuilder.instance()
             .setType(IdentityProvider.TypeEnum.OIDC)
             .setName("Mock OpenID Connect Id")
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
-            .setProtocol(client.instantiate(Protocol)
-                .setAlgorithms(client.instantiate(ProtocolAlgorithms)
-                    .setRequest(client.instantiate(ProtocolAlgorithmType)
-                        .setSignature(client.instantiate(ProtocolAlgorithmTypeSignature)
-                            .setAlgorithm("SHA-256")
-                            .setScope(ProtocolAlgorithmTypeSignature.ScopeEnum.REQUEST)))
-                    .setResponse(client.instantiate(ProtocolAlgorithmType)
-                        .setSignature(client.instantiate(ProtocolAlgorithmTypeSignature)
-                            .setAlgorithm("SHA-256")
-                            .setScope(ProtocolAlgorithmTypeSignature.ScopeEnum.ANY))))
-                .setEndpoints(client.instantiate(ProtocolEndpoints)
-                    .setAcs(client.instantiate(ProtocolEndpoint)
-                        .setBinding(ProtocolEndpoint.BindingEnum.POST)
-                        .setType(ProtocolEndpoint.TypeEnum.INSTANCE))
-                    .setAuthorization(client.instantiate(ProtocolEndpoint)
-                        .setBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-                        .setUrl("https://idp.example.com/authorize"))
-                    .setToken(client.instantiate(ProtocolEndpoint)
-                        .setBinding(ProtocolEndpoint.BindingEnum.POST)
-                        .setUrl("https://idp.example.com/token"))
-                    .setUserInfo(client.instantiate(ProtocolEndpoint)
-                        .setBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-                        .setUrl("https://idp.example.com/userinfo"))
-                    .setJwks(client.instantiate(ProtocolEndpoint)
-                        .setBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-                        .setUrl("https://idp.example.com/keys")))
-                .setScopes(["openid", "profile", "email"])
-                .setType(Protocol.TypeEnum.OIDC)
-                .setCredentials(client.instantiate(IdentityProviderCredentials)
-                    .setClient(client.instantiate(IdentityProviderCredentialsClient)
-                        .setClientId("your-client-id")
-                        .setClientSecret("your-client-secret")))
-                .setIssuer(client.instantiate(ProtocolEndpoint)
-                    .setUrl("https://idp.example.com")))
-            .setPolicy(client.instantiate(IdentityProviderPolicy)
-                .setAccountLink(client.instantiate(PolicyAccountLink)
-                    .setAction(PolicyAccountLink.ActionEnum.AUTO)
-                    .setFilter(null))
-                .setProvisioning(client.instantiate(Provisioning)
-                    .setAction(Provisioning.ActionEnum.AUTO)
-                    .setConditions(client.instantiate(ProvisioningConditions)
-                        .setDeprovisioned(client.instantiate(ProvisioningDeprovisionedCondition)
-                            .setAction(ProvisioningDeprovisionedCondition.ActionEnum.NONE))
-                        .setSuspended(client.instantiate(ProvisioningSuspendedCondition)
-                            .setAction(ProvisioningSuspendedCondition.ActionEnum.NONE)))
-                    .setGroups(client.instantiate(ProvisioningGroups)
-                        .setAction(ProvisioningGroups.ActionEnum.NONE)))
-                .setMaxClockSkew(120000)
-                .setSubject(client.instantiate(PolicySubject)
-                    .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate)
-                        .setTemplate("idpuser.email"))
-                    .setMatchType(PolicySubjectMatchType.USERNAME))))
+            .setRequestSignatureAlgorithm("SHA-256")
+            .setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum.REQUEST)
+            .setResponseSignatureAlgorithm("SHA-256")
+            .setResponseSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum.ANY)
+            .setAcsEndpointBinding(ProtocolEndpoint.BindingEnum.POST)
+            .setAcsEndpointType(ProtocolEndpoint.TypeEnum.INSTANCE)
+            .setAuthorizationEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
+            .setAuthorizationEndpointUrl("https://idp.example.com/authorize")
+            .setTokenEndpointBinding(ProtocolEndpoint.BindingEnum.POST)
+            .setTokenEndpointUrl("https://idp.example.com/token")
+            .setUserInfoEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
+            .setUserInfoEndpointUrl("https://idp.example.com/userinfo")
+            .setJwksEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
+            .setJwksEndpointUrl("https://idp.example.com/keys")
+            .setScopes(["openid", "profile", "email"])
+            .setProtocolType(Protocol.TypeEnum.OIDC)
+            .setClientId("your-client-id")
+            .setClientSecret("your-client-secret")
+            .setBaseUrl("https://idp.example.com")
+            .setMaxClockSkew(120000)
+            .setSubjectTemplate("idpuser.email")
+            .setPolicySubjectMatchType(PolicySubjectMatchType.USERNAME)
+            .buildAndCreate(client)
         registerForCleanup(createdIdp)
 
         // list linked idp users
