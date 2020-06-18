@@ -42,7 +42,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -61,7 +61,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -84,7 +84,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -110,7 +110,7 @@ class InlineHooksIT extends ITSupport {
         assertThat(updatedInlineHook.getId(), notNullValue())
         assertThat(updatedInlineHook.getId(), equalTo(createdInlineHook.getId()))
         assertThat(updatedInlineHook.getName(), equalTo("updated-" + name))
-        assertThat(updatedInlineHook.getType(), equalTo(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM))
+        assertThat(updatedInlineHook.getType(), equalTo(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM))
         assertThat(updatedInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooksUpdated"))
     }
 
@@ -120,7 +120,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -145,7 +145,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
@@ -163,7 +163,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
-            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKEN_TRANSFORM)
+            .setHookType(InlineHook.TypeEnum.OAUTH2_TOKENS_TRANSFORM)
             .setChannelType(InlineHookChannel.TypeEnum.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")

@@ -8602,14 +8602,11 @@ definitions:
         type: string
       type:
         enum:
-          - TEST
-          - TEST2
-          - WEBHOOK
-          - OAUTH2_TOKEN_TRANSFORM
-          - SAML_ASSERTION_TRANSFORM
-          - PRE_REGISTRATION
-          - IMPORT_TRANSFORM
-          - PASSWORD_IMPORT
+          - com.okta.oauth2.tokens.transform
+          - com.okta.import.transform
+          - com.okta.saml.tokens.transform
+          - com.okta.user.pre-registration
+          - com.okta.user.credential.password.import
         type: string
       version:
         type: string
