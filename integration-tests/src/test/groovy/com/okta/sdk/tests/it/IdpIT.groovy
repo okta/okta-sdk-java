@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.*
 class IdpIT extends ITSupport {
 
     @Test
-    void idpLifecycleTest() {
+    void oidcIdpLifecycleTest() {
 
         // create idp
         IdentityProvider createdIdp = OIDCIdentityProviderBuilder.instance()
@@ -164,7 +164,7 @@ class IdpIT extends ITSupport {
     }
 
     @Test
-    void idpUserTest() {
+    void oidcIdpUserTest() {
 
         // create user
         def email = "joe.coder+${uniqueTestName}@example.com"
@@ -231,5 +231,58 @@ class IdpIT extends ITSupport {
 
         // delete
         createdIdp.delete()
+    }
+
+    @Test
+    void googleIdpTest() {
+
+        // create user
+        def email = "joe.coder+${uniqueTestName}@example.com"
+        User createdUser = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName("Joe")
+            .setLastName("Code")
+            .setPassword("Password1".toCharArray())
+            .buildAndCreate(client)
+        registerForCleanup(createdUser)
+
+        // create google idp
+        IdentityProvider createdIdp = GoogleIdentityProviderBuilder.instance()
+            .setName("Mock Google IdP")
+            .setScopes(["openid", "profile", "email"])
+            .setProtocolType(Protocol.TypeEnum.OAUTH2)
+            .setClientId("your-client-id")
+            .setClientSecret("your-client-secret")
+            .setIsProfileMaster(true)
+            .setMaxClockSkew(120000)
+            .setUserNameTemplate("idpuser.email")
+            .setPolicySubjectMatchType(PolicySubjectMatchType.USERNAME)
+            .buildAndCreate(client)
+        registerForCleanup(createdIdp)
+
+        // list linked idp users
+        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+
+        // link user
+        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
+            client.instantiate(UserIdentityProviderLinkRequest)
+                .setExternalId("externalId"))
+
+        assertThat(createdIdp.listUsers(), iterableWithSize(1))
+        assertPresent(createdIdp.listUsers(), idpAppUser)
+
+        // unlink user
+        createdIdp.unlinkUser(createdUser.getId())
+
+        // list linked idp users
+        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+
+        // deactivate
+        createdIdp.deactivate()
+
+        // delete
+        createdIdp.delete()
+
+        assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 }
