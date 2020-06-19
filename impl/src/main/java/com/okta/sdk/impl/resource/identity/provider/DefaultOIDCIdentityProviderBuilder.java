@@ -17,9 +17,9 @@ package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
-import com.okta.sdk.resource.identity.provider.IdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
+import com.okta.sdk.resource.identity.provider.OIDCIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.Protocol;
 import com.okta.sdk.resource.identity.provider.ProtocolAlgorithmType;
 import com.okta.sdk.resource.identity.provider.ProtocolAlgorithmTypeSignature;
@@ -39,11 +39,7 @@ import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
 import java.util.List;
 
-/**
- * Builder for {@link IdentityProvider}.
- * @since 2.0.0
- */
-public class DefaultIdentityProviderBuilder implements IdentityProviderBuilder {
+public class DefaultOIDCIdentityProviderBuilder implements OIDCIdentityProviderBuilder {
 
     private String name;
     private IdentityProvider.TypeEnum type;
@@ -72,151 +68,145 @@ public class DefaultIdentityProviderBuilder implements IdentityProviderBuilder {
     private PolicySubjectMatchType policySubjectMatchType;
 
     @Override
-    public IdentityProviderBuilder setName(String name) {
+    public DefaultOIDCIdentityProviderBuilder setName(String name) {
         this.name = name;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setType(IdentityProvider.TypeEnum type) {
-        this.type = type;
-        return this;
-    }
-
-    @Override
-    public IdentityProviderBuilder setIssuerMode(IdentityProvider.IssuerModeEnum issuerMode) {
+    public DefaultOIDCIdentityProviderBuilder setIssuerMode(IdentityProvider.IssuerModeEnum issuerMode) {
         this.issuerMode = issuerMode;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setRequestSignatureAlgorithm(String requestSignatureAlgorithm) {
+    public DefaultOIDCIdentityProviderBuilder setRequestSignatureAlgorithm(String requestSignatureAlgorithm) {
         this.requestSignatureAlgorithm = requestSignatureAlgorithm;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum requestSignatureScope) {
+    public DefaultOIDCIdentityProviderBuilder setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum requestSignatureScope) {
         this.requestSignatureScope = requestSignatureScope;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setResponseSignatureAlgorithm(String responseSignatureAlgorithm) {
+    public DefaultOIDCIdentityProviderBuilder setResponseSignatureAlgorithm(String responseSignatureAlgorithm) {
         this.responseSignatureAlgorithm = responseSignatureAlgorithm;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setResponseSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum responseSignatureScope) {
+    public DefaultOIDCIdentityProviderBuilder setResponseSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum responseSignatureScope) {
         this.responseSignatureScope = responseSignatureScope;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setAcsEndpointBinding(ProtocolEndpoint.BindingEnum acsEndpointBinding) {
+    public DefaultOIDCIdentityProviderBuilder setAcsEndpointBinding(ProtocolEndpoint.BindingEnum acsEndpointBinding) {
         this.acsEndpointBinding = acsEndpointBinding;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setAcsEndpointType(ProtocolEndpoint.TypeEnum acsEndpointType) {
+    public DefaultOIDCIdentityProviderBuilder setAcsEndpointType(ProtocolEndpoint.TypeEnum acsEndpointType) {
         this.acsEndpointType = acsEndpointType;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setAuthorizationEndpointBinding(ProtocolEndpoint.BindingEnum authorizationEndpointBinding) {
+    public DefaultOIDCIdentityProviderBuilder setAuthorizationEndpointBinding(ProtocolEndpoint.BindingEnum authorizationEndpointBinding) {
         this.authorizationEndpointBinding = authorizationEndpointBinding;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setAuthorizationEndpointUrl(String authorizationEndpointUrl) {
+    public DefaultOIDCIdentityProviderBuilder setAuthorizationEndpointUrl(String authorizationEndpointUrl) {
         this.authorizationEndpointUrl = authorizationEndpointUrl;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setTokenEndpointBinding(ProtocolEndpoint.BindingEnum tokenEndpointBinding) {
+    public DefaultOIDCIdentityProviderBuilder setTokenEndpointBinding(ProtocolEndpoint.BindingEnum tokenEndpointBinding) {
         this.tokenEndpointBinding = tokenEndpointBinding;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setTokenEndpointUrl(String tokenEndpointUrl) {
+    public DefaultOIDCIdentityProviderBuilder setTokenEndpointUrl(String tokenEndpointUrl) {
         this.tokenEndpointUrl = tokenEndpointUrl;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setUserInfoEndpointBinding(ProtocolEndpoint.BindingEnum userInfoEndpointBinding) {
+    public DefaultOIDCIdentityProviderBuilder setUserInfoEndpointBinding(ProtocolEndpoint.BindingEnum userInfoEndpointBinding) {
         this.userInfoEndpointBinding = userInfoEndpointBinding;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setUserInfoEndpointUrl(String userInfoEndpointUrl) {
+    public DefaultOIDCIdentityProviderBuilder setUserInfoEndpointUrl(String userInfoEndpointUrl) {
         this.userInfoEndpointUrl = userInfoEndpointUrl;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setJwksEndpointBinding(ProtocolEndpoint.BindingEnum jwksEndpointBinding) {
+    public DefaultOIDCIdentityProviderBuilder setJwksEndpointBinding(ProtocolEndpoint.BindingEnum jwksEndpointBinding) {
         this.jwksEndpointBinding = jwksEndpointBinding;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setJwksEndpointUrl(String jwksEndpointUrl) {
+    public DefaultOIDCIdentityProviderBuilder setJwksEndpointUrl(String jwksEndpointUrl) {
         this.jwksEndpointUrl = jwksEndpointUrl;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setScopes(List<String> scopes) {
+    public DefaultOIDCIdentityProviderBuilder setScopes(List<String> scopes) {
         this.scopes = scopes;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setProtocolType(Protocol.TypeEnum protocolType) {
+    public DefaultOIDCIdentityProviderBuilder setProtocolType(Protocol.TypeEnum protocolType) {
         this.protocolType = protocolType;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setClientId(String clientId) {
+    public DefaultOIDCIdentityProviderBuilder setClientId(String clientId) {
         this.clientId = clientId;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setClientSecret(String clientSecret) {
+    public DefaultOIDCIdentityProviderBuilder setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setBaseUrl(String baseUrl) {
+    public DefaultOIDCIdentityProviderBuilder setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setMaxClockSkew(Integer maxClockSkew) {
+    public DefaultOIDCIdentityProviderBuilder setMaxClockSkew(Integer maxClockSkew) {
         this.maxClockSkew = maxClockSkew;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setSubjectTemplate(String subjectTemplate) {
+    public DefaultOIDCIdentityProviderBuilder setSubjectTemplate(String subjectTemplate) {
         this.subjectTemplate = subjectTemplate;
         return this;
     }
 
     @Override
-    public IdentityProviderBuilder setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType) {
+    public DefaultOIDCIdentityProviderBuilder setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType) {
         this.policySubjectMatchType = policySubjectMatchType;
         return this;
     }
@@ -224,7 +214,7 @@ public class DefaultIdentityProviderBuilder implements IdentityProviderBuilder {
     @Override
     public IdentityProvider buildAndCreate(Client client) {
         IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider.class)
-            .setType(type)
+            .setType(IdentityProvider.TypeEnum.OIDC)
             .setName(name)
             .setIssuerMode(issuerMode)
             .setProtocol(client.instantiate(Protocol.class)

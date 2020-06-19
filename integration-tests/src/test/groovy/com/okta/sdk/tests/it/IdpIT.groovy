@@ -36,8 +36,7 @@ class IdpIT extends ITSupport {
     void idpLifecycleTest() {
 
         // create idp
-        IdentityProvider createdIdp = IdentityProviderBuilder.instance()
-            .setType(IdentityProvider.TypeEnum.OIDC)
+        IdentityProvider createdIdp = OIDCIdentityProviderBuilder.instance()
             .setName("Mock OpenID Connect Id")
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
             .setRequestSignatureAlgorithm("SHA-256")
@@ -178,8 +177,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create idp
-        IdentityProvider createdIdp = IdentityProviderBuilder.instance()
-            .setType(IdentityProvider.TypeEnum.OIDC)
+        IdentityProvider createdIdp = OIDCIdentityProviderBuilder.instance()
             .setName("Mock OpenID Connect Id")
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
             .setRequestSignatureAlgorithm("SHA-256")
