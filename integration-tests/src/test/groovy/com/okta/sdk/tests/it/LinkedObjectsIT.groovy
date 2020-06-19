@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-Present Okta, Inc.
+ * Copyright 2020-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.LinkedObjectDetails
-import com.okta.sdk.resource.LinkedObjectDetailsType
 import com.okta.sdk.resource.linked.object.LinkedObject
+import com.okta.sdk.resource.linked.object.LinkedObjectDetailsType
+import com.okta.sdk.resource.linked.object.LinkedObjectDetails
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils

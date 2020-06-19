@@ -473,8 +473,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '201':
+          description: Created
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -527,8 +527,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '201':
+          description: Created
           schema:
             $ref: '#/definitions/OAuth2ScopeConsentGrant'
       security:
@@ -646,8 +646,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Remove Group from Application
@@ -769,8 +769,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -827,8 +827,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -965,8 +965,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Remove User from Application
@@ -1080,7 +1080,7 @@ paths:
           schema:
             $ref: '#/definitions/AuthorizationServer'
         '201':
-          description: Success
+          description: Created
       security:
         - api_token: []
       tags:
@@ -1099,8 +1099,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1195,7 +1195,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: Success
+          description: Created
           schema:
             $ref: '#/definitions/OAuth2Claim'
         '201':
@@ -1222,8 +1222,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1325,8 +1325,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1391,8 +1391,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1569,7 +1569,7 @@ paths:
           schema:
             $ref: '#/definitions/Policy'
         '201':
-          description: Success
+          description: Created
       security:
         - api_token: []
       tags:
@@ -1592,8 +1592,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1737,8 +1737,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -1854,8 +1854,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -2519,8 +2519,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -2584,7 +2584,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/Application'
+              $ref: '#/definitions/CatalogApplication'
             type: array
       security:
         - api_token: []
@@ -2612,8 +2612,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -3019,8 +3019,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Delete Key
@@ -3062,8 +3062,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Delete Identity Provider
@@ -3161,7 +3161,7 @@ paths:
           schema:
             $ref: '#/definitions/CsrMetadata'
       produces:
-        - application/pkcs10
+        - application/json
       responses:
         '201':
           description: Created
@@ -3401,8 +3401,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '201':
+          description: Created
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -3499,8 +3499,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Unlink User from IdP
@@ -3657,8 +3657,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -3756,7 +3756,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: successful operation
+          description: Success
           schema:
             $ref: '#/definitions/InlineHook'
       security:
@@ -3778,7 +3778,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: successful operation
+          description: Success
           schema:
             $ref: '#/definitions/InlineHook'
       security:
@@ -3865,8 +3865,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '201':
+          description: Created
           schema:
             $ref: '#/definitions/LinkedObject'
       security:
@@ -3887,8 +3887,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -4198,8 +4198,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -4218,8 +4218,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -4292,8 +4292,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -4395,8 +4395,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -4443,8 +4443,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Close Session
@@ -4558,8 +4558,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       summary: Remove SMS Template
@@ -4958,7 +4958,7 @@ paths:
       produces:
         - application/json
       responses:
-        '204':
+        '202':
           description: ACCEPTED
       security:
         - api_token: []
@@ -5122,8 +5122,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -5551,8 +5551,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -5861,8 +5861,8 @@ paths:
         - application/json
       description: >-
         Activates a user.  This operation can only be performed on users with a
-        `STAGED` status.  Activation of a user is an asynchronous operation. The
-        user will have the `transitioningToStatus` property with a value of
+        `STAGED` status.  Activation of a user is an asynchronous operation.
+        The user will have the `transitioningToStatus` property with a value of
         `ACTIVE` during activation to indicate that the user hasn't completed
         the asynchronous operation.  The user will have a status of `ACTIVE`
         when the activation process is complete.
@@ -6103,7 +6103,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: OK
+          description: Success
       security:
         - api_token: []
       summary: Unlock User
@@ -6126,7 +6126,7 @@ paths:
         - application/json
       responses:
         '200':
-          description: OK
+          description: Success
       security:
         - api_token: []
       summary: Unsuspend User
@@ -6153,7 +6153,7 @@ paths:
         - application/json
       responses:
         '204':
-          description: Success
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -6244,7 +6244,7 @@ paths:
         - application/json
       responses:
         '201':
-          description: Success
+          description: Created
           schema:
             $ref: '#/definitions/Role'
       security:
@@ -6269,8 +6269,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -6309,7 +6309,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/Application'
+              $ref: '#/definitions/CatalogApplication'
             type: array
       security:
         - api_token: []
@@ -6360,8 +6360,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -6516,8 +6516,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -6571,8 +6571,8 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
-          description: Success
+        '204':
+          description: No Content
       security:
         - api_token: []
       tags:
@@ -6605,6 +6605,8 @@ definitions:
           - APP
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   AppAndInstancePolicyRuleCondition:
     properties:
       exclude:
@@ -6616,6 +6618,8 @@ definitions:
           $ref: '#/definitions/AppAndInstanceConditionEvaluatorAppOrInstance'
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   AppInstancePolicyRuleCondition:
     properties:
       exclude:
@@ -6627,6 +6631,8 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   AppLink:
     properties:
       appAssignmentId:
@@ -7499,6 +7505,8 @@ definitions:
       lifecycleAction:
         $ref: '#/definitions/ScheduledUserLifecycleAction'
     type: object
+    x-okta-tags:
+      - Policy
   BookmarkApplication:
     properties:
       name:
@@ -7538,6 +7546,51 @@ definitions:
         template_swa: '#/definitions/SwaApplication'
         template_swa3field: '#/definitions/SwaThreeFieldApplication'
       propertyName: name
+  CatalogApplication:
+    properties:
+      id:
+        type: string
+        readOnly: true
+      name:
+        type: string
+      displayName:
+        type: string
+      description:
+        type: string
+      status:
+        $ref: '#/definitions/CatalogApplicationStatus'
+      lastUpdated:
+        format: date-time
+        readOnly: true
+        type: string
+      category:
+        type: string
+      verificationStatus:
+        type: string
+      website:
+        type: string
+      signOnModes:
+        items:
+          type: string
+        type: array
+      features:
+        items:
+          type: string
+        type: array
+      _links:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
+    x-okta-tags:
+      - Role
+  CatalogApplicationStatus:
+    enum:
+      - ACTIVE
+      - INACTIVE
+    type: string
+    x-okta-tags:
+      - Role
   Csr:
     properties:
       created:
@@ -7619,11 +7672,15 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   ContextPolicyRuleCondition:
     properties:
       expression:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   CreateSessionRequest:
     properties:
       sessionToken:
@@ -7661,6 +7718,8 @@ definitions:
           - TRUSTED
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   DevicePolicyRuleConditionPlatform:
     properties:
       supportedMDMFrameworks:
@@ -7672,6 +7731,8 @@ definitions:
           $ref: '#/definitions/Platforms'
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   Duration:
     properties:
       number:
@@ -7679,6 +7740,8 @@ definitions:
       unit:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   EmailUserFactor:
     properties:
       profile:
@@ -7789,6 +7852,8 @@ definitions:
         readOnly: false
         type: string
     type: object
+    x-okta-tags:
+      - EventHook
   EventHookChannelConfig:
     properties:
       authScheme:
@@ -7801,6 +7866,8 @@ definitions:
       uri:
         type: string
     type: object
+    x-okta-tags:
+      - EventHook
   EventHookChannelConfigAuthScheme:
     properties:
       key:
@@ -7810,6 +7877,8 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - EventHook
   EventHookChannelConfigAuthSchemeType:
     enum:
       - HEADER
@@ -7823,6 +7892,8 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - EventHook
   EventSubscriptions:
     properties:
       items:
@@ -7835,6 +7906,8 @@ definitions:
           - FLOW_EVENT
         type: string
     type: object
+    x-okta-tags:
+      - EventHook
   FactorProvider:
     enum:
       - OKTA
@@ -7976,6 +8049,8 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   Group:
     properties:
       _embedded:
@@ -8074,6 +8149,8 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   GroupProfile:
     properties:
       description:
@@ -8410,6 +8487,8 @@ definitions:
           type: object
         type: object
     type: object
+    x-okta-tags:
+      - IdentityProvider
   IdentityProviderCredentials:
     properties:
       client:
@@ -8419,6 +8498,8 @@ definitions:
       trust:
         $ref: '#/definitions/IdentityProviderCredentialsTrust'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   IdentityProviderCredentialsClient:
     properties:
       client_id:
@@ -8426,11 +8507,15 @@ definitions:
       client_secret:
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   IdentityProviderCredentialsSigning:
     properties:
       kid:
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   IdentityProviderCredentialsTrust:
     properties:
       audience:
@@ -8448,6 +8533,8 @@ definitions:
       revocationCacheLifetime:
         type: integer
     type: object
+    x-okta-tags:
+      - IdentityProvider
   IdentityProviderPolicy:
     properties:
       accountLink:
@@ -8475,6 +8562,8 @@ definitions:
           - SPECIFIC_IDP
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   InactivityPolicyRuleCondition:
     properties:
       number:
@@ -8482,6 +8571,8 @@ definitions:
       unit:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   InlineHook:
     properties:
       _links:
@@ -8505,21 +8596,9 @@ definitions:
       name:
         type: string
       status:
-        enum:
-          - ACTIVE
-          - INACTIVE
-        type: string
+        $ref: '#/definitions/InlineHookStatus'
       type:
-        enum:
-          - TEST
-          - TEST2
-          - WEBHOOK
-          - OAUTH2_TOKEN_TRANSFORM
-          - SAML_ASSERTION_TRANSFORM
-          - PRE_REGISTRATION
-          - IMPORT_TRANSFORM
-          - PASSWORD_IMPORT
-        type: string
+        $ref: '#/definitions/InlineHookType'
       version:
         type: string
     type: object
@@ -8560,6 +8639,8 @@ definitions:
           - dest: inlineHookId
             src: id
         operationId: executeInlineHook
+    x-okta-tags:
+      - InlineHook
   InlineHookChannel:
     properties:
       config:
@@ -8574,6 +8655,8 @@ definitions:
         readOnly: false
         type: string
     type: object
+    x-okta-tags:
+      - InlineHook
   InlineHookChannelConfig:
     properties:
       authScheme:
@@ -8586,6 +8669,8 @@ definitions:
       uri:
         type: string
     type: object
+    x-okta-tags:
+      - InlineHook
   InlineHookChannelConfigAuthScheme:
     properties:
       key:
@@ -8595,6 +8680,8 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - InlineHook
   InlineHookChannelConfigHeaders:
     properties:
       key:
@@ -8602,9 +8689,13 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - InlineHook
   InlineHookPayload:
     type: object
     x-okta-extensible: true
+    x-okta-tags:
+      - InlineHook
   InlineHookResponse:
     properties:
       commands:
@@ -8612,6 +8703,8 @@ definitions:
           $ref: '#/definitions/InlineHookResponseCommands'
         type: array
     type: object
+    x-okta-tags:
+      - InlineHook
   InlineHookResponseCommandValue:
     properties:
       op:
@@ -8620,6 +8713,8 @@ definitions:
         type: string
       value:
         type: string
+    x-okta-tags:
+      - InlineHook
   InlineHookResponseCommands:
     properties:
       type:
@@ -8628,6 +8723,25 @@ definitions:
         items:
           $ref: '#/definitions/InlineHookResponseCommandValue'
         type: array
+    x-okta-tags:
+      - InlineHook
+  InlineHookStatus:
+    enum:
+      - ACTIVE
+      - INACTIVE
+    type: string
+    x-okta-tags:
+      - InlineHook
+  InlineHookType:
+    enum:
+      - com.okta.oauth2.tokens.transform
+      - com.okta.import.transform
+      - com.okta.saml.tokens.transform
+      - com.okta.user.pre-registration
+      - com.okta.user.credential.password.import
+    type: string
+    x-okta-tags:
+      - InlineHook
   IonField:
     properties:
       form:
@@ -8651,6 +8765,8 @@ definitions:
       visible:
         type: boolean
     type: object
+    x-okta-tags:
+      - Ion
   IonForm:
     properties:
       accepts:
@@ -8679,6 +8795,8 @@ definitions:
         readOnly: true
         type: array
     type: object
+    x-okta-tags:
+      - Ion
   JsonWebKey:
     properties:
       _links:
@@ -8745,6 +8863,8 @@ definitions:
         enum:
           - sig
         type: string
+    x-okta-tags:
+      - Application
   LifecycleExpirationPolicyRuleCondition:
     properties:
       lifecycleStatus:
@@ -8754,6 +8874,8 @@ definitions:
       unit:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   LinkedObject:
     properties:
       _links:
@@ -8795,10 +8917,14 @@ definitions:
       type:
         $ref: '#/definitions/LinkedObjectDetailsType'
     type: object
+    x-okta-tags:
+      - LinkedObject
   LinkedObjectDetailsType:
     enum:
       - USER
     type: string
+    x-okta-tags:
+      - LinkedObject
   LogActor:
     properties:
       alternateId:
@@ -9143,6 +9269,8 @@ definitions:
           - ANY_OR_NONE
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   MDMFrameworks:
     enum:
       - authorization_code
@@ -9151,6 +9279,8 @@ definitions:
       - refresh_token
       - client_credentials
     type: string
+    x-okta-tags:
+      - Policy
   OAuth2Actor:
     properties:
       id:
@@ -9159,6 +9289,8 @@ definitions:
       type:
         type: string
     type: object
+    x-okta-tags:
+      - Application
   OAuth2Claim:
     properties:
       _links:
@@ -9203,6 +9335,8 @@ definitions:
           - SYSTEM
         type: string
     type: object
+    x-okta-tags:
+      - Application
   OAuth2ClaimConditions:
     properties:
       scopes:
@@ -9211,7 +9345,7 @@ definitions:
         type: array
     type: object
     x-okta-tags:
-      - AuthorizationServer
+      - Application
   OAuth2Client:
     properties:
       _links:
@@ -9232,6 +9366,8 @@ definitions:
         readOnly: true
         type: string
     type: object
+    x-okta-tags:
+      - Application
   OAuth2RefreshToken:
     properties:
       _embedded:
@@ -9277,6 +9413,8 @@ definitions:
       userId:
         type: string
     type: object
+    x-okta-tags:
+      - Application
   OAuth2Scope:
     properties:
       consent:
@@ -9304,6 +9442,8 @@ definitions:
       system:
         type: boolean
     type: object
+    x-okta-tags:
+      - Application
   OAuth2ScopeConsentGrant:
     properties:
       _embedded:
@@ -9317,6 +9457,8 @@ definitions:
         readOnly: true
         type: object
       clientId:
+        type: string
+      userId:
         type: string
       created:
         format: date-time
@@ -9363,6 +9505,8 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Application
   OAuth2Token:
     properties:
       _embedded:
@@ -9553,6 +9697,8 @@ definitions:
       - CUSTOM_URL
       - ORG_URL
     type: string
+    x-okta-tags:
+      - Application
   OpenIdConnectApplicationSettings:
     properties:
       oauthClient:
@@ -9671,6 +9817,8 @@ definitions:
       unit:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   PasswordPolicy:
     properties:
       conditions:
@@ -9943,6 +10091,8 @@ definitions:
       - OSX
       - WINDOWS
     type: string
+    x-okta-tags:
+      - Policy
   PlatformConditionEvaluatorPlatform:
     properties:
       os:
@@ -9955,6 +10105,8 @@ definitions:
           - ANY
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   PlatformConditionEvaluatorPlatformOperatingSystem:
     properties:
       expression:
@@ -9971,6 +10123,8 @@ definitions:
       version:
         $ref: '#/definitions/PlatformConditionEvaluatorPlatformOperatingSystemVersion'
     type: object
+    x-okta-tags:
+      - Policy
   PlatformConditionEvaluatorPlatformOperatingSystemVersion:
     properties:
       matchType:
@@ -9981,6 +10135,8 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   PlatformPolicyRuleCondition:
     properties:
       exclude:
@@ -9992,6 +10148,8 @@ definitions:
           $ref: '#/definitions/PlatformConditionEvaluatorPlatform'
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   Policy:
     properties:
       _embedded:
@@ -10096,11 +10254,15 @@ definitions:
       filter:
         $ref: '#/definitions/PolicyAccountLinkFilter'
     type: object
+    x-okta-tags:
+      - Policy
   PolicyAccountLinkFilter:
     properties:
       groups:
         $ref: '#/definitions/PolicyAccountLinkFilterGroups'
     type: object
+    x-okta-tags:
+      - Policy
   PolicyAccountLinkFilterGroups:
     properties:
       include:
@@ -10108,6 +10270,8 @@ definitions:
           type: string
         type: array
     type: object
+    x-okta-tags:
+      - Policy
   PolicyNetworkCondition:
     properties:
       connection:
@@ -10276,6 +10440,8 @@ definitions:
       userNameTemplate:
         $ref: '#/definitions/PolicyUserNameTemplate'
     type: object
+    x-okta-tags:
+      - Policy
   PolicySubjectMatchType:
     enum:
       - USERNAME
@@ -10283,6 +10449,8 @@ definitions:
       - USERNAME_OR_EMAIL
       - CUSTOM_ATTRIBUTE
     type: string
+    x-okta-tags:
+      - Policy
   PolicyType:
     enum:
       - OAUTH_AUTHORIZATION_POLICY
@@ -10297,6 +10465,8 @@ definitions:
       template:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   Protocol:
     properties:
       algorithms:
@@ -10323,11 +10493,15 @@ definitions:
           - MTLS
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolAlgorithmType:
     properties:
       signature:
         $ref: '#/definitions/ProtocolAlgorithmTypeSignature'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolAlgorithmTypeSignature:
     properties:
       algorithm:
@@ -10341,6 +10515,8 @@ definitions:
           - NONE
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolAlgorithms:
     properties:
       request:
@@ -10348,6 +10524,8 @@ definitions:
       response:
         $ref: '#/definitions/ProtocolAlgorithmType'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolEndpoint:
     properties:
       binding:
@@ -10365,6 +10543,8 @@ definitions:
       url:
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolEndpoints:
     properties:
       acs:
@@ -10384,21 +10564,29 @@ definitions:
       userInfo:
         $ref: '#/definitions/ProtocolEndpoint'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolRelayState:
     properties:
       format:
         $ref: '#/definitions/ProtocolRelayStateFormat'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProtocolRelayStateFormat:
     enum:
       - OPAQUE
       - FROM_URL
     type: string
+    x-okta-tags:
+      - IdentityProvider
   ProtocolSettings:
     properties:
       nameFormat:
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   Provisioning:
     properties:
       action:
@@ -10414,6 +10602,8 @@ definitions:
       profileMaster:
         type: boolean
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProvisioningConditions:
     properties:
       deprovisioned:
@@ -10421,6 +10611,8 @@ definitions:
       suspended:
         $ref: '#/definitions/ProvisioningSuspendedCondition'
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProvisioningDeprovisionedCondition:
     properties:
       action:
@@ -10429,6 +10621,8 @@ definitions:
           - REACTIVATE
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProvisioningGroups:
     properties:
       action:
@@ -10449,6 +10643,8 @@ definitions:
       sourceAttributeName:
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   ProvisioningSuspendedCondition:
     properties:
       action:
@@ -10457,6 +10653,8 @@ definitions:
           - UNSUSPEND
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   PushUserFactor:
     properties:
       expiresAt:
@@ -10506,6 +10704,8 @@ definitions:
   ResponseLinks:
     properties: {}
     type: object
+    x-okta-tags:
+      - User
   RiskPolicyRuleCondition:
     properties:
       behaviors:
@@ -10514,11 +10714,15 @@ definitions:
         type: array
         uniqueItems: true
     type: object
+    x-okta-tags:
+      - Policy
   RiskScorePolicyRuleCondition:
     properties:
       level:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   Role:
     properties:
       _embedded:
@@ -10720,6 +10924,8 @@ definitions:
           - DELETING
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   SchemeApplicationCredentials:
     properties:
       password:
@@ -10984,6 +11190,8 @@ definitions:
   SmsTemplateTranslations:
     type: object
     x-okta-extensible: true
+    x-okta-tags:
+      - Template
   SmsTemplateType:
     enum:
       - SMS_VERIFY_CODE
@@ -11026,6 +11234,8 @@ definitions:
           - REFRESH
         type: string
     type: object
+    x-okta-tags:
+      - IdentityProvider
   SwaApplication:
     properties:
       name:
@@ -11274,11 +11484,6 @@ definitions:
             self: true
         operationId: deactivateOrDeleteUser
     x-okta-operations:
-      - alias: endAllSessions
-        arguments:
-          - dest: userId
-            src: id
-        operationId: clearUserSessions
       - alias: listAppLinks
         arguments:
           - dest: userId
@@ -11304,11 +11509,6 @@ definitions:
           - dest: userId
             src: id
         operationId: forgotPasswordGenerateOneTimeToken
-      - alias: listRoles
-        arguments:
-          - dest: userId
-            src: id
-        operationId: listAssignedRolesForUser
       - alias: assignRole
         arguments:
           - dest: userId
@@ -11319,21 +11519,31 @@ definitions:
           - dest: userId
             src: id
         operationId: removeRoleFromUser
-      - alias: listGroupTargetsForRole
+      - alias: listGroupTargets
         arguments:
           - dest: userId
             src: id
         operationId: listGroupTargetsForRole
-      - alias: removeGroupTargetFromRole
+      - alias: removeGroupTarget
         arguments:
           - dest: userId
             src: id
         operationId: removeGroupTargetFromRole
-      - alias: addGroupTargetToRole
+      - alias: addGroupTarget
         arguments:
           - dest: userId
             src: id
         operationId: addGroupTargetToRole
+      - alias: listAssignedRoles
+        arguments:
+          - dest: userId
+            src: id
+        operationId: listAssignedRolesForUser
+      - alias: addAllAppsAsTarget
+        arguments:
+          - dest: userId
+            src: id
+        operationId: addAllAppsAsTargetToRole
       - alias: listGroups
         arguments:
           - dest: userId
@@ -11419,6 +11629,11 @@ definitions:
           - dest: userId
             src: id
         operationId: expirePassword
+      - alias: expirePasswordAndGetTemporaryPassword
+        arguments:
+          - dest: userId
+            src: id
+        operationId: expirePasswordAndGetTemporaryPassword
       - alias: unlock
         arguments:
           - dest: userId
@@ -11480,6 +11695,16 @@ definitions:
           - dest: userId
             src: id
         operationId: getLinkedObjectsForUser
+      - alias: clearSessions
+        arguments:
+          - dest: userId
+            src: id
+        operationId: clearUserSessions
+      - alias: removeLinkedObject
+        arguments:
+          - dest: userId
+            src: id
+        operationId: removeLinkedObjectForUser
     x-okta-tags:
       - User
   UserActivationToken:
@@ -11601,6 +11826,8 @@ definitions:
       value:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   UserIdentifierPolicyRuleCondition:
     properties:
       attribute:
@@ -11615,11 +11842,15 @@ definitions:
           - ATTRIBUTE
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   UserIdentityProviderLinkRequest:
     properties:
       externalId:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   UserLifecycleAttributePolicyRuleCondition:
     properties:
       attributeName:
@@ -11627,6 +11858,8 @@ definitions:
       matchingValue:
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   UserNextLogin:
     enum:
       - changePassword
@@ -11652,6 +11885,8 @@ definitions:
       userLifecycleAttribute:
         $ref: '#/definitions/UserLifecycleAttributePolicyRuleCondition'
     type: object
+    x-okta-tags:
+      - Policy
   UserProfile:
     properties:
       city:
@@ -11747,6 +11982,8 @@ definitions:
           - DELETING
         type: string
     type: object
+    x-okta-tags:
+      - Policy
   UserType:
     properties:
       _links:
@@ -11781,10 +12018,17 @@ definitions:
         type: string
     type: object
     x-okta-crud:
+      - alias: create
+        arguments:
+          - dest: userType
+            self: true
+        operationId: createUserType
       - alias: update
         arguments:
           - dest: typeId
             src: id
+          - dest: userType
+            self: true
         operationId: updateUserType
       - alias: read
         arguments:
@@ -11802,6 +12046,8 @@ definitions:
           - dest: roleId
             src: id
         operationId: replaceUserType
+    x-okta-tags:
+      - UserType
   VerifyFactorRequest:
     properties:
       activationToken:
