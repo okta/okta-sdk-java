@@ -103,7 +103,7 @@ public class DefaultInlineHookBuilder implements InlineHookBuilder {
             .setAuthScheme(inlineHookChannelConfigAuthScheme);
 
         InlineHookChannel inlineHookChannel = client.instantiate(InlineHookChannel.class)
-            .setType(InlineHookChannel.TypeEnum.HTTP)
+            .setType(channelType)
             .setVersion(VERSION)
             .setConfig(inlineHookChannelConfig);
 
