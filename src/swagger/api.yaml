@@ -11812,6 +11812,7 @@ definitions:
         'token:software:totp': '#/definitions/TotpUserFactor'
         u2f: '#/definitions/U2fUserFactor'
         web: '#/definitions/WebUserFactor'
+        webauthn: '#/definitions/WebAuthnUserFactor'
       propertyName: factorType
   UserIdentifierConditionEvaluatorPattern:
     properties:
@@ -12110,6 +12111,21 @@ definitions:
   WebUserFactorProfile:
     properties:
       credentialId:
+        type: string
+    x-okta-tags:
+      - UserFactor
+  WebAuthnUserFactor:
+    properties:
+      profile:
+        $ref: '#/definitions/WebAuthnUserFactorProfile'
+    x-okta-parent: '#/definitions/UserFactor'
+    x-okta-tags:
+      - UserFactor
+  WebAuthnUserFactorProfile:
+    properties:
+      credentialId:
+        type: string
+      authenticatorName:
         type: string
     x-okta-tags:
       - UserFactor
