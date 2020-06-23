@@ -17,9 +17,9 @@ package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
+import com.okta.sdk.resource.identity.provider.IdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
-import com.okta.sdk.resource.identity.provider.OIDCIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.Protocol;
 import com.okta.sdk.resource.identity.provider.ProtocolAlgorithmType;
 import com.okta.sdk.resource.identity.provider.ProtocolAlgorithmTypeSignature;
@@ -39,7 +39,7 @@ import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
 import java.util.List;
 
-public class DefaultOIDCIdentityProviderBuilder implements OIDCIdentityProviderBuilder {
+public class DefaultOIDCIdentityProviderBuilder implements IdentityProviderBuilder.OIDCIdentityProviderBuilder {
 
     private String name;
     private IdentityProvider.TypeEnum type;
@@ -59,7 +59,6 @@ public class DefaultOIDCIdentityProviderBuilder implements OIDCIdentityProviderB
     private ProtocolEndpoint.BindingEnum jwksEndpointBinding;
     private String jwksEndpointUrl;
     private List<String> scopes;
-    private Protocol.TypeEnum protocolType;
     private String clientId;
     private String clientSecret;
     private String baseUrl;
@@ -170,12 +169,6 @@ public class DefaultOIDCIdentityProviderBuilder implements OIDCIdentityProviderB
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setProtocolType(Protocol.TypeEnum protocolType) {
-        this.protocolType = protocolType;
-        return this;
-    }
-
-    @Override
     public DefaultOIDCIdentityProviderBuilder setClientId(String clientId) {
         this.clientId = clientId;
         return this;
@@ -244,7 +237,7 @@ public class DefaultOIDCIdentityProviderBuilder implements OIDCIdentityProviderB
                         .setBinding(jwksEndpointBinding)
                         .setUrl(jwksEndpointUrl)))
                 .setScopes(scopes)
-                .setType(protocolType)
+                .setType(Protocol.TypeEnum.OIDC)
             .setCredentials(client.instantiate(IdentityProviderCredentials.class)
                 .setClient(client.instantiate(IdentityProviderCredentialsClient.class)
                     .setClientId(clientId)

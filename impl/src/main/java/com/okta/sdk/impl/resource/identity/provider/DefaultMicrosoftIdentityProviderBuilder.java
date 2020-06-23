@@ -34,7 +34,7 @@ import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
 import java.util.List;
 
-public class DefaultGoogleIdentityProviderBuilder implements IdentityProviderBuilder.GoogleIdentityProviderBuilder {
+public class DefaultMicrosoftIdentityProviderBuilder implements IdentityProviderBuilder.MicrosoftIdentityProviderBuilder {
 
     private String name;
     private List<String> scopes;
@@ -46,49 +46,49 @@ public class DefaultGoogleIdentityProviderBuilder implements IdentityProviderBui
     private PolicySubjectMatchType policySubjectMatchType;
 
     @Override
-    public DefaultGoogleIdentityProviderBuilder setName(String name) {
+    public DefaultMicrosoftIdentityProviderBuilder setName(String name) {
         this.name = name;
         return this;
     }
 
     @Override
-    public DefaultGoogleIdentityProviderBuilder setScopes(List<String> scopes) {
+    public DefaultMicrosoftIdentityProviderBuilder setScopes(List<String> scopes) {
         this.scopes = scopes;
         return this;
     }
 
     @Override
-    public DefaultGoogleIdentityProviderBuilder setClientId(String clientId) {
+    public DefaultMicrosoftIdentityProviderBuilder setClientId(String clientId) {
         this.clientId = clientId;
         return this;
     }
 
     @Override
-    public DefaultGoogleIdentityProviderBuilder setClientSecret(String clientSecret) {
+    public DefaultMicrosoftIdentityProviderBuilder setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
         return this;
     }
 
     @Override
-    public DefaultGoogleIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
+    public DefaultMicrosoftIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
         this.isProfileMaster = isProfileMaster;
         return this;
     }
 
     @Override
-    public DefaultGoogleIdentityProviderBuilder setMaxClockSkew(Integer maxClockSkew) {
+    public DefaultMicrosoftIdentityProviderBuilder setMaxClockSkew(Integer maxClockSkew) {
         this.maxClockSkew = maxClockSkew;
         return this;
     }
 
     @Override
-    public DefaultGoogleIdentityProviderBuilder setUserNameTemplate(String userNameTemplate) {
+    public DefaultMicrosoftIdentityProviderBuilder setUserNameTemplate(String userNameTemplate) {
         this.userNameTemplate = userNameTemplate;
         return this;
     }
 
     @Override
-    public DefaultGoogleIdentityProviderBuilder setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType) {
+    public DefaultMicrosoftIdentityProviderBuilder setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType) {
         this.policySubjectMatchType = policySubjectMatchType;
         return this;
     }
@@ -97,7 +97,7 @@ public class DefaultGoogleIdentityProviderBuilder implements IdentityProviderBui
     public IdentityProvider buildAndCreate(Client client) {
 
         IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider.class)
-            .setType(IdentityProvider.TypeEnum.GOOGLE)
+            .setType(IdentityProvider.TypeEnum.MICROSOFT)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
                 .setType(Protocol.TypeEnum.OIDC)
