@@ -32,6 +32,7 @@ import com.okta.sdk.resource.log.LogSeverity
 import com.okta.sdk.resource.log.LogTransaction
 import com.okta.sdk.resource.log.LogUserAgent
 import org.mockito.Mockito
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 import java.time.Instant
@@ -42,13 +43,17 @@ import static org.hamcrest.Matchers.*
 import static org.hamcrest.MatcherAssert.*
 
 class LogsTest {
+    def client
+
+    @BeforeMethod
+    void setup() {
+        // mock the response objects in the client
+        client = new MockClient()
+            .withMockResponse(Mockito.any(Request), '/stubs/logs.json')
+    }
 
     @Test
     void testGetLogs() {
-
-        // Mock the response objects in the client
-        MockClient client = new MockClient()
-                .withMockResponse(Mockito.any(Request), '/stubs/logs.json')
 
         // get the list of logs
         List<LogEvent> logs = client.getLogs().stream().collect(Collectors.toList())
@@ -99,6 +104,7 @@ class LogsTest {
 
         assertThat log.displayMessage, equalTo("Deactivate Okta User")
         assertThat log.eventType, equalTo("user.lifecycle.deactivate")
+        assertThat log.getPublished(), instanceOf(Date)
         assertThat log.getPublished(), equalTo(expectedDate)
         assertThat log.getSeverity(), equalTo(LogSeverity.INFO)
         assertThat log.uuid, equalTo("0626e18a-3d17-40fb-a1f3-094be1f39208")
@@ -144,5 +150,39 @@ class LogsTest {
         assertThat log.getRequest().getIpChain().get(0).getGeographicalContext().getGeolocation(), instanceOf(LogGeolocation)
         assertThat log.getRequest().getIpChain().get(0).getGeographicalContext().getGeolocation().lat, equalTo(43.3091d)
         assertThat log.getRequest().getIpChain().get(0).getGeographicalContext().getGeolocation().lon, equalTo(-71.6861d)
+    }
+
+    @Test
+    void testGetLogsBetweenDates() {
+
+        // get the events between the 'until' and 'since' date params
+        Date untilDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:16:00.081Z")))
+        Date sinceDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:15:16.838Z")))
+
+        List<LogEvent> logs = client.getLogs(untilDate, sinceDate, null, null, null).stream().collect(Collectors.toList())
+        assertThat logs, hasSize(100)
+        logs.forEach { assertThat it, instanceOf(LogEvent) }
+    }
+
+    @Test
+    void testGetLogsSinceDate() {
+
+        // get the events since given date
+        Date sinceDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:15:16.838Z")))
+
+        List<LogEvent> logs = client.getLogs(null, sinceDate, null, null, null).stream().collect(Collectors.toList())
+        assertThat logs, hasSize(100)
+        logs.forEach { assertThat it, instanceOf(LogEvent) }
+    }
+
+    @Test
+    void testGetLogsUntilDate() {
+
+        // get the events until given date
+        Date untilDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:16:00.081Z")))
+
+        List<LogEvent> logs = client.getLogs(untilDate, null, null, null, null).stream().collect(Collectors.toList())
+        assertThat logs, hasSize(100)
+        logs.forEach { assertThat it, instanceOf(LogEvent) }
     }
 }
