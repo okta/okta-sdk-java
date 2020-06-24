@@ -107,7 +107,6 @@ class LogsTest {
 
         assertThat log.displayMessage, equalTo("Deactivate Okta User")
         assertThat log.eventType, equalTo("user.lifecycle.deactivate")
-        assertThat log.getPublished(), instanceOf(Date)
         assertThat log.getPublished(), equalTo(expectedDate)
         assertThat log.getSeverity(), equalTo(LogSeverity.INFO)
         assertThat log.uuid, equalTo("0626e18a-3d17-40fb-a1f3-094be1f39208")
@@ -158,10 +157,10 @@ class LogsTest {
     @Test
     void testGetLogsBetweenDates() {
 
-        // get the events between 'since' and 'until' dates
         Date sinceDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:15:16.838Z")))
         Date untilDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:16:00.081Z")))
-
+        
+        // get log events between dates
         List<LogEvent> logs = client.getLogs(sinceDate, untilDate, null, null, null).stream().collect(Collectors.toList())
         logs.forEach { assertThat it, instanceOf(LogEvent) }
 
@@ -174,9 +173,9 @@ class LogsTest {
     @Test
     void testGetLogsSinceDate() {
 
-        // get the events since given date
         Date sinceDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:15:16.838Z")))
 
+        // get log events since given date
         List<LogEvent> logs = client.getLogs(sinceDate, null, null, null, null).stream().collect(Collectors.toList())
         assertThat logs, hasSize(100)
         logs.forEach { assertThat it, instanceOf(LogEvent) }
@@ -189,9 +188,9 @@ class LogsTest {
     @Test
     void testGetLogsUntilDate() {
 
-        // get the events until given date
         Date untilDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:16:00.081Z")))
 
+        // get log events until given date
         List<LogEvent> logs = client.getLogs(null, untilDate, null, null, null).stream().collect(Collectors.toList())
         assertThat logs, hasSize(100)
         logs.forEach { assertThat it, instanceOf(LogEvent) }
