@@ -16,10 +16,12 @@
 package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.identity.provider.FacebookIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
 import com.okta.sdk.resource.identity.provider.IdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
+import com.okta.sdk.resource.identity.provider.OIDCIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.Protocol;
 import com.okta.sdk.resource.identity.provider.Provisioning;
 import com.okta.sdk.resource.identity.provider.ProvisioningConditions;
@@ -34,62 +36,21 @@ import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
 import java.util.List;
 
-public class DefaultFacebookIdentityProviderBuilder implements IdentityProviderBuilder.FacebookIdentityProviderBuilder {
+public class DefaultFacebookIdentityProviderBuilder extends DefaultIdentityProviderBuilder<FacebookIdentityProviderBuilder>
+    implements FacebookIdentityProviderBuilder {
 
-    private String name;
-    private List<String> scopes;
-    private String clientId;
-    private String clientSecret;
     private Boolean isProfileMaster;
-    private Integer maxClockSkew;
     private String userNameTemplate;
-    private PolicySubjectMatchType policySubjectMatchType;
 
     @Override
-    public DefaultFacebookIdentityProviderBuilder setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public DefaultFacebookIdentityProviderBuilder setScopes(List<String> scopes) {
-        this.scopes = scopes;
-        return this;
-    }
-
-    @Override
-    public DefaultFacebookIdentityProviderBuilder setClientId(String clientId) {
-        this.clientId = clientId;
-        return this;
-    }
-
-    @Override
-    public DefaultFacebookIdentityProviderBuilder setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-        return this;
-    }
-
-    @Override
-    public DefaultFacebookIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
+    public FacebookIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
         this.isProfileMaster = isProfileMaster;
         return this;
     }
 
     @Override
-    public DefaultFacebookIdentityProviderBuilder setMaxClockSkew(Integer maxClockSkew) {
-        this.maxClockSkew = maxClockSkew;
-        return this;
-    }
-
-    @Override
-    public DefaultFacebookIdentityProviderBuilder setUserNameTemplate(String userNameTemplate) {
+    public FacebookIdentityProviderBuilder setUserNameTemplate(String userNameTemplate) {
         this.userNameTemplate = userNameTemplate;
-        return this;
-    }
-
-    @Override
-    public DefaultFacebookIdentityProviderBuilder setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType) {
-        this.policySubjectMatchType = policySubjectMatchType;
         return this;
     }
 

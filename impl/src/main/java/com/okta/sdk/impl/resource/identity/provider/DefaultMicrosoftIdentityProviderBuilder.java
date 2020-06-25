@@ -20,6 +20,8 @@ import com.okta.sdk.resource.identity.provider.IdentityProvider;
 import com.okta.sdk.resource.identity.provider.IdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
+import com.okta.sdk.resource.identity.provider.LinkedInIdentityProviderBuilder;
+import com.okta.sdk.resource.identity.provider.MicrosoftIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.Protocol;
 import com.okta.sdk.resource.identity.provider.Provisioning;
 import com.okta.sdk.resource.identity.provider.ProvisioningConditions;
@@ -34,50 +36,15 @@ import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
 import java.util.List;
 
-public class DefaultMicrosoftIdentityProviderBuilder implements IdentityProviderBuilder.MicrosoftIdentityProviderBuilder {
+public class DefaultMicrosoftIdentityProviderBuilder extends DefaultIdentityProviderBuilder<MicrosoftIdentityProviderBuilder>
+    implements MicrosoftIdentityProviderBuilder {
 
-    private String name;
-    private List<String> scopes;
-    private String clientId;
-    private String clientSecret;
     private Boolean isProfileMaster;
-    private Integer maxClockSkew;
     private String userNameTemplate;
-    private PolicySubjectMatchType policySubjectMatchType;
-
-    @Override
-    public DefaultMicrosoftIdentityProviderBuilder setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public DefaultMicrosoftIdentityProviderBuilder setScopes(List<String> scopes) {
-        this.scopes = scopes;
-        return this;
-    }
-
-    @Override
-    public DefaultMicrosoftIdentityProviderBuilder setClientId(String clientId) {
-        this.clientId = clientId;
-        return this;
-    }
-
-    @Override
-    public DefaultMicrosoftIdentityProviderBuilder setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-        return this;
-    }
 
     @Override
     public DefaultMicrosoftIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
         this.isProfileMaster = isProfileMaster;
-        return this;
-    }
-
-    @Override
-    public DefaultMicrosoftIdentityProviderBuilder setMaxClockSkew(Integer maxClockSkew) {
-        this.maxClockSkew = maxClockSkew;
         return this;
     }
 
@@ -88,15 +55,9 @@ public class DefaultMicrosoftIdentityProviderBuilder implements IdentityProvider
     }
 
     @Override
-    public DefaultMicrosoftIdentityProviderBuilder setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType) {
-        this.policySubjectMatchType = policySubjectMatchType;
-        return this;
-    }
-
-    @Override
     public IdentityProvider buildAndCreate(Client client) {
 
-        IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider.class)
+        return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
             .setType(IdentityProvider.TypeEnum.MICROSOFT)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
@@ -125,7 +86,5 @@ public class DefaultMicrosoftIdentityProviderBuilder implements IdentityProvider
                         .setTemplate(userNameTemplate))
                     .setMatchType(policySubjectMatchType))
                 .setMaxClockSkew(maxClockSkew)));
-
-        return createdIdp;
     }
 }

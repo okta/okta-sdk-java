@@ -36,7 +36,7 @@ class IdpIT extends ITSupport {
     void oidcIdpLifecycleTest() {
 
         // create idp
-        IdentityProvider createdIdp = IdentityProviderBuilder.oidc()
+        IdentityProvider createdIdp = OIDCIdentityProviderBuilder.instance()
             .setName("Mock OpenID Connect Id")
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
             .setRequestSignatureAlgorithm("SHA-256")
@@ -176,7 +176,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create idp
-        IdentityProvider createdIdp = IdentityProviderBuilder.oidc()
+        IdentityProvider createdIdp = OIDCIdentityProviderBuilder.instance()
             .setName("Mock OpenID Connect Id")
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
             .setRequestSignatureAlgorithm("SHA-256")
@@ -245,7 +245,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create Google idp
-        IdentityProvider createdIdp = IdentityProviderBuilder.google()
+        IdentityProvider createdIdp = GoogleIdentityProviderBuilder.instance()
             .setName("Mock Google IdP")
             .setScopes(["openid", "profile", "email"])
             .setClientId("your-client-id")
@@ -297,7 +297,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create Facebook idp
-        IdentityProvider createdIdp = IdentityProviderBuilder.facebook()
+        IdentityProvider createdIdp = FacebookIdentityProviderBuilder.instance()
             .setName("Mock Facebook IdP")
             .setScopes(["public_profile", "email"])
             .setClientId("your-client-id")
@@ -349,7 +349,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create Microsoft idp
-        IdentityProvider createdIdp = IdentityProviderBuilder.microsoft()
+        IdentityProvider createdIdp = MicrosoftIdentityProviderBuilder.instance()
             .setName("Mock Microsoft IdP")
             .setScopes(["openid", "email", "profile", "https://graph.microsoft.com/User.Read"])
             .setClientId("your-client-id")
@@ -401,7 +401,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create Linkedin idp
-        IdentityProvider createdIdp = IdentityProviderBuilder.linkedin()
+        IdentityProvider createdIdp = LinkedInIdentityProviderBuilder.instance()
             .setName("Mock LinkedIn IdP")
             .setScopes(["r_basicprofile", "r_emailaddress"])
             .setClientId("your-client-id")

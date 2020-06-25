@@ -16,10 +16,12 @@
 package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.identity.provider.GoogleIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
 import com.okta.sdk.resource.identity.provider.IdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
+import com.okta.sdk.resource.identity.provider.LinkedInIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.Protocol;
 import com.okta.sdk.resource.identity.provider.Provisioning;
 import com.okta.sdk.resource.identity.provider.ProvisioningConditions;
@@ -34,50 +36,15 @@ import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
 import java.util.List;
 
-public class DefaultLinkedInIdentityProviderBuilder implements IdentityProviderBuilder.LinkedInIdentityProviderBuilder {
+public class DefaultLinkedInIdentityProviderBuilder extends DefaultIdentityProviderBuilder<LinkedInIdentityProviderBuilder>
+    implements LinkedInIdentityProviderBuilder {
 
-    private String name;
-    private List<String> scopes;
-    private String clientId;
-    private String clientSecret;
     private Boolean isProfileMaster;
-    private Integer maxClockSkew;
     private String userNameTemplate;
-    private PolicySubjectMatchType policySubjectMatchType;
-
-    @Override
-    public DefaultLinkedInIdentityProviderBuilder setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public DefaultLinkedInIdentityProviderBuilder setScopes(List<String> scopes) {
-        this.scopes = scopes;
-        return this;
-    }
-
-    @Override
-    public DefaultLinkedInIdentityProviderBuilder setClientId(String clientId) {
-        this.clientId = clientId;
-        return this;
-    }
-
-    @Override
-    public DefaultLinkedInIdentityProviderBuilder setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-        return this;
-    }
 
     @Override
     public DefaultLinkedInIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
         this.isProfileMaster = isProfileMaster;
-        return this;
-    }
-
-    @Override
-    public DefaultLinkedInIdentityProviderBuilder setMaxClockSkew(Integer maxClockSkew) {
-        this.maxClockSkew = maxClockSkew;
         return this;
     }
 
@@ -88,15 +55,9 @@ public class DefaultLinkedInIdentityProviderBuilder implements IdentityProviderB
     }
 
     @Override
-    public DefaultLinkedInIdentityProviderBuilder setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType) {
-        this.policySubjectMatchType = policySubjectMatchType;
-        return this;
-    }
-
-    @Override
     public IdentityProvider buildAndCreate(Client client) {
 
-        IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider.class)
+        return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
             .setType(IdentityProvider.TypeEnum.LINKEDIN)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
@@ -125,7 +86,5 @@ public class DefaultLinkedInIdentityProviderBuilder implements IdentityProviderB
                         .setTemplate(userNameTemplate))
                     .setMatchType(policySubjectMatchType))
                 .setMaxClockSkew(maxClockSkew)));
-
-        return createdIdp;
     }
 }

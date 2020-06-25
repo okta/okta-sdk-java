@@ -17,9 +17,9 @@ package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
-import com.okta.sdk.resource.identity.provider.IdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
+import com.okta.sdk.resource.identity.provider.OIDCIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.Protocol;
 import com.okta.sdk.resource.identity.provider.ProtocolAlgorithmType;
 import com.okta.sdk.resource.identity.provider.ProtocolAlgorithmTypeSignature;
@@ -34,15 +34,11 @@ import com.okta.sdk.resource.identity.provider.ProvisioningSuspendedCondition;
 import com.okta.sdk.resource.policy.IdentityProviderPolicy;
 import com.okta.sdk.resource.policy.PolicyAccountLink;
 import com.okta.sdk.resource.policy.PolicySubject;
-import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
-import java.util.List;
+public class DefaultOIDCIdentityProviderBuilder extends DefaultIdentityProviderBuilder<OIDCIdentityProviderBuilder>
+    implements OIDCIdentityProviderBuilder {
 
-public class DefaultOIDCIdentityProviderBuilder implements IdentityProviderBuilder.OIDCIdentityProviderBuilder {
-
-    private String name;
-    private IdentityProvider.TypeEnum type;
     private IdentityProvider.IssuerModeEnum issuerMode;
     private String requestSignatureAlgorithm;
     private ProtocolAlgorithmTypeSignature.ScopeEnum requestSignatureScope;
@@ -58,19 +54,8 @@ public class DefaultOIDCIdentityProviderBuilder implements IdentityProviderBuild
     private String userInfoEndpointUrl;
     private ProtocolEndpoint.BindingEnum jwksEndpointBinding;
     private String jwksEndpointUrl;
-    private List<String> scopes;
-    private String clientId;
-    private String clientSecret;
     private String baseUrl;
-    private Integer maxClockSkew;
     private String subjectTemplate;
-    private PolicySubjectMatchType policySubjectMatchType;
-
-    @Override
-    public DefaultOIDCIdentityProviderBuilder setName(String name) {
-        this.name = name;
-        return this;
-    }
 
     @Override
     public DefaultOIDCIdentityProviderBuilder setIssuerMode(IdentityProvider.IssuerModeEnum issuerMode) {
@@ -163,32 +148,8 @@ public class DefaultOIDCIdentityProviderBuilder implements IdentityProviderBuild
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setScopes(List<String> scopes) {
-        this.scopes = scopes;
-        return this;
-    }
-
-    @Override
-    public DefaultOIDCIdentityProviderBuilder setClientId(String clientId) {
-        this.clientId = clientId;
-        return this;
-    }
-
-    @Override
-    public DefaultOIDCIdentityProviderBuilder setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-        return this;
-    }
-
-    @Override
     public DefaultOIDCIdentityProviderBuilder setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
-        return this;
-    }
-
-    @Override
-    public DefaultOIDCIdentityProviderBuilder setMaxClockSkew(Integer maxClockSkew) {
-        this.maxClockSkew = maxClockSkew;
         return this;
     }
 
@@ -199,14 +160,8 @@ public class DefaultOIDCIdentityProviderBuilder implements IdentityProviderBuild
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType) {
-        this.policySubjectMatchType = policySubjectMatchType;
-        return this;
-    }
-
-    @Override
     public IdentityProvider buildAndCreate(Client client) {
-        IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider.class)
+        return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
             .setType(IdentityProvider.TypeEnum.OIDC)
             .setName(name)
             .setIssuerMode(issuerMode)
@@ -215,7 +170,7 @@ public class DefaultOIDCIdentityProviderBuilder implements IdentityProviderBuild
                     .setRequest(client.instantiate(ProtocolAlgorithmType.class)
                         .setSignature(client.instantiate(ProtocolAlgorithmTypeSignature.class)
                             .setAlgorithm(requestSignatureAlgorithm)
-                            .setScope(ProtocolAlgorithmTypeSignature.ScopeEnum.REQUEST)))
+                            .setScope(requestSignatureScope)))
                     .setResponse(client.instantiate(ProtocolAlgorithmType.class)
                         .setSignature(client.instantiate(ProtocolAlgorithmTypeSignature.class)
                             .setAlgorithm(responseSignatureAlgorithm)
@@ -238,31 +193,29 @@ public class DefaultOIDCIdentityProviderBuilder implements IdentityProviderBuild
                         .setUrl(jwksEndpointUrl)))
                 .setScopes(scopes)
                 .setType(Protocol.TypeEnum.OIDC)
-            .setCredentials(client.instantiate(IdentityProviderCredentials.class)
-                .setClient(client.instantiate(IdentityProviderCredentialsClient.class)
-                    .setClientId(clientId)
-                    .setClientSecret(clientSecret)))
-            .setIssuer(client.instantiate(ProtocolEndpoint.class)
-                .setUrl(baseUrl)))
+                .setCredentials(client.instantiate(IdentityProviderCredentials.class)
+                    .setClient(client.instantiate(IdentityProviderCredentialsClient.class)
+                        .setClientId(clientId)
+                        .setClientSecret(clientSecret)))
+                .setIssuer(client.instantiate(ProtocolEndpoint.class)
+                    .setUrl(baseUrl)))
             .setPolicy(client.instantiate(IdentityProviderPolicy.class)
-            .setAccountLink(client.instantiate(PolicyAccountLink.class)
-                .setAction(PolicyAccountLink.ActionEnum.AUTO)
-                .setFilter(null))
-            .setProvisioning(client.instantiate(Provisioning.class)
-                .setAction(Provisioning.ActionEnum.AUTO)
-                .setConditions(client.instantiate(ProvisioningConditions.class)
-                    .setDeprovisioned(client.instantiate(ProvisioningDeprovisionedCondition.class)
-                        .setAction(ProvisioningDeprovisionedCondition.ActionEnum.NONE))
-                    .setSuspended(client.instantiate(ProvisioningSuspendedCondition.class)
-                        .setAction(ProvisioningSuspendedCondition.ActionEnum.NONE)))
-                .setGroups(client.instantiate(ProvisioningGroups.class)
-                    .setAction(ProvisioningGroups.ActionEnum.NONE)))
-            .setMaxClockSkew(maxClockSkew)
-            .setSubject(client.instantiate(PolicySubject.class)
-                .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate.class)
-                    .setTemplate(subjectTemplate))
-                .setMatchType(policySubjectMatchType))));
-
-        return createdIdp;
+                .setAccountLink(client.instantiate(PolicyAccountLink.class)
+                    .setAction(PolicyAccountLink.ActionEnum.AUTO)
+                    .setFilter(null))
+                .setProvisioning(client.instantiate(Provisioning.class)
+                    .setAction(Provisioning.ActionEnum.AUTO)
+                    .setConditions(client.instantiate(ProvisioningConditions.class)
+                        .setDeprovisioned(client.instantiate(ProvisioningDeprovisionedCondition.class)
+                            .setAction(ProvisioningDeprovisionedCondition.ActionEnum.NONE))
+                        .setSuspended(client.instantiate(ProvisioningSuspendedCondition.class)
+                            .setAction(ProvisioningSuspendedCondition.ActionEnum.NONE)))
+                    .setGroups(client.instantiate(ProvisioningGroups.class)
+                        .setAction(ProvisioningGroups.ActionEnum.NONE)))
+                .setMaxClockSkew(maxClockSkew)
+                .setSubject(client.instantiate(PolicySubject.class)
+                    .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate.class)
+                        .setTemplate(subjectTemplate))
+                    .setMatchType(policySubjectMatchType))));
     }
 }

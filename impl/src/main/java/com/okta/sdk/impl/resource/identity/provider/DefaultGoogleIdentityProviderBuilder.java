@@ -16,8 +16,8 @@
 package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.identity.provider.GoogleIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
-import com.okta.sdk.resource.identity.provider.IdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
 import com.okta.sdk.resource.identity.provider.Protocol;
@@ -32,42 +32,11 @@ import com.okta.sdk.resource.policy.PolicySubject;
 import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
-import java.util.List;
+public class DefaultGoogleIdentityProviderBuilder extends DefaultIdentityProviderBuilder<GoogleIdentityProviderBuilder>
+    implements GoogleIdentityProviderBuilder {
 
-public class DefaultGoogleIdentityProviderBuilder implements IdentityProviderBuilder.GoogleIdentityProviderBuilder {
-
-    private String name;
-    private List<String> scopes;
-    private String clientId;
-    private String clientSecret;
     private Boolean isProfileMaster;
-    private Integer maxClockSkew;
     private String userNameTemplate;
-    private PolicySubjectMatchType policySubjectMatchType;
-
-    @Override
-    public DefaultGoogleIdentityProviderBuilder setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public DefaultGoogleIdentityProviderBuilder setScopes(List<String> scopes) {
-        this.scopes = scopes;
-        return this;
-    }
-
-    @Override
-    public DefaultGoogleIdentityProviderBuilder setClientId(String clientId) {
-        this.clientId = clientId;
-        return this;
-    }
-
-    @Override
-    public DefaultGoogleIdentityProviderBuilder setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-        return this;
-    }
 
     @Override
     public DefaultGoogleIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
@@ -96,7 +65,7 @@ public class DefaultGoogleIdentityProviderBuilder implements IdentityProviderBui
     @Override
     public IdentityProvider buildAndCreate(Client client) {
 
-        IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider.class)
+        return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
             .setType(IdentityProvider.TypeEnum.GOOGLE)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
@@ -125,7 +94,5 @@ public class DefaultGoogleIdentityProviderBuilder implements IdentityProviderBui
                         .setTemplate(userNameTemplate))
                     .setMatchType(policySubjectMatchType))
                 .setMaxClockSkew(maxClockSkew)));
-
-        return createdIdp;
     }
 }
