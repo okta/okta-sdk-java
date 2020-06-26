@@ -43,5 +43,7 @@ public interface IdentityProviderBuilder<T extends IdentityProviderBuilder> {
 
     T setIsProfileMaster(Boolean isProfileMaster);
 
+    T isProfileMaster(Boolean isProfileMaster);
+
     IdentityProvider buildAndCreate(Client client);
 }

@@ -83,6 +83,11 @@ public class DefaultIdentityProviderBuilder<T extends IdentityProviderBuilder> i
     }
 
     @Override
+    public T isProfileMaster(Boolean isProfileMaster) {
+        return setIsProfileMaster(isProfileMaster);
+    }
+
+    @Override
     public IdentityProvider buildAndCreate(Client client) {
         return client.createIdentityProvider(client.instantiate(IdentityProvider.class));
     }
