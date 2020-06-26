@@ -166,8 +166,8 @@ class LogsTest {
 
         ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class)
         verify(client.mockRequestExecutor).executeRequest(argument.capture())
-        assertThat argument.getValue().queryString.since, instanceOf(String)
-        assertThat argument.getValue().queryString.until, instanceOf(String)
+        assertThat argument.getValue().queryString.since, equalTo("2017-11-30T21:15:16.838Z")
+        assertThat argument.getValue().queryString.until, equalTo("2017-11-30T21:16:00.081Z")
     }
 
     @Test
@@ -182,7 +182,7 @@ class LogsTest {
 
         ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class)
         verify(client.mockRequestExecutor).executeRequest(argument.capture())
-        assertThat argument.getValue().queryString.since, instanceOf(String)
+        assertThat argument.getValue().queryString.since, equalTo("2017-11-30T21:15:16.838Z")
     }
 
     @Test
@@ -197,6 +197,6 @@ class LogsTest {
 
         ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class)
         verify(client.mockRequestExecutor).executeRequest(argument.capture())
-        assertThat argument.getValue().queryString.until, instanceOf(String)
+        assertThat argument.getValue().queryString.until, equalTo("2017-11-30T21:16:00.081Z")
     }
 }
