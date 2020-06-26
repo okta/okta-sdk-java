@@ -34,21 +34,6 @@ import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 public class DefaultLinkedInIdentityProviderBuilder extends DefaultIdentityProviderBuilder<LinkedInIdentityProviderBuilder>
     implements LinkedInIdentityProviderBuilder {
 
-    private Boolean isProfileMaster;
-    private String userNameTemplate;
-
-    @Override
-    public DefaultLinkedInIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
-        this.isProfileMaster = isProfileMaster;
-        return this;
-    }
-
-    @Override
-    public DefaultLinkedInIdentityProviderBuilder setUserNameTemplate(String userNameTemplate) {
-        this.userNameTemplate = userNameTemplate;
-        return this;
-    }
-
     @Override
     public IdentityProvider buildAndCreate(Client client) {
 
@@ -78,8 +63,8 @@ public class DefaultLinkedInIdentityProviderBuilder extends DefaultIdentityProvi
                     .setAction(PolicyAccountLink.ActionEnum.AUTO))
                 .setSubject(client.instantiate(PolicySubject.class)
                     .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate.class)
-                        .setTemplate(userNameTemplate))
-                    .setMatchType(policySubjectMatchType))
+                        .setTemplate(userName))
+                    .setMatchType(matchType))
                 .setMaxClockSkew(maxClockSkew)));
     }
 }

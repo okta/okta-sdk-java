@@ -22,8 +22,4 @@ public interface MicrosoftIdentityProviderBuilder extends IdentityProviderBuilde
     static MicrosoftIdentityProviderBuilder instance() {
         return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultMicrosoftIdentityProviderBuilder");
     }
-
-    MicrosoftIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster);
-
-    MicrosoftIdentityProviderBuilder setUserNameTemplate(String userNameTemplate);
 }

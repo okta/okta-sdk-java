@@ -29,38 +29,10 @@ import com.okta.sdk.resource.identity.provider.ProvisioningSuspendedCondition;
 import com.okta.sdk.resource.policy.IdentityProviderPolicy;
 import com.okta.sdk.resource.policy.PolicyAccountLink;
 import com.okta.sdk.resource.policy.PolicySubject;
-import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
 public class DefaultGoogleIdentityProviderBuilder extends DefaultIdentityProviderBuilder<GoogleIdentityProviderBuilder>
     implements GoogleIdentityProviderBuilder {
-
-    private Boolean isProfileMaster;
-    private String userNameTemplate;
-
-    @Override
-    public DefaultGoogleIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
-        this.isProfileMaster = isProfileMaster;
-        return this;
-    }
-
-    @Override
-    public DefaultGoogleIdentityProviderBuilder setMaxClockSkew(Integer maxClockSkew) {
-        this.maxClockSkew = maxClockSkew;
-        return this;
-    }
-
-    @Override
-    public DefaultGoogleIdentityProviderBuilder setUserNameTemplate(String userNameTemplate) {
-        this.userNameTemplate = userNameTemplate;
-        return this;
-    }
-
-    @Override
-    public DefaultGoogleIdentityProviderBuilder setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType) {
-        this.policySubjectMatchType = policySubjectMatchType;
-        return this;
-    }
 
     @Override
     public IdentityProvider buildAndCreate(Client client) {
@@ -91,8 +63,8 @@ public class DefaultGoogleIdentityProviderBuilder extends DefaultIdentityProvide
                     .setAction(PolicyAccountLink.ActionEnum.AUTO))
                 .setSubject(client.instantiate(PolicySubject.class)
                     .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate.class)
-                        .setTemplate(userNameTemplate))
-                    .setMatchType(policySubjectMatchType))
+                        .setTemplate(userName))
+                    .setMatchType(matchType))
                 .setMaxClockSkew(maxClockSkew)));
     }
 }

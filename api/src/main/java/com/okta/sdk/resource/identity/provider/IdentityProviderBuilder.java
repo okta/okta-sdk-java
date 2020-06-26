@@ -29,15 +29,19 @@ public interface IdentityProviderBuilder<T extends IdentityProviderBuilder> {
 
     T setName(String name);
 
-    T setScopes(List<String> scopes);
-
     T setClientId(String clientId);
 
     T setClientSecret(String clientSecret);
 
+    T setScopes(List<String> scopes);
+
     T setMaxClockSkew(Integer maxClockSkew);
 
-    T setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType);
+    T setUserName(String userName);
+
+    T setMatchType(PolicySubjectMatchType policySubjectMatchType);
+
+    T setIsProfileMaster(Boolean isProfileMaster);
 
     IdentityProvider buildAndCreate(Client client);
 }

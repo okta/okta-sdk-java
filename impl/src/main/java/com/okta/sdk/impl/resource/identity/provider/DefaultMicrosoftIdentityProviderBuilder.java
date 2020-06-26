@@ -34,21 +34,6 @@ import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 public class DefaultMicrosoftIdentityProviderBuilder extends DefaultIdentityProviderBuilder<MicrosoftIdentityProviderBuilder>
     implements MicrosoftIdentityProviderBuilder {
 
-    private Boolean isProfileMaster;
-    private String userNameTemplate;
-
-    @Override
-    public DefaultMicrosoftIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
-        this.isProfileMaster = isProfileMaster;
-        return this;
-    }
-
-    @Override
-    public DefaultMicrosoftIdentityProviderBuilder setUserNameTemplate(String userNameTemplate) {
-        this.userNameTemplate = userNameTemplate;
-        return this;
-    }
-
     @Override
     public IdentityProvider buildAndCreate(Client client) {
 
@@ -78,8 +63,8 @@ public class DefaultMicrosoftIdentityProviderBuilder extends DefaultIdentityProv
                     .setAction(PolicyAccountLink.ActionEnum.AUTO))
                 .setSubject(client.instantiate(PolicySubject.class)
                     .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate.class)
-                        .setTemplate(userNameTemplate))
-                    .setMatchType(policySubjectMatchType))
+                        .setTemplate(userName))
+                    .setMatchType(matchType))
                 .setMaxClockSkew(maxClockSkew)));
     }
 }

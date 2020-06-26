@@ -22,8 +22,4 @@ public interface FacebookIdentityProviderBuilder extends IdentityProviderBuilder
     static FacebookIdentityProviderBuilder instance() {
         return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultFacebookIdentityProviderBuilder");
     }
-
-    FacebookIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster);
-
-    FacebookIdentityProviderBuilder setUserNameTemplate(String userNameTemplate);
 }

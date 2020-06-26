@@ -26,21 +26,17 @@ import java.util.List;
 public class DefaultIdentityProviderBuilder<T extends IdentityProviderBuilder> implements IdentityProviderBuilder<T> {
 
     protected String name;
-    protected List<String> scopes;
     protected String clientId;
     protected String clientSecret;
+    protected List<String> scopes;
     protected Integer maxClockSkew;
-    protected PolicySubjectMatchType policySubjectMatchType;
+    protected String userName;
+    protected PolicySubjectMatchType matchType;
+    protected Boolean isProfileMaster;
 
     @Override
     public T setName(String name) {
         this.name = name;
-        return self();
-    }
-
-    @Override
-    public T setScopes(List<String> scopes) {
-        this.scopes = scopes;
         return self();
     }
 
@@ -57,14 +53,32 @@ public class DefaultIdentityProviderBuilder<T extends IdentityProviderBuilder> i
     }
 
     @Override
+    public T setScopes(List<String> scopes) {
+        this.scopes = scopes;
+        return self();
+    }
+
+    @Override
     public T setMaxClockSkew(Integer maxClockSkew) {
         this.maxClockSkew = maxClockSkew;
         return self();
     }
 
     @Override
-    public T setPolicySubjectMatchType(PolicySubjectMatchType policySubjectMatchType) {
-        this.policySubjectMatchType = policySubjectMatchType;
+    public T setUserName(String userName) {
+        this.userName = userName;
+        return self();
+    }
+
+    @Override
+    public T setMatchType(PolicySubjectMatchType matchType) {
+        this.matchType = matchType;
+        return self();
+    }
+
+    @Override
+    public T setIsProfileMaster(Boolean isProfileMaster) {
+        this.isProfileMaster = isProfileMaster;
         return self();
     }
 

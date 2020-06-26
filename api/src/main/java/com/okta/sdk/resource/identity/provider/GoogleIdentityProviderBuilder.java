@@ -22,8 +22,4 @@ public interface GoogleIdentityProviderBuilder extends IdentityProviderBuilder<G
     static GoogleIdentityProviderBuilder instance() {
         return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultGoogleIdentityProviderBuilder");
     }
-
-    GoogleIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster);
-
-    GoogleIdentityProviderBuilder setUserNameTemplate(String userNameTemplate);
 }

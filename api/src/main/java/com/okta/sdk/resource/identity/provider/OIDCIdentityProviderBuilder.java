@@ -16,6 +16,7 @@
 package com.okta.sdk.resource.identity.provider;
 
 import com.okta.commons.lang.Classes;
+import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 
 public interface OIDCIdentityProviderBuilder extends IdentityProviderBuilder<OIDCIdentityProviderBuilder> {
 
@@ -53,7 +54,9 @@ public interface OIDCIdentityProviderBuilder extends IdentityProviderBuilder<OID
 
     OIDCIdentityProviderBuilder setJwksEndpointUrl(String jwksEndpointUrl);
 
-    OIDCIdentityProviderBuilder setBaseUrl(String baseUrl);
+    OIDCIdentityProviderBuilder setIssuerUrl(String issuerUrl);
 
-    OIDCIdentityProviderBuilder setSubjectTemplate(String subjectTemplate);
+    OIDCIdentityProviderBuilder setUserName(String userName);
+
+    OIDCIdentityProviderBuilder setMatchType(PolicySubjectMatchType matchType);
 }

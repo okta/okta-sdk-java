@@ -34,6 +34,7 @@ import com.okta.sdk.resource.identity.provider.ProvisioningSuspendedCondition;
 import com.okta.sdk.resource.policy.IdentityProviderPolicy;
 import com.okta.sdk.resource.policy.PolicyAccountLink;
 import com.okta.sdk.resource.policy.PolicySubject;
+import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
 public class DefaultOIDCIdentityProviderBuilder extends DefaultIdentityProviderBuilder<OIDCIdentityProviderBuilder>
@@ -54,8 +55,9 @@ public class DefaultOIDCIdentityProviderBuilder extends DefaultIdentityProviderB
     private String userInfoEndpointUrl;
     private ProtocolEndpoint.BindingEnum jwksEndpointBinding;
     private String jwksEndpointUrl;
-    private String baseUrl;
-    private String subjectTemplate;
+    private String issuerUrl;
+    private String userName;
+    private PolicySubjectMatchType matchType;
 
     @Override
     public DefaultOIDCIdentityProviderBuilder setIssuerMode(IdentityProvider.IssuerModeEnum issuerMode) {
@@ -148,14 +150,20 @@ public class DefaultOIDCIdentityProviderBuilder extends DefaultIdentityProviderB
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public DefaultOIDCIdentityProviderBuilder setIssuerUrl(String issuerUrl) {
+        this.issuerUrl = issuerUrl;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setSubjectTemplate(String subjectTemplate) {
-        this.subjectTemplate = subjectTemplate;
+    public DefaultOIDCIdentityProviderBuilder setUserName(String userName) {
+        this.userName = userName;
+        return this;
+    }
+
+    @Override
+    public DefaultOIDCIdentityProviderBuilder setMatchType(PolicySubjectMatchType matchType) {
+        this.matchType = matchType;
         return this;
     }
 
@@ -198,7 +206,7 @@ public class DefaultOIDCIdentityProviderBuilder extends DefaultIdentityProviderB
                         .setClientId(clientId)
                         .setClientSecret(clientSecret)))
                 .setIssuer(client.instantiate(ProtocolEndpoint.class)
-                    .setUrl(baseUrl)))
+                    .setUrl(issuerUrl)))
             .setPolicy(client.instantiate(IdentityProviderPolicy.class)
                 .setAccountLink(client.instantiate(PolicyAccountLink.class)
                     .setAction(PolicyAccountLink.ActionEnum.AUTO)
@@ -215,7 +223,7 @@ public class DefaultOIDCIdentityProviderBuilder extends DefaultIdentityProviderB
                 .setMaxClockSkew(maxClockSkew)
                 .setSubject(client.instantiate(PolicySubject.class)
                     .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate.class)
-                        .setTemplate(subjectTemplate))
-                    .setMatchType(policySubjectMatchType))));
+                        .setTemplate(userName))
+                    .setMatchType(matchType))));
     }
 }

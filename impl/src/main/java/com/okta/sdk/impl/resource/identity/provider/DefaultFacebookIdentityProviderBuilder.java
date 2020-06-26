@@ -34,21 +34,6 @@ import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 public class DefaultFacebookIdentityProviderBuilder extends DefaultIdentityProviderBuilder<FacebookIdentityProviderBuilder>
     implements FacebookIdentityProviderBuilder {
 
-    private Boolean isProfileMaster;
-    private String userNameTemplate;
-
-    @Override
-    public FacebookIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster) {
-        this.isProfileMaster = isProfileMaster;
-        return this;
-    }
-
-    @Override
-    public FacebookIdentityProviderBuilder setUserNameTemplate(String userNameTemplate) {
-        this.userNameTemplate = userNameTemplate;
-        return this;
-    }
-
     @Override
     public IdentityProvider buildAndCreate(Client client) {
 
@@ -78,8 +63,8 @@ public class DefaultFacebookIdentityProviderBuilder extends DefaultIdentityProvi
                     .setAction(PolicyAccountLink.ActionEnum.AUTO))
                 .setSubject(client.instantiate(PolicySubject.class)
                     .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate.class)
-                        .setTemplate(userNameTemplate))
-                    .setMatchType(policySubjectMatchType))
+                        .setTemplate(userName))
+                    .setMatchType(matchType))
                 .setMaxClockSkew(maxClockSkew)));
 
         return createdIdp;

@@ -22,8 +22,4 @@ public interface LinkedInIdentityProviderBuilder extends IdentityProviderBuilder
     static LinkedInIdentityProviderBuilder instance() {
         return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultLinkedInIdentityProviderBuilder");
     }
-
-    LinkedInIdentityProviderBuilder setIsProfileMaster(Boolean isProfileMaster);
-
-    LinkedInIdentityProviderBuilder setUserNameTemplate(String userNameTemplate);
 }
