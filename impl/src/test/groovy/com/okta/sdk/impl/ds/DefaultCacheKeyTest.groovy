@@ -19,6 +19,9 @@ package com.okta.sdk.impl.ds
 import com.okta.commons.http.QueryString
 import org.testng.annotations.Test
 
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+
 import static org.testng.Assert.*
 
 /**
@@ -49,6 +52,19 @@ class DefaultCacheKeyTest {
         def cacheKey = new DefaultCacheKey("https://mysite.com?key_one=value_one", qs)
 
         assertEquals cacheKey.toString(), "https://mysite.com?key_one=value_one&key_three=value_three&key_two=value_two"
+    }
+
+    @Test
+    void testWithDateInQueryString() {
+        def isoDateString = "2017-11-30T21:15:16.838Z"
+        Date date = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse(isoDateString)))
+
+        def qs = new QueryString([
+            "key_one":date
+        ])
+        def cacheKey = new DefaultCacheKey("https://mysite.com", qs)
+
+        assertEquals cacheKey.toString(), "https://mysite.com?key_one=" + URLEncoder.encode(isoDateString, "UTF-8")
     }
 
     @Test
