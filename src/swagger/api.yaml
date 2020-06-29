@@ -3795,11 +3795,13 @@ paths:
       operationId: getLogs
       parameters:
         - in: query
-          name: until
-          type: string
-        - in: query
           name: since
           type: string
+          format: date-time
+        - in: query
+          name: until
+          type: string
+          format: date-time
         - in: query
           name: filter
           type: string
