@@ -60,7 +60,7 @@ class DefaultCacheKeyTest {
         Date date = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse(isoDateString)))
 
         def qs = new QueryString([
-            "key_one":date
+            "key_one": date
         ])
         def cacheKey = new DefaultCacheKey("https://mysite.com", qs)
 
