@@ -16,7 +16,6 @@
 package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.identity.provider.GoogleIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
@@ -31,8 +30,7 @@ import com.okta.sdk.resource.policy.PolicyAccountLink;
 import com.okta.sdk.resource.policy.PolicySubject;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
-public class DefaultGoogleIdentityProviderBuilder extends DefaultIdentityProviderBuilder<GoogleIdentityProviderBuilder>
-    implements GoogleIdentityProviderBuilder {
+public class DefaultGoogleIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
 
     @Override
     public IdentityProvider buildAndCreate(Client client) {

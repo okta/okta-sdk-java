@@ -15,17 +15,12 @@
  */
 package com.okta.sdk.resource.identity.provider;
 
-import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 
 import java.util.List;
 
 public interface IdentityProviderBuilder<T extends IdentityProviderBuilder> {
-
-    static IdentityProviderBuilder<IdentityProviderBuilder> instance() {
-        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultIdentityProviderBuilder");
-    }
 
     T setName(String name);
 

@@ -15,14 +15,9 @@
  */
 package com.okta.sdk.resource.identity.provider;
 
-import com.okta.commons.lang.Classes;
 import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 
 public interface OIDCIdentityProviderBuilder extends IdentityProviderBuilder<OIDCIdentityProviderBuilder> {
-
-    static OIDCIdentityProviderBuilder instance() {
-        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultOIDCIdentityProviderBuilder");
-    }
 
     OIDCIdentityProviderBuilder setIssuerMode(IdentityProvider.IssuerModeEnum issuerMode);
 

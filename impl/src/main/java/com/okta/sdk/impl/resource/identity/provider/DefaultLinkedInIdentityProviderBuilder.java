@@ -19,7 +19,6 @@ import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
-import com.okta.sdk.resource.identity.provider.LinkedInIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.Protocol;
 import com.okta.sdk.resource.identity.provider.Provisioning;
 import com.okta.sdk.resource.identity.provider.ProvisioningConditions;
@@ -31,8 +30,7 @@ import com.okta.sdk.resource.policy.PolicyAccountLink;
 import com.okta.sdk.resource.policy.PolicySubject;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
-public class DefaultLinkedInIdentityProviderBuilder extends DefaultIdentityProviderBuilder<LinkedInIdentityProviderBuilder>
-    implements LinkedInIdentityProviderBuilder {
+public class DefaultLinkedInIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
 
     @Override
     public IdentityProvider buildAndCreate(Client client) {
