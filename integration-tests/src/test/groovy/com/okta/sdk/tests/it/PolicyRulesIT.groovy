@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-Present Okta, Inc.
+ * Copyright 2020-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,9 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.policy.GroupCondition
-import com.okta.sdk.resource.policy.OktaSignOnPolicy
-import com.okta.sdk.resource.policy.OktaSignOnPolicyRule
-import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleActions
-import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleConditions
-import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleSignonActions
-import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleSignonSessionActions
-import com.okta.sdk.resource.policy.PasswordPolicyRule
-import com.okta.sdk.resource.policy.PasswordPolicyRuleAction
-import com.okta.sdk.resource.policy.PasswordPolicyRuleActions
-import com.okta.sdk.resource.policy.PasswordPolicyRuleConditions
-import com.okta.sdk.resource.policy.PolicyNetworkCondition
-import com.okta.sdk.resource.policy.PolicyPeopleCondition
-import com.okta.sdk.resource.policy.PolicyRule
-import com.okta.sdk.resource.policy.PolicyRuleAuthContextCondition
-import com.okta.sdk.resource.policy.UserCondition
+import com.okta.sdk.resource.policy.*
+import com.okta.sdk.resource.policy.rule.PasswordPolicyRuleBuilder
+import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
@@ -49,12 +36,11 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         crudTestPolicy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        OktaSignOnPolicyRule policyRule = crudTestPolicy.createRule(client.instantiate(OktaSignOnPolicyRule)
+        OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
-            .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
-                .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
-                    .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
-                    .setRequireFactor(false))))
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
+            .setRequireFactor(false)
+        .buildAndCreate(client, crudTestPolicy);
 
         assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.ACTIVE))
 
@@ -89,12 +75,12 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
+        OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
-            .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
-                .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
-                    .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
-                    .setRequireFactor(false))))
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
+            .setRequireFactor(false)
+            .setStatus(PolicyRule.StatusEnum.INACTIVE)
+        .buildAndCreate(client, policy);
         registerForCleanup(policyRule)
 
         // policy rule is ACTIVE by default
@@ -113,21 +99,14 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policy = randomPasswordPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        PasswordPolicyRule policyRule = policy.createRule(client.instantiate(PasswordPolicyRule)
-            .setConditions(client.instantiate(PasswordPolicyRuleConditions)
-                .setPeople(client.instantiate(PolicyPeopleCondition)
-                    .setUsers(client.instantiate(UserCondition)
-                        .setExclude(Collections.emptyList())))
-                .setNetwork(client.instantiate(PolicyNetworkCondition)
-                    .setConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)))
-                .setActions(client.instantiate(PasswordPolicyRuleActions)
-                    .setPasswordChange(client.instantiate(PasswordPolicyRuleAction)
-                        .setAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW))
-                    .setSelfServicePasswordReset(client.instantiate(PasswordPolicyRuleAction)
-                        .setAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW))
-                    .setSelfServiceUnlock(client.instantiate(PasswordPolicyRuleAction)
-                        .setAccess(PasswordPolicyRuleAction.AccessEnum.DENY)))
-            .setName(policyRuleName))
+        PasswordPolicyRule policyRule = PasswordPolicyRuleBuilder.instance()
+            .setName(policyRuleName)
+            .setType(PolicyRule.TypeEnum.PASSWORD)
+            .setSelfServiceUnlockAccess(PasswordPolicyRuleAction.AccessEnum.DENY)
+            .setSelfServicePasswordResetAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW)
+            .setPasswordChangeAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW)
+            .setNetworkConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
+        .buildAndCreate(client, policy)
         registerForCleanup(policyRule)
 
         assertThat policyRule.getName(), is(policyRuleName)
@@ -145,21 +124,17 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
-            .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
-                .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
-                    .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
-                    .setRequireFactor(false)
-                    .setRememberDeviceByDefault(false)
-                    .setSession(client.instantiate(OktaSignOnPolicyRuleSignonSessionActions)
-                        .setUsePersistentCookie(false)
-                        .setMaxSessionIdleMinutes(720)
-                        .setMaxSessionLifetimeMinutes(0))))
-            .setConditions(client.instantiate(OktaSignOnPolicyRuleConditions)
-                .setAuthContext(client.instantiate(PolicyRuleAuthContextCondition)
-                    .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)))
+        OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
-            .setType(PolicyRule.TypeEnum.SIGN_ON))
+            .setType(PolicyRule.TypeEnum.SIGN_ON)
+            .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
+            .setMaxSessionLifetimeMinutes(0)
+            .setMaxSessionIdleMinutes(720)
+            .setUsePersistentCookie(false)
+            .setRememberDeviceByDefault(false)
+            .setRequireFactor(false)
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
+        .buildAndCreate(client, policy)
         registerForCleanup(policyRule)
 
         assertThat policyRule.getActions().getSignon().getAccess(), is(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
@@ -177,23 +152,18 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
-            .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
-                .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
-                    .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
-                    .setRequireFactor(true)
-                    .setFactorPromptMode(OktaSignOnPolicyRuleSignonActions.FactorPromptModeEnum.ALWAYS)
-                    .setRememberDeviceByDefault(false)
-                    .setSession(client.instantiate(OktaSignOnPolicyRuleSignonSessionActions)
-                        .setUsePersistentCookie(false)
-                        .setMaxSessionIdleMinutes(720)
-                        .setMaxSessionLifetimeMinutes(0))))
-            .setConditions(client.instantiate(OktaSignOnPolicyRuleConditions)
-                .setNetwork(client.instantiate(PolicyNetworkCondition)
-                    .setConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE))
-                .setAuthContext(client.instantiate(PolicyRuleAuthContextCondition)
-                    .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.RADIUS)))
-            .setName(policyRuleName))
+        OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
+            .setName(policyRuleName)
+            .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.RADIUS)
+            .setNetworkConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
+            .setMaxSessionIdleMinutes(720)
+            .setMaxSessionLifetimeMinutes(0)
+            .setUsePersistentCookie(false)
+            .setRememberDeviceByDefault(false)
+            .setRequireFactor(false)
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
+            .buildAndCreate(client, policy)
+
         registerForCleanup(policyRule)
 
         assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextCondition.AuthTypeEnum.RADIUS)
@@ -207,38 +177,25 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
-            .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
-                .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
-                    .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
-                    .setRequireFactor(true)
-                    .setFactorPromptMode(OktaSignOnPolicyRuleSignonActions.FactorPromptModeEnum.ALWAYS)
-                    .setRememberDeviceByDefault(false)
-                    .setSession(client.instantiate(OktaSignOnPolicyRuleSignonSessionActions)
-                        .setUsePersistentCookie(false)
-                        .setMaxSessionIdleMinutes(720)
-                        .setMaxSessionLifetimeMinutes(0))))
-            .setConditions(client.instantiate(OktaSignOnPolicyRuleConditions)
-                .setNetwork(client.instantiate(PolicyNetworkCondition)
-                    .setConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE))
-                .setAuthContext(client.instantiate(PolicyRuleAuthContextCondition)
-                    .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY))
-                .setPeople(client.instantiate(PolicyPeopleCondition)
-                    .setUsers(client.instantiate(UserCondition)
-                        .setInclude(Collections.emptyList())
-                        .setExclude(Collections.emptyList()))
-                    .setGroups(client.instantiate(GroupCondition)
-                        .setInclude(Collections.emptyList())
-                        .setExclude(Collections.emptyList()))))
-            .setName(policyRuleName))
+        OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
+            .setName(policyRuleName)
+            .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
+            .setNetworkConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
+            .setUsePersistentCookie(false)
+            .setMaxSessionIdleMinutes(720)
+            .setMaxSessionLifetimeMinutes(0)
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
+            .setRequireFactor(true)
+            .setFactorPromptMode(OktaSignOnPolicyRuleSignonActions.FactorPromptModeEnum.ALWAYS)
+            .setRememberDeviceByDefault(false)
+        .buildAndCreate(client, policy)
         registerForCleanup(policyRule)
 
         assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
         assertThat policyRule.getConditions().getNetwork().getConnection(), is(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
-        assertThat policyRule.getConditions().getPeople().getUsers().getInclude(), is(Collections.emptyList())
+        assertThat policyRule.getConditions().getPeople().getUsers().getInclude(), nullValue()
         assertThat policyRule.getConditions().getPeople().getUsers().getExclude(), is(Collections.emptyList())
-        assertThat policyRule.getConditions().getPeople().getGroups().getInclude(), is(Collections.emptyList())
-        assertThat policyRule.getConditions().getPeople().getGroups().getExclude(), is(Collections.emptyList())
+        assertThat policyRule.getConditions().getPeople().getGroups(), nullValue()
         assertThat policyRule.getActions().getSignon().getAccess(), is(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
         assertThat policyRule.getActions().getSignon().getRequireFactor(), is(true)
         assertThat policyRule.getActions().getSignon().getRememberDeviceByDefault(), is(false)
@@ -255,17 +212,14 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
-            .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
-                .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
-                    .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
-                    .setRequireFactor(false)))
-            .setConditions(client.instantiate(OktaSignOnPolicyRuleConditions)
-                .setNetwork(client.instantiate(PolicyNetworkCondition)
-                    .setConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE))
-                .setAuthContext(client.instantiate(PolicyRuleAuthContextCondition)
-                    .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)))
-            .setName(policyRuleName))
+        OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
+            .setName(policyRuleName)
+            .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
+            .setNetworkConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
+            .setRequireFactor(false)
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
+        .buildAndCreate(client, policy)
+
         registerForCleanup(policyRule)
 
         assertThat policyRule.getType(), is(PolicyRule.TypeEnum.SIGN_ON)

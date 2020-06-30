@@ -17,54 +17,8 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.application.AppUser
-import com.okta.sdk.resource.application.AppUserCredentials
-import com.okta.sdk.resource.application.AppUserList
-import com.okta.sdk.resource.application.AppUserPasswordCredential
-import com.okta.sdk.resource.application.Application
-import com.okta.sdk.resource.application.ApplicationCredentialsOAuthClient
-import com.okta.sdk.resource.application.ApplicationCredentialsScheme
-import com.okta.sdk.resource.application.ApplicationGroupAssignment
-import com.okta.sdk.resource.application.ApplicationVisibility
-import com.okta.sdk.resource.application.ApplicationVisibilityHide
-import com.okta.sdk.resource.application.AutoLoginApplication
-import com.okta.sdk.resource.application.AutoLoginApplicationSettings
-import com.okta.sdk.resource.application.AutoLoginApplicationSettingsSignOn
-import com.okta.sdk.resource.application.BasicApplicationSettings
-import com.okta.sdk.resource.application.BasicApplicationSettingsApplication
-import com.okta.sdk.resource.application.BasicAuthApplication
-import com.okta.sdk.resource.application.BookmarkApplication
-import com.okta.sdk.resource.application.BookmarkApplicationSettings
-import com.okta.sdk.resource.application.BookmarkApplicationSettingsApplication
-import com.okta.sdk.resource.application.Csr
-import com.okta.sdk.resource.application.CsrMetadata
-import com.okta.sdk.resource.application.CsrMetadataSubject
-import com.okta.sdk.resource.application.CsrMetadataSubjectAltNames
-import com.okta.sdk.resource.application.JsonWebKey
-import com.okta.sdk.resource.application.JsonWebKeyList
-import com.okta.sdk.resource.application.OAuth2ScopeConsentGrant
-import com.okta.sdk.resource.application.OAuthApplicationCredentials
-import com.okta.sdk.resource.application.OAuthEndpointAuthenticationMethod
-import com.okta.sdk.resource.application.OAuthGrantType
-import com.okta.sdk.resource.application.OAuthResponseType
-import com.okta.sdk.resource.application.OpenIdConnectApplication
-import com.okta.sdk.resource.application.OpenIdConnectApplicationSettings
-import com.okta.sdk.resource.application.OpenIdConnectApplicationSettingsClient
-import com.okta.sdk.resource.application.OpenIdConnectApplicationType
-import com.okta.sdk.resource.application.SamlApplication
-import com.okta.sdk.resource.application.SamlApplicationSettings
-import com.okta.sdk.resource.application.SamlApplicationSettingsSignOn
-import com.okta.sdk.resource.application.SamlAttributeStatement
-import com.okta.sdk.resource.application.SchemeApplicationCredentials
-import com.okta.sdk.resource.application.SecurePasswordStoreApplication
-import com.okta.sdk.resource.application.SecurePasswordStoreApplicationSettings
-import com.okta.sdk.resource.application.SecurePasswordStoreApplicationSettingsApplication
-import com.okta.sdk.resource.application.SwaApplication
-import com.okta.sdk.resource.application.SwaApplicationSettings
-import com.okta.sdk.resource.application.SwaApplicationSettingsApplication
-import com.okta.sdk.resource.application.WsFederationApplication
-import com.okta.sdk.resource.application.WsFederationApplicationSettings
-import com.okta.sdk.resource.application.WsFederationApplicationSettingsApplication
+
+import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.User
@@ -76,9 +30,7 @@ import static com.okta.sdk.tests.it.util.Util.assertPresent
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
 
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.equalTo
-import static org.hamcrest.Matchers.notNullValue
-import static org.hamcrest.Matchers.sameInstance
+import static org.hamcrest.Matchers.*
 
 /**
  * Tests for {@code /api/v1/apps}.
@@ -632,4 +584,3 @@ class ApplicationsIT extends ITSupport {
         assertNotPresent(app.listScopeConsentGrants(), app.getScopeConsentGrant(oAuth2ScopeConsentGrant.getId()))
     }
 }
-
