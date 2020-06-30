@@ -22,12 +22,15 @@ import com.okta.commons.http.config.HttpClientConfiguration;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.client.AuthenticationScheme;
+import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory;
 import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class holds the default configuration properties.
@@ -49,6 +52,10 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private RequestAuthenticatorFactory requestAuthenticatorFactory = new DefaultRequestAuthenticatorFactory();
     private AuthenticationScheme authenticationScheme;
     private BaseUrlResolver baseUrlResolver;
+    private AuthorizationMode authorizationMode;
+    private String clientId;
+    private Set<String> scopes = new HashSet<>();
+    private String privateKey;
 
     public String getApiToken() {
         return apiToken;
@@ -88,6 +95,38 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     public void setBaseUrlResolver(BaseUrlResolver baseUrlResolver) {
         this.baseUrlResolver = baseUrlResolver;
+    }
+
+    public AuthorizationMode getAuthorizationMode() {
+        return authorizationMode;
+    }
+
+    public void setAuthorizationMode(AuthorizationMode authorizationMode) {
+        this.authorizationMode = authorizationMode;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public Set<String> getScopes() {
+        return scopes;
+    }
+
+    public void setScopes(Set<String> scopes) {
+        this.scopes = scopes;
+    }
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
     }
 
     public boolean isCacheManagerEnabled() {
@@ -162,17 +201,20 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     @Override
     public String toString() {
-        return "ClientConfiguration{" +
-                ", cacheManagerTtl=" + cacheManagerTtl +
-                ", cacheManagerTti=" + cacheManagerTti +
-                ", cacheManagerCaches=" + cacheManagerCaches +
-                ", baseUrl='" + getBaseUrl() + '\'' +
-                ", connectionTimeout=" + getConnectionTimeout() +
-                ", requestAuthenticator=" + getRequestAuthenticator() +
-                ", retryMaxElapsed=" + getRetryMaxElapsed() +
-                ", retryMaxAttempts=" + getRetryMaxAttempts() +
-                ", proxy=" + getProxy() +
-                '}';
+        return "ClientConfiguration {cacheManagerTtl=" + cacheManagerTtl +
+            ", cacheManagerTti=" + cacheManagerTti +
+            ", cacheManagerCaches=" + cacheManagerCaches +
+            ", baseUrl='" + getBaseUrl() + '\'' +
+            ", authorizationMode=" + getAuthorizationMode() +
+            ", clientId=" + getClientId() +
+            ", scopes=" + getScopes() +
+            ", privateKey=" + ((getPrivateKey() != null) ? "xxxxx" : null) +
+            ", connectionTimeout=" + getConnectionTimeout() +
+            ", requestAuthenticator=" + getRequestAuthenticator() +
+            ", retryMaxElapsed=" + getRetryMaxElapsed() +
+            ", retryMaxAttempts=" + getRetryMaxAttempts() +
+            ", proxy=" + getProxy() +
+            " }";
     }
 
 }

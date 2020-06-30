@@ -26,7 +26,7 @@ import com.okta.sdk.impl.ds.InternalDataStore;
  * be removed in future versions.
  *
  * @deprecated see {@link BaseClient}
- * @see <a href="http://www.okta.com/docs/quickstart/connect">Communicating with Okta: Get your API Key</a>
+ * @see <a href="https://developer.okta.com/docs/guides/create-an-api-token/overview">Communicating with Okta: Get your API Token</a>
  * @since 0.5.0
  */
 @Deprecated
