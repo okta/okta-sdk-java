@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-Present Okta, Inc.
+ * Copyright 2020-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,7 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.policy.GroupCondition
-import com.okta.sdk.resource.policy.OktaSignOnPolicy
-import com.okta.sdk.resource.policy.OktaSignOnPolicyConditions
-import com.okta.sdk.resource.policy.OktaSignOnPolicyRule
-import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleActions
-import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleSignonActions
-import com.okta.sdk.resource.policy.Policy
-import com.okta.sdk.resource.policy.PolicyPeopleCondition
-import com.okta.sdk.resource.policy.PolicyType
+import com.okta.sdk.resource.policy.*
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
@@ -72,15 +64,14 @@ class SignOnPoliciesIT implements CrudTestSupport {
                 .buildAndCreate(client)
         registerForCleanup(group)
 
-        OktaSignOnPolicy policy = client.createPolicy(
-            client.instantiate(OktaSignOnPolicy)
-                .setConditions(client.instantiate(OktaSignOnPolicyConditions)
-                    .setPeople(client.instantiate(PolicyPeopleCondition)
-                        .setGroups(client.instantiate(GroupCondition)
-                            .setInclude([group.getId()]))))
+        OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
                 .setName("policy+" + UUID.randomUUID().toString())
                 .setStatus(Policy.StatusEnum.ACTIVE)
-                .setDescription("IT created Policy - signOnPolicyWithGroupConditions"))
+                .setDescription("IT created Policy - signOnPolicyWithGroupConditions")
+                .setType(PolicyType.OKTA_SIGN_ON)
+                .addGroup(group.getId())
+        .buildAndCreate(client)
+
         registerForCleanup(policy)
 
         assertThat policy.getId(), notNullValue()
@@ -91,11 +82,13 @@ class SignOnPoliciesIT implements CrudTestSupport {
     @Test
     void signOnActionsTest() {
 
-        OktaSignOnPolicy policy = client.createPolicy(
-            client.instantiate(OktaSignOnPolicy)
-                .setName("policy+" + UUID.randomUUID().toString())
-                .setStatus(Policy.StatusEnum.ACTIVE)
-                .setDescription("IT created Policy - signOnActionsTest"))
+        OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
+            .setName("policy+" + UUID.randomUUID().toString())
+            .setDescription("IT created Policy - signOnActionsTest")
+            .setType(PolicyType.OKTA_SIGN_ON)
+            .setStatus(Policy.StatusEnum.ACTIVE)
+            .buildAndCreate(client);
+
         registerForCleanup(policy)
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
@@ -114,9 +107,13 @@ class SignOnPoliciesIT implements CrudTestSupport {
     @Test
     void activateDeactivateTest() {
 
-        def policy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
-            .setName("policy+" + UUID.randomUUID().toString())
-            .setDescription("IT created Policy - activateDeactivateTest"), false)
+        def policy = OktaSignOnPolicyBuilder.instance()
+                .setName("policy+" + UUID.randomUUID().toString())
+                .setDescription("IT created Policy - activateDeactivateTest")
+                .setType(PolicyType.OKTA_SIGN_ON)
+                .setStatus(Policy.StatusEnum.INACTIVE)
+        .buildAndCreate(client)
+
         registerForCleanup(policy)
 
         assertThat(policy.getStatus(), is(Policy.StatusEnum.INACTIVE))

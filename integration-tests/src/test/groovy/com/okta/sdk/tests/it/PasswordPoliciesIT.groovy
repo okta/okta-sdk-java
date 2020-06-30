@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-Present Okta, Inc.
+ * Copyright 2020-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,46 @@
  */
 package com.okta.sdk.tests.it
 
+
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.policy.GroupCondition
-import com.okta.sdk.resource.policy.PasswordPolicy
-import com.okta.sdk.resource.policy.PasswordPolicyConditions
-import com.okta.sdk.resource.policy.Policy
-import com.okta.sdk.resource.policy.PolicyPeopleCondition
-import com.okta.sdk.resource.policy.PolicyType
+import com.okta.sdk.resource.policy.*
 import com.okta.sdk.tests.it.util.ITSupport
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
 
-class PasswordPoliciesIT extends ITSupport implements CrudTestSupport {
-
+class PasswordPoliciesIT extends ITSupport implements CrudTestSupport  {
     @Override
     def create(Client client) {
         Group group = randomGroup()
+        Policy passwordPolicy = PasswordPolicyBuilder.instance()
+                                    .setAuthProvider(PasswordPolicyAuthenticationProviderCondition.ProviderEnum.OKTA)
+                                    .setExcludePasswordDictionary(false)
+                                    .setExcludeUserNameInPassword(false)
+                                    .setMinPasswordLength(8)
+                                    .setMinLowerCase(1)
+                                    .setMinUpperCase(1)
+                                    .setMinNumbers(1)
+                                    .setMinSymbols(1)
+                                    .addGroup(group.getId())
+                                    .setSkipUnlock(false)
+                                    .setPasswordExpireWarnDays(85)
+                                    .setPasswordHistoryCount(5)
+                                    .setPasswordMaxAgeDays(90)
+                                    .setPasswordMinMinutes(2)
+                                    .setPasswordAutoUnlockMinutes(5)
+                                    .setPasswordMaxAttempts(3)
+                                    .setShowLockoutFailures(true)
+                                    .setPasswordRecoveryOktaSMS(PasswordPolicyRecoveryFactorSettings.StatusEnum.ACTIVE)
+                                    .setType(PolicyType.PASSWORD)
+                                    .setStatus(Policy.StatusEnum.ACTIVE)
+                                    .setPriority(1)
+                                    .setDescription("Dummy policy for sdk test")
+                                    .setName("SDK policy "+ UUID.randomUUID().toString())
+                                    .buildAndCreate(client) ;
+        return (PasswordPolicy) passwordPolicy;
 
-        return client.createPolicy(client.instantiate(PasswordPolicy)
-            .setConditions(client.instantiate(PasswordPolicyConditions)
-                .setPeople(client.instantiate(PolicyPeopleCondition)
-                    .setGroups(client.instantiate(GroupCondition)
-                        .setInclude([group.getId()]))))
-            .setName("policy+" + UUID.randomUUID().toString())
-            .setStatus(Policy.StatusEnum.ACTIVE)
-            .setDescription("IT created Policy - password CRUD"))
     }
 
     @Override
@@ -50,18 +63,23 @@ class PasswordPoliciesIT extends ITSupport implements CrudTestSupport {
     }
 
     @Override
+    Iterator getResourceCollectionIterator(Client client) {
+        return client.listPolicies(PolicyType.PASSWORD.toString()).iterator()
+    }
+
+    @Override
     void update(Client client, def policy) {
-        policy.setDescription("IT created Policy - Updated")
+        policy.setDescription("Dummy policy for sdk test - Updated")
+        policy.settings.password.lockout.maxAttempts = 5
         policy.update()
+
     }
 
     @Override
     void assertUpdate(Client client, def policy) {
-        assertThat policy.description, is("IT created Policy - Updated")
-    }
-
-    @Override
-    Iterator getResourceCollectionIterator(Client client) {
-        return client.listPolicies(PolicyType.PASSWORD.toString()).iterator()
+        assertThat policy.description, is("Dummy policy for sdk test - Updated")
+        assertThat policy.settings.password.lockout.maxAttempts, is(5)
+        assertThat policy.settings.password.complexity.minLength, is(8)
+        assertThat policy.settings.recovery.factors.okta_email.status, is("ACTIVE")
     }
 }
