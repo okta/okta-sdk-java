@@ -41,8 +41,6 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
     private PolicyRuleAuthContextCondition.AuthTypeEnum authType;
     private PolicyNetworkCondition.ConnectionEnum connection;
 
-
-
     @Override
     public SignOnPolicyRuleBuilder setName(String name) {
         this.name = name;
@@ -135,15 +133,13 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
 
     @Override
     public OktaSignOnPolicyRule buildAndCreate(Client client, Policy policy) {
-        return (OktaSignOnPolicyRule) policy.createRule(build(client), isActive);
+        return (OktaSignOnPolicyRule) policy.createRule(build(client));
     }
 
     private OktaSignOnPolicyRule build(Client client){
         OktaSignOnPolicyRule policyRule = client.instantiate(OktaSignOnPolicyRule.class);
 
         if (Strings.hasText(name)) policyRule.setName(name);
-
-        if (Strings.hasText(id)) policyRule.setId(id);
 
         if (Objects.nonNull(priority)) policyRule.setPriority(priority);
 

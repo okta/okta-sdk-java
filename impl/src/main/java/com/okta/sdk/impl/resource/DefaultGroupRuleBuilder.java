@@ -22,13 +22,11 @@ import com.okta.sdk.resource.group.rule.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class DefaultGroupRuleBuilder implements GroupRuleBuilder {
 
     private String name;
     private String type;
-    private Boolean allGroupsValid;
     private List<String> assignUserToGroups = new ArrayList<>();
     private List<String> groupIds = new ArrayList<>();
     private List<String> userIds = new ArrayList<>();
@@ -44,12 +42,6 @@ public class DefaultGroupRuleBuilder implements GroupRuleBuilder {
     @Override
     public GroupRuleBuilder setType(String type) {
         this.type = type;
-        return this;
-    }
-
-    @Override
-    public GroupRuleBuilder setAllGroupsValid(Boolean allGroupsValid) {
-        this.allGroupsValid = allGroupsValid;
         return this;
     }
 
@@ -97,7 +89,7 @@ public class DefaultGroupRuleBuilder implements GroupRuleBuilder {
 
     @Override
     public GroupRule buildAndCreate(Client client) {
-        return client.createRule(build(client));
+        return client.createGroupRule(build(client));
     }
 
     private GroupRule build(Client client){
@@ -106,8 +98,6 @@ public class DefaultGroupRuleBuilder implements GroupRuleBuilder {
         if (Strings.hasText(name)) groupRule.setName(name);
 
         if (Strings.hasText(type)) groupRule.setType(type);
-
-        if (Objects.nonNull(allGroupsValid)) groupRule.setAllGroupsValid(allGroupsValid);
 
         // Actions
         groupRule.setActions(client.instantiate(GroupRuleAction.class));

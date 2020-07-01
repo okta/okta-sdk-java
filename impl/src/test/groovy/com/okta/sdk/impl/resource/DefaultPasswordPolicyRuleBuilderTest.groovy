@@ -38,7 +38,6 @@ class DefaultPasswordPolicyRuleBuilderTest {
         def groupCondition = mock(GroupCondition)
         def userCondition = mock(UserCondition)
 
-
         when(client.instantiate(PasswordPolicyRule.class)).thenReturn(passwordPolicyRule)
         when(client.instantiate(PasswordPolicyRuleActions.class)).thenReturn(passwordPolicyRuleActions)
         when(passwordPolicyRule.getActions()).thenReturn(passwordPolicyRuleActions)
@@ -51,7 +50,6 @@ class DefaultPasswordPolicyRuleBuilderTest {
         when(client.instantiate(UserCondition.class)).thenReturn(userCondition)
 
         new DefaultPasswordPolicyRuleBuilder()
-            .setId("id here")
             .setName("name here")
             .setStatus(PolicyRule.StatusEnum.ACTIVE)
             .setType(PolicyRule.TypeEnum.PASSWORD)
@@ -63,7 +61,7 @@ class DefaultPasswordPolicyRuleBuilderTest {
             .setSelfServiceUnlockAccess(PasswordPolicyRuleAction.AccessEnum.DENY)
         .buildAndCreate(client, policy)
 
-        verify(policy).createRule(eq(passwordPolicyRule), eq(true))
+        verify(policy).createRule(eq(passwordPolicyRule))
         verify(passwordPolicyRule).setName("name here")
         verify(passwordPolicyRule).setType(PolicyRule.TypeEnum.PASSWORD)
         verify(passwordPolicyRuleActions).setSelfServicePasswordReset(passwordPolicyRuleAction.setAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW))

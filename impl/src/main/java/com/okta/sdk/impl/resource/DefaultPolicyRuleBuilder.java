@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.policy.Policy;
 import com.okta.sdk.resource.policy.PolicyRule;
@@ -25,19 +24,11 @@ import java.util.Objects;
 
 public class DefaultPolicyRuleBuilder<T extends PolicyRuleBuilder> implements PolicyRuleBuilder<T> {
 
-    protected String id;
     protected Integer priority;
     protected PolicyRule.TypeEnum type;
     protected PolicyRule.StatusEnum status;
-    protected Boolean isActive = true;
 
     DefaultPolicyRuleBuilder(){ this.type = PolicyRule.TypeEnum.SIGN_ON; }
-
-    @Override
-    public T setId(String id) {
-        this.id = id;
-        return self();
-    }
 
     @Override
     public T setPriority(Integer priority) {
@@ -48,10 +39,6 @@ public class DefaultPolicyRuleBuilder<T extends PolicyRuleBuilder> implements Po
     @Override
     public T setStatus(PolicyRule.StatusEnum status) {
         this.status = status;
-        if (PolicyRule.StatusEnum.ACTIVE.equals(status))
-            isActive = true;
-        else
-            isActive = false;
         return self();
     }
 
@@ -63,7 +50,7 @@ public class DefaultPolicyRuleBuilder<T extends PolicyRuleBuilder> implements Po
 
     @Override
     public PolicyRule buildAndCreate(Client client, Policy policy) {
-        return (PolicyRule)policy.createRule(build(client), isActive);
+        return (PolicyRule) policy.createRule(build(client));
     }
 
     @SuppressWarnings("unchecked")
@@ -73,8 +60,6 @@ public class DefaultPolicyRuleBuilder<T extends PolicyRuleBuilder> implements Po
 
     private PolicyRule build(Client client){
         PolicyRule policyRule = client.instantiate(PolicyRule.class);
-
-        if (Strings.hasText(id)) policyRule.setId(id);
 
         if (Objects.nonNull(priority)) policyRule.setPriority(priority);
 
