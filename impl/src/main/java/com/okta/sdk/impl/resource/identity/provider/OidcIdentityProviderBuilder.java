@@ -37,7 +37,7 @@ import com.okta.sdk.resource.policy.PolicySubject;
 import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
-public class DefaultOIDCIdentityProviderBuilder extends DefaultIdentityProviderBuilder<OIDCIdentityProviderBuilder>
+public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<OIDCIdentityProviderBuilder>
     implements OIDCIdentityProviderBuilder {
 
     private IdentityProvider.IssuerModeEnum issuerMode;
@@ -60,109 +60,109 @@ public class DefaultOIDCIdentityProviderBuilder extends DefaultIdentityProviderB
     private PolicySubjectMatchType matchType;
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setIssuerMode(IdentityProvider.IssuerModeEnum issuerMode) {
+    public OidcIdentityProviderBuilder setIssuerMode(IdentityProvider.IssuerModeEnum issuerMode) {
         this.issuerMode = issuerMode;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setRequestSignatureAlgorithm(String requestSignatureAlgorithm) {
+    public OidcIdentityProviderBuilder setRequestSignatureAlgorithm(String requestSignatureAlgorithm) {
         this.requestSignatureAlgorithm = requestSignatureAlgorithm;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum requestSignatureScope) {
+    public OidcIdentityProviderBuilder setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum requestSignatureScope) {
         this.requestSignatureScope = requestSignatureScope;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setResponseSignatureAlgorithm(String responseSignatureAlgorithm) {
+    public OidcIdentityProviderBuilder setResponseSignatureAlgorithm(String responseSignatureAlgorithm) {
         this.responseSignatureAlgorithm = responseSignatureAlgorithm;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setResponseSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum responseSignatureScope) {
+    public OidcIdentityProviderBuilder setResponseSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum responseSignatureScope) {
         this.responseSignatureScope = responseSignatureScope;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setAcsEndpointBinding(ProtocolEndpoint.BindingEnum acsEndpointBinding) {
+    public OidcIdentityProviderBuilder setAcsEndpointBinding(ProtocolEndpoint.BindingEnum acsEndpointBinding) {
         this.acsEndpointBinding = acsEndpointBinding;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setAcsEndpointType(ProtocolEndpoint.TypeEnum acsEndpointType) {
+    public OidcIdentityProviderBuilder setAcsEndpointType(ProtocolEndpoint.TypeEnum acsEndpointType) {
         this.acsEndpointType = acsEndpointType;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setAuthorizationEndpointBinding(ProtocolEndpoint.BindingEnum authorizationEndpointBinding) {
+    public OidcIdentityProviderBuilder setAuthorizationEndpointBinding(ProtocolEndpoint.BindingEnum authorizationEndpointBinding) {
         this.authorizationEndpointBinding = authorizationEndpointBinding;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setAuthorizationEndpointUrl(String authorizationEndpointUrl) {
+    public OidcIdentityProviderBuilder setAuthorizationEndpointUrl(String authorizationEndpointUrl) {
         this.authorizationEndpointUrl = authorizationEndpointUrl;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setTokenEndpointBinding(ProtocolEndpoint.BindingEnum tokenEndpointBinding) {
+    public OidcIdentityProviderBuilder setTokenEndpointBinding(ProtocolEndpoint.BindingEnum tokenEndpointBinding) {
         this.tokenEndpointBinding = tokenEndpointBinding;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setTokenEndpointUrl(String tokenEndpointUrl) {
+    public OidcIdentityProviderBuilder setTokenEndpointUrl(String tokenEndpointUrl) {
         this.tokenEndpointUrl = tokenEndpointUrl;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setUserInfoEndpointBinding(ProtocolEndpoint.BindingEnum userInfoEndpointBinding) {
+    public OidcIdentityProviderBuilder setUserInfoEndpointBinding(ProtocolEndpoint.BindingEnum userInfoEndpointBinding) {
         this.userInfoEndpointBinding = userInfoEndpointBinding;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setUserInfoEndpointUrl(String userInfoEndpointUrl) {
+    public OidcIdentityProviderBuilder setUserInfoEndpointUrl(String userInfoEndpointUrl) {
         this.userInfoEndpointUrl = userInfoEndpointUrl;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setJwksEndpointBinding(ProtocolEndpoint.BindingEnum jwksEndpointBinding) {
+    public OidcIdentityProviderBuilder setJwksEndpointBinding(ProtocolEndpoint.BindingEnum jwksEndpointBinding) {
         this.jwksEndpointBinding = jwksEndpointBinding;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setJwksEndpointUrl(String jwksEndpointUrl) {
+    public OidcIdentityProviderBuilder setJwksEndpointUrl(String jwksEndpointUrl) {
         this.jwksEndpointUrl = jwksEndpointUrl;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setIssuerUrl(String issuerUrl) {
+    public OidcIdentityProviderBuilder setIssuerUrl(String issuerUrl) {
         this.issuerUrl = issuerUrl;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setUserName(String userName) {
+    public OidcIdentityProviderBuilder setUserName(String userName) {
         this.userName = userName;
         return this;
     }
 
     @Override
-    public DefaultOIDCIdentityProviderBuilder setMatchType(PolicySubjectMatchType matchType) {
+    public OidcIdentityProviderBuilder setMatchType(PolicySubjectMatchType matchType) {
         this.matchType = matchType;
         return this;
     }

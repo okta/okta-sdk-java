@@ -20,22 +20,22 @@ import com.okta.commons.lang.Classes;
 public class IdentityProviderBuilders {
 
     public static OIDCIdentityProviderBuilder oidc() {
-        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultOIDCIdentityProviderBuilder");
+        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.OIDCIdentityProviderBuilder");
     }
 
     public static IdentityProviderBuilder google() {
-        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultGoogleIdentityProviderBuilder");
+        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.GoogleIdentityProviderBuilder");
     }
 
     public static IdentityProviderBuilder facebook() {
-        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultFacebookIdentityProviderBuilder");
+        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.FacebookIdentityProviderBuilder");
     }
 
     public static IdentityProviderBuilder microsoft() {
-        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultMicrosoftIdentityProviderBuilder");
+        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.MicrosoftIdentityProviderBuilder");
     }
 
     public static IdentityProviderBuilder linkedin() {
-        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.DefaultLinkedInIdentityProviderBuilder");
+        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.LinkedInIdentityProviderBuilder");
     }
 }

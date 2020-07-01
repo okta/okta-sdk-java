@@ -30,7 +30,7 @@ import com.okta.sdk.resource.policy.PolicyAccountLink;
 import com.okta.sdk.resource.policy.PolicySubject;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
-public class DefaultLinkedInIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
+public class LinkedInIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
 
     @Override
     public IdentityProvider buildAndCreate(Client client) {

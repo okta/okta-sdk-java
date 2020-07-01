@@ -30,16 +30,16 @@ import com.okta.sdk.resource.policy.PolicyAccountLink;
 import com.okta.sdk.resource.policy.PolicySubject;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
-public class DefaultFacebookIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
+public class GoogleIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
 
     @Override
     public IdentityProvider buildAndCreate(Client client) {
 
-        IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider.class)
-            .setType(IdentityProvider.TypeEnum.FACEBOOK)
+        return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
+            .setType(IdentityProvider.TypeEnum.GOOGLE)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
-                .setType(Protocol.TypeEnum.OAUTH2)
+                .setType(Protocol.TypeEnum.OIDC)
                 .setScopes(scopes)
                 .setCredentials(client.instantiate(IdentityProviderCredentials.class)
                     .setClient(client.instantiate(IdentityProviderCredentialsClient.class)
@@ -64,7 +64,5 @@ public class DefaultFacebookIdentityProviderBuilder extends DefaultIdentityProvi
                         .setTemplate(userName))
                     .setMatchType(matchType))
                 .setMaxClockSkew(maxClockSkew)));
-
-        return createdIdp;
     }
 }

@@ -30,13 +30,13 @@ import com.okta.sdk.resource.policy.PolicyAccountLink;
 import com.okta.sdk.resource.policy.PolicySubject;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
-public class DefaultGoogleIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
+public class MicrosoftIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
 
     @Override
     public IdentityProvider buildAndCreate(Client client) {
 
         return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
-            .setType(IdentityProvider.TypeEnum.GOOGLE)
+            .setType(IdentityProvider.TypeEnum.MICROSOFT)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
                 .setType(Protocol.TypeEnum.OIDC)
