@@ -774,7 +774,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     }
 
     private void addBackwardCompatibleArgs(CodegenOperation co, List<CodegenParameter> params) {
-        if (params.parallelStream().anyMatch(param -> param.vendorExtensions.containsKey("x-okta-added-version"))) {
+        // add backward compatible args only for major revisions greater than 1
+        if (params.parallelStream().anyMatch(param -> param.vendorExtensions.containsKey("x-okta-added-version") &&
+            Integer.valueOf(param.vendorExtensions.get("x-okta-added-version").toString().substring(0, 1)) > 1)) {
 
             // capture the backward compat params
             Map<String, List<CodegenParameter>> versionedParamsMap = new LinkedHashMap<>();
