@@ -185,7 +185,8 @@ class FactorsIT extends ITSupport {
 
         VerifyFactorRequest request = client.instantiate(VerifyFactorRequest)
         request.setAnswer("pizza")
-        VerifyUserFactorResponse response = securityQuestionUserFactor.verify(request, null, null)
+        VerifyUserFactorResponse response =
+            securityQuestionUserFactor.verify(request, null, null, null, null, null)
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
     }
 
@@ -207,7 +208,8 @@ class FactorsIT extends ITSupport {
         assertThat emailUserFactor.id, notNullValue()
 
         VerifyFactorRequest request = client.instantiate(VerifyFactorRequest)
-        VerifyUserFactorResponse response = emailUserFactor.verify(request, null, null)
+        VerifyUserFactorResponse response =
+            emailUserFactor.verify(request, null, null, null, null, null)
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.CHALLENGE)
     }
 

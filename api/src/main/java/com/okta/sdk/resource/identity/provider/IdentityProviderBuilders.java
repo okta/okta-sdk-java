@@ -20,7 +20,7 @@ import com.okta.commons.lang.Classes;
 public class IdentityProviderBuilders {
 
     public static OIDCIdentityProviderBuilder oidc() {
-        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.OIDCIdentityProviderBuilder");
+        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.OidcIdentityProviderBuilder");
     }
 
     public static IdentityProviderBuilder google() {
