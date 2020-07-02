@@ -17,15 +17,12 @@ Following is a list of changes that break backward compatibility in version 2.0.
    - Renamed `listRules` to `listGroupRules`
    
 - `com.okta.sdk.resource.log.LogEventList` 
-   - `getLogs(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)`
-   Signature changed to `getLogs(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String)`
+   - `getLogs(String until, String since, String filter, String q, String sortOrder)`
+   Signature changed to `getLogs(Date since, Date until, String filter, String q, String sortOrder)`
    
 - `com.okta.sdk.resource.group.GroupList` 
-   - `listGroups(java.lang.String,java.lang.String, java.lang.String)`
-   Signature changed to `listGroups(java.lang.String, java.lang.String)`
-
-- `com.okta.sdk.resource.application.JsonWebKey`
-   - `getExpiresAt` Return type changed from `Date` to `String`
+   - `listGroups(String q, String filter, String expand)`
+   Signature changed to `listGroups(String q, String filter)`
 
 - `com.okta.sdk.resource.application.SwaThreeFieldApplicationSettingsApplication`
    - `getTargetUrl` Renamed to `getTargetURL`
@@ -33,7 +30,8 @@ Following is a list of changes that break backward compatibility in version 2.0.
 
 - `com.okta.sdk.resource.group.Group`
    - `getType` Return type changed from `String` to `com.okta.sdk.resource.group.GroupType`
-
+   - Removed `listUsers`
+   
 - `com.okta.sdk.resource.group.rule.GroupRule`
    - Removed `delete` 
    - Removed `getAllGroupsValid` 

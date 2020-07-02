@@ -8817,6 +8817,8 @@ definitions:
         readOnly: true
         type: string
       expiresAt:
+        format: date-time
+        readOnly: true
         type: string
       key_ops:
         items:
