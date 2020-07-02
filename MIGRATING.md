@@ -9,7 +9,7 @@ In addition to many new classes/interfaces, some existing class/interfaces are n
 
 ### Breaking Changes
 
-The following is a list of changes that break backward compatibility in version 2.0.0.
+Following is a list of changes that break backward compatibility in version 2.0.0.
 
 - `com.okta.sdk.client.Client`
    - Renamed `createRule` to `createGroupRule`
@@ -32,27 +32,26 @@ The following is a list of changes that break backward compatibility in version 
    - `setTargetUrl` Renamed to `setTargetURL`
 
 - `com.okta.sdk.resource.group.Group`
-   -  `getType` Return type changed from `String` to `com.okta.sdk.resource.group.GroupType`
+   - `getType` Return type changed from `String` to `com.okta.sdk.resource.group.GroupType`
 
 - `com.okta.sdk.resource.group.rule.GroupRule`
-   -  Removed `delete` 
-   -  Removed `getAllGroupsValid` 
-   -  Removed `getEmbedded` 
-   -  Removed `setAllGroupsValid`
+   - Removed `delete` 
+   - Removed `getAllGroupsValid` 
+   - Removed `getEmbedded` 
+   - Removed `setAllGroupsValid`
 
 - `com.okta.sdk.resource.log.LogAuthenticationContext`
-   -  `getCredentialProvider` Return type changed from `List` to `com.okta.sdk.resource.log.LogCredentialProvider`
-   -  `getCredentialType` Return type changed from `List` to `com.okta.sdk.resource.log.LogCredentialType`
+   - `getCredentialProvider` Return type changed from `List` to `com.okta.sdk.resource.log.LogCredentialProvider`
+   - `getCredentialType` Return type changed from `List` to `com.okta.sdk.resource.log.LogCredentialType`
 
 - `com.okta.sdk.resource.policy.Policy`
-   -  Removed `createRule`
+   - Removed `createRule`
 
 - `com.okta.sdk.resource.policy.PolicyRule`
    - Removed `setId`
 
 - `com.okta.sdk.resource.user.factor.VerifyFactorRequest`
-   - Removed `getTokenLifetimeSeconds` 
-   - Removed `setTokenLifetimeSeconds`
+   - Removed `getTokenLifetimeSeconds` & `setTokenLifetimeSeconds`
 
 - `com.okta.sdk.resource.user.Role`
    - `getType` Return type changed from `String` to `com.okta.sdk.resource.role.RoleType`
@@ -74,5 +73,5 @@ The following is a list of changes that break backward compatibility in version 
    - Renamed `removeGroupTargetFromRole` to `removeGroupTarget`
    - `resetPassword(java.lang.String, java.lang.Boolean)` Signature changed to `resetPassword(java.lang.Boolean)`
 
-`com.okta.sdk.resource.user.UserCredentials`
--  removed getEmails() & setEmails(java.util.List)
+- `com.okta.sdk.resource.user.UserCredentials`
+   - Removed `getEmails` & `setEmails`
