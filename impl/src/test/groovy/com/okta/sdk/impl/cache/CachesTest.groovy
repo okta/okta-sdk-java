@@ -17,7 +17,7 @@
 package com.okta.sdk.impl.cache
 
 import com.okta.sdk.cache.CacheManager
-import com.okta.sdk.lang.Duration
+import java.time.Duration
 import org.testng.annotations.Test
 
 import java.util.concurrent.TimeUnit
@@ -34,13 +34,12 @@ class CachesTest {
     @Test
     void testBuild() {
 
-        def defaultTtl = new Duration(10, TimeUnit.MINUTES)
-        def defaultTti = new Duration(5, TimeUnit.HOURS)
+        Duration defaultTtl = Duration.ofMinutes(30)
+        Duration defaultTti = Duration.ofHours(5)
 
         CacheManager m = newCacheManager()
-                .withDefaultTimeToLive(-1, defaultTtl.timeUnit)
-                .withDefaultTimeToLive(defaultTtl.value, defaultTtl.timeUnit)
-                .withDefaultTimeToIdle(defaultTti.value, defaultTti.timeUnit)
+                .withDefaultTimeToLive(defaultTtl.getSeconds(), TimeUnit.SECONDS)
+                .withDefaultTimeToIdle(defaultTti.getSeconds(), TimeUnit.SECONDS)
                 .withCache(named('foo').withTimeToLive(20, TimeUnit.MINUTES).withTimeToIdle(15, TimeUnit.MINUTES))
                 .withCache(named('bar').withTimeToLive(-1, TimeUnit.HOURS).withTimeToIdle(0, TimeUnit.HOURS))
                 .build()
@@ -57,8 +56,8 @@ class CachesTest {
         assertTrue c instanceof DefaultCache
         DefaultCache cache = (DefaultCache)c
 
-        assertEquals cache.timeToLive, new Duration(20, TimeUnit.MINUTES)
-        assertEquals cache.timeToIdle, new Duration(15, TimeUnit.MINUTES)
+        assertEquals cache.timeToLive, Duration.ofMinutes(20)
+        assertEquals cache.timeToIdle, Duration.ofMinutes(15)
 
         cache = (DefaultCache)manager.getCache('bar')
 
@@ -69,7 +68,7 @@ class CachesTest {
     @Test
     void testNewDisabledCacheManager() {
 
-        CacheManager cm = newDisabledCacheManager();
+        CacheManager cm = newDisabledCacheManager()
 
         assertNotNull cm
         assertTrue cm instanceof DisabledCacheManager

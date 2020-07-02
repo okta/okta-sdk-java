@@ -16,12 +16,9 @@
  */
 package com.okta.sdk.impl.lang
 
-import com.okta.sdk.lang.Duration
+import java.time.Duration
 import org.testng.annotations.Test
 
-import java.util.concurrent.TimeUnit
-
-import static org.testng.Assert.assertEquals
 import static org.testng.Assert.assertTrue
 
 /**
@@ -33,33 +30,30 @@ class DurationTest {
     void testGreaterThan() {
 
         //1,800,801 millis = 30 minutes + 1 millis
-        def duration = new Duration(1800001, TimeUnit.MILLISECONDS);
-        def thirtyMin = new Duration(30, TimeUnit.MINUTES);
+        def duration = Duration.ofMillis(1800001)
+        def thirtyMin = Duration.ofMinutes(30)
 
-        assertEquals duration.compareTo(thirtyMin), 1
-        assertTrue duration.isGreaterThan(thirtyMin)
+        assertTrue duration.compareTo(thirtyMin) > 0
     }
 
     @Test
     void testLessThan() {
 
         //1,799,999 millis = 30 minutes - 1 millis
-        def duration = new Duration(1799999, TimeUnit.MILLISECONDS);
-        def thirtyMin = new Duration(30, TimeUnit.MINUTES);
+        def duration = Duration.ofMillis(1799999)
+        def thirtyMin = Duration.ofMinutes(30)
 
-        assertEquals duration.compareTo(thirtyMin), -1
-        assertTrue duration.isLessThan(thirtyMin);
+        assertTrue duration.compareTo(thirtyMin) < 0
     }
 
     @Test
     void testEqualTo() {
 
         //1,800,000 millis = 30 minutes
-        def duration = new Duration(1800000, TimeUnit.MILLISECONDS);
-        def thirtyMin = new Duration(30, TimeUnit.MINUTES);
+        def duration = Duration.ofMillis(1800000)
+        def thirtyMin = Duration.ofMinutes(30)
 
-        assertEquals duration.compareTo(thirtyMin), 0
-        assertTrue duration.isEquivalentTo(thirtyMin)
+        assertTrue duration.compareTo(thirtyMin) == 0
     }
 
 }

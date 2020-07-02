@@ -21,7 +21,7 @@ import com.okta.commons.lang.Collections;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.cache.CacheManagerBuilder;
-import com.okta.sdk.lang.Duration;
+import java.time.Duration;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

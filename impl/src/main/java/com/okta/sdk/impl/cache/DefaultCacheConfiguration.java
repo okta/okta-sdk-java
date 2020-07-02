@@ -17,7 +17,7 @@
 package com.okta.sdk.impl.cache;
 
 import com.okta.commons.lang.Assert;
-import com.okta.sdk.lang.Duration;
+import java.time.Duration;
 
 import java.util.concurrent.TimeUnit;
 
@@ -38,8 +38,9 @@ public class DefaultCacheConfiguration implements CacheConfiguration {
     }
 
     static Duration toDuration(long value, TimeUnit tu) {
-        if (value > 0) {
-            return new Duration(value, tu);
+        long timeInMillis = TimeUnit.MILLISECONDS.convert(value, tu);
+        if (timeInMillis > 0) {
+            return Duration.ofMillis(timeInMillis);
         }
         return null;
     }

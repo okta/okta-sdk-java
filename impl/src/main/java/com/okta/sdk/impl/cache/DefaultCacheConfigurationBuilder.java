@@ -18,7 +18,7 @@ package com.okta.sdk.impl.cache;
 
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
-import com.okta.sdk.lang.Duration;
+import java.time.Duration;
 
 import java.util.concurrent.TimeUnit;
 
