@@ -19,12 +19,11 @@ package com.okta.sdk.impl.cache;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.impl.util.SoftHashMap;
 import com.okta.commons.lang.Assert;
-import com.okta.sdk.lang.Duration;
+import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -72,16 +71,16 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * This constructor uses a {@link SoftHashMap} instance as the cache's backing map, which is thread-safe and
      * auto-sizes itself based on the application's memory constraints.
      * <p>
-     * Finally, the {@link #setTimeToIdle(com.okta.sdk.lang.Duration) timeToIdle} and
-     * {@link #setTimeToLive(com.okta.sdk.lang.Duration) timeToLive} settings are both {@code null},
+     * Finally, the {@link #setTimeToIdle(java.time.Duration) timeToIdle} and
+     * {@link #setTimeToLive(java.time.Duration) timeToLive} settings are both {@code null},
      * indicating that cache entries will live indefinitely (except due to memory constraints as managed by the
      * {@code SoftHashMap}).
      *
      * @param name the name to assign to this instance, expected to be unique among all other caches in the parent
      *             {@code CacheManager}.
      * @see SoftHashMap
-     * @see #setTimeToIdle(com.okta.sdk.lang.Duration)
-     * @see #setTimeToLive(com.okta.sdk.lang.Duration)
+     * @see #setTimeToIdle(java.time.Duration)
+     * @see #setTimeToLive(java.time.Duration)
      */
     public DefaultCache(String name) {
         this(name, new SoftHashMap<K, Entry<V>>());
@@ -92,8 +91,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * {@code backingMap}.  It is expected that the {@code backingMap} implementation be thread-safe and preferrably
      * auto-sizing based on memory constraints (see {@link SoftHashMap} for such an implementation).
      * <p>
-     * The {@link #setTimeToIdle(com.okta.sdk.lang.Duration) timeToIdle} and
-     * {@link #setTimeToLive(com.okta.sdk.lang.Duration) timeToLive} settings are both {@code null},
+     * The {@link #setTimeToIdle(java.time.Duration) timeToIdle} and
+     * {@link #setTimeToLive(java.time.Duration) timeToLive} settings are both {@code null},
      * indicating that cache entries will live indefinitely (except due to memory constraints as managed by the
      * {@code backingMap} instance).
      *
@@ -101,8 +100,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      *                   {@code CacheManager}.
      * @param backingMap the (ideally thread-safe) map instance to store the Cache entries.
      * @see SoftHashMap
-     * @see #setTimeToIdle(com.okta.sdk.lang.Duration)
-     * @see #setTimeToLive(com.okta.sdk.lang.Duration)
+     * @see #setTimeToIdle(java.time.Duration)
+     * @see #setTimeToLive(java.time.Duration)
      */
     public DefaultCache(String name, Map<K, Entry<V>> backingMap) {
         this(name, backingMap, null, null);
@@ -123,8 +122,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * @throws IllegalArgumentException if either {@code timeToLive} or {@code timeToIdle} are non-null <em>and</em>
      *                                  represent a non-positive (zero or negative) value. This is only enforced for
      *                                  non-null values - {@code null} values are allowed for either argument.
-     * @see #setTimeToIdle(com.okta.sdk.lang.Duration)
-     * @see #setTimeToLive(com.okta.sdk.lang.Duration)
+     * @see #setTimeToIdle(java.time.Duration)
+     * @see #setTimeToLive(java.time.Duration)
      */
     public DefaultCache(String name, Map<K, Entry<V>> backingMap, Duration timeToLive, Duration timeToIdle) {
         Assert.notNull(name, "Cache name cannot be null.");
@@ -142,13 +141,13 @@ public class DefaultCache<K, V> implements Cache<K, V> {
 
     protected static void assertTtl(Duration ttl) {
         if (ttl != null) {
-            Assert.isTrue(ttl.getValue() > 0, "timeToLive duration must be greater than zero");
+            Assert.isTrue(!ttl.isZero() && !ttl.isNegative(), "timeToLive duration must be greater than zero");
         }
     }
 
     protected static void assertTti(Duration tti) {
         if (tti != null) {
-            Assert.isTrue(tti.getValue() > 0, "timeToIdle duration must be greater than zero");
+            Assert.isTrue(!tti.isZero() && !tti.isNegative(), "timeToIdle duration must be greater than zero");
         }
     }
 
@@ -169,8 +168,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
         Duration tti = this.timeToIdle;
 
         if (ttl != null) {
-            Duration sinceCreation = new Duration(nowMillis - entry.getCreationTimeMillis(), TimeUnit.MILLISECONDS);
-            if (sinceCreation.isGreaterThan(ttl)) {
+            Duration sinceCreation = Duration.ofMillis(nowMillis - entry.getCreationTimeMillis());
+            if (sinceCreation.compareTo(ttl) > 0) {
                 map.remove(key);
                 missCount.incrementAndGet(); //count an expired TTL as a miss
                 logger.trace("Removing {} from cache due to TTL, sinceCreation: {}", key, sinceCreation);
@@ -179,8 +178,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
         }
 
         if (tti != null) {
-            Duration sinceLastAccess = new Duration(nowMillis - entry.getLastAccessTimeMillis(), TimeUnit.MILLISECONDS);
-            if (sinceLastAccess.isGreaterThan(tti)) {
+            Duration sinceLastAccess = Duration.ofMillis(nowMillis - entry.getLastAccessTimeMillis());
+            if (sinceLastAccess.compareTo(tti) > 0) {
                 map.remove(key);
                 missCount.incrementAndGet(); //count an expired TTI as a miss
                 logger.trace("Removing {} from cache due to TTI, sinceLastAccess: {}", key, sinceLastAccess);

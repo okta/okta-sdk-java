@@ -16,11 +16,9 @@
  */
 package com.okta.sdk.impl.cache
 
-import com.okta.sdk.lang.Duration
+import java.time.Duration
 import groovy.json.JsonSlurper
 import org.testng.annotations.Test
-
-import java.util.concurrent.TimeUnit
 
 import static org.testng.Assert.*
 
@@ -44,7 +42,7 @@ class DefaultCacheTest {
     @Test
     void testSetTtl() {
         def cache = new DefaultCache('foo')
-        def ttl = new Duration(30, TimeUnit.MILLISECONDS)
+        def ttl = Duration.ofMillis(30)
         cache.setTimeToLive(ttl)
         assertSame cache.timeToLive, ttl
     }
@@ -52,21 +50,21 @@ class DefaultCacheTest {
     @Test(expectedExceptions = IllegalArgumentException)
     void testSetNegativeTtl() {
         def cache = new DefaultCache('foo')
-        def ttl = new Duration(-30, TimeUnit.MILLISECONDS)
+        def ttl = Duration.ofMillis(-30)
         cache.setTimeToLive(ttl)
     }
 
     @Test(expectedExceptions = IllegalArgumentException)
     void testSetZeroTtl() {
         def cache = new DefaultCache('foo')
-        def ttl = new Duration(0, TimeUnit.MILLISECONDS)
+        def ttl = Duration.ofMillis(0)
         cache.setTimeToLive(ttl)
     }
 
     @Test
     void testSetTti() {
         def cache = new DefaultCache('foo')
-        def tti = new Duration(30, TimeUnit.MILLISECONDS)
+        def tti = Duration.ofMillis(30)
         cache.setTimeToIdle(tti)
         assertSame cache.timeToIdle, tti
     }
@@ -74,14 +72,14 @@ class DefaultCacheTest {
     @Test(expectedExceptions = IllegalArgumentException)
     void testSetNegativeTti() {
         def cache = new DefaultCache('foo')
-        def tti = new Duration(-30, TimeUnit.MILLISECONDS)
+        def tti = Duration.ofMillis(-30)
         cache.setTimeToIdle(tti)
     }
 
     @Test(expectedExceptions = IllegalArgumentException)
     void testSetZeroTti() {
         def cache = new DefaultCache('foo')
-        def tti = new Duration(0, TimeUnit.MILLISECONDS)
+        def tti = Duration.ofMillis(0)
         cache.setTimeToIdle(tti)
     }
 
@@ -173,7 +171,7 @@ class DefaultCacheTest {
     @Test
     void testTimeToLive() {
 
-        def cache = new DefaultCache('foo', [:], new Duration(10, TimeUnit.MILLISECONDS), null)
+        def cache = new DefaultCache('foo', [:], Duration.ofMillis(10), null)
 
         def key = 'key'
         def value = 'value'
@@ -196,7 +194,7 @@ class DefaultCacheTest {
     @Test
     void testTimeToIdle() {
 
-        def cache = new DefaultCache('foo', [:], null, new Duration(50, TimeUnit.MILLISECONDS))
+        def cache = new DefaultCache('foo', [:], null, Duration.ofMillis(50))
 
         def key = 'key'
         def value = 'value'
@@ -224,7 +222,7 @@ class DefaultCacheTest {
     @Test
     void testTimeToLiveAndTimeToIdle() {
 
-        def cache = new DefaultCache('foo', [:], new Duration(100, TimeUnit.MILLISECONDS), new Duration(40, TimeUnit.MILLISECONDS))
+        def cache = new DefaultCache('foo', [:], Duration.ofMillis(100), Duration.ofMillis(40))
 
         def key = 'key'
         def value = 'value'
