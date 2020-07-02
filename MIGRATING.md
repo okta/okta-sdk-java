@@ -30,46 +30,40 @@ Following is a list of changes that break backward compatibility in version 2.0.
 
 - `com.okta.sdk.resource.group.Group`
    - `getType` Return type changed from `String` to `com.okta.sdk.resource.group.GroupType`
-   - Removed `listUsers`
    
 - `com.okta.sdk.resource.group.rule.GroupRule`
-   - Removed `delete` 
-   - Removed `getAllGroupsValid` 
-   - Removed `getEmbedded` 
-   - Removed `setAllGroupsValid`
+   - `delete(Boolean removeUsers)` Signature changed to `delete()`
+   - Removed `getAllGroupsValid` and `setAllGroupsValid` (property `allGroupsValid` is removed)
+   - Removed `getEmbedded` (property `_embedded` is removed)
 
 - `com.okta.sdk.resource.log.LogAuthenticationContext`
    - `getCredentialProvider` Return type changed from `List` to `com.okta.sdk.resource.log.LogCredentialProvider`
    - `getCredentialType` Return type changed from `List` to `com.okta.sdk.resource.log.LogCredentialType`
 
-- `com.okta.sdk.resource.policy.Policy`
-   - Removed `createRule`
-
 - `com.okta.sdk.resource.policy.PolicyRule`
-   - Removed `setId`
+   - Removed `setId` (property `id` is read-only)
 
 - `com.okta.sdk.resource.user.factor.VerifyFactorRequest`
-   - Removed `getTokenLifetimeSeconds` & `setTokenLifetimeSeconds`
+   - Removed `getTokenLifetimeSeconds` & `setTokenLifetimeSeconds` (property `tokenLifetimeSeconds` is removed)
 
 - `com.okta.sdk.resource.user.Role`
    - `getType` Return type changed from `String` to `com.okta.sdk.resource.role.RoleType`
    - `setType` Param type changed from `String` to `com.okta.sdk.resource.role.RoleType`
 
 - `com.okta.sdk.resource.user.User`
-   - Removed `addFactor`
    - Renamed `addGroupTarget` to `addGroupTargetToRole`
    - Renamed `addRole` to `assignRole`
-   - Removed `endAllSessions`
-   - `expirePassword` Return type changed from `com.okta.sdk.resource.user.TempPassword` to `com.okta.sdk.resource.user.User`
-   - Removed `forgotPassword`
-   - `getFactor` Return type changed from `com.okta.sdk.resource.user.factor.Factor` to `com.okta.sdk.resource.user.factor.UserFactor`
-   - Removed `listAppLinks`
-   - `listFactors` Return type changed from `com.okta.sdk.resource.user.factor.FactorList` to `com.okta.sdk.resource.user.factor.UserFactorList` 
    - Renamed `listGroupTargetsForRole` to `listGroupTargets`
-   - Removed `listRoles`
-   - `listSupportedFactors` Return type changed from `com.okta.sdk.resource.user.factor.FactorList` to `com.okta.sdk.resource.user.factor.UserFactorList`
    - Renamed `removeGroupTargetFromRole` to `removeGroupTarget`
-   - `resetPassword(java.lang.String, java.lang.Boolean)` Signature changed to `resetPassword(java.lang.Boolean)`
+   - Renamed `addFactor` to `enrollFactor`
+   - Renamed `listRoles`to `listAssignedRoles`
+   - Removed `forgotPassword` (use `resetPassword` instead)
+   - Removed `endAllSessions` (use `clearSessions` instead)
+   - `listSupportedFactors` Return type changed from `com.okta.sdk.resource.user.factor.FactorList` to `com.okta.sdk.resource.user.factor.UserFactorList`
+   - `expirePassword` Return type changed from `com.okta.sdk.resource.user.TempPassword` to `com.okta.sdk.resource.user.User`
+   - `getFactor` Return type changed from `com.okta.sdk.resource.user.factor.Factor` to `com.okta.sdk.resource.user.factor.UserFactor`
+   - `listFactors` Return type changed from `com.okta.sdk.resource.user.factor.FactorList` to `com.okta.sdk.resource.user.factor.UserFactorList` 
+   - `resetPassword(String provider, Boolean sendEmail)` Signature changed to `resetPassword(Boolean sendEmail)`
 
 - `com.okta.sdk.resource.user.UserCredentials`
-   - Removed `getEmails` & `setEmails`
+   - Removed `getEmails` & `setEmails` () (property `emails` is removed)
