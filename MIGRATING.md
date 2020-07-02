@@ -50,6 +50,8 @@ Following is a list of changes that break backward compatibility in version 2.0.
    - `getType` Return type changed from `String` to `com.okta.sdk.resource.role.RoleType`
    - `setType` Param type changed from `String` to `com.okta.sdk.resource.role.RoleType`
 
+- All `*Factor` classes Renamed to `*UserFactor`
+
 - `com.okta.sdk.resource.user.User`
    - Renamed `addGroupTarget` to `addGroupTargetToRole`
    - Renamed `addRole` to `assignRole`
