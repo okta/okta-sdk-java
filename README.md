@@ -52,7 +52,7 @@ If you run into problems using the SDK, you can
  
 ## Getting started
  
-To use this SDK you will need to include the following dependencies:
+To use this SDK, you will need to include the following dependencies:
 
 For Apache Maven:
 
@@ -92,7 +92,7 @@ Snapshots are deployed off of the 'master' branch to [OSSRH](https://oss.sonatyp
 https://oss.sonatype.org/content/repositories/snapshots/
 ```
 
-You'll also need:
+You will also need:
 
 * An Okta account, called an _organization_ (sign up for a free [developer organization](https://developer.okta.com/signup) if you need one)
 * An [API token](https://developer.okta.com/docs/api/getting_started/getting_a_token)
@@ -104,8 +104,8 @@ Construct a client instance by passing it your Okta domain name and API token:
 [//]: # (method: createClient)
 ```java
 Client client = Clients.builder()
-    .setOrgUrl("{yourOktaDomain}")
-    .setClientCredentials(new TokenClientCredentials("{apiToken}"))
+    .setOrgUrl("https://{yourOktaDomain}")  // e.g https://dev-123456.okta.com
+    .setClientCredentials(new TokenClientCredentials("yourApiToken"))
     .build();
 ```
 [//]: # (end: createClient)
@@ -118,16 +118,16 @@ Okta allows you to interact with Okta APIs using scoped OAuth 2.0 access tokens.
 
 This SDK supports this feature only for service-to-service applications. Check out [our guides](https://developer.okta.com/docs/guides/implement-oauth-for-okta/overview/) to learn more about how to register a new service application using a private and public key pair.
 
-When using this approach you won't need an API Token because the SDK will request an access token for you. In order to use OAuth 2.0, construct a client instance by passing the following parameters:
+When using this approach, you won't need an API Token because the SDK will request an access token for you. In order to use OAuth 2.0, construct a client instance by passing the following parameters:
 
 [//]: # (method: createOAuth2Client)
 ```java
 Client client = Clients.builder()
-    .setOrgUrl("{yourOktaDomain}")
+    .setOrgUrl("https://{yourOktaDomain}")  // e.g https://dev-123456.okta.com
     .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-    .setClientId("{clientId}")
+    .setClientId("yourClientID")
     .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
-    .setPrivateKey("{pathToYourPrivateKeyPemFile}")
+    .setPrivateKey("/path/to/yourPrivateKey.pem")
     .build();
 ```
 [//]: # (end: createOAuth2Client)
@@ -386,13 +386,13 @@ The full YAML configuration looks like:
 okta:
   client:
     connectionTimeout: 30 # seconds
-    orgUrl: "https://{yourOktaDomain}" # i.e. https://dev-123456.oktapreview.com
+    orgUrl: "https://{yourOktaDomain}" # i.e. https://dev-123456.okta.com
     proxy:
       port: null
       host: null
       username: null
       password: null
-    token: {apiToken}
+    token: yourApiToken
     requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4
@@ -411,11 +411,9 @@ okta:
       username: null
       password: null
     authorizationMode: "PrivateKey"
-    clientId: "{clientId}"
-    scopes:
-      - okta.users.read
-      - okta.apps.read
-    privateKey: "~/.okta/privateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
+    clientId: "yourClientId"
+    scopes: "okta.users.read okta.apps.read"
+    privateKey: "/path/to/yourPrivateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
     requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4
@@ -494,7 +492,7 @@ In most cases, you won't need to build the SDK from source. If you want to build
  
 ## Contributing
  
-We're happy to accept contributions and PRs! Please see the [contribution guide](CONTRIBUTING.md) to understand how to structure a contribution.
+We are happy to accept contributions and PRs! Please see the [contribution guide](CONTRIBUTING.md) to understand how to structure a contribution.
 
 [devforum]: https://devforum.okta.com/
 [javadocs]: https://developer.okta.com/okta-sdk-java/
