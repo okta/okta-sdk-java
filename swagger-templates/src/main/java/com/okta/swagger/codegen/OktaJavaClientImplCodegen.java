@@ -317,20 +317,5 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         } catch (IOException e) {
             throw new RuntimeException("Failed to write discrimination map to json: "+ destFileJson.getAbsolutePath(), e);
         }
-
-        // deprecated, use JSON going forward to remove the runtime dependency on a YAML parser
-        File destFileYaml = new File(destDir, "/discrimination.yaml");
-        try (OutputStream outputStream = new FileOutputStream(destFileYaml)) {
-
-            // pretty print
-            DumperOptions options = new DumperOptions();
-            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            options.setPrettyFlow(true);
-            Yaml yaml = new Yaml(options);
-            Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
-            yaml.dump(rootConfigMap, writer);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write discrimination map to yaml: "+ destFileYaml.getAbsolutePath(), e);
-        }
     }
 }
