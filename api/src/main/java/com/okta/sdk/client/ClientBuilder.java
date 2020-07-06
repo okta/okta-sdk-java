@@ -298,7 +298,7 @@ public interface ClientBuilder {
      * <pre>
      * Client client = Clients.builder()...
      *    // setApiKey, etc...
-     *    .setAuthorizationMode(AuthorizationMode.SSWS) //set the SSWS authentication mod
+     *    .setAuthorizationMode(AuthorizationMode.SSWS) //set the SSWS authentication mode
      *    .build(); //build the Client
      * </pre>
      *
