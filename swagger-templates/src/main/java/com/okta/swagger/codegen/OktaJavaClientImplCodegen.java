@@ -24,16 +24,11 @@ import io.swagger.models.Model;
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
 import org.apache.commons.lang3.BooleanUtils;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -316,21 +311,6 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
              new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(outputStream, rootConfigMap);
         } catch (IOException e) {
             throw new RuntimeException("Failed to write discrimination map to json: "+ destFileJson.getAbsolutePath(), e);
-        }
-
-        // deprecated, use JSON going forward to remove the runtime dependency on a YAML parser
-        File destFileYaml = new File(destDir, "/discrimination.yaml");
-        try (OutputStream outputStream = new FileOutputStream(destFileYaml)) {
-
-            // pretty print
-            DumperOptions options = new DumperOptions();
-            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            options.setPrettyFlow(true);
-            Yaml yaml = new Yaml(options);
-            Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
-            yaml.dump(rootConfigMap, writer);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write discrimination map to yaml: "+ destFileYaml.getAbsolutePath(), e);
         }
     }
 }

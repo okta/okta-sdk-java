@@ -49,12 +49,14 @@ class InlineHooksIT extends ITSupport {
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
         assertThat(createdInlineHook.getName(), equalTo(name))
         assertThat(createdInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooks"))
+
+        createdInlineHook.deactivate()
     }
 
     @Test
@@ -68,7 +70,7 @@ class InlineHooksIT extends ITSupport {
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
@@ -78,6 +80,8 @@ class InlineHooksIT extends ITSupport {
         assertThat(retrievedInlineHook.getId(), notNullValue())
         assertThat(retrievedInlineHook.getName(), equalTo(name))
         assertThat(retrievedInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooks"))
+
+        createdInlineHook.deactivate()
     }
 
     @Test
@@ -91,7 +95,7 @@ class InlineHooksIT extends ITSupport {
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
@@ -114,6 +118,8 @@ class InlineHooksIT extends ITSupport {
         assertThat(updatedInlineHook.getName(), equalTo("updated-" + name))
         assertThat(updatedInlineHook.getType(), equalTo(InlineHookType.OAUTH2_TOKENS_TRANSFORM))
         assertThat(updatedInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooksUpdated"))
+
+        updatedInlineHook.deactivate()
     }
 
     @Test
@@ -127,7 +133,7 @@ class InlineHooksIT extends ITSupport {
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
@@ -152,11 +158,13 @@ class InlineHooksIT extends ITSupport {
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
         assertPresent(client.listInlineHooks(), createdInlineHook)
+
+        createdInlineHook.deactivate()
     }
 
     @Test
@@ -170,7 +178,7 @@ class InlineHooksIT extends ITSupport {
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
