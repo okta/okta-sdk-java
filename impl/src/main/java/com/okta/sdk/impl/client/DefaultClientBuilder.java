@@ -267,11 +267,6 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
-    public ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme) {
-        return setAuthorizationMode(AuthorizationMode.get(authenticationScheme));
-    }
-
-    @Override
     public ClientBuilder setConnectionTimeout(int timeout) {
         Assert.isTrue(timeout >= 0, "Timeout cannot be a negative number.");
         this.clientConfig.setConnectionTimeout(timeout);
