@@ -12052,7 +12052,7 @@ definitions:
             src: id
         operationId: replaceUserType
     x-okta-tags:
-      - UserType
+      - User
   VerifyFactorRequest:
     properties:
       activationToken:
