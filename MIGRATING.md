@@ -13,7 +13,6 @@ This means that you will now have to start using the new `*UserFactor` objects i
 ### Package `com.okta.sdk.client.Client`
 
 Below methods have been renamed for the sake of clarity.
-
    - Renamed `createRule` to `createGroupRule`
    - Renamed `getRule` to `getGroupRule`
    - Renamed `listRules` to `listGroupRules`
@@ -21,7 +20,6 @@ Below methods have been renamed for the sake of clarity.
 ### Package `com.okta.sdk.resource.log.LogEventList`
 
 The API used to get log info has undergone a signature change (note the order swap of `until` and `since` parameters).
-
    - `getLogs(String until, String since, String filter, String q, String sortOrder)`
    Signature changed to `getLogs(Date since, Date until, String filter, String q, String sortOrder)`
    
@@ -29,12 +27,10 @@ The API used to get log info has undergone a signature change (note the order sw
 
 The API used to list the groups to which a user belongs, has undergone a signature change. 
 There is no need for supplying the `expand` parameter anymore. 
-
    - `listGroups(String q, String filter, String expand)`
    Signature changed to `listGroups(String q, String filter)`
    
 With this removal of `expand` parameter, the caller has two options of achieving the previous result:
-
 - Make a second API call to the Group API and fetch the results.
 - You can call the Groups API endpoint (or any Okta management API endpoint) using a syntax like below example:
   ```
@@ -48,7 +44,6 @@ With this removal of `expand` parameter, the caller has two options of achieving
 ### Package `com.okta.sdk.resource.application.SwaThreeFieldApplicationSettingsApplication`
 
 Below APIs have undergone a name change.
-
    - `getTargetUrl` Renamed to `getTargetURL`
    - `setTargetUrl` Renamed to `setTargetURL`
 
@@ -56,14 +51,12 @@ Below APIs have undergone a name change.
 
 With the introduction of enum type `com.okta.sdk.resource.group.GroupType`, the get group type operation will now make 
 use of this new type instead of the `String` type used earlier.
-
    - `getType` Return type changed from `String` to `com.okta.sdk.resource.group.GroupType`
    
 ### Package `com.okta.sdk.resource.group.rule.GroupRule`
 
 The properties `allGroupsValid` & `_embedded` were not used by the backend earlier and were always set to `null`.
 As part of this upgrade, we will remove it from the method signatures.
-
    - Removed `getAllGroupsValid` and `setAllGroupsValid` (property `allGroupsValid` is being removed; 
    this option is being removed from future versions of Okta API)
    - Removed `getEmbedded` (property `_embedded` is removed; this property is undocumented in Okta API and hence being removed)
@@ -73,12 +66,10 @@ As part of this upgrade, we will remove it from the method signatures.
 
 The API to get log credential provider used to return a list of objects of type `LogCredentialProvider` earlier. 
 Moving forward, the return type will be a single object of type `LogCredentialProvider`.
-
    - `getCredentialProvider` Return type changed from `List<com.okta.sdk.resource.log.LogCredentialProvider>` to `com.okta.sdk.resource.log.LogCredentialProvider`
 
 The API to get log credential type used to return a list of objects of type `LogCredentialType` earlier. 
 Moving forward, the return type will be a single object of type `LogCredentialType`.
-
 - `getCredentialType` Return type changed from `List<com.okta.sdk.resource.log.LogCredentialType>` to `com.okta.sdk.resource.log.LogCredentialType`
 
 ### Package `com.okta.sdk.resource.policy.PolicyRule`
@@ -89,14 +80,12 @@ There is no need of exposing setter for the `read-only` property `id`.
 ### Package `com.okta.sdk.resource.user.factor.VerifyFactorRequest`
 
 The property `tokenLifetimeSeconds` will not used by the backend going forward.
-
    - Removed `getTokenLifetimeSeconds` & `setTokenLifetimeSeconds` (property `tokenLifetimeSeconds` is removed)
 
 ### Package `com.okta.sdk.resource.user.Role`
 
 With the introduction of enum type `com.okta.sdk.resource.role.RoleType`, the getter/setter for role type operation will now make 
 use of this new type instead of the `String` type used earlier.
-
    - `getType` Return type changed from `String` to `com.okta.sdk.resource.role.RoleType`
    - `setType` Param type changed from `String` to `com.okta.sdk.resource.role.RoleType`
 
