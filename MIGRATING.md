@@ -30,16 +30,16 @@ There is no need for supplying the `expand` parameter anymore.
    - `listGroups(String q, String filter, String expand)`
    Signature changed to `listGroups(String q, String filter)`
    
-With this removal of `expand` parameter, the caller has two options of achieving the previous result:
-- Make a second API call to the Group API and fetch the results.
-- You can call the Groups API endpoint (or any Okta management API endpoint) using a syntax like below example:
-  ```
-  // List Groups API, see: https://developer.okta.com/docs/reference/api/groups/#list-groups
-  GroupsList result = client.http()
-      .addQueryParameter("expand", true)
-      .get("/api/v1/groups", GroupsList.class);
-  ```
-- Note that the support for `expand` parameter might go away anytime in future.
+       - With this removal of `expand` parameter, the caller has two options of achieving the previous result:
+       - Make a second API call to the Group API and fetch the results.
+       - You can call the Groups API endpoint (or any Okta management API endpoint) using a syntax like below example:
+       ```
+       // List Groups API, see: https://developer.okta.com/docs/reference/api/groups/#list-groups
+       GroupsList result = client.http()
+         .addQueryParameter("expand", true)
+         .get("/api/v1/groups", GroupsList.class);
+       ```
+- Note that the support for `expand` parameter might go away anytime in the future.
 
 ### Package `com.okta.sdk.resource.application.SwaThreeFieldApplicationSettingsApplication`
 
