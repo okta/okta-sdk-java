@@ -37,15 +37,13 @@ With this removal of `expand` parameter, the caller has two options of achieving
 
 - Make a second API call to the Group API and fetch the results.
 - You can call the Groups API endpoint (or any Okta management API endpoint) using a syntax like below example:
-  
-  ```java
-  // List Groups API, see: https://developer.okta.com/docs/reference/api/groups/#list-groups
-  ExtensibleResource result = client.http()
-      .addQueryParameter("expand", "<<value>>")
-      .get("/api/v1/groups", ExtensibleResource.class);
   ```
-
-Note that the support for `expand` parameter support might go away anytime in future.
+  // List Groups API, see: https://developer.okta.com/docs/reference/api/groups/#list-groups
+  GroupsList result = client.http()
+      .addQueryParameter("expand", true)
+      .get("/api/v1/groups", GroupsList.class);
+  ```
+- Note that the support for `expand` parameter might go away anytime in future.
 
 ### Package `com.okta.sdk.resource.application.SwaThreeFieldApplicationSettingsApplication`
 
