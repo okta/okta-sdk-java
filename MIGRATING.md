@@ -58,7 +58,7 @@ use of this new enum type instead of the `String` type used earlier.
 The properties `allGroupsValid` & `_embedded` were not used by the backend earlier and were always set to `null`.
 As part of this upgrade, we will remove it from the method signatures.
    - Removed `getAllGroupsValid` and `setAllGroupsValid` (property `allGroupsValid` is being removed; 
-   this option is being removed from future versions of Okta API)
+   this option would be removed from future versions of Okta API)
    - Removed `getEmbedded` (property `_embedded` is removed; this property is undocumented in Okta API and hence being removed)
    - `delete(Boolean removeUsers)` Signature changed to `delete()`
 
