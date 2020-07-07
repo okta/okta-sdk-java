@@ -30,8 +30,6 @@ public interface GroupRuleBuilder {
 
     GroupRuleBuilder setType(String type);
 
-    GroupRuleBuilder setAllGroupsValid(Boolean allGroupsValid);
-
     GroupRuleBuilder setAssignUserToGroups(List<String> assignUserToGroups);
 
     default GroupRuleBuilder setGroups(String... groupIds) {

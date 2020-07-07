@@ -25,7 +25,7 @@
 
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-root</artifactId>
-    <version>1.6.1-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Okta Java SDK</name>
@@ -40,7 +40,7 @@
         <bouncycastle.version>1.64</bouncycastle.version>
         <jjwt.version>0.11.1</jjwt.version>
         <okta.sdk.previousVersion>1.5.4</okta.sdk.previousVersion>
-        <otka.commons.version>1.2.3</otka.commons.version>
+        <otka.commons.version>1.2.4</otka.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
@@ -72,27 +72,27 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-api</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>2.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-impl</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>2.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-api-swagger-templates</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>2.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-httpclient</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>2.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-okhttp</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>2.0.0-SNAPSHOT</version>
             </dependency>
 
             <!-- Other Okta Projects -->
@@ -131,14 +131,14 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-integration-tests</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>2.0.0-SNAPSHOT</version>
             </dependency>
 
             <!-- Examples -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-examples-quickstart</artifactId>
-                <version>1.6.1-SNAPSHOT</version>
+                <version>2.0.0-SNAPSHOT</version>
             </dependency>
 
             <!-- Logging -->
@@ -315,7 +315,7 @@
                         <dependency>
                             <groupId>com.okta.sdk</groupId>
                             <artifactId>okta-api-swagger-templates</artifactId>
-                            <version>1.6.1-SNAPSHOT</version>
+                            <version>2.0.0-SNAPSHOT</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -330,7 +330,7 @@
                 <plugin>
                     <groupId>com.github.siom79.japicmp</groupId>
                     <artifactId>japicmp-maven-plugin</artifactId>
-                    <version>0.13.0</version>
+                    <version>0.14.3</version>
                     <configuration>
                         <oldVersion>
                             <dependency>
@@ -342,7 +342,7 @@
                         </oldVersion>
                         <parameter>
                             <onlyModified>true</onlyModified>
-                            <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
+                            <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications> <!-- TODO: revert to true after v2.0.0 major release -->
                             <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
                             <postAnalysisScript>${root.dir}/src/japicmp/postAnalysisScript.groovy</postAnalysisScript>
                         </parameter>

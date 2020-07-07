@@ -26,8 +26,6 @@ public interface PolicyRuleBuilder<T extends PolicyRuleBuilder> {
         return Classes.newInstance("com.okta.sdk.impl.resource.DefaultPolicyRuleBuilder");
     }
 
-    T setId(String id);
-
     T setPriority(Integer priority);
 
     T setStatus(PolicyRule.StatusEnum status);

@@ -69,7 +69,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
     }
 
     @Test
-    void activateDeactivateTest() {
+    void deactivateTest() {
 
         def group = randomGroup()
         def policy = randomSignOnPolicy(group.getId())
@@ -81,13 +81,9 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setRequireFactor(false)
             .setStatus(PolicyRule.StatusEnum.INACTIVE)
         .buildAndCreate(client, policy);
-
         registerForCleanup(policyRule)
-        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.INACTIVE))
 
-        // activate
-        policyRule.activate()
-        policyRule = policy.getPolicyRule(policyRule.getId())
+        // policy rule is ACTIVE by default
         assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.ACTIVE))
 
         // deactivate

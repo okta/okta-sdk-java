@@ -16,7 +16,7 @@
  */
 package com.okta.sdk.impl.cache;
 
-import com.okta.sdk.lang.Duration;
+import java.time.Duration;
 
 /**
  * Represents configuration settings for a particular {@link com.okta.sdk.cache.Cache Cache} region.

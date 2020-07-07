@@ -54,7 +54,6 @@ class DefaultSignOnPolicyRuleBuilderTest {
         when(client.instantiate(PolicyRuleAuthContextCondition.class)).thenReturn(policyRuleAuthContextCondition)
 
         new DefaultSignOnPolicyRuleBuilder()
-            .setId("id here")
             .setName("name here")
             .setStatus(PolicyRule.StatusEnum.ACTIVE)
             .setType(PolicyRule.TypeEnum.SIGN_ON)
@@ -72,7 +71,7 @@ class DefaultSignOnPolicyRuleBuilderTest {
             .setMaxSessionIdleMinutes(5)
             .buildAndCreate(client, policy)
 
-        verify(policy).createRule(eq(signOnPolicyRule), eq(true))
+        verify(policy).createRule(eq(signOnPolicyRule))
         verify(signOnPolicyRule).setName("name here")
         verify(signOnPolicyRule).setType(PolicyRule.TypeEnum.SIGN_ON)
         verify(oktaSignOnPolicyRuleSignonActions).setFactorLifetime(1)
@@ -97,7 +96,7 @@ class DefaultSignOnPolicyRuleBuilderTest {
                 .setName("test name")
                 .setStatus(PolicyRule.StatusEnum.ACTIVE)
                 .setType(PolicyRule.TypeEnum.PASSWORD)
-            .buildAndCreate(client, policy);
+            .buildAndCreate(client, policy)
         }
 
     }

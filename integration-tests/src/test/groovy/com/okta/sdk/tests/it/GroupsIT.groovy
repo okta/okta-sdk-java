@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Okta
+ * Copyright 2017-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 /**
- * Tests for /api/v1/groups
+ * Tests for {@code /api/v1/groups}.
  * @since 0.5.0
  */
 class GroupsIT implements CrudTestSupport {
@@ -98,7 +98,7 @@ class GroupsIT implements CrudTestSupport {
         validateGroup(group, groupName)
 
         // 2. Search the group by name
-        assertPresent(client.listGroups(groupName, null, null), group)
+        assertPresent(client.listGroups(groupName, null), group)
     }
 
     @Test

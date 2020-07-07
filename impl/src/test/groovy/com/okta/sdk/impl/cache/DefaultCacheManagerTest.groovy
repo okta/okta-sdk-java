@@ -17,12 +17,10 @@
 package com.okta.sdk.impl.cache
 
 import com.okta.sdk.cache.Cache
-import com.okta.sdk.lang.Duration
+import java.time.Duration
 import groovy.json.JsonSlurper
 import org.testng.annotations.BeforeTest
 import org.testng.annotations.Test
-
-import java.util.concurrent.TimeUnit
 
 import static org.testng.Assert.*
 
@@ -72,32 +70,32 @@ class DefaultCacheManagerTest {
     @Test
     void testDefaultTtl() {
         mgr = new DefaultCacheManager()
-        Duration ttl = new Duration(30, TimeUnit.SECONDS)
+        Duration ttl = Duration.ofSeconds(30)
         mgr.setDefaultTimeToLive(ttl)
 
         def cache = mgr.getCache('foo')
-        assertEquals cache.timeToLive, new Duration(30, TimeUnit.SECONDS)
+        assertEquals cache.timeToLive, Duration.ofSeconds(30)
     }
 
     @Test
     void testDefaultTtlSeconds() {
         mgr.setDefaultTimeToLiveSeconds(30)
-        assertEquals mgr.defaultTimeToLive, new Duration(30, TimeUnit.SECONDS)
+        assertEquals mgr.defaultTimeToLive, Duration.ofSeconds(30)
     }
 
     @Test
     void testDefaultTti() {
-        Duration tti = new Duration(20, TimeUnit.SECONDS)
+        Duration tti = Duration.ofSeconds(20)
         mgr.setDefaultTimeToIdle(tti)
 
         def cache = mgr.getCache('foo')
-        assertEquals cache.timeToIdle, new Duration(20, TimeUnit.SECONDS)
+        assertEquals cache.timeToIdle.seconds, tti.getSeconds()
     }
 
     @Test
     void testDefaultTtiSeconds() {
         mgr.setDefaultTimeToIdleSeconds(30)
-        assertEquals new Duration(30, TimeUnit.SECONDS), mgr.defaultTimeToIdle
+        assertEquals Duration.ofSeconds(30), mgr.defaultTimeToIdle
     }
 
     @Test

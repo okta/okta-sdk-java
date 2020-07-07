@@ -20,7 +20,7 @@ import com.okta.commons.lang.Assert;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.impl.util.SoftHashMap;
-import com.okta.sdk.lang.Duration;
+import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,29 +49,29 @@ import java.util.concurrent.TimeUnit;
  * no longer be available.  If a cache entry is not accessed at all after this amount of time, it will be
  * removed from the cache as soon as possible.
  * <p>
- * This implementation's {@link #setDefaultTimeToIdle(com.okta.sdk.lang.Duration) defaultTimeToIdle}
+ * This implementation's {@link #setDefaultTimeToIdle(java.time.Duration) defaultTimeToIdle}
  * is {@code null}, which means that cache entries can potentially remain idle indefinitely.  Note however that a
  * cache entry can still be expunged due to other conditions (e.g. memory constraints, Time to Live setting, etc).
  * <p>
- * The {@link #setDefaultTimeToIdle(com.okta.sdk.lang.Duration) defaultTimeToIdle} setting is only
+ * The {@link #setDefaultTimeToIdle(java.time.Duration) defaultTimeToIdle} setting is only
  * applied to newly created {@code Cache} instances.  It does not affect already existing {@code Cache}s.
  * <h2>Time to Live</h2>
  * Time to Live is the amount of time a cache entry may exist after first being created before it will expire and no
  * longer be available.  If a cache entry ever becomes older than this amount of time (regardless of how often
  * it is accessed), it will be removed from the cache as soon as possible.
  * <p>
- * This implementation's {@link #setDefaultTimeToLive(com.okta.sdk.lang.Duration) defaultTimeToLive}
+ * This implementation's {@link #setDefaultTimeToLive(java.time.Duration) defaultTimeToLive}
  * is {@code null}, which means that cache entries could potentially live indefinitely.  Note however that a
  * cache entry can still be expunged due to other conditions (e.g. memory constraints, Time to Idle setting, etc).
  * <p>
- * The {@link #setDefaultTimeToLive(com.okta.sdk.lang.Duration) defaultTimeToLive} setting is only
+ * The {@link #setDefaultTimeToLive(java.time.Duration) defaultTimeToLive} setting is only
  * applied to newly created {@code Cache} instances.  It does not affect already existing {@code Cache}s.
  * <h2>Thread Safety</h2>
  * This implementation and the cache instances it creates are thread-safe and usable in concurrent environments.
  *
- * @see #setDefaultTimeToIdle(com.okta.sdk.lang.Duration)
+ * @see #setDefaultTimeToIdle(java.time.Duration)
  * @see #setDefaultTimeToIdleSeconds(long)
- * @see #setDefaultTimeToLive(com.okta.sdk.lang.Duration)
+ * @see #setDefaultTimeToLive(java.time.Duration)
  * @see #setDefaultTimeToLiveSeconds(long)
  * @since 0.5.0
  */
@@ -127,13 +127,13 @@ public class DefaultCacheManager implements CacheManager {
     }
 
     /**
-     * Convenience method that sets the {@link #setDefaultTimeToLive(com.okta.sdk.lang.Duration) defaultTimeToLive}
+     * Convenience method that sets the {@link #setDefaultTimeToLive(java.time.Duration) defaultTimeToLive}
      * value using a {@code TimeUnit} of {@link TimeUnit#SECONDS}.
      *
-     * @param seconds the {@link #setDefaultTimeToLive(com.okta.sdk.lang.Duration) defaultTimeToLive} value in seconds.
+     * @param seconds the {@link #setDefaultTimeToLive(java.time.Duration) defaultTimeToLive} value in seconds.
      */
     public void setDefaultTimeToLiveSeconds(long seconds) {
-        setDefaultTimeToLive(new Duration(seconds, TimeUnit.SECONDS));
+        setDefaultTimeToLive(Duration.ofSeconds(seconds));
     }
 
     /**
@@ -162,13 +162,13 @@ public class DefaultCacheManager implements CacheManager {
     }
 
     /**
-     * Convenience method that sets the {@link #setDefaultTimeToIdle(com.okta.sdk.lang.Duration) defaultTimeToIdle}
+     * Convenience method that sets the {@link #setDefaultTimeToIdle(java.time.Duration) defaultTimeToIdle}
      * value using a {@code TimeUnit} of {@link TimeUnit#SECONDS}.
      *
-     * @param seconds the {@link #setDefaultTimeToIdle(com.okta.sdk.lang.Duration) defaultTimeToIdle} value in seconds.
+     * @param seconds the {@link #setDefaultTimeToIdle(java.time.Duration) defaultTimeToIdle} value in seconds.
      */
     public void setDefaultTimeToIdleSeconds(long seconds) {
-        setDefaultTimeToIdle(new Duration(seconds, TimeUnit.SECONDS));
+        setDefaultTimeToIdle(Duration.ofSeconds(seconds));
     }
 
     /**
@@ -221,8 +221,8 @@ public class DefaultCacheManager implements CacheManager {
      */
     @SuppressWarnings("unchecked")
     protected Cache createCache(String name) {
-        Duration ttl = this.defaultTimeToLive != null ? this.defaultTimeToLive.clone() : null;
-        Duration tti = this.defaultTimeToIdle != null ? this.defaultTimeToIdle.clone() : null;
+        Duration ttl = this.defaultTimeToLive != null ? Duration.from(this.defaultTimeToLive) : null;
+        Duration tti = this.defaultTimeToIdle != null ? Duration.from(this.defaultTimeToIdle) : null;
 
         CacheConfiguration config = this.configs.get(name);
         if (config != null) {

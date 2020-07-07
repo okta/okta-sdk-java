@@ -31,7 +31,11 @@ import com.okta.sdk.resource.log.LogSecurityContext
 import com.okta.sdk.resource.log.LogSeverity
 import com.okta.sdk.resource.log.LogTransaction
 import com.okta.sdk.resource.log.LogUserAgent
+import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
+import static org.mockito.Mockito.verify
+
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 import java.time.Instant
@@ -42,13 +46,17 @@ import static org.hamcrest.Matchers.*
 import static org.hamcrest.MatcherAssert.*
 
 class LogsTest {
+    MockClient client
+
+    @BeforeMethod
+    void setup() {
+        // mock the response objects in the client
+        client = new MockClient()
+            .withMockResponse(Mockito.any(Request), '/stubs/logs.json')
+    }
 
     @Test
     void testGetLogs() {
-
-        // Mock the response objects in the client
-        MockClient client = new MockClient()
-                .withMockResponse(Mockito.any(Request), '/stubs/logs.json')
 
         // get the list of logs
         List<LogEvent> logs = client.getLogs().stream().collect(Collectors.toList())
@@ -144,5 +152,51 @@ class LogsTest {
         assertThat log.getRequest().getIpChain().get(0).getGeographicalContext().getGeolocation(), instanceOf(LogGeolocation)
         assertThat log.getRequest().getIpChain().get(0).getGeographicalContext().getGeolocation().lat, equalTo(43.3091d)
         assertThat log.getRequest().getIpChain().get(0).getGeographicalContext().getGeolocation().lon, equalTo(-71.6861d)
+    }
+
+    @Test
+    void testGetLogsBetweenDates() {
+
+        Date sinceDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:15:16.838Z")))
+        Date untilDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:16:00.081Z")))
+        
+        // get log events between dates
+        List<LogEvent> logs = client.getLogs(sinceDate, untilDate, null, null, null).stream().collect(Collectors.toList())
+        logs.forEach { assertThat it, instanceOf(LogEvent) }
+
+        ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class)
+        verify(client.mockRequestExecutor).executeRequest(argument.capture())
+        assertThat argument.getValue().queryString.since, equalTo("2017-11-30T21:15:16.838Z")
+        assertThat argument.getValue().queryString.until, equalTo("2017-11-30T21:16:00.081Z")
+    }
+
+    @Test
+    void testGetLogsSinceDate() {
+
+        Date sinceDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:15:16.838Z")))
+
+        // get log events since given date
+        List<LogEvent> logs = client.getLogs(sinceDate, null, null, null, null).stream().collect(Collectors.toList())
+        assertThat logs, hasSize(100)
+        logs.forEach { assertThat it, instanceOf(LogEvent) }
+
+        ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class)
+        verify(client.mockRequestExecutor).executeRequest(argument.capture())
+        assertThat argument.getValue().queryString.since, equalTo("2017-11-30T21:15:16.838Z")
+    }
+
+    @Test
+    void testGetLogsUntilDate() {
+
+        Date untilDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:16:00.081Z")))
+
+        // get log events until given date
+        List<LogEvent> logs = client.getLogs(null, untilDate, null, null, null).stream().collect(Collectors.toList())
+        assertThat logs, hasSize(100)
+        logs.forEach { assertThat it, instanceOf(LogEvent) }
+
+        ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class)
+        verify(client.mockRequestExecutor).executeRequest(argument.capture())
+        assertThat argument.getValue().queryString.until, equalTo("2017-11-30T21:16:00.081Z")
     }
 }

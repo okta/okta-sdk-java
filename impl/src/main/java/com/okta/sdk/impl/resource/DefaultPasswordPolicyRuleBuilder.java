@@ -93,13 +93,11 @@ public class DefaultPasswordPolicyRuleBuilder extends DefaultPolicyRuleBuilder<P
 
     @Override
     public PasswordPolicyRule buildAndCreate(Client client, Policy policy){
-        return (PasswordPolicyRule) policy.createRule(build(client), isActive);
+        return (PasswordPolicyRule) policy.createRule(build(client));
     }
 
     private PasswordPolicyRule build(Client client){
         PasswordPolicyRule policyRule = client.instantiate(PasswordPolicyRule.class);
-
-        if (Strings.hasText(id)) policyRule.setId(id);
 
         if (Objects.nonNull(priority)) policyRule.setPriority(priority);
 

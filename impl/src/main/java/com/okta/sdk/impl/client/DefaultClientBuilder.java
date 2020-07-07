@@ -30,7 +30,7 @@ import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
-import com.okta.sdk.client.Proxy;
+import com.okta.commons.http.config.Proxy;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
@@ -264,11 +264,6 @@ public class DefaultClientBuilder implements ClientBuilder {
     public ClientBuilder setCacheManager(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
         return this;
-    }
-
-    @Override
-    public ClientBuilder setAuthenticationScheme(AuthenticationScheme authenticationScheme) {
-        return setAuthorizationMode(AuthorizationMode.get(authenticationScheme));
     }
 
     @Override

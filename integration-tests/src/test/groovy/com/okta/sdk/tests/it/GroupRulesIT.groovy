@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.matchesPattern
 
 /**
- * Tests for /api/v1/groups/rules
+ * Tests for {@code /api/v1/groups/rules}.
  * @since 0.5.0
  */
 class GroupRulesIT implements CrudTestSupport {
@@ -61,7 +61,7 @@ class GroupRulesIT implements CrudTestSupport {
         rule.getActions().setAssignUserToGroups(client.instantiate(GroupRuleGroupAssignment))
         rule.getActions().getAssignUserToGroups().setGroupIds(Collections.singletonList(group.getId()))
 
-        rule = client.createRule(rule)
+        rule = client.createGroupRule(rule)
         registerForCleanup(rule)
 
         return rule
@@ -69,7 +69,7 @@ class GroupRulesIT implements CrudTestSupport {
 
     @Override
     def read(Client client, String id) {
-        return client.getRule(id)
+        return client.getGroupRule(id)
     }
 
     @Override
@@ -85,7 +85,7 @@ class GroupRulesIT implements CrudTestSupport {
 
     @Override
     Iterator getResourceCollectionIterator(Client client) {
-        return client.listRules().iterator()
+        return client.listGroupRules().iterator()
     }
 
     @Test
@@ -124,15 +124,14 @@ class GroupRulesIT implements CrudTestSupport {
             .setGroupRuleExpressionValue("user.lastName==\"${user.getProfile().lastName}\"".toString())
             .setAssignUserToGroups(Collections.singletonList(group.getId()))
             .buildAndCreate(client)
-
         registerForCleanup(rule)
         rule.activate()
 
-        GroupRule readRule = client.getRule(rule.getId())
+        GroupRule readRule = client.getGroupRule(rule.getId())
         assertThat readRule.getStatus(), equalTo(GroupRuleStatus.ACTIVE)
 
         // 3. List group rules
-        assertPresent(client.listRules(), rule)
+        assertPresent(client.listGroupRules(), rule)
 
         // 4. Deactivate the rule and update it
         rule.deactivate()
@@ -142,7 +141,7 @@ class GroupRulesIT implements CrudTestSupport {
         rule.update()
         rule.activate()
 
-        readRule = client.getRule(rule.getId())
+        readRule = client.getGroupRule(rule.getId())
         assertThat readRule.getStatus(), equalTo(GroupRuleStatus.ACTIVE)
 
         // 5. delete rule

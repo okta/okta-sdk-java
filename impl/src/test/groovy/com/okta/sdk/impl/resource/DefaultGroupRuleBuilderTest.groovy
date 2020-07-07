@@ -51,14 +51,12 @@ class DefaultGroupRuleBuilderTest {
             .setName("dummy rule")
             .setType("group_rule")
             .addGroup("ajhd1234kak")
-            .setAllGroupsValid(false)
         .buildAndCreate(client)
 
-        verify(client).createRule(eq(groupRule))
+        verify(client).createGroupRule(eq(groupRule))
         verify(groupRule).setName("dummy rule")
         verify(groupRule).setType("group_rule")
         verify(groupRuleGroupCondition).setInclude(Arrays.asList("ajhd1234kak"))
-        verify(groupRule).setAllGroupsValid(false)
 
     }
 }
