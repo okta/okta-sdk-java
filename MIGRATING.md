@@ -50,8 +50,8 @@ Below APIs have undergone a name change.
 ### Package `com.okta.sdk.resource.group.Group`
 
 With the introduction of enum type `com.okta.sdk.resource.group.GroupType`, the get group type operation will now make 
-use of this new type instead of the `String` type used earlier.
-   - `getType` Return type changed from `String` to `com.okta.sdk.resource.group.GroupType`
+use of this new enum type instead of the `String` type used earlier.
+   - `getType` Return type changed from `String` to an enum `com.okta.sdk.resource.group.GroupType`
    
 ### Package `com.okta.sdk.resource.group.rule.GroupRule`
 
@@ -85,7 +85,7 @@ The property `tokenLifetimeSeconds` will not used by the backend going forward.
 ### Package `com.okta.sdk.resource.user.Role`
 
 With the introduction of enum type `com.okta.sdk.resource.role.RoleType`, the getter/setter for role type operation will now make 
-use of this new type instead of the `String` type used earlier.
+use of this new enum type instead of the `String` type used earlier.
    - `getType` Return type changed from `String` to an enum `com.okta.sdk.resource.role.RoleType`
    - `setType` Param type changed from `String` to an enum `com.okta.sdk.resource.role.RoleType`
 
