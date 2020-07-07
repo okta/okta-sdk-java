@@ -40,6 +40,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 | ------- | ------------------------- |
 | 0.0.x | :warning: Retired ([migration guide](https://github.com//okta/okta-sdk-java/wiki/Migration-from-v0.0.4-to-1.x)) |
 | 1.x   | :heavy_check_mark: Stable |
+| 2.x.x   | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md)) |
  
 The latest release can always be found on the [releases page][github-releases].
  
