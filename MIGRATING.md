@@ -86,8 +86,8 @@ The property `tokenLifetimeSeconds` will not used by the backend going forward.
 
 With the introduction of enum type `com.okta.sdk.resource.role.RoleType`, the getter/setter for role type operation will now make 
 use of this new type instead of the `String` type used earlier.
-   - `getType` Return type changed from `String` to `com.okta.sdk.resource.role.RoleType`
-   - `setType` Param type changed from `String` to `com.okta.sdk.resource.role.RoleType`
+   - `getType` Return type changed from `String` to an enum `com.okta.sdk.resource.role.RoleType`
+   - `setType` Param type changed from `String` to an enum `com.okta.sdk.resource.role.RoleType`
 
 ### Package `com.okta.sdk.resource.user.User`
 
