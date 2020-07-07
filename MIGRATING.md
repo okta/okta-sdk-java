@@ -65,11 +65,11 @@ As part of this upgrade, we will remove it from the method signatures.
 ### Package `com.okta.sdk.resource.log.LogAuthenticationContext`
 
 The API to get log credential provider used to return a list of objects of type `LogCredentialProvider` earlier. 
-Moving forward, the return type will be a single object of type `LogCredentialProvider`.
+This is now fixed to return a single object of type `LogCredentialProvider`.
    - `getCredentialProvider` Return type changed from `List<com.okta.sdk.resource.log.LogCredentialProvider>` to `com.okta.sdk.resource.log.LogCredentialProvider`
 
 The API to get log credential type used to return a list of objects of type `LogCredentialType` earlier. 
-Moving forward, the return type will be a single object of type `LogCredentialType`.
+This is now fixed to return a single object of type `LogCredentialType`.
 - `getCredentialType` Return type changed from `List<com.okta.sdk.resource.log.LogCredentialType>` to `com.okta.sdk.resource.log.LogCredentialType`
 
 ### Package `com.okta.sdk.resource.policy.PolicyRule`
