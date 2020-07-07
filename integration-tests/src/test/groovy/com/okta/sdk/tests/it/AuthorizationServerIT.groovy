@@ -149,7 +149,8 @@ class AuthorizationServerIT extends ITSupport {
             .setDescription("Test Policy")
             .setPriority(1)
             .setConditions(client.instantiate(PolicyRuleConditions)
-                .setClients(client.instantiate(ClientPolicyCondition).setInclude(["ALL_CLIENTS"])))
+                .setClients(client.instantiate(ClientPolicyCondition)
+                    .setInclude([OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()])))
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -176,7 +177,8 @@ class AuthorizationServerIT extends ITSupport {
             .setDescription("Test Policy")
             .setPriority(1)
             .setConditions(client.instantiate(PolicyRuleConditions)
-                .setClients(client.instantiate(ClientPolicyCondition).setInclude(["ALL_CLIENTS"])))
+                .setClients(client.instantiate(ClientPolicyCondition)
+                    .setInclude([OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()])))
         registerForCleanup(policy)
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
@@ -207,7 +209,8 @@ class AuthorizationServerIT extends ITSupport {
             .setDescription("Test Policy")
             .setPriority(1)
             .setConditions(client.instantiate(PolicyRuleConditions)
-                .setClients(client.instantiate(ClientPolicyCondition).setInclude(["ALL_CLIENTS"])))
+                .setClients(client.instantiate(ClientPolicyCondition)
+                    .setInclude([OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()])))
         registerForCleanup(policy)
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
@@ -244,7 +247,7 @@ class AuthorizationServerIT extends ITSupport {
             .setDescription("Test Policy")
             .setPriority(1)
             .setConditions(client.instantiate(PolicyRuleConditions)
-                .setClients(client.instantiate(ClientPolicyCondition).setInclude(["ALL_CLIENTS"])))
+                .setClients(client.instantiate(ClientPolicyCondition).setInclude([OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()])))
         registerForCleanup(policy)
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
