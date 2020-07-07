@@ -45,10 +45,9 @@ pushd target/checkout
 git clone -b gh-pages "git@github.com:${REPO_SLUG}.git" target/gh-pages
 
 # publish once to the versioned dir
-${MVN_CMD} javadoc:aggregate jxr:aggregate -Ppub-docs -Djavadoc.version.dir='' -Dadditionalparam="--allow-script-in-comments"
-
+${MVN_CMD} javadoc:aggregate jxr:aggregate -Ppub-docs -Djavadoc.version.dir=''
 # and again to the unversioned dir
-${MVN_CMD} javadoc:aggregate com.okta:okta-doclist-maven-plugin:generate jxr:aggregate -Ppub-docs -Djavadoc.version.dir="${NEW_VERSION}/" -Dadditionalparam="--allow-script-in-comments"
+${MVN_CMD} javadoc:aggregate com.okta:okta-doclist-maven-plugin:generate jxr:aggregate -Ppub-docs -Djavadoc.version.dir="${NEW_VERSION}/"
 
 cd target/gh-pages
 git add .
