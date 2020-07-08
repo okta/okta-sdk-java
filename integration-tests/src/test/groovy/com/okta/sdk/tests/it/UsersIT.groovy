@@ -48,6 +48,7 @@ import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
+import wiremock.org.apache.commons.lang3.RandomStringUtils
 
 import java.time.Duration
 import java.nio.charset.StandardCharsets
@@ -186,12 +187,15 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def lastName = 'Activate'
         def email = "john-activate=${uniqueTestName}@example.com"
 
-        UserType userType = client.instantiate(UserType)
-            .setName(firstName + lastName)
-            .setDescription("Test User")
-            .setDisplayName(firstName + lastName)
+        // 1. Define a user type
+        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
 
-        // 1. Create a user
+        UserType userType = client.instantiate(UserType)
+            .setName(name)
+            .setDisplayName(name)
+            .setDescription(name + "_test_description")
+
+        // 2. Create a user with the above UserType
         User user = UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName(firstName)
@@ -203,7 +207,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        // 2. Assert user type
+        // 3. Assert user type
         assertThat(user.getType(), notNullValue())
 
         // 3. Activate the user and verify user in list of active users
