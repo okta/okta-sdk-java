@@ -152,7 +152,6 @@ public class DefaultUserBuilder implements UserBuilder {
 
         User user = client.instantiate(User.class);
         user.setProfile(client.instantiate(UserProfile.class));
-        user.setType(userType);
         UserProfile userProfile = user.getProfile();
         if (Strings.hasText(firstName)) userProfile.setFirstName(firstName);
         if (Strings.hasText(lastName)) userProfile.setLastName(lastName);
@@ -165,6 +164,10 @@ public class DefaultUserBuilder implements UserBuilder {
         }
         else {
             userProfile.setLogin(email);
+        }
+
+        if (userType != null) {
+            user.setType(userType);
         }
 
         if (!Collections.isEmpty(groupIds)) {
