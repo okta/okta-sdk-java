@@ -51,6 +51,8 @@ public interface UserBuilder {
 
     UserBuilder setProvider(Boolean provider);
 
+    UserBuilder setType(UserType userType);
+
     UserBuilder setProfileProperties(Map<String, Object> profileProperties);
 
     UserBuilder putAllProfileProperties(Map<String, Object> profileProperties);

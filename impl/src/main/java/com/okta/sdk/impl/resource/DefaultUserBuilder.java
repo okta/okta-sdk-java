@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.impl.resource;
 
-
 import com.okta.sdk.client.Client;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
@@ -26,6 +25,7 @@ import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserCredentials;
 import com.okta.sdk.resource.user.UserNextLogin;
 import com.okta.sdk.resource.user.UserProfile;
+import com.okta.sdk.resource.user.UserType;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class DefaultUserBuilder implements UserBuilder {
-
 
     private char[] password;
     private String securityQuestion;
@@ -48,6 +47,7 @@ public class DefaultUserBuilder implements UserBuilder {
     private String mobilePhone;
     private Boolean active;
     private Boolean provider;
+    private UserType userType;
     private UserNextLogin nextLogin;
     private Set<String> groupIds = new HashSet<>();
     private Map<String, Object> passwordHashProperties;
@@ -106,6 +106,12 @@ public class DefaultUserBuilder implements UserBuilder {
 
     public UserBuilder setProvider(Boolean provider) {
         this.provider = provider;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setType(UserType userType) {
+        this.userType = userType;
         return this;
     }
 

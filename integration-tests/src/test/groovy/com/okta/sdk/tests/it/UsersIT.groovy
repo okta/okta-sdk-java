@@ -42,6 +42,7 @@ import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserList
 import com.okta.sdk.resource.user.UserStatus
+import com.okta.sdk.resource.user.UserType
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
@@ -185,6 +186,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def lastName = 'Activate'
         def email = "john-activate=${uniqueTestName}@example.com"
 
+        UserType userType = client.instantiate(UserType)
+            .setName(firstName + lastName)
+            .setDescription("Test User")
+            .setDisplayName(firstName + lastName)
+
         // 1. Create a user
         User user = UserBuilder.instance()
                 .setEmail(email)
@@ -192,17 +198,18 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setLastName(lastName)
                 .setPassword(password.toCharArray())
                 .setActive(false)
+                .setType(userType)
                 .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        // 2. Activate the user and verify user in list of active users
+        // 2. Assert user type
+        assertThat(user.getType(), notNullValue())
+
+        // 3. Activate the user and verify user in list of active users
         user.activate(false)
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
-
-
-
     }
 
     @Test
