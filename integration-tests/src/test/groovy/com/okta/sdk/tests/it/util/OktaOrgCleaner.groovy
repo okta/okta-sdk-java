@@ -46,6 +46,12 @@ class OktaOrgCleaner {
                 it.delete()
             }
 
+        client.listUsers(null, null, null, "status eq \"${UserStatus.DEPROVISIONED}\"", null).stream()
+            .forEach {
+                log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
+                it.delete()
+            }
+
         log.info("Deleting Applications:")
         client.listApplications().stream()
             .filter { it.getLabel().matches(".*-${uuidRegex}.*") }
