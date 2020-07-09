@@ -19,6 +19,9 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.rule.GroupRule
+import com.okta.sdk.resource.inline.hook.InlineHook
+import com.okta.sdk.resource.linked.object.LinkedObject
+import com.okta.sdk.resource.linked.object.LinkedObjectList
 import com.okta.sdk.resource.policy.PolicyType
 import com.okta.sdk.resource.user.UserStatus
 import org.slf4j.Logger
@@ -27,7 +30,7 @@ import org.slf4j.LoggerFactory
 class OktaOrgCleaner {
 
     private final static Logger log = LoggerFactory.getLogger(OktaOrgCleaner)
-    
+
     static void main(String[] args) {
 
         String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
@@ -43,15 +46,9 @@ class OktaOrgCleaner {
                 it.delete()
             }
 
-        client.listUsers(null, null, null, "status eq \"${UserStatus.DEPROVISIONED}\"", null).stream()
-            .forEach {
-                log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
-                it.delete()
-            }
-
         log.info("Deleting Applications:")
         client.listApplications().stream()
-            .filter { it.getLabel().matches(".*-${uuidRegex}.*")}
+            .filter { it.getLabel().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getLabel()}")
                 it.deactivate()
@@ -60,27 +57,67 @@ class OktaOrgCleaner {
 
         log.info("Deleting Groups:")
         client.listGroups().stream()
-                .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*")}
-                .forEach {
-                    log.info("\t ${it.getProfile().getName()}")
-                    it.delete()
-                }
+            .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                log.info("\t ${it.getProfile().getName()}")
+                it.delete()
+            }
 
         log.info("Deleting Group Rules:")
         client.listGroupRules().stream()
-                .filter { it.getName().matches("rule\\+${uuidRegex}.*")}
-                .forEach {
-                    GroupRule rule = it
-                    log.info("\t ${rule.getName()}")
-                    Util.ignoring(ResourceException) {
-                        rule.deactivate()
-                    }
-                    rule.delete()
+            .filter { it.getName().matches("rule\\+${uuidRegex}.*") }
+            .forEach {
+                GroupRule rule = it
+                log.info("\t ${rule.getName()}")
+                Util.ignoring(ResourceException) {
+                    rule.deactivate()
                 }
+                rule.delete()
+            }
 
         log.info("Deleting Policies:")
         client.listPolicies(PolicyType.OKTA_SIGN_ON.toString()).stream()
-            .filter { it.getName().matches("policy\\+${uuidRegex}.*")}
+            .filter { it.getName().matches("policy\\+${uuidRegex}.*") }
+            .forEach {
+                it.delete()
+            }
+
+        log.info("Deleting LinkedObjectDefinitions:")
+        client.listLinkedObjectDefinitions().stream()
+            .forEach {
+                it.setName(it.getPrimary().getName())
+                it.delete()
+            }
+
+        log.info("Deleting InlineHooks:")
+        client.listInlineHooks().stream()
+            .forEach {
+                it.deactivate()
+                it.delete()
+            }
+
+        log.info("Deleting EventHooks:")
+        client.listEventHooks().stream()
+            .forEach {
+                it.deactivate()
+                it.delete()
+            }
+
+        log.info("Deleting UserTypes:")
+        client.listUserTypes().stream()
+            .filter { !it.getDefault() }
+            .forEach {
+                it.delete()
+            }
+
+        log.info("Deleting AuthorizationServers:")
+        client.listAuthorizationServers().stream()
+            .forEach {
+                it.delete()
+            }
+
+        log.info("Deleting IdentityProviders:")
+        client.listIdentityProviders().stream()
             .forEach {
                 it.delete()
             }
