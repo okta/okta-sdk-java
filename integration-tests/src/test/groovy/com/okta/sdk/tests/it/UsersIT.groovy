@@ -179,6 +179,47 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     }
 
     @Test
+    @Scenario("create-user-with-user-type")
+    void createUserWithUserTypeTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Activate'
+        def email = "john-activate=${uniqueTestName}@example.com"
+
+        // 1. Create a User Type
+        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
+
+        UserType createdUserType = client.createUserType(client.instantiate(UserType)
+            .setName(name)
+            .setDisplayName(name)
+            .setDescription(name + "_test_description"))
+        registerForCleanup(createdUserType)
+
+        assertThat(createdUserType.getId(), notNullValue())
+
+        // 2. Create a user with the User Type
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+        // See https://developer.okta.com/docs/reference/api/user-types/#specify-the-user-type-of-a-new-user
+            .setType(client.instantiate(UserType).setId(createdUserType.getId()))
+            .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 3. Assert User Type
+        assertThat(user.getType().getId(), equalTo(createdUserType.getId()))
+
+        // 4.Verify user in list of active users
+        UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
+        assertPresent(users, user)
+    }
+
+    @Test
     @Scenario("user-activate")
     void userActivateTest() {
 
@@ -187,30 +228,18 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def lastName = 'Activate'
         def email = "john-activate=${uniqueTestName}@example.com"
 
-        // 1. Define a user type
-        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
-
-        UserType userType = client.instantiate(UserType)
-            .setName(name)
-            .setDisplayName(name)
-            .setDescription(name + "_test_description")
-
-        // 2. Create a user with the above UserType
+        // 1. Create a user
         User user = UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password.toCharArray())
                 .setActive(false)
-                .setType(userType)
                 .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        // 3. Assert user type
-        assertThat(user.getType(), notNullValue())
-
-        // 3. Activate the user and verify user in list of active users
+        // 2. Activate the user and verify user in list of active users
         user.activate(false)
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
