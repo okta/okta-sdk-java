@@ -129,5 +129,11 @@ class OktaOrgCleaner {
                 it.deactivate()
                 it.delete()
             }
+
+        log.info("Deleting SmsTemplates:")
+        client.listSmsTemplates().stream()
+            .forEach {
+                it.delete()
+            }
     }
 }
