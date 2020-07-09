@@ -105,8 +105,8 @@ Construct a client instance by passing it your Okta domain name and API token:
 [//]: # (method: createClient)
 ```java
 Client client = Clients.builder()
-    .setOrgUrl("https://{yourOktaDomain}")  // e.g https://dev-123456.okta.com
-    .setClientCredentials(new TokenClientCredentials("yourApiToken"))
+    .setOrgUrl("{yourOktaDomain}")
+    .setClientCredentials(new TokenClientCredentials("{apiToken}"))
     .build();
 ```
 [//]: # (end: createClient)
@@ -124,11 +124,11 @@ When using this approach, you won't need an API Token because the SDK will reque
 [//]: # (method: createOAuth2Client)
 ```java
 Client client = Clients.builder()
-    .setOrgUrl("https://{yourOktaDomain}")  // e.g https://dev-123456.okta.com
+    .setOrgUrl("{yourOktaDomain}")
     .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-    .setClientId("yourClientID")
+    .setClientId("{clientId}")
     .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
-    .setPrivateKey("/path/to/yourPrivateKey.pem")
+    .setPrivateKey("{pathToYourPrivateKeyPemFile}")
     .build();
 ```
 [//]: # (end: createOAuth2Client)
@@ -251,7 +251,7 @@ user.addToGroup("groupId");
 
 [//]: # (method: listUserFactors)
 ```java
-FactorList factors = user.listFactors();
+UserFactorList factors = user.listFactors();
 ```
 [//]: # (end: listUserFactors)
 
@@ -259,9 +259,9 @@ FactorList factors = user.listFactors();
 
 [//]: # (method: enrollUserInFactor)
 ```java
-SmsFactor smsFactor = client.instantiate(SmsFactor.class);
+SmsUserFactor smsFactor = client.instantiate(SmsUserFactor.class);
 smsFactor.getProfile().setPhoneNumber("555 867 5309");
-user.addFactor(smsFactor);
+user.enrollFactor(smsFactor);
 ```
 [//]: # (end: enrollUserInFactor)
 
@@ -269,10 +269,10 @@ user.addFactor(smsFactor);
 
 [//]: # (method: activateFactor)
 ```java
-Factor factor = user.getFactor("factorId");
-VerifyFactorRequest verifyFactorRequest = client.instantiate(VerifyFactorRequest.class);
-verifyFactorRequest.setPassCode("123456");
-factor.activate(verifyFactorRequest);
+UserFactor factor = user.getFactor("factorId");
+ActivateFactorRequest activateFactorRequest = client.instantiate(ActivateFactorRequest.class);
+activateFactorRequest.setPassCode("123456");
+factor.activate(activateFactorRequest);
 ```
 [//]: # (end: activateFactor)
 
@@ -280,10 +280,10 @@ factor.activate(verifyFactorRequest);
 
 [//]: # (method: verifyFactor)
 ```java
-Factor factor = user.getFactor("factorId");
+UserFactor factor = user.getFactor("factorId");
 VerifyFactorRequest verifyFactorRequest = client.instantiate(VerifyFactorRequest.class);
 verifyFactorRequest.setPassCode("123456");
-VerifyFactorResponse response = factor.verify(verifyFactorRequest);
+VerifyUserFactorResponse verifyUserFactorResponse = factor.setVerify(verifyFactorRequest).verify();
 ```
 [//]: # (end: verifyFactor)
 
