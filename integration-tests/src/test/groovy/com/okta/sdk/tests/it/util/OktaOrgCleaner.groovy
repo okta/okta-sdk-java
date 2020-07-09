@@ -46,7 +46,7 @@ class OktaOrgCleaner {
                 it.delete()
             }
 
-        client.listUsers(null, null, null, "status eq \"${UserStatus.DEPROVISIONED}\"", null).stream()
+        client.listUsers(null, "status eq \"${UserStatus.DEPROVISIONED}\"", null, null, null).stream()
             .forEach {
                 log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
                 it.delete()
@@ -119,12 +119,14 @@ class OktaOrgCleaner {
         log.info("Deleting AuthorizationServers:")
         client.listAuthorizationServers().stream()
             .forEach {
+                it.deactivate()
                 it.delete()
             }
 
         log.info("Deleting IdentityProviders:")
         client.listIdentityProviders().stream()
             .forEach {
+                it.deactivate()
                 it.delete()
             }
     }
