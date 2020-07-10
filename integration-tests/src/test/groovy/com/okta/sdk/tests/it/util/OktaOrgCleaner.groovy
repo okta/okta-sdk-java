@@ -118,6 +118,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting AuthorizationServers:")
         client.listAuthorizationServers().stream()
+            .filter { !it.getName().equals("default") }
             .forEach {
                 it.deactivate()
                 it.delete()
@@ -125,6 +126,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting IdentityProviders:")
         client.listIdentityProviders().stream()
+            .filter()
             .forEach {
                 it.deactivate()
                 it.delete()
