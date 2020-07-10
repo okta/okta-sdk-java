@@ -42,11 +42,13 @@ import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserList
 import com.okta.sdk.resource.user.UserStatus
+import com.okta.sdk.resource.user.UserType
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
+import wiremock.org.apache.commons.lang3.RandomStringUtils
 
 import java.time.Duration
 import java.nio.charset.StandardCharsets
@@ -177,6 +179,47 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     }
 
     @Test
+    @Scenario("create-user-with-user-type")
+    void createUserWithUserTypeTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Activate'
+        def email = "john-activate=${uniqueTestName}@example.com"
+
+        // 1. Create a User Type
+        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
+
+        UserType createdUserType = client.createUserType(client.instantiate(UserType)
+            .setName(name)
+            .setDisplayName(name)
+            .setDescription(name + "_test_description"))
+        registerForCleanup(createdUserType)
+
+        assertThat(createdUserType.getId(), notNullValue())
+
+        // 2. Create a user with the User Type
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+        // See https://developer.okta.com/docs/reference/api/user-types/#specify-the-user-type-of-a-new-user
+            .setType(createdUserType.getId())
+            .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 3. Assert User Type
+        assertThat(user.getType().getId(), equalTo(createdUserType.getId()))
+
+        // 4.Verify user in list of active users
+        UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
+        assertPresent(users, user)
+    }
+
+    @Test
     @Scenario("user-activate")
     void userActivateTest() {
 
@@ -200,9 +243,6 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         user.activate(false)
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
-
-
-
     }
 
     @Test
