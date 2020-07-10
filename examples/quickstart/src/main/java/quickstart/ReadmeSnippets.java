@@ -62,8 +62,8 @@ public class ReadmeSnippets {
 
     private void createClient() {
         Client client = Clients.builder()
-            .setOrgUrl("{yourOktaDomain}")
-            .setClientCredentials(new TokenClientCredentials("{apiToken}"))
+            .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
+            .setClientCredentials(new TokenClientCredentials("yourApiToken"))
             .build();
     }
 

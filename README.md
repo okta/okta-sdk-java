@@ -105,8 +105,8 @@ Construct a client instance by passing it your Okta domain name and API token:
 [//]: # (method: createClient)
 ```java
 Client client = Clients.builder()
-    .setOrgUrl("{yourOktaDomain}")
-    .setClientCredentials(new TokenClientCredentials("{apiToken}"))
+    .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
+    .setClientCredentials(new TokenClientCredentials("yourApiToken"))
     .build();
 ```
 [//]: # (end: createClient)
