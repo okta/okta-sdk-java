@@ -176,8 +176,7 @@ public class DefaultUserBuilder implements UserBuilder {
         if (Strings.hasText(userTypeId)) {
             user.setType(client.instantiate(UserType.class).setId(userTypeId));
         }
-
-        if (userType != null) {
+        else if (userType != null) {
             user.setType(userType);
         }
 
