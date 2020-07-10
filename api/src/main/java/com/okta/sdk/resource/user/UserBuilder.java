@@ -53,6 +53,8 @@ public interface UserBuilder {
 
     UserBuilder setType(UserType userType);
 
+    UserBuilder setType(String userTypeId);
+
     UserBuilder setProfileProperties(Map<String, Object> profileProperties);
 
     UserBuilder putAllProfileProperties(Map<String, Object> profileProperties);

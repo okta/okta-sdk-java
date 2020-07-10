@@ -48,6 +48,7 @@ public class DefaultUserBuilder implements UserBuilder {
     private Boolean active;
     private Boolean provider;
     private UserType userType;
+    private String userTypeId;
     private UserNextLogin nextLogin;
     private Set<String> groupIds = new HashSet<>();
     private Map<String, Object> passwordHashProperties;
@@ -115,6 +116,12 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
+    @Override
+    public UserBuilder setType(String userTypeId) {
+        this.userTypeId = userTypeId;
+        return this;
+    }
+
     public UserBuilder setProfileProperties(Map<String, Object> profileProperties) {
 
         this.customProfileAttributes.clear();
@@ -164,6 +171,10 @@ public class DefaultUserBuilder implements UserBuilder {
         }
         else {
             userProfile.setLogin(email);
+        }
+
+        if (Strings.hasText(userTypeId)) {
+            user.setType(client.instantiate(UserType.class).setId(userTypeId));
         }
 
         if (userType != null) {

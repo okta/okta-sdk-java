@@ -206,7 +206,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setPassword(password.toCharArray())
             .setActive(true)
         // See https://developer.okta.com/docs/reference/api/user-types/#specify-the-user-type-of-a-new-user
-            .setType(client.instantiate(UserType).setId(createdUserType.getId()))
+            .setType(createdUserType.getId())
             .buildAndCreate(client)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
