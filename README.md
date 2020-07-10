@@ -124,11 +124,11 @@ When using this approach, you won't need an API Token because the SDK will reque
 [//]: # (method: createOAuth2Client)
 ```java
 Client client = Clients.builder()
-    .setOrgUrl("{yourOktaDomain}")
+    .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
     .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-    .setClientId("{clientId}")
+    .setClientId("yourClientID")
     .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
-    .setPrivateKey("{pathToYourPrivateKeyPemFile}")
+    .setPrivateKey("/path/to/yourPrivateKey.pem")
     .build();
 ```
 [//]: # (end: createOAuth2Client)
