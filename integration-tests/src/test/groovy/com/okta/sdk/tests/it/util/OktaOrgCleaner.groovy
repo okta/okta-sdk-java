@@ -90,6 +90,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting LinkedObjectDefinitions:")
         client.listLinkedObjectDefinitions().stream()
+            .filter { it.getName().startsWith("manager") }
             .forEach {
                 it.setName(it.getPrimary().getName())
                 it.delete()
@@ -97,6 +98,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting InlineHooks:")
         client.listInlineHooks().stream()
+            .filter { it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 it.deactivate()
                 it.delete()
@@ -104,6 +106,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting EventHooks:")
         client.listEventHooks().stream()
+            .filter { it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 it.deactivate()
                 it.delete()
@@ -111,14 +114,14 @@ class OktaOrgCleaner {
 
         log.info("Deleting UserTypes:")
         client.listUserTypes().stream()
-            .filter { !it.getDefault() }
+            .filter { !it.getDefault() && it.getName().startsWith("java_sdk_user_type_") }
             .forEach {
                 it.delete()
             }
 
         log.info("Deleting AuthorizationServers:")
         client.listAuthorizationServers().stream()
-            .filter { !it.getName().equals("default") }
+            .filter { !it.getName().equals("default") && it.getName().startsWith("java-sdk-authorization-server-") }
             .forEach {
                 it.deactivate()
                 it.delete()
@@ -126,7 +129,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting IdentityProviders:")
         client.listIdentityProviders().stream()
-            .filter()
+            .filter { it.getName().startsWith("Mock") }
             .forEach {
                 it.deactivate()
                 it.delete()
@@ -134,6 +137,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting SmsTemplates:")
         client.listSmsTemplates().stream()
+            .filter { it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 it.delete()
             }
