@@ -62,7 +62,7 @@ class ApplicationsIT extends ITSupport {
     }
 
     def create(Client client, Application app) {
-        app.setLabel("app-${uniqueTestName}")
+        app.setLabel("java-sdk-it-" + UUID.randomUUID().toString())
         registerForCleanup(app)
         return client.createApplication(app)
     }

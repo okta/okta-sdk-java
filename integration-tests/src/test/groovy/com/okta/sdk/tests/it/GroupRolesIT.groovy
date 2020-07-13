@@ -24,6 +24,7 @@ import com.okta.sdk.resource.user.RoleList
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
+import wiremock.org.apache.commons.lang3.RandomStringUtils
 
 import static com.okta.sdk.tests.it.util.Util.assertGroupPresent
 import static com.okta.sdk.tests.it.util.Util.assertGroupAbsent
@@ -41,7 +42,7 @@ class GroupRolesIT extends ITSupport {
     @Scenario("list-roles-assigned-to-group")
     void listRolesAssignedToGroupTest() {
 
-        String groupName = "sdk-java List Test Group ${uniqueTestName}"
+        String groupName = "java-sdk-it-" + RandomStringUtils.randomAlphanumeric(15)
 
         // 1. Create a new group
         Group createdGroup = GroupBuilder.instance()
@@ -76,7 +77,7 @@ class GroupRolesIT extends ITSupport {
     @Scenario("unassigned-roles-for-group")
     void unassignRoleForGroupTest() {
 
-        String groupName = "sdk-java List Test Group ${uniqueTestName}"
+        String groupName = "java-sdk-it-" + RandomStringUtils.randomAlphanumeric(15)
 
         // 1. Create a new group
         Group createdGroup = GroupBuilder.instance()
@@ -110,8 +111,8 @@ class GroupRolesIT extends ITSupport {
     @Scenario("list-group-targets-for-group")
     void listGroupTargetsForGroupTest() {
 
-        String groupName1 = "sdk-java List Test Group ${uniqueTestName}-1"
-        String groupName2 = "sdk-java List Test Group ${uniqueTestName}-2"
+        String groupName1 = "java-sdk-it-" + RandomStringUtils.randomAlphanumeric(15)
+        String groupName2 = "java-sdk-it-" + RandomStringUtils.randomAlphanumeric(15)
 
         // 1. Create two groups
         Group createdGroup1 = GroupBuilder.instance()
@@ -145,9 +146,9 @@ class GroupRolesIT extends ITSupport {
     @Scenario("list-group-targets-for-group")
     void removeGroupTargetFromGroupAdministratorRoleGivenToGroupTest() {
 
-        String groupName1 = "sdk-java List Test Group ${uniqueTestName}-1"
-        String groupName2 = "sdk-java List Test Group ${uniqueTestName}-2"
-        String groupName3 = "sdk-java List Test Group ${uniqueTestName}-3"
+        String groupName1 = "java-sdk-it-" + RandomStringUtils.randomAlphanumeric(15)
+        String groupName2 = "java-sdk-it-" + RandomStringUtils.randomAlphanumeric(15)
+        String groupName3 = "java-sdk-it-" + RandomStringUtils.randomAlphanumeric(15)
 
         // 1. Create three groups
         Group createdGroup1 = GroupBuilder.instance()

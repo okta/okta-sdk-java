@@ -40,7 +40,7 @@ class GroupsIT implements CrudTestSupport {
     @Override
     def create(Client client) {
         return GroupBuilder.instance()
-                .setName("my-user-group-${uniqueTestName}")
+                .setName("java-sdk-it-" + UUID.randomUUID().toString())
                 .setDescription("IT created Group")
                 .buildAndCreate(client)
     }

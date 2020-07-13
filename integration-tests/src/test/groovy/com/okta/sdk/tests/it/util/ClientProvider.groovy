@@ -23,12 +23,18 @@ import com.okta.sdk.impl.cache.DisabledCacheManager
 import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.Application
+import com.okta.sdk.resource.authorization.server.AuthorizationServer
+import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.resource.group.GroupList
 import com.okta.sdk.resource.group.rule.GroupRule
 import com.okta.sdk.resource.group.rule.GroupRuleList
 import com.okta.sdk.resource.group.rule.GroupRuleStatus
+import com.okta.sdk.resource.identity.provider.IdentityProvider
+import com.okta.sdk.resource.inline.hook.InlineHook
+import com.okta.sdk.resource.linked.object.LinkedObject
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserStatus
+import com.okta.sdk.resource.user.UserType
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.slf4j.Logger
@@ -180,12 +186,19 @@ trait ClientProvider implements IHookable {
             // delete them in reverse order so dependencies are resolved
             toBeDeleted.reverse().each { deletable ->
                 try {
-                    if (deletable instanceof User) {
+                    if (deletable instanceof User ||
+                        deletable instanceof GroupRule ||
+                        deletable instanceof Application ||
+                        deletable instanceof AuthorizationServer ||
+                        deletable instanceof EventHook ||
+                        deletable instanceof InlineHook ||
+                        deletable instanceof GroupRule ||
+                        deletable instanceof IdentityProvider ||
+                        deletable instanceof UserType) {
                         deletable.deactivate()
-                    } else if (deletable instanceof GroupRule) {
-                        deletable.deactivate()
-                    } else if (deletable instanceof Application) {
-                        deletable.deactivate()
+                    }
+                    if (deletable instanceof LinkedObject) {
+                        deletable.setName(deletable.getPrimary().getName())
                     }
                     deletable.delete()
                 }

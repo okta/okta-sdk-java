@@ -41,7 +41,7 @@ class GroupRulesIT implements CrudTestSupport {
 
     void preTestSetup(Client client) {
         group = GroupBuilder.instance()
-                .setName("my-user-group-" + UUID.randomUUID().toString())
+                .setName("java-sdk-it-" + UUID.randomUUID().toString())
                 .setDescription("IT created Group")
                 .buildAndCreate(client)
     }
@@ -50,7 +50,7 @@ class GroupRulesIT implements CrudTestSupport {
     def create(Client client) {
 
         GroupRule rule = client.instantiate(GroupRule)
-        rule.setName("rule+" + UUID.randomUUID().toString() )
+        rule.setName("java-sdk-it-" + UUID.randomUUID().toString() )
         rule.setType("group_rule")
 
         rule.setConditions(client.instantiate(GroupRuleConditions))
@@ -80,7 +80,7 @@ class GroupRulesIT implements CrudTestSupport {
 
     @Override
     void assertUpdate(Client client, def resource) {
-        assertThat resource.name, matchesPattern('^rule.*-2$')
+        assertThat resource.name, matchesPattern('^java-sdk-it-.*-2$')
     }
 
     @Override
@@ -97,8 +97,8 @@ class GroupRulesIT implements CrudTestSupport {
         def firstName = 'John'
         def lastName = 'With-Group-Rule'
         def email = "john-${uniqueTestName}@example.com"
-        def groupName = "Group-Rule API Test Group ${uniqueTestName}"
-        def groupRuleName = ("Group-Rule ${uniqueTestName}").substring(0, 49)
+        def groupName = "java-sdk-it-" + UUID.randomUUID().toString()
+        def groupRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
 
         // 1. Create a user and a group
         User user = UserBuilder.instance()

@@ -35,9 +35,11 @@ class IdpIT extends ITSupport {
     @Test
     void oidcIdpLifecycleTest() {
 
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
         // create idp
         IdentityProvider createdIdp = IdentityProviderBuilders.oidc()
-            .setName("Mock OpenID Connect Id")
+            .setName(name)
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
             .setRequestSignatureAlgorithm("SHA-256")
             .setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum.REQUEST)
@@ -65,6 +67,7 @@ class IdpIT extends ITSupport {
 
         assertThat(createdIdp, notNullValue())
         assertThat(createdIdp.getId(), notNullValue())
+        assertThat(createdIdp.getName(), equalTo(name))
         assertThat(createdIdp.getStatus(), equalTo(IdentityProvider.StatusEnum.ACTIVE))
 
         // get
@@ -72,9 +75,11 @@ class IdpIT extends ITSupport {
         assertThat(retrievedIdp.getId(), equalTo(createdIdp.getId()))
 
         // update
+        String newName = "java-sdk-it-" + UUID.randomUUID().toString()
+
         IdentityProvider updatedIdp = createdIdp.update(client.instantiate(IdentityProvider)
             .setType(IdentityProvider.TypeEnum.OIDC)
-            .setName("Mock OpenID Connect Id - NEW")
+            .setName(newName)
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
             .setProtocol(client.instantiate(Protocol)
                 .setAlgorithms(client.instantiate(ProtocolAlgorithms)
@@ -132,7 +137,7 @@ class IdpIT extends ITSupport {
 
         IdentityProvider retrievedUpdatedIdp = client.getIdentityProvider(updatedIdp.getId())
         assertThat(retrievedUpdatedIdp.getId(), equalTo(createdIdp.getId()))
-        assertThat(retrievedUpdatedIdp.getName(), equalTo("Mock OpenID Connect Id - NEW"))
+        assertThat(retrievedUpdatedIdp.getName(), equalTo(newName))
         assertThat(retrievedUpdatedIdp.getProtocol().getEndpoints().getAuthorization().getUrl(),
             equalTo("https://idp.example.com/authorize_new"))
         assertThat(retrievedUpdatedIdp.getProtocol().getEndpoints().getToken().getUrl(),
@@ -176,8 +181,10 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create idp
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
         IdentityProvider createdIdp = IdentityProviderBuilders.oidc()
-            .setName("Mock OpenID Connect Id")
+            .setName(name)
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
             .setRequestSignatureAlgorithm("SHA-256")
             .setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum.REQUEST)
@@ -245,8 +252,10 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create Google idp
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
         IdentityProvider createdIdp = IdentityProviderBuilders.google()
-            .setName("Mock Google IdP")
+            .setName(name)
             .setScopes(["openid", "profile", "email"])
             .setClientId("your-client-id")
             .setClientSecret("your-client-secret")
@@ -297,8 +306,10 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create Facebook idp
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
         IdentityProvider createdIdp = IdentityProviderBuilders.facebook()
-            .setName("Mock Facebook IdP")
+            .setName(name)
             .setScopes(["public_profile", "email"])
             .setClientId("your-client-id")
             .setClientSecret("your-client-secret")
@@ -349,8 +360,10 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create Microsoft idp
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
         IdentityProvider createdIdp = IdentityProviderBuilders.microsoft()
-            .setName("Mock Microsoft IdP")
+            .setName(name)
             .setScopes(["openid", "email", "profile", "https://graph.microsoft.com/User.Read"])
             .setClientId("your-client-id")
             .setClientSecret("your-client-secret")
@@ -401,8 +414,10 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdUser)
 
         // create Linkedin idp
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
         IdentityProvider createdIdp = IdentityProviderBuilders.linkedin()
-            .setName("Mock LinkedIn IdP")
+            .setName(name)
             .setScopes(["r_basicprofile", "r_emailaddress"])
             .setClientId("your-client-id")
             .setClientSecret("your-client-secret")

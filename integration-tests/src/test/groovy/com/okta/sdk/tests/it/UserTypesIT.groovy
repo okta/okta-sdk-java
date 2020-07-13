@@ -34,7 +34,7 @@ class UserTypesIT extends ITSupport {
 
     @Test
     void createUserTypeTest() {
-        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
@@ -48,7 +48,7 @@ class UserTypesIT extends ITSupport {
 
     @Test
     void getUserTypeTest() {
-        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
@@ -65,7 +65,7 @@ class UserTypesIT extends ITSupport {
 
     @Test
     void updateUserTypeTest() {
-        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
@@ -85,7 +85,7 @@ class UserTypesIT extends ITSupport {
 
     @Test
     void deleteUserTypeTest() {
-        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
@@ -102,7 +102,7 @@ class UserTypesIT extends ITSupport {
 
     @Test
     void listAllUserTypesTest() {
-        String name1 = "java_sdk_user_type_1_" + RandomStringUtils.randomAlphanumeric(15)
+        String name1 = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType1 = client.createUserType(client.instantiate(UserType)
             .setName(name1)
@@ -112,7 +112,7 @@ class UserTypesIT extends ITSupport {
 
         assertThat(createdUserType1.getId(), notNullValue())
 
-        String name2 = "java_sdk_user_type_2_" + RandomStringUtils.randomAlphanumeric(15)
+        String name2 = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType2 = client.createUserType(client.instantiate(UserType)
             .setName(name2)

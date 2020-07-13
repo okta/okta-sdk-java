@@ -19,9 +19,6 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.rule.GroupRule
-import com.okta.sdk.resource.inline.hook.InlineHook
-import com.okta.sdk.resource.linked.object.LinkedObject
-import com.okta.sdk.resource.linked.object.LinkedObjectList
 import com.okta.sdk.resource.policy.PolicyType
 import com.okta.sdk.resource.user.UserStatus
 import org.slf4j.Logger
@@ -33,6 +30,7 @@ class OktaOrgCleaner {
 
     static void main(String[] args) {
 
+        String prefix = "java-sdk-it-"
         String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 
         Client client = Clients.builder().build()
@@ -54,7 +52,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting Applications:")
         client.listApplications().stream()
-            .filter { it.getLabel().matches(".*-${uuidRegex}.*") }
+            .filter { it.getLabel().startsWith(prefix) && it.getLabel().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getLabel()}")
                 it.deactivate()
@@ -71,7 +69,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting Group Rules:")
         client.listGroupRules().stream()
-            .filter { it.getName().matches("rule\\+${uuidRegex}.*") }
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 GroupRule rule = it
                 log.info("\t ${rule.getName()}")
@@ -83,14 +81,14 @@ class OktaOrgCleaner {
 
         log.info("Deleting Policies:")
         client.listPolicies(PolicyType.OKTA_SIGN_ON.toString()).stream()
-            .filter { it.getName().matches("policy\\+${uuidRegex}.*") }
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 it.delete()
             }
 
         log.info("Deleting LinkedObjectDefinitions:")
         client.listLinkedObjectDefinitions().stream()
-            .filter { it.getName().startsWith("manager") }
+            .filter { it.getPrimary().getName().startsWith("java_sdk_it_") }
             .forEach {
                 it.setName(it.getPrimary().getName())
                 it.delete()
@@ -98,7 +96,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting InlineHooks:")
         client.listInlineHooks().stream()
-            .filter { it.getName().matches(".*-${uuidRegex}.*") }
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 it.deactivate()
                 it.delete()
@@ -106,7 +104,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting EventHooks:")
         client.listEventHooks().stream()
-            .filter { it.getName().matches(".*-${uuidRegex}.*") }
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 it.deactivate()
                 it.delete()
@@ -114,14 +112,14 @@ class OktaOrgCleaner {
 
         log.info("Deleting UserTypes:")
         client.listUserTypes().stream()
-            .filter { !it.getDefault() && it.getName().startsWith("java_sdk_user_type_") }
+            .filter { it.getName().startsWith("java_sdk_it_") && !it.getDefault() }
             .forEach {
                 it.delete()
             }
 
         log.info("Deleting AuthorizationServers:")
         client.listAuthorizationServers().stream()
-            .filter { !it.getName().equals("default") && it.getName().startsWith("java-sdk-authorization-server-") }
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 it.deactivate()
                 it.delete()
@@ -129,7 +127,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting IdentityProviders:")
         client.listIdentityProviders().stream()
-            .filter { it.getName().startsWith("Mock") }
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 it.deactivate()
                 it.delete()

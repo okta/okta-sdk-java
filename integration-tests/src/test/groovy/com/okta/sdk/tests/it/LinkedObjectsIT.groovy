@@ -35,8 +35,8 @@ class LinkedObjectsIT extends ITSupport {
 
     @Test
     void addLinkedObjectDefinitionTest() {
-        String primaryName = "manager" + RandomStringUtils.randomAlphanumeric(25)
-        String associatedName = "subordinate" + RandomStringUtils.randomAlphanumeric(25)
+        String primaryName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
+        String associatedName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
 
         LinkedObjectDetails primary = client.instantiate(LinkedObjectDetails)
             .setName(primaryName)
@@ -51,6 +51,7 @@ class LinkedObjectsIT extends ITSupport {
             .setType(LinkedObjectDetailsType.USER)
 
         LinkedObject linkedObject = client.instantiate(LinkedObject)
+            .setName(primary.getName())
             .setPrimary(primary)
             .setAssociated(associated)
         registerForCleanup(linkedObject)
@@ -71,8 +72,8 @@ class LinkedObjectsIT extends ITSupport {
 
     @Test
     void getLinkedObjectDefinitionByPrimaryNameTest() {
-        String primaryName = "manager" + RandomStringUtils.randomAlphanumeric(25)
-        String associatedName = "subordinate" + RandomStringUtils.randomAlphanumeric(25)
+        String primaryName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
+        String associatedName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
 
         LinkedObjectDetails primary = client.instantiate(LinkedObjectDetails)
             .setName(primaryName)
@@ -87,6 +88,7 @@ class LinkedObjectsIT extends ITSupport {
             .setType(LinkedObjectDetailsType.USER)
 
         LinkedObject linkedObject = client.instantiate(LinkedObject)
+            .setName(primary.getName())
             .setPrimary(primary)
             .setAssociated(associated)
         registerForCleanup(linkedObject)
@@ -109,8 +111,8 @@ class LinkedObjectsIT extends ITSupport {
 
     @Test
     void getLinkedObjectDefinitionByAssociatedNameTest() {
-        String primaryName = "manager" + RandomStringUtils.randomAlphanumeric(25)
-        String associatedName = "subordinate" + RandomStringUtils.randomAlphanumeric(25)
+        String primaryName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
+        String associatedName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
 
         LinkedObjectDetails primary = client.instantiate(LinkedObjectDetails)
             .setName(primaryName)
@@ -125,6 +127,7 @@ class LinkedObjectsIT extends ITSupport {
             .setType(LinkedObjectDetailsType.USER)
 
         LinkedObject linkedObject = client.instantiate(LinkedObject)
+            .setName(primary.getName())
             .setPrimary(primary)
             .setAssociated(associated)
         registerForCleanup(linkedObject)
@@ -149,8 +152,8 @@ class LinkedObjectsIT extends ITSupport {
     void getAllLinkedObjectDefinitionsTest() {
         // create first linked object definition
 
-        String primaryName1 = "manager" + RandomStringUtils.randomAlphanumeric(25)
-        String associatedName1 = "subordinate" + RandomStringUtils.randomAlphanumeric(25)
+        String primaryName1 = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
+        String associatedName1 = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
 
         LinkedObjectDetails primary1 = client.instantiate(LinkedObjectDetails)
             .setName(primaryName1)
@@ -165,6 +168,7 @@ class LinkedObjectsIT extends ITSupport {
             .setType(LinkedObjectDetailsType.USER)
 
         LinkedObject linkedObject1 = client.instantiate(LinkedObject)
+            .setName(primary1.getName())
             .setPrimary(primary1)
             .setAssociated(associated1)
         registerForCleanup(linkedObject1)
@@ -173,8 +177,8 @@ class LinkedObjectsIT extends ITSupport {
 
         // create second linked object definition
 
-        String primaryName2 = "manager" + RandomStringUtils.randomAlphanumeric(25)
-        String associatedName2 = "subordinate" + RandomStringUtils.randomAlphanumeric(25)
+        String primaryName2 = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
+        String associatedName2 = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
 
         LinkedObjectDetails primary2 = client.instantiate(LinkedObjectDetails)
             .setName(primaryName2)
@@ -189,6 +193,7 @@ class LinkedObjectsIT extends ITSupport {
             .setType(LinkedObjectDetailsType.USER)
 
         LinkedObject linkedObject2 = client.instantiate(LinkedObject)
+            .setName(primary2.getName())
             .setPrimary(primary2)
             .setAssociated(associated2)
         registerForCleanup(linkedObject2)

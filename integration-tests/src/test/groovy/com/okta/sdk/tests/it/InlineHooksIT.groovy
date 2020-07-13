@@ -40,7 +40,7 @@ class InlineHooksIT extends ITSupport {
 
     @Test
     void createInlineHookTest() {
-        String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
@@ -61,7 +61,7 @@ class InlineHooksIT extends ITSupport {
 
     @Test
     void getInlineHookTest() {
-        String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
@@ -86,7 +86,7 @@ class InlineHooksIT extends ITSupport {
 
     @Test
     void updateInlineHookTest() {
-        String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
@@ -100,7 +100,9 @@ class InlineHooksIT extends ITSupport {
 
         assertThat(createdInlineHook.getId(), notNullValue())
 
-        InlineHook toBeUpdatedInlineHook = createdInlineHook.setName("updated-" + name)
+        String newName = "java-sdk-it-" + UUID.randomUUID().toString()
+
+        InlineHook toBeUpdatedInlineHook = createdInlineHook.setName(newName)
         toBeUpdatedInlineHook.getChannel().getConfig().setHeaders([
             client.instantiate(InlineHookChannelConfigHeaders)
                 .setKey("X-Test-Header")
@@ -115,7 +117,7 @@ class InlineHooksIT extends ITSupport {
 
         assertThat(updatedInlineHook.getId(), notNullValue())
         assertThat(updatedInlineHook.getId(), equalTo(createdInlineHook.getId()))
-        assertThat(updatedInlineHook.getName(), equalTo("updated-" + name))
+        assertThat(updatedInlineHook.getName(), equalTo(newName))
         assertThat(updatedInlineHook.getType(), equalTo(InlineHookType.OAUTH2_TOKENS_TRANSFORM))
         assertThat(updatedInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooksUpdated"))
 
@@ -124,7 +126,7 @@ class InlineHooksIT extends ITSupport {
 
     @Test
     void deleteInlineHookTest() {
-        String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
@@ -140,6 +142,7 @@ class InlineHooksIT extends ITSupport {
 
         InlineHook retrievedInlineHook = client.getInlineHook(createdInlineHook.getId())
         assertThat(retrievedInlineHook.getId(), equalTo(createdInlineHook.getId()))
+        assertThat(retrievedInlineHook.getName(), equalTo(name))
 
         createdInlineHook.deactivate()
         createdInlineHook.delete()
@@ -149,7 +152,7 @@ class InlineHooksIT extends ITSupport {
 
     @Test
     void listAllInlineHooksTest() {
-        String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
@@ -162,6 +165,7 @@ class InlineHooksIT extends ITSupport {
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
+        assertThat(createdInlineHook.getName(), equalTo(name))
         assertPresent(client.listInlineHooks(), createdInlineHook)
 
         createdInlineHook.deactivate()
@@ -169,7 +173,7 @@ class InlineHooksIT extends ITSupport {
 
     @Test
     void activateDeactivateInlineHookTest() {
-        String name = "inline-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
@@ -182,6 +186,7 @@ class InlineHooksIT extends ITSupport {
         registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
+        assertThat(createdInlineHook.getName(), equalTo(name))
         assertThat(createdInlineHook.getStatus(), equalTo(InlineHookStatus.ACTIVE))
 
         createdInlineHook.deactivate()
