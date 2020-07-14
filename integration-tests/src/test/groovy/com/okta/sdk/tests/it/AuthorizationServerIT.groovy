@@ -288,7 +288,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
-            .setName("java-sdk-it-scope" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
 
         OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
 
@@ -310,7 +310,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
-            .setName("java-sdk-it-scope" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
 
         OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
 
@@ -335,7 +335,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
-            .setName("java-sdk-it-scope" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
             .setConsent(OAuth2Scope.ConsentEnum.REQUIRED)
             .setMetadataPublish(OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS)
 
@@ -344,7 +344,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdOAuth2Scope, notNullValue())
 
         OAuth2Scope tobeUpdatedOAuth2Scope = client.instantiate(OAuth2Scope)
-            .setName("java-sdk-it-scope" + RandomStringUtils.randomAlphanumeric(10) + "-updated")
+            .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10) + "-updated")
             .setConsent(OAuth2Scope.ConsentEnum.REQUIRED)
             .setMetadataPublish(OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS)
 
@@ -368,7 +368,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
-            .setName("java-sdk-it-scope" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
 
         OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
 
