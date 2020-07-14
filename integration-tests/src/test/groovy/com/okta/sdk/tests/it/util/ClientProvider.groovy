@@ -34,7 +34,6 @@ import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.linked.object.LinkedObject
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserStatus
-import com.okta.sdk.resource.user.UserType
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.slf4j.Logger
@@ -193,8 +192,7 @@ trait ClientProvider implements IHookable {
                         deletable instanceof EventHook ||
                         deletable instanceof InlineHook ||
                         deletable instanceof GroupRule ||
-                        deletable instanceof IdentityProvider ||
-                        deletable instanceof UserType) {
+                        deletable instanceof IdentityProvider) {
                         deletable.deactivate()
                     }
                     if (deletable instanceof LinkedObject) {

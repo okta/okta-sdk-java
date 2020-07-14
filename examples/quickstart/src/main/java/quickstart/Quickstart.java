@@ -25,6 +25,7 @@ import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.group.Group;
 import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserList;
+import com.okta.sdk.resource.user.UserStatus;
 
 import java.util.UUID;
 
@@ -38,28 +39,33 @@ public class Quickstart {
 
     public static void main(String[] args) {
 
+        final String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
+        final String groupName = "java-sdk-quickstart-" + UUID.randomUUID().toString();
+        final char[] password = {'P','a','s','s','w','o','r','d','1'};
+
+        ClientBuilder builder;
+        Client client;
+        Group group = null;
+        User user = null;
+
         try {
             // Instantiate a builder for your Client. If needed, settings like Proxy and Caching can be defined here.
-            ClientBuilder builder = Clients.builder();
+            builder = Clients.builder();
 
             // No need to define anything else; build the Client instance. The ClientCredential information will be automatically found
             // in pre-defined locations: i.e. ~/.okta/okta.yaml
-            Client client = builder.build();
+            client = builder.build();
 
             // Create a group
-            Group group = GroupBuilder.instance()
-                    .setName("my-user-group-" + UUID.randomUUID().toString())
+            group = GroupBuilder.instance()
+                    .setName(groupName)
                     .setDescription("Quickstart created Group")
                     .buildAndCreate(client);
 
             println("Group: '" + group.getId() + "' was last updated on: " + group.getLastUpdated());
 
-
             // Create a User Account
-            String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
-
-            char[] password = {'P','a','s','s','w','o','r','d','1'};
-            User user = UserBuilder.instance()
+            user = UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName("Joe")
                 .setLastName("Coder")
@@ -104,6 +110,20 @@ public class Quickstart {
             // and you can get the details too
             e.getCauses().forEach( cause -> println("\t" + cause.getSummary()));
             throw e;
+        }
+        finally {
+            // cleanup
+
+            // deactivate, delete user
+            if (user != null && user.getStatus() != UserStatus.DEPROVISIONED) {
+                user.deactivate();
+            }
+            user.delete();
+
+            // delete group
+            if (group != null) {
+                group.delete();
+            }
         }
     }
 

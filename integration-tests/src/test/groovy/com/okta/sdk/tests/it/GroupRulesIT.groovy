@@ -111,9 +111,6 @@ class GroupRulesIT implements CrudTestSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        Group group = GroupBuilder.instance()
-                .setName(groupName)
-                .buildAndCreate(client)
         registerForCleanup(group)
 
         // 2. Create a group rule and verify rule executes
