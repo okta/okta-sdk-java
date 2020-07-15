@@ -114,11 +114,13 @@ public class Quickstart {
         finally {
             // cleanup
 
-            // deactivate, delete user
-            if (user != null && user.getStatus() != UserStatus.DEPROVISIONED) {
-                user.deactivate();
+            // deactivate (if de-provisioned) and delete user
+            if (user != null) {
+                if (user.getStatus() != UserStatus.DEPROVISIONED) {
+                    user.deactivate();
+                }
+                user.delete();
             }
-            user.delete();
 
             // delete group
             if (group != null) {
