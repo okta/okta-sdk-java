@@ -62,18 +62,18 @@ public class ReadmeSnippets {
 
     private void createClient() {
         Client client = Clients.builder()
-            .setOrgUrl("{yourOktaDomain}")
+            .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
             .setClientCredentials(new TokenClientCredentials("{apiToken}"))
             .build();
     }
 
     private void createOAuth2Client() {
         Client client = Clients.builder()
-            .setOrgUrl("{yourOktaDomain}")
+            .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
             .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
             .setClientId("{clientId}")
             .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
-            .setPrivateKey("{pathToYourPrivateKeyPemFile}")
+            .setPrivateKey("/path/to/yourPrivateKey.pem")
             .build();
     }
 
