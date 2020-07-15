@@ -21,28 +21,33 @@ import com.okta.sdk.tests.it.util.ITSupport
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
+import static org.hamcrest.Matchers.matchesPattern
 
-class OIdCApplicationIT extends ITSupport implements CrudTestSupport{
+class OIdCApplicationIT extends ITSupport implements CrudTestSupport {
+
     @Override
     def create(Client client) {
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
         Application app = OIdCApplicationBuilder.instance()
-            .setName("oidc_client")
-            .setLabel("SDK test app - 1")
-            .addRedirectUris("http://www.google.com")
+            .setName(name)
+            .setLabel(name)
+            .addRedirectUris("http://www.example.com")
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
-            .setClientId("dummy_id")
-            .setClientSecret("dummy_shgfhsgdhfgwg")
+            .setClientId(UUID.randomUUID().toString())
+            .setClientSecret(UUID.randomUUID().toString())
             .setAutoKeyRotation(true)
             .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
             .setIOS(false)
             .setWeb(true)
             .setLoginRedirectUrl("http://www.myapp.com")
-            .setErrorRedirectUrl("http://www.myapp.com/errror")
-            .buildAndCreate(client);
+            .setErrorRedirectUrl("http://www.myapp.com/error")
+            .buildAndCreate(client)
+        registerForCleanup(app)
 
-        return (OpenIdConnectApplication)app
+        return (OpenIdConnectApplication) app
     }
 
     @Override
@@ -57,16 +62,14 @@ class OIdCApplicationIT extends ITSupport implements CrudTestSupport{
 
     @Override
     void update(Client client, def application) {
-        application.setLabel("test_app")
+        application.setLabel(application.label +"-2")
         application.visibility.hide.iOS = false
         application.update()
     }
 
     @Override
     void assertUpdate(Client client, def app) {
-        assertThat app.label, is("test_app")
+        assertThat app.label, matchesPattern('^java-sdk-it-.*-2$')
         assertThat app.visibility.hide.iOS, is(false)
-        assertThat app.credentials.oauthClient.client_id, is("dummy_id")
-
     }
 }

@@ -81,7 +81,7 @@ abstract class ITSupport implements ClientProvider {
         return user
     }
 
-    Group randomGroup(String name = "group-java-sdk-${UUID.randomUUID().toString()}") {
+    Group randomGroup(String name = "java-sdk-it-${UUID.randomUUID().toString()}") {
 
         Group group = GroupBuilder.instance()
             .setName(name)
@@ -95,7 +95,7 @@ abstract class ITSupport implements ClientProvider {
     PasswordPolicy randomPasswordPolicy(String groupId) {
 
         PasswordPolicy policy = PasswordPolicyBuilder.instance()
-            .setName("policy-java-" + UUID.randomUUID().toString())
+            .setName("java-sdk-it-" + UUID.randomUUID().toString())
             .setStatus(Policy.StatusEnum.ACTIVE)
             .setDescription("IT created Policy")
             .setStatus(Policy.StatusEnum.ACTIVE)
@@ -111,7 +111,7 @@ abstract class ITSupport implements ClientProvider {
     OktaSignOnPolicy randomSignOnPolicy(String groupId) {
 
         OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
-            .setName("policy-java-" + UUID.randomUUID().toString())
+            .setName("java-sdk-it-" + UUID.randomUUID().toString())
             .setDescription("IT created Policy")
             .setStatus(Policy.StatusEnum.ACTIVE)
         .setType(PolicyType.OKTA_SIGN_ON)

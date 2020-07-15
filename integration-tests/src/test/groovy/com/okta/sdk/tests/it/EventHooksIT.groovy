@@ -40,14 +40,14 @@ class EventHooksIT extends ITSupport {
 
     @Test
     void createEventHookTest() {
-        String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
         EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -61,14 +61,14 @@ class EventHooksIT extends ITSupport {
 
     @Test
     void getEventHookTest() {
-        String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
         EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -86,14 +86,14 @@ class EventHooksIT extends ITSupport {
 
     @Test
     void updateEventHookTest() {
-        String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
         EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -120,14 +120,14 @@ class EventHooksIT extends ITSupport {
 
     @Test
     void deleteEventHookTest() {
-        String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
         EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -149,14 +149,14 @@ class EventHooksIT extends ITSupport {
 
     @Test
     void listAllEventHooksTest() {
-        String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
         EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
@@ -168,14 +168,14 @@ class EventHooksIT extends ITSupport {
 
     @Test
     void activateDeactivateEventHookTest() {
-        String name = "event-hook-java-sdk-${UUID.randomUUID().toString()}"
+        String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
         EventHook createdEventHook = EventHookBuilder.instance()
             .setName(name)
             .setUrl("https://www.example.com/eventHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())

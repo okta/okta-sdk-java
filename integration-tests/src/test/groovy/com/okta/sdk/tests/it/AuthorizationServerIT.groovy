@@ -45,7 +45,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void createAuthorizationServerTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -64,7 +64,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void listCreatedAuthorizationServerTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -79,7 +79,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void getAuthorizationServerTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -96,7 +96,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void updateAuthorizationServerTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -116,7 +116,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void deleteAuthorizationServerTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -141,7 +141,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void listAuthorizationServerPoliciesTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         Policy policy = client.instantiate(Policy)
             .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
@@ -169,7 +169,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void getAuthorizationServerPolicyTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         Policy policy = client.instantiate(Policy)
             .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
@@ -201,7 +201,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void updateAuthorizationServerPolicyTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         Policy policy = client.instantiate(Policy)
             .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
@@ -239,7 +239,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void deleteAuthorizationServerPolicyTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         Policy policy = client.instantiate(Policy)
             .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
@@ -276,7 +276,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void listOAuth2ScopesTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -288,7 +288,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
-            .setName("java-sdk-authorization-server-scope" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
 
         OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
 
@@ -298,7 +298,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void getOAuth2ScopesTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -310,7 +310,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
-            .setName("java-sdk-authorization-server-scope" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
 
         OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
 
@@ -323,7 +323,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void updateOAuth2ScopesTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -335,7 +335,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
-            .setName("java-sdk-authorization-server-scope" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
             .setConsent(OAuth2Scope.ConsentEnum.REQUIRED)
             .setMetadataPublish(OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS)
 
@@ -344,7 +344,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdOAuth2Scope, notNullValue())
 
         OAuth2Scope tobeUpdatedOAuth2Scope = client.instantiate(OAuth2Scope)
-            .setName("java-sdk-authorization-server-scope" + RandomStringUtils.randomAlphanumeric(10) + "-updated")
+            .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10) + "-updated")
             .setConsent(OAuth2Scope.ConsentEnum.REQUIRED)
             .setMetadataPublish(OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS)
 
@@ -356,7 +356,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void deleteOAuth2ScopesTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -368,7 +368,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
-            .setName("java-sdk-authorization-server-scope" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
 
         OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
 
@@ -386,7 +386,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void listOAuth2ClaimsTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -398,7 +398,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Claim oAuth2Claim = client.instantiate(OAuth2Claim)
-            .setName("java-sdk-authorization-server-claims" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-claims" + RandomStringUtils.randomAlphanumeric(10))
             .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
             .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
             .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
@@ -412,7 +412,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void getOAuth2ClaimTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -424,7 +424,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Claim oAuth2Claim = client.instantiate(OAuth2Claim)
-            .setName("java-sdk-authorization-server-claims" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-claims" + RandomStringUtils.randomAlphanumeric(10))
             .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
             .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
             .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
@@ -440,7 +440,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void updateOAuth2ClaimTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -452,7 +452,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Claim oAuth2Claim = client.instantiate(OAuth2Claim)
-            .setName("java-sdk-authorization-server-claims" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-claims" + RandomStringUtils.randomAlphanumeric(10))
             .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
             .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
             .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
@@ -462,7 +462,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdOAuth2Claim, notNullValue())
 
         OAuth2Claim tobeUpdatedOAuth2Claim = client.instantiate(OAuth2Claim)
-            .setName("java-sdk-authorization-server-claims" + RandomStringUtils.randomAlphanumeric(10) + "-updated")
+            .setName("java-sdk-it-claims" + RandomStringUtils.randomAlphanumeric(10) + "-updated")
             .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
             .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
             .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
@@ -476,7 +476,7 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void deleteOAuth2ClaimTest() {
-        String name = "java-sdk-authorization-server-" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
@@ -488,7 +488,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Claim oAuth2Claim = client.instantiate(OAuth2Claim)
-            .setName("java-sdk-authorization-server-claims" + RandomStringUtils.randomAlphanumeric(10))
+            .setName("java-sdk-it-claims" + RandomStringUtils.randomAlphanumeric(10))
             .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
             .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
             .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
