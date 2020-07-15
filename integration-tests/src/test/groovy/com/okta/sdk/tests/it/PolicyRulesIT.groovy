@@ -35,7 +35,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def group = randomGroup()
         crudTestPolicy = randomSignOnPolicy(group.getId())
 
-        def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
+        def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
             .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
@@ -54,13 +54,13 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
 
     @Override
     void update(Client client, def policyRule) {
-        policyRule.setName(policyRule.name.replaceFirst("policyRule+", "updated+"))
+        policyRule.setName(policyRule.name +"-2")
         policyRule.update()
     }
 
     @Override
     void assertUpdate(Client client, def policyRule) {
-        assertThat policyRule.name, startsWith("updated+")
+        assertThat policyRule.name, matchesPattern('^java-sdk-it-.*-2$')
     }
 
     @Override
@@ -74,7 +74,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def group = randomGroup()
         def policy = randomSignOnPolicy(group.getId())
 
-        def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
+        def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
             .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
@@ -98,7 +98,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def group = randomGroup()
         def policy = randomPasswordPolicy(group.getId())
 
-        def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
+        def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         PasswordPolicyRule policyRule = PasswordPolicyRuleBuilder.instance()
             .setName(policyRuleName)
             .setType(PolicyRule.TypeEnum.PASSWORD)
@@ -123,7 +123,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def group = randomGroup()
         def policy = randomSignOnPolicy(group.getId())
 
-        def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
+        def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
             .setType(PolicyRule.TypeEnum.SIGN_ON)
@@ -151,7 +151,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def group = randomGroup()
         def policy = randomSignOnPolicy(group.getId())
 
-        def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
+        def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
             .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.RADIUS)
@@ -176,7 +176,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def group = randomGroup()
         def policy = randomSignOnPolicy(group.getId())
 
-        def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
+        def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
             .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
@@ -211,7 +211,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def group = randomGroup()
         def policy = randomSignOnPolicy(group.getId())
 
-        def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
+        def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
             .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
