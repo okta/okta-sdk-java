@@ -23,6 +23,8 @@ import com.okta.sdk.resource.policy.Policy
 import com.okta.sdk.resource.policy.PolicyRuleConditions
 import com.okta.sdk.resource.policy.PolicyType
 import com.okta.sdk.tests.it.util.ITSupport
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils
 
@@ -41,17 +43,21 @@ import static com.okta.sdk.tests.it.util.Util.assertNotPresent
  */
 class AuthorizationServerIT extends ITSupport {
 
+    private Logger log = LoggerFactory.getLogger(AuthorizationServerIT)
+
     // Authorization server operations
 
     @Test
     void createAuthorizationServerTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
+        log.debug("========= CREATE AUTHORIZATION SERVER ========= ")
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
+        log.debug("========= REGISTER AUTHORIZATION SERVER " + createdAuthorizationServer.getId() + " FOR CLEANUP ========= ")
         registerForCleanup(createdAuthorizationServer)
 
         assertThat(createdAuthorizationServer, notNullValue())

@@ -198,7 +198,13 @@ trait ClientProvider implements IHookable {
                     if (deletable instanceof LinkedObject) {
                         deletable.setName(deletable.getPrimary().getName())
                     }
-                    deletable.delete()
+                    if (deletable instanceof AuthorizationServer) {
+                        log.debug("========= DELETE AUTHORIZATION SERVER ========= " + deletable.getId())
+                        deletable.delete()
+                    }
+                    else {
+                        deletable.delete()
+                    }
                 }
                 catch (Exception e) {
                     log.trace("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run:", e)
