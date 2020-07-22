@@ -7656,6 +7656,7 @@ definitions:
         type: string
       phoneNumber:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   ChangePasswordRequest:
@@ -7755,6 +7756,7 @@ definitions:
     properties:
       email:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   EnabledStatus:
@@ -8309,6 +8311,7 @@ definitions:
     properties:
       credentialId:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   IdentityProvider:
@@ -10686,6 +10689,7 @@ definitions:
         type: string
       version:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   RecoveryQuestionCredential:
@@ -11029,6 +11033,7 @@ definitions:
         type: string
       questionText:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   Session:
@@ -11213,6 +11218,7 @@ definitions:
     properties:
       phoneNumber:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   SocialAuthToken:
@@ -11328,6 +11334,7 @@ definitions:
     properties:
       credentialId:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   TotpUserFactor:
@@ -11341,6 +11348,7 @@ definitions:
     properties:
       credentialId:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   TrustedOrigin:
@@ -11410,6 +11418,7 @@ definitions:
     properties:
       credentialId:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   User:
@@ -11818,6 +11827,10 @@ definitions:
         web: '#/definitions/WebUserFactor'
         webauthn: '#/definitions/WebAuthnUserFactor'
       propertyName: factorType
+  UserFactorProfile:
+    properties: {}
+    x-okta-tags:
+      - UserFactor
   UserIdentifierConditionEvaluatorPattern:
     properties:
       matchType:
@@ -12116,6 +12129,7 @@ definitions:
     properties:
       credentialId:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   WebAuthnUserFactor:
@@ -12131,6 +12145,7 @@ definitions:
         type: string
       authenticatorName:
         type: string
+    x-okta-parent: '#/definitions/UserFactorProfile'
     x-okta-tags:
       - UserFactor
   WsFederationApplication:
