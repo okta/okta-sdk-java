@@ -70,7 +70,6 @@ import java.util.stream.Collectors;
 import static com.okta.commons.http.HttpHeaders.OKTA_USER_AGENT;
 import static com.okta.commons.http.HttpHeaders.USER_AGENT;
 import static com.okta.commons.http.HttpHeaders.OKTA_AGENT;
-import static com.okta.commons.http.HttpHeaders.OKTA_CLIENT_REQUEST_ID;
 
 /**
  * @since 0.5.0
@@ -498,9 +497,13 @@ public class DefaultDataStore implements InternalDataStore {
             request.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         }
 
-        List<String> clientRequestId;
-        if (headerMap != null && (clientRequestId = headerMap.get(OKTA_CLIENT_REQUEST_ID)) != null) {
-            request.getHeaders().put(OKTA_CLIENT_REQUEST_ID, clientRequestId);
+        // all other headers
+        if (headerMap != null) {
+            headerMap.entrySet().stream()
+                // filter use agent, there is logic to add that above
+                .filter(entry -> !OKTA_AGENT.equals(entry.getKey()))
+                .filter(entry -> !USER_AGENT.equals(entry.getKey()))
+                .forEach(entry -> request.getHeaders().put(entry.getKey(), entry.getValue()));
         }
     }
 
