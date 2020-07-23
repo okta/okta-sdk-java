@@ -22,11 +22,13 @@ import com.okta.commons.http.RequestExecutor
 import com.okta.commons.http.Response
 import com.okta.sdk.authc.credentials.ClientCredentials
 import com.okta.sdk.impl.api.ClientCredentialsResolver
+import com.okta.sdk.impl.http.HttpHeadersHolder
 import com.okta.sdk.impl.resource.TestResource
 import com.okta.sdk.impl.util.StringInputStream
 import org.hamcrest.Matcher
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
+import org.testng.annotations.AfterTest
 import org.testng.annotations.Test
 
 import static org.mockito.Mockito.*
@@ -38,6 +40,11 @@ import static org.hamcrest.MatcherAssert.*
  * @since 0.5.0
  */
 class DefaultDataStoreTest {
+
+    @AfterTest
+    void cleanUpHeaders() {
+        HttpHeadersHolder.clear();
+    }
 
     @Test
     void testApiKeyResolverReturnsCorrectApiKey() {
@@ -174,5 +181,42 @@ class DefaultDataStoreTest {
                                         containsString("okta-sdk-java/"),
                                         containsString("java/${System.getProperty("java.version")}"),
                                         containsString("${System.getProperty("os.name")}/${System.getProperty("os.version")}"))
+    }
+
+    @Test
+    void testAdditionalHeaders() {
+        def resourceHref = "https://api.okta.com/v1/testResource"
+        def requestExecutor = mock(RequestExecutor)
+        def apiKeyResolver = mock(ClientCredentialsResolver)
+        def response = mock(Response)
+        def responseBody = '{"name": "jcoder"}'
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
+        def requestCapture = ArgumentCaptor.forClass(Request)
+
+        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
+        when(response.hasBody()).thenReturn(true)
+        when(response.getBody()).thenReturn(new StringInputStream(responseBody))
+        when(response.getHeaders()).thenReturn(new HttpHeaders())
+
+        HttpHeadersHolder.set([
+            "threaded-header1": ["value1", "value2"],
+            "threaded-header2": ["single-value"]
+        ])
+
+        defaultDataStore.getResource(resourceHref, TestResource, null,
+            ["Foo-Bar": ["test-value"]])
+
+        def request = requestCapture.getValue()
+        // from the request arg
+        assertThat request.headers, hasEntry("Foo-Bar", ["test-value"])
+        // thread local
+        assertThat request.headers, hasEntry("threaded-header1", ["value1", "value2"])
+        assertThat request.headers, hasEntry("threaded-header2", ["single-value"])
+        // default headers
+        assertThat request.headers.get("User-Agent"), hasSize(1)
+        assertThat request.headers.getFirst("User-Agent"), allOf(
+            containsString("okta-sdk-java/"),
+            containsString("java/${System.getProperty("java.version")}"),
+            containsString("${System.getProperty("os.name")}/${System.getProperty("os.version")}"))
     }
 }
