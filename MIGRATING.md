@@ -17,6 +17,10 @@ Below methods have been renamed for the sake of clarity.
    - Renamed `getRule` to `getGroupRule`
    - Renamed `listRules` to `listGroupRules`
 
+Below API has undergone a signature change.
+   - `listUsers(String q, String filter, String format, String search, String expand)`
+   Signature changed to `listUsers(java.lang.String q, java.lang.String filter, java.lang.String search, java.lang.String sortBy, java.lang.String sortOrder)`
+
 ### Package `com.okta.sdk.resource.log.LogEventList`
 
 The API used to get log info has undergone a signature change (note the order swap of `until` and `since` parameters).
