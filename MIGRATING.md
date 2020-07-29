@@ -20,6 +20,7 @@ Below methods have been renamed for the sake of clarity.
 Below API has undergone a signature change.
    - `listUsers(String q, String filter, String format, String search, String expand)`
    Signature changed to `listUsers(java.lang.String q, java.lang.String filter, java.lang.String search, java.lang.String sortBy, java.lang.String sortOrder)`
+
 Note that the params `format` and `expand` have been removed. New params `sortBy` and `sortOrder` have been added. These are optional and would need to be specified only while using search queries. 
 
 ### Package `com.okta.sdk.resource.log.LogEventList`
