@@ -63,7 +63,7 @@ class UserRolesIT extends ITSupport {
         assignRoleRequest.setType(RoleType.SUPER_ADMIN)
 
         // fix flakiness seen in PDV tests
-        Thread.sleep(getTestDelay())
+        Thread.sleep(getTestOperationDelay())
 
         Role assignedRole = user.assignRole(assignRoleRequest)
         assertThat("Incorrect RoleType", assignedRole.getType() == RoleType.SUPER_ADMIN)

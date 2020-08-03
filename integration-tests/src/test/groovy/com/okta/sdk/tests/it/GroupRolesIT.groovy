@@ -67,7 +67,7 @@ class GroupRolesIT extends ITSupport {
         Role appAdminRole = createdGroup.assignRole(appAdminRoleRequest)
 
         // fix flakiness seen in PDV tests
-        Thread.sleep(getTestDelay())
+        Thread.sleep(getTestOperationDelay())
 
         // 5. List assigned group roles and check the assignments
         RoleList roles = client.listGroupAssignedRoles(createdGroup.getId())

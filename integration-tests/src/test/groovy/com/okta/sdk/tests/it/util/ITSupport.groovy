@@ -24,6 +24,7 @@ import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.testng.Assert
 import org.testng.ITestContext
 import org.testng.annotations.AfterSuite
 import org.testng.annotations.BeforeSuite
@@ -71,11 +72,14 @@ abstract class ITSupport implements ClientProvider {
     }
 
     /**
-     * Some ITs exhibit flakiness at times due to replication issues at core backend.
+     * Some Integration test operations exhibit flakiness at times due to replication lag at the core backend.
      * We therefore add delays between some test operations to ensure we give sufficient
      * interval between invoking operations on the backend resource.
+     *
+     * This delay could be specified by System property 'okta.it.operationDelay' or
+     * env variable 'OKTA_IT_OPERATION_DELAY'.
      */
-    long getTestDelay() {
+    long getTestOperationDelay() {
         Long testDelay = Long.getLong(IT_OPERATION_DELAY)
 
         if (testDelay == null) {
@@ -83,12 +87,13 @@ abstract class ITSupport implements ClientProvider {
                 try {
                     testDelay = Long.valueOf(System.getenv("OKTA_IT_OPERATION_DELAY"))
                 } catch (NumberFormatException e) {
-                    log.error("Error parsing env variable OKTA_IT_OPERATION_DELAY. Will default to 0!")
+                    log.error("Could not parse env variable OKTA_IT_OPERATION_DELAY. Will default to 0!")
+                    return 0
                 }
             }
         }
 
-        return testDelay != null ? testDelay : 0
+        return testDelay;
     }
 
     User randomUser() {
