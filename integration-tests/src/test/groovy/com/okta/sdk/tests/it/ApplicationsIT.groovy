@@ -438,10 +438,9 @@ class ApplicationsIT extends ITSupport {
         client.createApplication(app)
         registerForCleanup(app)
 
-        // fix OKTA-279039, OKTA-315881
         // issue: listApplicationUsers() occasionally throws HTTP 404, Okta E0000007 - Resource not found error.
         // adding a sleep after createApplication() helps resolve the above issue.
-        sleep(4000)
+        sleep(getTestDelay())
 
         AppUserList appUserList = app.listApplicationUsers()
         assertThat appUserList.iterator().size(), equalTo(0)
@@ -466,8 +465,8 @@ class ApplicationsIT extends ITSupport {
         assertThat(app.assignUserToApplication(appUser1), sameInstance(appUser1))
         assertThat(app.assignUserToApplication(appUser2), sameInstance(appUser2))
 
-        // Ref OKTA-315881 - Fix flakiness seen in PDV tests
-        Thread.sleep(4000)
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestDelay())
 
         // now we should have 2
         assertThat appUserList.iterator().size(), equalTo(2)
@@ -475,8 +474,8 @@ class ApplicationsIT extends ITSupport {
         // delete just one
         appUser1.delete()
 
-        // Ref OKTA-315881 - Fix flakiness seen in PDV tests
-        Thread.sleep(4000)
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestDelay())
 
         // now we should have 1
         assertThat appUserList.iterator().size(), equalTo(1)

@@ -162,7 +162,7 @@ class IdpIT extends ITSupport {
         createdIdp.delete()
 
         // earlier operation may not complete immediately
-        sleep(2000)
+        sleep(getTestDelay())
 
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }

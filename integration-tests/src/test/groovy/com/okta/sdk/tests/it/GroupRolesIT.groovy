@@ -66,8 +66,8 @@ class GroupRolesIT extends ITSupport {
         Role userAdminRole = createdGroup.assignRole(userAdminRoleRequest)
         Role appAdminRole = createdGroup.assignRole(appAdminRoleRequest)
 
-        // Ref: OKTA-317025 - Fix flakiness seen in PDV tests
-        Thread.sleep(4000)
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestDelay())
 
         // 5. List assigned group roles and check the assignments
         RoleList roles = client.listGroupAssignedRoles(createdGroup.getId())

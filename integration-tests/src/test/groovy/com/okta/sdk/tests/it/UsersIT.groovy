@@ -214,8 +214,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 3. Assert User Type
         assertThat(user.getType().getId(), equalTo(createdUserType.getId()))
 
-        // Ref OKTA-315881 - Fix flakiness seen in PDV tests
-        Thread.sleep(4000)
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestDelay())
 
         // 4.Verify user in list of active users
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
@@ -245,8 +245,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 2. Activate the user and verify user in list of active users
         user.activate(false)
 
-        // Ref OKTA-315881 - Fix flakiness seen in PDV tests
-        Thread.sleep(4000)
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestDelay())
 
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
@@ -616,7 +616,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
         // 2. Update the user profile and verify that profile was updated
         // Need to wait 1 second here as that is the minimum time resolution of the 'lastUpdated' field
-        sleep(1000)
+        sleep(getTestDelay())
         user.getProfile().put("nickName", "Batman")
         user.update()
         assertThat(user.lastUpdated, greaterThan(originalLastUpdated))
@@ -647,8 +647,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 2. Suspend the user and verify user in list of suspended users
         user.suspend()
 
-        // Ref OKTA-315881 - Fix flakiness seen in PDV tests
-        Thread.sleep(4000)
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestDelay())
 
         assertPresent(client.listUsers(null, 'status eq \"SUSPENDED\"', null, null, null), user)
 
