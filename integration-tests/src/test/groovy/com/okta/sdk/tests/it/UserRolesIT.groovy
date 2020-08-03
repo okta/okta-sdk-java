@@ -62,6 +62,9 @@ class UserRolesIT extends ITSupport {
         AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
         assignRoleRequest.setType(RoleType.SUPER_ADMIN)
 
+        // Ref OKTA-315881 - Fix flakiness seen in PDV tests
+        Thread.sleep(4000)
+
         Role assignedRole = user.assignRole(assignRoleRequest)
         assertThat("Incorrect RoleType", assignedRole.getType() == RoleType.SUPER_ADMIN)
     }

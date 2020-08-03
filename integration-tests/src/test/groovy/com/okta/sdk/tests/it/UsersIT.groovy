@@ -214,6 +214,9 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 3. Assert User Type
         assertThat(user.getType().getId(), equalTo(createdUserType.getId()))
 
+        // Ref OKTA-315881 - Fix flakiness seen in PDV tests
+        Thread.sleep(4000)
+
         // 4.Verify user in list of active users
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
@@ -241,6 +244,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
         // 2. Activate the user and verify user in list of active users
         user.activate(false)
+
+        // Ref OKTA-315881 - Fix flakiness seen in PDV tests
+        Thread.sleep(4000)
+
         UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
     }
@@ -639,6 +646,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
         // 2. Suspend the user and verify user in list of suspended users
         user.suspend()
+
+        // Ref OKTA-315881 - Fix flakiness seen in PDV tests
+        Thread.sleep(4000)
+
         assertPresent(client.listUsers(null, 'status eq \"SUSPENDED\"', null, null, null), user)
 
         // 3. Unsuspend the user and verify user in list of active users
