@@ -24,7 +24,6 @@ import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.testng.Assert
 import org.testng.ITestContext
 import org.testng.annotations.AfterSuite
 import org.testng.annotations.BeforeSuite
