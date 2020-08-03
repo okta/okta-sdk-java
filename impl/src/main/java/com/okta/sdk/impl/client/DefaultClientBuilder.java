@@ -21,6 +21,7 @@ import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
+import com.okta.commons.lang.XdgConfig;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.cache.CacheManager;
@@ -91,14 +92,13 @@ public class DefaultClientBuilder implements ClientBuilder {
     private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
-    private static final String USER_HOME       = System.getProperty("user.home") + File.separatorChar;
 
     private static final String[] DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS = {
                                                  ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_PROPERTIES,
                                                  ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_YAML,
                                                  ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
                                                  ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
-                                                 USER_HOME + ".okta" + File.separatorChar + OKTA_YAML,
+                                                 XdgConfig.getConfigFile(OKTA_YAML).getAbsolutePath(),
                                                  ENVVARS_TOKEN,
                                                  SYSPROPS_TOKEN
     };
