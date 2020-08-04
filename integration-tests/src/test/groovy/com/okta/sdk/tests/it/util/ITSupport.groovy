@@ -22,14 +22,19 @@ import com.okta.sdk.resource.policy.*
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.testng.ITestContext
 import org.testng.annotations.AfterSuite
 import org.testng.annotations.BeforeSuite
 
 abstract class ITSupport implements ClientProvider {
 
+    private final static Logger log = LoggerFactory.getLogger(ITSupport)
+
     public static final USE_TEST_SERVER = "okta.use.testServer"
     public static final TEST_SERVER_ALL_SCENARIOS = "okta.testServer.allScenarios"
+    public static final IT_OPERATION_DELAY = "okta.it.operationDelay"
 
     private TestServer testServer
 
@@ -63,6 +68,30 @@ abstract class ITSupport implements ClientProvider {
             testServer.verify()
             testServer.stop()
         }
+    }
+
+    /**
+     * Some Integration test operations exhibit flakiness at times due to replication lag at the core backend.
+     * We therefore add delays between some test operations to ensure we give sufficient
+     * interval between invoking operations on the backend resource.
+     *
+     * This delay could be specified by the following in order of precedence:
+     * - System property 'okta.it.operationDelay'
+     * - Env variable 'OKTA_IT_OPERATION_DELAY'
+     */
+    long getTestOperationDelay() {
+        Long testDelay = Long.getLong(IT_OPERATION_DELAY)
+
+        if (testDelay == null) {
+            try {
+                testDelay = Long.valueOf(System.getenv().getOrDefault("OKTA_IT_OPERATION_DELAY", "0"))
+            } catch (NumberFormatException e) {
+                log.error("Could not parse env variable OKTA_IT_OPERATION_DELAY. Will default to 0!")
+                return 0
+            }
+        }
+
+        return testDelay == null ? 0 : testDelay;
     }
 
     User randomUser() {
