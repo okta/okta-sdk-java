@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory
 import org.testng.ITestContext
 import org.testng.annotations.AfterSuite
 import org.testng.annotations.BeforeSuite
-import wiremock.org.apache.commons.lang3.StringUtils
 
 abstract class ITSupport implements ClientProvider {
 
@@ -84,13 +83,11 @@ abstract class ITSupport implements ClientProvider {
         Long testDelay = Long.getLong(IT_OPERATION_DELAY)
 
         if (testDelay == null) {
-            if (StringUtils.isNotBlank(System.getenv("OKTA_IT_OPERATION_DELAY"))) {
-                try {
-                    testDelay = Long.valueOf(System.getenv("OKTA_IT_OPERATION_DELAY"))
-                } catch (NumberFormatException e) {
-                    log.error("Could not parse env variable OKTA_IT_OPERATION_DELAY. Will default to 0!")
-                    return 0
-                }
+            try {
+                testDelay = Long.valueOf(System.getenv().getOrDefault("OKTA_IT_OPERATION_DELAY", "0"))
+            } catch (NumberFormatException e) {
+                log.error("Could not parse env variable OKTA_IT_OPERATION_DELAY. Will default to 0!")
+                return 0
             }
         }
 
