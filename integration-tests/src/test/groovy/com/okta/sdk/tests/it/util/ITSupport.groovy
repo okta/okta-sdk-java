@@ -92,7 +92,7 @@ abstract class ITSupport implements ClientProvider {
             }
         }
 
-        return testDelay;
+        return testDelay == null ? 0 : testDelay;
     }
 
     User randomUser() {
