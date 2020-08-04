@@ -616,7 +616,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
         // 2. Update the user profile and verify that profile was updated
         // Need to wait 1 second here as that is the minimum time resolution of the 'lastUpdated' field
-        sleep(getTestOperationDelay())
+        sleep(1000)
         user.getProfile().put("nickName", "Batman")
         user.update()
         assertThat(user.lastUpdated, greaterThan(originalLastUpdated))
