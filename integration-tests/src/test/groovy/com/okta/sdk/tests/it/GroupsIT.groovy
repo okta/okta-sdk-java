@@ -20,6 +20,7 @@ import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
+import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.assertGroupPresent
@@ -35,7 +36,7 @@ import static org.hamcrest.Matchers.*
  * Tests for {@code /api/v1/groups}.
  * @since 0.5.0
  */
-class GroupsIT implements CrudTestSupport {
+class GroupsIT extends ITSupport implements CrudTestSupport {
 
     @Override
     def create(Client client) {
@@ -153,12 +154,12 @@ class GroupsIT implements CrudTestSupport {
 
         // 2. Add user to the group and validate user present in group
         user.addToGroup(group.getId())
-        // fix OKTA-279039
-        // try upto 5 times with a delay of 2000ms after each failed attempt
-        assertUserInGroup(user, group, 5, 2000)
+
+        assertUserInGroup(user, group, 5, getTestOperationDelay())
 
         // 3. Remove user from group and validate user removed
         group.removeUser(user.getId())
-        assertUserNotInGroup(user, group)
+
+        assertUserNotInGroup(user, group, 5, getTestOperationDelay())
     }
 }

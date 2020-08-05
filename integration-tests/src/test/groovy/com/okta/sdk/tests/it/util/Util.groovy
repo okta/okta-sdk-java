@@ -144,7 +144,7 @@ class Util {
                 .findFirst().isPresent()
     }
 
-    static void assertUserInGroup(User user, Group group, int times, int delayInMilliseconds, boolean present=true) {
+    static void assertUserInGroup(User user, Group group, int times, long delayInMilliseconds, boolean present=true) {
         for (int ii=0; ii<times; ii++) {
 
             sleep(delayInMilliseconds)
@@ -164,6 +164,22 @@ class Util {
         assertThat "User was found in group.", !StreamSupport.stream(group.listUsers().spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()
+    }
+
+    static void assertUserNotInGroup(User user, Group group, int times, long delayInMilliseconds, boolean present=true) {
+        for (int ii=0; ii<times; ii++) {
+
+            sleep(delayInMilliseconds)
+
+            if (present == !StreamSupport.stream(group.listUsers().spliterator(), false)
+                .filter{ listUser -> listUser.id == user.id}
+                .findFirst().isPresent()) {
+                return
+            }
+        }
+
+        if (present) Assert.fail("User not found in group")
+        if (!present) Assert.fail("User found in group")
     }
 
     static def ignoring = { Class<? extends Throwable> catchMe, Closure callMe ->
