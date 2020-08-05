@@ -66,7 +66,8 @@ As part of this upgrade, we will remove it from the method signatures.
    - Removed `getAllGroupsValid` and `setAllGroupsValid` (property `allGroupsValid` is being removed; 
    this option would be removed from future versions of Okta API)
    - Removed `getEmbedded` (property `_embedded` is removed; this property is undocumented in Okta API and hence being removed)
-   - `delete(Boolean removeUsers)` Signature changed to `delete()`
+
+- Renamed `deleteRule` to `deleteGroupRule`; Also, the signature has changed from `delete(Boolean removeUsers)` to `deleteGroupRule()` (`removeUsers` parameter used earlier was optional and was defaulting to false).
 
 ### Package `com.okta.sdk.resource.log.LogAuthenticationContext`
 
