@@ -7491,8 +7491,7 @@ definitions:
     properties:
       credentials:
         $ref: '#/definitions/SchemeApplicationCredentials'
-      name:
-        default: template_basic_auth
+      name: template_basic_auth
       settings:
         $ref: '#/definitions/BasicApplicationSettings'
     x-okta-defined-as:
@@ -7511,8 +7510,7 @@ definitions:
       - Policy
   BookmarkApplication:
     properties:
-      name:
-        default: bookmark
+      name: bookmark
       settings:
         $ref: '#/definitions/BookmarkApplicationSettings'
     x-okta-defined-as:
@@ -9680,8 +9678,7 @@ definitions:
     properties:
       credentials:
         $ref: '#/definitions/OAuthApplicationCredentials'
-      name:
-        default: oidc_client
+      name: oidc_client
       settings:
         $ref: '#/definitions/OpenIdConnectApplicationSettings'
     x-okta-defined-as:
@@ -10965,8 +10962,7 @@ definitions:
     properties:
       credentials:
         $ref: '#/definitions/SchemeApplicationCredentials'
-      name:
-        default: template_sps
+      name: template_sps
       settings:
         $ref: '#/definitions/SecurePasswordStoreApplicationSettings'
     x-okta-defined-as:
@@ -11242,8 +11238,7 @@ definitions:
       - IdentityProvider
   SwaApplication:
     properties:
-      name:
-        default: template_swa
+      name: template_swa
       settings:
         $ref: '#/definitions/SwaApplicationSettings'
     x-okta-defined-as:
@@ -11275,8 +11270,7 @@ definitions:
       - Application
   SwaThreeFieldApplication:
     properties:
-      name:
-        default: template_swa3field
+      name: template_swa3field
       settings:
         $ref: '#/definitions/SwaThreeFieldApplicationSettings'
     x-okta-defined-as:
@@ -12135,8 +12129,7 @@ definitions:
       - UserFactor
   WsFederationApplication:
     properties:
-      name:
-        default: template_wsfed
+      name: template_wsfed
       settings:
         $ref: '#/definitions/WsFederationApplicationSettings'
     x-okta-defined-as:
