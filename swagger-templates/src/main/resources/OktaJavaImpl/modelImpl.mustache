@@ -163,7 +163,12 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{>apiMethodGet}}
 {{/vendorExtensions.isGet}}
 {{#vendorExtensions.isPut}}
-{{>apiMethodPut}}
+    {{#vendorExtensions.optionalBody}}
+        {{>apiMethodPutNoBody}}
+    {{/vendorExtensions.optionalBody}}
+    {{^vendorExtensions.optionalBody}}
+        {{>apiMethodPut}}
+    {{/vendorExtensions.optionalBody}}
 {{/vendorExtensions.isPut}}
 {{#vendorExtensions.isPost}}
     {{#vendorExtensions.optionalBody}}
