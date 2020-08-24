@@ -14,25 +14,15 @@
     limitations under the License.
 }}
 
-        String href = "{{{vendorExtensions.hrefFiltered}}}";
+        {{#returnType}}return {{/returnType}}getDataStore().create(
+            "{{{vendorExtensions.hrefFiltered}}}",
 {{#vendorExtensions.bodyIsSelf}}
-        getDataStore().save(href, this, null, queryArgs, headers);
-  {{#returnType}}
-        return this;
-  {{/returnType}}
+            this,
 {{/vendorExtensions.bodyIsSelf}}
 {{^vendorExtensions.bodyIsSelf}}
-  {{#bodyParam}}
-        {{^bodyParam.required}}
-        ApplicationGroupAssignment applicationGroupAssignment = new DefaultApplicationGroupAssignment(getDataStore());
-        {{/bodyParam.required}}
-        getDataStore().save(href, {{bodyParam.paramName}}, this, queryArgs, headers);
-        {{#returnType}}return {{/returnType}} {{bodyParam.paramName}};
-  {{/bodyParam}}
-  {{^bodyParam}}
-        getDataStore().save(href, new DefaultVoidResource(getDataStore()), this, queryArgs, headers);
-    {{#returnType}}
-        return this;
-    {{/returnType}}
-  {{/bodyParam}}
+            new DefaultVoidResource(getDataStore()),
 {{/vendorExtensions.bodyIsSelf}}
+            null,
+            {{#returnType}}{{returnType}}.class,{{/returnType}}
+            queryArgs,
+            headers);
