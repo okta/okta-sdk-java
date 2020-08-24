@@ -350,8 +350,7 @@ class ApplicationsIT extends ITSupport {
         assertThat(client.getApplication(app.getId()).getStatus(), equalTo(Application.StatusEnum.ACTIVE))
     }
 
-    // disabled to do: https://github.com/okta/openapi/issues/107
-    @Test(enabled = false)
+    @Test
     void groupAssignmentWithNullBodyTest() {
 
         Application app = client.createApplication(client.instantiate(AutoLoginApplication)
@@ -374,7 +373,7 @@ class ApplicationsIT extends ITSupport {
         registerForCleanup(app)
         registerForCleanup(group)
 
-        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId(), null)
+        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId())
         assertThat(groupAssignment, notNullValue())
     }
 
