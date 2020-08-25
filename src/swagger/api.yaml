@@ -698,7 +698,6 @@ paths:
           type: string
         - in: body
           name: applicationGroupAssignment
-          required: true
           schema:
             $ref: '#/definitions/ApplicationGroupAssignment'
       produces:
