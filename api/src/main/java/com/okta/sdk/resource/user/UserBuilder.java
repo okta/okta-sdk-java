@@ -31,6 +31,10 @@ public interface UserBuilder {
 
     UserBuilder setPassword(char[] password);
 
+    UserBuilder usePasswordHookForImport();
+
+    UserBuilder usePasswordHookForImport(String type);
+
     UserBuilder setSecurityQuestion(String question);
 
     UserBuilder setSecurityQuestionAnswer(String answer);

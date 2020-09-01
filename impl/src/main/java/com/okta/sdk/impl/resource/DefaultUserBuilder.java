@@ -18,6 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.sdk.client.Client;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
+import com.okta.sdk.resource.user.PasswordCredentialHook;
 import com.okta.sdk.resource.user.RecoveryQuestionCredential;
 import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.user.PasswordCredential;
@@ -52,11 +53,21 @@ public class DefaultUserBuilder implements UserBuilder {
     private UserNextLogin nextLogin;
     private Set<String> groupIds = new HashSet<>();
     private Map<String, Object> passwordHashProperties;
+    private String passwordHookImportType;
 
     private Map<String, Object> customProfileAttributes = new LinkedHashMap<>();
 
     public UserBuilder setPassword(char[] password) {
         this.password = Arrays.copyOf(password, password.length);
+        return this;
+    }
+
+    public UserBuilder usePasswordHookForImport() {
+        return usePasswordHookForImport("default");
+    }
+
+    public UserBuilder usePasswordHookForImport(String type) {
+        passwordHookImportType = type;
         return this;
     }
 
@@ -209,10 +220,19 @@ public class DefaultUserBuilder implements UserBuilder {
             createCredentialsIfNeeded(user, client).setPassword(passwordCredential.setValue(password));
         }
 
-        // password import
+        // direct password import
         if (passwordHashProperties != null) {
             PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
             passwordCredential.put("hash", passwordHashProperties);
+            createCredentialsIfNeeded(user, client).setPassword(passwordCredential);
+        }
+
+        // password hook import
+        if (passwordHookImportType != null) {
+            PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
+            PasswordCredentialHook passwordCredentialHook = client.instantiate(PasswordCredentialHook.class);
+            passwordCredentialHook.setType(passwordHookImportType);
+            passwordCredential.setHook(passwordCredentialHook);
             createCredentialsIfNeeded(user, client).setPassword(passwordCredential);
         }
 
