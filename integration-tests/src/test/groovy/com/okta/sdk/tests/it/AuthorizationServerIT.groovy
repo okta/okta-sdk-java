@@ -72,6 +72,9 @@ class AuthorizationServerIT extends ITSupport {
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
+ 
+        // create operation may not take effect immediately in the backend
+        sleep(getTestOperationDelay());
 
         assertThat(createdAuthorizationServer, notNullValue())
         assertPresent(client.listAuthorizationServers(), createdAuthorizationServer)
