@@ -38,7 +38,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
-            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
             .setRequireFactor(false)
         .buildAndCreate(client, crudTestPolicy);
 
@@ -77,7 +77,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
-            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
             .setRequireFactor(false)
             .setStatus(PolicyRule.StatusEnum.INACTIVE)
         .buildAndCreate(client, policy);
@@ -205,7 +205,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         assertThat policyRule.getActions().getSignon().getSession().getMaxSessionIdleMinutes(), is(720)
     }
 
-    @Test
+    @Test (groups = "bacon")
     void createOktaSignOnDenyPolicyRule() {
 
         def group = randomGroup()
