@@ -3176,7 +3176,9 @@ paths:
     delete:
       consumes:
         - application/json
-      description: Revoke a Certificate Signing Request and delete the key pair from the IdP
+      description: >-
+        Revoke a Certificate Signing Request and delete the key pair from the
+        IdP
       operationId: revokeCsrForIdentityProvider
       parameters:
         - in: path
@@ -3226,8 +3228,8 @@ paths:
       consumes:
         - application/json
       description: >-
-        Update the Certificate Signing Request with a signed X.509 certificate and add it into the
-        signing key credentials for the IdP.
+        Update the Certificate Signing Request with a signed X.509 certificate
+        and add it into the signing key credentials for the IdP.
       parameters:
         - in: path
           name: idpId
@@ -3794,14 +3796,14 @@ paths:
         system log. This API provides more functionality than the Events API
       operationId: getLogs
       parameters:
-        - in: query
+        - format: date-time
+          in: query
           name: since
           type: string
-          format: date-time
-        - in: query
+        - format: date-time
+          in: query
           name: until
           type: string
-          format: date-time
         - in: query
           name: filter
           type: string
@@ -4876,7 +4878,7 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/CreateUserRequest'
         - default: true
           description: Executes activation lifecycle operation when creating the user
           in: query
@@ -5863,8 +5865,8 @@ paths:
         - application/json
       description: >-
         Activates a user.  This operation can only be performed on users with a
-        `STAGED` status.  Activation of a user is an asynchronous operation.
-        The user will have the `transitioningToStatus` property with a value of
+        `STAGED` status.  Activation of a user is an asynchronous operation. The
+        user will have the `transitioningToStatus` property with a value of
         `ACTIVE` during activation to indicate that the user hasn't completed
         the asynchronous operation.  The user will have a status of `ACTIVE`
         when the activation process is complete.
@@ -7548,42 +7550,57 @@ definitions:
         template_swa: '#/definitions/SwaApplication'
         template_swa3field: '#/definitions/SwaThreeFieldApplication'
       propertyName: name
+  CallUserFactor:
+    properties:
+      profile:
+        $ref: '#/definitions/CallUserFactorProfile'
+    x-okta-parent: '#/definitions/UserFactor'
+    x-okta-tags:
+      - UserFactor
+  CallUserFactorProfile:
+    properties:
+      phoneExtension:
+        type: string
+      phoneNumber:
+        type: string
+    x-okta-tags:
+      - UserFactor
   CatalogApplication:
     properties:
-      id:
-        type: string
-        readOnly: true
-      name:
-        type: string
-      displayName:
-        type: string
-      description:
-        type: string
-      status:
-        $ref: '#/definitions/CatalogApplicationStatus'
-      lastUpdated:
-        format: date-time
-        readOnly: true
-        type: string
-      category:
-        type: string
-      verificationStatus:
-        type: string
-      website:
-        type: string
-      signOnModes:
-        items:
-          type: string
-        type: array
-      features:
-        items:
-          type: string
-        type: array
       _links:
         additionalProperties:
           type: object
         readOnly: true
         type: object
+      category:
+        type: string
+      description:
+        type: string
+      displayName:
+        type: string
+      features:
+        items:
+          type: string
+        type: array
+      id:
+        readOnly: true
+        type: string
+      lastUpdated:
+        format: date-time
+        readOnly: true
+        type: string
+      name:
+        type: string
+      signOnModes:
+        items:
+          type: string
+        type: array
+      status:
+        $ref: '#/definitions/CatalogApplicationStatus'
+      verificationStatus:
+        type: string
+      website:
+        type: string
     x-okta-tags:
       - Role
   CatalogApplicationStatus:
@@ -7593,6 +7610,53 @@ definitions:
     type: string
     x-okta-tags:
       - Role
+  ChangePasswordRequest:
+    properties:
+      newPassword:
+        $ref: '#/definitions/PasswordCredential'
+      oldPassword:
+        $ref: '#/definitions/PasswordCredential'
+    type: object
+    x-okta-tags:
+      - User
+  ClientPolicyCondition:
+    properties:
+      include:
+        items:
+          type: string
+        type: array
+    type: object
+    x-okta-tags:
+      - Policy
+  ContextPolicyRuleCondition:
+    properties:
+      expression:
+        type: string
+    type: object
+    x-okta-tags:
+      - Policy
+  CreateSessionRequest:
+    properties:
+      sessionToken:
+        type: string
+    type: object
+    x-okta-tags:
+      - Session
+  CreateUserRequest:
+    properties:
+      credentials:
+        $ref: '#/definitions/UserCredentials'
+      groupIds:
+        items:
+          type: string
+        type: array
+      profile:
+        $ref: '#/definitions/UserProfile'
+      type:
+        $ref: '#/definitions/UserType'
+    type: object
+    x-okta-tags:
+      - User
   Csr:
     properties:
       created:
@@ -7643,69 +7707,6 @@ definitions:
         type: array
     x-okta-tags:
       - Application
-  CallUserFactor:
-    properties:
-      profile:
-        $ref: '#/definitions/CallUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
-    x-okta-tags:
-      - UserFactor
-  CallUserFactorProfile:
-    properties:
-      phoneExtension:
-        type: string
-      phoneNumber:
-        type: string
-    x-okta-tags:
-      - UserFactor
-  ChangePasswordRequest:
-    properties:
-      newPassword:
-        $ref: '#/definitions/PasswordCredential'
-      oldPassword:
-        $ref: '#/definitions/PasswordCredential'
-    type: object
-    x-okta-tags:
-      - User
-  ClientPolicyCondition:
-    properties:
-      include:
-        items:
-          type: string
-        type: array
-    type: object
-    x-okta-tags:
-      - Policy
-  ContextPolicyRuleCondition:
-    properties:
-      expression:
-        type: string
-    type: object
-    x-okta-tags:
-      - Policy
-  CreateSessionRequest:
-    properties:
-      sessionToken:
-        type: string
-    type: object
-    x-okta-tags:
-      - Session
-  CreateUserRequest:
-    properties:
-      credentials:
-        $ref: '#/definitions/UserCredentials'
-      groupIds:
-        items:
-          type: string
-        type: array
-      profile:
-        $ref: '#/definitions/UserProfile'
-      type:
-        $ref: '#/definitions/UserType'
-    type: object
-    x-okta-parent: '#/definitions/User'
-    x-okta-tags:
-      - User
   DevicePolicyRuleCondition:
     properties:
       migrated:
@@ -7726,11 +7727,20 @@ definitions:
     properties:
       supportedMDMFrameworks:
         items:
-          $ref: '#/definitions/MDMFrameworks'
+          enum:
+            - AFW
+            - SAFE
+            - NATIVE
+          type: string
         type: array
       types:
         items:
-          $ref: '#/definitions/Platforms'
+          enum:
+            - IOS
+            - ANDROID
+            - OSX
+            - WINDOWS
+          type: string
         type: array
     type: object
     x-okta-tags:
@@ -7897,6 +7907,7 @@ definitions:
     x-okta-tags:
       - EventHook
   EventSubscriptions:
+    discriminator: type
     properties:
       items:
         items:
@@ -8416,11 +8427,6 @@ definitions:
           - dest: idpId
             src: id
         operationId: getIdentityProviderSigningKey
-      - alias: deleteSigningKey
-        arguments:
-          - dest: idpId
-            src: id
-        operationId: deleteIdentityProviderKey
       - alias: cloneKey
         arguments:
           - dest: idpId
@@ -8887,8 +8893,6 @@ definitions:
           type: object
         readOnly: true
         type: object
-      name:
-        type: string
       associated:
         $ref: '#/definitions/LinkedObjectDetails'
       primary:
@@ -8906,7 +8910,7 @@ definitions:
       - alias: delete
         arguments:
           - dest: linkedObjectName
-            src: name
+            self: true
         operationId: deleteLinkedObjectDefinition
     x-okta-tags:
       - LinkedObject
@@ -9275,16 +9279,6 @@ definitions:
     type: object
     x-okta-tags:
       - Policy
-  MDMFrameworks:
-    enum:
-      - authorization_code
-      - implicit
-      - password
-      - refresh_token
-      - client_credentials
-    type: string
-    x-okta-tags:
-      - Policy
   OAuth2Actor:
     properties:
       id:
@@ -9462,8 +9456,6 @@ definitions:
         type: object
       clientId:
         type: string
-      userId:
-        type: string
       created:
         format: date-time
         readOnly: true
@@ -9485,6 +9477,8 @@ definitions:
         $ref: '#/definitions/OAuth2ScopeConsentGrantSource'
       status:
         $ref: '#/definitions/OAuth2ScopeConsentGrantStatus'
+      userId:
+        type: string
     type: object
     x-okta-tags:
       - Application
@@ -9606,7 +9600,6 @@ definitions:
     properties:
       people:
         $ref: '#/definitions/PolicyPeopleCondition'
-    x-okta-parent: '#/definition/PolicyRuleConditions'
     x-okta-tags:
       - Policy
   OktaSignOnPolicyRule:
@@ -9700,7 +9693,6 @@ definitions:
     enum:
       - CUSTOM_URL
       - ORG_URL
-    type: string
     x-okta-tags:
       - Application
   OpenIdConnectApplicationSettings:
@@ -9855,7 +9847,6 @@ definitions:
         $ref: '#/definitions/PasswordPolicyAuthenticationProviderCondition'
       people:
         $ref: '#/definitions/PolicyPeopleCondition'
-    x-okta-parent: '#/definition/PolicyRuleConditions'
     x-okta-tags:
       - Policy
   PasswordPolicyDelegationSettings:
@@ -10086,15 +10077,6 @@ definitions:
       recovery:
         $ref: '#/definitions/PasswordPolicyRecoverySettings'
     type: object
-    x-okta-tags:
-      - Policy
-  Platforms:
-    enum:
-      - IOS
-      - ANDROID
-      - OSX
-      - WINDOWS
-    type: string
     x-okta-tags:
       - Policy
   PlatformConditionEvaluatorPlatform:
@@ -10664,7 +10646,6 @@ definitions:
       expiresAt:
         format: date-time
         type: string
-        readOnly: true
       factorResult:
         $ref: '#/definitions/FactorResultType'
       profile:
@@ -10765,8 +10746,6 @@ definitions:
         $ref: '#/definitions/RoleType'
         type: string
     type: object
-    x-okta-tags:
-      - User
     x-okta-operations:
       - alias: addAdminGroupTarget
         arguments:
@@ -10810,6 +10789,8 @@ definitions:
           - dest: userId
             parentSrc: id
         operationId: addApplicationTargetToAdminRoleForUser
+    x-okta-tags:
+      - User
   RoleAssignmentType:
     enum:
       - GROUP
@@ -11780,7 +11761,7 @@ definitions:
         $ref: '#/definitions/VerifyFactorRequest'
     type: object
     x-okta-crud:
-      - alias: deleteFactor
+      - alias: delete
         arguments:
           - dest: factorId
             src: id
@@ -12045,14 +12026,8 @@ definitions:
           - dest: typeId
             src: id
         operationId: deleteUserType
-    x-okta-operations:
-      - alias: replaceUserType
-        arguments:
-          - dest: roleId
-            src: id
-        operationId: replaceUserType
     x-okta-tags:
-      - User
+      - UserType
   VerifyFactorRequest:
     properties:
       activationToken:
@@ -12086,6 +12061,8 @@ definitions:
         readOnly: true
         type: object
       expiresAt:
+        format: date-time
+        readOnly: true
         type: string
       factorResult:
         enum:
@@ -12105,6 +12082,21 @@ definitions:
     type: object
     x-okta-tags:
       - UserFactor
+  WebAuthnUserFactor:
+    properties:
+      profile:
+        $ref: '#/definitions/WebAuthnUserFactorProfile'
+    x-okta-parent: '#/definitions/UserFactor'
+    x-okta-tags:
+      - UserFactor
+  WebAuthnUserFactorProfile:
+    properties:
+      authenticatorName:
+        type: string
+      credentialId:
+        type: string
+    x-okta-tags:
+      - UserFactor
   WebUserFactor:
     properties:
       profile:
@@ -12115,21 +12107,6 @@ definitions:
   WebUserFactorProfile:
     properties:
       credentialId:
-        type: string
-    x-okta-tags:
-      - UserFactor
-  WebAuthnUserFactor:
-    properties:
-      profile:
-        $ref: '#/definitions/WebAuthnUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
-    x-okta-tags:
-      - UserFactor
-  WebAuthnUserFactorProfile:
-    properties:
-      credentialId:
-        type: string
-      authenticatorName:
         type: string
     x-okta-tags:
       - UserFactor
