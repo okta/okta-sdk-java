@@ -10,6 +10,7 @@
 * [Need help?](#need-help)
 * [Getting started](#getting-started)
 * [Usage guide](#usage-guide)
+* [Spring Support](#spring-support)
 * [Configuration reference](#configuration-reference)
 * [Building the SDK](#building-the-sdk)
 * [Contributing](#contributing)
@@ -366,6 +367,32 @@ for (User tmpUser : users) {
 users.stream().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
 ```
 [//]: # (end: paging)
+
+<a name="spring-support"></a>
+## Inject the Okta Java SDK in Spring
+
+To integrate the Okta Java SDK into your Spring Boot application you just need to add a dependency:
+
+```xml
+<dependency>
+    <groupId>com.okta.spring</groupId>
+    <artifactId>okta-spring-sdk</artifactId>
+    <version>${okta.spring.version}</version>
+</dependency>
+```
+
+Then define the following properties:
+
+| Key | Description |
+------|--------------
+| `okta.client.orgUrl` | Your Okta Url: `https://{yourOktaDomain}`, i.e. `https://dev-123456.okta.com` |
+| `okta.client.token` | An Okta API token, see [creating an API token](https://developer.okta.com/docs/api/getting_started/getting_a_token) for more info. |
+
+**NOTE:** The configuration techniques described in the [configuration reference](#configuration-reference) section will work as well.
+
+All that is left is to inject the client (`com.okta.sdk.client.Client`)! Take a look at [this post](https://spring.io/blog/2007/07/11/setter-injection-versus-constructor-injection-and-the-use-of-required/) for more info on the best way to inject your beans.
+
+For more information check out the [Okta Spring Boot Starter](https://github.com/okta/okta-spring-boot/) project!
 
 ## Configuration reference
   
