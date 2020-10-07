@@ -18,6 +18,7 @@ package com.okta.sdk.impl.resource
 import com.okta.sdk.client.Client
 import com.okta.sdk.impl.Util
 import com.okta.sdk.resource.user.PasswordCredential
+import com.okta.sdk.resource.user.PasswordCredentialHook
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserNextLogin
@@ -238,6 +239,55 @@ class DefaultUserBuilderTest {
                 .setPassword(password.toCharArray())
                 .setSha512PasswordHash(hashedPassword, salt, "PREFIX")
                 .buildAndCreate(client)
+        }
+    }
+
+    @Test
+    void createUserWithUsePasswordHookForImportDefaultType() {
+        createUserWithUsePasswordHookForImport(null)
+    }
+
+    @Test
+    void createUserWithUsePasswordHookForImportOtherType() {
+        createUserWithUsePasswordHookForImport("other")
+    }
+
+    void createUserWithUsePasswordHookForImport(String type) {
+
+        def client = mock(Client)
+        def user = mock(User)
+        def profile = mock(UserProfile)
+        def passwordCredential = mock(PasswordCredential)
+        def passwordCredentialHook = mock(PasswordCredentialHook)
+        def userCredentials = mock(UserCredentials)
+        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(UserProfile)).thenReturn(profile)
+        when(client.instantiate(UserCredentials)).thenReturn(userCredentials)
+        when(client.instantiate(PasswordCredential)).thenReturn(passwordCredential)
+        when(client.instantiate(PasswordCredentialHook)).thenReturn(passwordCredentialHook)
+        when(user.getProfile()).thenReturn(profile)
+        when(user.getCredentials()).thenReturn(userCredentials)
+
+        DefaultUserBuilder defaultUserBuilder = new DefaultUserBuilder()
+            .setFirstName("Joe")
+            .setLastName("Coder")
+            .setEmail("joe.coder@example.com")
+
+        if (type == null) {
+            defaultUserBuilder.usePasswordHookForImport()
+        } else {
+            defaultUserBuilder.usePasswordHookForImport(type)
+        }
+
+        defaultUserBuilder.buildAndCreate(client)
+
+        verify(userCredentials).setPassword(passwordCredential)
+        verify(passwordCredential).setHook(passwordCredentialHook)
+
+        if (type == null) {
+            verify(passwordCredentialHook).setType("default")
+        } else {
+            verify(passwordCredentialHook).setType(type)
         }
     }
 }

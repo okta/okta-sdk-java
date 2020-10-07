@@ -72,6 +72,9 @@ class AuthorizationServerIT extends ITSupport {
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
+ 
+        // create operation may not take effect immediately in the backend
+        sleep(getTestOperationDelay());
 
         assertThat(createdAuthorizationServer, notNullValue())
         assertPresent(client.listAuthorizationServers(), createdAuthorizationServer)
@@ -132,7 +135,7 @@ class AuthorizationServerIT extends ITSupport {
         createdAuthorizationServer.delete()
 
         // delete operation may not effect immediately in the backend
-        sleep(2000)
+        sleep(getTestOperationDelay())
 
         assertNotPresent(client.listAuthorizationServers(), createdAuthorizationServer)
     }
@@ -267,7 +270,7 @@ class AuthorizationServerIT extends ITSupport {
         createdAuthorizationServer.deletePolicy(createdPolicy.getId())
 
         // delete may not effect immediately in the backend
-        sleep(2000)
+        sleep(getTestOperationDelay())
 
         assertNotPresent(createdAuthorizationServer.listPolicies(), createdPolicy)
     }
@@ -377,7 +380,7 @@ class AuthorizationServerIT extends ITSupport {
         createdAuthorizationServer.deleteOAuth2Scope(createdOAuth2Scope.getId())
 
         // delete may not effect immediately in the backend
-        sleep(2000)
+        sleep(getTestOperationDelay())
 
         assertNotPresent(createdAuthorizationServer.listOAuth2Scopes(), createdOAuth2Scope)
     }
@@ -500,7 +503,7 @@ class AuthorizationServerIT extends ITSupport {
         createdAuthorizationServer.deleteOAuth2Claim(createdOAuth2Claim.getId())
 
         // delete may not effect immediately in the backend
-        sleep(2000)
+        sleep(getTestOperationDelay())
 
         assertNotPresent(createdAuthorizationServer.listOAuth2Claims(), createdOAuth2Claim)
     }

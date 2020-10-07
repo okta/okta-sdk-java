@@ -36,8 +36,8 @@
     <properties>
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
         <jackson.version>2.10.0</jackson.version>
-        <snakeyaml.version>1.25</snakeyaml.version>
-        <bouncycastle.version>1.64</bouncycastle.version>
+        <snakeyaml.version>1.26</snakeyaml.version>
+        <bouncycastle.version>1.66</bouncycastle.version>
         <jjwt.version>0.11.1</jjwt.version>
         <okta.sdk.previousVersion>1.5.4</okta.sdk.previousVersion>
         <otka.commons.version>1.3.0-SNAPSHOT</otka.commons.version>
@@ -255,6 +255,7 @@
                         <forkCount>1</forkCount>
                         <parallel>classesAndMethods</parallel>
                         <threadCount>5</threadCount>
+                        <skipTests>${skipImplTests}</skipTests>
                     </configuration>
                 </plugin>
                 <plugin>
