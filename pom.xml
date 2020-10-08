@@ -252,7 +252,7 @@
                     <configuration>
                         <trimStackTrace>false</trimStackTrace>
                         <reuseForks>true</reuseForks>
-                        <forkCount>5</forkCount>
+                        <forkCount>1</forkCount>
                         <parallel>classesAndMethods</parallel>
                         <threadCount>5</threadCount>
                         <skipTests>${skipImplTests}</skipTests>
@@ -264,10 +264,11 @@
                     <configuration>
                         <trimStackTrace>false</trimStackTrace>
                         <reuseForks>true</reuseForks>
-                        <reportsDirectory>target/failsafe-reports-${surefire.forkNumber}</reportsDirectory>
-                        <forkCount>5</forkCount>
+
+                        <forkCount>2C</forkCount>
                         <parallel>classes</parallel>
                         <threadCount>5</threadCount>
+
                     </configuration>
                 </plugin>
                 <plugin>

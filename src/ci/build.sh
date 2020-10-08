@@ -41,8 +41,6 @@ deploy () {
 full_build () {
     echo "Running mvn install"
     ${MVN_CMD} install -Pci
-
-    ls -al integration-tests/target/
 }
 
 no_its_build () {
