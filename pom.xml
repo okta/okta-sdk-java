@@ -40,7 +40,7 @@
         <bouncycastle.version>1.66</bouncycastle.version>
         <jjwt.version>0.11.1</jjwt.version>
         <okta.sdk.previousVersion>1.5.4</okta.sdk.previousVersion>
-        <otka.commons.version>1.3.0-SNAPSHOT</otka.commons.version>
+        <otka.commons.version>1.2.4</otka.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
