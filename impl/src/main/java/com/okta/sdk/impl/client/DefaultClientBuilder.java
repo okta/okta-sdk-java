@@ -21,7 +21,6 @@ import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
-import com.okta.commons.lang.XdgConfig;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.cache.CacheManager;
@@ -53,6 +52,7 @@ import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -92,16 +92,6 @@ public class DefaultClientBuilder implements ClientBuilder {
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
 
-    private static final String[] DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS = {
-                                                 ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_PROPERTIES,
-                                                 ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_YAML,
-                                                 ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
-                                                 ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
-                                                 XdgConfig.getConfigFile(OKTA_YAML).getAbsolutePath(),
-                                                 ENVVARS_TOKEN,
-                                                 SYSPROPS_TOKEN
-    };
-
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
@@ -117,7 +107,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     DefaultClientBuilder(ResourceFactory resourceFactory) {
         Collection<PropertiesSource> sources = new ArrayList<>();
 
-        for (String location : DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS) {
+        for (String location : configSources()) {
 
             if (ENVVARS_TOKEN.equalsIgnoreCase(location)) {
                 sources.add(EnvironmentVariablesPropertiesSource.oktaFilteredPropertiesSource());
@@ -412,9 +402,22 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
     }
 
-    // Used for testing, package private
-    ClientConfiguration getClientConfiguration() {
+    public ClientConfiguration getClientConfiguration() {
         return clientConfig;
+    }
+
+    private static String[] configSources() {
+
+        // lazy load the config sources as the user.home system prop could change for testing
+        return new String[] {
+            ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_PROPERTIES,
+            ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_YAML,
+            ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
+            ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
+            System.getProperty("user.home") + File.separatorChar + ".okta" + File.separatorChar + OKTA_YAML,
+            ENVVARS_TOKEN,
+            SYSPROPS_TOKEN
+        };
     }
 
 }
