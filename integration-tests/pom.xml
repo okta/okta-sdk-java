@@ -129,6 +129,7 @@
                             <systemPropertyVariables>
                                 <okta.use.testServer>${okta.use.testServer}</okta.use.testServer>
                             </systemPropertyVariables>
+                            <!-- <reportsDirectory>target/failsafe-reports-${surefire.forkNumber}</reportsDirectory> -->
                         </configuration>
                     </plugin>
                 </plugins>
