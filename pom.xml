@@ -265,9 +265,9 @@
                         <trimStackTrace>false</trimStackTrace>
                         <reuseForks>true</reuseForks>
 
-                        <forkCount>2C</forkCount>
+<!--                         <forkCount>2C</forkCount>
                         <parallel>classes</parallel>
-                        <threadCount>5</threadCount>
+                        <threadCount>5</threadCount> -->
 
                     </configuration>
                 </plugin>
