@@ -346,7 +346,7 @@ class IdpIT extends ITSupport {
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 
-    // Remove this groups tag after https://oktainc.atlassian.net/browse/OKTA-329987 is resolved (Adding this tag disables the test in bacon PDV)
+    // Remove this groups tag after OKTA-329987 is resolved (Adding this tag disables the test in bacon PDV)
     @Test (groups = "bacon")
     void microsoftIdpTest() {
 
