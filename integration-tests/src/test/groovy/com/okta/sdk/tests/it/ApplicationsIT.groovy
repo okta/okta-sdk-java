@@ -415,7 +415,8 @@ class ApplicationsIT extends ITSupport {
         assertThat(app.listGroupAssignments().iterator().size(), equalTo(0))
     }
 
-    @Test
+    // Remove this groups tag after OKTA-337342 is resolved (Adding this tag disables the test in bacon PDV)
+    @Test (groups = "bacon")
     void associateUserWithApplication() {
 
         Client client = getClient()
