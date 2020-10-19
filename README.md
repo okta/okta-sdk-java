@@ -464,9 +464,54 @@ Each one of of the configuration values written in 'dot' notation to be used as 
 
 ## Connection Retry / Rate Limiting
 
-By default this SDK will retry requests that are return with a `503`, `504`, `429`, or socket/connection exceptions.  To disable this functionality set `okta.client.requestTimeout` and `okta.client.rateLimit.maxRetries` to `0`.
+By default, this SDK will retry requests that return with response code `503`, `504`, `429`, or socket/connection exceptions.
 
-Setting only one of the values to zero will disable that check. Meaning, by default, four retry attempts will be made. If you set `okta.client.requestTimeout` to `45` seconds and `okta.client.rateLimit.maxRetries` to `0`. This SDK will continue to retry indefinitely for `45` seconds.  If both values are non zero, this SDK will attempt to retry until either of the conditions are met (not both).
+Default configuration tells SDK to retry requests up to 4 times without time limitation:
+```properties
+okta.client.requestTimeout = 0 //Sets the maximum number of seconds to wait when retrying before giving up.
+okta.client.rateLimit.maxRetries = 4 //Sets the maximum number of attempts to retrying before giving up.
+```
+
+For interactive clients (i.e. web pages) it is optimal to set `requestTimeout` to be 10 sec (or less, based on your needs), and the `maxRetries` attempts to be 0.
+This means the requests will retry as many times as possible within 10 seconds:
+
+```properties
+okta.client.requestTimeout = 10
+okta.client.rateLimit.maxRetries = 0
+```
+
+or
+ 
+```java
+import com.okta.sdk.client.Client;
+import com.okta.sdk.client.Clients;
+
+Client client = Clients.builder()
+                .setRetryMaxElapsed(10)
+                .setRetryMaxAttempts(0)
+                .build();
+```
+
+For batch/non-interactive processes optimal values are opposite. It is optimal to set `requestTimeout` to be 0, and the `maxRetries` attempts to be 5.
+The SDK will retry requests up to 5 times before failing:
+```properties
+okta.client.requestTimeout = 0
+okta.client.rateLimit.maxRetries = 5
+```
+
+If you need to limit execution time and retry attempts, you can set both `requestTimeout` and the `maxRetries`.
+For example, the following example would retry up to 15 times within 30 seconds:
+```properties
+okta.client.requestTimeout = 30
+okta.client.rateLimit.maxRetries = 15
+```
+
+To disable the retry functionality you need to set both variables to zero:
+```properties
+okta.client.requestTimeout = 0
+okta.client.rateLimit.maxRetries = 0
+```
+
 
 ## Caching
 
