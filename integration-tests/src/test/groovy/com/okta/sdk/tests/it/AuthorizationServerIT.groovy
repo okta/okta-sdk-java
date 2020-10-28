@@ -155,15 +155,6 @@ class AuthorizationServerIT extends ITSupport {
     void listAuthorizationServerPoliciesTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        Policy policy = client.instantiate(Policy)
-            .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
-            .setName("Test Policy")
-            .setDescription("Test Policy")
-            .setPriority(1)
-            .setConditions(client.instantiate(PolicyRuleConditions)
-                .setClients(client.instantiate(ClientPolicyCondition)
-                    .setInclude([OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()])))
-
         AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
             .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
             .setName("Test Policy")
@@ -186,29 +177,24 @@ class AuthorizationServerIT extends ITSupport {
 
         AuthorizationServerPolicyRule authorizationServerPolicyRule = createdAuthorizationServerPolicy.createPolicyRule(createdAuthorizationServer.getId(),
             client.instantiate(AuthorizationServerPolicyRule)
-               .setName(name)
-               .setType(AuthorizationServerPolicyRule.TypeEnum.ACCESS)
-               .setPriority(1)
-               .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
-                   .setPeople(client.instantiate(PolicyPeopleCondition)
-                       .setGroups(client.instantiate(GroupCondition)
-                          .setInclude(["EVERYONE"])))
-                   .setGrantTypes(client.instantiate(GrantTypePolicyRuleCondition)
-                       .setInclude(["implicit", "client_credentials", "authorization_code", "password"]))
-                   .setScopes(client.instantiate(OAuth2ScopesMediationPolicyRuleCondition).setInclude(["openid", "email", "address"])))
-               )
-        assertThat(authorizationServerPolicyRule, notNullValue())
+                .setName(name)
+                .setType(AuthorizationServerPolicyRule.TypeEnum.ACCESS)
+                .setPriority(1)
+                .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
+                    .setPeople(client.instantiate(PolicyPeopleCondition)
+                        .setGroups(client.instantiate(GroupCondition)
+                            .setInclude(["EVERYONE"])))
+                    .setGrantTypes(client.instantiate(GrantTypePolicyRuleCondition)
+                        .setInclude(["implicit", "client_credentials", "authorization_code", "password"]))
+                    .setScopes(client.instantiate(OAuth2ScopesMediationPolicyRuleCondition).setInclude(["openid", "email", "address"])))
+        )
 
-        registerForCleanup(createdAuthorizationServer)
+        assertThat(authorizationServerPolicyRule, notNullValue())
+        assertPresent(createdAuthorizationServer.listPolicies(), createdAuthorizationServerPolicy)
 
         createdAuthorizationServer.listPolicies().forEach({ pol ->
-            //Throws a 404 Error
-            pol.listPolicyRules(createdAuthorizationServer.getId())
-        });
-
-        //createdAuthorizationServer.listPolicies().getAt(0).listPolicyRules()
-
-        assertPresent(createdAuthorizationServer.listPolicies(), createdAuthorizationServerPolicy)
+            assertThat(pol.listPolicyRules(createdAuthorizationServer.getId()), notNullValue())
+        })
     }
 
     @Test
