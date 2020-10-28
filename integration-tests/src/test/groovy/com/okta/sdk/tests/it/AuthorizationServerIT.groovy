@@ -15,13 +15,22 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.application.OAuth2ScopesMediationPolicyRuleCondition
+import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy
+import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRule
+import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRuleConditions
 import com.okta.sdk.resource.policy.ClientPolicyCondition
 import com.okta.sdk.resource.application.OAuth2Claim
 import com.okta.sdk.resource.application.OAuth2Scope
 import com.okta.sdk.resource.authorization.server.AuthorizationServer
+import com.okta.sdk.resource.policy.GrantTypePolicyRuleCondition
+import com.okta.sdk.resource.policy.GroupCondition
 import com.okta.sdk.resource.policy.Policy
+import com.okta.sdk.resource.policy.PolicyPeopleCondition
+import com.okta.sdk.resource.policy.PolicyRule
 import com.okta.sdk.resource.policy.PolicyRuleConditions
 import com.okta.sdk.resource.policy.PolicyType
+import com.okta.sdk.resource.policy.UserCondition
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils
@@ -155,6 +164,15 @@ class AuthorizationServerIT extends ITSupport {
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude([OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()])))
 
+        AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
+            .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
+            .setName("Test Policy")
+            .setDescription("Test Policy")
+            .setPriority(1)
+            .setConditions(client.instantiate(PolicyRuleConditions)
+                .setClients(client.instantiate(ClientPolicyCondition)
+                    .setInclude([OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()])))
+
         AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
             client.instantiate(AuthorizationServer)
                 .setName(name)
@@ -164,10 +182,33 @@ class AuthorizationServerIT extends ITSupport {
 
         assertThat(createdAuthorizationServer, notNullValue())
 
-        Policy createdPolicy = createdAuthorizationServer.createPolicy(policy)
-        registerForCleanup(createdPolicy)
+        AuthorizationServerPolicy createdAuthorizationServerPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
 
-        assertPresent(createdAuthorizationServer.listPolicies(), createdPolicy)
+        AuthorizationServerPolicyRule authorizationServerPolicyRule = createdAuthorizationServerPolicy.createPolicyRule(createdAuthorizationServer.getId(),
+            client.instantiate(AuthorizationServerPolicyRule)
+               .setName(name)
+               .setType(AuthorizationServerPolicyRule.TypeEnum.ACCESS)
+               .setPriority(1)
+               .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
+                   .setPeople(client.instantiate(PolicyPeopleCondition)
+                       .setGroups(client.instantiate(GroupCondition)
+                          .setInclude(["EVERYONE"])))
+                   .setGrantTypes(client.instantiate(GrantTypePolicyRuleCondition)
+                       .setInclude(["implicit", "client_credentials", "authorization_code", "password"]))
+                   .setScopes(client.instantiate(OAuth2ScopesMediationPolicyRuleCondition).setInclude(["openid", "email", "address"])))
+               )
+        assertThat(authorizationServerPolicyRule, notNullValue())
+
+        registerForCleanup(createdAuthorizationServer)
+
+        createdAuthorizationServer.listPolicies().forEach({ pol ->
+            //Throws a 404 Error
+            pol.listPolicyRules(createdAuthorizationServer.getId())
+        });
+
+        //createdAuthorizationServer.listPolicies().getAt(0).listPolicyRules()
+
+        assertPresent(createdAuthorizationServer.listPolicies(), createdAuthorizationServerPolicy)
     }
 
     @Test
