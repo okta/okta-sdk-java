@@ -16,6 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.*
 import org.testng.annotations.Test
@@ -163,7 +164,15 @@ class SignOnPoliciesIT implements CrudTestSupport {
         assertThat policy.getEmbedded(), anyOf(nullValue(), not(hasKey("rules")))
     }
 
+    static void assertRulesNotExpanded(AuthorizationServerPolicy policy) {
+        assertThat policy.getEmbedded(), anyOf(nullValue(), not(hasKey("rules")))
+    }
+
     static void assertRulesExpanded(Policy policy) {
+        assertThat policy.getEmbedded(), allOf(notNullValue(), hasKey("rules"))
+    }
+
+    static void assertRulesExpanded(AuthorizationServerPolicy policy) {
         assertThat policy.getEmbedded(), allOf(notNullValue(), hasKey("rules"))
     }
 }
