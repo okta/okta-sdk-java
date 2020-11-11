@@ -62,14 +62,6 @@ class AuthorizationServerIT extends ITSupport {
     }
 
     @Test
-    void listAuthorizationServers() {
-        AuthorizationServerList authorizationServerList = client.listAuthorizationServers()
-
-        assertThat(authorizationServerList, notNullValue())
-        assertThat(authorizationServerList.size(), greaterThan(0))
-    }
-
-    @Test
     void listCreatedAuthorizationServerTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -139,7 +131,6 @@ class AuthorizationServerIT extends ITSupport {
         registerForCleanup(createdAuthorizationServer)
         assertThat(createdAuthorizationServer, notNullValue())
 
-        assertThat(createdAuthorizationServer, notNullValue())
         assertThat(client.getAuthorizationServer(createdAuthorizationServer.getId()), notNullValue())
 
         createdAuthorizationServer.deactivate()
@@ -171,6 +162,7 @@ class AuthorizationServerIT extends ITSupport {
         sleep(getTestOperationDelay())
 
         AuthorizationServer retrievedAuthorizationServer = client.getAuthorizationServer(createdAuthorizationServer.getId())
+        assertThat(retrievedAuthorizationServer, notNullValue())
         assertThat(retrievedAuthorizationServer.getId(), equalTo(createdAuthorizationServer.getId()))
         assertThat(retrievedAuthorizationServer.getStatus(), equalTo(AuthorizationServer.StatusEnum.INACTIVE))
     }
@@ -195,6 +187,7 @@ class AuthorizationServerIT extends ITSupport {
         sleep(getTestOperationDelay())
 
         AuthorizationServer retrievedAuthorizationServer = client.getAuthorizationServer(createdAuthorizationServer.getId())
+        assertThat(retrievedAuthorizationServer, notNullValue())
         assertThat(retrievedAuthorizationServer.getId(), equalTo(createdAuthorizationServer.getId()))
         assertThat(retrievedAuthorizationServer.getStatus(), equalTo(AuthorizationServer.StatusEnum.INACTIVE))
 
@@ -204,6 +197,7 @@ class AuthorizationServerIT extends ITSupport {
         sleep(getTestOperationDelay())
 
         retrievedAuthorizationServer = client.getAuthorizationServer(createdAuthorizationServer.getId())
+        assertThat(retrievedAuthorizationServer, notNullValue())
         assertThat(retrievedAuthorizationServer.getId(), equalTo(createdAuthorizationServer.getId()))
         assertThat(retrievedAuthorizationServer.getStatus(), equalTo(AuthorizationServer.StatusEnum.ACTIVE))
     }
