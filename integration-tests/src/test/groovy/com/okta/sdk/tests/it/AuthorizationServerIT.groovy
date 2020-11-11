@@ -52,7 +52,6 @@ class AuthorizationServerIT extends ITSupport {
                 .setAudiences(["api://example"])
         )
         registerForCleanup(createdAuthorizationServer)
-        assertThat(createdAuthorizationServer, notNullValue())
 
         assertThat(createdAuthorizationServer, notNullValue())
         assertThat(createdAuthorizationServer.getId(), notNullValue())
