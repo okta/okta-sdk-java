@@ -25,7 +25,7 @@ info:
   license:
     name: Apache-2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-  version: 2.0.0
+  version: 2.2.1
 externalDocs:
   description: Find more info here
   url: 'http://developer.okta.com/docs/api/getting_started/design_principles.html'
@@ -1649,14 +1649,16 @@ paths:
           schema:
             $ref: '#/definitions/AuthorizationServerPolicy'
       security:
-        - api_token: [ ]
+        - api_token: []
       tags:
         - AuthorizationServer
   '/api/v1/authorizationServers/{authServerId}/policies/{policyId}/rules':
     get:
       consumes:
         - application/json
-      description: Enumerates all policy rules for the specified Custom Authorization Server and Policy.
+      description: >-
+        Enumerates all policy rules for the specified Custom Authorization
+        Server and Policy.
       operationId: listAuthorizationServerPolicyRules
       parameters:
         - in: path
@@ -1683,7 +1685,9 @@ paths:
     post:
       consumes:
         - application/json
-      description: Creates a policy rule for the specified Custom Authorization Server and Policy.
+      description: >-
+        Creates a policy rule for the specified Custom Authorization Server and
+        Policy.
       operationId: createAuthorizationServerPolicyRule
       parameters:
         - in: path
@@ -1711,33 +1715,33 @@ paths:
       tags:
         - AuthorizationServer
   '/api/v1/authorizationServers/{authServerId}/policies/{policyId}/rules/{ruleId}':
-   delete:
-    consumes:
-      - application/json
-    description: Deletes a Policy Rule defined in the specified Custom Authorization Server and Policy.
-    operationId: deleteAuthorizationServerPolicyRule
-    parameters:
-      - in: path
-        name: policyId
-        required: true
-        type: string
-      - in: path
-        name: authServerId
-        required: true
-        type: string
-      - in: path
-        name: ruleId
-        required: true
-        type: string
-    produces:
-      - application/json
-    responses:
-      '204':
-        description: No Content
-    security:
-      - api_token: [ ]
-    tags:
-      - AuthorizationServer
+    delete:
+      consumes:
+        - application/json
+      description: Deletes a Policy Rule defined in the specified Custom Authorization Server and Policy.
+      operationId: deleteAuthorizationServerPolicyRule
+      parameters:
+        - in: path
+          name: policyId
+          required: true
+          type: string
+        - in: path
+          name: authServerId
+          required: true
+          type: string
+        - in: path
+          name: ruleId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: No Content
+      security:
+        - api_token: [ ]
+      tags:
+        - AuthorizationServer
     get:
       consumes:
         - application/json
@@ -1770,7 +1774,9 @@ paths:
     put:
       consumes:
         - application/json
-      description: Updates the configuration of the Policy Rule defined in the specified Custom Authorization Server and Policy.
+      description: >-
+        Updates the configuration of the Policy Rule defined in the specified
+        Custom Authorization Server and Policy.
       operationId: updateAuthorizationServerPolicyRule
       parameters:
         - in: path
@@ -8740,6 +8746,12 @@ definitions:
       type:
         $ref: '#/definitions/PolicyType'
     type: object
+    x-okta-crud:
+      - alias: read
+        arguments:
+          - dest: policyId
+            src: id
+        operationId: getAuthorizationServerPolicy
     x-okta-operations:
       - alias: listPolicyRules
         arguments:
@@ -8765,6 +8777,10 @@ definitions:
       - AuthorizationServer
   AuthorizationServerPolicyRule:
     properties:
+      actions:
+        $ref: '#/definitions/AuthorizationServerPolicyRuleActions'
+      conditions:
+        $ref: '#/definitions/AuthorizationServerPolicyRuleConditions'
       created:
         format: date-time
         readOnly: true
@@ -8772,11 +8788,11 @@ definitions:
       id:
         readOnly: true
         type: string
-      name:
-        type: string
       lastUpdated:
         format: date-time
         readOnly: true
+        type: string
+      name:
         type: string
       priority:
         type: integer
@@ -8793,11 +8809,17 @@ definitions:
         enum:
           - RESOURCE_ACCESS
         type: string
-      conditions:
-        $ref: '#/definitions/AuthorizationServerPolicyRuleConditions'
-      actions:
-        $ref: '#/definitions/AuthorizationServerPolicyRuleActions'
     type: object
+    x-okta-crud:
+      - alias: update
+        arguments:
+          - dest: ruleId
+            src: id
+          - dest: policyRule
+            self: true
+          - dest: policyId
+            parentSrc: id
+        operationId: updateAuthorizationServerPolicyRule
     x-okta-tags:
       - AuthorizationServerPolicy
   AuthorizationServerPolicyRuleActions:

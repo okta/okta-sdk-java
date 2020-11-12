@@ -74,7 +74,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setAudiences(["api://example"]))
         registerForCleanup(createdAuthorizationServer)
         assertThat(createdAuthorizationServer, notNullValue())
- 
+
         // create operation may not take effect immediately in the backend
         sleep(getTestOperationDelay())
 
@@ -208,14 +208,25 @@ class AuthorizationServerIT extends ITSupport {
 
     @Test
     void listAuthorizationServerPoliciesTest() {
-        AuthorizationServerList authorizationServerList = client.listAuthorizationServers()
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
+        AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
+            client.instantiate(AuthorizationServer)
+                .setName(name)
+                .setDescription("Test Authorization Server")
+                .setAudiences(["api://example"])
+        )
+        registerForCleanup(createdAuthorizationServer)
+        assertThat(createdAuthorizationServer, notNullValue())
+
+        AuthorizationServerList authorizationServerList = client.listAuthorizationServers()
         assertThat(authorizationServerList, notNullValue())
         assertThat(authorizationServerList.size(), greaterThan(0))
+        assertPresent(authorizationServerList, createdAuthorizationServer)
 
-        authorizationServerList.forEach({authServer ->
+        authorizationServerList.forEach({ authServer ->
             assertThat(authServer.listPolicies(), notNullValue())
-            authServer.listPolicies().forEach({authPolicy ->
+            authServer.listPolicies().forEach({ authPolicy ->
                 assertThat(authPolicy.getId(), notNullValue())
             })
         })
@@ -344,9 +355,9 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(authorizationServerList, notNullValue())
         assertThat(authorizationServerList.size(), greaterThan(0))
 
-        authorizationServerList.forEach({authServer ->
+        authorizationServerList.forEach({ authServer ->
             assertThat(authServer.listPolicies(), notNullValue())
-            authServer.listPolicies().forEach({authPolicy ->
+            authServer.listPolicies().forEach({ authPolicy ->
                 assertThat(authPolicy, notNullValue())
                 assertThat(authPolicy.getId(), notNullValue())
                 assertThat(authPolicy.listPolicyRules(createdAuthorizationServer.getId()), notNullValue())
@@ -398,14 +409,14 @@ class AuthorizationServerIT extends ITSupport {
                         .setInclude(["implicit", "client_credentials", "authorization_code", "password"]))
                     .setScopes(client.instantiate(OAuth2ScopesMediationPolicyRuleCondition).setInclude(["openid", "email", "address"]))
                 )
-            .setActions(client.instantiate(AuthorizationServerPolicyRuleActions)
-                .setToken(
-                    client.instantiate(TokenAuthorizationServerPolicyRuleAction)
-                        .setAccessTokenLifetimeMinutes(60)
-                        .setRefreshTokenLifetimeMinutes(0)
-                        .setRefreshTokenWindowMinutes(10080)
+                .setActions(client.instantiate(AuthorizationServerPolicyRuleActions)
+                    .setToken(
+                        client.instantiate(TokenAuthorizationServerPolicyRuleAction)
+                            .setAccessTokenLifetimeMinutes(60)
+                            .setRefreshTokenLifetimeMinutes(0)
+                            .setRefreshTokenWindowMinutes(10080)
+                    )
                 )
-            )
         )
 
         assertThat(createdPolicyRule, notNullValue())
@@ -419,6 +430,91 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdPolicyRule.getActions().getToken().getAccessTokenLifetimeMinutes(), equalTo(60))
         assertThat(createdPolicyRule.getActions().getToken().getRefreshTokenLifetimeMinutes(), equalTo(0))
         assertThat(createdPolicyRule.getActions().getToken().getRefreshTokenWindowMinutes(), equalTo(10080))
+    }
+
+    @Test
+    void updateAuthorizationServerPolicyRuleTest() {
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
+        AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
+            client.instantiate(AuthorizationServer)
+                .setName(name)
+                .setDescription("Test Authorization Server")
+                .setAudiences(["api://example"]))
+        registerForCleanup(createdAuthorizationServer)
+        assertThat(createdAuthorizationServer, notNullValue())
+
+        AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
+            .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
+            .setName("Test Policy")
+            .setDescription("Test Policy")
+            .setPriority(1)
+            .setConditions(client.instantiate(PolicyRuleConditions)
+                .setClients(client.instantiate(ClientPolicyCondition)
+                    .setInclude(
+                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
+                    )
+                )
+            )
+
+        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
+        assertThat(createdPolicy, notNullValue())
+
+        AuthorizationServerPolicy retrievedPolicy = createdAuthorizationServer.getPolicy(createdPolicy.getId())
+        assertThat(retrievedPolicy, notNullValue())
+        assertThat(retrievedPolicy.getId(), equalTo(createdPolicy.getId()))
+
+        AuthorizationServerPolicyRule createdPolicyRule = retrievedPolicy.createPolicyRule(createdAuthorizationServer.getId(),
+            client.instantiate(AuthorizationServerPolicyRule)
+                .setName(name)
+                .setType(AuthorizationServerPolicyRule.TypeEnum.ACCESS)
+                .setPriority(1)
+                .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
+                    .setPeople(client.instantiate(PolicyPeopleCondition)
+                        .setGroups(client.instantiate(GroupCondition)
+                            .setInclude(["EVERYONE"])))
+                    .setGrantTypes(client.instantiate(GrantTypePolicyRuleCondition)
+                        .setInclude(["implicit", "client_credentials", "authorization_code", "password"]))
+                    .setScopes(client.instantiate(OAuth2ScopesMediationPolicyRuleCondition).setInclude(["openid", "email", "address"]))
+                )
+                .setActions(client.instantiate(AuthorizationServerPolicyRuleActions)
+                    .setToken(
+                        client.instantiate(TokenAuthorizationServerPolicyRuleAction)
+                            .setAccessTokenLifetimeMinutes(60)
+                            .setRefreshTokenLifetimeMinutes(0)
+                            .setRefreshTokenWindowMinutes(10080)
+                    )
+                )
+        )
+
+        assertThat(createdPolicyRule, notNullValue())
+        assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.ACCESS))
+        assertThat(createdPolicyRule.getPriority(), equalTo(1))
+        assertThat(createdPolicyRule.getConditions().getPeople().getGroups().getInclude(), contains("EVERYONE"))
+        assertThat(createdPolicyRule.getConditions().getGrantTypes().getInclude(),
+            containsInAnyOrder("implicit", "client_credentials", "authorization_code", "password"))
+        assertThat(createdPolicyRule.getConditions().getScopes().getInclude(),
+            containsInAnyOrder("openid", "email", "address"))
+        assertThat(createdPolicyRule.getActions().getToken().getAccessTokenLifetimeMinutes(), equalTo(60))
+        assertThat(createdPolicyRule.getActions().getToken().getRefreshTokenLifetimeMinutes(), equalTo(0))
+        assertThat(createdPolicyRule.getActions().getToken().getRefreshTokenWindowMinutes(), equalTo(10080))
+
+        createdPolicyRule
+            .setActions(client.instantiate(AuthorizationServerPolicyRuleActions)
+                .setToken(
+                    client.instantiate(TokenAuthorizationServerPolicyRuleAction)
+                        .setAccessTokenLifetimeMinutes(55)
+                        .setRefreshTokenLifetimeMinutes(55)
+                        .setRefreshTokenWindowMinutes(55)
+                )
+            )
+
+        AuthorizationServerPolicyRule retrievedPolicyRule = createdPolicyRule.update(createdAuthorizationServer.getId())
+
+        assertThat(retrievedPolicyRule, notNullValue())
+        assertThat(retrievedPolicyRule.getActions().getToken().getAccessTokenLifetimeMinutes(), equalTo(55))
+        assertThat(retrievedPolicyRule.getActions().getToken().getRefreshTokenLifetimeMinutes(), equalTo(55))
+        assertThat(retrievedPolicyRule.getActions().getToken().getRefreshTokenWindowMinutes(), equalTo(55))
     }
 
     @Test
