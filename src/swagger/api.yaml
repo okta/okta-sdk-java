@@ -25,7 +25,7 @@ info:
   license:
     name: Apache-2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-  version: 2.0.0
+  version: 2.2.1
 externalDocs:
   description: Find more info here
   url: 'http://developer.okta.com/docs/api/getting_started/design_principles.html'
@@ -698,7 +698,6 @@ paths:
           type: string
         - in: body
           name: applicationGroupAssignment
-          required: true
           schema:
             $ref: '#/definitions/ApplicationGroupAssignment'
       produces:
@@ -1540,7 +1539,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/Policy'
+              $ref: '#/definitions/AuthorizationServerPolicy'
             type: array
       security:
         - api_token: []
@@ -1560,14 +1559,14 @@ paths:
           name: policy
           required: true
           schema:
-            $ref: '#/definitions/Policy'
+            $ref: '#/definitions/AuthorizationServerPolicy'
       produces:
         - application/json
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/Policy'
+            $ref: '#/definitions/AuthorizationServerPolicy'
         '201':
           description: Created
       security:
@@ -1618,7 +1617,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/Policy'
+            $ref: '#/definitions/AuthorizationServerPolicy'
       security:
         - api_token: []
       tags:
@@ -1641,14 +1640,169 @@ paths:
           name: policy
           required: true
           schema:
-            $ref: '#/definitions/Policy'
+            $ref: '#/definitions/AuthorizationServerPolicy'
       produces:
         - application/json
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/Policy'
+            $ref: '#/definitions/AuthorizationServerPolicy'
+      security:
+        - api_token: []
+      tags:
+        - AuthorizationServer
+  '/api/v1/authorizationServers/{authServerId}/policies/{policyId}/rules':
+    get:
+      consumes:
+        - application/json
+      description: >-
+        Enumerates all policy rules for the specified Custom Authorization
+        Server and Policy.
+      operationId: listAuthorizationServerPolicyRules
+      parameters:
+        - in: path
+          name: policyId
+          required: true
+          type: string
+        - in: path
+          name: authServerId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/AuthorizationServerPolicyRule'
+            type: array
+      security:
+        - api_token: []
+      tags:
+        - AuthorizationServer
+    post:
+      consumes:
+        - application/json
+      description: >-
+        Creates a policy rule for the specified Custom Authorization Server and
+        Policy.
+      operationId: createAuthorizationServerPolicyRule
+      parameters:
+        - in: path
+          name: policyId
+          required: true
+          type: string
+        - in: path
+          name: authServerId
+          required: true
+          type: string
+        - in: body
+          name: policyRule
+          required: true
+          schema:
+            $ref: '#/definitions/AuthorizationServerPolicyRule'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/AuthorizationServerPolicyRule'
+      security:
+        - api_token: [ ]
+      tags:
+        - AuthorizationServer
+  '/api/v1/authorizationServers/{authServerId}/policies/{policyId}/rules/{ruleId}':
+    delete:
+      consumes:
+        - application/json
+      description: Deletes a Policy Rule defined in the specified Custom Authorization Server and Policy.
+      operationId: deleteAuthorizationServerPolicyRule
+      parameters:
+        - in: path
+          name: policyId
+          required: true
+          type: string
+        - in: path
+          name: authServerId
+          required: true
+          type: string
+        - in: path
+          name: ruleId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: No Content
+      security:
+        - api_token: [ ]
+      tags:
+        - AuthorizationServer
+    get:
+      consumes:
+        - application/json
+      description: Returns a Policy Rule by ID that is defined in the specified Custom Authorization Server and Policy.
+      operationId: getAuthorizationServerPolicyRule
+      parameters:
+        - in: path
+          name: policyId
+          required: true
+          type: string
+        - in: path
+          name: authServerId
+          required: true
+          type: string
+        - in: path
+          name: ruleId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/AuthorizationServerPolicyRule'
+      security:
+        - api_token: [ ]
+      tags:
+        - AuthorizationServer
+    put:
+      consumes:
+        - application/json
+      description: >-
+        Updates the configuration of the Policy Rule defined in the specified
+        Custom Authorization Server and Policy.
+      operationId: updateAuthorizationServerPolicyRule
+      parameters:
+        - in: path
+          name: policyId
+          required: true
+          type: string
+        - in: path
+          name: authServerId
+          required: true
+          type: string
+        - in: path
+          name: ruleId
+          required: true
+          type: string
+        - in: body
+          name: policyRule
+          required: true
+          schema:
+            $ref: '#/definitions/AuthorizationServerPolicyRule'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/AuthorizationServerPolicyRule'
       security:
         - api_token: []
       tags:
@@ -4083,7 +4237,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/Policy'
+              $ref: '#/definitions/AuthorizationServerPolicy'
             type: array
       security:
         - api_token: []
@@ -4244,7 +4398,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/PolicyRule'
+              $ref: '#/definitions/AuthorizationServerPolicyRule'
             type: array
       security:
         - api_token: []
@@ -8549,6 +8703,154 @@ definitions:
     x-okta-parent: '#/definitions/Policy'
     x-okta-tags:
       - Policy
+  AuthorizationServerPolicy:
+    properties:
+      _embedded:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
+      _links:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
+      conditions:
+        $ref: '#/definitions/PolicyRuleConditions'
+      created:
+        format: date-time
+        readOnly: true
+        type: string
+      description:
+        type: string
+      id:
+        readOnly: true
+        type: string
+      lastUpdated:
+        format: date-time
+        readOnly: true
+        type: string
+      name:
+        type: string
+      priority:
+        type: integer
+      status:
+        enum:
+          - ACTIVE
+          - INACTIVE
+        type: string
+      system:
+        type: boolean
+      type:
+        $ref: '#/definitions/PolicyType'
+    type: object
+    x-okta-crud:
+      - alias: read
+        arguments:
+          - dest: policyId
+            src: id
+        operationId: getAuthorizationServerPolicy
+    x-okta-operations:
+      - alias: listPolicyRules
+        arguments:
+          - dest: policyId
+            src: id
+        operationId: listAuthorizationServerPolicyRules
+      - alias: createPolicyRule
+        arguments:
+          - dest: policyId
+            src: id
+        operationId: createAuthorizationServerPolicyRule
+      - alias: getPolicyRule
+        arguments:
+          - dest: policyId
+            src: id
+        operationId: getAuthorizationServerPolicyRule
+      - alias: deletePolicyRule
+        arguments:
+          - dest: policyId
+            src: id
+        operationId: deleteAuthorizationServerPolicyRule
+    x-okta-tags:
+      - AuthorizationServer
+  AuthorizationServerPolicyRule:
+    properties:
+      actions:
+        $ref: '#/definitions/AuthorizationServerPolicyRuleActions'
+      conditions:
+        $ref: '#/definitions/AuthorizationServerPolicyRuleConditions'
+      created:
+        format: date-time
+        readOnly: true
+        type: string
+      id:
+        readOnly: true
+        type: string
+      lastUpdated:
+        format: date-time
+        readOnly: true
+        type: string
+      name:
+        type: string
+      priority:
+        type: integer
+      status:
+        default: ACTIVE
+        enum:
+          - ACTIVE
+          - INACTIVE
+        type: string
+      system:
+        default: false
+        type: boolean
+      type:
+        enum:
+          - RESOURCE_ACCESS
+        type: string
+    type: object
+    x-okta-crud:
+      - alias: update
+        arguments:
+          - dest: ruleId
+            src: id
+          - dest: policyRule
+            self: true
+          - dest: policyId
+            parentSrc: id
+        operationId: updateAuthorizationServerPolicyRule
+    x-okta-tags:
+      - AuthorizationServerPolicy
+  AuthorizationServerPolicyRuleActions:
+    properties:
+      token:
+        $ref: '#/definitions/TokenAuthorizationServerPolicyRuleAction'
+    type: object
+    x-okta-tags:
+      - AuthorizationServerPolicy
+  TokenAuthorizationServerPolicyRuleAction:
+    properties:
+      accessTokenLifetimeMinutes:
+        type: integer
+      refreshTokenLifetimeMinutes:
+        type: integer
+      refreshTokenWindowMinutes:
+        type: integer
+    type: object
+    x-okta-tags:
+      - AuthorizationServerPolicy
+  AuthorizationServerPolicyRuleConditions:
+    properties:
+      people:
+        $ref: '#/definitions/PolicyPeopleCondition'
+      clients:
+        $ref: '#/definitions/ClientPolicyCondition'
+      grantTypes:
+        $ref: '#/definitions/GrantTypePolicyRuleCondition'
+      scopes:
+        $ref: '#/definitions/OAuth2ScopesMediationPolicyRuleCondition'
+    type: object
+    x-okta-tags:
+      - AuthorizationServerPolicy
   IdentityProviderPolicyRuleCondition:
     properties:
       idpIds:

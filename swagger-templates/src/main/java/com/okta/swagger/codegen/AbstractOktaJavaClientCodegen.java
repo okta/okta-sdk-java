@@ -133,6 +133,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         moveOperationsToSingleClient(swagger);
         handleOktaLinkedOperations(swagger);
         buildDiscriminationMap(swagger);
+        buildGraalVMReflectionConfig(swagger);
     }
 
     /**
@@ -225,6 +226,33 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 discriminatorMap.put(name, new Discriminator(name, propertyName, result));
             }
         });
+    }
+
+    protected void buildGraalVMReflectionConfig(Swagger swagger) {
+
+        try {
+            List<Map<String, ?>> reflectionConfig = swagger.getDefinitions().keySet().stream()
+                .filter(it -> !enumList.contains(it)) // ignore enums
+                .map(this::fqcn)
+                .map(this::reflectionConfig)
+                .collect(Collectors.toList());
+
+            // this is slightly error prone, but this project only has `api` and `impl`
+            File projectDir = new File(outputFolder(), "../../..").getCanonicalFile();
+            String projectName = projectDir.getName();
+
+            File reflectionConfigFile = new File(projectDir, "target/classes/META-INF/native-image/com.okta.sdk/okta-sdk-" + projectName + "/generated-reflection-config.json");
+            if (!(reflectionConfigFile.getParentFile().exists() || reflectionConfigFile.getParentFile().mkdirs())) {
+                throw new IllegalStateException("Failed to create directory: "+ reflectionConfigFile.getParent());
+            }
+            new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(reflectionConfigFile, reflectionConfig);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to write generated-reflection-config.json file", e);
+        }
+    }
+
+    protected Map<String, ?> reflectionConfig(String fqcn) {
+        return Collections.singletonMap("name", fqcn);
     }
 
     protected void tagEnums(Swagger swagger) {
@@ -520,6 +548,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             return modelPackage() +"."+ modelTagMap.get(name) +"."+ name;
         }
         return super.toModelImport(name);
+    }
+
+    protected String fqcn(String name) {
+        String className = toApiName(name);
+        if (modelTagMap.containsKey(className)) {
+            return modelPackage() +"."+ modelTagMap.get(className) +"."+ className;
+        }
+        return super.toModelImport(className);
     }
 
     @Override

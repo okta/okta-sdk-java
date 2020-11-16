@@ -346,7 +346,8 @@ class IdpIT extends ITSupport {
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 
-    @Test
+    // Remove this groups tag after OKTA-329987 is resolved (Adding this tag disables the test in bacon PDV)
+    @Test (groups = "bacon")
     void microsoftIdpTest() {
 
         // create user

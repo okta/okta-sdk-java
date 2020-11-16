@@ -38,7 +38,8 @@ import static org.hamcrest.MatcherAssert.assertThat
  */
 class UserRolesIT extends ITSupport {
 
-    @Test
+    // Remove this groups tag after OKTA-337497 is resolved (Adding this tag disables the test in bacon PDV)
+    @Test (groups = "bacon")
     @Scenario("assign-super-admin-role-to-user")
     void assignSuperAdminRoleToUserTest() {
 

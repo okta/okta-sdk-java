@@ -91,17 +91,6 @@ public class DefaultClientBuilder implements ClientBuilder {
     private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
-    private static final String USER_HOME       = System.getProperty("user.home") + File.separatorChar;
-
-    private static final String[] DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS = {
-                                                 ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_PROPERTIES,
-                                                 ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_YAML,
-                                                 ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
-                                                 ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
-                                                 USER_HOME + ".okta" + File.separatorChar + OKTA_YAML,
-                                                 ENVVARS_TOKEN,
-                                                 SYSPROPS_TOKEN
-    };
 
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
@@ -118,7 +107,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     DefaultClientBuilder(ResourceFactory resourceFactory) {
         Collection<PropertiesSource> sources = new ArrayList<>();
 
-        for (String location : DEFAULT_OKTA_PROPERTIES_FILE_LOCATIONS) {
+        for (String location : configSources()) {
 
             if (ENVVARS_TOKEN.equalsIgnoreCase(location)) {
                 sources.add(EnvironmentVariablesPropertiesSource.oktaFilteredPropertiesSource());
@@ -413,9 +402,22 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
     }
 
-    // Used for testing, package private
-    ClientConfiguration getClientConfiguration() {
+    public ClientConfiguration getClientConfiguration() {
         return clientConfig;
+    }
+
+    private static String[] configSources() {
+
+        // lazy load the config sources as the user.home system prop could change for testing
+        return new String[] {
+            ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_PROPERTIES,
+            ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_YAML,
+            ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
+            ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
+            System.getProperty("user.home") + File.separatorChar + ".okta" + File.separatorChar + OKTA_YAML,
+            ENVVARS_TOKEN,
+            SYSPROPS_TOKEN
+        };
     }
 
 }

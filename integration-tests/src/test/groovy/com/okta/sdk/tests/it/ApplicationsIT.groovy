@@ -350,8 +350,7 @@ class ApplicationsIT extends ITSupport {
         assertThat(client.getApplication(app.getId()).getStatus(), equalTo(Application.StatusEnum.ACTIVE))
     }
 
-    // disabled to do: https://github.com/okta/openapi/issues/107
-    @Test(enabled = false)
+    @Test
     void groupAssignmentWithNullBodyTest() {
 
         Application app = client.createApplication(client.instantiate(AutoLoginApplication)
@@ -374,7 +373,7 @@ class ApplicationsIT extends ITSupport {
         registerForCleanup(app)
         registerForCleanup(group)
 
-        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId(), null)
+        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId())
         assertThat(groupAssignment, notNullValue())
     }
 
@@ -416,7 +415,8 @@ class ApplicationsIT extends ITSupport {
         assertThat(app.listGroupAssignments().iterator().size(), equalTo(0))
     }
 
-    @Test
+    // Remove this groups tag after OKTA-337342 is resolved (Adding this tag disables the test in bacon PDV)
+    @Test (groups = "bacon")
     void associateUserWithApplication() {
 
         Client client = getClient()
