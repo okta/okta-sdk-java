@@ -4410,7 +4410,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/AuthorizationServerPolicyRule'
+              $ref: '#/definitions/PolicyRule'
             type: array
       security:
         - api_token: []
@@ -10142,7 +10142,7 @@ definitions:
         type: string
       value:
         type: string
-      workerFactor:
+      workFactor:
         type: integer
     type: object
     x-okta-tags:
