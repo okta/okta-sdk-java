@@ -348,7 +348,7 @@ ExtensibleResource result = client.http()
 
 ### Client Lifecycle
 
-Every client instance of the SDK client is thread-safe. You **should** use the same client instance through the entire lifecycle of the client. Each client instance has its own Connection pool and Caching resources that are automatically released when the instance is garbage collected.
+Every instance of the SDK `Client` is thread-safe. You **should** use the same instance throughout the entire lifecycle of your application. Each instance has its own Connection pool and Caching resources that are automatically released when the instance is garbage collected.
 
 ## Paging
 
