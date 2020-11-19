@@ -2278,12 +2278,6 @@ paths:
           in: query
           name: limit
           type: integer
-        - description: >-
-            If specified, it causes additional metadata to be included in the
-            response.
-          in: query
-          name: expand
-          type: string
       produces:
         - application/json
       responses:
