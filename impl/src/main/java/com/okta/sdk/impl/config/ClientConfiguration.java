@@ -56,6 +56,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private String clientId;
     private Set<String> scopes = new HashSet<>();
     private String privateKey;
+    private String privateKeyContent;
 
     public String getApiToken() {
         return apiToken;
@@ -127,6 +128,14 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     public void setPrivateKey(String privateKey) {
         this.privateKey = privateKey;
+    }
+
+    public String getPrivateKeyContent() {
+        return privateKeyContent;
+    }
+
+    public void setPrivateKeyContent(String privateKeyContent) {
+        this.privateKeyContent = privateKeyContent;
     }
 
     public boolean isCacheManagerEnabled() {

@@ -245,6 +245,29 @@ class DefaultClientBuilderTest {
     }
 
     @Test
+    void testOauth2SetPrivateKeyAndSetPrivateKeyContentAreMutuallyExclusive() {
+        clearOktaEnvAndSysProps()
+        Util.expect(IllegalArgumentException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+                .setClientId("client12345")
+                .setScopes(new HashSet<>(Arrays.asList({"okta.apps.read"})))
+                .setPrivateKey("blahblah.pem")
+                .setPrivateKeyContent("foo")
+        }
+        Util.expect(IllegalArgumentException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+                .setClientId("client12345")
+                .setScopes(new HashSet<>(Arrays.asList({"okta.apps.read"})))
+                .setPrivateKeyContent("foo")
+                .setPrivateKey("blahblah.pem")
+        }
+    }
+
+    @Test
     void testOAuth2InvalidPrivateKeyPemFilePath() {
         clearOktaEnvAndSysProps()
         Util.expect(IllegalArgumentException) {

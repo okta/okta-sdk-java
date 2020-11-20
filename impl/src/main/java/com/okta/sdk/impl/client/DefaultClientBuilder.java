@@ -353,10 +353,18 @@ public class DefaultClientBuilder implements ClientBuilder {
         Assert.notNull(clientConfiguration.getClientId(), "clientId cannot be null");
         Assert.isTrue(clientConfiguration.getScopes() != null && !clientConfiguration.getScopes().isEmpty(),
             "At least one scope is required");
-        Assert.notNull(clientConfiguration.getPrivateKey(), "privateKey cannot be null");
-        Path privateKeyPemFilePath = Paths.get(clientConfiguration.getPrivateKey());
-        boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, new LinkOption[]{ LinkOption.NOFOLLOW_LINKS });
-        Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
+
+        if (clientConfiguration.getPrivateKey() == null && clientConfiguration.getPrivateKeyContent() == null) {
+            throw new IllegalArgumentException("either privateKey or privateKeyContent must be set");
+        }
+
+        if (clientConfiguration.getPrivateKey() != null) {
+            Path privateKeyPemFilePath = Paths.get(clientConfiguration.getPrivateKey());
+            boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, new LinkOption[]{ LinkOption.NOFOLLOW_LINKS });
+            Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
+        } else {
+            Assert.isTrue(Strings.hasLength(clientConfiguration.getPrivateKeyContent()), "privateKeyContent must not be empty");
+        }
     }
 
     @Override
@@ -384,9 +392,25 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     @Override
     public ClientBuilder setPrivateKey(String privateKey) {
+        if (this.clientConfig.getPrivateKeyContent() != null) {
+            throw new IllegalArgumentException("Can not set private key file when privateKeyContent was set");
+
+        }
         if (isOAuth2Flow()) {
             Assert.notNull(privateKey, "Missing privateKey");
             this.clientConfig.setPrivateKey(privateKey);
+        }
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setPrivateKeyContent(final String privateKeyContent) {
+        if (this.clientConfig.getPrivateKey() != null) {
+            throw new IllegalArgumentException("Can not set private key content directly when private key-file was set");
+        }
+        if (isOAuth2Flow()) {
+            Assert.hasLength(privateKeyContent, "privateKeyContent must not be empty");
+            this.clientConfig.setPrivateKeyContent(privateKeyContent);
         }
         return this;
     }

@@ -333,6 +333,19 @@ public interface ClientBuilder {
     ClientBuilder setPrivateKey(String privateKey);
 
     /**
+     * Allows passing of PEM payload for the private key directly, avoiding the
+     * need to access the filesystem directly.
+     *
+     * @see #setPrivateKey(String)
+     * @param privateKeyContent the full PEM-payload
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @throws IllegalArgumentException when {@link #setPrivateKey(String)} was called before. They are mutually exclusive
+     * @since 2.0.1
+     */
+    ClientBuilder setPrivateKeyContent(String privateKeyContent);
+
+    /**
      * Allows specifying the client ID instead of relying on the default location + override/fallback behavior defined
      * in the {@link ClientBuilder documentation above}.
      *

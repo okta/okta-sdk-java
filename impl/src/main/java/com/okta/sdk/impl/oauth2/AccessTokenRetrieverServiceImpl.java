@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -130,7 +131,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      */
     String createSignedJWT() throws InvalidKeyException, IOException {
         String clientId = tokenClientConfiguration.getClientId();
-        PrivateKey privateKey = parsePrivateKey(tokenClientConfiguration.getPrivateKey());
+        PrivateKey privateKey = parsePrivateKey(getPemReader());
         Instant now = Instant.now();
 
         String jwt = Jwts.builder()
@@ -147,20 +148,16 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     }
 
     /**
-     * Parse private key from the supplied path.
+     * Parse private key from the supplied configuration.
      *
-     * @param privateKeyFilePath
+     * @param pemReader a {@link Reader} that has access to a full PEM resource
      * @return {@link PrivateKey}
      * @throws IOException
      * @throws InvalidKeyException
      */
-    PrivateKey parsePrivateKey(String privateKeyFilePath) throws IOException, InvalidKeyException {
-        Assert.notNull(privateKeyFilePath, "privateKeyFilePath may not be null");
+    PrivateKey parsePrivateKey(Reader pemReader) throws IOException, InvalidKeyException {
 
-        Path privateKeyPemFilePath = Paths.get(privateKeyFilePath);
-        Reader reader = Files.newBufferedReader(privateKeyPemFilePath, Charset.defaultCharset());
-
-        PrivateKey privateKey = getPrivateKeyFromPEM(reader);
+        PrivateKey privateKey = getPrivateKeyFromPEM(pemReader);
         String algorithm = privateKey.getAlgorithm();
 
         if (!algorithm.equals("RSA") &&
@@ -169,6 +166,15 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         }
 
         return privateKey;
+    }
+
+    private Reader getPemReader() throws IOException {
+        if (tokenClientConfiguration.getPrivateKey() != null) {
+            Path privateKeyPemFilePath = Paths.get(tokenClientConfiguration.getPrivateKey());
+            return Files.newBufferedReader(privateKeyPemFilePath, Charset.defaultCharset());
+        } else {
+            return new StringReader(tokenClientConfiguration.getPrivateKeyContent());
+        }
     }
 
     /**
@@ -236,6 +242,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
         tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());
         tokenClientConfiguration.setPrivateKey(apiClientConfiguration.getPrivateKey());
+        tokenClientConfiguration.setPrivateKeyContent(apiClientConfiguration.getPrivateKeyContent());
 
         // setting this to '0' will disable this check and only 'retryMaxAttempts' will be effective
         tokenClientConfiguration.setRetryMaxElapsed(0);

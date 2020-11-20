@@ -77,8 +77,9 @@ class AccessTokenRetrieverServiceImplTest {
     void testParsePrivateKey() {
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
+        Reader reader = new BufferedReader(new FileReader(privateKeyPemFile))
 
-        PrivateKey parsedPrivateKey = getAccessTokenRetrieverServiceInstance().parsePrivateKey(privateKeyPemFile.path)
+        PrivateKey parsedPrivateKey = getAccessTokenRetrieverServiceInstance().parsePrivateKey(reader)
 
         privateKeyPemFile.deleteOnExit()
 
