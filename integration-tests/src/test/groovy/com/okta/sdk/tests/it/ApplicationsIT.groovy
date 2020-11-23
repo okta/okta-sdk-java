@@ -17,7 +17,6 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.ResourceException
-
 import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
@@ -26,9 +25,8 @@ import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
 
-import static com.okta.sdk.tests.it.util.Util.assertPresent
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
-
+import static com.okta.sdk.tests.it.util.Util.assertPresent
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
@@ -409,6 +407,10 @@ class ApplicationsIT extends ITSupport {
         assertThat(groupAssignment, notNullValue())
         assertThat(groupAssignment.priority, equalTo(2))
         assertThat(app.listGroupAssignments().iterator().size(), equalTo(1))
+
+        ApplicationGroupAssignment receivedGroupAssignment = app.getApplicationGroupAssignment(group.getId())
+        assertThat(groupAssignment.getId(), equalTo(receivedGroupAssignment.getId()))
+        assertThat(groupAssignment.getPriority(), equalTo(receivedGroupAssignment.getPriority()))
 
         // delete the assignment
         groupAssignment.delete()
