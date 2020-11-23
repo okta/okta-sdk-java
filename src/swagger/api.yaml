@@ -2278,6 +2278,12 @@ paths:
           in: query
           name: limit
           type: integer
+        - description: >-
+            If specified, it causes additional metadata to be included in the
+            response.
+          in: query
+          name: expand
+          type: string
       produces:
         - application/json
       responses:
@@ -7662,6 +7668,16 @@ definitions:
           - dest: policyId
             src: id
         operationId: getAuthorizationServerPolicy
+      - alias: updatePolicy
+        arguments:
+          - dest: policyId
+            src: id
+        operationId: updateAuthorizationServerPolicy
+      - alias: deletePolicy
+        arguments:
+          - dest: policyId
+            src: id
+        operationId: deleteAuthorizationServerPolicy
     x-okta-operations:
       - alias: listPolicyRules
         arguments:
@@ -7730,6 +7746,13 @@ definitions:
           - dest: policyId
             parentSrc: id
         operationId: updateAuthorizationServerPolicyRule
+      - alias: deletePolicyRule
+        arguments:
+          - dest: ruleId
+            src: id
+          - dest: policyId
+            parentSrc: id
+        operationId: deleteAuthorizationServerPolicyRule
     x-okta-operations:
       - alias: activate
         arguments:

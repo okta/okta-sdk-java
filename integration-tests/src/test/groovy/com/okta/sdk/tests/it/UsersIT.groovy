@@ -568,7 +568,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         Role role = user.assignRole(assignRoleRequest)
 
         // 3. Add Group Target to User Admin Role
-        user.addGroupTarget(role.id, group.id)
+        user.addGroupTarget(role.getId(), group.getId())
 
         // 4. List Group Targets for Role
         assertGroupTargetPresent(user, group, role)
