@@ -169,11 +169,13 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     }
 
     private Reader getPemReader() throws IOException {
-        if (tokenClientConfiguration.getPrivateKey() != null) {
+        String privateKey = tokenClientConfiguration.getPrivateKey();
+        if (privateKey.startsWith("-----BEGIN PRIVATE KEY-----") &&
+            privateKey.contains("-----END PRIVATE KEY-----")) {
+            return new StringReader(tokenClientConfiguration.getPrivateKey());
+        } else {
             Path privateKeyPemFilePath = Paths.get(tokenClientConfiguration.getPrivateKey());
             return Files.newBufferedReader(privateKeyPemFilePath, Charset.defaultCharset());
-        } else {
-            return new StringReader(tokenClientConfiguration.getPrivateKeyContent());
         }
     }
 
@@ -242,7 +244,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
         tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());
         tokenClientConfiguration.setPrivateKey(apiClientConfiguration.getPrivateKey());
-        tokenClientConfiguration.setPrivateKeyContent(apiClientConfiguration.getPrivateKeyContent());
 
         // setting this to '0' will disable this check and only 'retryMaxAttempts' will be effective
         tokenClientConfiguration.setRetryMaxElapsed(0);

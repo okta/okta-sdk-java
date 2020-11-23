@@ -208,7 +208,6 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_ID_PROPERTY_NAME = "okta.client.clientId";
     String DEFAULT_CLIENT_SCOPES_PROPERTY_NAME = "okta.client.scopes";
     String DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME = "okta.client.privateKey";
-    String DEFAULT_CLIENT_PRIVATE_KEY_CONTENT_PROPERTY_NAME = "okta.client.privateKeyContent";
     String DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME = "okta.client.requestTimeout";
     String DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME = "okta.client.rateLimit.maxRetries";
     String DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME = "okta.testing.disableHttpsCheck";
@@ -326,25 +325,13 @@ public interface ClientBuilder {
      * of relying on the default location + override/fallback behavior defined
      * in the {@link ClientBuilder documentation above}.
      *
-     * @param privateKey the fully qualified string path to the private key (PEM file).
+     * @param privateKey either the fully qualified string path to the private key PEM file (or)
+     *                   the full PEM payload content.
      * @return the ClientBuilder instance for method chaining.
      *
      * @since 1.6.0
      */
     ClientBuilder setPrivateKey(String privateKey);
-
-    /**
-     * Allows passing of PEM payload for the private key directly, avoiding the
-     * need to access the filesystem directly.
-     *
-     * @see #setPrivateKey(String)
-     * @param privateKeyContent the full PEM-payload
-     * @return the ClientBuilder instance for method chaining.
-     *
-     * @throws IllegalArgumentException when {@link #setPrivateKey(String)} was called before. They are mutually exclusive
-     * @since 2.0.1
-     */
-    ClientBuilder setPrivateKeyContent(String privateKeyContent);
 
     /**
      * Allows specifying the client ID instead of relying on the default location + override/fallback behavior defined

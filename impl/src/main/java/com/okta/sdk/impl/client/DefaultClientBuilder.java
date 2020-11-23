@@ -228,11 +228,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME))) {
-            this.setPrivateKey(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
-        }
-
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_CONTENT_PROPERTY_NAME))) {
-            this.setPrivateKeyContent(props.get(DEFAULT_CLIENT_PRIVATE_KEY_CONTENT_PROPERTY_NAME));
+            clientConfig.setPrivateKey(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME))) {
@@ -360,17 +356,14 @@ public class DefaultClientBuilder implements ClientBuilder {
         Assert.notNull(clientConfiguration.getClientId(), "clientId cannot be null");
         Assert.isTrue(clientConfiguration.getScopes() != null && !clientConfiguration.getScopes().isEmpty(),
             "At least one scope is required");
+        String privateKey = clientConfiguration.getPrivateKey();
+        Assert.hasText(privateKey, "privateKey cannot be null (either PEM file path (or) full PEM content must be supplied)");
 
-        if (clientConfiguration.getPrivateKey() == null && clientConfiguration.getPrivateKeyContent() == null) {
-            throw new IllegalArgumentException("either privateKey or privateKeyContent must be set");
-        }
-
-        if (clientConfiguration.getPrivateKey() != null) {
-            Path privateKeyPemFilePath = Paths.get(clientConfiguration.getPrivateKey());
-            boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, new LinkOption[]{ LinkOption.NOFOLLOW_LINKS });
+        if (!(privateKey.startsWith("-----BEGIN PRIVATE KEY-----") && privateKey.contains("-----END PRIVATE KEY-----"))) {
+            // if privateKey is a file path, check if the file exists
+            Path privateKeyPemFilePath = Paths.get(privateKey);
+            boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, LinkOption.NOFOLLOW_LINKS);
             Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
-        } else {
-            Assert.isTrue(Strings.hasLength(clientConfiguration.getPrivateKeyContent()), "privateKeyContent must not be empty");
         }
     }
 
@@ -399,26 +392,10 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     @Override
     public ClientBuilder setPrivateKey(String privateKey) {
-        if (this.clientConfig.getPrivateKeyContent() != null) {
-            throw new IllegalArgumentException("Can not set private key file when privateKeyContent was set");
-
-        }
         if (isOAuth2Flow()) {
             Assert.notNull(privateKey, "Missing privateKey");
-            this.clientConfig.setPrivateKey(privateKey);
-        }
-        return this;
-    }
-
-    @Override
-    public ClientBuilder setPrivateKeyContent(final String privateKeyContent) {
-        if (this.clientConfig.getPrivateKey() != null) {
-            throw new IllegalArgumentException("Can not set private key content directly when private key-file was set");
-        }
-        if (isOAuth2Flow()) {
-            Assert.hasLength(privateKeyContent, "privateKeyContent must not be empty");
-            this.clientConfig.setPrivateKeyContent(privateKeyContent);
-        }
+                this.clientConfig.setPrivateKey(privateKey);
+            }
         return this;
     }
 

@@ -151,7 +151,7 @@ class AccessTokenRetrieverServiceImplTest {
 
         when(clientConfig.getBaseUrl()).thenReturn(baseUrl)
         when(clientConfig.getClientId()).thenReturn("client12345")
-        when(clientConfig.getPrivateKeyContent()).thenReturn(createPemFileContent(generatedPrivateKey))
+        when(clientConfig.getPrivateKey()).thenReturn(createPemFileContent(generatedPrivateKey))
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
