@@ -57,7 +57,7 @@ If you run into problems using the SDK, you can
 ### Prerequisites
 
 * JDK 8 or later
-* Apache Maven (3.6.x or later)
+* Apache Maven (3.6.x or later) is recommended/supported for builds
 
 To use this SDK, you will need to include the following dependencies:
 
