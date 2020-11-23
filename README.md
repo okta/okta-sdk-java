@@ -53,7 +53,12 @@ If you run into problems using the SDK, you can
 * Post [issues][github-issues] here on GitHub (for code errors)
  
 ## Getting started
- 
+
+### Prerequisites
+
+* JDK 8 or later
+* Apache Maven (3.6.x or later)
+
 To use this SDK, you will need to include the following dependencies:
 
 For Apache Maven:
