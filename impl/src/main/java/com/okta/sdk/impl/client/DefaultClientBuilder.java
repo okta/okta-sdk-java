@@ -80,6 +80,9 @@ import java.util.concurrent.TimeUnit;
  * <li>Programmatically</li>
  * </ul>
  *
+ * Please be aware that, in general, loading secrets (such as api-keys or PEM-content) from environment variables
+ * or system properties can lead to those secrets being leaked.
+ *
  * @since 0.5.0
  */
 public class DefaultClientBuilder implements ClientBuilder {
@@ -225,7 +228,11 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME))) {
-            clientConfig.setPrivateKey(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
+            this.setPrivateKey(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_PRIVATE_KEY_CONTENT_PROPERTY_NAME))) {
+            this.setPrivateKeyContent(props.get(DEFAULT_CLIENT_PRIVATE_KEY_CONTENT_PROPERTY_NAME));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME))) {
