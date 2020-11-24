@@ -394,8 +394,8 @@ public class DefaultClientBuilder implements ClientBuilder {
     public ClientBuilder setPrivateKey(String privateKey) {
         if (isOAuth2Flow()) {
             Assert.notNull(privateKey, "Missing privateKey");
-                this.clientConfig.setPrivateKey(privateKey);
-            }
+            this.clientConfig.setPrivateKey(privateKey);
+        }
         return this;
     }
 
