@@ -35,7 +35,7 @@ You can learn more on the [Okta + Java][lang-landing] page in our documentation.
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The current stable major version series is: 1.x
+:heavy_check_mark: The current stable major version series is: 2.x.x
 
 | Version | Status                    |
 | ------- | ------------------------- |
@@ -53,7 +53,11 @@ If you run into problems using the SDK, you can
 * Post [issues][github-issues] here on GitHub (for code errors)
  
 ## Getting started
- 
+
+### Prerequisites
+
+* JDK 8 or later
+
 To use this SDK, you will need to include the following dependencies:
 
 For Apache Maven:
