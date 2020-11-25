@@ -88,6 +88,13 @@
         </Class>
     </Match>
 
+    <Match>
+        <Class name="com.okta.sdk.impl.resource.application.DefaultOpenIdConnectApplicationSettingsClientKeys">
+            <Method name="getKeys" />
+            <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE" />
+        </Class>
+    </Match>
+
     <!-- only detected when running with Java 11, but this null check IS valid -->
     <Match>
         <Class name="com.okta.sdk.impl.config.YAMLPropertiesSource">
