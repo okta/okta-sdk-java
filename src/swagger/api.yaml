@@ -10080,6 +10080,8 @@ definitions:
         type: string
       issuer_mode:
         $ref: '#/definitions/OpenIdConnectApplicationIssuerMode'
+      jwks:
+        $ref: '#/definitions/OpenIdConnectApplicationSettingsClientKeys'
       logo_uri:
         type: string
       policy_uri:
@@ -10100,6 +10102,14 @@ definitions:
         type: array
       tos_uri:
         type: string
+    x-okta-tags:
+      - Application
+  OpenIdConnectApplicationSettingsClientKeys:
+    properties:
+      keys:
+        items:
+          $ref: '#/definitions/JsonWebKey'
+        type: array
     x-okta-tags:
       - Application
   OpenIdConnectApplicationSettingsRefreshToken:
