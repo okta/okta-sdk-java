@@ -37,6 +37,14 @@ Below method has been added.
 Below methods have been added.
    - `OpenIdConnectApplicationSettingsRefreshToken getRefreshToken()`
    - `OpenIdConnectApplicationSettingsRefreshToken setRefreshToken(OpenIdConnectApplicationSettingsRefreshToken refreshToken)`
+   - `OpenIdConnectApplicationSettingsClientKeys getJwks()`
+   - `OpenIdConnectApplicationSettingsClient setJwks(OpenIdConnectApplicationSettingsClientKeys jwks)`
+   
+### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationSettingsClientKeys`
+
+This is a newly created interface with methods listed below.
+   - `JsonWebKeyList getKeys()`
+   - `OpenIdConnectApplicationSettingsClientKeys setKeys(JsonWebKeyList keys)`
 
 ### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationSettingsRefreshToken`
 
@@ -53,6 +61,12 @@ Below methods have been added.
    - `Boolean getAllowMultipleAcsEndpoints()`
    - `SamlApplicationSettingsSignOn setAcsEndpoints(List<AcsEndpoint> acsEndpoints)`
    - `SamlApplicationSettingsSignOn setAllowMultipleAcsEndpoints(Boolean allowMultipleAcsEndpoints)`
+   
+### Package `com.okta.sdk.resource.application.SamlApplicationV1`
+
+This is a newly created interface with methods listed below.
+   - `SamlApplicationSettings getSettings()`
+   - `SamlApplicationV1 setSettings(SamlApplicationSettings settings)`
    
 ### Package `com.okta.sdk.resource.application.SamlAttributeStatement` 
   
