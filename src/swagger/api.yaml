@@ -7160,6 +7160,7 @@ definitions:
         BOOKMARK: '#/definitions/BookmarkApplication'
         BROWSER_PLUGIN: '#/definitions/BrowserPluginApplication'
         OPENID_CONNECT: '#/definitions/OpenIdConnectApplication'
+        SAML_1_1: '#/definitions/SamlApplicationV1'
         SAML_2_0: '#/definitions/SamlApplication'
         SECURE_PASSWORD_STORE: '#/definitions/SecurePasswordStoreApplication'
         WS_FEDERATION: '#/definitions/WsFederationApplication'
@@ -10080,6 +10081,8 @@ definitions:
         type: string
       issuer_mode:
         $ref: '#/definitions/OpenIdConnectApplicationIssuerMode'
+      jwks:
+        $ref: '#/definitions/OpenIdConnectApplicationSettingsClientKeys'
       logo_uri:
         type: string
       policy_uri:
@@ -10100,6 +10103,14 @@ definitions:
         type: array
       tos_uri:
         type: string
+    x-okta-tags:
+      - Application
+  OpenIdConnectApplicationSettingsClientKeys:
+    properties:
+      keys:
+        items:
+          $ref: '#/definitions/JsonWebKey'
+        type: array
     x-okta-tags:
       - Application
   OpenIdConnectApplicationSettingsRefreshToken:
@@ -11211,6 +11222,13 @@ definitions:
     x-okta-tags:
       - Role
   SamlApplication:
+    properties:
+      settings:
+        $ref: '#/definitions/SamlApplicationSettings'
+    x-okta-parent: '#/definitions/Application'
+    x-okta-tags:
+      - Application
+  SamlApplicationV1:
     properties:
       settings:
         $ref: '#/definitions/SamlApplicationSettings'
