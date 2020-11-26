@@ -195,7 +195,8 @@ Below method has been removed.
 
 ### Package `com.okta.sdk.resource.policy.PolicyList` 
 
-Interface has been replaced by `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyList`
+The Interface has been removed.
+The Interface `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyList` should be used instead.
 
 ### Package `com.okta.sdk.resource.user.factor.CustomHotpUserFactor`
 
