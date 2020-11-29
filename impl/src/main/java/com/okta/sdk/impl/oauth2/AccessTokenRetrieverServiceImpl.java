@@ -23,6 +23,7 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.error.DefaultError;
+import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.resource.ExtensibleResource;
 import com.okta.sdk.resource.ResourceException;
 import io.jsonwebtoken.Jwts;
@@ -170,12 +171,10 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
     private Reader getPemReader() throws IOException {
         String privateKey = tokenClientConfiguration.getPrivateKey();
-        if (privateKey.startsWith("-----BEGIN PRIVATE KEY-----") &&
-            privateKey.contains("-----END PRIVATE KEY-----")) {
-            return new StringReader(tokenClientConfiguration.getPrivateKey());
+        if (ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
+            return new StringReader(privateKey);
         } else {
-            Path privateKeyPemFilePath = Paths.get(tokenClientConfiguration.getPrivateKey());
-            return Files.newBufferedReader(privateKeyPemFilePath, Charset.defaultCharset());
+            return Files.newBufferedReader(Paths.get(privateKey), Charset.defaultCharset());
         }
     }
 

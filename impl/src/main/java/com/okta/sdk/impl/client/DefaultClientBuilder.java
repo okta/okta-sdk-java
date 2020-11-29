@@ -48,12 +48,14 @@ import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
+import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -359,9 +361,14 @@ public class DefaultClientBuilder implements ClientBuilder {
         String privateKey = clientConfiguration.getPrivateKey();
         Assert.hasText(privateKey, "privateKey cannot be null (either PEM file path (or) full PEM content must be supplied)");
 
-        if (!(privateKey.startsWith("-----BEGIN PRIVATE KEY-----") && privateKey.contains("-----END PRIVATE KEY-----"))) {
-            // if privateKey is a file path, check if the file exists
-            Path privateKeyPemFilePath = Paths.get(privateKey);
+        if (!ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
+            // privateKey is a file path, check if the file exists
+            Path privateKeyPemFilePath;
+            try {
+                privateKeyPemFilePath = Paths.get(privateKey);
+            } catch (InvalidPathException ipe) {
+                throw new IllegalArgumentException("Invalid privateKey file path", ipe);
+            }
             boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, LinkOption.NOFOLLOW_LINKS);
             Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
         }
