@@ -7,6 +7,11 @@ This SDK uses semantic versioning and follows Okta's [library version policy](ht
 Version 3.0.0 of this SDK introduces a number of breaking changes from previous versions. 
 In addition to many new classes/interfaces, some existing classes/interfaces are no longer backward compatible due to method renaming and signature changes.
 
+[Custom HOTP Factor](https://developer.okta.com/docs/reference/api/factors/#enroll-custom-hotp-factor) is supported now.
+Define a separate Policy model for Authorization Servers.
+Define a separate Policy Rule model for Authorization Servers.
+[SAML Multiple ACS URLs](https://developer.okta.com/docs/reference/api/apps/#acs-endpoint-object) is supported now.
+
 ### Package `com.okta.sdk.client.Client`
 
 Below method has been added.
