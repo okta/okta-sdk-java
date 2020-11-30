@@ -215,9 +215,6 @@ This is a newly created interface with methods listed below.
 Below method has undergone a signature change.
 - `getExpiresAt()` return type changed from `String` to `Date`
    - The property's `expiresAt` type contains a date-time string, so it's convenient to use the `Date` type
-
-Below method has been removed.
-- `setExpiresAt(String expiresAt)`
    
 ### Package `com.okta.sdk.resource.user.PasswordCredentialHash`
 
