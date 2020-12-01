@@ -338,26 +338,6 @@ class DefaultClientBuilderTest {
     }
 
     @Test
-    void testOAuth2SemanticallyValidInputParams_withPrivateKeyPemFile() {
-        clearOktaEnvAndSysProps()
-
-        File privateKeyFile = generatePrivateKey("RSA", 2048, "anotherPrivateKey", ".pem")
-
-        // expected because the URL is not an actual endpoint
-        Util.expect(OAuth2TokenRetrieverException) {
-            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
-                .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-                .setClientId("client12345")
-                .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
-                .setPrivateKey(privateKeyFile)
-                .build()
-        }
-
-        privateKeyFile.delete()
-    }
-
-    @Test
     void testOAuth2SemanticallyValidInputParams_withPrivateKeyPemPath() {
         clearOktaEnvAndSysProps()
 

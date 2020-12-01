@@ -64,7 +64,6 @@ import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -405,16 +404,6 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
-    public ClientBuilder setPrivateKey(File privateKeyFile) {
-        if (isOAuth2Flow()) {
-            Assert.notNull(privateKeyFile, "Missing privateKeyFile");
-            Assert.isTrue(privateKeyFile.exists(), "Missing privateKeyFile");
-            this.clientConfig.setPrivateKey(getFileContent(privateKeyFile));
-        }
-        return this;
-    }
-
-    @Override
     public ClientBuilder setPrivateKey(Path privateKeyPath) {
         if (isOAuth2Flow()) {
             Assert.notNull(privateKeyPath, "Missing privateKeyFile");
@@ -465,9 +454,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     private String readFromInputStream(InputStream inputStream) throws IOException {
-        if (inputStream == null) {
-            throw new RuntimeException("InputStream cannot be null.");
-        }
+        Assert.notNull(inputStream, "InputStream cannot be null.");
         StringBuilder resultStringBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
             inputStream, Charset.forName(StandardCharsets.UTF_8.name())))) {
