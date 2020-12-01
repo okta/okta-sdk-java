@@ -345,7 +345,7 @@ public interface ClientBuilder {
      * @param privateKeyFile representing the private key (PEM file) file object.
      * @return the ClientBuilder instance for method chaining.
      *
-     * @since 3.0.0-SNAPSHOT
+     * @since 3.0.0
      */
     ClientBuilder setPrivateKey(File privateKeyFile);
 
@@ -357,7 +357,7 @@ public interface ClientBuilder {
      * @param privateKeyPath representing the path to private key PEM file.
      * @return the ClientBuilder instance for method chaining.
      *
-     * @since 3.0.0-SNAPSHOT
+     * @since 3.0.0
      */
     ClientBuilder setPrivateKey(Path privateKeyPath);
 
@@ -369,7 +369,7 @@ public interface ClientBuilder {
      * @param privateKeyStream representing an InputStream with private key PEM file content.
      * @return the ClientBuilder instance for method chaining.
      *
-     * @since 3.0.0-SNAPSHOT
+     * @since 3.0.0
      */
     ClientBuilder setPrivateKey(InputStream privateKeyStream);
 
@@ -381,7 +381,7 @@ public interface ClientBuilder {
      * @param privateKey representing an PrivateKey PEM file.
      * @return the ClientBuilder instance for method chaining.
      *
-     * @since 3.0.0-SNAPSHOT
+     * @since 3.0.0
      */
     ClientBuilder setPrivateKey(PrivateKey privateKey);
 
