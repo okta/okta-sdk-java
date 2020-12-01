@@ -133,7 +133,11 @@ Client client = Clients.builder()
     .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
     .setClientId("{clientId}")
     .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
-    .setPrivateKey("/path/to/yourPrivateKey.pem") // (or) .setPrivateKey("full PEM payload");
+    .setPrivateKey("/path/to/yourPrivateKey.pem")
+    // (or) .setPrivateKey("full PEM payload")
+    // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
+    // (or) .setPrivateKey(inputStream)
+    // (or) .setPrivateKey(privateKey)
     .build();
 ```
 [//]: # (end: createOAuth2Client)
