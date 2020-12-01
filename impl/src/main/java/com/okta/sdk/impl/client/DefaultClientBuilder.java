@@ -471,6 +471,9 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     private String readFromInputStream(InputStream inputStream) throws IOException {
+        if (inputStream == null) {
+            throw new RuntimeException("InputStream cannot be null.");
+        }
         StringBuilder resultStringBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
