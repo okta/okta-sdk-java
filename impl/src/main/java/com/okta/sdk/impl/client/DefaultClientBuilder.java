@@ -434,14 +434,15 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     private String getFileContent(File file) {
-        try {
-            return readFromInputStream(new FileInputStream(file));
+        try (InputStream inputStream = new FileInputStream(file)) {
+            return readFromInputStream(inputStream);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     private String getFileContent(Path path) {
+        Assert.notNull(path, "path cannot be null.");
         return getFileContent(path.getFileName().toFile());
     }
 
