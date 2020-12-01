@@ -437,12 +437,13 @@ public class DefaultClientBuilder implements ClientBuilder {
         try (InputStream inputStream = new FileInputStream(file)) {
             return readFromInputStream(inputStream);
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new IllegalArgumentException("Could not read from supplied private key file");
         }
     }
 
     private String getFileContent(Path path) {
-        Assert.notNull(path, "path cannot be null.");
+        Assert.notNull(path, "The path to the privateKey cannot be null.");
+        Assert.notNull(path.getFileName(), "The path to privateKey file cannot be null.");
         return getFileContent(path.getFileName().toFile());
     }
 
@@ -450,7 +451,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         try {
             return readFromInputStream(privateKeyStream);
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new IllegalArgumentException("Could not read from supplied privateKey input stream");
         }
     }
 
