@@ -53,7 +53,8 @@ import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.LinkOption;
@@ -67,6 +68,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -404,6 +406,72 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setPrivateKey(privateKey);
         }
         return this;
+    }
+
+    @Override
+    public ClientBuilder setPrivateKey(File privateKeyFile) {
+        if (isOAuth2Flow()) {
+            Assert.notNull(privateKeyFile, "Missing privateKeyFile");
+            Assert.isTrue(privateKeyFile.exists(), "Missing privateKeyFile");
+            this.clientConfig.setPrivateKey(getFileContent(privateKeyFile));
+        }
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setPrivateKey(Path privateKeyPath) {
+        if (isOAuth2Flow()) {
+            Assert.notNull(privateKeyPath, "Missing privateKeyFile");
+            this.clientConfig.setPrivateKey(getFileContent(privateKeyPath));
+        }
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setPrivateKey(InputStream privateKeyStream) {
+        if (isOAuth2Flow()) {
+            Assert.notNull(privateKeyStream, "Missing privateKeyFile");
+            this.clientConfig.setPrivateKey(getFileContent(privateKeyStream));
+        }
+        return this;
+    }
+
+    private String getFileContent(File file) {
+        try {
+            return readFromInputStream(new FileInputStream(file));
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private String getFileContent(Path path) {
+        StringBuilder contentBuilder = new StringBuilder();
+        try (Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
+            stream.forEach(s -> contentBuilder.append(s).append("\n"));
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return contentBuilder.toString();
+    }
+
+    private String getFileContent(InputStream privateKeyStream) {
+        try {
+            return readFromInputStream(privateKeyStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private String readFromInputStream(InputStream inputStream) throws IOException {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                resultStringBuilder.append(line).append("\n");
+            }
+        }
+        return resultStringBuilder.toString();
     }
 
     @Override
