@@ -443,8 +443,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     private String getFileContent(Path path) {
         Assert.notNull(path, "The path to the privateKey cannot be null.");
-        Assert.notNull(path.getFileName(), "The path to privateKey file cannot be null.");
-        return getFileContent(path.getFileName().toFile());
+        return getFileContent(path.toFile());
     }
 
     private String getFileContent(InputStream privateKeyStream) {
