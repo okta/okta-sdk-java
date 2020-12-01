@@ -18,10 +18,10 @@ Below method has been added.
 - `void deleteIdentityProviderKey(String keyId)`
    
 Below methods have undergone a signature change.
-- `listGroups(String q, String filter)` signature changed to `listGroups(String q, String filter, String expand)`
-    - New param `expand` has been added. It's optional and would need to be specified only while using search queries. 
+- `listGroups(String groupName, String filter)` signature changed to `listGroups(String groupName, String filter, String expand)`
+    - New param `expand` has been added. It is `optional` and would need to be specified only while using search queries. 
 
-- `listPolicies(String s)` return type changed from `com.okta.sdk.resource.policy.PolicyList` to `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyList`
+- `listPolicies(String type)` return type changed from `com.okta.sdk.resource.policy.PolicyList` to `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyList`
 
 ### Package `com.okta.sdk.resource.application.AcsEndpoint`
 
@@ -33,7 +33,6 @@ This is a newly created interface with methods listed below.
 
 ### Package `com.okta.sdk.resource.application.Application` 
 
-Below method has been added.
 - Added `ApplicationGroupAssignment createApplicationGroupAssignment(String groupId)` method.
     - This method allows assigning a group to an Application.
 
@@ -62,7 +61,7 @@ This is a newly created interface with methods listed below.
 With the introduction of enum type `OpenIdConnectRefreshTokenRotationType`, 
 operations `getRotationType()` and `setRotationType(OpenIdConnectRefreshTokenRotationType rotationType)` will use this new enum type.
 
-Enum `OpenIdConnectRefreshTokenRotationType` has 2 fields listed below.
+Enum `OpenIdConnectRefreshTokenRotationType` has the below fields defined:
 - `ROTATE("rotate")`
 - `STATIC("static")`
    
@@ -127,7 +126,7 @@ This is a newly created interface with methods listed below.
 With the introduction of enum type `AuthorizationServerPolicy$StatusEnum`, 
 operations `getStatus()` and `setStatus(StatusEnum status)` will use this new enum type.
 
-Enum `StatusEnum` has 2 fields listed below.
+Enum `StatusEnum` has below fields defined:
 - `ACTIVE("ACTIVE")`
 - `INACTIVE("INACTIVE")`
 
@@ -159,7 +158,7 @@ This is a newly created interface with methods listed below.
 With the introduction of enum type `AuthorizationServerPolicyRule$StatusEnum`, operations `getStatus()` and `setStatus(StatusEnum status)` 
 will use this new enum type.
 
-Enum `StatusEnum` has 2 fields listed below.
+Enum `StatusEnum` has below fields defined:
 - `ACTIVE("ACTIVE")`
 - `INACTIVE("INACTIVE")`
 
@@ -219,7 +218,7 @@ This is a newly created interface with methods listed below.
 
 Below method has undergone a signature change.
 - `getExpiresAt()` return type changed from `String` to `Date`
-   - The property's `expiresAt` type contains a date-time string, so it's convenient to use the `Date` type
+   - The property's `expiresAt` type is a date-time string, so it becomes convenient to use `Date` type
    
 ### Package `com.okta.sdk.resource.user.PasswordCredentialHash`
 
