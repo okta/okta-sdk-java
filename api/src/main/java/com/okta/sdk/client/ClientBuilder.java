@@ -23,6 +23,7 @@ import com.okta.sdk.cache.CacheManager;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.security.PrivateKey;
 import java.util.Set;
 
 /**
@@ -371,6 +372,18 @@ public interface ClientBuilder {
      * @since 3.0.0-SNAPSHOT
      */
     ClientBuilder setPrivateKey(InputStream privateKeyStream);
+
+    /**
+     * Allows specifying the private key (PEM file) path (for private key jwt authentication) directly instead
+     * of relying on the default location + override/fallback behavior defined
+     * in the {@link ClientBuilder documentation above}.
+     *
+     * @param privateKey representing an PrivateKey PEM file.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 3.0.0-SNAPSHOT
+     */
+    ClientBuilder setPrivateKey(PrivateKey privateKey);
 
     /**
      * Allows specifying the client ID instead of relying on the default location + override/fallback behavior defined

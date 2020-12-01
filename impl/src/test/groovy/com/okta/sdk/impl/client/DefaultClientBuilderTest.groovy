@@ -399,6 +399,24 @@ class DefaultClientBuilderTest {
     }
 
     @Test
+    void testOAuth2SemanticallyValidInputParams_withPrivateKeyPem() {
+        clearOktaEnvAndSysProps()
+
+        PrivateKey privateKey = generatePrivateKey("RSA", 2048)
+
+        // expected because the URL is not an actual endpoint
+        Util.expect(OAuth2TokenRetrieverException) {
+            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+                .setOrgUrl("https://okta.example.com")
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+                .setClientId("client12345")
+                .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
+                .setPrivateKey(privateKey)
+                .build()
+        }
+    }
+
+    @Test
     void testOAuth2WithEnvVariables() {
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_ORGURL",
             "https://okta.example.com")
@@ -434,6 +452,14 @@ class DefaultClientBuilderTest {
         File file = File.createTempFile(fileNamePrefix,fileNameSuffix)
         file.write(encodedString)
         return file
+    }
+
+    static generatePrivateKey(String algorithm, int keySize) {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(algorithm)
+        keyGen.initialize(keySize)
+        KeyPair key = keyGen.generateKeyPair()
+        PrivateKey privateKey = key.getPrivate()
+        return privateKey
     }
 
     static ResourceFactory noDefaultYamlNoAppYamlResourceFactory() {

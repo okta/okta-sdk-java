@@ -60,13 +60,8 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.security.PrivateKey;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -432,6 +427,18 @@ public class DefaultClientBuilder implements ClientBuilder {
         if (isOAuth2Flow()) {
             Assert.notNull(privateKeyStream, "Missing privateKeyFile");
             this.clientConfig.setPrivateKey(getFileContent(privateKeyStream));
+        }
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setPrivateKey(PrivateKey privateKey) {
+        if (isOAuth2Flow()) {
+            Assert.notNull(privateKey, "Missing privateKeyFile");
+            String encodedString = "-----BEGIN PRIVATE KEY-----\n";
+            encodedString = encodedString + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n";
+            encodedString = encodedString + "-----END PRIVATE KEY-----\n";
+            this.clientConfig.setPrivateKey(encodedString);
         }
         return this;
     }
