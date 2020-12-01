@@ -453,14 +453,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     private String getFileContent(Path path) {
-        StringBuilder contentBuilder = new StringBuilder();
-        try (Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
-            stream.forEach(s -> contentBuilder.append(s).append("\n"));
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-
-        return contentBuilder.toString();
+        return getFileContent(path.getFileName().toFile());
     }
 
     private String getFileContent(InputStream privateKeyStream) {
