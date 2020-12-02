@@ -48,22 +48,21 @@ import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
+import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.security.PrivateKey;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -79,6 +78,9 @@ import java.util.concurrent.TimeUnit;
  * <li>System Properties</li>
  * <li>Programmatically</li>
  * </ul>
+ *
+ * Please be aware that, in general, loading secrets (such as api-keys or PEM-content) from environment variables
+ * or system properties can lead to those secrets being leaked.
  *
  * @since 0.5.0
  */
@@ -353,10 +355,20 @@ public class DefaultClientBuilder implements ClientBuilder {
         Assert.notNull(clientConfiguration.getClientId(), "clientId cannot be null");
         Assert.isTrue(clientConfiguration.getScopes() != null && !clientConfiguration.getScopes().isEmpty(),
             "At least one scope is required");
-        Assert.notNull(clientConfiguration.getPrivateKey(), "privateKey cannot be null");
-        Path privateKeyPemFilePath = Paths.get(clientConfiguration.getPrivateKey());
-        boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, new LinkOption[]{ LinkOption.NOFOLLOW_LINKS });
-        Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
+        String privateKey = clientConfiguration.getPrivateKey();
+        Assert.hasText(privateKey, "privateKey cannot be null (either PEM file path (or) full PEM content must be supplied)");
+
+        if (!ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
+            // privateKey is a file path, check if the file exists
+            Path privateKeyPemFilePath;
+            try {
+                privateKeyPemFilePath = Paths.get(privateKey);
+            } catch (InvalidPathException ipe) {
+                throw new IllegalArgumentException("Invalid privateKey file path", ipe);
+            }
+            boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, LinkOption.NOFOLLOW_LINKS);
+            Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
+        }
     }
 
     @Override
@@ -389,6 +401,80 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setPrivateKey(privateKey);
         }
         return this;
+    }
+
+    @Override
+    public ClientBuilder setPrivateKey(Path privateKeyPath) {
+        if (isOAuth2Flow()) {
+            Assert.notNull(privateKeyPath, "Missing privateKeyFile");
+            this.clientConfig.setPrivateKey(getFileContent(privateKeyPath));
+        }
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setPrivateKey(InputStream privateKeyStream) {
+        if (isOAuth2Flow()) {
+            Assert.notNull(privateKeyStream, "Missing privateKeyFile");
+            this.clientConfig.setPrivateKey(getFileContent(privateKeyStream));
+        }
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setPrivateKey(PrivateKey privateKey) {
+        if (isOAuth2Flow()) {
+            Assert.notNull(privateKey, "Missing privateKeyFile");
+            String algorithm = privateKey.getAlgorithm();
+            if (algorithm.equals("RSA")) {
+                String encodedString = ConfigUtil.RSA_PRIVATE_KEY_HEADER + "\n"
+                    + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
+                    + ConfigUtil.RSA_PRIVATE_KEY_FOOTER;
+                this.clientConfig.setPrivateKey(encodedString);
+            } else if(algorithm.equals("EC")) {
+                String encodedString = ConfigUtil.EC_PRIVATE_KEY_HEADER + "\n"
+                    + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
+                    + ConfigUtil.EC_PRIVATE_KEY_FOOTER;
+                this.clientConfig.setPrivateKey(encodedString);
+            } else {
+                throw new IllegalArgumentException("Supplied privateKey is not an RSA or EC key - " + algorithm);
+            }
+        }
+        return this;
+    }
+
+    private String getFileContent(File file) {
+        try (InputStream inputStream = new FileInputStream(file)) {
+            return readFromInputStream(inputStream);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not read from supplied private key file");
+        }
+    }
+
+    private String getFileContent(Path path) {
+        Assert.notNull(path, "The path to the privateKey cannot be null.");
+        return getFileContent(path.toFile());
+    }
+
+    private String getFileContent(InputStream privateKeyStream) {
+        try {
+            return readFromInputStream(privateKeyStream);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not read from supplied privateKey input stream");
+        }
+    }
+
+    private String readFromInputStream(InputStream inputStream) throws IOException {
+        Assert.notNull(inputStream, "InputStream cannot be null.");
+        StringBuilder resultStringBuilder = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+            inputStream, Charset.forName(StandardCharsets.UTF_8.name())))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                resultStringBuilder.append(line).append("\n");
+            }
+        }
+        return resultStringBuilder.toString();
     }
 
     @Override
