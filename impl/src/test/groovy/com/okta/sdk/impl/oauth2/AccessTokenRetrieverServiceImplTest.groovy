@@ -77,8 +77,9 @@ class AccessTokenRetrieverServiceImplTest {
     void testParsePrivateKey() {
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
+        Reader reader = new BufferedReader(new FileReader(privateKeyPemFile))
 
-        PrivateKey parsedPrivateKey = getAccessTokenRetrieverServiceInstance().parsePrivateKey(privateKeyPemFile.path)
+        PrivateKey parsedPrivateKey = getAccessTokenRetrieverServiceInstance().parsePrivateKey(reader)
 
         privateKeyPemFile.deleteOnExit()
 
@@ -132,6 +133,32 @@ class AccessTokenRetrieverServiceImplTest {
         assertThat(claims.get("sub"), notNullValue())
         assertEquals(claims.get("sub"), clientConfig.getClientId(), "sub must be equal to client id")
         assertThat(claims.get("jti"), notNullValue())
+    }
+
+    @Test
+    void testCreateSignedJWTUsingPrivateKeyFromString() {
+        def clientConfig = mock(ClientConfiguration)
+
+        PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
+
+        String baseUrl = "https://sample.okta.com"
+        BaseUrlResolver baseUrlResolver = new BaseUrlResolver() {
+            @Override
+            String getBaseUrl() {
+                return baseUrl
+            }
+        }
+
+        when(clientConfig.getBaseUrl()).thenReturn(baseUrl)
+        when(clientConfig.getClientId()).thenReturn("client12345")
+        when(clientConfig.getPrivateKey()).thenReturn(createPemFileContent(generatedPrivateKey))
+        when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
+        when(clientConfig.getClientCredentialsResolver()).thenReturn(
+            new DefaultClientCredentialsResolver({ -> Optional.empty() }))
+
+        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfig).createSignedJWT()
+
+        assertThat(signedJwt, notNullValue())
     }
 
     @Test(expectedExceptions = OAuth2TokenRetrieverException.class)
@@ -227,12 +254,16 @@ class AccessTokenRetrieverServiceImplTest {
         return privateKey
     }
 
-    File writePrivateKeyToPemFile(PrivateKey privateKey, String fileNamePrefix) {
+    String createPemFileContent(PrivateKey privateKey) {
         String encodedString = "-----BEGIN PRIVATE KEY-----\n"
         encodedString = encodedString + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
         encodedString = encodedString + "-----END PRIVATE KEY-----\n"
+        return encodedString
+
+    }
+    File writePrivateKeyToPemFile(PrivateKey privateKey, String fileNamePrefix) {
         File privateKeyPemFile = File.createTempFile(fileNamePrefix,".pem")
-        privateKeyPemFile.write(encodedString)
+        privateKeyPemFile.write(createPemFileContent(privateKey))
         return privateKeyPemFile
     }
 

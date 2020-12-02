@@ -23,6 +23,7 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.error.DefaultError;
+import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.resource.ExtensibleResource;
 import com.okta.sdk.resource.ResourceException;
 import io.jsonwebtoken.Jwts;
@@ -35,9 +36,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -130,7 +131,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      */
     String createSignedJWT() throws InvalidKeyException, IOException {
         String clientId = tokenClientConfiguration.getClientId();
-        PrivateKey privateKey = parsePrivateKey(tokenClientConfiguration.getPrivateKey());
+        PrivateKey privateKey = parsePrivateKey(getPemReader());
         Instant now = Instant.now();
 
         String jwt = Jwts.builder()
@@ -147,20 +148,16 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     }
 
     /**
-     * Parse private key from the supplied path.
+     * Parse private key from the supplied configuration.
      *
-     * @param privateKeyFilePath
+     * @param pemReader a {@link Reader} that has access to a full PEM resource
      * @return {@link PrivateKey}
      * @throws IOException
      * @throws InvalidKeyException
      */
-    PrivateKey parsePrivateKey(String privateKeyFilePath) throws IOException, InvalidKeyException {
-        Assert.notNull(privateKeyFilePath, "privateKeyFilePath may not be null");
+    PrivateKey parsePrivateKey(Reader pemReader) throws IOException, InvalidKeyException {
 
-        Path privateKeyPemFilePath = Paths.get(privateKeyFilePath);
-        Reader reader = Files.newBufferedReader(privateKeyPemFilePath, Charset.defaultCharset());
-
-        PrivateKey privateKey = getPrivateKeyFromPEM(reader);
+        PrivateKey privateKey = getPrivateKeyFromPEM(pemReader);
         String algorithm = privateKey.getAlgorithm();
 
         if (!algorithm.equals("RSA") &&
@@ -169,6 +166,15 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         }
 
         return privateKey;
+    }
+
+    private Reader getPemReader() throws IOException {
+        String privateKey = tokenClientConfiguration.getPrivateKey();
+        if (ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
+            return new StringReader(privateKey);
+        } else {
+            return Files.newBufferedReader(Paths.get(privateKey), Charset.defaultCharset());
+        }
     }
 
     /**
