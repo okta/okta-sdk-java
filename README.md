@@ -454,6 +454,10 @@ okta:
     clientId: "yourClientId"
     scopes: "okta.users.read okta.apps.read"
     privateKey: "/path/to/yourPrivateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
+    # or set full PEM payload 
+    # privateKey: "-----BEGIN PRIVATE KEY-----\
+    #   MIIEvgIBADANBgkqhkiG9...\
+    #   -----END PRIVATE KEY-----"
     requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4
