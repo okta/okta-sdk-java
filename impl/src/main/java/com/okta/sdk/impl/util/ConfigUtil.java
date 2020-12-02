@@ -17,6 +17,11 @@ package com.okta.sdk.impl.util;
 
 public class ConfigUtil {
 
+    public static final String RSA_PRIVATE_KEY_HEADER = "-----BEGIN RSA PRIVATE KEY-----";
+    public static final String RSA_PRIVATE_KEY_FOOTER = "-----END RSA PRIVATE KEY-----";
+    public static final String EC_PRIVATE_KEY_HEADER = "-----BEGIN EC PRIVATE KEY-----";
+    public static final String EC_PRIVATE_KEY_FOOTER = "-----END EC PRIVATE KEY-----";
+
     /**
      * Check if the PEM key has BEGIN content wrapper.
      *

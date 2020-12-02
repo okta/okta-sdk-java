@@ -425,10 +425,20 @@ public class DefaultClientBuilder implements ClientBuilder {
     public ClientBuilder setPrivateKey(PrivateKey privateKey) {
         if (isOAuth2Flow()) {
             Assert.notNull(privateKey, "Missing privateKeyFile");
-            String encodedString = "-----BEGIN PRIVATE KEY-----\n";
-            encodedString = encodedString + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n";
-            encodedString = encodedString + "-----END PRIVATE KEY-----\n";
-            this.clientConfig.setPrivateKey(encodedString);
+            String algorithm = privateKey.getAlgorithm();
+            if (algorithm.equals("RSA")) {
+                String encodedString = ConfigUtil.RSA_PRIVATE_KEY_HEADER + "\n"
+                    + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
+                    + ConfigUtil.RSA_PRIVATE_KEY_FOOTER;
+                this.clientConfig.setPrivateKey(encodedString);
+            } else if(algorithm.equals("EC")) {
+                String encodedString = ConfigUtil.EC_PRIVATE_KEY_HEADER + "\n"
+                    + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
+                    + ConfigUtil.EC_PRIVATE_KEY_FOOTER;
+                this.clientConfig.setPrivateKey(encodedString);
+            } else {
+                throw new IllegalArgumentException("Supplied privateKey is not an RSA or EC key - " + algorithm);
+            }
         }
         return this;
     }
