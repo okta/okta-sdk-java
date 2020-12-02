@@ -413,15 +413,6 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
-    public ClientBuilder setPrivateKey(InputStream privateKeyStream) {
-        if (isOAuth2Flow()) {
-            Assert.notNull(privateKeyStream, "Missing privateKeyFile");
-            this.clientConfig.setPrivateKey(getFileContent(privateKeyStream));
-        }
-        return this;
-    }
-
-    @Override
     public ClientBuilder setPrivateKey(PrivateKey privateKey) {
         if (isOAuth2Flow()) {
             Assert.notNull(privateKey, "Missing privateKeyFile");
@@ -454,14 +445,6 @@ public class DefaultClientBuilder implements ClientBuilder {
     private String getFileContent(Path path) {
         Assert.notNull(path, "The path to the privateKey cannot be null.");
         return getFileContent(path.toFile());
-    }
-
-    private String getFileContent(InputStream privateKeyStream) {
-        try {
-            return readFromInputStream(privateKeyStream);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Could not read from supplied privateKey input stream");
-        }
     }
 
     private String readFromInputStream(InputStream inputStream) throws IOException {

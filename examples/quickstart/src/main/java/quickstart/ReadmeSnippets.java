@@ -76,7 +76,6 @@ public class ReadmeSnippets {
             .setPrivateKey("/path/to/yourPrivateKey.pem")
             // (or) .setPrivateKey("full PEM payload");
             // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"));
-            // (or) .setPrivateKey(inputStream);
             // (or) .setPrivateKey(privateKey);
             .build();
     }
