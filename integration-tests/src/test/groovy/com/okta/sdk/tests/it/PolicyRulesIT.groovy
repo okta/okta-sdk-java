@@ -93,6 +93,18 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
     }
 
     @Test
+    void listPolicyRulesTest() {
+        def group = randomGroup()
+        def policy = randomSignOnPolicy(group.getId())
+
+        policy.listPolicyRules().forEach({policyItem ->
+            assertThat(policyItem, notNullValue())
+            assertThat(policyItem.getId(), notNullValue())
+            assertThat(policyItem, instanceOf(Policy.class))
+        })
+    }
+
+    @Test
     void createPasswordPolicyRule() {
 
         def group = randomGroup()
