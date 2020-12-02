@@ -134,6 +134,10 @@ Client client = Clients.builder()
     .setClientId("{clientId}")
     .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
     .setPrivateKey("/path/to/yourPrivateKey.pem")
+    // (or) .setPrivateKey("full PEM payload")
+    // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
+    // (or) .setPrivateKey(inputStream)
+    // (or) .setPrivateKey(privateKey)
     .build();
 ```
 [//]: # (end: createOAuth2Client)
@@ -449,7 +453,14 @@ okta:
     authorizationMode: "PrivateKey"
     clientId: "yourClientId"
     scopes: "okta.users.read okta.apps.read"
-    privateKey: "/path/to/yourPrivateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
+    privateKey: |
+      -----BEGIN PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn
+      ...b3BlbnNzaC1rZXktdjEAAAAAAAAAAAAABAAABFwAAAAdzc2gtcn-myN3AmcmmPMS...
+      CO7Hnjlg77HRNFXPAAAAFWxrYW1pcmVkZHlAdm13YXJlLmNvbQECAwQF
+      -----END PRIVATE KEY-----
+    # or specify a path to a PEM file
+    # privateKey: "/path/to/yourPrivateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
     requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4

@@ -20,6 +20,9 @@ import com.okta.commons.http.config.Proxy;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.security.PrivateKey;
 import java.util.Set;
 
 /**
@@ -325,12 +328,49 @@ public interface ClientBuilder {
      * of relying on the default location + override/fallback behavior defined
      * in the {@link ClientBuilder documentation above}.
      *
-     * @param privateKey the fully qualified string path to the private key (PEM file).
+     * @param privateKey either the fully qualified string path to the private key PEM file (or)
+     *                   the full PEM payload content.
      * @return the ClientBuilder instance for method chaining.
      *
      * @since 1.6.0
      */
     ClientBuilder setPrivateKey(String privateKey);
+
+    /**
+     * Allows specifying the private key (PEM file) path (for private key jwt authentication) directly instead
+     * of relying on the default location + override/fallback behavior defined
+     * in the {@link ClientBuilder documentation above}.
+     *
+     * @param privateKeyPath representing the path to private key PEM file.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 3.0.0
+     */
+    ClientBuilder setPrivateKey(Path privateKeyPath);
+
+    /**
+     * Allows specifying the private key (PEM file) path (for private key jwt authentication) directly instead
+     * of relying on the default location + override/fallback behavior defined
+     * in the {@link ClientBuilder documentation above}.
+     *
+     * @param privateKeyInputStream representing an InputStream with private key PEM file content.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 3.0.0
+     */
+    ClientBuilder setPrivateKey(InputStream privateKeyInputStream);
+
+    /**
+     * Allows specifying the private key (PEM file) path (for private key jwt authentication) directly instead
+     * of relying on the default location + override/fallback behavior defined
+     * in the {@link ClientBuilder documentation above}.
+     *
+     * @param privateKey the {@link java.security.PrivateKey} instance.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 3.0.0
+     */
+    ClientBuilder setPrivateKey(PrivateKey privateKey);
 
     /**
      * Allows specifying the client ID instead of relying on the default location + override/fallback behavior defined
