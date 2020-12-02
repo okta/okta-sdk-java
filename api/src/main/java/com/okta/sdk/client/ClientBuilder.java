@@ -353,19 +353,19 @@ public interface ClientBuilder {
      * of relying on the default location + override/fallback behavior defined
      * in the {@link ClientBuilder documentation above}.
      *
-     * @param privateKeyStream representing an InputStream with private key PEM file content.
+     * @param privateKeyInputStream representing an InputStream with private key PEM file content.
      * @return the ClientBuilder instance for method chaining.
      *
      * @since 3.0.0
      */
-    ClientBuilder setPrivateKey(InputStream privateKeyStream);
+    ClientBuilder setPrivateKey(InputStream privateKeyInputStream);
 
     /**
      * Allows specifying the private key (PEM file) path (for private key jwt authentication) directly instead
      * of relying on the default location + override/fallback behavior defined
      * in the {@link ClientBuilder documentation above}.
      *
-     * @param privateKey representing an PrivateKey PEM file.
+     * @param privateKey the {@link java.security.PrivateKey} instance.
      * @return the ClientBuilder instance for method chaining.
      *
      * @since 3.0.0
