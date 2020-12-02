@@ -23,6 +23,15 @@ Below methods have undergone a signature change.
 
 - `listPolicies(String type)` return type changed from `com.okta.sdk.resource.policy.PolicyList` to `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyList`
 
+### Package `com.okta.sdk.impl.client.DefaultClientBuilder`
+
+The method `ClientBuilder setPrivateKey(String privateKey)` has been overloaded.
+- The method `ClientBuilder setPrivateKey(String privateKey)` could be used to set a path to private key PEM file.
+- Also, the method `ClientBuilder setPrivateKey(String privateKey)` could be used to set full PEM payload.
+- The method `ClientBuilder setPrivateKey(Path privateKeyPath)` allows setting a path to private key PEM file.
+- The method `ClientBuilder setPrivateKey(InputStream privateKeyStream)` allows setting an InputStream with private key PEM file content.
+- The method `ClientBuilder setPrivateKey(PrivateKey privateKey)` allows setting the privateKey instance.
+
 ### Package `com.okta.sdk.resource.application.AcsEndpoint`
 
 This is a newly created interface with methods listed below.
