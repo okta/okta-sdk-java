@@ -35,7 +35,7 @@ You can learn more on the [Okta + Java][lang-landing] page in our documentation.
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The current stable major version series is: 2.x.x
+:heavy_check_mark: The current stable major version series is: 3.x.x
 
 | Version | Status                    |
 | ------- | ------------------------- |
