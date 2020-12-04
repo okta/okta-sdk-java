@@ -39,7 +39,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 
 | Version | Status                    |
 | ------- | ------------------------- |
-| 0.0.x | :warning: Retired ([migration guide](https://github.com//okta/okta-sdk-java/wiki/Migration-from-v0.0.4-to-1.x)) |
+| 0.0.x | :warning: Retired |
 | 1.x   | :clock9: Retiring effective April 07, 2021 |
 | 2.x.x | :clock9: Retiring effective September 03, 2021 |
 | 3.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-2xx-to-300)) |
