@@ -39,7 +39,7 @@
         <snakeyaml.version>1.26</snakeyaml.version>
         <bouncycastle.version>1.66</bouncycastle.version>
         <jjwt.version>0.11.1</jjwt.version>
-        <okta.sdk.previousVersion>2.0.0</okta.sdk.previousVersion>
+        <okta.sdk.previousVersion>3.0.0</okta.sdk.previousVersion>
         <otka.commons.version>1.2.4</otka.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
@@ -343,7 +343,7 @@
                         </oldVersion>
                         <parameter>
                             <onlyModified>true</onlyModified>
-                            <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications> <!-- TODO: revert to true after v3.0.0 major release -->
+                            <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                             <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
                             <postAnalysisScript>${root.dir}/src/japicmp/postAnalysisScript.groovy</postAnalysisScript>
                         </parameter>
