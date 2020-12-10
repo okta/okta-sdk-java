@@ -219,6 +219,9 @@ class AuthorizationServerIT extends ITSupport {
         registerForCleanup(createdAuthorizationServer)
         assertThat(createdAuthorizationServer, notNullValue())
 
+        // create may not effect immediately in the backend
+        sleep(getTestOperationDelay())
+
         AuthorizationServerList authorizationServerList = client.listAuthorizationServers()
         assertThat(authorizationServerList, notNullValue())
         assertThat(authorizationServerList.size(), greaterThan(0))
