@@ -10,6 +10,7 @@
 * [Need help?](#need-help)
 * [Getting started](#getting-started)
 * [Usage guide](#usage-guide)
+* [Spring Support](#spring-support)
 * [Configuration reference](#configuration-reference)
 * [Building the SDK](#building-the-sdk)
 * [Contributing](#contributing)
@@ -34,13 +35,14 @@ You can learn more on the [Okta + Java][lang-landing] page in our documentation.
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The current stable major version series is: 1.x
+:heavy_check_mark: The current stable major version series is: 3.x.x
 
 | Version | Status                    |
 | ------- | ------------------------- |
-| 0.0.x | :warning: Retired ([migration guide](https://github.com//okta/okta-sdk-java/wiki/Migration-from-v0.0.4-to-1.x)) |
+| 0.0.x | :warning: Retired |
 | 1.x   | :clock9: Retiring effective April 07, 2021 |
-| 2.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md)) |
+| 2.x.x | :clock9: Retiring effective September 03, 2021 |
+| 3.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-2xx-to-300)) |
  
 The latest release can always be found on the [releases page][github-releases].
  
@@ -52,7 +54,11 @@ If you run into problems using the SDK, you can
 * Post [issues][github-issues] here on GitHub (for code errors)
  
 ## Getting started
- 
+
+### Prerequisites
+
+* JDK 8 or later
+
 To use this SDK, you will need to include the following dependencies:
 
 For Apache Maven:
@@ -117,7 +123,7 @@ Hard-coding the Okta domain and API token works for quick tests, but for real pr
 
 Okta allows you to interact with Okta APIs using scoped OAuth 2.0 access tokens. Each access token enables the bearer to perform specific actions on specific Okta endpoints, with that ability controlled by which scopes the access token contains.
 
-This SDK supports this feature only for service-to-service applications. Check out [our guides](https://developer.okta.com/docs/guides/implement-oauth-for-okta/overview/) to learn more about how to register a new service application using a private and public key pair.
+This SDK supports this feature only for service-to-service applications. Check out [our guides](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/overview/) to learn more about how to register a new service application using a private and public key pair.
 
 When using this approach, you won't need an API Token because the SDK will request an access token for you. In order to use OAuth 2.0, construct a client instance by passing the following parameters:
 
@@ -129,6 +135,10 @@ Client client = Clients.builder()
     .setClientId("{clientId}")
     .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
     .setPrivateKey("/path/to/yourPrivateKey.pem")
+    // (or) .setPrivateKey("full PEM payload")
+    // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
+    // (or) .setPrivateKey(inputStream)
+    // (or) .setPrivateKey(privateKey)
     .build();
 ```
 [//]: # (end: createOAuth2Client)
@@ -345,6 +355,10 @@ ExtensibleResource result = client.http()
 ```
 [//]: # (end: callAnotherEndpoint)
 
+### Thread Safety
+
+Every instance of the SDK `Client` is thread-safe. You **should** use the same instance throughout the entire lifecycle of your application. Each instance has its own Connection pool and Caching resources that are automatically released when the instance is garbage collected.
+
 ## Paging
 
 Paging is handled automatically when iterating over a any collection.
@@ -366,6 +380,32 @@ for (User tmpUser : users) {
 users.stream().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
 ```
 [//]: # (end: paging)
+
+<a name="spring-support"></a>
+## Inject the Okta Java SDK in Spring
+
+To integrate the Okta Java SDK into your Spring Boot application you just need to add a dependency:
+
+```xml
+<dependency>
+    <groupId>com.okta.spring</groupId>
+    <artifactId>okta-spring-sdk</artifactId>
+    <version>${okta.spring.version}</version>
+</dependency>
+```
+
+Then define the following properties:
+
+| Key | Description |
+------|--------------
+| `okta.client.orgUrl` | Your Okta Url: `https://{yourOktaDomain}`, i.e. `https://dev-123456.okta.com` |
+| `okta.client.token` | An Okta API token, see [creating an API token](https://developer.okta.com/docs/api/getting_started/getting_a_token) for more info. |
+
+**NOTE:** The configuration techniques described in the [configuration reference](#configuration-reference) section will work as well.
+
+All that is left is to inject the client (`com.okta.sdk.client.Client`)! Take a look at [this post](https://spring.io/blog/2007/07/11/setter-injection-versus-constructor-injection-and-the-use-of-required/) for more info on the best way to inject your beans.
+
+For more information check out the [Okta Spring Boot Starter](https://github.com/okta/okta-spring-boot/) project!
 
 ## Configuration reference
   
@@ -414,7 +454,14 @@ okta:
     authorizationMode: "PrivateKey"
     clientId: "yourClientId"
     scopes: "okta.users.read okta.apps.read"
-    privateKey: "/path/to/yourPrivateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
+    privateKey: |
+      -----BEGIN PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn
+      ...b3BlbnNzaC1rZXktdjEAAAAAAAAAAAAABAAABFwAAAAdzc2gtcn-myN3AmcmmPMS...
+      CO7Hnjlg77HRNFXPAAAAFWxrYW1pcmVkZHlAdm13YXJlLmNvbQECAwQF
+      -----END PRIVATE KEY-----
+    # or specify a path to a PEM file
+    # privateKey: "/path/to/yourPrivateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
     requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4
@@ -430,16 +477,61 @@ Each one of the configuration values above can be turned into an environment var
 
 ### System properties
 
-Each one of of the configuration values written in 'dot' notation to be used as a Java system property:
+Each one of the configuration values written in 'dot' notation to be used as a Java system property:
 * `okta.client.connectionTimeout`
 * `okta.client.token`
 * and so on
 
 ## Connection Retry / Rate Limiting
 
-By default this SDK will retry requests that are return with a `503`, `504`, `429`, or socket/connection exceptions.  To disable this functionality set `okta.client.requestTimeout` and `okta.client.rateLimit.maxRetries` to `0`.
+By default, this SDK will retry requests that return with response code `503`, `504`, `429`, or socket/connection exceptions.
 
-Setting only one of the values to zero will disable that check. Meaning, by default, four retry attempts will be made. If you set `okta.client.requestTimeout` to `45` seconds and `okta.client.rateLimit.maxRetries` to `0`. This SDK will continue to retry indefinitely for `45` seconds.  If both values are non zero, this SDK will attempt to retry until either of the conditions are met (not both).
+Default configuration tells SDK to retry requests up to 4 times without time limitation:
+```properties
+okta.client.requestTimeout = 0 //Sets the maximum number of seconds to wait when retrying before giving up.
+okta.client.rateLimit.maxRetries = 4 //Sets the maximum number of attempts to retrying before giving up.
+```
+
+For interactive clients (i.e. web pages) it is optimal to set `requestTimeout` to be 10 sec (or less, based on your needs), and the `maxRetries` attempts to be 0.
+This means the requests will retry as many times as possible within 10 seconds:
+
+```properties
+okta.client.requestTimeout = 10
+okta.client.rateLimit.maxRetries = 0
+```
+
+or
+ 
+```java
+import com.okta.sdk.client.Client;
+import com.okta.sdk.client.Clients;
+
+Client client = Clients.builder()
+                .setRetryMaxElapsed(10)
+                .setRetryMaxAttempts(0)
+                .build();
+```
+
+For batch/non-interactive processes optimal values are opposite. It is optimal to set `requestTimeout` to be 0, and the `maxRetries` attempts to be 5.
+The SDK will retry requests up to 5 times before failing:
+```properties
+okta.client.requestTimeout = 0
+okta.client.rateLimit.maxRetries = 5
+```
+
+If you need to limit execution time and retry attempts, you can set both `requestTimeout` and the `maxRetries`.
+For example, the following example would retry up to 15 times within 30 seconds:
+```properties
+okta.client.requestTimeout = 30
+okta.client.rateLimit.maxRetries = 15
+```
+
+To disable the retry functionality you need to set both variables to zero:
+```properties
+okta.client.requestTimeout = 0
+okta.client.rateLimit.maxRetries = 0
+```
+
 
 ## Caching
 

@@ -38,7 +38,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
-            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
             .setRequireFactor(false)
         .buildAndCreate(client, crudTestPolicy);
 
@@ -77,7 +77,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
-            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
             .setRequireFactor(false)
             .setStatus(PolicyRule.StatusEnum.INACTIVE)
         .buildAndCreate(client, policy);
@@ -90,6 +90,18 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         policyRule.deactivate()
         policyRule = policy.getPolicyRule(policyRule.getId())
         assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.INACTIVE))
+    }
+
+    @Test
+    void listPolicyRulesTest() {
+        def group = randomGroup()
+        def policy = randomSignOnPolicy(group.getId())
+
+        policy.listPolicyRules().forEach({policyItem ->
+            assertThat(policyItem, notNullValue())
+            assertThat(policyItem.getId(), notNullValue())
+            assertThat(policyItem, instanceOf(Policy.class))
+        })
     }
 
     @Test
@@ -205,7 +217,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         assertThat policyRule.getActions().getSignon().getSession().getMaxSessionIdleMinutes(), is(720)
     }
 
-    @Test
+    @Test (groups = "bacon")
     void createOktaSignOnDenyPolicyRule() {
 
         def group = randomGroup()

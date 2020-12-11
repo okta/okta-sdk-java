@@ -313,4 +313,11 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             throw new RuntimeException("Failed to write discrimination map to json: "+ destFileJson.getAbsolutePath(), e);
         }
     }
+
+    @Override
+    protected Map<String, ?> reflectionConfig(String fqcn) {
+        Map<String, Object> data = new HashMap<>(super.reflectionConfig(fqcn));
+        data.put("allDeclaredConstructors", true);
+        return data;
+    }
 }

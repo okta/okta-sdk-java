@@ -17,7 +17,6 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.ResourceException
-
 import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
@@ -26,9 +25,8 @@ import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
 
-import static com.okta.sdk.tests.it.util.Util.assertPresent
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
-
+import static com.okta.sdk.tests.it.util.Util.assertPresent
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
@@ -350,8 +348,7 @@ class ApplicationsIT extends ITSupport {
         assertThat(client.getApplication(app.getId()).getStatus(), equalTo(Application.StatusEnum.ACTIVE))
     }
 
-    // disabled to do: https://github.com/okta/openapi/issues/107
-    @Test(enabled = false)
+    @Test
     void groupAssignmentWithNullBodyTest() {
 
         Application app = client.createApplication(client.instantiate(AutoLoginApplication)
@@ -374,7 +371,7 @@ class ApplicationsIT extends ITSupport {
         registerForCleanup(app)
         registerForCleanup(group)
 
-        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId(), null)
+        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId())
         assertThat(groupAssignment, notNullValue())
     }
 
@@ -411,12 +408,17 @@ class ApplicationsIT extends ITSupport {
         assertThat(groupAssignment.priority, equalTo(2))
         assertThat(app.listGroupAssignments().iterator().size(), equalTo(1))
 
+        ApplicationGroupAssignment receivedGroupAssignment = app.getApplicationGroupAssignment(group.getId())
+        assertThat(groupAssignment.getId(), equalTo(receivedGroupAssignment.getId()))
+        assertThat(groupAssignment.getPriority(), equalTo(receivedGroupAssignment.getPriority()))
+
         // delete the assignment
         groupAssignment.delete()
         assertThat(app.listGroupAssignments().iterator().size(), equalTo(0))
     }
 
-    @Test
+    // Remove this groups tag after OKTA-337342 is resolved (Adding this tag disables the test in bacon PDV)
+    @Test (groups = "bacon")
     void associateUserWithApplication() {
 
         Client client = getClient()

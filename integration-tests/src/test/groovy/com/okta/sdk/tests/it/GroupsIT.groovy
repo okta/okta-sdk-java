@@ -99,7 +99,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         validateGroup(group, groupName)
 
         // 2. Search the group by name
-        assertPresent(client.listGroups(groupName, null), group)
+        assertPresent(client.listGroups(groupName, null, null), group)
     }
 
     @Test

@@ -52,7 +52,7 @@ import static org.hamcrest.MatcherAssert.assertThat
 
 class FactorsIT extends ITSupport {
 
-    private String smsTestNumber = "162 840 01133"
+    private String smsTestNumber = "185 635 15491"
 
     @Test
     void factorListTest() {
