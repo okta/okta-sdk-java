@@ -141,6 +141,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             .setIssuer(clientId)
             .setSubject(clientId)
             .claim("jti", UUID.randomUUID().toString())
+            .setHeaderParam("kid", clientId + privateKey.hashCode())
             .signWith(privateKey)
             .compact();
 

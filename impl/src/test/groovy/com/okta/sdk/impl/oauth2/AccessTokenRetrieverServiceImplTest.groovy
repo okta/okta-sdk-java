@@ -23,6 +23,7 @@ import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.error.DefaultError
 import com.okta.sdk.resource.ResourceException
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
 import org.testng.annotations.Test
 
@@ -133,6 +134,13 @@ class AccessTokenRetrieverServiceImplTest {
         assertThat(claims.get("sub"), notNullValue())
         assertEquals(claims.get("sub"), clientConfig.getClientId(), "sub must be equal to client id")
         assertThat(claims.get("jti"), notNullValue())
+
+        Header header = Jwts.parser()
+            .setSigningKey(generatedPrivateKey)
+            .parseClaimsJws(signedJwt)
+            .getHeader()
+
+        assertThat(header.get("kid"), notNullValue())
     }
 
     @Test
