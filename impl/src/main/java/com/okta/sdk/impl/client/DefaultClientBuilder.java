@@ -239,41 +239,7 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setRetryMaxAttempts(Integer.parseInt(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME)));
         }
 
-        Map<String, String> requestExecutorParamsMap = new HashMap<>();
-
-        String maxPerRoute = lookupConfigValue(
-            props,
-            DEFAULT_REQUEST_EXECUTOR_MAX_CONNECTIONS_PER_ROUTE_PROPERTY_NAME,
-            HttpClientConfiguration.MAX_CONNECTIONS_PER_ROUTE_PROPERTY_KEY);
-        if(maxPerRoute != null) {
-            requestExecutorParamsMap.put("maxPerRoute", maxPerRoute);
-        }
-
-        String maxTotal = lookupConfigValue(
-            props,
-            DEFAULT_REQUEST_EXECUTOR_MAX_CONNECTIONS_TOTAL_PROPERTY_NAME,
-            HttpClientConfiguration.MAX_CONNECTIONS_TOTAL_PROPERTY_KEY);
-        if(maxTotal != null) {
-            requestExecutorParamsMap.put("maxTotal", maxTotal);
-        }
-
-        String validateAfterInactivity = lookupConfigValue(
-            props,
-            DEFAULT_REQUEST_EXECUTOR_CONNECTION_VALIDATION_PROPERTY_NAME,
-            HttpClientConfiguration.CONNECTION_VALIDATION_PROPERTY_KEY);
-        if(validateAfterInactivity != null) {
-            requestExecutorParamsMap.put("validateAfterInactivity", validateAfterInactivity);
-        }
-
-        String timeToLive = lookupConfigValue(
-            props,
-            DEFAULT_REQUEST_EXECUTOR_CONNECTION_TIME_TO_LIVE_PROPERTY_NAME,
-            HttpClientConfiguration.CONNECTION_TIME_TO_LIVE_PROPERTY_KEY);
-        if(maxPerRoute != null) {
-            requestExecutorParamsMap.put("timeToLive", timeToLive);
-        }
-
-        clientConfig.setRequestExecutorParams(requestExecutorParamsMap);
+        clientConfig.setRequestExecutorParams(props);
     }
 
     @Override
@@ -541,33 +507,5 @@ public class DefaultClientBuilder implements ClientBuilder {
             ENVVARS_TOKEN,
             SYSPROPS_TOKEN
         };
-    }
-
-    private String lookupConfigValue(Map<String, String> props, String key, String sysPropName) {
-
-        String configuredValue = props.get(key);
-        if (configuredValue != null) {
-            return configuredValue;
-        }
-
-        String[] arr = key.split("\\.");
-        if(arr.length > 0) {
-            String shortKeyNew = String.join(".", arr[arr.length - 1]);
-            for (String prop : props.keySet()) {
-                if (prop.endsWith(shortKeyNew)) {
-                    configuredValue = props.get(prop);
-                    if (configuredValue != null) {
-                        return configuredValue;
-                    }
-                }
-            }
-        }
-
-        configuredValue = props.get(sysPropName);
-        if (configuredValue != null) {
-            return configuredValue;
-        }
-
-        return configuredValue;
     }
 }

@@ -101,21 +101,6 @@ class FactorsIT extends ITSupport {
     }
 
     @Test
-    void testCallFactorCreation() {
-        Client client = getClient()
-        User user = randomUser()
-
-        assertThat user.listFactors(), emptyIterable()
-
-        CallUserFactor callUserFactor = client.instantiate(CallUserFactor)
-        callUserFactor.getProfile().setPhoneNumber(smsTestNumber)
-
-        assertThat callUserFactor.id, nullValue()
-        assertThat callUserFactor, sameInstance(user.enrollFactor(callUserFactor))
-        assertThat callUserFactor.id, notNullValue()
-    }
-
-    @Test
     void testSmsFactorCreation() {
         Client client = getClient()
         User user = randomUser()
@@ -128,18 +113,6 @@ class FactorsIT extends ITSupport {
         assertThat smsUserFactor.id, nullValue()
         assertThat smsUserFactor, sameInstance(user.enrollFactor(smsUserFactor))
         assertThat smsUserFactor.id, notNullValue()
-    }
-
-    @Test
-    void testPushFactorCreation() {
-        Client client = getClient()
-        User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
-
-        PushUserFactor pushUserFactor = client.instantiate(PushUserFactor)
-        assertThat pushUserFactor.id, nullValue()
-        assertThat pushUserFactor, sameInstance(user.enrollFactor(pushUserFactor))
-        assertThat pushUserFactor.id, notNullValue()
     }
 
     @Test
