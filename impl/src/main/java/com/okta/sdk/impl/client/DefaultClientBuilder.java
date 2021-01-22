@@ -18,7 +18,6 @@ package com.okta.sdk.impl.client;
 
 import com.okta.commons.configcheck.ConfigurationValidator;
 import com.okta.commons.http.config.BaseUrlResolver;
-import com.okta.commons.http.config.HttpClientConfiguration;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
@@ -508,4 +507,5 @@ public class DefaultClientBuilder implements ClientBuilder {
             SYSPROPS_TOKEN
         };
     }
+
 }
