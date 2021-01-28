@@ -470,7 +470,13 @@ public class DefaultDataStore implements InternalDataStore {
         Map<String, Object> out = null;
 
         if (response.hasBody()) {
-            out = mapMarshaller.unmarshal(response.getBody(), response.getHeaders().getLinkMap());
+            String s=response.getHeaders().getContentType().getSubtype();
+            if("xml".equalsIgnoreCase(s)){
+                out = new HashMap<>();
+                out.put("xmlresponse", response.getBody());
+            }else {
+                out = mapMarshaller.unmarshal(response.getBody(), response.getHeaders().getLinkMap());
+            }
         }
 
         return out;
