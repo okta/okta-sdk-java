@@ -214,10 +214,6 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME = "okta.client.requestTimeout";
     String DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME = "okta.client.rateLimit.maxRetries";
     String DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME = "okta.testing.disableHttpsCheck";
-    String DEFAULT_REQUEST_EXECUTOR_MAX_CONNECTIONS_PER_ROUTE_PROPERTY_NAME = "okta.client.requestExecutor.maxPerRoute";
-    String DEFAULT_REQUEST_EXECUTOR_MAX_CONNECTIONS_TOTAL_PROPERTY_NAME = "okta.client.requestExecutor.maxTotal";
-    String DEFAULT_REQUEST_EXECUTOR_CONNECTION_VALIDATION_PROPERTY_NAME = "okta.client.requestExecutor.validateAfterInactivity";
-    String DEFAULT_REQUEST_EXECUTOR_CONNECTION_TIME_TO_LIVE_PROPERTY_NAME = "okta.client.requestExecutor.timeToLive";
 
     /**
      * Allows specifying an {@code ApiKey} instance directly instead of relying on the

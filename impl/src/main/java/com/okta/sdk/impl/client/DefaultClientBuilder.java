@@ -64,6 +64,7 @@ import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -238,7 +239,17 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setRetryMaxAttempts(Integer.parseInt(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME)));
         }
 
-        clientConfig.setRequestExecutorParams(props);
+        clientConfig.setRequestExecutorParams(
+            props
+                .entrySet().stream()
+                .filter(x -> x.getKey().startsWith("okta.client.requestExecutor"))
+                .collect(
+                    Collectors.toMap(
+                        x -> x.getKey().replaceAll("^okta\\.client\\.requestExecutor\\.", ""),
+                        x -> x.getValue()
+                    )
+                )
+        );
     }
 
     @Override

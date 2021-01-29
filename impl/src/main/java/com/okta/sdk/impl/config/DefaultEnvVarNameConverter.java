@@ -43,11 +43,7 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
             ClientBuilder.DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME,
             ClientBuilder.DEFAULT_CLIENT_ID_PROPERTY_NAME,
             ClientBuilder.DEFAULT_CLIENT_SCOPES_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_REQUEST_EXECUTOR_MAX_CONNECTIONS_PER_ROUTE_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_REQUEST_EXECUTOR_MAX_CONNECTIONS_TOTAL_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_REQUEST_EXECUTOR_CONNECTION_VALIDATION_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_REQUEST_EXECUTOR_CONNECTION_TIME_TO_LIVE_PROPERTY_NAME);
+            ClientBuilder.DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME);
     }
 
     private Map<String, String> buildReverseLookupToMap(String... dottedPropertyNames) {
