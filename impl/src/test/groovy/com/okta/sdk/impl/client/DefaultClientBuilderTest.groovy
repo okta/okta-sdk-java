@@ -437,6 +437,36 @@ class DefaultClientBuilderTest {
         privateKeyFile.delete()
     }
 
+    @Test
+    void testRequestExecutorParamsFromSystemProperties() {
+        System.setProperty("okta.client.requestExecutor.maxConnectionsPerRoute", "2500")
+        System.setProperty("okta.client.requestExecutor.maxConnectionsTotal", "5000")
+        System.setProperty("okta.client.requestExecutor.validateAfterInactivity", "3600")
+        System.setProperty("okta.client.requestExecutor.timeToLive", "4500")
+        def builder = Clients.builder()
+        DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
+        def params = clientBuilder.clientConfiguration.getRequestExecutorParams()
+        assertThat params.get("maxPerRoute"), is("2500")
+        assertThat params.get("maxTotal"), is("5000")
+        assertThat params.get("validateAfterInactivity"), is("3600")
+        assertThat params.get("timeToLive"), is("4500")
+    }
+
+    @Test
+    void testRequestExecutorParamsFromEnvironmentVariables() {
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_REQUESTEXECUTOR_MAXCONNECTIONSPERROUTE", "2501")
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_REQUESTEXECUTOR_MAXCONNECTIONSTOTAL", "5001")
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_REQUESTEXECUTOR_VALIDATEAFTERINACTIVITY", "3601")
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_REQUESTEXECUTOR_TIMETOLIVE", "4501")
+        def builder = Clients.builder()
+        DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
+        def params = clientBuilder.clientConfiguration.getRequestExecutorParams()
+        assertThat params.get("maxperroute"), is("2501")
+        assertThat params.get("maxtotal"), is("5001")
+        assertThat params.get("validateafterinactivity"), is("3601")
+        assertThat params.get("timetolive"), is("4501")
+    }
+
     // helper methods
 
     static generatePrivateKey(String algorithm, int keySize, String fileNamePrefix, String fileNameSuffix) {

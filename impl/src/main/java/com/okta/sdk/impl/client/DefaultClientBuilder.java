@@ -95,6 +95,8 @@ public class DefaultClientBuilder implements ClientBuilder {
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
 
+    private static final String OKTA_REQUEST_EXECUTOR_PREFIX = "okta.client.requestExecutor.";
+
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
@@ -242,10 +244,10 @@ public class DefaultClientBuilder implements ClientBuilder {
         clientConfig.setRequestExecutorParams(
             props
                 .entrySet().stream()
-                .filter(x -> x.getKey().startsWith("okta.client.requestExecutor"))
+                .filter(x -> x.getKey().toLowerCase().startsWith(OKTA_REQUEST_EXECUTOR_PREFIX.toLowerCase()))
                 .collect(
                     Collectors.toMap(
-                        x -> x.getKey().replaceAll("^okta\\.client\\.requestExecutor\\.", ""),
+                        x -> x.getKey().substring(OKTA_REQUEST_EXECUTOR_PREFIX.length()),
                         x -> x.getValue()
                     )
                 )
