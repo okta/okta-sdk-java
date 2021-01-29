@@ -100,7 +100,7 @@ class FactorsIT extends ITSupport {
         assertThat securityQuestionUserFactor.id, notNullValue()
     }
 
-    @Test(enabled = false)
+    @Test
     void testCallFactorCreation() {
         Client client = getClient()
         User user = randomUser()
@@ -130,7 +130,7 @@ class FactorsIT extends ITSupport {
         assertThat smsUserFactor.id, notNullValue()
     }
 
-    @Test(enabled = false)
+    @Test
     void testPushFactorCreation() {
         Client client = getClient()
         User user = randomUser()
