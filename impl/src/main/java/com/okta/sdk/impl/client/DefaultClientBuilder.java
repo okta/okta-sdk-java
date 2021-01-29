@@ -247,8 +247,17 @@ public class DefaultClientBuilder implements ClientBuilder {
                 .filter(x -> x.getKey().toLowerCase().startsWith(OKTA_REQUEST_EXECUTOR_PREFIX.toLowerCase()))
                 .collect(
                     Collectors.toMap(
-                        x -> x.getKey().substring(OKTA_REQUEST_EXECUTOR_PREFIX.length()),
-                        x -> x.getValue()
+                        k -> {
+                            //get property key, cut 'okta.client.requestExecutor.' and make it camelCase
+                            String camelCaseString = Arrays.stream(k.getKey()
+                                .substring(OKTA_REQUEST_EXECUTOR_PREFIX.length())
+                                .split("\\."))
+                                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1))
+                                .collect(Collectors.joining(""));
+                                return camelCaseString.substring(0, 1).toLowerCase() + camelCaseString.substring(1);
+                        },
+                        v -> v.getValue(),
+                        (key1, key2) -> key1
                     )
                 )
         );
