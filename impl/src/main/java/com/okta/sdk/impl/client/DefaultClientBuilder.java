@@ -257,7 +257,7 @@ public class DefaultClientBuilder implements ClientBuilder {
                                 return camelCaseString.substring(0, 1).toLowerCase() + camelCaseString.substring(1);
                         },
                         v -> v.getValue(),
-                        (key1, key2) -> key1
+                        (oldValue, newValue) -> newValue
                     )
                 )
         );
