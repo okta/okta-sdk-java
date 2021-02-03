@@ -483,7 +483,9 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     protected void applyDefaultRequestHeaders(Request request) {
-        request.getHeaders().setAccept(java.util.Collections.singletonList(MediaType.APPLICATION_JSON));
+        if(!request.getHeaders().containsKey("Accept")){
+            request.getHeaders().setAccept(java.util.Collections.singletonList(MediaType.APPLICATION_JSON));
+        }
 
         // Get runtime headers from http client
         Map<String, List<String>> headerMap = HttpHeadersHolder.get();
