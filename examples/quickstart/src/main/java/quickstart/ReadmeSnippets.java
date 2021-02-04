@@ -111,6 +111,15 @@ public class ReadmeSnippets {
             .buildAndCreate(client);
     }
 
+    private void createUserWithGroups() {
+        User user = UserBuilder.instance()
+            .setEmail("joe.coder@example.com")
+            .setFirstName("Joe")
+            .setLastName("Code")
+            .setGroups(new HashSet<>(Arrays.asList("group-id-1", "group-id-2")))
+            .buildAndCreate(client);
+    }
+
     private void updateUser() {
         user.getProfile().setFirstName("new-first-name");
         user.update();

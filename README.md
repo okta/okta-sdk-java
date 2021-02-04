@@ -201,6 +201,19 @@ User user = UserBuilder.instance()
 ```
 [//]: # (end: createUser)
 
+### Create a User with Group(s)
+
+[//]: # (method: createUserWithGroups)
+```java
+User user = UserBuilder.instance()
+    .setEmail("joe.coder@example.com")
+    .setFirstName("Joe")
+    .setLastName("Code")
+    .setGroups(new HashSet<>(Arrays.asList("group-id-1", "group-id-2")))
+    .buildAndCreate(client);
+```
+[//]: # (end: createUserWithGroups)
+
 ### Update a User
 
 [//]: # (method: updateUser)
