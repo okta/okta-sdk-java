@@ -64,6 +64,7 @@ import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -93,6 +94,8 @@ public class DefaultClientBuilder implements ClientBuilder {
     private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
+
+    private static final String OKTA_REQUEST_EXECUTOR_PREFIX = "okta.client.requestExecutor.";
 
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
@@ -237,6 +240,27 @@ public class DefaultClientBuilder implements ClientBuilder {
         if (Strings.hasText(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME))) {
             clientConfig.setRetryMaxAttempts(Integer.parseInt(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME)));
         }
+
+        clientConfig.setRequestExecutorParams(
+            props
+                .entrySet().stream()
+                .filter(x -> x.getKey().toLowerCase().startsWith(OKTA_REQUEST_EXECUTOR_PREFIX.toLowerCase()))
+                .collect(
+                    Collectors.toMap(
+                        k -> {
+                            //get property key, cut 'okta.client.requestExecutor.' and make it camelCase
+                            String camelCaseString = Arrays.stream(k.getKey()
+                                .substring(OKTA_REQUEST_EXECUTOR_PREFIX.length())
+                                .split("\\."))
+                                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1))
+                                .collect(Collectors.joining(""));
+                                return camelCaseString.substring(0, 1).toLowerCase() + camelCaseString.substring(1);
+                        },
+                        v -> v.getValue(),
+                        (oldValue, newValue) -> newValue
+                    )
+                )
+        );
     }
 
     @Override
