@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static com.okta.sdk.cache.Caches.forResource;
@@ -108,6 +109,15 @@ public class ReadmeSnippets {
             .setEmail("joe.coder@example.com")
             .setFirstName("Joe")
             .setLastName("Code")
+            .buildAndCreate(client);
+    }
+
+    private void createUserWithGroups() {
+        User user = UserBuilder.instance()
+            .setEmail("joe.coder@example.com")
+            .setFirstName("Joe")
+            .setLastName("Code")
+            .setGroups(new HashSet<>(Arrays.asList("group-id-1", "group-id-2")))
             .buildAndCreate(client);
     }
 
