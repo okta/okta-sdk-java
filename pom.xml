@@ -39,8 +39,8 @@
         <snakeyaml.version>1.26</snakeyaml.version>
         <bouncycastle.version>1.68</bouncycastle.version>
         <jjwt.version>0.11.1</jjwt.version>
-        <okta.sdk.previousVersion>2.0.0</okta.sdk.previousVersion>
-        <otka.commons.version>1.2.4</otka.commons.version>
+        <okta.sdk.previousVersion>3.0.0</okta.sdk.previousVersion>
+        <okta.commons.version>1.2.5</okta.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
@@ -99,27 +99,27 @@
             <dependency>
                 <groupId>com.okta.commons</groupId>
                 <artifactId>okta-config-check</artifactId>
-                <version>${otka.commons.version}</version>
+                <version>${okta.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.commons</groupId>
                 <artifactId>okta-commons-lang</artifactId>
-                <version>${otka.commons.version}</version>
+                <version>${okta.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.commons</groupId>
                 <artifactId>okta-http-api</artifactId>
-                <version>${otka.commons.version}</version>
+                <version>${okta.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.commons</groupId>
                 <artifactId>okta-http-httpclient</artifactId>
-                <version>${otka.commons.version}</version>
+                <version>${okta.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.commons</groupId>
                 <artifactId>okta-http-okhttp</artifactId>
-                <version>${otka.commons.version}</version>
+                <version>${okta.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.annotation</groupId>
