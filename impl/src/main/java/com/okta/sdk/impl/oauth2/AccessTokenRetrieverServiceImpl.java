@@ -134,17 +134,15 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         PrivateKey privateKey = parsePrivateKey(getPemReader());
         Instant now = Instant.now();
 
-        String jwt = Jwts.builder()
+        return Jwts.builder()
             .setAudience(tokenClientConfiguration.getBaseUrl() + TOKEN_URI)
             .setIssuedAt(Date.from(now))
-            .setExpiration(Date.from(now.plus(1L, ChronoUnit.HOURS)))
+            .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))
             .setIssuer(clientId)
             .setSubject(clientId)
             .claim("jti", UUID.randomUUID().toString())
             .signWith(privateKey)
             .compact();
-
-        return jwt;
     }
 
     /**
