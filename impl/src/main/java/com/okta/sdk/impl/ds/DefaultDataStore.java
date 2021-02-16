@@ -16,6 +16,9 @@
  */
 package com.okta.sdk.impl.ds;
 
+import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.io.CharStreams;
 import com.okta.commons.http.DefaultRequest;
 import com.okta.commons.http.HttpHeaders;
 import com.okta.commons.http.HttpMethod;
@@ -59,7 +62,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -470,14 +475,24 @@ public class DefaultDataStore implements InternalDataStore {
         Map<String, Object> out = null;
 
         if (response.hasBody()) {
-            out = mapMarshaller.unmarshal(response.getBody(), response.getHeaders().getLinkMap());
+            if ("json".equals(response.getHeaders().getContentType().getSubtype())) {
+                out = mapMarshaller.unmarshal(response.getBody(), response.getHeaders().getLinkMap());
+            } else {
+                try (InputStreamReader inputStreamReader = new InputStreamReader(response.getBody(), Charsets.UTF_8)) {
+                    out = ImmutableMap.of(MediaType.TEXT_PLAIN_VALUE, CharStreams.toString(inputStreamReader));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
 
         return out;
     }
 
     protected void applyDefaultRequestHeaders(Request request) {
-        request.getHeaders().setAccept(java.util.Collections.singletonList(MediaType.APPLICATION_JSON));
+        if (!request.getHeaders().containsKey("Accept")) {
+            request.getHeaders().setAccept(java.util.Collections.singletonList(MediaType.APPLICATION_JSON));
+        }
 
         // Get runtime headers from http client
         Map<String, List<String>> headerMap = HttpHeadersHolder.get();
