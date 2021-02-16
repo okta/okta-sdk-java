@@ -15,7 +15,12 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.commons.http.DefaultRequest
+import com.okta.commons.http.HttpMethod
+import com.okta.commons.http.MediaType
+import com.okta.commons.http.Response
 import com.okta.sdk.client.Client
+import com.okta.sdk.impl.ds.DefaultDataStore
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.group.Group
@@ -24,6 +29,9 @@ import com.okta.sdk.resource.user.User
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
+
+import java.nio.charset.Charset
+import javax.xml.parsers.DocumentBuilderFactory
 
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
 import static com.okta.sdk.tests.it.util.Util.assertPresent
@@ -589,5 +597,75 @@ class ApplicationsIT extends ITSupport {
 
         // verify
         assertNotPresent(app.listScopeConsentGrants(), app.getScopeConsentGrant(oAuth2ScopeConsentGrant.getId()))
+    }
+
+    @Test
+    void testExecuteAcceptJson() {
+        def app = client.instantiate(SamlApplication)
+            .setVisibility(client.instantiate(ApplicationVisibility))
+            .setSettings(client.instantiate(SamlApplicationSettings)
+                .setSignOn(client.instantiate(SamlApplicationSettingsSignOn)
+                    .setSsoAcsUrl("http://testorgone.okta")
+                    .setAudience("asdqwe123")
+                    .setRecipient("http://testorgone.okta")
+                    .setDestination("http://testorgone.okta")
+                    .setAssertionSigned(true)
+                    .setSignatureAlgorithm("RSA_SHA256")
+                    .setDigestAlgorithm("SHA256")
+                )
+            )
+        def dataStore = (DefaultDataStore) client.getDataStore()
+        def resource = create(client, app)
+        def url = resource.getLinks().get("users")["href"]
+        registerForCleanup(resource)
+
+        DefaultRequest request = new DefaultRequest(HttpMethod.GET, url as String)
+        Response response = dataStore.execute(request)
+
+        assertThat(response.getHttpStatus(), is(200))
+        assertThat(response.getHeaders().getContentType(), is(MediaType.APPLICATION_JSON))
+        Map<String, Object> body = dataStore.getBody(response)
+        assertThat(body.isEmpty(), is(false))
+        assertThat(body.size(), is(3))
+    }
+
+    @Test
+    void testExecuteAcceptXml() {
+        def app = client.instantiate(SamlApplication)
+            .setVisibility(client.instantiate(ApplicationVisibility))
+            .setSettings(client.instantiate(SamlApplicationSettings)
+                .setSignOn(client.instantiate(SamlApplicationSettingsSignOn)
+                    .setSsoAcsUrl("http://testorgone.okta")
+                    .setAudience("asdqwe123")
+                    .setRecipient("http://testorgone.okta")
+                    .setDestination("http://testorgone.okta")
+                    .setAssertionSigned(true)
+                    .setSignatureAlgorithm("RSA_SHA256")
+                    .setDigestAlgorithm("SHA256")
+                )
+            )
+        def dataStore = (DefaultDataStore) client.getDataStore()
+        def resource = create(client, app)
+        def url = resource.getLinks().get("metadata")["href"]
+        registerForCleanup(resource)
+
+        DefaultRequest request = new DefaultRequest(HttpMethod.GET, url as String)
+        request.getHeaders().setAccept(Collections.singletonList(MediaType.APPLICATION_XML))
+        Response response = dataStore.execute(request)
+
+        assertThat(response.getHttpStatus(), is(200))
+        assertThat(response.getHeaders().getContentType(), is(new MediaType(MediaType.APPLICATION_XML, Charset.forName("ISO-8859-1"))))
+        Map<String, Object> body = dataStore.getBody(response)
+        assertThat(body.isEmpty(), is(false))
+        assertThat(body.containsKey(MediaType.TEXT_PLAIN_VALUE), is(true))
+
+        String x509Certificate = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder()
+            .parse(body.get(MediaType.TEXT_PLAIN_VALUE) as InputStream)
+            .getElementsByTagName("ds:X509Certificate")
+            .item(0)
+            .getFirstChild()
+            .getNodeValue()
+        assertThat(x509Certificate.isBlank(), is(false))
     }
 }
