@@ -21,6 +21,7 @@ import com.okta.commons.http.MediaType
 import com.okta.commons.http.Response
 import com.okta.sdk.client.Client
 import com.okta.sdk.impl.ds.DefaultDataStore
+import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.group.Group
@@ -29,6 +30,7 @@ import com.okta.sdk.resource.user.User
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
+import wiremock.net.minidev.json.JSONObject
 
 import java.nio.charset.Charset
 import javax.xml.parsers.DocumentBuilderFactory
@@ -619,14 +621,10 @@ class ApplicationsIT extends ITSupport {
         def url = resource.getLinks().get("users")["href"]
         registerForCleanup(resource)
 
-        DefaultRequest request = new DefaultRequest(HttpMethod.GET, url as String)
-        Response response = dataStore.execute(request)
+        Resource response = dataStore.getResource(url as String, Application.class)
 
-        assertThat(response.getHttpStatus(), is(200))
-        assertThat(response.getHeaders().getContentType(), is(MediaType.APPLICATION_JSON))
-        Map<String, Object> body = dataStore.getBody(response)
-        assertThat(body.isEmpty(), is(false))
-        assertThat(body.size(), is(3))
+        assertThat(response.isEmpty(), is(false))
+        assertThat(response.size(), is(3))
     }
 
     @Test
@@ -647,21 +645,15 @@ class ApplicationsIT extends ITSupport {
         def dataStore = (DefaultDataStore) client.getDataStore()
         def resource = create(client, app)
         def url = resource.getLinks().get("metadata")["href"]
+        def headers = Collections.singletonMap("Accept", Collections.singletonList(MediaType.APPLICATION_XML as String))
         registerForCleanup(resource)
 
-        DefaultRequest request = new DefaultRequest(HttpMethod.GET, url as String)
-        request.getHeaders().setAccept(Collections.singletonList(MediaType.APPLICATION_XML))
-        Response response = dataStore.execute(request)
+        Resource response = dataStore.getResource(url as String, Application.class, null, headers)
 
-        assertThat(response.getHttpStatus(), is(200))
-        assertThat(response.getHeaders().getContentType(), is(new MediaType(MediaType.APPLICATION_XML, Charset.forName("ISO-8859-1"))))
-        Map<String, Object> body = dataStore.getBody(response)
-        assertThat(body.isEmpty(), is(false))
-        assertThat(body.containsKey(MediaType.TEXT_PLAIN_VALUE), is(true))
-
+        assertThat(resource.isEmpty(), is(false))
         String x509Certificate = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder()
-            .parse(body.get(MediaType.TEXT_PLAIN_VALUE) as InputStream)
+            .parse(response["text/plain"] as InputStream)
             .getElementsByTagName("ds:X509Certificate")
             .item(0)
             .getFirstChild()
