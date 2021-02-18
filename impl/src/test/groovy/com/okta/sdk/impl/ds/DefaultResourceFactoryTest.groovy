@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.impl.ds
 
+import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.user.factor.UserFactor
 import com.okta.sdk.resource.user.factor.FactorType
 import com.okta.sdk.resource.user.factor.TotpUserFactor
@@ -42,5 +43,11 @@ class DefaultResourceFactoryTest {
         UserFactor factor = resourceFactory.instantiate(UserFactor, map)
         assertThat factor, instanceOf(TotpUserFactor)
         assertThat factor.getFactorType(), equalTo(FactorType.TOKEN_SOFTWARE_TOTP)
+    }
+
+    @Test
+    void convertToImplClassTest() {
+        Class implClass = DefaultResourceFactory.convertToImplClass("com.okta.sdk.resource.VoidResource" as Class<Resource>)
+        assertThat implClass.name, equalTo("com.okta.sdk.impl.resource.DefaultVoidResource")
     }
 }
