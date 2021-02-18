@@ -17,6 +17,7 @@
 package com.okta.sdk.impl.ds;
 
 import com.okta.commons.lang.Classes;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.Resource;
 
 import java.lang.reflect.Constructor;
@@ -153,10 +154,16 @@ public class DefaultResourceFactory implements ResourceFactory {
         }
 
         int index = afterBase.lastIndexOf('.');
-        String beforeConcreteClassName = afterBase.substring(0, index);
 
-        String implFqcn = basePackage + IMPL_PACKAGE_NAME_FRAGMENT + "." +
+        String implFqcn;
+
+        if (index == -1) {
+            implFqcn = basePackage + IMPL_PACKAGE_NAME_FRAGMENT + "." + IMPL_CLASS_PREFIX + clazz.getSimpleName();
+        } else {
+            String beforeConcreteClassName = afterBase.substring(0, index);
+            implFqcn = basePackage + IMPL_PACKAGE_NAME_FRAGMENT + "." +
                 beforeConcreteClassName + "." + IMPL_CLASS_PREFIX + clazz.getSimpleName();
+        }
 
         return Classes.forName(implFqcn);
     }
