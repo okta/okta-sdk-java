@@ -46,8 +46,11 @@ class DefaultResourceFactoryTest {
     }
 
     @Test
-    void convertToImplClassTest() {
-        Class implClass = DefaultResourceFactory.convertToImplClass("com.okta.sdk.resource.VoidResource" as Class<Resource>)
-        assertThat implClass.name, equalTo("com.okta.sdk.impl.resource.DefaultVoidResource")
+    void implClassFqcnTest() {
+        String implClassFqcn = DefaultResourceFactory.constructImplFqcn("com.okta.sdk.resource.VoidResource" as Class)
+        assertThat implClassFqcn, equalTo("com.okta.sdk.impl.resource.DefaultVoidResource")
+
+        implClassFqcn = DefaultResourceFactory.constructImplFqcn("com.xyz.model.extensibleresource.SubLink" as Class)
+        assertThat implClassFqcn, equalTo("com.xyz.model.extensibleresource.impl.DefaultSubLink")
     }
 }

@@ -135,12 +135,17 @@ public class DefaultResourceFactory implements ResourceFactory {
 
     @SuppressWarnings("unchecked")
     static <T extends Resource> Class<T> convertToImplClass(Class<T> clazz) {
+        String implFqcn = constructImplFqcn(clazz);
+        return Classes.forName(implFqcn);
+    }
+
+    static String constructImplFqcn(Class clazz) {
         String fqcn = clazz.getName();
 
         String basePackage = SUPPORTED_PACKAGES.stream()
-                .filter(fqcn::startsWith)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Could not determine impl for class: '" + fqcn +"'"));
+            .filter(fqcn::startsWith)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Could not determine impl for class: '" + fqcn +"'"));
 
         String afterBase = fqcn.substring(basePackage.length());
         //e.g. if interface is com.okta.sdk.account.Account, 'afterBase' is account.Account
@@ -164,7 +169,7 @@ public class DefaultResourceFactory implements ResourceFactory {
                 beforeConcreteClassName + "." + IMPL_CLASS_PREFIX + clazz.getSimpleName();
         }
 
-        return Classes.forName(implFqcn);
+        return implFqcn;
     }
 
     private Object[] createConstructorArgs(Object[] existing) {
