@@ -279,7 +279,12 @@ public abstract class AbstractPropertyRetriever implements PropertyRetriever {
 
         if (value != null) {
             if (value instanceof String) {
-                return enumConverter.fromValue(type, value.toString());
+                try {
+                    return enumConverter.fromValue(type, value.toString());
+                } catch (IllegalArgumentException e) {
+                    String msg = "Undeclared enum value";
+                    log.error(msg, e);
+                }
             }
             if (type.isAssignableFrom(value.getClass())) {
                 //noinspection unchecked
