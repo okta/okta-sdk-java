@@ -139,7 +139,7 @@ public class DefaultResourceFactory implements ResourceFactory {
         return Classes.forName(implFqcn);
     }
 
-    static String constructImplFqcn(Class clazz) {
+    static <T extends Resource> String constructImplFqcn(Class<T> clazz) {
         String fqcn = clazz.getName();
 
         String basePackage = SUPPORTED_PACKAGES.stream()
