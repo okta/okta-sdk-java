@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.impl.ds
 
+import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.user.factor.UserFactor
 import com.okta.sdk.resource.user.factor.FactorType
 import com.okta.sdk.resource.user.factor.TotpUserFactor
@@ -46,10 +47,10 @@ class DefaultResourceFactoryTest {
 
     @Test
     void implClassFqcnTest() {
-        String implClassFqcn = DefaultResourceFactory.constructImplFqcn("com.okta.sdk.resource.VoidResource" as Class)
+        String implClassFqcn = DefaultResourceFactory.constructImplFqcn("com.okta.sdk.resource.VoidResource" as Class<Resource>)
         assertThat implClassFqcn, equalTo("com.okta.sdk.impl.resource.DefaultVoidResource")
 
-        implClassFqcn = DefaultResourceFactory.constructImplFqcn("com.xyz.model.extensibleresource.SubLink" as Class)
+        implClassFqcn = DefaultResourceFactory.constructImplFqcn("com.xyz.model.extensibleresource.SubLink" as Class<Resource>)
         assertThat implClassFqcn, equalTo("com.xyz.model.extensibleresource.impl.DefaultSubLink")
     }
 }
