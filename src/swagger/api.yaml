@@ -25,7 +25,7 @@ info:
   license:
     name: Apache-2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-  version: 2.2.1
+  version: 2.2.5
 externalDocs:
   description: Find more info here
   url: 'http://developer.okta.com/docs/api/getting_started/design_principles.html'
@@ -303,8 +303,6 @@ paths:
         - Application
   '/api/v1/apps/{appId}/credentials/csrs/{csrId}/lifecycle/publish':
     post:
-      consumes:
-        - application/json
       parameters:
         - in: path
           name: appId
@@ -1656,9 +1654,7 @@ paths:
     get:
       consumes:
         - application/json
-      description: >-
-        Enumerates all policy rules for the specified Custom Authorization
-        Server and Policy.
+      description: Enumerates all policy rules for the specified Custom Authorization Server and Policy.
       operationId: listAuthorizationServerPolicyRules
       parameters:
         - in: path
@@ -1685,9 +1681,7 @@ paths:
     post:
       consumes:
         - application/json
-      description: >-
-        Creates a policy rule for the specified Custom Authorization Server and
-        Policy.
+      description: Creates a policy rule for the specified Custom Authorization Server and Policy.
       operationId: createAuthorizationServerPolicyRule
       parameters:
         - in: path
@@ -1718,9 +1712,7 @@ paths:
     delete:
       consumes:
         - application/json
-      description: >-
-        Deletes a Policy Rule defined in the specified Custom Authorization
-        Server and Policy.
+      description: Deletes a Policy Rule defined in the specified Custom Authorization Server and Policy.
       operationId: deleteAuthorizationServerPolicyRule
       parameters:
         - in: path
@@ -1747,9 +1739,7 @@ paths:
     get:
       consumes:
         - application/json
-      description: >-
-        Returns a Policy Rule by ID that is defined in the specified Custom
-        Authorization Server and Policy.
+      description: Returns a Policy Rule by ID that is defined in the specified Custom Authorization Server and Policy.
       operationId: getAuthorizationServerPolicyRule
       parameters:
         - in: path
@@ -1778,9 +1768,7 @@ paths:
     put:
       consumes:
         - application/json
-      description: >-
-        Updates the configuration of the Policy Rule defined in the specified
-        Custom Authorization Server and Policy.
+      description: Updates the configuration of the Policy Rule defined in the specified Custom Authorization Server and Policy.
       operationId: updateAuthorizationServerPolicyRule
       parameters:
         - in: path
@@ -2278,9 +2266,7 @@ paths:
           in: query
           name: limit
           type: integer
-        - description: >-
-            If specified, it causes additional metadata to be included in the
-            response.
+        - description: If specified, it causes additional metadata to be included in the response.
           in: query
           name: expand
           type: string
@@ -2934,8 +2920,6 @@ paths:
       responses:
         '204':
           description: No Content
-      security:
-        - api_token: []
       tags:
         - Group
     put:
@@ -2961,8 +2945,6 @@ paths:
       responses:
         '204':
           description: No Content
-      security:
-        - api_token: []
       tags:
         - Group
   '/api/v1/groups/{groupId}/users':
@@ -3340,9 +3322,7 @@ paths:
     delete:
       consumes:
         - application/json
-      description: >-
-        Revoke a Certificate Signing Request and delete the key pair from the
-        IdP
+      description: Revoke a Certificate Signing Request and delete the key pair from the IdP
       operationId: revokeCsrForIdentityProvider
       parameters:
         - in: path
@@ -3392,8 +3372,8 @@ paths:
       consumes:
         - application/json
       description: >-
-        Update the Certificate Signing Request with a signed X.509 certificate
-        and add it into the signing key credentials for the IdP.
+        Update the Certificate Signing Request with a signed X.509 certificate and add it into the
+        signing key credentials for the IdP.
       parameters:
         - in: path
           name: idpId
@@ -3925,8 +3905,6 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/InlineHook'
-      security:
-        - api_token: []
       tags:
         - InlineHook
   '/api/v1/inlineHooks/{inlineHookId}/lifecycle/deactivate':
@@ -3947,8 +3925,6 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/InlineHook'
-      security:
-        - api_token: []
       tags:
         - InlineHook
   /api/v1/logs:
@@ -3960,14 +3936,14 @@ paths:
         system log. This API provides more functionality than the Events API
       operationId: getLogs
       parameters:
-        - format: date-time
-          in: query
+        - in: query
           name: since
           type: string
-        - format: date-time
-          in: query
+          format: date-time
+        - in: query
           name: until
           type: string
+          format: date-time
         - in: query
           name: filter
           type: string
@@ -5095,13 +5071,9 @@ paths:
           name: primaryUserId
           required: true
           type: string
-      produces:
-        - application/json
       responses:
         '204':
           description: Success
-      security:
-        - api_token: []
       tags:
         - User
   '/api/v1/users/{userId}':
@@ -6029,8 +6001,8 @@ paths:
         - application/json
       description: >-
         Activates a user.  This operation can only be performed on users with a
-        `STAGED` status.  Activation of a user is an asynchronous operation. The
-        user will have the `transitioningToStatus` property with a value of
+        `STAGED` status.  Activation of a user is an asynchronous operation.
+        The user will have the `transitioningToStatus` property with a value of
         `ACTIVE` during activation to indicate that the user hasn't completed
         the asynchronous operation.  The user will have a status of `ACTIVE`
         when the activation process is complete.
@@ -6746,14 +6718,6 @@ paths:
       tags:
         - User
 definitions:
-  AcsEndpoint:
-    properties:
-      index:
-        type: integer
-      url:
-        type: string
-    x-okta-tags:
-      - Application
   ActivateFactorRequest:
     properties:
       attestation:
@@ -6867,6 +6831,7 @@ definitions:
         type: string
       id:
         type: string
+        readOnly: false
       lastSync:
         format: date-time
         readOnly: true
@@ -7892,57 +7857,42 @@ definitions:
         template_swa: '#/definitions/SwaApplication'
         template_swa3field: '#/definitions/SwaThreeFieldApplication'
       propertyName: name
-  CallUserFactor:
-    properties:
-      profile:
-        $ref: '#/definitions/CallUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
-    x-okta-tags:
-      - UserFactor
-  CallUserFactorProfile:
-    properties:
-      phoneExtension:
-        type: string
-      phoneNumber:
-        type: string
-    x-okta-tags:
-      - UserFactor
   CatalogApplication:
     properties:
-      _links:
-        additionalProperties:
-          type: object
-        readOnly: true
-        type: object
-      category:
+      id:
         type: string
-      description:
+        readOnly: true
+      name:
         type: string
       displayName:
         type: string
-      features:
-        items:
+      description:
           type: string
-        type: array
-      id:
-        readOnly: true
-        type: string
+      status:
+        $ref: '#/definitions/CatalogApplicationStatus'
       lastUpdated:
         format: date-time
         readOnly: true
         type: string
-      name:
+      category:
+        type: string
+      verificationStatus:
+        type: string
+      website:
         type: string
       signOnModes:
         items:
           type: string
         type: array
-      status:
-        $ref: '#/definitions/CatalogApplicationStatus'
-      verificationStatus:
-        type: string
-      website:
-        type: string
+      features:
+        items:
+          type: string
+        type: array
+      _links:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
     x-okta-tags:
       - Role
   CatalogApplicationStatus:
@@ -7952,54 +7902,6 @@ definitions:
     type: string
     x-okta-tags:
       - Role
-  ChangePasswordRequest:
-    properties:
-      newPassword:
-        $ref: '#/definitions/PasswordCredential'
-      oldPassword:
-        $ref: '#/definitions/PasswordCredential'
-    type: object
-    x-okta-tags:
-      - User
-  ClientPolicyCondition:
-    properties:
-      include:
-        items:
-          type: string
-        type: array
-    type: object
-    x-okta-tags:
-      - Policy
-  ContextPolicyRuleCondition:
-    properties:
-      expression:
-        type: string
-    type: object
-    x-okta-tags:
-      - Policy
-  CreateSessionRequest:
-    properties:
-      sessionToken:
-        type: string
-    type: object
-    x-okta-tags:
-      - Session
-  CreateUserRequest:
-    properties:
-      credentials:
-        $ref: '#/definitions/UserCredentials'
-      groupIds:
-        items:
-          type: string
-        type: array
-      profile:
-        $ref: '#/definitions/UserProfile'
-      type:
-        $ref: '#/definitions/UserType'
-    type: object
-    x-okta-parent: '#/definitions/User'
-    x-okta-tags:
-      - User
   Csr:
     properties:
       created:
@@ -8050,21 +7952,68 @@ definitions:
         type: array
     x-okta-tags:
       - Application
-  CustomHotpUserFactor:
+  CallUserFactor:
     properties:
-      factorProfileId:
-        type: string
       profile:
-        $ref: '#/definitions/CustomHotpUserFactorProfile'
+        $ref: '#/definitions/CallUserFactorProfile'
     x-okta-parent: '#/definitions/UserFactor'
     x-okta-tags:
       - UserFactor
-  CustomHotpUserFactorProfile:
+  CallUserFactorProfile:
     properties:
-      sharedSecret:
+      phoneExtension:
+        type: string
+      phoneNumber:
         type: string
     x-okta-tags:
       - UserFactor
+  ChangePasswordRequest:
+    properties:
+      newPassword:
+        $ref: '#/definitions/PasswordCredential'
+      oldPassword:
+        $ref: '#/definitions/PasswordCredential'
+    type: object
+    x-okta-tags:
+      - User
+  ClientPolicyCondition:
+    properties:
+      include:
+        items:
+          type: string
+        type: array
+    type: object
+    x-okta-tags:
+      - Policy
+  ContextPolicyRuleCondition:
+    properties:
+      expression:
+        type: string
+    type: object
+    x-okta-tags:
+      - Policy
+  CreateSessionRequest:
+    properties:
+      sessionToken:
+        type: string
+    type: object
+    x-okta-tags:
+      - Session
+  CreateUserRequest:
+    properties:
+      credentials:
+        $ref: '#/definitions/UserCredentials'
+      groupIds:
+        items:
+          type: string
+        type: array
+      profile:
+        $ref: '#/definitions/UserProfile'
+      type:
+        $ref: '#/definitions/UserType'
+    type: object
+    x-okta-tags:
+      - User
   DevicePolicyRuleCondition:
     properties:
       migrated:
@@ -9026,6 +8975,8 @@ definitions:
         type: array
       uri:
         type: string
+      method:
+        type: string
     type: object
     x-okta-tags:
       - InlineHook
@@ -9051,9 +9002,9 @@ definitions:
       - InlineHook
   InlineHookPayload:
     type: object
-    x-okta-extensible: true
     x-okta-tags:
       - InlineHook
+    x-okta-extensible: true
   InlineHookResponse:
     properties:
       commands:
@@ -9818,6 +9769,8 @@ definitions:
         type: object
       clientId:
         type: string
+      userId:
+        type: string
       created:
         format: date-time
         readOnly: true
@@ -9839,8 +9792,6 @@ definitions:
         $ref: '#/definitions/OAuth2ScopeConsentGrantSource'
       status:
         $ref: '#/definitions/OAuth2ScopeConsentGrantStatus'
-      userId:
-        type: string
     type: object
     x-okta-tags:
       - Application
@@ -10083,8 +10034,8 @@ definitions:
         type: string
       issuer_mode:
         $ref: '#/definitions/OpenIdConnectApplicationIssuerMode'
-      jwks:
-        $ref: '#/definitions/OpenIdConnectApplicationSettingsClientKeys'
+      idp_initiated_login:
+        $ref: '#/definitions/OpenIdConnectApplicationIdpInitiatedLogin'
       logo_uri:
         type: string
       policy_uri:
@@ -10097,14 +10048,27 @@ definitions:
         items:
           type: string
         type: array
-      refresh_token:
-        $ref: '#/definitions/OpenIdConnectApplicationSettingsRefreshToken'
       response_types:
         items:
           $ref: '#/definitions/OAuthResponseType'
         type: array
+      refresh_token:
+        $ref: '#/definitions/OpenIdConnectApplicationSettingsRefreshToken'
       tos_uri:
         type: string
+      jwks:
+        $ref: '#/definitions/OpenIdConnectApplicationSettingsClientKeys'
+    x-okta-tags:
+      - Application
+  OpenIdConnectApplicationIdpInitiatedLogin:
+    properties:
+      mode:
+        type: string
+      default_scope:
+        items:
+          type: string
+        type: array
+    type: object
     x-okta-tags:
       - Application
   OpenIdConnectApplicationSettingsClientKeys:
@@ -10124,19 +10088,19 @@ definitions:
     type: object
     x-okta-tags:
       - Application
+  OpenIdConnectRefreshTokenRotationType:
+    enum:
+      - rotate
+      - static
+    type: string
+    x-okta-tags:
+      - Application
   OpenIdConnectApplicationType:
     enum:
       - web
       - native
       - browser
       - service
-    type: string
-    x-okta-tags:
-      - Application
-  OpenIdConnectRefreshTokenRotationType:
-    enum:
-      - rotate
-      - static
     type: string
     x-okta-tags:
       - Application
@@ -11150,6 +11114,8 @@ definitions:
         $ref: '#/definitions/RoleType'
         type: string
     type: object
+    x-okta-tags:
+      - User
     x-okta-operations:
       - alias: addAdminGroupTarget
         arguments:
@@ -11193,8 +11159,6 @@ definitions:
           - dest: userId
             parentSrc: id
         operationId: addApplicationTargetToAdminRoleForUser
-    x-okta-tags:
-      - User
   RoleAssignmentType:
     enum:
       - GROUP
@@ -11246,12 +11210,12 @@ definitions:
       - Application
   SamlApplicationSettingsSignOn:
     properties:
+      allowMultipleAcsEndpoints:
+        type: boolean
       acsEndpoints:
         items:
           $ref: '#/definitions/AcsEndpoint'
         type: array
-      allowMultipleAcsEndpoints:
-        type: boolean
       assertionSigned:
         type: boolean
       attributeStatements:
@@ -11286,29 +11250,60 @@ definitions:
         type: boolean
       signatureAlgorithm:
         type: string
+      slo:
+        $ref: '#/definitions/SingleLogout'
       spIssuer:
         type: string
       ssoAcsUrl:
         type: string
       ssoAcsUrlOverride:
         type: string
+      spCertificate:
+        $ref: '#/definitions/SpCertificate'
       subjectNameIdFormat:
         type: string
       subjectNameIdTemplate:
         type: string
     x-okta-tags:
       - Application
+  SpCertificate:
+    properties:
+      x5c:
+        items:
+          type: string
+        readOnly: false
+        type: array
+    x-okta-tags:
+      - Application
+  SingleLogout:
+    properties:
+      enabled:
+        type: boolean
+      issuer:
+        type: string
+      logoutUrl:
+        type: string
+    x-okta-tags:
+      - Application
+  AcsEndpoint:
+    properties:
+      url:
+        type: string
+      index:
+        type: integer
+    x-okta-tags:
+      - Application
   SamlAttributeStatement:
     properties:
-      filterType:
-        type: string
-      filterValue:
-        type: string
       name:
         type: string
       namespace:
         type: string
       type:
+        type: string
+      filterType:
+        type: string
+      filterValue:
         type: string
       values:
         items:
@@ -11614,6 +11609,21 @@ definitions:
   SmsUserFactorProfile:
     properties:
       phoneNumber:
+        type: string
+    x-okta-tags:
+      - UserFactor
+  CustomHotpUserFactor:
+    properties:
+      factorProfileId:
+        type: string
+      profile:
+        $ref: '#/definitions/CustomHotpUserFactorProfile'
+    x-okta-parent: '#/definitions/UserFactor'
+    x-okta-tags:
+      - UserFactor
+  CustomHotpUserFactorProfile:
+    properties:
+      sharedSecret:
         type: string
     x-okta-tags:
       - UserFactor
@@ -12221,7 +12231,6 @@ definitions:
       mapping:
         call: '#/definitions/CallUserFactor'
         email: '#/definitions/EmailUserFactor'
-        hotp: '#/definitions/CustomHotpUserFactor'
         push: '#/definitions/PushUserFactor'
         question: '#/definitions/SecurityQuestionUserFactor'
         sms: '#/definitions/SmsUserFactor'
@@ -12231,6 +12240,7 @@ definitions:
         u2f: '#/definitions/U2fUserFactor'
         web: '#/definitions/WebUserFactor'
         webauthn: '#/definitions/WebAuthnUserFactor'
+        hotp: '#/definitions/CustomHotpUserFactor'
       propertyName: factorType
   UserIdentifierConditionEvaluatorPattern:
     properties:
@@ -12426,6 +12436,7 @@ definitions:
         type: string
       id:
         type: string
+        readOnly: false
       lastUpdated:
         format: date-time
         readOnly: true
@@ -12521,21 +12532,6 @@ definitions:
     type: object
     x-okta-tags:
       - UserFactor
-  WebAuthnUserFactor:
-    properties:
-      profile:
-        $ref: '#/definitions/WebAuthnUserFactorProfile'
-    x-okta-parent: '#/definitions/UserFactor'
-    x-okta-tags:
-      - UserFactor
-  WebAuthnUserFactorProfile:
-    properties:
-      authenticatorName:
-        type: string
-      credentialId:
-        type: string
-    x-okta-tags:
-      - UserFactor
   WebUserFactor:
     properties:
       profile:
@@ -12546,6 +12542,21 @@ definitions:
   WebUserFactorProfile:
     properties:
       credentialId:
+        type: string
+    x-okta-tags:
+      - UserFactor
+  WebAuthnUserFactor:
+    properties:
+      profile:
+        $ref: '#/definitions/WebAuthnUserFactorProfile'
+    x-okta-parent: '#/definitions/UserFactor'
+    x-okta-tags:
+      - UserFactor
+  WebAuthnUserFactorProfile:
+    properties:
+      credentialId:
+        type: string
+      authenticatorName:
         type: string
     x-okta-tags:
       - UserFactor
