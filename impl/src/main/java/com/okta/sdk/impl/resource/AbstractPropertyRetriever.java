@@ -279,12 +279,18 @@ public abstract class AbstractPropertyRetriever implements PropertyRetriever {
 
         if (value != null) {
             if (value instanceof String) {
-                try {
-                    return enumConverter.fromValue(type, value.toString());
-                } catch (IllegalArgumentException e) {
-                    String msg = "Undeclared enum value";
-                    log.error(msg, e);
+                if(type.getName().equals("com.okta.sdk.resource.application.ApplicationSignOnMode")) {
+                    E convertedValue;
+                    try {
+                        convertedValue = enumConverter.fromValue(type, value.toString());
+                    } catch (IllegalArgumentException e) {
+                        convertedValue = enumConverter.fromValue(type, "CUSTOM");
+                        String msg = "Undeclared enum value. Defaulting to CUSTOM";
+                        log.error(msg, e);
+                    }
+                    return convertedValue;
                 }
+                return enumConverter.fromValue(type, value.toString());
             }
             if (type.isAssignableFrom(value.getClass())) {
                 //noinspection unchecked

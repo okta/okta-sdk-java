@@ -7346,6 +7346,7 @@ definitions:
       - SAML_2_0
       - OPENID_CONNECT
       - SAML_1_1
+      - CUSTOM
     type: string
     x-okta-tags:
       - Application
