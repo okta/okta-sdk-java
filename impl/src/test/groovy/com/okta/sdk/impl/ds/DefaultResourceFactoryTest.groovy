@@ -49,5 +49,8 @@ class DefaultResourceFactoryTest {
     void implClassFqcnTest() {
         String implClassFqcn = DefaultResourceFactory.constructImplFqcn("com.okta.sdk.resource.VoidResource" as Class<Resource>)
         assertThat implClassFqcn, equalTo("com.okta.sdk.impl.resource.DefaultVoidResource")
+
+        implClassFqcn = DefaultResourceFactory.constructImplFqcn("com.okta.sdk.extensibleresource.CustomResource" as Class<Resource>)
+        assertThat implClassFqcn, equalTo("com.okta.sdk.impl.extensibleresource.DefaultCustomResource")
     }
 }
