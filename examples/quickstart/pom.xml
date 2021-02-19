@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.okta.sdk</groupId>
             <artifactId>okta-sdk-impl</artifactId>
-<!--            <scope>runtime</scope>-->
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.okta.sdk</groupId>
@@ -52,11 +52,6 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-impl</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
