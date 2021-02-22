@@ -135,12 +135,17 @@ public class DefaultResourceFactory implements ResourceFactory {
 
     @SuppressWarnings("unchecked")
     static <T extends Resource> Class<T> convertToImplClass(Class<T> clazz) {
+        String implFqcn = constructImplFqcn(clazz);
+        return Classes.forName(implFqcn);
+    }
+
+    static <T extends Resource> String constructImplFqcn(Class<T> clazz) {
         String fqcn = clazz.getName();
 
         String basePackage = SUPPORTED_PACKAGES.stream()
-                .filter(fqcn::startsWith)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Could not determine impl for class: '" + fqcn +"'"));
+            .filter(fqcn::startsWith)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Could not determine impl for class: '" + fqcn +"'"));
 
         String afterBase = fqcn.substring(basePackage.length());
         //e.g. if interface is com.okta.sdk.account.Account, 'afterBase' is account.Account
@@ -153,12 +158,18 @@ public class DefaultResourceFactory implements ResourceFactory {
         }
 
         int index = afterBase.lastIndexOf('.');
-        String beforeConcreteClassName = afterBase.substring(0, index);
 
-        String implFqcn = basePackage + IMPL_PACKAGE_NAME_FRAGMENT + "." +
+        String implFqcn;
+
+        if (index == -1) {
+            implFqcn = basePackage + IMPL_PACKAGE_NAME_FRAGMENT + "." + IMPL_CLASS_PREFIX + clazz.getSimpleName();
+        } else {
+            String beforeConcreteClassName = afterBase.substring(0, index);
+            implFqcn = basePackage + IMPL_PACKAGE_NAME_FRAGMENT + "." +
                 beforeConcreteClassName + "." + IMPL_CLASS_PREFIX + clazz.getSimpleName();
+        }
 
-        return Classes.forName(implFqcn);
+        return implFqcn;
     }
 
     private Object[] createConstructorArgs(Object[] existing) {
