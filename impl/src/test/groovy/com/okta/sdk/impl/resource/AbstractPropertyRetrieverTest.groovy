@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*
 class AbstractPropertyRetrieverTest {
 
     @Test(dataProvider = "signOnModes")
-    void testTest(String configValue, ApplicationSignOnMode expectedValue) {
+    void ApplicationSignOnModeTest(String configValue, ApplicationSignOnMode expectedValue) {
         def internalDataStore = mock(InternalDataStore.class)
 
         Map<String,Object> data = new HashMap<>()
