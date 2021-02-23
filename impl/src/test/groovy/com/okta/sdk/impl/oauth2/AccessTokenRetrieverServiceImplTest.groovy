@@ -107,6 +107,7 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getBaseUrl()).thenReturn(baseUrl)
         when(clientConfig.getClientId()).thenReturn("client12345")
         when(clientConfig.getPrivateKey()).thenReturn(privateKeyPemFile.path)
+        when(clientConfig.getKid()).thenReturn("kid-value")
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
@@ -142,6 +143,7 @@ class AccessTokenRetrieverServiceImplTest {
             .getHeader()
 
         assertThat(header.get("kid"), notNullValue())
+        assertThat(header.get("kid"), is("kid-value"))
     }
 
     @Test
