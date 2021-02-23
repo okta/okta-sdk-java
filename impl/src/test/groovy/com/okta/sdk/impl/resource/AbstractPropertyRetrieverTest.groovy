@@ -52,10 +52,10 @@ class AbstractPropertyRetrieverTest {
             ["SAML_2_0", ApplicationSignOnMode.SAML_2_0],
             ["OPENID_CONNECT", ApplicationSignOnMode.OPENID_CONNECT],
             ["SAML_1_1", ApplicationSignOnMode.SAML_1_1],
-            ["RADIUS_FOR_GENERIC_APP", ApplicationSignOnMode.CUSTOM],
-            ["AWS_FEDERATED_LOGIN", ApplicationSignOnMode.CUSTOM],
-            ["UNKNOWN_VALUE", ApplicationSignOnMode.CUSTOM],
-            ["", ApplicationSignOnMode.CUSTOM]
+            ["RADIUS_FOR_GENERIC_APP", ApplicationSignOnMode.SDK_UNKNOWN],
+            ["AWS_FEDERATED_LOGIN", ApplicationSignOnMode.SDK_UNKNOWN],
+            ["UNKNOWN_VALUE", ApplicationSignOnMode.SDK_UNKNOWN],
+            ["", ApplicationSignOnMode.SDK_UNKNOWN]
         ]
     }
 }
