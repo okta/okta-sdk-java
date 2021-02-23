@@ -125,6 +125,9 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     /**
      * Create signed JWT string with the supplied token client configuration details.
      *
+     * Expiration value should be not more than one hour in the future.
+     * We use 50 minutes in order to have a 10 minutes leeway in case of clock skew.
+     *
      * @return signed JWT string
      * @throws InvalidKeyException
      * @throws IOException
@@ -134,18 +137,16 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         PrivateKey privateKey = parsePrivateKey(getPemReader());
         Instant now = Instant.now();
 
-        String jwt = Jwts.builder()
+        return Jwts.builder()
             .setAudience(tokenClientConfiguration.getBaseUrl() + TOKEN_URI)
             .setIssuedAt(Date.from(now))
-            .setExpiration(Date.from(now.plus(1L, ChronoUnit.HOURS)))
+            .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))             // see Javadoc
             .setIssuer(clientId)
             .setSubject(clientId)
             .claim("jti", UUID.randomUUID().toString())
             .setHeaderParam("kid", clientId + privateKey.hashCode())
             .signWith(privateKey)
             .compact();
-
-        return jwt;
     }
 
     /**

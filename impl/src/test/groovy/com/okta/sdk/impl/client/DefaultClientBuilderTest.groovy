@@ -437,6 +437,47 @@ class DefaultClientBuilderTest {
         privateKeyFile.delete()
     }
 
+    @Test
+    void testRequestExecutorParamsFromSystemProperties() {
+        System.setProperty("okta.client.requestExecutor.maxConnectionsPerRoute", "2500")
+        System.setProperty("okta.client.requestExecutor.maxConnectionsTotal", "5000")
+        System.setProperty("okta.client.requestExecutor.validateAfterInactivity", "3600")
+        System.setProperty("okta.client.requestExecutor.timeToLive", "4500")
+        def builder = Clients.builder()
+        DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
+        def params = clientBuilder.clientConfiguration.getRequestExecutorParams()
+        assertThat params.get("maxConnectionsPerRoute"), is("2500")
+        assertThat params.get("maxConnectionsTotal"), is("5000")
+        assertThat params.get("validateAfterInactivity"), is("3600")
+        assertThat params.get("timeToLive"), is("4500")
+    }
+
+    @Test
+    void testRequestExecutorParamsFromEnvironmentVariables() {
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_REQUESTEXECUTOR_MAX_CONNECTIONS_PER_ROUTE", "2501")
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_REQUESTEXECUTOR_MAX_CONNECTIONS_TOTAL", "5001")
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_REQUESTEXECUTOR_VALIDATE_AFTER_INACTIVITY", "3601")
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_REQUESTEXECUTOR_TIME_TO_LIVE", "4501")
+        def builder = Clients.builder()
+        DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
+        def params = clientBuilder.clientConfiguration.getRequestExecutorParams()
+        assertThat params.get("maxConnectionsPerRoute"), is("2501")
+        assertThat params.get("maxConnectionsTotal"), is("5001")
+        assertThat params.get("validateAfterInactivity"), is("3601")
+        assertThat params.get("timeToLive"), is("4501")
+    }
+
+    @Test
+    void testRequestExecutorParamsFromMultipleSources() {
+        //Testing https://github.com/okta/okta-sdk-java#configuration-reference
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_REQUESTEXECUTOR_MAX_CONNECTIONS_PER_ROUTE", "2501")
+        System.setProperty("okta.client.requestExecutor.maxConnectionsPerRoute", "2500")
+        def builder = Clients.builder()
+        DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
+        def params = clientBuilder.clientConfiguration.getRequestExecutorParams()
+        assertThat params.get("maxConnectionsPerRoute"), is("2500")
+    }
+
     // helper methods
 
     static generatePrivateKey(String algorithm, int keySize, String fileNamePrefix, String fileNameSuffix) {

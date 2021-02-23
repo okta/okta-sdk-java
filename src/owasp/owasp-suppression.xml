@@ -19,80 +19,11 @@
   -->
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
 
-    <!-- this comes from this repo, and it is java not ruby, so... false positive -->
-    <suppress>
-       <notes><![CDATA[ file name: okta-sdk-httpclient-1.0.1-SNAPSHOT.jar ]]></notes>
-       <gav regex="true">^com\.okta\.sdk:okta-sdk-httpclient:.*$</gav>
-       <cpe>cpe:/a:rest-client_project:rest-client</cpe>
-    </suppress>
-
     <!-- invalid artifact detection / swagger uber jars-->
     <suppress>
        <notes><![CDATA[file name: swagger-codegen-2.2.3.jar: gradle-wrapper.jar]]></notes>
        <sha1>0f6f1fa2b59ae770ca14f975726bed8d6620ed9b</sha1>
        <cve>CVE-2016-6199</cve>
-    </suppress>
-
-    <!-- invalid artifact detection, this project module: okta-sdk-okhttp,
-         was detected as a ruby a:rest-client_project:rest-client:1.3.1-->
-    <suppress>
-       <notes><![CDATA[file name: okta-sdk-okhttp-1.3.1-SNAPSHOT.jar]]></notes>
-       <gav regex="true">^com\.okta\.sdk:okta-sdk-okhttp:.*$</gav>
-       <cpe>cpe:/a:rest-client_project:rest-client</cpe>
-    </suppress>
-
-    <!-- wrong GAV, this CVE effects slf4j-ext not the other slf4j- projects
-     https://nvd.nist.gov/vuln/detail/CVE-2018-8088
-
-     > org.slf4j.ext.EventData in the slf4j-ext module in QOS.CH SLF4J ...
-    -->
-    <suppress>
-        <notes><![CDATA[ file name: slf4j-api-1.7.25.jar ]]></notes>
-        <gav regex="true">^org\.slf4j:slf4j-api:.*$</gav>
-        <cve>CVE-2018-8088</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[ file name: jcl-over-slf4j-1.7.25.jar ]]></notes>
-        <gav regex="true">^org\.slf4j:jcl-over-slf4j:.*$</gav>
-        <cve>CVE-2018-8088</cve>
-    </suppress>
-
-    <!-- wrong GAV, this CVE affects a golang project named jsonpatch:
-     https://github.com/evanphx/json-patch
-
-     coordinate: cpe:2.3:a:json-patch_project:json-patch:-:*:*:*:*:*:*:go
-    -->
-    <suppress>
-        <notes><![CDATA[ file name: json-patch-1.6.jar ]]></notes>
-        <gav regex="true">^com\.github\.fge:json-patch:.*$</gav>
-        <cve>CVE-2018-14632</cve>
-    </suppress>
-
-    <suppress>
-        <notes><![CDATA[ file name: json-schema-validator-2.2.8.jar ]]></notes>
-        <gav regex="true">^com\.github\.java-json-tools:json-schema-validator:.*$</gav>
-        <cve>CVE-2018-18749</cve>
-    </suppress>
-
-    <!-- wrong GAV detection, processing != json-schema-core -->
-    <suppress>
-        <notes><![CDATA[ file name: json-schema-core-1.2.8.jar ]]></notes>
-        <gav regex="true">^com\.github\.java-json-tools:json-schema-core:.*$</gav>
-        <cpe>cpe:/a:processing:processing</cpe>
-    </suppress>
-
-    <!-- wrong GAV detection, processing != commons-cli -->
-    <suppress>
-        <notes><![CDATA[ file name: commons-cli-1.2.jar ]]></notes>
-        <gav regex="true">^commons-cli:commons-cli:.*$</gav>
-        <cpe>cpe:/a:processing:processing</cpe>
-    </suppress>
-
-    <!-- wrong GAV detection, obviously Okta's java client is NOT a ruby lib -->
-    <suppress>
-        <notes><![CDATA[ file name: okta-http-okhttp-1.2.0.jar ]]></notes>
-        <gav regex="true">^com\.okta\.commons:okta-http-okhttp:.*$</gav>
-        <cpe>cpe:/a:rest-client_project:rest-client</cpe>
     </suppress>
 
     <!-- build time dependency contains older version of gradle (which this project does NOT use) -->
@@ -104,13 +35,11 @@
         <cve>CVE-2019-16370</cve>
     </suppress>
 
-    <!-- swagger-codegen is an uberjar, it is only used at build time, and we are NOT using the included jquery (or any js) related files -->
+    <!-- this project does not use the offending method com.google.common.io.Files.createTempDir -->
     <suppress>
-        <notes><![CDATA[ file name: swagger-codegen-2.2.3.jar: jquery-1.8.3.min.js ]]></notes>
-        <sha1>06e872300088b9ba8a08427d28ed0efcdf9c6ff5</sha1>
-        <cve>CVE-2012-6708</cve>
-        <cve>CVE-2015-9251</cve>
-        <cve>CVE-2019-11358</cve>
+        <notes><![CDATA[ file name: guava-27.0.1-jre.jar ]]></notes>
+        <gav regex="true">^com\.google\.guava:.*$</gav>
+        <cve>CVE-2020-8908</cve>
     </suppress>
 
 </suppressions>

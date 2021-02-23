@@ -118,8 +118,9 @@ class AccessTokenRetrieverServiceImplTest {
         assertThat(signedJwt, notNullValue())
 
         // decode the signed jwt and verify
-        Claims claims = Jwts.parser()
+        Claims claims = Jwts.parserBuilder()
             .setSigningKey(generatedPrivateKey)
+            .build()
             .parseClaimsJws(signedJwt).getBody()
 
         assertThat(claims, notNullValue())
@@ -127,8 +128,8 @@ class AccessTokenRetrieverServiceImplTest {
         assertEquals(claims.get("aud"), clientConfig.getBaseUrl() + "/oauth2/v1/token")
         assertThat(claims.get("iat"), notNullValue())
         assertThat(claims.get("exp"), notNullValue())
-        assertEquals(Integer.valueOf(claims.get("exp")) - Integer.valueOf(claims.get("iat")), 3600,
-            "token expiry time is not 3600s")
+        assertEquals(Integer.valueOf(claims.get("exp")) - Integer.valueOf(claims.get("iat")), 3000,
+            "token expiry time is not 50 minutes")
         assertThat(claims.get("iss"), notNullValue())
         assertEquals(claims.get("iss"), clientConfig.getClientId(), "iss must be equal to client id")
         assertThat(claims.get("sub"), notNullValue())
