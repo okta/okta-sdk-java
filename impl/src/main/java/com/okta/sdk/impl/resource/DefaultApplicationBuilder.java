@@ -65,6 +65,10 @@ public class DefaultApplicationBuilder<T extends ApplicationBuilder> implements 
 
     @Override
     public T setSignOnMode(ApplicationSignOnMode signOnMode) {
+        if(signOnMode == ApplicationSignOnMode.SDK_UNKNOWN) {
+            throw new IllegalArgumentException(
+                "The " + signOnMode.getClass().getName() + ".SDK_UNKNOWN can not be used in setter");
+        }
         this.signOnMode = signOnMode;
         return self();
     }
