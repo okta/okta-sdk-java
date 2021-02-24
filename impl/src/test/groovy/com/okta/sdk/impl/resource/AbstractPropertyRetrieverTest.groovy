@@ -53,6 +53,7 @@ class AbstractPropertyRetrieverTest {
             ["OPENID_CONNECT", ApplicationSignOnMode.OPENID_CONNECT],
             ["SAML_1_1", ApplicationSignOnMode.SAML_1_1],
             ["RADIUS_FOR_GENERIC_APP", ApplicationSignOnMode.SDK_UNKNOWN],
+            ["RADIUS_FOR_CISCO_ASA", ApplicationSignOnMode.SDK_UNKNOWN],
             ["AWS_FEDERATED_LOGIN", ApplicationSignOnMode.SDK_UNKNOWN],
             ["UNKNOWN_VALUE", ApplicationSignOnMode.SDK_UNKNOWN],
             ["", ApplicationSignOnMode.SDK_UNKNOWN]
