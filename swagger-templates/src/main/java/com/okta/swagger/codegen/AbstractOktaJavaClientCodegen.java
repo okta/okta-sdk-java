@@ -210,19 +210,22 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     protected void buildDiscriminationMap(Swagger swagger) {
         swagger.getDefinitions().forEach((name, model) -> {
-            ObjectNode discriminatorMapExtention = (ObjectNode) model.getVendorExtensions().get("x-openapi-v3-discriminator");
-            if (discriminatorMapExtention != null) {
-
-                String propertyName = discriminatorMapExtention.get("propertyName").asText();
-                ObjectNode mapping = (ObjectNode) discriminatorMapExtention.get("mapping");
-
+            ObjectNode discriminatorMapExtension =
+                (ObjectNode) model.getVendorExtensions().get("x-openapi-v3-discriminator");
+            if (discriminatorMapExtension != null) {
+                String propertyName = discriminatorMapExtension.get("propertyName").asText();
+                ObjectNode mapping = (ObjectNode) discriminatorMapExtension.get("mapping");
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, String> result = mapper.convertValue(mapping, Map.class);
                 result = result.entrySet().stream()
-                        .collect(Collectors.toMap(e -> e.getValue().substring(e.getValue().lastIndexOf('/')+1), e -> e.getKey()));
-                result.forEach((key, value) -> {
-                    reverseDiscriminatorMap.put(key, name);
-                });
+                    .collect(
+                        Collectors.toMap(
+                            e -> e.getValue().substring(e.getValue().lastIndexOf('/') + 1),
+                            e -> e.getKey(),
+                            (oldValue, newValue) -> newValue
+                        )
+                    );
+                result.forEach((key, value) -> reverseDiscriminatorMap.put(key, name));
                 discriminatorMap.put(name, new Discriminator(name, propertyName, result));
             }
         });

@@ -7160,7 +7160,7 @@ definitions:
         BOOKMARK: '#/definitions/BookmarkApplication'
         BROWSER_PLUGIN: '#/definitions/BrowserPluginApplication'
         OPENID_CONNECT: '#/definitions/OpenIdConnectApplication'
-        SAML_1_1: '#/definitions/SamlApplicationV1'
+        SAML_1_1: '#/definitions/SamlApplication'
         SAML_2_0: '#/definitions/SamlApplication'
         SECURE_PASSWORD_STORE: '#/definitions/SecurePasswordStoreApplication'
         WS_FEDERATION: '#/definitions/WsFederationApplication'
