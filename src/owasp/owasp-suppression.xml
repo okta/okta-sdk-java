@@ -21,9 +21,10 @@
 
     <!-- invalid artifact detection / swagger uber jars-->
     <suppress>
-       <notes><![CDATA[file name: swagger-codegen-2.2.3.jar: gradle-wrapper.jar]]></notes>
-       <sha1>0f6f1fa2b59ae770ca14f975726bed8d6620ed9b</sha1>
-       <cve>CVE-2016-6199</cve>
+        <notes><![CDATA[file name: swagger-codegen-2.2.3.jar: gradle-wrapper.jar]]></notes>
+        <sha1>0f6f1fa2b59ae770ca14f975726bed8d6620ed9b</sha1>
+        <cve>CVE-2016-6199</cve>
+        <cve>CVE-2020-11979</cve>
     </suppress>
 
     <!-- build time dependency contains older version of gradle (which this project does NOT use) -->
