@@ -7673,6 +7673,8 @@ definitions:
         arguments:
           - dest: policyId
             src: id
+#          - dest: policy
+#            self: true
         operationId: updateAuthorizationServerPolicy
       - alias: deletePolicy
         arguments:
