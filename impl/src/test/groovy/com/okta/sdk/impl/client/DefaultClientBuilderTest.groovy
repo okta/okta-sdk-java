@@ -60,6 +60,7 @@ class DefaultClientBuilderTest {
         System.clearProperty("okta.client.orgUrl")
         System.clearProperty("okta.client.authorizationMode")
         System.clearProperty("okta.client.clientId")
+        System.clearProperty("okta.client.kid")
         System.clearProperty("okta.client.scopes")
         System.clearProperty("okta.client.privateKey")
         System.clearProperty("okta.client.connectionTimeout")
@@ -68,6 +69,7 @@ class DefaultClientBuilderTest {
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_ORGURL", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_AUTHORIZATIONMODE", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_CLIENTID", null)
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_KID", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_SCOPES", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_PRIVATEKEY", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_CONNECTIONTIMEOUT", null)
@@ -476,6 +478,22 @@ class DefaultClientBuilderTest {
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) builder
         def params = clientBuilder.clientConfiguration.getRequestExecutorParams()
         assertThat params.get("maxConnectionsPerRoute"), is("2500")
+    }
+
+    @Test
+    void testEnvironmentValueKid() {
+        clearOktaEnvAndSysProps()
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_KID", "kid-value")
+        DefaultClientBuilder clientBuilder = (DefaultClientBuilder) Clients.builder()
+        assertThat clientBuilder.clientConfiguration.getKid(), is("kid-value")
+    }
+
+    @Test
+    void testSystemPropertyKid() {
+        clearOktaEnvAndSysProps()
+        System.setProperty("okta.client.kid", "kid-value")
+        DefaultClientBuilder clientBuilder = (DefaultClientBuilder) Clients.builder()
+        assertThat clientBuilder.clientConfiguration.getKid(), is("kid-value")
     }
 
     // helper methods
