@@ -279,7 +279,16 @@ public abstract class AbstractPropertyRetriever implements PropertyRetriever {
 
         if (value != null) {
             if (value instanceof String) {
-                return enumConverter.fromValue(type, value.toString());
+                E convertedValue;
+                try {
+                    convertedValue = enumConverter.fromValue(type, value.toString());
+                } catch (IllegalArgumentException e) {
+                    convertedValue = enumConverter.fromValue(type, "SDK_UNKNOWN");
+                    String msg = "Undeclared enum value {}.{}. Defaulting to SDK_UNKNOWN. " +
+                        "Call get(\"{}\", String.class) to receive raw value.";
+                    log.warn(msg, type.getSimpleName(), value, key);
+                }
+                return convertedValue;
             }
             if (type.isAssignableFrom(value.getClass())) {
                 //noinspection unchecked
@@ -311,6 +320,17 @@ public abstract class AbstractPropertyRetriever implements PropertyRetriever {
     }
 
     protected void setProperty(Property property, Object value) {
+        if(property.getType().isEnum() && value.toString().equals("SDK_UNKNOWN")) {
+            throw new IllegalArgumentException(
+                "The " + property.getType() + ".SDK_UNKNOWN value can not be used in setter." +
+                    " Try to use put(\"" + property.getName() + "\", <your-value>)");
+        } else if(property.getType().isEnum()
+            && value instanceof List<?>
+            && ((List) value).stream().anyMatch(x -> x.toString().equals("SDK_UNKNOWN"))) {
+            throw new IllegalArgumentException(
+                "The " + property.getType() + ".SDK_UNKNOWN value can not be used in setter." +
+                    " Try to use put(\"" + property.getName() + "\", <your-value>)");
+        }
         setProperty(property.getName(), value, true);
     }
 
