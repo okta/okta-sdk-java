@@ -19,10 +19,12 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.resource.application.*
 import org.testng.annotations.Test
 
+import static com.okta.sdk.impl.Util.expect
 import static org.mockito.ArgumentMatchers.eq
 import static org.mockito.Mockito.*
 
 class DefaultApplicationBuilderTest {
+
     @Test
     void basicUsage() {
         def client = mock(Client)
@@ -31,7 +33,7 @@ class DefaultApplicationBuilderTest {
         def applicationVisibilityHide = mock(ApplicationVisibilityHide)
         def applicationVisibility = mock(ApplicationVisibility)
 
-        when(client.instantiate(Application.class)).thenReturn(application);
+        when(client.instantiate(Application.class)).thenReturn(application)
         when(client.instantiate(ApplicationAccessibility.class)).thenReturn(applicationAccessibility)
         when(client.instantiate(ApplicationVisibilityHide.class)).thenReturn(applicationVisibilityHide)
         when(application.getAccessibility()).thenReturn(applicationAccessibility)
@@ -46,7 +48,7 @@ class DefaultApplicationBuilderTest {
             .setSignOnMode(ApplicationSignOnMode.AUTO_LOGIN)
             .setIOS(false)
             .setWeb(true)
-            .buildAndCreate(client);
+            .buildAndCreate(client)
 
         verify(client).createApplication(eq(application))
         verify(application).setLabel("test_app")
@@ -56,5 +58,33 @@ class DefaultApplicationBuilderTest {
         verify(applicationAccessibility).setLoginRedirectUrl("http://www.myApp.com")
         verify(applicationVisibilityHide).setWeb(true)
         verify(applicationVisibilityHide).setIOS(false)
+    }
+
+    @Test
+    void invalidApplicationSignOnMode() {
+        def client = mock(Client)
+        def application = mock(Application)
+        def applicationAccessibility = mock(ApplicationAccessibility)
+        def applicationVisibilityHide = mock(ApplicationVisibilityHide)
+        def applicationVisibility = mock(ApplicationVisibility)
+
+        when(client.instantiate(Application.class)).thenReturn(application);
+        when(client.instantiate(ApplicationAccessibility.class)).thenReturn(applicationAccessibility)
+        when(client.instantiate(ApplicationVisibilityHide.class)).thenReturn(applicationVisibilityHide)
+        when(application.getAccessibility()).thenReturn(applicationAccessibility)
+        when(client.instantiate(ApplicationVisibility.class)).thenReturn(applicationVisibility)
+        when(application.getVisibility())thenReturn(applicationVisibility)
+
+        expect IllegalArgumentException, {
+            new DefaultApplicationBuilder()
+                .setLabel("test_app")
+                .setLoginRedirectUrl("http://www.myApp.com")
+                .setErrorRedirectUrl("http://www.myApp.com/error")
+                .setSelfService(false)
+                .setSignOnMode(ApplicationSignOnMode.SDK_UNKNOWN)
+                .setIOS(false)
+                .setWeb(true)
+                .buildAndCreate(client)
+        }
     }
 }

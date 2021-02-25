@@ -27,6 +27,7 @@ import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
 import static com.okta.sdk.tests.it.util.Util.assertPresent
+import static com.okta.sdk.tests.it.util.Util.expect
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
@@ -262,6 +263,121 @@ class ApplicationsIT extends ITSupport {
                             .setApp(client.instantiate(BasicApplicationSettingsApplication)
                                 .setAuthURL("https://example.com/auth.html")
                                 .setUrl("https://example.com/login.html"))))
+    }
+
+    @Test
+    void invalidApplicationCredentialsSchemeTest() {
+        expect(IllegalArgumentException, {
+            client.instantiate(BasicAuthApplication)
+                .setCredentials(client.instantiate(SchemeApplicationCredentials)
+                    .setScheme(ApplicationCredentialsScheme.SDK_UNKNOWN)
+                    .setRevealPassword(true))
+                .setSettings(client.instantiate(BasicApplicationSettings)
+                    .setApp(client.instantiate(BasicApplicationSettingsApplication)
+                        .setAuthURL("https://example.com/auth.html")
+                        .setUrl("https://example.com/login.html")))
+        })
+    }
+
+    @Test
+    void invalidOAuthEndpointAuthenticationMethodTest() {
+        expect(IllegalArgumentException ,{client.instantiate(OpenIdConnectApplication)
+            .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
+                .setOAuthClient(client.instantiate(OpenIdConnectApplicationSettingsClient)
+                    .setClientUri("https://example.com/client")
+                    .setLogoUri("https://example.com/assets/images/logo-new.png")
+                    .setRedirectUris(["https://example.com/oauth2/callback",
+                                      "myapp://callback"])
+                    .setResponseTypes([OAuthResponseType.TOKEN,
+                                       OAuthResponseType.ID_TOKEN,
+                                       OAuthResponseType.CODE])
+                    .setGrantTypes([OAuthGrantType.IMPLICIT,
+                                    OAuthGrantType.AUTHORIZATION_CODE])
+                    .setApplicationType(OpenIdConnectApplicationType.NATIVE)
+                    .setTosUri("https://example.com/client/tos")
+                    .setPolicyUri("https://example.com/client/policy")))
+            .setCredentials(client.instantiate(OAuthApplicationCredentials)
+                .setOAuthClient(client.instantiate(ApplicationCredentialsOAuthClient)
+                    .setClientId(UUID.randomUUID().toString())
+                    .setAutoKeyRotation(true)
+                    .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.SDK_UNKNOWN)))})
+    }
+
+    @Test
+    void invalidOAuthResponseTypeTest() {
+        expect(IllegalArgumentException ,{client.instantiate(OpenIdConnectApplication)
+            .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
+                .setOAuthClient(client.instantiate(OpenIdConnectApplicationSettingsClient)
+                    .setClientUri("https://example.com/client")
+                    .setLogoUri("https://example.com/assets/images/logo-new.png")
+                    .setRedirectUris(["https://example.com/oauth2/callback",
+                                      "myapp://callback"])
+                    .setResponseTypes([OAuthResponseType.TOKEN,
+                                       OAuthResponseType.ID_TOKEN,
+                                       OAuthResponseType.CODE,
+                                       OAuthResponseType.SDK_UNKNOWN])
+                    .setGrantTypes([OAuthGrantType.IMPLICIT,
+                                    OAuthGrantType.AUTHORIZATION_CODE])
+                    .setApplicationType(OpenIdConnectApplicationType.NATIVE)
+                    .setTosUri("https://example.com/client/tos")
+                    .setPolicyUri("https://example.com/client/policy")))
+            .setCredentials(client.instantiate(OAuthApplicationCredentials)
+                .setOAuthClient(client.instantiate(ApplicationCredentialsOAuthClient)
+                    .setClientId(UUID.randomUUID().toString())
+                    .setAutoKeyRotation(true)
+                    .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))})
+    }
+
+    @Test
+    void invalidOAuthGrantTypeTest() {
+        expect(IllegalArgumentException, {client.instantiate(OpenIdConnectApplication)
+            .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
+                .setOAuthClient(client.instantiate(OpenIdConnectApplicationSettingsClient)
+                    .setClientUri("https://example.com/client")
+                    .setLogoUri("https://example.com/assets/images/logo-new.png")
+                    .setRedirectUris(["https://example.com/oauth2/callback",
+                                      "myapp://callback"])
+                    .setResponseTypes([OAuthResponseType.TOKEN,
+                                       OAuthResponseType.ID_TOKEN,
+                                       OAuthResponseType.CODE])
+                    .setGrantTypes([OAuthGrantType.IMPLICIT,
+                                    OAuthGrantType.AUTHORIZATION_CODE,
+                                    OAuthGrantType.SDK_UNKNOWN])
+                    .setApplicationType(OpenIdConnectApplicationType.NATIVE)
+                    .setTosUri("https://example.com/client/tos")
+                    .setPolicyUri("https://example.com/client/policy")))
+            .setCredentials(client.instantiate(OAuthApplicationCredentials)
+                .setOAuthClient(client.instantiate(ApplicationCredentialsOAuthClient)
+                    .setClientId(UUID.randomUUID().toString())
+                    .setAutoKeyRotation(true)
+                    .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))
+        })
+    }
+
+    @Test
+    void invalidOpenIdConnectApplicationTypeTest() {
+        expect(IllegalArgumentException ,{
+            client.instantiate(OpenIdConnectApplication)
+            .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
+                .setOAuthClient(client.instantiate(OpenIdConnectApplicationSettingsClient)
+                    .setClientUri("https://example.com/client")
+                    .setLogoUri("https://example.com/assets/images/logo-new.png")
+                    .setRedirectUris(["https://example.com/oauth2/callback",
+                                      "myapp://callback"])
+                    .setResponseTypes([OAuthResponseType.TOKEN,
+                                       OAuthResponseType.ID_TOKEN,
+                                       OAuthResponseType.CODE])
+                    .setGrantTypes([OAuthGrantType.IMPLICIT,
+                                    OAuthGrantType.AUTHORIZATION_CODE])
+                    .setApplicationType(OpenIdConnectApplicationType.SDK_UNKNOWN)
+                    .setTosUri("https://example.com/client/tos")
+                    .setPolicyUri("https://example.com/client/policy")))
+            .setCredentials(client.instantiate(OAuthApplicationCredentials)
+                .setOAuthClient(client.instantiate(ApplicationCredentialsOAuthClient)
+                    .setClientId(UUID.randomUUID().toString())
+                    .setAutoKeyRotation(true)
+                    .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))
+        })
     }
 
     @Test
