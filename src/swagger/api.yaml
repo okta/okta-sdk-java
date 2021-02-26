@@ -8256,6 +8256,7 @@ definitions:
     x-okta-tags:
       - EventHook
   EventSubscriptions:
+    discriminator: type
     properties:
       items:
         items:
