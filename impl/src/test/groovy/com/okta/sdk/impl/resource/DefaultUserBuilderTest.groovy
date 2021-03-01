@@ -209,6 +209,43 @@ class DefaultUserBuilderTest {
     }
 
     @Test
+    void importPasswordMd5() {
+        def client = mock(Client)
+        def user = mock(User)
+        def profile = mock(UserProfile)
+        def passwordCredential = mock(PasswordCredential)
+        def userCredentials = mock(UserCredentials)
+        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(UserProfile)).thenReturn(profile)
+        when(client.instantiate(UserCredentials)).thenReturn(userCredentials)
+        when(client.instantiate(PasswordCredential)).thenReturn(passwordCredential)
+        when(user.getProfile()).thenReturn(profile)
+        when(user.getCredentials()).thenReturn(userCredentials)
+
+        String salt = "some-salt"
+        String hashedPassword = "a-hashed-password"
+
+        new DefaultUserBuilder()
+            .setFirstName("Joe")
+            .setLastName("Coder")
+            .setEmail("joe.coder@example.com")
+            .setMd5PasswordHash(hashedPassword, salt, "PREFIX")
+            .buildAndCreate(client)
+
+        def hashCapture = ArgumentCaptor.forClass(Map.class)
+
+        verify(userCredentials).setPassword(passwordCredential)
+        verify(passwordCredential).put(eq("hash"), hashCapture.capture())
+
+        assertThat hashCapture.value, allOf(
+            hasEntry("salt", salt),
+            hasEntry("saltOrder", "PREFIX"),
+            hasEntry("value", hashedPassword),
+            hasEntry("algorithm", "MD5"),
+            aMapWithSize(4))
+    }
+
+    @Test
     void createUserWithClearAndImportPassword() {
 
         def client = mock(Client)

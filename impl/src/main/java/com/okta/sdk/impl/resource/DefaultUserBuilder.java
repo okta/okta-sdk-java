@@ -269,6 +269,10 @@ public class DefaultUserBuilder implements UserBuilder {
         return setShaPasswordHash("SHA-1", value, salt, saltOrder);
     }
 
+    public UserBuilder setMd5PasswordHash(String value, String salt, String saltOrder) {
+        return setShaPasswordHash("MD5", value, salt, saltOrder);
+    }
+
     private UserBuilder setShaPasswordHash(String shaAlgorithm, String value, String salt, String saltOrder) {
         passwordHashProperties = new HashMap<>();
         passwordHashProperties.put("algorithm", shaAlgorithm);
