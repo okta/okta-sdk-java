@@ -11231,13 +11231,6 @@ definitions:
     x-okta-parent: '#/definitions/Application'
     x-okta-tags:
       - Application
-  SamlApplicationV1:
-    properties:
-      settings:
-        $ref: '#/definitions/SamlApplicationSettings'
-    x-okta-parent: '#/definitions/Application'
-    x-okta-tags:
-      - Application
   SamlApplicationSettings:
     properties:
       signOn:
