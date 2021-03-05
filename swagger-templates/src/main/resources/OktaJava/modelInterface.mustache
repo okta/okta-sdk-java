@@ -37,13 +37,13 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
 
 {{#isEnum}}
     {{^isContainer}}
-        {{>modelInnerEnum}}
+{{>modelInnerEnum}}
     {{/isContainer}}
 {{/isEnum}}
 {{#items.isEnum}}
     {{#items}}
         {{^isContainer}}
-            {{>modelInnerEnum}}
+{{>modelInnerEnum}}
         {{/isContainer}}
     {{/items}}
 {{/items.isEnum}}
