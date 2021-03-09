@@ -7669,10 +7669,12 @@ definitions:
           - dest: policyId
             src: id
         operationId: getAuthorizationServerPolicy
-      - alias: updatePolicy
+      - alias: update
         arguments:
           - dest: policyId
             src: id
+          - dest: policy
+            self: true
         operationId: updateAuthorizationServerPolicy
       - alias: deletePolicy
         arguments:

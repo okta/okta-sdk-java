@@ -761,6 +761,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 definitions,
                 swagger);
 
+        // Deep copy for vendorExtensions Map
+        Map<String, Object> vendorExtensions = new LinkedHashMap<>();
+        co.vendorExtensions.forEach(vendorExtensions::put);
+        co.vendorExtensions = vendorExtensions;
+
         // scan params for X_OPENAPI_V3_SCHEMA_REF, and _correct_ the param
         co.allParams.forEach(param -> {
             if (param.vendorExtensions.containsKey(X_OPENAPI_V3_SCHEMA_REF)) {
