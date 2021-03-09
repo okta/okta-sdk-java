@@ -9034,6 +9034,8 @@ definitions:
         items:
           $ref: '#/definitions/InlineHookChannelConfigHeaders'
         type: array
+      method:
+        type: string
       uri:
         type: string
     type: object
