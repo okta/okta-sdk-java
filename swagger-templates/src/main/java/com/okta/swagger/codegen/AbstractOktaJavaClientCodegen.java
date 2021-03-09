@@ -455,15 +455,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         });
     }
 
-    //TODO Review and improve
-    @Override
-    public CodegenProperty fromProperty(String name, Property p) {
-
-        CodegenProperty co = super.fromProperty(name, p);
-
-        return co;
-    }
-
     private Map<String, String> createArgMap(ObjectNode n) {
 
         Map<String, String> argMap = new LinkedHashMap<>();
