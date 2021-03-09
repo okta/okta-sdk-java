@@ -391,6 +391,10 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                                     if (model.getProperties() != null) {
                                         CodegenProperty cgProperty = fromProperty(paramName, model.getProperties().get(paramName));
+                                        if(cgProperty == null && cgOperation.operationId.equals("deleteLinkedObjectDefinition")) {
+                                            cgProperty = new CodegenProperty();
+                                            cgProperty.getter = "getPrimary().getName";
+                                        }
                                         param.vendorExtensions.put("fromModel", cgProperty);
                                     } else {
                                         System.err.println("Model '" + model.getTitle() + "' has no properties");
