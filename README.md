@@ -466,7 +466,7 @@ okta:
       password: null
     authorizationMode: "PrivateKey"
     clientId: "yourClientId"
-    kid: "yourKeyId" # i.e. "92u3YfA6GgQwL1uSFbgqysQjz61kWtuAhgM2yHbmCuM"
+    kid: "yourKeyId" # i.e. "92u3YfA6GgQwL1uSFbgqysQjz61kWtuAhgM2yHbmCuM". This parameter is optional
     scopes: "okta.users.read okta.apps.read"
     privateKey: |
       -----BEGIN PRIVATE KEY-----
