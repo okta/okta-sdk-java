@@ -202,6 +202,11 @@ public abstract class AbstractPropertyRetriever implements PropertyRetriever {
             return null;
         }
 
+        //TODO: review this
+        if(value instanceof Date) {
+            return (Date)value;
+        }
+
         try {
             return dateFormatter.parse(String.valueOf(value));
         } catch (ParseException e) {
