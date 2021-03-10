@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.user.UserType
+import com.okta.sdk.resource.user.type.UserType
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils

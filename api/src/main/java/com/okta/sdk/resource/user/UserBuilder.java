@@ -17,6 +17,7 @@ package com.okta.sdk.resource.user;
 
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.user.type.UserType;
 
 import java.util.Arrays;
 import java.util.Map;

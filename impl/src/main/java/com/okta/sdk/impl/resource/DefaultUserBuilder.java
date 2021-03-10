@@ -26,7 +26,7 @@ import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserCredentials;
 import com.okta.sdk.resource.user.UserNextLogin;
 import com.okta.sdk.resource.user.UserProfile;
-import com.okta.sdk.resource.user.UserType;
+import com.okta.sdk.resource.user.type.UserType;
 
 import java.util.Arrays;
 import java.util.HashMap;
