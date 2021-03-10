@@ -12317,7 +12317,7 @@ definitions:
         $ref: '#/definitions/VerifyFactorRequest'
     type: object
     x-okta-crud:
-      - alias: deleteFactor
+      - alias: delete
         arguments:
           - dest: factorId
             src: id
