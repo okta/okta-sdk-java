@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Support](https://img.shields.io/badge/support-Developer%20Forum-blue.svg)][devforum]
 [![API Reference](https://img.shields.io/badge/docs-reference-lightgrey.svg)][javadocs]
+[![Build Status](https://travis-ci.com/okta/okta-sdk-java.svg?branch=master)](https://travis-ci.com/okta/okta-sdk-java)
 
 # Okta Java Management SDK
 
