@@ -744,7 +744,7 @@ class ApplicationsIT extends ITSupport {
     }
 
     @Test
-    void testExecuteAcceptXml() {
+    void testGetRawResponse() {
         def app = client.instantiate(SamlApplication)
             .setVisibility(client.instantiate(ApplicationVisibility))
             .setSettings(client.instantiate(SamlApplicationSettings)
@@ -764,12 +764,12 @@ class ApplicationsIT extends ITSupport {
         def headers = Collections.singletonMap("Accept", Collections.singletonList(MediaType.APPLICATION_XML as String))
         registerForCleanup(resource)
 
-        Resource response = dataStore.getResource(url as String, Application.class, null, headers)
+        InputStream response = dataStore.getRawResponse(url as String, null, headers)
 
         assertThat(resource.isEmpty(), is(false))
         String x509Certificate = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder()
-            .parse(response["text/plain"] as InputStream)
+            .parse(response)
             .getElementsByTagName("ds:X509Certificate")
             .item(0)
             .getFirstChild()
