@@ -718,6 +718,32 @@ class ApplicationsIT extends ITSupport {
     }
 
     @Test
+    void testExecuteWithoutAcceptHeader() {
+        def app = client.instantiate(SamlApplication)
+            .setVisibility(client.instantiate(ApplicationVisibility))
+            .setSettings(client.instantiate(SamlApplicationSettings)
+                .setSignOn(client.instantiate(SamlApplicationSettingsSignOn)
+                    .setSsoAcsUrl("http://testorgone.okta")
+                    .setAudience("asdqwe123")
+                    .setRecipient("http://testorgone.okta")
+                    .setDestination("http://testorgone.okta")
+                    .setAssertionSigned(true)
+                    .setSignatureAlgorithm("RSA_SHA256")
+                    .setDigestAlgorithm("SHA256")
+                )
+            )
+        def dataStore = (DefaultDataStore) client.getDataStore()
+        def resource = create(client, app)
+        def url = resource.getLinks().get("users")["href"]
+        registerForCleanup(resource)
+
+        Resource response = dataStore.getResource(url as String, Application.class)
+
+        assertThat(response.isEmpty(), is(false))
+        assertThat(response.size(), is(3))
+    }
+
+    @Test
     void testExecuteAcceptIonPlusJson() {
         def app = client.instantiate(SamlApplication)
             .setVisibility(client.instantiate(ApplicationVisibility))
