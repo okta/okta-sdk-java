@@ -718,7 +718,7 @@ class ApplicationsIT extends ITSupport {
     }
 
     @Test
-    void testExecuteAcceptJson() {
+    void testExecuteAcceptIonPlusJson() {
         def app = client.instantiate(SamlApplication)
             .setVisibility(client.instantiate(ApplicationVisibility))
             .setSettings(client.instantiate(SamlApplicationSettings)
