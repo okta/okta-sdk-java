@@ -82,7 +82,6 @@ public class DefaultDataStore implements InternalDataStore {
 
     private static final String HREF_REQD_MSG = "'save' may only be called on objects that have already been " +
                                                "persisted and have an existing 'href' attribute.";
-    private static final MediaType APPLICATION_ION_JSON = new MediaType("application", "ion+json");
 
     private final RequestExecutor requestExecutor;
     private final ResourceFactory resourceFactory;
@@ -484,7 +483,7 @@ public class DefaultDataStore implements InternalDataStore {
         Assert.notNull(response, "response argument cannot be null.");
 
         if (response.hasBody() && (MediaType.APPLICATION_JSON.equals(response.getHeaders().getContentType())
-            || APPLICATION_ION_JSON.equals(response.getHeaders().getContentType()))) {
+            || Strings.endsWithIgnoreCase(String.valueOf(response.getHeaders().getContentType()), "+json"))) {
             return mapMarshaller.unmarshal(response.getBody(), response.getHeaders().getLinkMap());
         }
 
@@ -493,12 +492,7 @@ public class DefaultDataStore implements InternalDataStore {
 
     private Optional<InputStream> getRawBody(Response response) {
         Assert.notNull(response, "response argument cannot be null.");
-
-        if (response.hasBody()) {
-            return Optional.ofNullable(response.getBody());
-        }
-
-        return Optional.empty();
+        return Optional.ofNullable(response.getBody());
     }
 
     protected void applyDefaultRequestHeaders(Request request) {
