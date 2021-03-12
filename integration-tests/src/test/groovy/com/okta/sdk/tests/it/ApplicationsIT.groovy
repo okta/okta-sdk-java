@@ -735,9 +735,10 @@ class ApplicationsIT extends ITSupport {
         def dataStore = (DefaultDataStore) client.getDataStore()
         def resource = create(client, app)
         def url = resource.getLinks().get("users")["href"]
+        def headers = Collections.singletonMap("Accept", Collections.singletonList("application/ion+json"))
         registerForCleanup(resource)
 
-        Resource response = dataStore.getResource(url as String, Application.class)
+        Resource response = dataStore.getResource(url as String, Application.class, null, headers)
 
         assertThat(response.isEmpty(), is(false))
         assertThat(response.size(), is(3))
