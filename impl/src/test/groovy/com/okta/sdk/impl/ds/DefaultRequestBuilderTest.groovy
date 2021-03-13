@@ -152,6 +152,27 @@ class DefaultRequestBuilderTest {
     }
 
     @Test
+    void testGetRaw() {
+        def href = "/api/v1/apps/clientId/sso/saml/metadata"
+        def queryParams = [
+                key1: "value1"
+        ]
+        def headerParams = [
+                header1: ["value1"]
+        ]
+        def dataStore = mock(InternalDataStore)
+        def returnValue = mock(InputStream)
+        when(dataStore.getRawResponse(href, queryParams, headerParams)).thenReturn(returnValue)
+
+        def result = new DefaultRequestBuilder(dataStore)
+                .setQueryParameters(queryParams)
+                .setHeaderParameters(headerParams)
+                .getRaw(href)
+
+        assertThat result, sameInstance(returnValue)
+    }
+
+    @Test
     void testPut() {
 
         def href = "/api/v1/foobar"

@@ -20,6 +20,7 @@ import com.okta.sdk.ds.RequestBuilder;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.VoidResource;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +89,11 @@ class DefaultRequestBuilder implements RequestBuilder {
     @Override
     public <T extends Resource> T get(String href, Class<T> type) {
         return dataStore.getResource(href, type, queryParams, headers);
+    }
+
+    @Override
+    public InputStream getRaw(String href) {
+        return dataStore.getRawResponse(href, queryParams, headers);
     }
 
     @Override

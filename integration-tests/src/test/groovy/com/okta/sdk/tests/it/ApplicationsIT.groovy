@@ -15,7 +15,13 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.commons.http.DefaultRequest
+import com.okta.commons.http.HttpMethod
+import com.okta.commons.http.MediaType
+import com.okta.commons.http.Response
 import com.okta.sdk.client.Client
+import com.okta.sdk.impl.ds.DefaultDataStore
+import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.group.Group
@@ -24,6 +30,10 @@ import com.okta.sdk.resource.user.User
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
+import wiremock.net.minidev.json.JSONObject
+
+import java.nio.charset.Charset
+import javax.xml.parsers.DocumentBuilderFactory
 
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
 import static com.okta.sdk.tests.it.util.Util.assertPresent
@@ -705,5 +715,92 @@ class ApplicationsIT extends ITSupport {
 
         // verify
         assertNotPresent(app.listScopeConsentGrants(), app.getScopeConsentGrant(oAuth2ScopeConsentGrant.getId()))
+    }
+
+    @Test
+    void testExecuteWithoutAcceptHeader() {
+        def app = client.instantiate(SamlApplication)
+            .setVisibility(client.instantiate(ApplicationVisibility))
+            .setSettings(client.instantiate(SamlApplicationSettings)
+                .setSignOn(client.instantiate(SamlApplicationSettingsSignOn)
+                    .setSsoAcsUrl("http://testorgone.okta")
+                    .setAudience("asdqwe123")
+                    .setRecipient("http://testorgone.okta")
+                    .setDestination("http://testorgone.okta")
+                    .setAssertionSigned(true)
+                    .setSignatureAlgorithm("RSA_SHA256")
+                    .setDigestAlgorithm("SHA256")
+                )
+            )
+        def dataStore = (DefaultDataStore) client.getDataStore()
+        def resource = create(client, app)
+        def url = resource.getLinks().get("users")["href"]
+        registerForCleanup(resource)
+
+        Resource response = dataStore.getResource(url as String, Application.class)
+
+        assertThat(response.isEmpty(), is(false))
+        assertThat(response.size(), is(3))
+    }
+
+    @Test
+    void testExecuteAcceptIonPlusJson() {
+        def app = client.instantiate(SamlApplication)
+            .setVisibility(client.instantiate(ApplicationVisibility))
+            .setSettings(client.instantiate(SamlApplicationSettings)
+                .setSignOn(client.instantiate(SamlApplicationSettingsSignOn)
+                    .setSsoAcsUrl("http://testorgone.okta")
+                    .setAudience("asdqwe123")
+                    .setRecipient("http://testorgone.okta")
+                    .setDestination("http://testorgone.okta")
+                    .setAssertionSigned(true)
+                    .setSignatureAlgorithm("RSA_SHA256")
+                    .setDigestAlgorithm("SHA256")
+                )
+            )
+        def dataStore = (DefaultDataStore) client.getDataStore()
+        def resource = create(client, app)
+        def url = resource.getLinks().get("users")["href"]
+        def headers = Collections.singletonMap("Accept", Collections.singletonList("application/ion+json"))
+        registerForCleanup(resource)
+
+        Resource response = dataStore.getResource(url as String, Application.class, null, headers)
+
+        assertThat(response.isEmpty(), is(false))
+        assertThat(response.size(), is(3))
+    }
+
+    @Test
+    void testGetRawResponse() {
+        def app = client.instantiate(SamlApplication)
+            .setVisibility(client.instantiate(ApplicationVisibility))
+            .setSettings(client.instantiate(SamlApplicationSettings)
+                .setSignOn(client.instantiate(SamlApplicationSettingsSignOn)
+                    .setSsoAcsUrl("http://testorgone.okta")
+                    .setAudience("asdqwe123")
+                    .setRecipient("http://testorgone.okta")
+                    .setDestination("http://testorgone.okta")
+                    .setAssertionSigned(true)
+                    .setSignatureAlgorithm("RSA_SHA256")
+                    .setDigestAlgorithm("SHA256")
+                )
+            )
+        def dataStore = (DefaultDataStore) client.getDataStore()
+        def resource = create(client, app)
+        def url = resource.getLinks().get("metadata")["href"]
+        def headers = Collections.singletonMap("Accept", Collections.singletonList(MediaType.APPLICATION_XML as String))
+        registerForCleanup(resource)
+
+        InputStream response = dataStore.getRawResponse(url as String, null, headers)
+
+        assertThat(resource.isEmpty(), is(false))
+        String x509Certificate = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder()
+            .parse(response)
+            .getElementsByTagName("ds:X509Certificate")
+            .item(0)
+            .getFirstChild()
+            .getNodeValue()
+        assertThat(x509Certificate.isBlank(), is(false))
     }
 }
