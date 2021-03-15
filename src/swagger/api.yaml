@@ -7851,12 +7851,12 @@ definitions:
           - dest: policyId
             parentSrc: id
         operationId: updateAuthorizationServerPolicyRule
-      - alias: deletePolicyRule
+      - alias: delete
         arguments:
           - dest: ruleId
             src: id
           - dest: policyId
-            parentSrc: id
+            parentSrc: policyId
         operationId: deleteAuthorizationServerPolicyRule
     x-okta-operations:
       - alias: activate
