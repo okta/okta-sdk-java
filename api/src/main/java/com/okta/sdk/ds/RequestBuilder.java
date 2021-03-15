@@ -19,6 +19,7 @@ package com.okta.sdk.ds;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.VoidResource;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -110,6 +111,14 @@ public interface RequestBuilder {
      * @return The response payload unmarshalled into a Resource
      */
     <T extends Resource> T get(String href, Class<T> type);
+
+    /**
+     * Executes a {@code GET} request and returns a raw response.
+     *
+     * @param href an absolute or partial HREF
+     * @return The response payload as InputStream
+     */
+    InputStream getRaw(String href);
 
     /**
      * Executes a {@code PUT} request and updates the resource used as the {@code body}.
