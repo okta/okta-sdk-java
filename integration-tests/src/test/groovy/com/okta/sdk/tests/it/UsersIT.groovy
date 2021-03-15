@@ -761,6 +761,22 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.IMPORT)
     }
 
+    @Test
+    void importUserWithMd5Password() {
+        def salt = "aSalt"
+
+        User user = UserBuilder.instance()
+                .setEmail("joe.coder+${uniqueTestName}@example.com")
+                .setFirstName("Joe")
+                .setLastName("Code")
+                .setMd5PasswordHash(hashPassword("aPassword", salt), salt, "PREFIX")
+                .buildAndCreate(getClient())
+        registerForCleanup(user)
+
+        assertThat user.getCredentials(), notNullValue()
+        assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.IMPORT)
+    }
+
     private void ensureCustomProperties() {
         def userSchemaUri = "/api/v1/meta/schemas/user/default"
 
