@@ -198,4 +198,9 @@ class LinkedObjectsIT extends ITSupport {
         assertLinkedObjectPresent(client.listLinkedObjectDefinitions(), createdLinkedObjectDefinition1)
         assertLinkedObjectPresent(client.listLinkedObjectDefinitions(), createdLinkedObjectDefinition2)
     }
+
+    @Test
+    void cleanUpLinkedObjects() {
+        client.listLinkedObjectDefinitions().stream().forEach({ x -> x.delete() })
+    }
 }
