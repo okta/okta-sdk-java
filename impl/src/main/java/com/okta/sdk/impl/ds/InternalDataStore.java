@@ -19,6 +19,7 @@ package com.okta.sdk.impl.ds;
 import com.okta.sdk.ds.DataStore;
 import com.okta.sdk.resource.Resource;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -102,4 +103,6 @@ public interface InternalDataStore extends DataStore {
     default <T extends Resource> void save(String href, T resource) {
         save(href, resource, null);
     }
+
+    InputStream getRawResponse(String href, Map<String, Object> queryParameters, Map<String, List<String>> headerParameters);
 }

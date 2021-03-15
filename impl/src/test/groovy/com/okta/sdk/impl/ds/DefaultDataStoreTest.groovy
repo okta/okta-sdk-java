@@ -17,6 +17,7 @@
 package com.okta.sdk.impl.ds
 
 import com.okta.commons.http.HttpHeaders
+import com.okta.commons.http.MediaType
 import com.okta.commons.http.Request
 import com.okta.commons.http.RequestExecutor
 import com.okta.commons.http.Response
@@ -25,7 +26,6 @@ import com.okta.sdk.impl.api.ClientCredentialsResolver
 import com.okta.sdk.impl.http.HttpHeadersHolder
 import com.okta.sdk.impl.resource.TestResource
 import com.okta.sdk.impl.util.StringInputStream
-import org.hamcrest.Matcher
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.testng.annotations.AfterTest
@@ -69,11 +69,13 @@ class DefaultDataStoreTest {
         def response = mock(Response)
         def responseBody = '{"name": "jcoder"}'
         def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
 
         when(requestExecutor.executeRequest(Mockito.any())).thenReturn(response)
         when(response.hasBody()).thenReturn(true)
         when(response.getBody()).thenReturn(new StringInputStream(responseBody))
-        when(response.getHeaders()).thenReturn(new HttpHeaders())
+        when(response.getHeaders()).thenReturn(headers)
 
         def testResource = defaultDataStore.getResource(resourceHref, TestResource)
         assertThat testResource.getResourceHref(), is(resourceHref)
@@ -89,11 +91,13 @@ class DefaultDataStoreTest {
         def responseBody = '{"name": "jcoder"}'
         def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
         def requestCapture = ArgumentCaptor.forClass(Request)
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
 
         when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
         when(response.hasBody()).thenReturn(true)
         when(response.getBody()).thenReturn(new StringInputStream(responseBody))
-        when(response.getHeaders()).thenReturn(new HttpHeaders())
+        when(response.getHeaders()).thenReturn(headers)
 
         defaultDataStore.getResource(resourceHref, TestResource, [query1: "query-value1", query2: "query-value2"],
                                                                  [header1: ["header-value1"], header2: ["header2-valueA", "header2-valueB"]])
@@ -140,11 +144,13 @@ class DefaultDataStoreTest {
         def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
         def requestCapture = ArgumentCaptor.forClass(Request)
         def resource = new TestResource(null, null)
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
 
         when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
         when(response.hasBody()).thenReturn(true)
         when(response.getBody()).thenReturn(new StringInputStream(responseBody))
-        when(response.getHeaders()).thenReturn(new HttpHeaders())
+        when(response.getHeaders()).thenReturn(headers)
 
         defaultDataStore.save(resourceHref, resource, null, [query1: "query-value1", query2: "query-value2"],
                                                                           [header1: ["header-value1"], header2: ["header2-valueA", "header2-valueB"]])
@@ -165,11 +171,13 @@ class DefaultDataStoreTest {
         def responseBody = '{"name": "jcoder"}'
         def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
         def requestCapture = ArgumentCaptor.forClass(Request)
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
 
         when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
         when(response.hasBody()).thenReturn(true)
         when(response.getBody()).thenReturn(new StringInputStream(responseBody))
-        when(response.getHeaders()).thenReturn(new HttpHeaders())
+        when(response.getHeaders()).thenReturn(headers)
 
         defaultDataStore.getResource(resourceHref, TestResource, null,
                                                                  ["User-Agent": ["test-value"]])
@@ -192,11 +200,13 @@ class DefaultDataStoreTest {
         def responseBody = '{"name": "jcoder"}'
         def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", apiKeyResolver)
         def requestCapture = ArgumentCaptor.forClass(Request)
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
 
         when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
         when(response.hasBody()).thenReturn(true)
         when(response.getBody()).thenReturn(new StringInputStream(responseBody))
-        when(response.getHeaders()).thenReturn(new HttpHeaders())
+        when(response.getHeaders()).thenReturn(headers)
 
         HttpHeadersHolder.set([
             "threaded-header1": ["value1", "value2"],
