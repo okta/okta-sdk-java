@@ -194,9 +194,6 @@ trait ClientProvider implements IHookable {
                         deletable instanceof IdentityProvider) {
                         deletable.deactivate()
                     }
-                    if (deletable instanceof LinkedObject) {
-                        deletable.setName(deletable.getPrimary().getName())
-                    }
                     deletable.delete()
                 }
                 catch (Exception e) {
