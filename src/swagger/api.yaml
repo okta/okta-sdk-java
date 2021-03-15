@@ -7778,7 +7778,7 @@ definitions:
           - dest: policy
             self: true
         operationId: updateAuthorizationServerPolicy
-      - alias: deletePolicy
+      - alias: delete
         arguments:
           - dest: policyId
             src: id

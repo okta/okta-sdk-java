@@ -355,8 +355,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         boolean canLinkMethod = true;
 
                         JsonNode aliasNode = n.get("alias");
+                        String alias = null;
                         if (aliasNode != null) {
-                            String alias = aliasNode.textValue();
+                            alias = aliasNode.textValue();
                             cgOperation.vendorExtensions.put("alias", alias);
 
                             if ("update".equals(alias)) {
@@ -421,6 +422,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                     cgParamAllList.add(param);
                                 }
                             });
+
+                            //do not implement interface Deletable when delete method has some arguments
+                            if(alias.equals("delete") && cgParamAllList.size() > 0) {
+                                model.getVendorExtensions().put("deletable", false);
+                            }
 
                             if (!pathParents.isEmpty()) {
                                 cgOperation.vendorExtensions.put("hasPathParents", true);
