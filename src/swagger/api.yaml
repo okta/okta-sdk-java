@@ -5144,7 +5144,7 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/CreateUserRequest'
         - default: true
           description: Executes activation lifecycle operation when creating the user
           in: query
@@ -8101,7 +8101,6 @@ definitions:
       type:
         $ref: '#/definitions/UserType'
     type: object
-    x-okta-parent: '#/definitions/User'
     x-okta-tags:
       - User
   Csr:
@@ -10068,7 +10067,7 @@ definitions:
     properties:
       people:
         $ref: '#/definitions/PolicyPeopleCondition'
-    x-okta-parent: '#/definition/PolicyRuleConditions'
+    x-okta-parent: '#/definitions/PolicyRuleConditions'
     x-okta-tags:
       - Policy
   OktaSignOnPolicyRule:
@@ -10358,7 +10357,7 @@ definitions:
         $ref: '#/definitions/PasswordPolicyAuthenticationProviderCondition'
       people:
         $ref: '#/definitions/PolicyPeopleCondition'
-    x-okta-parent: '#/definition/PolicyRuleConditions'
+    x-okta-parent: '#/definitions/PolicyRuleConditions'
     x-okta-tags:
       - Policy
   PasswordPolicyDelegationSettings:
