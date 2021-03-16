@@ -2,6 +2,28 @@
  
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
+## Migrating from 3.x.x to 4.0.0
+
+Version 4.0.0 of this SDK introduces a number of breaking changes from previous versions.
+In addition to many new classes/interfaces, some existing classes/interfaces are no longer backward compatible due to method renaming and signature changes.
+
+### Package `com.okta.sdk.client.Client`
+
+Below methods have undergone a signature change.
+- `User createUser(User user, Boolean active, Boolean provider, UserNextLogin nextLogin)` signature changed to `User createUser(CreateUserRequest createUserRequest, Boolean active, Boolean provider, UserNextLogin nextLogin)`
+- `User createUser(User user)` signature changed to `User createUser(CreateUserRequest createUserRequest)`
+    - First argument type changed from `User` to `CreateUserRequest`
+    
+### Package `com.okta.sdk.resource.user.type.UserType`
+
+Class `com.okta.sdk.resource.user.UserType` moved under `com.okta.sdk.resource.user.type.UserType`
+
+### Package `com.okta.sdk.resource.user.type.UserTypeList`
+
+Class `com.okta.sdk.resource.user.UserTypeList` moved under `com.okta.sdk.resource.user.type.UserTypeList`
+
+
+
 ## Migrating from 2.x.x to 3.0.0
 
 Version 3.0.0 of this SDK introduces a number of breaking changes from previous versions. 
