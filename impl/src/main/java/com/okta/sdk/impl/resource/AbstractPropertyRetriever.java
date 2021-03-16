@@ -202,7 +202,6 @@ public abstract class AbstractPropertyRetriever implements PropertyRetriever {
             return null;
         }
 
-        //TODO: review this
         if(value instanceof Date) {
             return (Date)value;
         }
