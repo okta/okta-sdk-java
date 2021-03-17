@@ -65,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.okta.commons.http.HttpHeaders.OKTA_USER_AGENT;
@@ -167,6 +168,7 @@ public class DefaultDataStore implements InternalDataStore {
         return getResource(href, clazz, null);
     }
 
+    @Override
     public <T extends Resource> T getResource(String href, Class<T> clazz, Map<String, Object> queryParameters) {
         return getResource(href, clazz, queryParameters, null);
     }
@@ -179,6 +181,19 @@ public class DefaultDataStore implements InternalDataStore {
         resource.setResourceHref(href);
 
         return resource;
+    }
+
+    @Override
+    public InputStream getRawResponse(String href, Map<String, Object> queryParameters, Map<String, List<String>> headerParameters) {
+
+        Assert.hasText(href, "href argument cannot be null or empty.");
+
+        CanonicalUri uri = canonicalize(href, queryParameters);
+        Request getRequest = new DefaultRequest(HttpMethod.GET, uri.getAbsolutePath(), uri.getQuery(), headers(headerParameters));
+        Response getResponse = execute(getRequest);
+
+        return getRawBody(getResponse)
+            .orElseThrow(() -> new IllegalStateException("Unable to obtain resource data from the API server."));
     }
 
     @SuppressWarnings("unchecked")
@@ -345,7 +360,7 @@ public class DefaultDataStore implements InternalDataStore {
                 props,
                 requestHeaders);
 
-        ResourceDataResult result = chain.filter(request);
+        DefaultResourceDataResult result = (DefaultResourceDataResult) chain.filter(request);
 
         Map<String,Object> data = result.getData();
 
@@ -467,17 +482,23 @@ public class DefaultDataStore implements InternalDataStore {
 
         Assert.notNull(response, "response argument cannot be null.");
 
-        Map<String, Object> out = null;
-
-        if (response.hasBody()) {
-            out = mapMarshaller.unmarshal(response.getBody(), response.getHeaders().getLinkMap());
+        if (response.hasBody() && (MediaType.APPLICATION_JSON.equals(response.getHeaders().getContentType())
+            || Strings.endsWithIgnoreCase(String.valueOf(response.getHeaders().getContentType()), "+json"))) {
+            return mapMarshaller.unmarshal(response.getBody(), response.getHeaders().getLinkMap());
         }
 
-        return out;
+        return java.util.Collections.emptyMap();
+    }
+
+    private Optional<InputStream> getRawBody(Response response) {
+        Assert.notNull(response, "response argument cannot be null.");
+        return Optional.ofNullable(response.getBody());
     }
 
     protected void applyDefaultRequestHeaders(Request request) {
-        request.getHeaders().setAccept(java.util.Collections.singletonList(MediaType.APPLICATION_JSON));
+        if (!request.getHeaders().containsKey("Accept")) {
+            request.getHeaders().setAccept(java.util.Collections.singletonList(MediaType.APPLICATION_JSON));
+        }
 
         // Get runtime headers from http client
         Map<String, List<String>> headerMap = HttpHeadersHolder.get();
