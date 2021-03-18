@@ -21,11 +21,11 @@ Below methods have been added.
     
 ### Package `com.okta.sdk.resource.user.type.UserType`
 
-Class `com.okta.sdk.resource.user.UserType` moved under `com.okta.sdk.resource.user.type.UserType`
+Class `com.okta.sdk.resource.user.UserType` moved to `com.okta.sdk.resource.user.type.UserType`
 
 ### Package `com.okta.sdk.resource.user.type.UserTypeList`
 
-Class `com.okta.sdk.resource.user.UserTypeList` moved under `com.okta.sdk.resource.user.type.UserTypeList`
+Class `com.okta.sdk.resource.user.UserTypeList` moved to `com.okta.sdk.resource.user.type.UserTypeList`
 
 ### Package `com.okta.sdk.ds.RequestBuilder`
 
@@ -77,7 +77,7 @@ Below methods have been added.
 
 ### Package `com.okta.sdk.resource.application.SamlApplicationV1`
 
-The Interface has been removed.
+The Interface `com.okta.sdk.resource.application.SamlApplicationV1` has been removed.
 The Interface `com.okta.sdk.resource.application.SamlApplication` should be used instead.
 
 
@@ -101,18 +101,18 @@ This is a newly created interface with methods listed below.
 
 ### Package `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy`
 
-Below method has been renamed to keep naming consistency.
+Below method has been renamed in the interest of naming consistency.
 - Renamed `deletePolicy` to `delete`
 
 Below method has undergone a signature change.
 - `void deletePolicyRule(String ruleId)` signature changed to `void deletePolicyRule(String authServerId, String ruleId)`
 
-Below method has undergone a signature change and renamed to keep naming consistency.
+Below method has undergone a signature change and renamed in the interest of naming consistency.
 - `AuthorizationServerPolicy updatePolicy(String authServerId, AuthorizationServerPolicy authServerPolicy)` changed to `AuthorizationServerPolicy update(String authServerId)`
 
 ### Package `com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRule`
 
-Below method has been renamed to keep naming consistency.
+Below method has been renamed in the interest of naming consistency.
 - Renamed `deletePolicyRule` to `delete`
 
 ### Package `com.okta.sdk.resource.inline.hook.InlineHookChannelConfig`
@@ -126,20 +126,22 @@ Below methods have been added.
 
 Below methods have been removed.
 - `String getName()`
+  - `LinkedObject.getPrimary().getName()` should be used instead
 - `LinkedObject setName(String name)`
+  - `LinkedObject.getPrimary().setName()` should be used instead
 
 ### Package `com.okta.sdk.resource.log.LogCredentialProvider`
 
-Enum `LogCredentialProvider` has the below field defined:
+Enum `LogCredentialProvider` has the below new field definition:
 - `OKTA_CREDENTIAL_PROVIDER("OKTA_CREDENTIAL_PROVIDER")`
 
 ### Package `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$SupportedMDMFrameworksEnum`
 
-Interface `com.okta.sdk.resource.policy.MDMFrameworks` moved under `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$SupportedMDMFrameworksEnum`
+Interface `com.okta.sdk.resource.policy.MDMFrameworks` moved to `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$SupportedMDMFrameworksEnum`
 
 ### Package `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$TypesEnum`
 
-Interface `com.okta.sdk.resource.policy.Platforms` moved under `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$TypesEnum`
+Interface `com.okta.sdk.resource.policy.Platforms` moved to `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$TypesEnum`
 
 ### Package `com.okta.sdk.resource.user.factor.PushUserFactor` 
 
@@ -148,7 +150,7 @@ Below method has been added
 
 ### Package `com.okta.sdk.resource.user.factor.UserFactor`
 
-Below method has been renamed to keep naming consistency.
+Below method has been renamed in the interest of naming consistency.
 - Renamed `deleteFactor` to `delete`
 
 ### Package `com.okta.sdk.resource.user.schema.UserSchema`
@@ -303,12 +305,9 @@ This is a newly created interface with methods listed below.
 
 ### Package `com.okta.sdk.resource.user.User`
 
-Below method has undergone a signature change and renamed to keep naming consistency.
+Below method has undergone a signature change in the interest of naming consistency.
 - `void addAllAppsAsTargetToRole()` to `void addAllAppsAsTarget(String roleId)`
 - `void deleteFactor()` to `void deleteFactor(String factorId)`
-
-
-
 
 
 ## Migrating from 2.x.x to 3.0.0
