@@ -27,11 +27,6 @@ Class `com.okta.sdk.resource.user.UserType` moved to `com.okta.sdk.resource.user
 
 Class `com.okta.sdk.resource.user.UserTypeList` moved to `com.okta.sdk.resource.user.type.UserTypeList`
 
-### Package `com.okta.sdk.ds.RequestBuilder`
-
-Below method has been added.
-- `InputStream getRaw(String href)`
-
 ### Package `com.okta.sdk.resource.application.JsonWebKey`
 
 Below methods have been added.
