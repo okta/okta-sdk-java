@@ -338,8 +338,31 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 swagger.getPaths().forEach((pathName, path) -> {
                     Optional<Map.Entry<HttpMethod, Operation>> operationEntry =
                         path.getOperationMap().entrySet().stream().filter(
-                            e -> e.getValue().getOperationId() != null &&
-                                e.getValue().getOperationId().equals(operationId)).findFirst();
+                            oper -> {
+                                //Looking for operationId in paths:path:operationId
+                                if (oper.getValue().getOperationId() != null
+                                    && oper.getValue().getOperationId().equals(operationId)) {
+                                    return true;
+                                }
+                                //Looking for operationId in paths:path:method:x-okta-multi-operation:operationId
+                                Object multiOperation = oper.getValue().getVendorExtensions().get("x-okta-multi-operation");
+                                if (multiOperation instanceof List) {
+                                    Optional<JsonNode> jsonNodeOptional = ((List)multiOperation).stream().filter(x -> {
+                                        if(x instanceof JsonNode) {
+                                            JsonNode operationIdFromMultiOperation = ((JsonNode)x).get("operationId");
+                                            if(operationIdFromMultiOperation != null && operationIdFromMultiOperation.textValue().equals(operationId)) {
+                                                return true;
+                                            }
+                                        }
+                                        return false;
+                                    }).findFirst();
+                                    if(jsonNodeOptional.isPresent()) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+                        ).findFirst();
 
                     if (operationEntry.isPresent()) {
 
