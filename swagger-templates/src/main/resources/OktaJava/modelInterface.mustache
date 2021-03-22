@@ -22,7 +22,7 @@ import com.okta.sdk.resource.Saveable;
 /**
  * {{#description}}{{.}}{{/description}}{{^description}}{{classname}}{{/description}}
  */
-{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}
+{{>generatedAnnotation}}
 public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/parent}}{{#vendorExtensions.x-okta-extensible}}, PropertyRetriever, Map<String, Object>{{/vendorExtensions.x-okta-extensible}}{{#vendorExtensions.deletable}}, Deletable{{/vendorExtensions.deletable}} {
 
 {{#vars}}
@@ -37,13 +37,13 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
 
 {{#isEnum}}
     {{^isContainer}}
-        {{>modelInnerEnum}}
+{{>modelInnerEnum}}
     {{/isContainer}}
 {{/isEnum}}
 {{#items.isEnum}}
     {{#items}}
         {{^isContainer}}
-            {{>modelInnerEnum}}
+{{>modelInnerEnum}}
         {{/isContainer}}
     {{/items}}
 {{/items.isEnum}}

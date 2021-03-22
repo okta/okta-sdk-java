@@ -2,6 +2,309 @@
  
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
+## Migrating from 3.x.x to 4.0.0
+
+Version 4.0.0 of this SDK introduces a number of breaking changes from previous versions.
+In addition to many new classes/interfaces, some existing classes/interfaces are no longer backward compatible due to method renaming and signature changes.
+
+### Package `com.okta.sdk.client.Client`
+
+Below methods have undergone a signature change.
+- `User createUser(User user, Boolean active, Boolean provider, UserNextLogin nextLogin)` signature changed to `User createUser(CreateUserRequest createUserRequest, Boolean active, Boolean provider, UserNextLogin nextLogin)`
+- `User createUser(User user)` signature changed to `User createUser(CreateUserRequest createUserRequest)`
+    - First argument type changed from `User` to `CreateUserRequest`
+
+Below methods have been added.
+- `UserSchema updateApplicationUserProfile(String appInstanceId, UserSchema userSchema)`
+- `UserSchema updateApplicationUserProfile(String appInstanceId)`
+- `UserSchema updateUserProfile(String schemaId, UserSchema userSchema)`
+    
+### Package `com.okta.sdk.resource.user.type.UserType`
+
+Class `com.okta.sdk.resource.user.UserType` moved to `com.okta.sdk.resource.user.type.UserType`
+
+### Package `com.okta.sdk.resource.user.type.UserTypeList`
+
+Class `com.okta.sdk.resource.user.UserTypeList` moved to `com.okta.sdk.resource.user.type.UserTypeList`
+
+### Package `com.okta.sdk.resource.application.JsonWebKey`
+
+Below methods have been added.
+- `JsonWebKey setAlg(String alg)`
+- `JsonWebKey setCreated(Date created)`
+- `JsonWebKey setE(String e)`
+- `JsonWebKey setExpiresAt(Date expiresAt)`
+- `JsonWebKey setKeyOps(List<String> keyOps)`
+- `JsonWebKey setKid(String kid)`
+- `JsonWebKey setKty(String kty)`
+- `JsonWebKey setLastUpdated(Date lastUpdated)`
+- `JsonWebKey setN(String n)`
+- `JsonWebKey setStatus(String status)`
+- `JsonWebKey setUse(String use)`
+- `JsonWebKey setX5t(String x5t)`
+- `JsonWebKey setX5tS256(String x5tS256)`
+- `JsonWebKey setX5u(String x5u)`
+
+### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationIdpInitiatedLogin`
+
+This is a newly created interface with methods listed below.
+
+- `List<String> getDefaultScope()`
+- `OpenIdConnectApplicationIdpInitiatedLogin setDefaultScope(List<String> defaultScope)`
+- `String getMode()`
+- `OpenIdConnectApplicationIdpInitiatedLogin setMode(String mode)`
+
+### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationSettingsClient`
+
+Below methods have been added.
+
+- `OpenIdConnectApplicationIdpInitiatedLogin getIdpInitiatedLogin()`
+- `OpenIdConnectApplicationSettingsClient setIdpInitiatedLogin(OpenIdConnectApplicationIdpInitiatedLogin idpInitiatedLogin)`
+
+### Package `com.okta.sdk.resource.application.SamlApplicationSettingsSignOn`
+
+Below methods have been added.
+
+- `SingleLogout getSlo()`
+- `SpCertificate getSpCertificate()`
+- `SamlApplicationSettingsSignOn setSlo(SingleLogout slo)`
+- `SamlApplicationSettingsSignOn setSpCertificate(SpCertificate spCertificate)`
+
+### Package `com.okta.sdk.resource.application.SamlApplicationV1`
+
+The Interface `com.okta.sdk.resource.application.SamlApplicationV1` has been removed.
+The Interface `com.okta.sdk.resource.application.SamlApplication` should be used instead.
+
+
+### Package `com.okta.sdk.resource.application.SingleLogout`
+
+This is a newly created interface with methods listed below.
+
+- `Boolean getEnabled()`
+- `String getIssuer()`
+- `String getLogoutUrl()`
+- `SingleLogout setEnabled(Boolean enabled)`
+- `SingleLogout setIssuer(String issuer)`
+- `SingleLogout setLogoutUrl(String logoutUrl)`
+
+### Package `com.okta.sdk.resource.application.SpCertificate`
+
+This is a newly created interface with methods listed below.
+
+- `List<String> getX5c()`
+- `SpCertificate setX5c(List<String> x5c)`
+
+### Package `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy`
+
+Below method has been renamed in the interest of naming consistency.
+- Renamed `deletePolicy` to `delete`
+
+Below method has undergone a signature change.
+- `void deletePolicyRule(String ruleId)` signature changed to `void deletePolicyRule(String authServerId, String ruleId)`
+
+Below method has undergone a signature change and renamed in the interest of naming consistency.
+- `AuthorizationServerPolicy updatePolicy(String authServerId, AuthorizationServerPolicy authServerPolicy)` changed to `AuthorizationServerPolicy update(String authServerId)`
+
+### Package `com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRule`
+
+Below method has been renamed in the interest of naming consistency.
+- Renamed `deletePolicyRule` to `delete`
+
+### Package `com.okta.sdk.resource.inline.hook.InlineHookChannelConfig`
+
+Below methods have been added.
+
+- `String getMethod()`
+- `InlineHookChannelConfig setMethod(String method)`
+
+### Package `com.okta.sdk.resource.linked.object.LinkedObject`
+
+Below methods have been removed.
+- `String getName()`
+  - `LinkedObject.getPrimary().getName()` should be used instead
+- `LinkedObject setName(String name)`
+  - `LinkedObject.getPrimary().setName()` should be used instead
+
+### Package `com.okta.sdk.resource.log.LogCredentialProvider`
+
+Enum `LogCredentialProvider` has the below new field definition:
+- `OKTA_CREDENTIAL_PROVIDER("OKTA_CREDENTIAL_PROVIDER")`
+
+### Package `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$SupportedMDMFrameworksEnum`
+
+Interface `com.okta.sdk.resource.policy.MDMFrameworks` moved to `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$SupportedMDMFrameworksEnum`
+
+### Package `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$TypesEnum`
+
+Interface `com.okta.sdk.resource.policy.Platforms` moved to `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$TypesEnum`
+
+### Package `com.okta.sdk.resource.user.factor.PushUserFactor` 
+
+Below method has been added
+- `PushUserFactor setExpiresAt(Date expiresAt)`
+
+### Package `com.okta.sdk.resource.user.factor.UserFactor`
+
+Below method has been renamed in the interest of naming consistency.
+- Renamed `deleteFactor` to `delete`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchema`
+
+This is a newly created interface with methods listed below.
+- `String getCreated()`
+- `UserSchemaDefinitions getDefinitions()`
+- `String getId()`
+- `String getLastUpdated()`
+- `Map getLinks()`
+- `String getName()`
+- `Map getProperties()`
+- `String getSchema()`
+- `String getTitle()`
+- `String getType()`
+- `UserSchema setDefinitions(UserSchemaDefinitions definitions)`
+- `UserSchema setTitle(String title)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttribute`
+
+This is a newly created interface with methods listed below.
+- `String getDescription()`
+- `UserSchemaAttributeMaster getMaster()`
+- `Integer getMaxLength()`
+- `Integer getMinLength()`
+- `String getMutability()`
+- `List getPermissions()`
+- `Boolean getRequired()`
+- `String getScope()`
+- `String getTitle()`
+- `String getType()`
+- `UserSchemaAttribute setDescription(String description)`
+- `UserSchemaAttribute setMaster(UserSchemaAttributeMaster master)`
+- `UserSchemaAttribute setMaxLength(Integer maxLength)`
+- `UserSchemaAttribute setMinLength(Integer minLength)`
+- `UserSchemaAttribute setMutability(String mutability)`
+- `UserSchemaAttribute setPermissions(List permissions)`
+- `UserSchemaAttribute setRequired(Boolean required)`
+- `UserSchemaAttribute setScope(String scope)`
+- `UserSchemaAttribute setTitle(String title)`
+- `UserSchemaAttribute setType(String type)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeMaster`
+
+This is a newly created interface with methods listed below.
+- `String getType()`
+- `UserSchemaAttributeMaster setType(String type)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributePermission`
+
+This is a newly created interface with methods listed below.
+- `String getAction()`
+- `String getPrincipal()`
+- `UserSchemaAttributePermission setAction(String action)`
+- `UserSchemaAttributePermission setPrincipal(String principal)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaBase`
+
+This is a newly created interface with methods listed below.
+- `String getId()`
+- `UserSchemaBaseProperties getProperties()`
+- `List<String> getRequired()`
+- `String getType()`
+- `UserSchemaBase setProperties(UserSchemaBaseProperties properties)`
+- `UserSchemaBase setRequired(List<String> required)`
+- `UserSchemaBase setType(String type)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaBaseProperties`
+
+This is a newly created interface with methods listed below.
+- `UserSchemaAttribute getCity()`
+- `UserSchemaAttribute getCostCenter()`
+- `UserSchemaAttribute getCountryCode()`
+- `UserSchemaAttribute getDepartment()`
+- `UserSchemaAttribute getDisplayName()`
+- `UserSchemaAttribute getDivision()`
+- `UserSchemaAttribute getEmail()`
+- `UserSchemaAttribute getEmployeeNumber()`
+- `UserSchemaAttribute getFirstName()`
+- `UserSchemaAttribute getHonorificPrefix()`
+- `UserSchemaAttribute getHonorificSuffix()`
+- `UserSchemaAttribute getLastName()`
+- `UserSchemaAttribute getLocale()`
+- `UserSchemaAttribute getLogin()`
+- `UserSchemaAttribute getManager()`
+- `UserSchemaAttribute getManagerId()`
+- `UserSchemaAttribute getMiddleName()`
+- `UserSchemaAttribute getMobilePhone()`
+- `UserSchemaAttribute getNickName()`
+- `UserSchemaAttribute getOrganization()`
+- `UserSchemaAttribute getPostalAddress()`
+- `UserSchemaAttribute getPreferredLanguage()`
+- `UserSchemaAttribute getPrimaryPhone()`
+- `UserSchemaAttribute getProfileUrl()`
+- `UserSchemaAttribute getSecondEmail()`
+- `UserSchemaAttribute getState()`
+- `UserSchemaAttribute getStreetAddress()`
+- `UserSchemaAttribute getTimezone()`
+- `UserSchemaAttribute getTitle()`
+- `UserSchemaAttribute getUserType()`
+- `UserSchemaAttribute getZipCode()`
+- `UserSchemaBaseProperties setCity(UserSchemaAttribute city)`
+- `UserSchemaBaseProperties setCostCenter(UserSchemaAttribute costCenter)`
+- `UserSchemaBaseProperties setCountryCode(UserSchemaAttribute countryCode)`
+- `UserSchemaBaseProperties setDepartment(UserSchemaAttribute department)`
+- `UserSchemaBaseProperties setDisplayName(UserSchemaAttribute displayName)`
+- `UserSchemaBaseProperties setDivision(UserSchemaAttribute division)`
+- `UserSchemaBaseProperties setEmail(UserSchemaAttribute email)`
+- `UserSchemaBaseProperties setEmployeeNumber(UserSchemaAttribute employeeNumber)`
+- `UserSchemaBaseProperties setFirstName(UserSchemaAttribute firstName)`
+- `UserSchemaBaseProperties setHonorificPrefix(UserSchemaAttribute honorificPrefix)`
+- `UserSchemaBaseProperties setHonorificSuffix(UserSchemaAttribute honorificSuffix)`
+- `UserSchemaBaseProperties setLastName(UserSchemaAttribute lastName)`
+- `UserSchemaBaseProperties setLocale(UserSchemaAttribute locale)`
+- `UserSchemaBaseProperties setLogin(UserSchemaAttribute login)`
+- `UserSchemaBaseProperties setManager(UserSchemaAttribute manager)`
+- `UserSchemaBaseProperties setManagerId(UserSchemaAttribute managerId)`
+- `UserSchemaBaseProperties setMiddleName(UserSchemaAttribute middleName)`
+- `UserSchemaBaseProperties setMobilePhone(UserSchemaAttribute mobilePhone)`
+- `UserSchemaBaseProperties setNickName(UserSchemaAttribute nickName)`
+- `UserSchemaBaseProperties setOrganization(UserSchemaAttribute organization)`
+- `UserSchemaBaseProperties setPostalAddress(UserSchemaAttribute postalAddress)`
+- `UserSchemaBaseProperties setPreferredLanguage(UserSchemaAttribute preferredLanguage)`
+- `UserSchemaBaseProperties setPrimaryPhone(UserSchemaAttribute primaryPhone)`
+- `UserSchemaBaseProperties setProfileUrl(UserSchemaAttribute profileUrl)`
+- `UserSchemaBaseProperties setSecondEmail(UserSchemaAttribute secondEmail)`
+- `UserSchemaBaseProperties setState(UserSchemaAttribute state)`
+- `UserSchemaBaseProperties setStreetAddress(UserSchemaAttribute streetAddress)`
+- `UserSchemaBaseProperties setTimezone(UserSchemaAttribute timezone)`
+- `UserSchemaBaseProperties setTitle(UserSchemaAttribute title)`
+- `UserSchemaBaseProperties setUserType(UserSchemaAttribute userType)`
+- `UserSchemaBaseProperties setZipCode(UserSchemaAttribute zipCode)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaDefinitions`
+
+This is a newly created interface with methods listed below.
+- `UserSchemaBase getBase()`
+- `UserSchemaPublic getCustom()`
+- `UserSchemaDefinitions setBase(UserSchemaBase base)`
+- `UserSchemaDefinitions setCustom(UserSchemaPublic custom)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaPublic`
+
+This is a newly created interface with methods listed below.
+- `String getId()`
+- `Map<String, Object> getProperties()`
+- `List<String> getRequired()`
+- `String getType()`
+- `UserSchemaPublic setProperties(Map<String, Object> properties)`
+- `UserSchemaPublic setRequired(List<String> required)`
+- `UserSchemaPublic setType(String type)`
+
+### Package `com.okta.sdk.resource.user.User`
+
+Below method has undergone a signature change in the interest of naming consistency.
+- `void addAllAppsAsTargetToRole()` to `void addAllAppsAsTarget(String roleId)`
+- `void deleteFactor()` to `void deleteFactor(String factorId)`
+
+
 ## Migrating from 2.x.x to 3.0.0
 
 Version 3.0.0 of this SDK introduces a number of breaking changes from previous versions. 

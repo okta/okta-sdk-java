@@ -186,7 +186,6 @@ trait ClientProvider implements IHookable {
             toBeDeleted.reverse().each { deletable ->
                 try {
                     if (deletable instanceof User ||
-                        deletable instanceof GroupRule ||
                         deletable instanceof Application ||
                         deletable instanceof AuthorizationServer ||
                         deletable instanceof EventHook ||
@@ -194,9 +193,6 @@ trait ClientProvider implements IHookable {
                         deletable instanceof GroupRule ||
                         deletable instanceof IdentityProvider) {
                         deletable.deactivate()
-                    }
-                    if (deletable instanceof LinkedObject) {
-                        deletable.setName(deletable.getPrimary().getName())
                     }
                     deletable.delete()
                 }

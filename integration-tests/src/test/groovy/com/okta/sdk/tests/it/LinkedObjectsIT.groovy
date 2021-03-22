@@ -51,7 +51,6 @@ class LinkedObjectsIT extends ITSupport {
             .setType(LinkedObjectDetailsType.USER)
 
         LinkedObject linkedObject = client.instantiate(LinkedObject)
-            .setName(primary.getName())
             .setPrimary(primary)
             .setAssociated(associated)
         registerForCleanup(linkedObject)
@@ -88,7 +87,6 @@ class LinkedObjectsIT extends ITSupport {
             .setType(LinkedObjectDetailsType.USER)
 
         LinkedObject linkedObject = client.instantiate(LinkedObject)
-            .setName(primary.getName())
             .setPrimary(primary)
             .setAssociated(associated)
         registerForCleanup(linkedObject)
@@ -127,7 +125,6 @@ class LinkedObjectsIT extends ITSupport {
             .setType(LinkedObjectDetailsType.USER)
 
         LinkedObject linkedObject = client.instantiate(LinkedObject)
-            .setName(primary.getName())
             .setPrimary(primary)
             .setAssociated(associated)
         registerForCleanup(linkedObject)
@@ -168,7 +165,6 @@ class LinkedObjectsIT extends ITSupport {
             .setType(LinkedObjectDetailsType.USER)
 
         LinkedObject linkedObject1 = client.instantiate(LinkedObject)
-            .setName(primary1.getName())
             .setPrimary(primary1)
             .setAssociated(associated1)
         registerForCleanup(linkedObject1)
@@ -193,7 +189,6 @@ class LinkedObjectsIT extends ITSupport {
             .setType(LinkedObjectDetailsType.USER)
 
         LinkedObject linkedObject2 = client.instantiate(LinkedObject)
-            .setName(primary2.getName())
             .setPrimary(primary2)
             .setAssociated(associated2)
         registerForCleanup(linkedObject2)

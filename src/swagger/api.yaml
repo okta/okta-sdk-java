@@ -25,7 +25,7 @@ info:
   license:
     name: Apache-2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-  version: 2.2.1
+  version: 2.3.0
 externalDocs:
   description: Find more info here
   url: 'http://developer.okta.com/docs/api/getting_started/design_principles.html'
@@ -3999,6 +3999,59 @@ paths:
       summary: Fetch a list of events from your Okta organization system log.
       tags:
         - Log
+  '/api/v1/meta/schemas/apps/{appInstanceId}/default':
+    get:
+      consumes:
+        - application/json
+      description: Fetches the Schema for an App User
+      operationId: getApplicationUserSchema
+      parameters:
+        - in: path
+          name: appInstanceId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/UserSchema'
+      security:
+        - api_token: []
+      summary: Fetches the Schema for an App User
+      tags:
+        - UserSchema
+    post:
+      consumes:
+        - application/json
+      description: >-
+        Partial updates on the User Profile properties of the Application User
+        Schema.
+      operationId: updateApplicationUserProfile
+      parameters:
+        - in: path
+          name: appInstanceId
+          required: true
+          type: string
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/UserSchema'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/UserSchema'
+      security:
+        - api_token: []
+      summary: >-
+        Partial updates on the User Profile properties of the Application User
+        Schema.
+      tags:
+        - UserSchema
   /api/v1/meta/schemas/user/linkedObjects:
     get:
       consumes:
@@ -4082,6 +4135,55 @@ paths:
         - api_token: []
       tags:
         - LinkedObject
+  '/api/v1/meta/schemas/user/{schemaId}':
+    get:
+      consumes:
+        - application/json
+      description: Fetches the schema for a Schema Id.
+      operationId: getUserSchema
+      parameters:
+        - in: path
+          name: schemaId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/UserSchema'
+      security:
+        - api_token: []
+      summary: Fetches the schema for a Schema Id.
+      tags:
+        - UserSchema
+    post:
+      consumes:
+        - application/json
+      description: Partial updates on the User Profile properties of the user schema.
+      operationId: updateUserProfile
+      parameters:
+        - in: path
+          name: schemaId
+          required: true
+          type: string
+        - in: body
+          name: userSchema
+          required: true
+          schema:
+            $ref: '#/definitions/UserSchema'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/UserSchema'
+      security:
+        - api_token: []
+      tags:
+        - UserSchema
   /api/v1/meta/types/user:
     get:
       consumes:
@@ -5042,7 +5144,7 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/CreateUserRequest'
         - default: true
           description: Executes activation lifecycle operation when creating the user
           in: query
@@ -7160,7 +7262,7 @@ definitions:
         BOOKMARK: '#/definitions/BookmarkApplication'
         BROWSER_PLUGIN: '#/definitions/BrowserPluginApplication'
         OPENID_CONNECT: '#/definitions/OpenIdConnectApplication'
-        SAML_1_1: '#/definitions/SamlApplicationV1'
+        SAML_1_1: '#/definitions/SamlApplication'
         SAML_2_0: '#/definitions/SamlApplication'
         SECURE_PASSWORD_STORE: '#/definitions/SecurePasswordStoreApplication'
         WS_FEDERATION: '#/definitions/WsFederationApplication'
@@ -7669,12 +7771,14 @@ definitions:
           - dest: policyId
             src: id
         operationId: getAuthorizationServerPolicy
-      - alias: updatePolicy
+      - alias: update
         arguments:
           - dest: policyId
             src: id
+          - dest: policy
+            self: true
         operationId: updateAuthorizationServerPolicy
-      - alias: deletePolicy
+      - alias: delete
         arguments:
           - dest: policyId
             src: id
@@ -7747,12 +7851,12 @@ definitions:
           - dest: policyId
             parentSrc: id
         operationId: updateAuthorizationServerPolicyRule
-      - alias: deletePolicyRule
+      - alias: delete
         arguments:
           - dest: ruleId
             src: id
           - dest: policyId
-            parentSrc: id
+            parentSrc: policyId
         operationId: deleteAuthorizationServerPolicyRule
     x-okta-operations:
       - alias: activate
@@ -7997,7 +8101,6 @@ definitions:
       type:
         $ref: '#/definitions/UserType'
     type: object
-    x-okta-parent: '#/definitions/User'
     x-okta-tags:
       - User
   Csr:
@@ -8085,11 +8188,20 @@ definitions:
     properties:
       supportedMDMFrameworks:
         items:
-          $ref: '#/definitions/MDMFrameworks'
+          enum:
+            - AFW
+            - SAFE
+            - NATIVE
+          type: string
         type: array
       types:
         items:
-          $ref: '#/definitions/Platforms'
+          enum:
+            - IOS
+            - ANDROID
+            - OSX
+            - WINDOWS
+          type: string
         type: array
     type: object
     x-okta-tags:
@@ -8256,6 +8368,7 @@ definitions:
     x-okta-tags:
       - EventHook
   EventSubscriptions:
+    discriminator: type
     properties:
       items:
         items:
@@ -9024,6 +9137,8 @@ definitions:
         items:
           $ref: '#/definitions/InlineHookChannelConfigHeaders'
         type: array
+      method:
+        type: string
       uri:
         type: string
     type: object
@@ -9163,42 +9278,42 @@ definitions:
         readOnly: true
         type: object
       alg:
-        readOnly: true
+        readOnly: false
         type: string
       created:
         format: date-time
-        readOnly: true
+        readOnly: false
         type: string
       e:
-        readOnly: true
+        readOnly: false
         type: string
       expiresAt:
         format: date-time
-        readOnly: true
+        readOnly: false
         type: string
       key_ops:
         items:
           type: string
-        readOnly: true
+        readOnly: false
         type: array
       kid:
-        readOnly: true
+        readOnly: false
         type: string
       kty:
-        readOnly: true
+        readOnly: false
         type: string
       lastUpdated:
         format: date-time
-        readOnly: true
+        readOnly: false
         type: string
       'n':
-        readOnly: true
+        readOnly: false
         type: string
       status:
-        readOnly: true
+        readOnly: false
         type: string
       use:
-        readOnly: true
+        readOnly: false
         type: string
       x5c:
         items:
@@ -9206,13 +9321,13 @@ definitions:
         readOnly: false
         type: array
       x5t:
-        readOnly: true
+        readOnly: false
         type: string
-      'x5t#S256':
-        readOnly: true
+      x5t#S256:
+        readOnly: false
         type: string
       x5u:
-        readOnly: true
+        readOnly: false
         type: string
     type: object
     x-okta-tags:
@@ -9243,8 +9358,6 @@ definitions:
           type: object
         readOnly: true
         type: object
-      name:
-        type: string
       associated:
         $ref: '#/definitions/LinkedObjectDetails'
       primary:
@@ -9262,7 +9375,7 @@ definitions:
       - alias: delete
         arguments:
           - dest: linkedObjectName
-            src: name
+            self: true
         operationId: deleteLinkedObjectDefinition
     x-okta-tags:
       - LinkedObject
@@ -9369,6 +9482,7 @@ definitions:
   LogCredentialProvider:
     enum:
       - OKTA_AUTHENTICATION_PROVIDER
+      - OKTA_CREDENTIAL_PROVIDER
       - RSA
       - SYMANTEC
       - GOOGLE
@@ -9629,16 +9743,6 @@ definitions:
           - ANY_OR_NONE
         type: string
     type: object
-    x-okta-tags:
-      - Policy
-  MDMFrameworks:
-    enum:
-      - authorization_code
-      - implicit
-      - password
-      - refresh_token
-      - client_credentials
-    type: string
     x-okta-tags:
       - Policy
   OAuth2Actor:
@@ -9963,7 +10067,7 @@ definitions:
     properties:
       people:
         $ref: '#/definitions/PolicyPeopleCondition'
-    x-okta-parent: '#/definition/PolicyRuleConditions'
+    x-okta-parent: '#/definitions/PolicyRuleConditions'
     x-okta-tags:
       - Policy
   OktaSignOnPolicyRule:
@@ -10053,6 +10157,17 @@ definitions:
     type: string
     x-okta-tags:
       - Application
+  OpenIdConnectApplicationIdpInitiatedLogin:
+    properties:
+      default_scope:
+        items:
+          type: string
+        type: array
+      mode:
+        type: string
+    type: object
+    x-okta-tags:
+      - Application
   OpenIdConnectApplicationIssuerMode:
     enum:
       - CUSTOM_URL
@@ -10079,6 +10194,8 @@ definitions:
         items:
           $ref: '#/definitions/OAuthGrantType'
         type: array
+      idp_initiated_login:
+        $ref: '#/definitions/OpenIdConnectApplicationIdpInitiatedLogin'
       initiate_login_uri:
         type: string
       issuer_mode:
@@ -10240,7 +10357,7 @@ definitions:
         $ref: '#/definitions/PasswordPolicyAuthenticationProviderCondition'
       people:
         $ref: '#/definitions/PolicyPeopleCondition'
-    x-okta-parent: '#/definition/PolicyRuleConditions'
+    x-okta-parent: '#/definitions/PolicyRuleConditions'
     x-okta-tags:
       - Policy
   PasswordPolicyDelegationSettings:
@@ -10471,15 +10588,6 @@ definitions:
       recovery:
         $ref: '#/definitions/PasswordPolicyRecoverySettings'
     type: object
-    x-okta-tags:
-      - Policy
-  Platforms:
-    enum:
-      - IOS
-      - ANDROID
-      - OSX
-      - WINDOWS
-    type: string
     x-okta-tags:
       - Policy
   PlatformConditionEvaluatorPlatform:
@@ -11049,7 +11157,6 @@ definitions:
       expiresAt:
         format: date-time
         type: string
-        readOnly: true
       factorResult:
         $ref: '#/definitions/FactorResultType'
       profile:
@@ -11230,13 +11337,6 @@ definitions:
     x-okta-parent: '#/definitions/Application'
     x-okta-tags:
       - Application
-  SamlApplicationV1:
-    properties:
-      settings:
-        $ref: '#/definitions/SamlApplicationSettings'
-    x-okta-parent: '#/definitions/Application'
-    x-okta-tags:
-      - Application
   SamlApplicationSettings:
     properties:
       signOn:
@@ -11286,6 +11386,10 @@ definitions:
         type: boolean
       signatureAlgorithm:
         type: string
+      slo:
+        $ref: '#/definitions/SingleLogout'
+      spCertificate:
+        $ref: '#/definitions/SpCertificate'
       spIssuer:
         type: string
       ssoAcsUrl:
@@ -11540,6 +11644,16 @@ definitions:
     type: string
     x-okta-tags:
       - Session
+  SingleLogout:
+    properties:
+      enabled:
+        type: boolean
+      issuer:
+        type: string
+      logoutUrl:
+        type: string
+    x-okta-tags:
+      - Application
   SmsTemplate:
     properties:
       created:
@@ -11642,6 +11756,15 @@ definitions:
     type: object
     x-okta-tags:
       - IdentityProvider
+  SpCertificate:
+    properties:
+      x5c:
+        items:
+          type: string
+        readOnly: false
+        type: array
+    x-okta-tags:
+      - Application
   SwaApplication:
     properties:
       name:
@@ -12193,7 +12316,7 @@ definitions:
         $ref: '#/definitions/VerifyFactorRequest'
     type: object
     x-okta-crud:
-      - alias: deleteFactor
+      - alias: delete
         arguments:
           - dest: factorId
             src: id
@@ -12374,6 +12497,196 @@ definitions:
     x-okta-extensible: true
     x-okta-tags:
       - User
+  UserSchema:
+    properties:
+      $schema:
+        readOnly: true
+        type: string
+      _links:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
+      created:
+        readOnly: true
+        type: string
+      definitions:
+        $ref: '#/definitions/UserSchemaDefinitions'
+      id:
+        readOnly: true
+        type: string
+      lastUpdated:
+        readOnly: true
+        type: string
+      name:
+        readOnly: true
+        type: string
+      properties:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
+      title:
+        type: string
+      type:
+        readOnly: true
+        type: string
+    type: object
+    x-okta-tags:
+      - UserSchema
+  UserSchemaAttribute:
+    properties:
+      description:
+        type: string
+      master:
+        $ref: '#/definitions/UserSchemaAttributeMaster'
+      maxLength:
+        type: integer
+      minLength:
+        type: integer
+      mutability:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/UserSchemaAttributePermission'
+        type: array
+      required:
+        type: boolean
+      scope:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+    type: object
+    x-okta-tags:
+      - UserSchema
+  UserSchemaAttributeMaster:
+    properties:
+      type:
+        type: string
+    type: object
+    x-okta-tags:
+      - UserSchema
+  UserSchemaAttributePermission:
+    properties:
+      action:
+        type: string
+      principal:
+        type: string
+    type: object
+    x-okta-tags:
+      - UserSchema
+  UserSchemaBase:
+    properties:
+      id:
+        readOnly: true
+        type: string
+      properties:
+        $ref: '#/definitions/UserSchemaBaseProperties'
+      required:
+        items:
+          type: string
+        type: array
+      type:
+        type: string
+    type: object
+    x-okta-tags:
+      - UserSchema
+  UserSchemaBaseProperties:
+    properties:
+      city:
+        $ref: '#/definitions/UserSchemaAttribute'
+      costCenter:
+        $ref: '#/definitions/UserSchemaAttribute'
+      countryCode:
+        $ref: '#/definitions/UserSchemaAttribute'
+      department:
+        $ref: '#/definitions/UserSchemaAttribute'
+      displayName:
+        $ref: '#/definitions/UserSchemaAttribute'
+      division:
+        $ref: '#/definitions/UserSchemaAttribute'
+      email:
+        $ref: '#/definitions/UserSchemaAttribute'
+      employeeNumber:
+        $ref: '#/definitions/UserSchemaAttribute'
+      firstName:
+        $ref: '#/definitions/UserSchemaAttribute'
+      honorificPrefix:
+        $ref: '#/definitions/UserSchemaAttribute'
+      honorificSuffix:
+        $ref: '#/definitions/UserSchemaAttribute'
+      lastName:
+        $ref: '#/definitions/UserSchemaAttribute'
+      locale:
+        $ref: '#/definitions/UserSchemaAttribute'
+      login:
+        $ref: '#/definitions/UserSchemaAttribute'
+      manager:
+        $ref: '#/definitions/UserSchemaAttribute'
+      managerId:
+        $ref: '#/definitions/UserSchemaAttribute'
+      middleName:
+        $ref: '#/definitions/UserSchemaAttribute'
+      mobilePhone:
+        $ref: '#/definitions/UserSchemaAttribute'
+      nickName:
+        $ref: '#/definitions/UserSchemaAttribute'
+      organization:
+        $ref: '#/definitions/UserSchemaAttribute'
+      postalAddress:
+        $ref: '#/definitions/UserSchemaAttribute'
+      preferredLanguage:
+        $ref: '#/definitions/UserSchemaAttribute'
+      primaryPhone:
+        $ref: '#/definitions/UserSchemaAttribute'
+      profileUrl:
+        $ref: '#/definitions/UserSchemaAttribute'
+      secondEmail:
+        $ref: '#/definitions/UserSchemaAttribute'
+      state:
+        $ref: '#/definitions/UserSchemaAttribute'
+      streetAddress:
+        $ref: '#/definitions/UserSchemaAttribute'
+      timezone:
+        $ref: '#/definitions/UserSchemaAttribute'
+      title:
+        $ref: '#/definitions/UserSchemaAttribute'
+      userType:
+        $ref: '#/definitions/UserSchemaAttribute'
+      zipCode:
+        $ref: '#/definitions/UserSchemaAttribute'
+    type: object
+    x-okta-tags:
+      - UserSchema
+  UserSchemaDefinitions:
+    properties:
+      base:
+        $ref: '#/definitions/UserSchemaBase'
+      custom:
+        $ref: '#/definitions/UserSchemaPublic'
+    type: object
+    x-okta-tags:
+      - UserSchema
+  UserSchemaPublic:
+    properties:
+      id:
+        readOnly: true
+        type: string
+      properties:
+        additionalProperties:
+          type: object
+        type: object
+      required:
+        items:
+          type: string
+        type: array
+      type:
+        type: string
+    type: object
+    x-okta-tags:
+      - UserSchema
   UserStatus:
     enum:
       - ACTIVE
@@ -12466,7 +12779,7 @@ definitions:
             src: id
         operationId: replaceUserType
     x-okta-tags:
-      - User
+      - UserType
   VerifyFactorRequest:
     properties:
       activationToken:

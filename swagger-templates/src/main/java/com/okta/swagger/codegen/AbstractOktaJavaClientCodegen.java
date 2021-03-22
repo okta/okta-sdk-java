@@ -210,19 +210,22 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     protected void buildDiscriminationMap(Swagger swagger) {
         swagger.getDefinitions().forEach((name, model) -> {
-            ObjectNode discriminatorMapExtention = (ObjectNode) model.getVendorExtensions().get("x-openapi-v3-discriminator");
-            if (discriminatorMapExtention != null) {
-
-                String propertyName = discriminatorMapExtention.get("propertyName").asText();
-                ObjectNode mapping = (ObjectNode) discriminatorMapExtention.get("mapping");
-
+            ObjectNode discriminatorMapExtension =
+                (ObjectNode) model.getVendorExtensions().get("x-openapi-v3-discriminator");
+            if (discriminatorMapExtension != null) {
+                String propertyName = discriminatorMapExtension.get("propertyName").asText();
+                ObjectNode mapping = (ObjectNode) discriminatorMapExtension.get("mapping");
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, String> result = mapper.convertValue(mapping, Map.class);
                 result = result.entrySet().stream()
-                        .collect(Collectors.toMap(e -> e.getValue().substring(e.getValue().lastIndexOf('/')+1), e -> e.getKey()));
-                result.forEach((key, value) -> {
-                    reverseDiscriminatorMap.put(key, name);
-                });
+                    .collect(
+                        Collectors.toMap(
+                            e -> e.getValue().substring(e.getValue().lastIndexOf('/') + 1),
+                            e -> e.getKey(),
+                            (oldValue, newValue) -> newValue
+                        )
+                    );
+                result.forEach((key, value) -> reverseDiscriminatorMap.put(key, name));
                 discriminatorMap.put(name, new Discriminator(name, propertyName, result));
             }
         });
@@ -352,8 +355,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         boolean canLinkMethod = true;
 
                         JsonNode aliasNode = n.get("alias");
+                        String alias = null;
                         if (aliasNode != null) {
-                            String alias = aliasNode.textValue();
+                            alias = aliasNode.textValue();
                             cgOperation.vendorExtensions.put("alias", alias);
 
                             if ("update".equals(alias)) {
@@ -388,6 +392,10 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                                     if (model.getProperties() != null) {
                                         CodegenProperty cgProperty = fromProperty(paramName, model.getProperties().get(paramName));
+                                        if(cgProperty == null && cgOperation.operationId.equals("deleteLinkedObjectDefinition")) {
+                                            cgProperty = new CodegenProperty();
+                                            cgProperty.getter = "getPrimary().getName";
+                                        }
                                         param.vendorExtensions.put("fromModel", cgProperty);
                                     } else {
                                         System.err.println("Model '" + model.getTitle() + "' has no properties");
@@ -414,6 +422,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                     cgParamAllList.add(param);
                                 }
                             });
+
+                            //do not implement interface Deletable when delete method has some arguments
+                            if(alias.equals("delete") && cgParamAllList.size() > 0) {
+                                model.getVendorExtensions().put("deletable", false);
+                            }
 
                             if (!pathParents.isEmpty()) {
                                 cgOperation.vendorExtensions.put("hasPathParents", true);
@@ -753,6 +766,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 operation,
                 definitions,
                 swagger);
+
+        // Deep copy for vendorExtensions Map
+        Map<String, Object> vendorExtensions = new LinkedHashMap<>();
+        co.vendorExtensions.forEach(vendorExtensions::put);
+        co.vendorExtensions = vendorExtensions;
 
         // scan params for X_OPENAPI_V3_SCHEMA_REF, and _correct_ the param
         co.allParams.forEach(param -> {
