@@ -56,6 +56,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private String clientId;
     private Set<String> scopes = new HashSet<>();
     private String privateKey;
+    private String kid;
 
     public String getApiToken() {
         return apiToken;
@@ -143,6 +144,14 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     public void setCacheManagerCaches(Map<String, CacheConfigurationBuilder> cacheManagerCaches) {
         this.cacheManagerCaches = cacheManagerCaches;
+    }
+
+    public String getKid() {
+        return kid;
+    }
+
+    public void setKid(String kid) {
+        this.kid = kid;
     }
 
     /**

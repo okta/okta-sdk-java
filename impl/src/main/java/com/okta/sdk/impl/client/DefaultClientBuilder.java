@@ -233,6 +233,10 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setPrivateKey(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
         }
 
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_KID_PROPERTY_NAME))) {
+            clientConfig.setKid(props.get(DEFAULT_CLIENT_KID_PROPERTY_NAME));
+        }
+
         if (Strings.hasText(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME))) {
             clientConfig.setRetryMaxElapsed(Integer.parseInt(props.get(DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME)));
         }
