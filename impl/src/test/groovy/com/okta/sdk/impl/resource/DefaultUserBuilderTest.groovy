@@ -211,16 +211,16 @@ class DefaultUserBuilderTest {
     @Test
     void importPasswordMd5() {
         def client = mock(Client)
-        def user = mock(User)
+        def createUserRequest = mock(CreateUserRequest)
         def profile = mock(UserProfile)
         def passwordCredential = mock(PasswordCredential)
         def userCredentials = mock(UserCredentials)
-        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(CreateUserRequest)).thenReturn(createUserRequest)
         when(client.instantiate(UserProfile)).thenReturn(profile)
         when(client.instantiate(UserCredentials)).thenReturn(userCredentials)
         when(client.instantiate(PasswordCredential)).thenReturn(passwordCredential)
-        when(user.getProfile()).thenReturn(profile)
-        when(user.getCredentials()).thenReturn(userCredentials)
+        when(createUserRequest.getProfile()).thenReturn(profile)
+        when(createUserRequest.getCredentials()).thenReturn(userCredentials)
 
         String salt = "some-salt"
         String hashedPassword = "a-hashed-password"
