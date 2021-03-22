@@ -48,7 +48,6 @@ import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.BeforeClass
-import org.testng.annotations.Ignore
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils
 
@@ -779,8 +778,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.IMPORT)
     }
 
-    @Test
-    @Ignore     // TODO: fix this when the OKTA-379446 is resolved
+    @Test(enabled = false)      // TODO: Enable it back when 379446 is resolved.
     void importCreateAndLoginUserWithMd5Password() {
         def salt = "aSalt"
         def password = "aPassword"
