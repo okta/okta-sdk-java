@@ -572,7 +572,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdPolicyRule, notNullValue())
         assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.ACCESS))
 
-        createdPolicyRule.deletePolicyRule(createdAuthorizationServer.getId())
+        createdPolicyRule.delete(createdAuthorizationServer.getId())
 
         // delete may not effect immediately in the backend
         sleep(getTestOperationDelay())

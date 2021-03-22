@@ -204,7 +204,8 @@ class GeneratedResourceTest {
                 } else if (property instanceof IntegerProperty) {
                     value = 42
                 } else if (property instanceof DateProperty) {
-                    value = "2001-07-04T12:08:56.235-0700"
+                    value = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                        .parse("2001-07-04T12:08:56.235-0700")
                 } else if (property instanceof MapProperty) {
                     value = [one: "two"]
                 } else if (property instanceof ResourceReference) {

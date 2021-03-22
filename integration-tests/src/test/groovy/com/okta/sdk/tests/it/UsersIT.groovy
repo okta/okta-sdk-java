@@ -42,7 +42,7 @@ import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserList
 import com.okta.sdk.resource.user.UserStatus
-import com.okta.sdk.resource.user.UserType
+import com.okta.sdk.resource.user.type.UserType
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert

@@ -54,7 +54,7 @@ import static com.okta.commons.lang.Assert.hasText;
 public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}{{#vendorExtensions.top-level}}AbstractInstanceResource<{{classname}}>{{/vendorExtensions.top-level}}{{^vendorExtensions.top-level}}AbstractResource{{/vendorExtensions.top-level}}{{/parent}} implements {{classname}} {
 
 {{#vars}}
-    private final static {{vendorExtensions.propertyType}}{{#vendorExtensions.itemType}}<{{{vendorExtensions.itemType}}}>{{/vendorExtensions.itemType}} {{name}}Property = new {{vendorExtensions.propertyType}}("{{baseName}}"{{vendorExtensions.constructorTypeExtra}});
+    private final static {{vendorExtensions.propertyType}}{{#vendorExtensions.itemType}}<{{{vendorExtensions.itemType}}}>{{/vendorExtensions.itemType}} {{name}}Property = new {{vendorExtensions.propertyType}}("{{baseName}}"{{{vendorExtensions.constructorTypeExtra}}});
 {{/vars}}
 
     private final static Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap({{#vars}}{{name}}Property{{^-last}}, {{/-last}}{{/vars}});
