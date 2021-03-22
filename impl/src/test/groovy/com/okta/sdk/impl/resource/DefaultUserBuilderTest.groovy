@@ -16,18 +16,14 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.impl.Util
+import com.okta.sdk.resource.user.CreateUserRequest
 import com.okta.sdk.resource.user.PasswordCredential
 import com.okta.sdk.resource.user.PasswordCredentialHook
-import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserNextLogin
 import com.okta.sdk.resource.user.UserProfile
 import org.mockito.ArgumentCaptor
 import org.testng.annotations.Test
-
-import java.nio.charset.StandardCharsets
-import java.security.MessageDigest
 
 import static com.okta.sdk.impl.Util.expect
 import static org.hamcrest.Matchers.aMapWithSize
@@ -45,11 +41,11 @@ class DefaultUserBuilderTest {
     void basicUsage() {
 
         def client = mock(Client)
-        def user = mock(User)
+        def createUserRequest = mock(CreateUserRequest)
         def profile = mock(UserProfile)
-        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(CreateUserRequest)).thenReturn(createUserRequest)
         when(client.instantiate(UserProfile)).thenReturn(profile)
-        when(user.getProfile()).thenReturn(profile)
+        when(createUserRequest.getProfile()).thenReturn(profile)
 
         new DefaultUserBuilder()
             .setFirstName("Joe")
@@ -58,7 +54,7 @@ class DefaultUserBuilderTest {
             .setNextLogin(UserNextLogin.CHANGEPASSWORD)
             .buildAndCreate(client)
 
-        verify(client).createUser(eq(user), eq(null), eq(null), eq(UserNextLogin.CHANGEPASSWORD))
+        verify(client).createUser(eq(createUserRequest), eq(null), eq(null), eq(UserNextLogin.CHANGEPASSWORD))
         verify(profile).setFirstName("Joe")
         verify(profile).setLastName("Coder")
         verify(profile).setEmail("joe.coder@example.com")
@@ -67,16 +63,16 @@ class DefaultUserBuilderTest {
     @Test
     void importPasswordSha256() {
         def client = mock(Client)
-        def user = mock(User)
+        def createUserRequest = mock(CreateUserRequest)
         def profile = mock(UserProfile)
         def passwordCredential = mock(PasswordCredential)
         def userCredentials = mock(UserCredentials)
-        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(CreateUserRequest)).thenReturn(createUserRequest)
         when(client.instantiate(UserProfile)).thenReturn(profile)
         when(client.instantiate(UserCredentials)).thenReturn(userCredentials)
         when(client.instantiate(PasswordCredential)).thenReturn(passwordCredential)
-        when(user.getProfile()).thenReturn(profile)
-        when(user.getCredentials()).thenReturn(userCredentials)
+        when(createUserRequest.getProfile()).thenReturn(profile)
+        when(createUserRequest.getCredentials()).thenReturn(userCredentials)
 
         String salt = "some-salt"
         String hashedPassword = "a-hashed-password"
@@ -104,16 +100,16 @@ class DefaultUserBuilderTest {
     @Test
     void importPasswordSha512() {
         def client = mock(Client)
-        def user = mock(User)
+        def createUserRequest = mock(CreateUserRequest)
         def profile = mock(UserProfile)
         def passwordCredential = mock(PasswordCredential)
         def userCredentials = mock(UserCredentials)
-        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(CreateUserRequest)).thenReturn(createUserRequest)
         when(client.instantiate(UserProfile)).thenReturn(profile)
         when(client.instantiate(UserCredentials)).thenReturn(userCredentials)
         when(client.instantiate(PasswordCredential)).thenReturn(passwordCredential)
-        when(user.getProfile()).thenReturn(profile)
-        when(user.getCredentials()).thenReturn(userCredentials)
+        when(createUserRequest.getProfile()).thenReturn(profile)
+        when(createUserRequest.getCredentials()).thenReturn(userCredentials)
 
         String salt = "some-salt"
         String hashedPassword = "a-hashed-password"
@@ -141,16 +137,16 @@ class DefaultUserBuilderTest {
     @Test
     void importPasswordSha1() {
         def client = mock(Client)
-        def user = mock(User)
+        def createUserRequest = mock(CreateUserRequest)
         def profile = mock(UserProfile)
         def passwordCredential = mock(PasswordCredential)
         def userCredentials = mock(UserCredentials)
-        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(CreateUserRequest)).thenReturn(createUserRequest)
         when(client.instantiate(UserProfile)).thenReturn(profile)
         when(client.instantiate(UserCredentials)).thenReturn(userCredentials)
         when(client.instantiate(PasswordCredential)).thenReturn(passwordCredential)
-        when(user.getProfile()).thenReturn(profile)
-        when(user.getCredentials()).thenReturn(userCredentials)
+        when(createUserRequest.getProfile()).thenReturn(profile)
+        when(createUserRequest.getCredentials()).thenReturn(userCredentials)
 
         String salt = "some-salt"
         String hashedPassword = "a-hashed-password"
@@ -178,16 +174,16 @@ class DefaultUserBuilderTest {
     @Test
     void importPasswordBcrypt() {
         def client = mock(Client)
-        def user = mock(User)
+        def createUserRequest = mock(CreateUserRequest)
         def profile = mock(UserProfile)
         def passwordCredential = mock(PasswordCredential)
         def userCredentials = mock(UserCredentials)
-        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(CreateUserRequest)).thenReturn(createUserRequest)
         when(client.instantiate(UserProfile)).thenReturn(profile)
         when(client.instantiate(UserCredentials)).thenReturn(userCredentials)
         when(client.instantiate(PasswordCredential)).thenReturn(passwordCredential)
-        when(user.getProfile()).thenReturn(profile)
-        when(user.getCredentials()).thenReturn(userCredentials)
+        when(createUserRequest.getProfile()).thenReturn(profile)
+        when(createUserRequest.getCredentials()).thenReturn(userCredentials)
 
         String salt = "some-salt"
         String hashedPassword = "a-hashed-password"
@@ -216,16 +212,16 @@ class DefaultUserBuilderTest {
     void createUserWithClearAndImportPassword() {
 
         def client = mock(Client)
-        def user = mock(User)
+        def createUserRequest = mock(CreateUserRequest)
         def profile = mock(UserProfile)
         def passwordCredential = mock(PasswordCredential)
         def userCredentials = mock(UserCredentials)
-        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(CreateUserRequest)).thenReturn(createUserRequest)
         when(client.instantiate(UserProfile)).thenReturn(profile)
         when(client.instantiate(UserCredentials)).thenReturn(userCredentials)
         when(client.instantiate(PasswordCredential)).thenReturn(passwordCredential)
-        when(user.getProfile()).thenReturn(profile)
-        when(user.getCredentials()).thenReturn(userCredentials)
+        when(createUserRequest.getProfile()).thenReturn(profile)
+        when(createUserRequest.getCredentials()).thenReturn(userCredentials)
 
         String salt = "some-salt"
         String hashedPassword = "a-hashed-password"
@@ -255,18 +251,18 @@ class DefaultUserBuilderTest {
     void createUserWithUsePasswordHookForImport(String type) {
 
         def client = mock(Client)
-        def user = mock(User)
+        def createUserRequest = mock(CreateUserRequest)
         def profile = mock(UserProfile)
         def passwordCredential = mock(PasswordCredential)
         def passwordCredentialHook = mock(PasswordCredentialHook)
         def userCredentials = mock(UserCredentials)
-        when(client.instantiate(User)).thenReturn(user)
+        when(client.instantiate(CreateUserRequest)).thenReturn(createUserRequest)
         when(client.instantiate(UserProfile)).thenReturn(profile)
         when(client.instantiate(UserCredentials)).thenReturn(userCredentials)
         when(client.instantiate(PasswordCredential)).thenReturn(passwordCredential)
         when(client.instantiate(PasswordCredentialHook)).thenReturn(passwordCredentialHook)
-        when(user.getProfile()).thenReturn(profile)
-        when(user.getCredentials()).thenReturn(userCredentials)
+        when(createUserRequest.getProfile()).thenReturn(profile)
+        when(createUserRequest.getCredentials()).thenReturn(userCredentials)
 
         DefaultUserBuilder defaultUserBuilder = new DefaultUserBuilder()
             .setFirstName("Joe")

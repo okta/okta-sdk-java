@@ -15,10 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.commons.http.DefaultRequest
-import com.okta.commons.http.HttpMethod
 import com.okta.commons.http.MediaType
-import com.okta.commons.http.Response
 import com.okta.sdk.client.Client
 import com.okta.sdk.impl.ds.DefaultDataStore
 import com.okta.sdk.resource.Resource
@@ -27,12 +24,13 @@ import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.user.schema.UserSchema
+import com.okta.sdk.resource.user.schema.UserSchemaDefinitions
+import com.okta.sdk.resource.user.schema.UserSchemaPublic
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
-import wiremock.net.minidev.json.JSONObject
 
-import java.nio.charset.Charset
 import javax.xml.parsers.DocumentBuilderFactory
 
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
@@ -802,5 +800,90 @@ class ApplicationsIT extends ITSupport {
             .getFirstChild()
             .getNodeValue()
         assertThat(x509Certificate.isBlank(), is(false))
+    }
+
+    @Test
+    void getApplicationUserSchemaTest() {
+
+        Application createdApp = client.instantiate(AutoLoginApplication)
+            .setLabel("app-${uniqueTestName}")
+            .setVisibility(client.instantiate(ApplicationVisibility)
+                .setAutoSubmitToolbar(false)
+                .setHide(client.instantiate(ApplicationVisibilityHide)
+                    .setIOS(false)
+                    .setWeb(false)))
+            .setSettings(client.instantiate(AutoLoginApplicationSettings)
+                .setSignOn(client.instantiate(AutoLoginApplicationSettingsSignOn)
+                    .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
+                    .setLoginUrl("http://swaprimaryloginurl.okta.com")))
+        client.createApplication(createdApp)
+        registerForCleanup(createdApp)
+
+        def userSchema = client.getApplicationUserSchema(createdApp.getId())
+        assertThat(userSchema, notNullValue())
+        assertThat(userSchema.getName(), notNullValue())
+        assertThat(userSchema.getTitle(), notNullValue())
+        assertThat(userSchema.getType(), notNullValue())
+        assertThat(userSchema.getDefinitions(), notNullValue())
+
+        def userSchemaBase = userSchema.getDefinitions().getBase()
+        assertThat(userSchemaBase, notNullValue())
+        userSchemaBase.getRequired().forEach({ requiredItem ->
+            assertThat(userSchemaBase.getProperties().containsKey(requiredItem), equalTo(true))
+        })
+    }
+
+    @Test
+    void updateApplicationUserProfileTest() {
+
+        Application createdApp = client.instantiate(AutoLoginApplication)
+            .setLabel("app-${uniqueTestName}")
+            .setVisibility(client.instantiate(ApplicationVisibility)
+                .setAutoSubmitToolbar(false)
+                .setHide(client.instantiate(ApplicationVisibilityHide)
+                    .setIOS(false)
+                    .setWeb(false)))
+            .setSettings(client.instantiate(AutoLoginApplicationSettings)
+                .setSignOn(client.instantiate(AutoLoginApplicationSettingsSignOn)
+                    .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
+                    .setLoginUrl("http://swaprimaryloginurl.okta.com")))
+        client.createApplication(createdApp)
+        registerForCleanup(createdApp)
+
+        def userSchema = client.getApplicationUserSchema(createdApp.getId())
+        assertThat(userSchema, notNullValue())
+        assertThat(userSchema.getDefinitions(), notNullValue())
+
+        def app = client.instantiate(UserSchema)
+        app.setDefinitions(client.instantiate(UserSchemaDefinitions))
+        app.getDefinitions().setCustom(client.instantiate(UserSchemaPublic))
+        app.getDefinitions().getCustom().setProperties(new LinkedHashMap() {
+            {
+                put("twitterUserName",
+                    new LinkedHashMap() {
+                        {
+                            put("title", "Twitter username")
+                            put("description", "Username for twitter.com")
+                            put("type", "string")
+                            put("minLength", 1)
+                            put("maxLength", 20)
+                        }
+                    })
+            }
+        })
+
+        def updatedUserSchema = client.updateApplicationUserProfile(createdApp.getId(), app)
+        assertThat(updatedUserSchema, notNullValue())
+        assertThat(updatedUserSchema.getDefinitions().getCustom(), notNullValue())
+
+        def userSchemaPublic = updatedUserSchema.getDefinitions().getCustom()
+        assertThat(userSchemaPublic.getProperties().containsKey("twitterUserName"), equalTo(true))
+
+        def customPropertyMap = userSchemaPublic.getProperties().get("twitterUserName")
+        assertThat(customPropertyMap["title"], equalTo("Twitter username"))
+        assertThat(customPropertyMap["description"], equalTo("Username for twitter.com"))
+        assertThat(customPropertyMap["type"], equalTo("string"))
+        assertThat(customPropertyMap["minLength"], equalTo(1))
+        assertThat(customPropertyMap["maxLength"], equalTo(20))
     }
 }
