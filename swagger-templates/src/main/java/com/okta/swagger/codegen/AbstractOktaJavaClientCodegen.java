@@ -35,10 +35,12 @@ import io.swagger.models.RefModel;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.BodyParameter;
+import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.SwaggerException;
+import io.swagger.util.Json;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -368,6 +370,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                         Operation operation = operationEntry.get().getValue();
 
+                        //IF THIS IS x-okta-multi-operation
+                        applyOktaMultiOperation(operation, operationId);
+
                         CodegenOperation cgOperation = fromOperation(
                                 pathName,
                                 operationEntry.get().getKey().name().toLowerCase(),
@@ -486,6 +491,46 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
             model.getVendorExtensions().put("operations", operationMap.values());
         });
+    }
+
+    //TODO Review THIS
+    private void applyOktaMultiOperation(Operation operation, String operationId) {
+
+        Object multiOperation = operation.getVendorExtensions().get("x-okta-multi-operation");
+        if(multiOperation == null) {
+            return;
+        }
+
+        if (multiOperation instanceof List) {
+            Optional<JsonNode> multiOperationNodeOptional = ((List)multiOperation).stream().filter(x -> {
+                if(x instanceof JsonNode) {
+                    JsonNode operationIdFromMultiOperation = ((JsonNode)x).get("operationId");
+                    if(operationIdFromMultiOperation != null && operationIdFromMultiOperation.textValue().equals(operationId)) {
+                        return true;
+                    }
+                }
+                return false;
+            }).findFirst();
+
+            if(multiOperationNodeOptional.isPresent()) {
+                JsonNode multiOperationNode = multiOperationNodeOptional.get();
+                Operation multiOperationObject = Json.mapper().convertValue(multiOperationNode, Operation.class);
+                operation.setOperationId(multiOperationObject.getOperationId());
+                operation.setDescription(multiOperationObject.getDescription());
+                //operation.getParameters().addAll(multiOperationObject.getParameters());
+                multiOperationObject.getParameters().forEach(x -> {
+                    if(x instanceof BodyParameter) {
+                        //Doing nothing Take a look here https://github.com/swagger-api/swagger-parser/pull/381/files
+                    } else {
+                        operation.getParameters().add(x);
+                    }
+                });
+            }
+        }
+
+        System.out.println(operationId);
+
+        System.out.println(operation);
     }
 
     private Map<String, String> createArgMap(ObjectNode n) {
