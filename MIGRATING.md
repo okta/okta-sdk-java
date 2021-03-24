@@ -18,6 +18,15 @@ Below methods have been added.
 - `UserSchema updateApplicationUserProfile(String appInstanceId, UserSchema userSchema)`
 - `UserSchema updateApplicationUserProfile(String appInstanceId)`
 - `UserSchema updateUserProfile(String schemaId, UserSchema userSchema)`
+
+Below method has been removed.
+- `ForgotPasswordResponse apiV1UsersUserIdCredentialsForgotPasswordPost(String userId)`
+
+One of listed methods could be used instead
+- `User.forgotPasswordGenerateOneTimeToken(Boolean sendEmail)`
+- `User.forgotPasswordGenerateOneTimeToken()`
+- `User.forgotPasswordSetNewPassword(UserCredentials userCredentials, Boolean sendEmail)`
+- `User.forgotPasswordSetNewPassword(UserCredentials userCredentials)`
     
 ### Package `com.okta.sdk.resource.user.type.UserType`
 
@@ -304,6 +313,11 @@ Below method has undergone a signature change in the interest of naming consiste
 - `void addAllAppsAsTargetToRole()` to `void addAllAppsAsTarget(String roleId)`
 - `void deleteFactor()` to `void deleteFactor(String factorId)`
 
+Below methods have been added.
+- `ForgotPasswordResponse forgotPasswordGenerateOneTimeToken(Boolean sendEmail)`
+- `ForgotPasswordResponse forgotPasswordGenerateOneTimeToken()`
+- `ForgotPasswordResponse forgotPasswordSetNewPassword(UserCredentials userCredentials, Boolean sendEmail)`
+- `ForgotPasswordResponse forgotPasswordSetNewPassword(UserCredentials userCredentials)`
 
 ## Migrating from 2.x.x to 3.0.0
 
