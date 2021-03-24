@@ -23,6 +23,7 @@ import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.error.DefaultError
 import com.okta.sdk.resource.ResourceException
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
 import org.testng.annotations.Test
 
@@ -106,6 +107,7 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getBaseUrl()).thenReturn(baseUrl)
         when(clientConfig.getClientId()).thenReturn("client12345")
         when(clientConfig.getPrivateKey()).thenReturn(privateKeyPemFile.path)
+        when(clientConfig.getKid()).thenReturn("kid-value")
         when(clientConfig.getBaseUrlResolver()).thenReturn(baseUrlResolver)
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
@@ -134,6 +136,14 @@ class AccessTokenRetrieverServiceImplTest {
         assertThat(claims.get("sub"), notNullValue())
         assertEquals(claims.get("sub"), clientConfig.getClientId(), "sub must be equal to client id")
         assertThat(claims.get("jti"), notNullValue())
+
+        Header header = Jwts.parser()
+            .setSigningKey(generatedPrivateKey)
+            .parseClaimsJws(signedJwt)
+            .getHeader()
+
+        assertThat(header.get("kid"), notNullValue())
+        assertThat(header.get("kid"), is("kid-value"))
     }
 
     @Test

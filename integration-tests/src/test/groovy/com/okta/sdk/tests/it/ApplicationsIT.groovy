@@ -15,10 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.commons.http.DefaultRequest
-import com.okta.commons.http.HttpMethod
 import com.okta.commons.http.MediaType
-import com.okta.commons.http.Response
 import com.okta.sdk.client.Client
 import com.okta.sdk.impl.ds.DefaultDataStore
 import com.okta.sdk.resource.Resource
@@ -33,9 +30,7 @@ import com.okta.sdk.resource.user.schema.UserSchemaPublic
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
-import wiremock.net.minidev.json.JSONObject
 
-import java.nio.charset.Charset
 import javax.xml.parsers.DocumentBuilderFactory
 
 import static com.okta.sdk.tests.it.util.Util.assertNotPresent
@@ -859,31 +854,25 @@ class ApplicationsIT extends ITSupport {
         assertThat(userSchema, notNullValue())
         assertThat(userSchema.getDefinitions(), notNullValue())
 
-        def userSchemaToUpdate = client.instantiate(UserSchema)
+        def app = client.instantiate(UserSchema)
+        app.setDefinitions(client.instantiate(UserSchemaDefinitions))
+        app.getDefinitions().setCustom(client.instantiate(UserSchemaPublic))
+        app.getDefinitions().getCustom().setProperties(new LinkedHashMap() {
+            {
+                put("twitterUserName",
+                    new LinkedHashMap() {
+                        {
+                            put("title", "Twitter username")
+                            put("description", "Username for twitter.com")
+                            put("type", "string")
+                            put("minLength", 1)
+                            put("maxLength", 20)
+                        }
+                    })
+            }
+        })
 
-        userSchemaToUpdate.setDefinitions(
-            client.instantiate(UserSchemaDefinitions)
-                .setCustom(
-                    client.instantiate(UserSchemaPublic)
-                        .setProperties(new LinkedHashMap() {
-                            {
-                                put("twitterUserName",
-                                    new LinkedHashMap() {
-                                        {
-                                            put("title", "Twitter username")
-                                            put("description", "Username for twitter.com")
-                                            put("type", "string")
-                                            put("required", "false")
-                                            put("minLength", 1)
-                                            put("maxLength", 20)
-                                        }
-                                    })
-                            }
-                        })
-                )
-        )
-
-        def updatedUserSchema = client.updateApplicationUserProfile(createdApp.getId(), userSchemaToUpdate)
+        def updatedUserSchema = client.updateApplicationUserProfile(createdApp.getId(), app)
         assertThat(updatedUserSchema, notNullValue())
         assertThat(updatedUserSchema.getDefinitions().getCustom(), notNullValue())
 
@@ -894,7 +883,6 @@ class ApplicationsIT extends ITSupport {
         assertThat(customPropertyMap["title"], equalTo("Twitter username"))
         assertThat(customPropertyMap["description"], equalTo("Username for twitter.com"))
         assertThat(customPropertyMap["type"], equalTo("string"))
-        assertThat(customPropertyMap["required"], equalTo("false"))
         assertThat(customPropertyMap["minLength"], equalTo(1))
         assertThat(customPropertyMap["maxLength"], equalTo(20))
     }
