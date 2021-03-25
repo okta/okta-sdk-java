@@ -39,7 +39,7 @@
         <snakeyaml.version>1.26</snakeyaml.version>
         <bouncycastle.version>1.68</bouncycastle.version>
         <jjwt.version>0.11.1</jjwt.version>
-        <okta.sdk.previousVersion>3.1.0</okta.sdk.previousVersion>
+        <okta.sdk.previousVersion>4.0.0-SNAPSHOT</okta.sdk.previousVersion>
         <okta.commons.version>1.2.5</okta.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
