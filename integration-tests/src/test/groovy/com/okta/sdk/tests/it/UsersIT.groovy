@@ -33,6 +33,7 @@ import com.okta.sdk.resource.role.AssignRoleRequest
 import com.okta.sdk.resource.role.RoleType
 import com.okta.sdk.resource.user.AuthenticationProviderType
 import com.okta.sdk.resource.user.ChangePasswordRequest
+import com.okta.sdk.resource.user.ForgotPasswordResponse
 import com.okta.sdk.resource.user.PasswordCredential
 import com.okta.sdk.resource.user.RecoveryQuestionCredential
 import com.okta.sdk.resource.user.ResetPasswordToken
@@ -759,6 +760,67 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
         assertThat user.getCredentials(), notNullValue()
         assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.IMPORT)
+    }
+
+    @Test
+    @Scenario("user-forgot-password-generate-one-time-token")
+    void forgotPasswordGenerateOttTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Forgot-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .setSecurityQuestion("How many roads must a man walk down?")
+            .setSecurityQuestionAnswer("forty two")
+            .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        ForgotPasswordResponse response = user.forgotPasswordGenerateOneTimeToken(false)
+        assertThat response.getResetPasswordUrl(), containsString("/signin/reset-password/")
+    }
+
+    @Test
+    @Scenario("user-forgot-password-set-new-password")
+    void forgotPasswordSetNewPasswordTest() {
+
+        def password = 'OldPassw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Forgot-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .setSecurityQuestion("How many roads must a man walk down?")
+            .setSecurityQuestionAnswer("forty two")
+            .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        UserCredentials userCredentials = client.instantiate(UserCredentials)
+            .setPassword(client.instantiate(PasswordCredential)
+                .setValue('NewPassw0rd!2@3#'.toCharArray()))
+            .setRecoveryQuestion(client.instantiate(RecoveryQuestionCredential)
+                .setQuestion('How many roads must a man walk down?')
+                .setAnswer('forty two'))
+
+        ForgotPasswordResponse response = user.forgotPasswordSetNewPassword(userCredentials, false)
+        assertThat response.get("recovery_question")["question"], equalTo("How many roads must a man walk down?")
+        assertThat response.get("provider")["type"], equalTo("OKTA")
+        assertThat response.get("provider")["name"], equalTo("OKTA")
     }
 
     private void ensureCustomProperties() {

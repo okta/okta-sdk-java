@@ -18,6 +18,7 @@ package com.okta.sdk.impl.oauth2;
 import com.okta.commons.http.MediaType;
 import com.okta.commons.http.authc.DisabledAuthenticator;
 import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
@@ -26,6 +27,7 @@ import com.okta.sdk.impl.error.DefaultError;
 import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.resource.ExtensibleResource;
 import com.okta.sdk.resource.ResourceException;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMKeyPair;
@@ -137,15 +139,20 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         PrivateKey privateKey = parsePrivateKey(getPemReader());
         Instant now = Instant.now();
 
-        return Jwts.builder()
+        JwtBuilder builder = Jwts.builder()
             .setAudience(tokenClientConfiguration.getBaseUrl() + TOKEN_URI)
             .setIssuedAt(Date.from(now))
             .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))             // see Javadoc
             .setIssuer(clientId)
             .setSubject(clientId)
             .claim("jti", UUID.randomUUID().toString())
-            .signWith(privateKey)
-            .compact();
+            .signWith(privateKey);
+
+        if (Strings.hasText(tokenClientConfiguration.getKid())) {
+            builder.setHeaderParam("kid", tokenClientConfiguration.getKid());
+        }
+
+        return builder.compact();
     }
 
     /**
@@ -243,6 +250,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
         tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());
         tokenClientConfiguration.setPrivateKey(apiClientConfiguration.getPrivateKey());
+        tokenClientConfiguration.setKid(apiClientConfiguration.getKid());
 
         // setting this to '0' will disable this check and only 'retryMaxAttempts' will be effective
         tokenClientConfiguration.setRetryMaxElapsed(0);

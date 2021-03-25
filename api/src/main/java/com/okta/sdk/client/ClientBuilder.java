@@ -211,6 +211,7 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_ID_PROPERTY_NAME = "okta.client.clientId";
     String DEFAULT_CLIENT_SCOPES_PROPERTY_NAME = "okta.client.scopes";
     String DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME = "okta.client.privateKey";
+    String DEFAULT_CLIENT_KID_PROPERTY_NAME = "okta.client.kid";
     String DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME = "okta.client.requestTimeout";
     String DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME = "okta.client.rateLimit.maxRetries";
     String DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME = "okta.testing.disableHttpsCheck";

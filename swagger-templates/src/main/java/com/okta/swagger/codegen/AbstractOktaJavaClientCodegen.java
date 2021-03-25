@@ -35,10 +35,12 @@ import io.swagger.models.RefModel;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.BodyParameter;
+import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.SwaggerException;
+import io.swagger.util.Json;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -338,17 +340,36 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 swagger.getPaths().forEach((pathName, path) -> {
                     Optional<Map.Entry<HttpMethod, Operation>> operationEntry =
                         path.getOperationMap().entrySet().stream().filter(
-                            e -> e.getValue().getOperationId() != null &&
-                                e.getValue().getOperationId().equals(operationId)).findFirst();
+                            oper -> {
+                                //Looking for an operationId in paths:path:operationId
+                                if (oper.getValue().getOperationId() != null
+                                    && oper.getValue().getOperationId().equals(operationId)) {
+                                    return true;
+                                }
+                                //Looking for an operationId in paths:path:method:x-okta-multi-operation:operationId
+                                List<Operation> xOktaMultiOperation = getOktaMultiOperationObject(oper.getValue());
+                                if (xOktaMultiOperation != null &&
+                                    xOktaMultiOperation
+                                        .stream()
+                                        .anyMatch(multiOper -> multiOper.getOperationId().equals(operationId))
+                                    ) {
+                                    return true;
+                                }
+                                return false;
+                            }
+                        ).findFirst();
 
                     if (operationEntry.isPresent()) {
 
                         Operation operation = operationEntry.get().getValue();
 
+                        //Trying to get an Operation from x-okta-multi-operation
+                        Operation xOktaMultiOperation = produceOperationFromXOktaMultiOperation(operation, operationId);
+
                         CodegenOperation cgOperation = fromOperation(
                                 pathName,
                                 operationEntry.get().getKey().name().toLowerCase(),
-                                operation,
+                            xOktaMultiOperation != null ? xOktaMultiOperation : operation,
                                 swagger.getDefinitions(),
                                 swagger);
 
@@ -463,6 +484,77 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
             model.getVendorExtensions().put("operations", operationMap.values());
         });
+    }
+
+    private List<Operation> getOktaMultiOperationObject(Operation operation) {
+        Object multiOperationObject = operation.getVendorExtensions().get("x-okta-multi-operation");
+        List<Operation> xOktaMultiOperationList = new ArrayList<>();
+        if (multiOperationObject instanceof List) {
+            for(Object node : (List)multiOperationObject) {
+                Operation multiOperation = Json.mapper().convertValue(node, Operation.class);
+                xOktaMultiOperationList.add(multiOperation);
+            }
+            return xOktaMultiOperationList;
+        }
+        return null;
+    }
+
+    private Operation produceOperationFromXOktaMultiOperation(Operation operation, String operationId) {
+
+        Operation xOktaMultiOperation = null;
+
+        List<Operation> xOktaMultiOperationList = getOktaMultiOperationObject(operation);
+        if (xOktaMultiOperationList != null) {
+            Optional<Operation> operationFromXOktaMultiOperation = xOktaMultiOperationList.stream()
+                .filter(multiOper -> multiOper.getOperationId().equals(operationId)).findFirst();
+
+            if (operationFromXOktaMultiOperation.isPresent()) {
+                Operation xOktaMultiOperationTmp = operationFromXOktaMultiOperation.get();
+                xOktaMultiOperation = new Operation();
+
+                // VendorExtensions deep copy
+                Map<String, Object> vendorExtensions = new LinkedHashMap<>(operation.getVendorExtensions());
+                xOktaMultiOperation.setVendorExtensions(vendorExtensions);
+
+                // Tags deep copy
+                List<String> tags = new ArrayList<>(operation.getTags());
+                xOktaMultiOperation.setTags(tags);
+
+                xOktaMultiOperation.setSummary(operation.getSummary());
+                xOktaMultiOperation.setDescription(xOktaMultiOperationTmp.getDescription());
+                xOktaMultiOperation.setOperationId(xOktaMultiOperationTmp.getOperationId());
+
+                // Consumes deep copy
+                List<String> consumes = new ArrayList<>(operation.getConsumes());
+                xOktaMultiOperation.setConsumes(consumes);
+
+                // Produces deep copy
+                List<String> produces = new ArrayList<>(operation.getProduces());
+                xOktaMultiOperation.setProduces(produces);
+
+                // Parameters deep copy
+                List<Parameter> parameters = new ArrayList<>(operation.getParameters());
+                xOktaMultiOperation.setParameters(parameters);
+
+                // Responses deep copy
+                Map<String, Response> responses = new LinkedHashMap<>(operation.getResponses());
+                xOktaMultiOperation.setResponses(responses);
+
+                // Security deep copy
+                List<Map<String, List<String>>> security = new ArrayList<>(operation.getSecurity());
+                xOktaMultiOperation.setSecurity(security);
+
+                //Add params defined in x-okta-multi-operation
+                for(Parameter p: xOktaMultiOperationTmp.getParameters()) {
+                    if (p instanceof BodyParameter && ((BodyParameter) p).getSchema() != null) {
+                        xOktaMultiOperation.getParameters().add(p);
+                    } else if (!(p instanceof BodyParameter)) {
+                        xOktaMultiOperation.getParameters().add(p);
+                    }
+                }
+            }
+        }
+        return xOktaMultiOperation;
     }
 
     private Map<String, String> createArgMap(ObjectNode n) {
