@@ -22,7 +22,7 @@ Below methods have been added.
 Below method has been removed.
 - `ForgotPasswordResponse apiV1UsersUserIdCredentialsForgotPasswordPost(String userId)`
 
-One of listed methods could be used instead
+One of below listed methods could be used instead:
 - `User.forgotPasswordGenerateOneTimeToken(Boolean sendEmail)`
 - `User.forgotPasswordGenerateOneTimeToken()`
 - `User.forgotPasswordSetNewPassword(UserCredentials userCredentials, Boolean sendEmail)`
