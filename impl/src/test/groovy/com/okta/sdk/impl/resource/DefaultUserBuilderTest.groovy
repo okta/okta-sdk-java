@@ -54,7 +54,7 @@ class DefaultUserBuilderTest {
             .setNextLogin(UserNextLogin.CHANGEPASSWORD)
             .buildAndCreate(client)
 
-        verify(client).createUser(eq(createUserRequest), eq(null), eq(null), eq(UserNextLogin.CHANGEPASSWORD))
+        verify(client).createUser(eq(createUserRequest), eq(null), eq(false), eq(UserNextLogin.CHANGEPASSWORD))
         verify(profile).setFirstName("Joe")
         verify(profile).setLastName("Coder")
         verify(profile).setEmail("joe.coder@example.com")
