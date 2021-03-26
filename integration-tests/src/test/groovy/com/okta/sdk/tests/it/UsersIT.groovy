@@ -832,8 +832,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def email = "john-${uniqueTestName}@example.com"
 
         def authenticationProvider = client.instantiate(AuthenticationProvider)
-        authenticationProvider.setName(AuthenticationProviderType.FEDERATION.toString())
-        authenticationProvider.setType(AuthenticationProviderType.FEDERATION)
+            .setName(AuthenticationProviderType.FEDERATION.name())
+            .setType(AuthenticationProviderType.FEDERATION)
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -848,7 +848,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
         assertThat user.getCredentials(), notNullValue()
         assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.FEDERATION)
-        assertThat user.getCredentials().getProvider().getName(), equalTo(AuthenticationProviderType.FEDERATION.toString())
+        assertThat user.getCredentials().getProvider().getName(), equalTo(AuthenticationProviderType.FEDERATION.name())
     }
 
     private void ensureCustomProperties() {
