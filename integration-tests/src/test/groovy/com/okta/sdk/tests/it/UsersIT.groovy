@@ -31,6 +31,7 @@ import com.okta.sdk.resource.policy.PasswordPolicySettings
 import com.okta.sdk.resource.policy.PolicyNetworkCondition
 import com.okta.sdk.resource.role.AssignRoleRequest
 import com.okta.sdk.resource.role.RoleType
+import com.okta.sdk.resource.user.AuthenticationProvider
 import com.okta.sdk.resource.user.AuthenticationProviderType
 import com.okta.sdk.resource.user.ChangePasswordRequest
 import com.okta.sdk.resource.user.ForgotPasswordResponse
@@ -821,6 +822,33 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat response.get("recovery_question")["question"], equalTo("How many roads must a man walk down?")
         assertThat response.get("provider")["type"], equalTo("OKTA")
         assertThat response.get("provider")["name"], equalTo("OKTA")
+    }
+
+    @Test
+    void userWithAuthenticationProviderTest() {
+
+        def firstName = 'John'
+        def lastName = 'Forgot-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        def authenticationProvider = client.instantiate(AuthenticationProvider)
+        authenticationProvider.setName(AuthenticationProviderType.FEDERATION.toString())
+        authenticationProvider.setType(AuthenticationProviderType.FEDERATION)
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setLogin(email)
+            .setProvider(authenticationProvider)
+            .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        assertThat user.getCredentials(), notNullValue()
+        assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.FEDERATION)
+        assertThat user.getCredentials().getProvider().getName(), equalTo(AuthenticationProviderType.FEDERATION.toString())
     }
 
     private void ensureCustomProperties() {

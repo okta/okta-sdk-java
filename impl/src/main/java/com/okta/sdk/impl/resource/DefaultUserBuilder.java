@@ -18,6 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.sdk.client.Client;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
+import com.okta.sdk.resource.user.AuthenticationProvider;
 import com.okta.sdk.resource.user.PasswordCredentialHook;
 import com.okta.sdk.resource.user.RecoveryQuestionCredential;
 import com.okta.sdk.resource.user.UserBuilder;
@@ -48,7 +49,7 @@ public class DefaultUserBuilder implements UserBuilder {
     private String lastName;
     private String mobilePhone;
     private Boolean active;
-    private Boolean provider;
+    private AuthenticationProvider provider;
     private UserType userType;
     private String userTypeId;
     private UserNextLogin nextLogin;
@@ -117,7 +118,7 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
-    public UserBuilder setProvider(Boolean provider) {
+    public UserBuilder setProvider(AuthenticationProvider provider) {
         this.provider = provider;
         return this;
     }
@@ -210,6 +211,11 @@ public class DefaultUserBuilder implements UserBuilder {
             createCredentialsIfNeeded(createUserRequest, client).setRecoveryQuestion(question);
         }
 
+        // authentication provider
+        if (provider != null) {
+            createCredentialsIfNeeded(createUserRequest, client).setProvider(provider);
+        }
+
         // user password
         if (password != null && password.length > 0) {
 
@@ -280,6 +286,6 @@ public class DefaultUserBuilder implements UserBuilder {
 
     @Override
     public User buildAndCreate(Client client) {
-        return client.createUser(build(client), active, provider, nextLogin);
+        return client.createUser(build(client), active, provider != null, nextLogin);
     }
 }
