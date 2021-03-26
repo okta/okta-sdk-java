@@ -324,12 +324,6 @@ Below methods have been added.
 Below method has undergone a signature change.
 - `UserBuilder setProvider(Boolean provider)` signature changed to `UserBuilder setProvider(AuthenticationProvider provider)`
 
-### Package `com.okta.sdk.resource.impl.DefaultUserBuilder`
-
-Below method has undergone a signature change.
-- `UserBuilder setProvider(Boolean provider)` signature changed to `UserBuilder setProvider(AuthenticationProvider provider)`
-
-
 ## Migrating from 2.x.x to 3.0.0
 
 Version 3.0.0 of this SDK introduces a number of breaking changes from previous versions. 
