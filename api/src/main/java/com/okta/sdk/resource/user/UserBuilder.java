@@ -54,7 +54,7 @@ public interface UserBuilder {
 
     UserBuilder setActive(Boolean active);
 
-    UserBuilder setProvider(Boolean provider);
+    UserBuilder setProvider(AuthenticationProvider provider);
 
     UserBuilder setType(UserType userType);
 
