@@ -18,18 +18,22 @@ package com.okta.sdk.tests.it
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.application.*
 import com.okta.sdk.tests.it.util.ITSupport
+import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.Matchers.hasSize
+import static org.hamcrest.Matchers.instanceOf
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.matchesPattern
 
-class OIdCApplicationIT extends ITSupport implements CrudTestSupport {
+class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
 
     @Override
     def create(Client client) {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        Application app = OIdCApplicationBuilder.instance()
+        Application app = OIDCApplicationBuilder.instance()
             .setName(name)
             .setLabel(name)
             .addRedirectUris("http://www.example.com")
@@ -48,6 +52,44 @@ class OIdCApplicationIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(app)
 
         return (OpenIdConnectApplication) app
+    }
+
+    @Test
+    void createOIDCApplicationWithPrivateKeyJwtTest() {
+
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
+        def createdKey = client.instantiate(JsonWebKey)
+            .setKty("RSA")
+            .setKid("SIGNING_KEY")
+            .setE("AQAB")
+            .setN("MIIBIzANBgkqhkiG9w0BAQEFAAOCARAAMIIBCwKCAQIAnFo/4e91na8x/BsPkNS5QkwankewxJ1uZU6p827W/gkRcNHtNi/cE644W5OVdB4UaXV6koT+TsC1prhUEhRR3g5ggE0B/lwYqBaLq/Ejy19Crc4XYU3Aah67Y6HiHWcHGZ+BbpebtTixJv/UYW/Gw+k8M+zj4O001mOeBPpwlEiZZLIo33m/Xkfn28jaCFqTQBJHr67IQh4zEUFs4e5D5D6UE8ee93yeSUJyhbifeIgYh3tS/+ZW4Uo1KLIc0rcLRrnEMsS3aOQbrv/SEKij+Syx4KXI0Gi2xMdXctnFOVT6NM6/EkLxFp2POEdv9SNBtTvXcxIGRwK51W4Jdgh/xZcCAwEAAQ==")
+
+        Application app = OIDCApplicationBuilder.instance()
+            .setName(name)
+            .setLabel(name)
+            .setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
+            .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.PRIVATE_KEY_JWT)
+            .addRedirectUris("http://www.example.com")
+            .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
+            .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
+            .setApplicationType(OpenIdConnectApplicationType.NATIVE)
+            .setJwks(Arrays.asList(createdKey))
+            .buildAndCreate(client)
+        registerForCleanup(app)
+
+        assertThat(app, instanceOf(OpenIdConnectApplication))
+        assertThat(app.getSettings().getOAuthClient().getJwks() , instanceOf(OpenIdConnectApplicationSettingsClientKeys))
+
+        OpenIdConnectApplicationSettingsClientKeys keys = app.getSettings().getOAuthClient().getJwks()
+        assertThat(keys.getKeys(), hasSize(1))
+        assertThat(keys.getKeys().get(0), instanceOf(JsonWebKey))
+
+        JsonWebKey receivedKey = keys.getKeys().get(0)
+        assertThat(receivedKey.getKty(), equalTo(createdKey.getKty()))
+        assertThat(receivedKey.getKid(), equalTo(createdKey.getKid()))
+        assertThat(receivedKey.getE(), equalTo(createdKey.getE()))
+        assertThat(receivedKey.getN(), equalTo(createdKey.getN()))
     }
 
     @Override
