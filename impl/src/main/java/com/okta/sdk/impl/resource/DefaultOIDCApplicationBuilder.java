@@ -218,10 +218,12 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
             throw new IllegalArgumentException("Application Type cannot be null, value should be of type OpenIdConnectApplicationType");
 
         if(jsonWebKeyList.size() > 0) {
-            openIdConnectApplicationSettings.getOAuthClient().setJwks(
-                client.instantiate(OpenIdConnectApplicationSettingsClientKeys.class)
-                .setKeys(this.jsonWebKeyList)
-            );
+            openIdConnectApplicationSettings
+                .getOAuthClient()
+                .setJwks(
+                    client.instantiate(OpenIdConnectApplicationSettingsClientKeys.class)
+                        .setKeys(this.jsonWebKeyList)
+                );
         }
 
         // Credentials

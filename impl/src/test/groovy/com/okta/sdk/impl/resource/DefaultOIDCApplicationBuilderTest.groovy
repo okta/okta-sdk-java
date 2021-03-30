@@ -211,4 +211,54 @@ class DefaultOIDCApplicationBuilderTest {
         }
 
     }
+
+    @Test
+    void createOIDCApplicationWithPrivateKeyJwtTest(){
+
+        def client = mock(Client)
+        def application = mock(OpenIdConnectApplication)
+        def applicationVisibilityHide = mock(ApplicationVisibilityHide)
+        def openIdConnectApplicationSettingsClient = mock(OpenIdConnectApplicationSettingsClient)
+        def applicationCredentialsOAuthClient = mock(ApplicationCredentialsOAuthClient)
+        def openIdConnectApplicationSettings = mock(OpenIdConnectApplicationSettings)
+        def clientKeys = mock(OpenIdConnectApplicationSettingsClientKeys)
+        def oAuthApplicationCredentials = mock(OAuthApplicationCredentials)
+        def jsonWebKey = mock(JsonWebKey)
+
+        jsonWebKey.setKid("kid_value")
+        jsonWebKey.setKty("kty_value")
+        jsonWebKey.setE("e_value")
+        jsonWebKey.setN("n_value")
+
+        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application);
+        when(client.instantiate(ApplicationVisibilityHide.class)).thenReturn(applicationVisibilityHide)
+        when(client.instantiate(OpenIdConnectApplicationSettingsClient.class))thenReturn(openIdConnectApplicationSettingsClient)
+        when(client.instantiate(ApplicationCredentialsOAuthClient.class))thenReturn(applicationCredentialsOAuthClient)
+        when(application.getSettings()).thenReturn(openIdConnectApplicationSettings)
+        when(application.getSettings().getOAuthClient()).thenReturn(openIdConnectApplicationSettingsClient)
+        when(client.instantiate(OpenIdConnectApplicationSettingsClientKeys.class)).thenReturn(clientKeys)
+        when(application.getCredentials())thenReturn(oAuthApplicationCredentials)
+
+        new DefaultOIDCApplicationBuilder()
+            .setName("oidc_client")
+            .setLabel("test_app")
+            .setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
+            .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.PRIVATE_KEY_JWT)
+            .addRedirectUris("http://www.example.com")
+            .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
+            .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
+            .setApplicationType(OpenIdConnectApplicationType.NATIVE)
+            .setJwks(Arrays.asList(jsonWebKey))
+            .buildAndCreate(client)
+
+        verify(client).createApplication(eq(application))
+        verify(application).setLabel("test_app")
+        verify(application).setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
+        verify(applicationCredentialsOAuthClient).setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.PRIVATE_KEY_JWT)
+        verify(openIdConnectApplicationSettingsClient).setRedirectUris(Arrays.asList("http://www.example.com"))
+        verify(openIdConnectApplicationSettingsClient).setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
+        verify(openIdConnectApplicationSettingsClient).setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
+        verify(openIdConnectApplicationSettingsClient).setApplicationType(OpenIdConnectApplicationType.NATIVE)
+        verify(clientKeys).setKeys(Arrays.asList(jsonWebKey))
+    }
 }
