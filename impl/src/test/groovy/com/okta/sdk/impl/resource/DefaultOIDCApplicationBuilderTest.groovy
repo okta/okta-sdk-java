@@ -23,7 +23,7 @@ import static com.okta.sdk.impl.Util.expect
 import static org.mockito.ArgumentMatchers.eq
 import static org.mockito.Mockito.*
 
-class DefaultOIdcApplicationBuilderTest {
+class DefaultOIDCApplicationBuilderTest {
 
     @Test
     void basicUsage() {
@@ -49,7 +49,7 @@ class DefaultOIdcApplicationBuilderTest {
         when(application.getSettings()).thenReturn(openIdConnectApplicationSettings)
         when(application.getCredentials())thenReturn(oAuthApplicationCredentials)
 
-        new DefaultOIdCApplicationBuilder()
+        new DefaultOIDCApplicationBuilder()
             .setName("oidc_client")
             .setLabel("test_app")
             .addRedirectUris("http://www.google.com")
@@ -102,7 +102,7 @@ class DefaultOIdcApplicationBuilderTest {
         when(application.getCredentials())thenReturn(oAuthApplicationCredentials)
 
         expect IllegalArgumentException, {
-            new DefaultOIdCApplicationBuilder()
+            new DefaultOIDCApplicationBuilder()
                 .setName("oidc_client")
                 .setLabel("test_app")
                 .addRedirectUris("http://www.google.com")
@@ -147,7 +147,7 @@ class DefaultOIdcApplicationBuilderTest {
         when(application.getCredentials())thenReturn(oAuthApplicationCredentials)
 
         expect IllegalArgumentException, {
-            new DefaultOIdCApplicationBuilder()
+            new DefaultOIDCApplicationBuilder()
                 .setName("oidc_client")
                 .setLabel("test_app")
                 .addRedirectUris("http://www.google.com")
@@ -192,7 +192,7 @@ class DefaultOIdcApplicationBuilderTest {
         when(application.getCredentials())thenReturn(oAuthApplicationCredentials)
 
         expect IllegalArgumentException, {
-            new DefaultOIdCApplicationBuilder()
+            new DefaultOIDCApplicationBuilder()
                 .setName("oidc_client")
                 .setLabel("test_app")
                 .addRedirectUris("http://www.google.com")

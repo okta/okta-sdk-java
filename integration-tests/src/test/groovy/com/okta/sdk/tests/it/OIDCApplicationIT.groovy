@@ -27,13 +27,13 @@ import static org.hamcrest.Matchers.instanceOf
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.matchesPattern
 
-class OIdCApplicationIT extends ITSupport implements CrudTestSupport {
+class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
 
     @Override
     def create(Client client) {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        Application app = OIdCApplicationBuilder.instance()
+        Application app = OIDCApplicationBuilder.instance()
             .setName(name)
             .setLabel(name)
             .addRedirectUris("http://www.example.com")
@@ -65,7 +65,7 @@ class OIdCApplicationIT extends ITSupport implements CrudTestSupport {
             .setE("AQAB")
             .setN("MIIBIzANBgkqhkiG9w0BAQEFAAOCARAAMIIBCwKCAQIAnFo/4e91na8x/BsPkNS5QkwankewxJ1uZU6p827W/gkRcNHtNi/cE644W5OVdB4UaXV6koT+TsC1prhUEhRR3g5ggE0B/lwYqBaLq/Ejy19Crc4XYU3Aah67Y6HiHWcHGZ+BbpebtTixJv/UYW/Gw+k8M+zj4O001mOeBPpwlEiZZLIo33m/Xkfn28jaCFqTQBJHr67IQh4zEUFs4e5D5D6UE8ee93yeSUJyhbifeIgYh3tS/+ZW4Uo1KLIc0rcLRrnEMsS3aOQbrv/SEKij+Syx4KXI0Gi2xMdXctnFOVT6NM6/EkLxFp2POEdv9SNBtTvXcxIGRwK51W4Jdgh/xZcCAwEAAQ==")
 
-        Application app = OIdCApplicationBuilder.instance()
+        Application app = OIDCApplicationBuilder.instance()
             .setName(name)
             .setLabel(name)
             .setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
