@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DefaultOIdCApplicationBuilder extends DefaultApplicationBuilder<OIdCApplicationBuilder> implements OIdCApplicationBuilder {
+public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OIDCApplicationBuilder> implements OIDCApplicationBuilder {
 
     private OpenIdConnectApplicationType applicationType;
     private String clientUri;
@@ -38,101 +38,108 @@ public class DefaultOIdCApplicationBuilder extends DefaultApplicationBuilder<OId
     private String clientSecret;
     private Boolean autoKeyRotation;
     private OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
+    private List<JsonWebKey> jsonWebKeyList = new ArrayList<>();
 
 
     @Override
-    public OIdCApplicationBuilder setApplicationType(OpenIdConnectApplicationType applicationType) {
+    public OIDCApplicationBuilder setApplicationType(OpenIdConnectApplicationType applicationType) {
         this.applicationType = applicationType;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setClientUri(String clientUri) {
+    public OIDCApplicationBuilder setClientUri(String clientUri) {
         this.clientUri = clientUri;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setConsentMethod(OpenIdConnectApplicationConsentMethod consentMethod) {
+    public OIDCApplicationBuilder setConsentMethod(OpenIdConnectApplicationConsentMethod consentMethod) {
         this.consentMethod = consentMethod;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setGrantTypes(List<OAuthGrantType> grantTypes) {
+    public OIDCApplicationBuilder setGrantTypes(List<OAuthGrantType> grantTypes) {
         this.grantTypes = grantTypes;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder addGrantTypes(OAuthGrantType grantType) {
+    public OIDCApplicationBuilder addGrantTypes(OAuthGrantType grantType) {
         this.grantTypes.add(grantType);
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setLogoUri(String logoUri) {
+    public OIDCApplicationBuilder setLogoUri(String logoUri) {
         this.logoUri = logoUri;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setPolicyUri(String policyUri) {
+    public OIDCApplicationBuilder setPolicyUri(String policyUri) {
         this.policyUri = policyUri;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setRedirectUris(List<String> redirectUris) {
+    public OIDCApplicationBuilder setRedirectUris(List<String> redirectUris) {
         this.redirectUris = redirectUris;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder addRedirectUris(String redirectUri) {
+    public OIDCApplicationBuilder addRedirectUris(String redirectUri) {
         this.redirectUris.add(redirectUri);
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setResponseTypes(List<OAuthResponseType> responseTypes) {
+    public OIDCApplicationBuilder setResponseTypes(List<OAuthResponseType> responseTypes) {
         this.responseTypes = responseTypes;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder addResponseTypes(OAuthResponseType responseType) {
+    public OIDCApplicationBuilder addResponseTypes(OAuthResponseType responseType) {
         this.responseTypes.add(responseType);
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setTosUri(String tosUri) {
+    public OIDCApplicationBuilder setTosUri(String tosUri) {
         this.tosUri = tosUri;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setClientId(String clientId) {
+    public OIDCApplicationBuilder setClientId(String clientId) {
         this.clientId = clientId;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setClientSecret(String clientSecret) {
+    public OIDCApplicationBuilder setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setAutoKeyRotation(Boolean autoKeyRotation) {
+    public OIDCApplicationBuilder setAutoKeyRotation(Boolean autoKeyRotation) {
         this.autoKeyRotation = autoKeyRotation;
         return this;
     }
 
     @Override
-    public OIdCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod) {
+    public OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod) {
         this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
+        return this;
+    }
+
+    @Override
+    public OIDCApplicationBuilder setJwks(List<JsonWebKey> jsonWebKeyList) {
+        this.jsonWebKeyList = jsonWebKeyList;
         return this;
     }
 
@@ -209,6 +216,15 @@ public class DefaultOIdCApplicationBuilder extends DefaultApplicationBuilder<OId
             openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setApplicationType(applicationType));
         else
             throw new IllegalArgumentException("Application Type cannot be null, value should be of type OpenIdConnectApplicationType");
+
+        if(jsonWebKeyList.size() > 0) {
+            openIdConnectApplicationSettings
+                .getOAuthClient()
+                .setJwks(
+                    client.instantiate(OpenIdConnectApplicationSettingsClientKeys.class)
+                        .setKeys(this.jsonWebKeyList)
+                );
+        }
 
         // Credentials
         application.setCredentials(client.instantiate(OAuthApplicationCredentials.class));

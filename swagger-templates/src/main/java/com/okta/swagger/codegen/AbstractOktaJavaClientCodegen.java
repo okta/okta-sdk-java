@@ -776,6 +776,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         super.postProcessModelProperty(model, property);
         if(!BooleanUtils.toBoolean(model.isEnum)) {
 
+            //Do not use JsonWebKeyList because it's based on Map<K,V> but API require a simple List<JsonWebKey>
+            if(model.name.equals("OpenIdConnectApplicationSettingsClientKeys")) {
+                property.datatypeWithEnum = property.baseType + "<" + property.complexType + ">";
+            }
+
             String datatype = property.datatype;
             if (datatype != null
                     && datatype.matches(".+List$")

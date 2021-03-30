@@ -54,6 +54,14 @@ Below methods have been added.
 - `JsonWebKey setX5tS256(String x5tS256)`
 - `JsonWebKey setX5u(String x5u)`
 
+### Package `com.okta.sdk.resource.application.OIDCApplicationBuilder`
+
+The interface has been renamed in the interest of naming consistency.
+- From `OIdCApplicationBuilder` to `OIDCApplicationBuilder`
+
+Below method has been added.
+- `OIDCApplicationBuilder setJwks(List<JsonWebKey> jsonWebKeyList)`
+
 ### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationIdpInitiatedLogin`
 
 This is a newly created interface with methods listed below.
@@ -318,6 +326,11 @@ Below methods have been added.
 - `ForgotPasswordResponse forgotPasswordGenerateOneTimeToken()`
 - `ForgotPasswordResponse forgotPasswordSetNewPassword(UserCredentials userCredentials, Boolean sendEmail)`
 - `ForgotPasswordResponse forgotPasswordSetNewPassword(UserCredentials userCredentials)`
+
+### Package `com.okta.sdk.resource.user.UserBuilder`
+
+Below method has undergone a signature change.
+- `UserBuilder setProvider(Boolean provider)` signature changed to `UserBuilder setProvider(AuthenticationProvider provider)`
 
 ## Migrating from 2.x.x to 3.0.0
 
