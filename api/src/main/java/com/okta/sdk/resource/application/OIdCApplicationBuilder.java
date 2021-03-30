@@ -57,5 +57,5 @@ public interface OIdCApplicationBuilder extends ApplicationBuilder<OIdCApplicati
 
     OIdCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod);
 
-
+    OIdCApplicationBuilder setJwks(List<JsonWebKey> jsonWebKeyList);
 }

@@ -38,6 +38,7 @@ public class DefaultOIdCApplicationBuilder extends DefaultApplicationBuilder<OId
     private String clientSecret;
     private Boolean autoKeyRotation;
     private OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
+    private List<JsonWebKey> jsonWebKeyList = new ArrayList<>();
 
 
     @Override
@@ -137,6 +138,12 @@ public class DefaultOIdCApplicationBuilder extends DefaultApplicationBuilder<OId
     }
 
     @Override
+    public OIdCApplicationBuilder setJwks(List<JsonWebKey> jsonWebKeyList) {
+        this.jsonWebKeyList = jsonWebKeyList;
+        return this;
+    }
+
+    @Override
     public OpenIdConnectApplication buildAndCreate(Client client){ return (OpenIdConnectApplication) client.createApplication(build(client)); }
 
     private Application build(Client client){
@@ -209,6 +216,13 @@ public class DefaultOIdCApplicationBuilder extends DefaultApplicationBuilder<OId
             openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setApplicationType(applicationType));
         else
             throw new IllegalArgumentException("Application Type cannot be null, value should be of type OpenIdConnectApplicationType");
+
+        if(jsonWebKeyList.size() > 0) {
+            openIdConnectApplicationSettings.getOAuthClient().setJwks(
+                client.instantiate(OpenIdConnectApplicationSettingsClientKeys.class)
+                .setKeys(this.jsonWebKeyList)
+            );
+        }
 
         // Credentials
         application.setCredentials(client.instantiate(OAuthApplicationCredentials.class));
