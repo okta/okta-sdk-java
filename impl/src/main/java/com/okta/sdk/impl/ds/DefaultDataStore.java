@@ -17,6 +17,7 @@
 package com.okta.sdk.impl.ds;
 
 import com.okta.commons.http.DefaultRequest;
+import com.okta.commons.http.HttpException;
 import com.okta.commons.http.HttpHeaders;
 import com.okta.commons.http.HttpMethod;
 import com.okta.commons.http.MediaType;
@@ -594,5 +595,14 @@ public class DefaultDataStore implements InternalDataStore {
     @Override
     public RequestBuilder http() {
         return new DefaultRequestBuilder(this);
+    }
+
+    @Override
+    public boolean isReady() {
+        try {
+            return getRawResponse("/api/v1/apps", null, null) != null;
+        } catch (ResourceException | HttpException exception) {
+            return false;
+        }
     }
 }

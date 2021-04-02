@@ -125,4 +125,9 @@ public abstract class BaseClient implements DataStore {
     public RequestBuilder http() {
         return this.dataStore.http();
     }
+
+    @Override
+    public boolean isReady(){
+        return this.dataStore.isReady();
+    }
 }

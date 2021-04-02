@@ -16,6 +16,7 @@
  */
 package com.okta.sdk.impl.ds
 
+import com.okta.commons.http.HttpException
 import com.okta.commons.http.HttpHeaders
 import com.okta.commons.http.MediaType
 import com.okta.commons.http.Request
@@ -228,5 +229,31 @@ class DefaultDataStoreTest {
             containsString("okta-sdk-java/"),
             containsString("java/${System.getProperty("java.version")}"),
             containsString("${System.getProperty("os.name")}/${System.getProperty("os.version")}"))
+    }
+
+    @Test
+    void testIsReadyTrue(){
+        def response = mock(Response)
+        def requestExecutor = mock(RequestExecutor)
+        def clientCredentialsResolver = mock(ClientCredentialsResolver)
+
+        when(requestExecutor.executeRequest(any())).thenReturn(response)
+        when(response.getBody()).thenReturn(new StringInputStream('{"name": "web app"}'))
+
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", clientCredentialsResolver)
+
+        assertTrue(defaultDataStore.isReady())
+    }
+
+    @Test
+    void testIsReadyFalse(){
+        def requestExecutor = mock(RequestExecutor)
+        def clientCredentialsResolver = mock(ClientCredentialsResolver)
+
+        when(requestExecutor.executeRequest(any())).thenThrow(new HttpException("Unable to execute HTTP request"))
+
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", clientCredentialsResolver)
+
+        assertFalse(defaultDataStore.isReady())
     }
 }

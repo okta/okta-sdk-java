@@ -113,4 +113,11 @@ public interface DataStore {
      */
     RequestBuilder http();
 
+    /**
+     * Check if Datastore is configured correctly and able to execute requests.
+     *
+     * @return {@code true} if orgUrl and token are correct and Okta server is available, otherwise {@code false}.
+     */
+    boolean isReady();
+
 }
