@@ -252,7 +252,7 @@ class DefaultDataStoreTest {
 
         when(requestExecutor.executeRequest(any())).thenThrow(new HttpException("Unable to execute HTTP request"))
 
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", clientCredentialsResolver)
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.example.com/v1", clientCredentialsResolver)
 
         assertFalse(defaultDataStore.isReady())
     }
