@@ -101,7 +101,7 @@ class ApplicationsIT extends ITSupport {
 
     @Test
     void testClientIsReady() {
-        assertThat client.isReady(), is(true)
+        assertThat "Expected client to be ready", client.isReady()
     }
 
     @Test
