@@ -240,7 +240,7 @@ class DefaultDataStoreTest {
         when(requestExecutor.executeRequest(any())).thenReturn(response)
         when(response.getBody()).thenReturn(new StringInputStream('{"name": "web app"}'))
 
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com/v1", clientCredentialsResolver)
+        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.example.com/v1", clientCredentialsResolver)
 
         assertTrue(defaultDataStore.isReady())
     }
