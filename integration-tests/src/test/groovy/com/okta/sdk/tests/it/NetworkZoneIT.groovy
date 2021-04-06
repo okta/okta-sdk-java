@@ -169,10 +169,6 @@ class NetworkZoneIT extends ITSupport {
         assertThat(createdNetworkZone, notNullValue())
         registerForCleanup(createdNetworkZone)
 
-        //Here is the problem with cached object because activateNetworkZone and deactivateNetworkZone return void
-        //Possible options:
-        // 1. Add return type
-        // 2. Clean up cache manually
         createdNetworkZone.deactivate()
 
         def deactivatedNetworkZone = getClient().getNetworkZone(createdNetworkZone.getId())
