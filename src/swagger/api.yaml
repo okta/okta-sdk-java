@@ -7225,8 +7225,6 @@ paths:
       responses:
         '200':
           description: Success
-          schema:
-            $ref: '#/definitions/NetworkZone'
       security:
         - api_token: []
       summary: Activate Network Zone
@@ -7248,8 +7246,6 @@ paths:
       responses:
         '200':
           description: Success
-          schema:
-            $ref: '#/definitions/NetworkZone'
       security:
         - api_token: []
       summary: Deactivate Network Zone
