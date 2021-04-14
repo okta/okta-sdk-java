@@ -120,7 +120,7 @@ Client client = Clients.builder()
  
 Hard-coding the Okta domain and API token works for quick tests, but for real projects you should use a more secure way of storing these values (such as environment variables). This library supports a few different configuration sources, covered in the [configuration reference](#configuration-reference) section.
 
-In some cases, it maybe needed to check if the client is ready and able to execute requests. The _**isReady**_ method can be used for this. It doesn't produce exceptions if the wrong orgUrl or token have been used, but it returns boolean. As a parameter, you have to provide a method reference based on which the ready state will be checked. Recommended realization:
+In some cases, it maybe needed to check if the client is ready and able to execute requests. The _**isReady**_ method can be used for this. It does not produce exceptions if the wrong orgUrl or token have been used, but it returns a boolean indicating the client readiness.
 
 [//]: # (method: isReadyChecking)
 ```java
