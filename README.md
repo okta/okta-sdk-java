@@ -126,7 +126,7 @@ In some cases, it maybe needed to check if the client is ready and able to execu
 ```java
 boolean isClientReadyStatus = client.isReady(client::listApplications);
 ```
-[//]: # (end: isReadyChecking)
+[//]: # (end: isClientReady)
 
 ## OAuth 2.0
 
