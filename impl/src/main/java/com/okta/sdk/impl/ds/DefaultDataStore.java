@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.okta.commons.http.HttpHeaders.OKTA_USER_AGENT;
@@ -598,10 +599,11 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     @Override
-    public boolean isReady() {
+    public boolean isReady(Supplier<? extends Resource> methodReference) {
         try {
-            return getRawResponse("/api/v1/apps", null, null) != null;
+            return methodReference.get() != null;
         } catch (ResourceException | HttpException exception) {
+            log.error("DataStore is not ready", exception);
             return false;
         }
     }

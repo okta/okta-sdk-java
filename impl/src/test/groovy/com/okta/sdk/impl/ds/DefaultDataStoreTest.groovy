@@ -232,7 +232,7 @@ class DefaultDataStoreTest {
     }
 
     @Test
-    void testIsReadyTrue(){
+    void testIsReadyTrue() {
         def response = mock(Response)
         def requestExecutor = mock(RequestExecutor)
         def clientCredentialsResolver = mock(ClientCredentialsResolver)
@@ -242,11 +242,11 @@ class DefaultDataStoreTest {
 
         def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.example.com/v1", clientCredentialsResolver)
 
-        assertTrue(defaultDataStore.isReady())
+        assertTrue(defaultDataStore.isReady({ -> defaultDataStore.getRawResponse("/api/v1/apps", null, null) }))
     }
 
     @Test
-    void testIsReadyFalse(){
+    void testIsReadyFalse() {
         def requestExecutor = mock(RequestExecutor)
         def clientCredentialsResolver = mock(ClientCredentialsResolver)
 
@@ -254,6 +254,6 @@ class DefaultDataStoreTest {
 
         def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.example.com/v1", clientCredentialsResolver)
 
-        assertFalse(defaultDataStore.isReady())
+        assertFalse(defaultDataStore.isReady({ -> defaultDataStore.getRawResponse("/api/v1/apps", null, null) }))
     }
 }

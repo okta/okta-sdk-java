@@ -31,6 +31,8 @@ import com.okta.sdk.impl.ds.DefaultDataStore;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.resource.Resource;
 
+import java.util.function.Supplier;
+
 /**
  * The base client class.
  * @since 1.1.0
@@ -127,7 +129,7 @@ public abstract class BaseClient implements DataStore {
     }
 
     @Override
-    public boolean isReady(){
-        return this.dataStore.isReady();
+    public boolean isReady(Supplier<? extends Resource> methodReference) {
+        return this.dataStore.isReady(methodReference);
     }
 }

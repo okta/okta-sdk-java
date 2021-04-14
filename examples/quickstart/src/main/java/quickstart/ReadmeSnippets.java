@@ -67,6 +67,10 @@ public class ReadmeSnippets {
             .build();
     }
 
+    private void isReadyChecking() {
+        boolean isClientReadyStatus = client.isReady(client::listApplications);
+    }
+
     private void createOAuth2Client() {
         Client client = Clients.builder()
             .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
