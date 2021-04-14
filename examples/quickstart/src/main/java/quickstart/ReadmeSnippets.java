@@ -67,7 +67,7 @@ public class ReadmeSnippets {
             .build();
     }
 
-    private void isReadyChecking() {
+    private void isClientReady() {
         boolean isClientReadyStatus = client.isReady(client::listApplications);
     }
 
@@ -251,4 +251,3 @@ public class ReadmeSnippets {
             .build();
     }
 }
-
