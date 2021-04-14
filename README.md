@@ -122,7 +122,7 @@ Hard-coding the Okta domain and API token works for quick tests, but for real pr
 
 In some cases, it maybe needed to check if the client is ready and able to execute requests. The _**isReady**_ method can be used for this. It does not produce exceptions if the wrong orgUrl or token have been used, but it returns a boolean indicating the client readiness.
 
-[//]: # (method: isReadyChecking)
+[//]: # (method: isClientReady)
 ```java
 boolean isClientReadyStatus = client.isReady(client::listApplications);
 ```
