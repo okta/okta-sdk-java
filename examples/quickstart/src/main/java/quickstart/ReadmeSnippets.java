@@ -78,10 +78,10 @@ public class ReadmeSnippets {
             .setClientId("{clientId}")
             .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
             .setPrivateKey("/path/to/yourPrivateKey.pem")
-            // (or) .setPrivateKey("full PEM payload");
-            // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"));
-            // (or) .setPrivateKey(inputStream);
-            // (or) .setPrivateKey(privateKey);
+            // (or) .setPrivateKey("full PEM payload")
+            // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
+            // (or) .setPrivateKey(inputStream)
+            // (or) .setPrivateKey(privateKey)
             .build();
     }
 
