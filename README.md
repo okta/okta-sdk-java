@@ -120,6 +120,14 @@ Client client = Clients.builder()
  
 Hard-coding the Okta domain and API token works for quick tests, but for real projects you should use a more secure way of storing these values (such as environment variables). This library supports a few different configuration sources, covered in the [configuration reference](#configuration-reference) section.
 
+In some cases, it maybe needed to check if the client is ready and able to execute requests. The _**isReady**_ method can be used for this. It does not produce exceptions if the wrong orgUrl or token have been used, but it returns a boolean indicating the client readiness.
+
+[//]: # (method: isClientReady)
+```java
+boolean isClientReadyStatus = client.isReady(client::listApplications);
+```
+[//]: # (end: isClientReady)
+
 ## OAuth 2.0
 
 Okta allows you to interact with Okta APIs using scoped OAuth 2.0 access tokens. Each access token enables the bearer to perform specific actions on specific Okta endpoints, with that ability controlled by which scopes the access token contains.
