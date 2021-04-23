@@ -851,6 +851,31 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat user.getCredentials().getProvider().getName(), equalTo(AuthenticationProviderType.FEDERATION.name())
     }
 
+    @Test
+    void testGetNextPageUrl() {
+        def user1 = create(client)
+        def user2 = create(client)
+        def user3 = create(client)
+        registerForCleanup(user1)
+        registerForCleanup(user2)
+        registerForCleanup(user3)
+
+        String pageSize = "2"
+
+        def userListFirstPage = client.http()
+            .addQueryParameter("limit", pageSize)
+            .get("/api/v1/users", UserList.class)
+        assertThat userListFirstPage, notNullValue()
+        assertThat userListFirstPage.getNextPageUrl(), notNullValue()
+        assertThat userListFirstPage.getProperties().get("currentPage").getProperties().get("items").collect().size(), is(2)
+
+        def userListSecondPage = client.http()
+            .addQueryParameter("limit", pageSize)
+            .get(userListFirstPage.getNextPageUrl(), UserList.class)
+        assertThat userListSecondPage, notNullValue()
+        assertThat userListSecondPage.getProperties().get("currentPage").getProperties().get("items").collect().size(), is(greaterThanOrEqualTo(1))
+    }
+
     private void ensureCustomProperties() {
         def userSchemaUri = "/api/v1/meta/schemas/user/default"
 
