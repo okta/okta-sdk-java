@@ -46,4 +46,10 @@ public interface CollectionResource<T extends Resource> extends Resource, Iterab
      */
     Stream<T> stream();
 
+    /**
+     * Returns a next page URL
+     *
+     * @return a URL link to the next resource, or {@code null} if the current resource is the last one.
+     */
+    String getNextPageUrl();
 }
