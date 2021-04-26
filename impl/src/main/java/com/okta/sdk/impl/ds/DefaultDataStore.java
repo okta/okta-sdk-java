@@ -17,6 +17,7 @@
 package com.okta.sdk.impl.ds;
 
 import com.okta.commons.http.DefaultRequest;
+import com.okta.commons.http.HttpException;
 import com.okta.commons.http.HttpHeaders;
 import com.okta.commons.http.HttpMethod;
 import com.okta.commons.http.MediaType;
@@ -66,6 +67,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.okta.commons.http.HttpHeaders.OKTA_USER_AGENT;
@@ -594,5 +596,15 @@ public class DefaultDataStore implements InternalDataStore {
     @Override
     public RequestBuilder http() {
         return new DefaultRequestBuilder(this);
+    }
+
+    @Override
+    public boolean isReady(Supplier<? extends Resource> methodReference) {
+        try {
+            return methodReference.get() != null;
+        } catch (ResourceException | HttpException exception) {
+            log.error("DataStore is not ready", exception);
+            return false;
+        }
     }
 }

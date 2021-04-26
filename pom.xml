@@ -343,7 +343,6 @@
                         </oldVersion>
                         <parameter>
                             <onlyModified>true</onlyModified>
-                            <!-- TODO: Revert these -->
                             <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications>
                             <breakBuildBasedOnSemanticVersioning>false</breakBuildBasedOnSemanticVersioning>
                             <postAnalysisScript>${root.dir}/src/japicmp/postAnalysisScript.groovy</postAnalysisScript>

@@ -100,6 +100,11 @@ class ApplicationsIT extends ITSupport {
     }
 
     @Test
+    void testClientIsReady() {
+        assertThat "Expected client to be ready", client.isReady({ -> client.listApplications() })
+    }
+
+    @Test
     void basicListTest() {
         // Create a resource
         def resource = create(client, client.instantiate(AutoLoginApplication)

@@ -20,6 +20,8 @@ import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.resource.Resource;
 
+import java.util.function.Supplier;
+
 /**
  * A {@code DataStore} is the liaison between client SDK components and the raw Okta REST API.  It is responsible
  * for converting SDK objects (Account, Directory, Group instances, etc) into REST HTTP requests, executing those
@@ -113,4 +115,11 @@ public interface DataStore {
      */
     RequestBuilder http();
 
+    /**
+     * Check if Datastore is configured correctly and able to execute requests.
+     *
+     * @param methodReference a reference to the method based on which the ready state will be checked
+     * @return {@code true} if orgUrl and token are correct and Okta Core is available, otherwise {@code false}.
+     */
+    boolean isReady(Supplier<? extends Resource> methodReference);
 }

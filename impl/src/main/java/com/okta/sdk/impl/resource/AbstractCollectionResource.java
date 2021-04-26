@@ -67,12 +67,13 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
         }
     }
 
-    private String getNextPageHref() {
+    @Override
+    public String getNextPageUrl() {
         return nextPageHref;
     }
 
     private boolean hasNextPage() {
-        return getNextPageHref() != null;
+        return getNextPageUrl() != null;
     }
 
     @Override
@@ -206,7 +207,7 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
                 //only represents a single page.
 
                 AbstractCollectionResource nextResource =
-                        getDataStore().getResource(getNextPageHref(), resource.getClass());
+                        getDataStore().getResource(getNextPageUrl(), resource.getClass());
                 Page<T> nextPage = nextResource.getCurrentPage();
                 Iterator<T> nextIterator = nextPage.getItems().iterator();
 
