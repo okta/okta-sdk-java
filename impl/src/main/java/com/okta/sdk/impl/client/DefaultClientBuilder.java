@@ -516,7 +516,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     public ClientBuilder setKid(String kid) {
         Assert.notNull(kid, "kid cannot be null.");
         this.clientConfig.setKid(kid);
-        return null;
+        return this;
     }
 
     boolean isOAuth2Flow() {
