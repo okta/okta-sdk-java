@@ -496,6 +496,14 @@ class DefaultClientBuilderTest {
         assertThat clientBuilder.clientConfiguration.getKid(), is("kid-value")
     }
 
+    @Test
+    void testSetterKid() {
+        clearOktaEnvAndSysProps()
+        System.setProperty("okta.client.kid", "kid-value")
+        DefaultClientBuilder clientBuilder = (DefaultClientBuilder) Clients.builder().setKid("another-kid-value")
+        assertThat clientBuilder.clientConfiguration.getKid(), is("another-kid-value")
+    }
+
     // helper methods
 
     static generatePrivateKey(String algorithm, int keySize, String fileNamePrefix, String fileNameSuffix) {

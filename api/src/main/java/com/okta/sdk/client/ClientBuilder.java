@@ -422,6 +422,14 @@ public interface ClientBuilder {
     ClientBuilder setRetryMaxAttempts(int maxAttempts);
 
     /**
+     * Sets Key ID.
+     *
+     * @param kid unique identifier for the key
+     * @return the ClientBuilder instance for method chaining
+     */
+    ClientBuilder setKid(String kid);
+
+    /**
      * Constructs a new {@link Client} instance based on the ClientBuilder's current configuration state.
      *
      * @return a new {@link Client} instance based on the ClientBuilder's current configuration state.

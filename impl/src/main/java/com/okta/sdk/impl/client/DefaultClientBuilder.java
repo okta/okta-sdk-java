@@ -330,6 +330,12 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
+    public ClientBuilder setKid(String kid) {
+        this.clientConfig.setKid(kid);
+        return this;
+    }
+
+    @Override
     public Client build() {
         if (!this.clientConfig.isCacheManagerEnabled()) {
             log.debug("CacheManager disabled. Defaulting to DisabledCacheManager");
