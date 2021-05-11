@@ -25,7 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
 /**
- * Tests for {@code /api/v1/threats/configuration}.
+ * Tests for {@code /api/v1/zones}.
  * @since 4.1.0
  */
 class NetworkZoneIT extends ITSupport {
