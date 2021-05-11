@@ -512,6 +512,13 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this;
     }
 
+    @Override
+    public ClientBuilder setKid(String kid) {
+        Assert.notNull(kid, "kid cannot be null.");
+        this.clientConfig.setKid(kid);
+        return null;
+    }
+
     boolean isOAuth2Flow() {
         return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
     }

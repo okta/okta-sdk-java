@@ -385,6 +385,16 @@ public interface ClientBuilder {
     ClientBuilder setClientId(String clientId);
 
     /**
+     * Allows specifying the Key ID (kid) instead of relying on the YAML config.
+     *
+     * @param kid string representing the Key ID.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 4.0.1
+     */
+    ClientBuilder setKid(String kid);
+
+    /**
      * Sets both the timeout until a connection is established and the socket timeout (i.e. a maximum period of inactivity
      * between two consecutive data packets).  A timeout value of zero is interpreted as an infinite timeout.
      *
