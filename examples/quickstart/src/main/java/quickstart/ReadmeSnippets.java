@@ -76,6 +76,7 @@ public class ReadmeSnippets {
             .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
             .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
             .setClientId("{clientId}")
+            .setKid("{kid}") // key id (optional)
             .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
             .setPrivateKey("/path/to/yourPrivateKey.pem")
             // (or) .setPrivateKey("full PEM payload")
