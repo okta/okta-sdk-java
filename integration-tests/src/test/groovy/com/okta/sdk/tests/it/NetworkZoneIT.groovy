@@ -169,23 +169,14 @@ class NetworkZoneIT extends ITSupport {
         assertThat(createdNetworkZone, notNullValue())
         registerForCleanup(createdNetworkZone)
 
-        // There is a problem with cached object
-        // According to YAML file activateNetworkZone and deactivateNetworkZone return void
-        // but actual API call return a NetworkZone object
-        //
-        //Possible options:
-        //- add return type in yaml file
-        //- update server-side code so API call return void
         createdNetworkZone.deactivate()
 
         def deactivatedNetworkZone = getClient().getNetworkZone(createdNetworkZone.getId())
-        //TODO: uncomment this when the return type issue is resolved
-        //assertThat(deactivatedNetworkZone.getStatus(), equalTo(NetworkZoneStatus.INACTIVE))
+        assertThat(deactivatedNetworkZone.getStatus(), equalTo(NetworkZoneStatus.INACTIVE))
 
         deactivatedNetworkZone.activate()
         def activatedNetworkZone = getClient().getNetworkZone(deactivatedNetworkZone.getId())
-        //TODO: uncomment this when the return type issue is resolved
-        //assertThat(activatedNetworkZone.getStatus(), equalTo(NetworkZoneStatus.ACTIVE))
+        assertThat(activatedNetworkZone.getStatus(), equalTo(NetworkZoneStatus.ACTIVE))
     }
 }
 
