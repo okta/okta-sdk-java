@@ -47,7 +47,9 @@ class NetworkZoneIT extends ITSupport {
             })
     }
 
-    @Test
+    @Test(enabled = false)
+    // disabled due to PDV failures after the test hits the limits (2 zones).
+    // need to fix the tests to cleanup resource after execution.
     void createAndDeleteNetworkZoneTest() {
 
         String networkZoneName = "network-zone-it-${uniqueTestName}"
@@ -88,7 +90,9 @@ class NetworkZoneIT extends ITSupport {
         assertNotPresent(getClient().listNetworkZones(), createdNetworkZone)
     }
 
-    @Test
+    @Test(enabled = false)
+    // disabled due to PDV failures after the test hits the limits (2 zones).
+    // need to fix the tests to cleanup resource after execution.
     void updateNetworkZoneTest() {
 
         String networkZoneName = "network-zone-it-${uniqueTestName}"
@@ -145,7 +149,9 @@ class NetworkZoneIT extends ITSupport {
         )
     }
 
-    @Test
+    @Test(enabled = false)
+    // disabled due to PDV failures after the test hits the limits (2 zones).
+    // need to fix the tests to cleanup resource after execution.
     void activateDeactivateNetworkZoneTest() {
 
         String networkZoneName = "network-zone-it-${uniqueTestName}"
