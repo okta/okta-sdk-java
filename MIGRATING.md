@@ -2,6 +2,129 @@
  
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
+## Migrating from 4.x.x to 5.0.0
+
+Version 5.0.0 of this SDK introduces a number of breaking changes from previous versions.
+In addition to many new classes/interfaces, some existing classes/interfaces are no longer backward compatible due to method renaming and signature changes.
+
+### Package `com.okta.sdk.client.Client`
+
+Below methods have been added.
+- `NetworkZone createNetworkZone(NetworkZone zone)`
+- `ThreatInsightConfiguration getCurrentConfiguration()`
+- `NetworkZone getNetworkZone(String zoneId)`
+- `ProfileMapping getProfileMapping(String mappingId)`
+- `NetworkZoneList listNetworkZones(String filter)`
+- `NetworkZoneList listNetworkZones()`
+- `ProfileMappingList listProfileMappings(String sourceId, String targetId)`
+- `ProfileMappingList listProfileMappings()`
+
+### Package `com.okta.sdk.client.ClientBuilder`
+
+Below method has been added.
+- `ClientBuilder setKid(String kid)`
+
+### Package `com.okta.sdk.ds.DataStore`
+
+Below method has been added.
+- `boolean isReady(Supplier<? extends Resource> methodReference)`
+
+### Package `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy`
+
+Below methods have been added.
+- `void activate(String authServerId)`
+- `void deactivate(String authServerId)`
+
+### Package `com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRule`
+
+Below methods have undergone a signature change.
+- `void activate()` signature changed to `void activate(String authServerId)`
+- `void deactivate()` signature changed to `void deactivate(String authServerId)`
+
+### Package `com.okta.sdk.resource.CollectionResource`
+
+Below method has been added.
+- `String getNextPageUrl()`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZone`
+
+This is a newly created interface with methods listed below.
+
+- `NetworkZone activate()`
+- `NetworkZone deactivate()`
+- `void delete()`
+- `List<String> getAsns()`
+- `Date getCreated()`
+- `List<NetworkZoneAddress> getGateways()`
+- `String getId()`
+- `Date getLastUpdated()`
+- `Map<String, Object> getLinks()`
+- `List<NetworkZoneLocation> getLocations()`
+- `String getName()`
+- `List<NetworkZoneAddress> getProxies()`
+- `String getProxyType()`
+- `NetworkZoneStatus getStatus()`
+- `Boolean getSystem()`
+- `NetworkZoneType getType()`
+- `NetworkZoneUsage getUsage()`
+- `NetworkZone setAsns(List<String> asns)`
+- `NetworkZone setGateways(List<NetworkZoneAddress> gateways)`
+- `NetworkZone setLocations(List<NetworkZoneLocation> locations)`
+- `NetworkZone setName(String name)`
+- `NetworkZone setProxies(List<NetworkZoneAddress> proxies)`
+- `NetworkZone setProxyType(String proxyType)`
+- `NetworkZone setStatus(NetworkZoneStatus status)`
+- `NetworkZone setSystem(Boolean system)`
+- `NetworkZone setType(NetworkZoneType type)`
+- `NetworkZone setUsage(NetworkZoneUsage usage)`
+- `NetworkZone update()`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneAddress`
+
+This is a newly created interface with methods listed below.
+
+- `NetworkZoneAddressType getType()`
+- `String getValue()`
+- `NetworkZoneAddress setType(NetworkZoneAddressType type)`
+- `NetworkZoneAddress setValue(String value)`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneAddressType`
+
+This is a newly created enum with fields listed below.
+- `CIDR("CIDR")`
+- `RANGE("RANGE")`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneLocation`
+
+This is a newly created interface with methods listed below.
+- `String getCountry()`
+- `String getRegion()`
+- `NetworkZoneLocation setCountry(String country)`
+- `NetworkZoneLocation setRegion(String region)`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneStatus`
+
+This is a newly created enum with fields listed below.
+- `ACTIVE("ACTIVE")`
+- `INACTIVE("INACTIVE")`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneType`
+
+This is a newly created enum with fields listed below.
+- `DYNAMIC("DYNAMIC")`
+- `IP("IP")`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneUsage`
+
+This is a newly created enum with fields listed below.
+- `BLOCKLIST("BLOCKLIST")`
+- `POLICY("POLICY")`
+
+
+
+
+
+
 ## Migrating from 3.x.x to 4.0.0
 
 Version 4.0.0 of this SDK introduces a number of breaking changes from previous versions.
