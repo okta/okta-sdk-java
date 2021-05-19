@@ -120,10 +120,93 @@ This is a newly created enum with fields listed below.
 - `BLOCKLIST("BLOCKLIST")`
 - `POLICY("POLICY")`
 
+### Package `com.okta.sdk.resource.policy.PolicyRule`
 
+Below methods have been added.
+- `PolicyRuleActions getActions()`
+- `PolicyRuleConditions getConditions()`
+- `String getName()`
+- `PolicyRule setActions(PolicyRuleActions actions)`
+- `PolicyRule setConditions(PolicyRuleConditions conditions)`
+- `PolicyRule setName(String name)`
 
+### Package `com.okta.sdk.resource.policy.PolicyRuleActions`
 
+This is a newly created interface with methods listed below.
+- `PolicyRuleActionsEnroll getEnroll()`
+- `PasswordPolicyRuleAction getPasswordChange()`
+- `PasswordPolicyRuleAction getSelfServicePasswordReset()`
+- `PasswordPolicyRuleAction getSelfServiceUnlock()`
+- `OktaSignOnPolicyRuleSignonActions getSignon()`
+- `PolicyRuleActions setEnroll(PolicyRuleActionsEnroll enroll)`
+- `PolicyRuleActions setPasswordChange(PasswordPolicyRuleAction passwordChange)`
+- `PolicyRuleActions setSelfServicePasswordReset(PasswordPolicyRuleAction selfServicePasswordReset)`
+- `PolicyRuleActions setSelfServiceUnlock(PasswordPolicyRuleAction selfServiceUnlock)`
+- `PolicyRuleActions setSignon(OktaSignOnPolicyRuleSignonActions signon)`
 
+### Package `com.okta.sdk.resource.policy.PolicyRuleActionsEnroll`
+
+This is a newly created interface with methods listed below.
+- `PolicyRuleActionsEnrollSelf getSelf()`
+- `PolicyRuleActionsEnroll setSelf(PolicyRuleActionsEnrollSelf self)`
+
+### Package `com.okta.sdk.resource.policy.PolicyRuleActionsEnrollSelf`
+
+This is a newly created enum with fields listed below.
+- `CHALLENGE("CHALLENGE")`
+- `LOGIN("LOGIN")`
+- `NEVER("NEVER")`
+
+### Package `com.okta.sdk.resource.profile.mapping.ProfileMapping`
+
+This is a newly created interface with methods listed below.
+- `String getId()`
+- `Map<String, Object> getLinks()`
+- `Map<String, ProfileMappingProperty> getProperties()`
+- `ProfileMappingSource getSource()`
+- `ProfileMappingSource getTarget()`
+- `ProfileMapping setSource(ProfileMappingSource source)`
+- `ProfileMapping setTarget(ProfileMappingSource target)`
+- `ProfileMapping update(ProfileMapping profileMapping)`
+
+### Package `com.okta.sdk.resource.profile.mapping.ProfileMappingProperty`
+
+This is a newly created interface with methods listed below.
+- `String getExpression()`
+- `ProfileMappingPropertyPushStatus getPushStatus()`
+- `ProfileMappingProperty setExpression(String expression)`
+- `ProfileMappingProperty setPushStatus(ProfileMappingPropertyPushStatus pushStatus)`
+
+### Package `com.okta.sdk.resource.profile.mapping.ProfileMappingPropertyPushStatus`
+
+This is a newly created enum with fields listed below.
+- `DONT_PUSH("DONT_PUSH")`
+- `PUSH("PUSH")`
+
+### Package `com.okta.sdk.resource.profile.mapping.ProfileMappingSource`
+
+This is a newly created interface with methods listed below.
+- `String getId()`
+- `Map<String, Object> getLinks()`
+- `String getName()`
+- `String getType()`
+
+### Package `com.okta.sdk.resource.threat.insight.ThreatInsightConfiguration`
+
+This is a newly created interface with methods listed below.
+- `String getAction()`
+- `Date getCreated()`
+- `List<String> getExcludeZones()`
+- `Date getLastUpdated()`
+- `Map<String, Object> getLinks()`
+- `ThreatInsightConfiguration setAction(String action)`
+- `ThreatInsightConfiguration setExcludeZones(List<String> excludeZones)`
+- `ThreatInsightConfiguration update()`
+
+### Package `com.okta.sdk.resource.user.factor.FactorType`
+
+Enum `FactorType` has the below new field definition:
+- `HOTP("HOTP")`
 
 ## Migrating from 3.x.x to 4.0.0
 
