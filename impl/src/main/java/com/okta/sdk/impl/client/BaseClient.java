@@ -42,12 +42,12 @@ public abstract class BaseClient implements DataStore {
     private final InternalDataStore dataStore;
 
     public BaseClient(ClientConfiguration clientConfiguration, CacheManager cacheManager) {
-        this(clientConfiguration, cacheManager, createRequestExecutor(clientConfiguration));
+        this(clientConfiguration, cacheManager, null);
     }
 
     public BaseClient(ClientConfiguration clientConfiguration, CacheManager cacheManager, RequestExecutor requestExecutor) {
         Assert.notNull(clientConfiguration, "clientConfiguration argument cannot be null.");
-        this.dataStore = createDataStore(requestExecutor,
+        this.dataStore = createDataStore(requestExecutor != null ? requestExecutor : createRequestExecutor(clientConfiguration),
                                          clientConfiguration.getBaseUrlResolver(),
                                          clientConfiguration.getClientCredentialsResolver(),
                                          cacheManager);
@@ -72,7 +72,7 @@ public abstract class BaseClient implements DataStore {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static RequestExecutor createRequestExecutor(ClientConfiguration clientConfiguration) {
+    protected RequestExecutor createRequestExecutor(ClientConfiguration clientConfiguration) {
 
         String msg = "Unable to find a '" + RequestExecutorFactory.class.getName() + "' " +
                 "implementation on the classpath.  Please ensure you have added the " +
