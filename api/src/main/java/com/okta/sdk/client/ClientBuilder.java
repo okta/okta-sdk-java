@@ -435,8 +435,6 @@ public interface ClientBuilder {
     /**
      * Sets the {@link RequestExecutorFactory},
      * otherwise it will be loaded as a Service / SPI via the {@link RequestExecutorFactory} class
-     * <p>
-     * {@link com.okta.sdk.impl.client.BaseClient#createRequestExecutor}
      *
      * @param requestExecutorFactory that should be used to create the RequestExecutor
      * @return the ClientBuilder instance for method chaining
