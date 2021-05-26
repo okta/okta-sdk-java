@@ -433,8 +433,8 @@ public interface ClientBuilder {
     ClientBuilder setRetryMaxAttempts(int maxAttempts);
 
     /**
-     * Sets the {@link RequestExecutorFactory},
-     * otherwise it will be loaded as a Service / SPI via the {@link RequestExecutorFactory} class
+     * Sets the {@link RequestExecutorFactory}, otherwise it will be loaded as a Service / SPI 
+     * via the {@link RequestExecutorFactory} class.
      *
      * @param requestExecutorFactory that should be used to create the RequestExecutor
      * @return the ClientBuilder instance for method chaining
