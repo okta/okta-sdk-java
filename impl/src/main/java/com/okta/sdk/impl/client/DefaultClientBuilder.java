@@ -17,6 +17,7 @@
 package com.okta.sdk.impl.client;
 
 import com.okta.commons.configcheck.ConfigurationValidator;
+import com.okta.commons.http.RequestExecutorFactory;
 import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
@@ -104,6 +105,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     private boolean allowNonHttpsForTesting = false;
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
+    private RequestExecutorFactory requestExecutorFactory;
 
     private AccessTokenRetrieverService accessTokenRetrieverService;
 
@@ -332,6 +334,12 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
+    public ClientBuilder setRequestExecutorFactory(RequestExecutorFactory requestExecutorFactory) {
+        this.requestExecutorFactory = requestExecutorFactory;
+        return this;
+    }
+
+    @Override
     public Client build() {
         if (!this.clientConfig.isCacheManagerEnabled()) {
             log.debug("CacheManager disabled. Defaulting to DisabledCacheManager");
@@ -375,7 +383,9 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
         }
 
-        return new DefaultClient(clientConfig, cacheManager);
+        return requestExecutorFactory == null
+            ? new DefaultClient(clientConfig, cacheManager)
+            : new DefaultClient(clientConfig, cacheManager, requestExecutorFactory.create(clientConfig));
     }
 
     /**
