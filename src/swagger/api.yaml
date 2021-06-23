@@ -2370,7 +2370,7 @@ paths:
           type: string
         - description: Filter expression for groups
           in: query
-          name: filter
+          name: search
           type: string
         - description: Specifies the pagination cursor for the next page of groups
           in: query

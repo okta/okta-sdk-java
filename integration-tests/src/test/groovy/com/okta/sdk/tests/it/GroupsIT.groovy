@@ -103,6 +103,24 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
     }
 
     @Test
+    @Scenario("search-groups-by-search-parameter")
+    void searchGroupsBySearchParameterTest() {
+
+        String groupName = "Search Test Group ${uniqueTestName}"
+
+        // 1. Create a new group
+        Group group = GroupBuilder.instance()
+            .setName(groupName)
+            .buildAndCreate(client)
+        registerForCleanup(group)
+        validateGroup(group, groupName)
+
+        // 2. Search the group by search parameter
+        Thread.sleep(500)
+        assertPresent(client.listGroups(null, "profile.name eq \"" + groupName + "\"", null), group)
+    }
+
+    @Test
     @Scenario("update-group")
     void updateGroupTest() {
 
