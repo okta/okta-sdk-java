@@ -116,7 +116,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         validateGroup(group, groupName)
 
         // 2. Search the group by search parameter
-        Thread.sleep(1000)
+        Thread.sleep(getTestOperationDelay())
         assertPresent(client.listGroups(null, "profile.name eq \"" + groupName + "\"", null), group)
     }
 
