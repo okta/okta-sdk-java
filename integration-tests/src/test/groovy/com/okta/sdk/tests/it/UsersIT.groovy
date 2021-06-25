@@ -255,6 +255,27 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     }
 
     @Test
+    @Scenario("user-with-special-character")
+    void userWithSpecialCharacterTest() {
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'hashtag'
+        def email = "john-${uniqueTestName}#@example.com"
+
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password.toCharArray())
+                .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        Thread.sleep(getTestOperationDelay())
+        assertThat(client.getUser(email), equalTo(user))
+    }
+
+    @Test
     @Scenario("user-role-assign")
     void roleAssignTest() {
 
