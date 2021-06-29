@@ -42,9 +42,12 @@ public abstract class BaseClient implements DataStore {
     private final InternalDataStore dataStore;
 
     public BaseClient(ClientConfiguration clientConfiguration, CacheManager cacheManager) {
+        this(clientConfiguration, cacheManager, null);
+    }
+
+    public BaseClient(ClientConfiguration clientConfiguration, CacheManager cacheManager, RequestExecutor requestExecutor) {
         Assert.notNull(clientConfiguration, "clientConfiguration argument cannot be null.");
-        RequestExecutor requestExecutor = createRequestExecutor(clientConfiguration);
-        this.dataStore = createDataStore(requestExecutor,
+        this.dataStore = createDataStore(requestExecutor != null ? requestExecutor : createRequestExecutor(clientConfiguration),
                                          clientConfiguration.getBaseUrlResolver(),
                                          clientConfiguration.getClientCredentialsResolver(),
                                          cacheManager);

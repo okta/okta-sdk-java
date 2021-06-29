@@ -573,7 +573,8 @@ public class DefaultDataStore implements InternalDataStore {
         if (!href.startsWith("/")) {
             sb.append("/");
         }
-        sb.append(href);
+        //  encode a reference special character
+        sb.append(href.replace("#", "%23"));
         return sb.toString();
     }
 

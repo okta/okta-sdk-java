@@ -16,6 +16,7 @@
  */
 package com.okta.sdk.client;
 
+import com.okta.commons.http.RequestExecutorFactory;
 import com.okta.commons.http.config.Proxy;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
@@ -430,6 +431,15 @@ public interface ClientBuilder {
      * @return the ClientBuilder instance for method chaining
      */
     ClientBuilder setRetryMaxAttempts(int maxAttempts);
+
+    /**
+     * Sets the {@link RequestExecutorFactory}, otherwise it will be loaded as a Service / SPI 
+     * via the {@link RequestExecutorFactory} class.
+     *
+     * @param requestExecutorFactory that should be used to create the RequestExecutor
+     * @return the ClientBuilder instance for method chaining
+     */
+    ClientBuilder setRequestExecutorFactory(RequestExecutorFactory requestExecutorFactory);
 
     /**
      * Constructs a new {@link Client} instance based on the ClientBuilder's current configuration state.
