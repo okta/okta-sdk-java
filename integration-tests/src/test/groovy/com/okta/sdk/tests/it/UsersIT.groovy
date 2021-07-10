@@ -16,9 +16,11 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.impl.resource.DefaultGroupBuilder
 import com.okta.sdk.resource.ExtensibleResource
 import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
+import com.okta.sdk.resource.application.ApplicationGroupAssignment
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettings
@@ -895,6 +897,30 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .get(userListFirstPage.getNextPageUrl(), UserList.class)
         assertThat userListSecondPage, notNullValue()
         assertThat userListSecondPage.getProperties().get("currentPage").getProperties().get("items").collect().size(), is(greaterThanOrEqualTo(1))
+    }
+
+    @Test
+    void testListGroupAssignmentsWithExpand() {
+        //  Create more than 20 groups
+        for (int i = 1; i < 30; i++) {
+            registerForCleanup(new DefaultGroupBuilder().setName("test-group_" + i + "_${uniqueTestName}").buildAndCreate(client))
+        }
+
+        //  Fetch the GroupAssignment list in two requests
+        def expandParameter = "group"
+        List<ApplicationGroupAssignment> groupAssignments = client.listApplications().first()
+            .listGroupAssignments(null, expandParameter)
+            .stream()
+            .collect(Collectors.toList())
+
+        //  Make sure both pages (all resources) contain an expand parameter
+        for (ApplicationGroupAssignment groupAssignment : groupAssignments) {
+            def embedded = groupAssignment.getEmbedded()
+            assertThat(embedded, notNullValue())
+            assertThat(embedded.get(expandParameter), notNullValue())
+            assertThat(embedded.get(expandParameter).get("type"), notNullValue())
+            assertThat(embedded.get(expandParameter).get("profile"), notNullValue())
+        }
     }
 
     private void ensureCustomProperties() {

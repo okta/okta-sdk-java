@@ -206,8 +206,9 @@ public abstract class AbstractCollectionResource<T extends Resource> extends Abs
                 //We can't 'trust' the current page iterator to know if more results exist on the server since it
                 //only represents a single page.
 
-                AbstractCollectionResource nextResource =
-                        getDataStore().getResource(getNextPageUrl(), resource.getClass());
+                AbstractCollectionResource<T> nextResource = queryParams.isEmpty()
+                    ? getDataStore().getResource(getNextPageUrl(), resource.getClass())
+                    : getDataStore().getResource(getNextPageUrl(), resource.getClass(), queryParams);
                 Page<T> nextPage = nextResource.getCurrentPage();
                 Iterator<T> nextIterator = nextPage.getItems().iterator();
 
