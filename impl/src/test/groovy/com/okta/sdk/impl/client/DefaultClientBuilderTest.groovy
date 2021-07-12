@@ -16,10 +16,14 @@
  */
 package com.okta.sdk.impl.client
 
+import com.okta.commons.http.DefaultResponse
+import com.okta.commons.http.RequestExecutor
+import com.okta.commons.http.RequestExecutorFactory
 import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.AuthorizationMode
+import com.okta.sdk.client.Client
 import com.okta.sdk.client.ClientBuilder
 import com.okta.sdk.client.Clients
 import com.okta.sdk.impl.Util
@@ -38,6 +42,7 @@ import java.nio.file.Path
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
+import java.util.stream.Collectors
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
@@ -494,6 +499,22 @@ class DefaultClientBuilderTest {
         System.setProperty("okta.client.kid", "kid-value")
         DefaultClientBuilder clientBuilder = (DefaultClientBuilder) Clients.builder()
         assertThat clientBuilder.clientConfiguration.getKid(), is("kid-value")
+    }
+
+    @Test
+    void testRequestExecutorFactorySetter() {
+        DefaultResponse defaultResponse = new DefaultResponse(200, null, new ByteArrayInputStream("custom_response".getBytes()), 0)
+        RequestExecutor requestExecutor = { request -> defaultResponse }
+        RequestExecutorFactory customRequestExecutorFactory = { clientConfiguration -> requestExecutor }
+
+        Client client = Clients.builder()
+            .setRequestExecutorFactory(customRequestExecutorFactory)
+            .build()
+
+        InputStream response = client.http().getRaw("www.example.com")
+        String result = new BufferedReader(new InputStreamReader(response)).lines().collect(Collectors.joining())
+
+        assertEquals result, "custom_response"
     }
 
     // helper methods
