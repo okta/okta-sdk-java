@@ -34,6 +34,8 @@
         <cve>CVE-2019-11065</cve>
         <cve>CVE-2019-15052</cve>
         <cve>CVE-2019-16370</cve>
+        <cve>CVE-2021-29429</cve>
+        <cve>CVE-2021-29428</cve>
     </suppress>
 
     <!-- this project does not use the offending method com.google.common.io.Files.createTempDir -->
