@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when
 
 class MockClient extends DefaultClient {
 
-    RequestExecutor mockRequestExecutor
+    static RequestExecutor mockRequestExecutor
 
     static ClientConfiguration defaultClientConfig = new ClientConfiguration() {{
         setBaseUrlResolver(new DefaultBaseUrlResolver("https://okta.example.com"))
