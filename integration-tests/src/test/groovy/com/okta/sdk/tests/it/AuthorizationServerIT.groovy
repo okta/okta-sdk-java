@@ -342,51 +342,6 @@ class AuthorizationServerIT extends ITSupport {
     }
 
     @Test
-    void activateDeactivateAuthorizationServerPolicyTest() {
-        String name = "java-sdk-it-" + UUID.randomUUID().toString()
-
-        AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
-            client.instantiate(AuthorizationServer)
-                .setName(name)
-                .setDescription("Test Authorization Server")
-                .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
-        assertThat(createdAuthorizationServer, notNullValue())
-
-        AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
-            .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
-            .setName("Test Policy")
-            .setDescription("Test Policy")
-            .setPriority(1)
-            .setConditions(client.instantiate(PolicyRuleConditions)
-                .setClients(client.instantiate(ClientPolicyCondition)
-                    .setInclude(
-                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
-                    )
-                )
-            )
-        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
-        assertThat(createdPolicy, notNullValue())
-
-        createdPolicy.deactivate(createdAuthorizationServer.getId())
-        def deactivatedPolicy = createdAuthorizationServer.getPolicy(createdPolicy.getId())
-        assertThat(deactivatedPolicy, notNullValue())
-        assertThat(deactivatedPolicy.getStatus(), equalTo(AuthorizationServerPolicy.StatusEnum.INACTIVE))
-
-        deactivatedPolicy.activate(createdAuthorizationServer.getId())
-        def activatedPolicy = createdAuthorizationServer.getPolicy(deactivatedPolicy.getId())
-        assertThat(activatedPolicy, notNullValue())
-        assertThat(activatedPolicy.getStatus(), equalTo(AuthorizationServerPolicy.StatusEnum.ACTIVE))
-
-        createdAuthorizationServer.deletePolicy(activatedPolicy.getId())
-
-        // delete may not effect immediately in the backend
-        sleep(getTestOperationDelay())
-
-        assertNotPresent(createdAuthorizationServer.listPolicies(), activatedPolicy)
-    }
-
-    @Test
     void listAuthorizationServerPolicyRulesTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -623,67 +578,6 @@ class AuthorizationServerIT extends ITSupport {
         sleep(getTestOperationDelay())
 
         assertNotPresent(createdPolicy.listPolicyRules(createdAuthorizationServer.getId()), createdPolicyRule)
-    }
-
-    @Test
-    void activateDeactivateAuthorizationServerPolicyRuleTest() {
-        String name = "java-sdk-it-" + UUID.randomUUID().toString()
-
-        AuthorizationServer createdAuthorizationServer = client.createAuthorizationServer(
-            client.instantiate(AuthorizationServer)
-                .setName(name)
-                .setDescription("Test Authorization Server")
-                .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
-        assertThat(createdAuthorizationServer, notNullValue())
-
-        AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
-            .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
-            .setName("Test Policy")
-            .setDescription("Test Policy")
-            .setPriority(1)
-            .setConditions(client.instantiate(PolicyRuleConditions)
-                .setClients(client.instantiate(ClientPolicyCondition)
-                    .setInclude(
-                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
-                    )
-                )
-            )
-        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
-        assertThat(createdPolicy, notNullValue())
-
-        AuthorizationServerPolicyRule createdPolicyRule = createdPolicy.createPolicyRule(createdAuthorizationServer.getId(),
-            client.instantiate(AuthorizationServerPolicyRule)
-                .setName(name)
-                .setType(AuthorizationServerPolicyRule.TypeEnum.ACCESS)
-                .setPriority(1)
-                .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
-                    .setPeople(client.instantiate(PolicyPeopleCondition)
-                        .setGroups(client.instantiate(GroupCondition)
-                            .setInclude(["EVERYONE"])))
-                    .setGrantTypes(client.instantiate(GrantTypePolicyRuleCondition)
-                        .setInclude(["implicit", "client_credentials", "authorization_code", "password"]))
-                    .setScopes(client.instantiate(OAuth2ScopesMediationPolicyRuleCondition).setInclude(["openid", "email", "address"]))
-                )
-        )
-        assertThat(createdPolicyRule, notNullValue())
-
-        createdPolicyRule.deactivate(createdAuthorizationServer.getId())
-        def deactivatedPolicyRule = createdPolicy.getPolicyRule(createdAuthorizationServer.getId(), createdPolicyRule.getId())
-        assertThat(deactivatedPolicyRule, notNullValue())
-        assertThat(deactivatedPolicyRule.getStatus(), equalTo(AuthorizationServerPolicyRule.StatusEnum.INACTIVE))
-
-        deactivatedPolicyRule.activate(createdAuthorizationServer.getId())
-        def activatedPolicyRule = createdPolicy.getPolicyRule(createdAuthorizationServer.getId(), createdPolicyRule.getId())
-        assertThat(activatedPolicyRule, notNullValue())
-        assertThat(activatedPolicyRule.getStatus(), equalTo(AuthorizationServerPolicyRule.StatusEnum.ACTIVE))
-
-        activatedPolicyRule.delete(createdAuthorizationServer.getId())
-
-        // delete may not effect immediately in the backend
-        sleep(getTestOperationDelay())
-
-        assertNotPresent(createdPolicy.listPolicyRules(createdAuthorizationServer.getId()), activatedPolicyRule)
     }
 
     // Scope operations
