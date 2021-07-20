@@ -2,9 +2,9 @@
  
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
-## Migrating from 4.x.x to 4.1.x
+## Migrating from 4.x.x to 5.0.0
 
-Version 4.1.x of this SDK introduces a number of breaking changes from previous versions.
+Version 5.0.0 of this SDK introduces a number of breaking changes from previous versions.
 In addition to many new classes/interfaces, some existing classes/interfaces are no longer backward compatible due to method renaming and signature changes.
 
 ### Package `com.okta.sdk.client.Client`
