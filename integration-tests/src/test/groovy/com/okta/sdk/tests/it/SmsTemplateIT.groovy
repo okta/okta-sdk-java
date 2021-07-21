@@ -50,6 +50,8 @@ class SmsTemplateIT extends ITSupport {
         } else {
             assertThat(smsTemplate.isPresent(), is(false))
         }
+
+        log.info("Operation delay: "+ getTestOperationDelay() + "ms. This log is just for testing purposes.")
     }
 
     @Test(dependsOnMethods = ["checkFirst"])
