@@ -219,20 +219,22 @@ class AuthorizationServerIT extends ITSupport {
         registerForCleanup(createdAuthorizationServer)
         assertThat(createdAuthorizationServer, notNullValue())
 
-        // create operation may not take effect immediately in the backend
-        sleep(getTestOperationDelay())
-
         AuthorizationServerList authorizationServerList = client.listAuthorizationServers()
         assertThat(authorizationServerList, notNullValue())
         assertThat(authorizationServerList.size(), greaterThan(0))
         assertPresent(authorizationServerList, createdAuthorizationServer)
 
-        authorizationServerList.forEach({ authServer ->
-            assertThat(authServer.listPolicies(), notNullValue())
-            authServer.listPolicies().forEach({ authPolicy ->
-                assertThat(authPolicy.getId(), notNullValue())
+        authorizationServerList.stream()
+            .filter({
+                authServer -> authServer.getId() == createdAuthorizationServer.getId()
             })
-        })
+            .forEach({
+                authServer ->
+                    assertThat(authServer.listPolicies(), notNullValue())
+                    authServer.listPolicies().forEach({
+                        authPolicy -> assertThat(authPolicy.getId(), notNullValue())
+                    })
+            })
     }
 
     @Test
@@ -398,22 +400,24 @@ class AuthorizationServerIT extends ITSupport {
         registerForCleanup(createdAuthorizationServer)
         assertThat(createdAuthorizationServer, notNullValue())
 
-        // create operation may not take effect immediately in the backend
-        sleep(getTestOperationDelay())
-
         AuthorizationServerList authorizationServerList = client.listAuthorizationServers()
 
         assertThat(authorizationServerList, notNullValue())
         assertThat(authorizationServerList.size(), greaterThan(0))
 
-        authorizationServerList.forEach({ authServer ->
-            assertThat(authServer.listPolicies(), notNullValue())
-            authServer.listPolicies().forEach({ authPolicy ->
-                assertThat(authPolicy, notNullValue())
-                assertThat(authPolicy.getId(), notNullValue())
-                assertThat(authPolicy.listPolicyRules(createdAuthorizationServer.getId()), notNullValue())
+        authorizationServerList.stream()
+            .filter({
+                authServer -> authServer.getId() == createdAuthorizationServer.getId()
             })
-        })
+            .forEach({
+                authServer ->
+                    assertThat(authServer.listPolicies(), notNullValue())
+                    authServer.listPolicies().forEach({ authPolicy ->
+                        assertThat(authPolicy, notNullValue())
+                        assertThat(authPolicy.getId(), notNullValue())
+                        assertThat(authPolicy.listPolicyRules(authServer.getId()), notNullValue())
+                    })
+            })
     }
 
     @Test
