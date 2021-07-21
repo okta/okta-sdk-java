@@ -19,6 +19,8 @@ import com.okta.sdk.resource.template.SmsTemplateTranslations
 import com.okta.sdk.resource.template.SmsTemplate
 import com.okta.sdk.resource.template.SmsTemplateType
 import com.okta.sdk.tests.it.util.ITSupport
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.assertPresent
@@ -32,9 +34,27 @@ import static org.hamcrest.Matchers.*
  */
 class SmsTemplateIT extends ITSupport {
 
+    private final static Logger log = LoggerFactory.getLogger(SmsTemplateIT)
+
     @Test
+    void checkFirst() {
+
+        Optional<SmsTemplate> smsTemplate = client.listSmsTemplates(SmsTemplateType.CODE)
+            .stream()
+            .filter({it.getName().startsWith("java-sdk-it-")})
+            .findFirst()
+
+        if(smsTemplate.isPresent()) {
+            log.info("Another test has created an sms template already. Waiting for " + getTestOperationDelay() + "ms")
+            sleep(getTestOperationDelay())
+        } else {
+            assertThat(smsTemplate.isPresent(), is(false))
+        }
+    }
+
+    @Test(dependsOnMethods = ["checkFirst"])
     void customTemplatesCrudTest() {
-        def templateName = "template-" + UUID.randomUUID().toString()
+        def templateName = "java-sdk-it-" + UUID.randomUUID().toString()
 
         // create translations
         SmsTemplateTranslations smsTemplateTranslations = client.instantiate(SmsTemplateTranslations)
