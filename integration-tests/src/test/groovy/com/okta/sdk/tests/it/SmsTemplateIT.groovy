@@ -19,8 +19,6 @@ import com.okta.sdk.resource.template.SmsTemplateTranslations
 import com.okta.sdk.resource.template.SmsTemplate
 import com.okta.sdk.resource.template.SmsTemplateType
 import com.okta.sdk.tests.it.util.ITSupport
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.assertPresent
@@ -34,32 +32,21 @@ import static org.hamcrest.Matchers.*
  */
 class SmsTemplateIT extends ITSupport {
 
-    private final static Logger log = LoggerFactory.getLogger(SmsTemplateIT)
-
     @Test
-    void checkFirst() {
-
-        Optional<SmsTemplate> smsTemplate = client.listSmsTemplates(SmsTemplateType.CODE)
-            .stream()
-            .filter({it.getName().startsWith("sdk-it-")})
-            .findFirst()
-
-        if(smsTemplate.isPresent()) {
-            log.info("Another test has created an sms template already. Waiting.")
-            sleep(getTestOperationDelay())
-        } else {
-            assertThat(smsTemplate.isPresent(), is(false))
-        }
-    }
-
-    @Test(dependsOnMethods = ["checkFirst"])
     void customTemplatesCrudTest() {
         def templateName = "sdk-it-" + UUID.randomUUID().toString()
+        def retryCount = 5
 
         // create translations
         SmsTemplateTranslations smsTemplateTranslations = client.instantiate(SmsTemplateTranslations)
         smsTemplateTranslations.put("de", "\${org.name}: ihre bestätigungscode ist \${code}")
         smsTemplateTranslations.put("it", "\${org.name}: il codice di verifica è \${code}")
+
+        while(isSmsTemplateAlreadyCreated() && retryCount > 0) {
+            //Looks like another Travis CI build has created an SMS Template already. Need to wait
+            sleep(getTestOperationDelay())
+            retryCount--
+        }
 
         // create template
         SmsTemplate smsTemplate = client.createSmsTemplate(client.instantiate(SmsTemplate)
@@ -114,5 +101,15 @@ class SmsTemplateIT extends ITSupport {
         // delete template
         smsTemplate.delete()
         assertNotPresent(client.listSmsTemplates(), smsTemplate)
+    }
+
+    boolean isSmsTemplateAlreadyCreated() {
+
+        Optional<SmsTemplate> smsTemplate = client.listSmsTemplates(SmsTemplateType.CODE)
+            .stream()
+            .filter({ it.getName().startsWith("sdk-it-") })
+            .findFirst()
+
+        return smsTemplate.isPresent()
     }
 }
