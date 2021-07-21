@@ -104,7 +104,6 @@ class SmsTemplateIT extends ITSupport {
     }
 
     boolean isSmsTemplateAlreadyCreated() {
-
         Optional<SmsTemplate> smsTemplate = client.listSmsTemplates(SmsTemplateType.CODE)
             .stream()
             .filter({ it.getName().startsWith("sdk-it-") })
