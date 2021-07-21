@@ -41,7 +41,7 @@ class SmsTemplateIT extends ITSupport {
 
         Optional<SmsTemplate> smsTemplate = client.listSmsTemplates(SmsTemplateType.CODE)
             .stream()
-            .filter({it.getName().startsWith("java-sdk-it-")})
+            .filter({it.getName().startsWith("sdk-it-")})
             .findFirst()
 
         if(smsTemplate.isPresent()) {
@@ -54,7 +54,7 @@ class SmsTemplateIT extends ITSupport {
 
     @Test(dependsOnMethods = ["checkFirst"])
     void customTemplatesCrudTest() {
-        def templateName = "java-sdk-it-" + UUID.randomUUID().toString()
+        def templateName = "sdk-it-" + UUID.randomUUID().toString()
 
         // create translations
         SmsTemplateTranslations smsTemplateTranslations = client.instantiate(SmsTemplateTranslations)
