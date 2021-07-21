@@ -45,13 +45,11 @@ class SmsTemplateIT extends ITSupport {
             .findFirst()
 
         if(smsTemplate.isPresent()) {
-            log.info("Another test has created an sms template already. Waiting for " + getTestOperationDelay() + "ms")
+            log.info("Another test has created an sms template already. Waiting.")
             sleep(getTestOperationDelay())
         } else {
             assertThat(smsTemplate.isPresent(), is(false))
         }
-
-        log.info("Operation delay: "+ getTestOperationDelay() + "ms. This log is just for testing purposes.")
     }
 
     @Test(dependsOnMethods = ["checkFirst"])

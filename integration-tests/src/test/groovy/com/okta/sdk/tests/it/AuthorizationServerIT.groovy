@@ -411,7 +411,7 @@ class AuthorizationServerIT extends ITSupport {
             authServer.listPolicies().forEach({ authPolicy ->
                 assertThat(authPolicy, notNullValue())
                 assertThat(authPolicy.getId(), notNullValue())
-                assertThat(authPolicy.listPolicyRules(createdAuthorizationServer.getId()), notNullValue())
+                assertThat(authPolicy.listPolicyRules(authServer.getId()), notNullValue())
             })
         })
     }
