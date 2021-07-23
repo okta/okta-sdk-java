@@ -740,6 +740,10 @@ class ApplicationsIT extends ITSupport {
         def url = resource.getLinks().get("users")["href"]
         registerForCleanup(resource)
 
+        // issue: testExecuteWithoutAcceptHeader() occasionally throws HTTP 404, Okta E0000007 - Resource not found error.
+        // adding a sleep after create() helps resolve the above issue.
+        sleep(getTestOperationDelay())
+
         Resource response = dataStore.getResource(url as String, Application.class)
 
         assertThat(response.isEmpty(), is(false))
