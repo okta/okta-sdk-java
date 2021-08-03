@@ -10,14 +10,18 @@ In addition to many new classes/interfaces, some existing classes/interfaces are
 ### Package `com.okta.sdk.client.Client`
 
 Below methods have been added.
+- `Domain createDomain(Domain domain)`
 - `NetworkZone createNetworkZone(NetworkZone zone)`
+- `void deleteDomain(String domainId)`
 - `ThreatInsightConfiguration getCurrentConfiguration()`
 - `NetworkZone getNetworkZone(String zoneId)`
 - `ProfileMapping getProfileMapping(String mappingId)`
+- `DomainList listDomains()`
 - `NetworkZoneList listNetworkZones(String filter)`
 - `NetworkZoneList listNetworkZones()`
 - `ProfileMappingList listProfileMappings(String sourceId, String targetId)`
 - `ProfileMappingList listProfileMappings()`
+- `Domain verifyDomain(String domainId)`
 
 ### Package `com.okta.sdk.client.ClientBuilder`
 
