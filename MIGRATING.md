@@ -49,11 +49,11 @@ This is a newly created interface with methods listed below.
 - `String getExpiration()`
 - `String getFqdn()`
 - `DNSRecordType getRecordType()`
-- `List getValues()`
+- `List<String> getValues()`
 - `DNSRecord setExpiration(String exp)`
 - `DNSRecord setFqdn(String fqdn)`
-- `DNSRecord setRecordType(DNSRecordType dnsRecordType)`
-- `DNSRecord setValues(List values)`
+- `DNSRecord setRecordType(DNSRecordType recordType)`
+- `DNSRecord setValues(List<String> values)`
 
 ### Package `com.okta.sdk.resource.domain.DNSRecordType`
 
@@ -66,13 +66,13 @@ This is a newly created enum with fields listed below.
 This is a newly created interface with methods listed below.
 
 - `DomainCertificateSourceType getCertificateSourceType()`
-- `List getDnsRecords()`
+- `List<DNSRecord> getDnsRecords()`
 - `String getDomain()`
 - `String getId()`
 - `DomainCertificateMetadata getPublicCertificate()`
 - `DomainValidationStatus getValidationStatus()`
 - `Domain setCertificateSourceType(DomainCertificateSourceType value)`
-- `Domain setDnsRecords(List records)`
+- `Domain setDnsRecords(List<DNSRecord> records)`
 - `Domain setDomain(String domain)`
 - `Domain setPublicCertificate(DomainCertificateMetadata value)`
 - `Domain setValidationStatus(DomainValidationStatus status)`
