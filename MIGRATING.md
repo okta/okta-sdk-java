@@ -123,7 +123,7 @@ This is a newly created enum with fields listed below.
 ### Package `com.okta.sdk.resource.group.rule.GroupRule`
 
 Below methods has been added.
-- `void delete(Boolean)`
+- `void delete(Boolean removeUsers)`
 
 ### Package `com.okta.sdk.resource.network.zone.NetworkZone`
 
