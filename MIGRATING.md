@@ -287,7 +287,118 @@ This is a newly created interface with methods listed below.
 Enum `FactorType` has the below new field definition:
 - `HOTP("HOTP")`
 
+### Package `com.okta.sdk.resource.user.schema.UserSchema`
 
+Below method has undergone a signature change.
+- `User getProperties()` signature changed to `UserSchemaProperties getProperties()`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttribute`
+
+Below methods have undergone a signature change.
+- `String getScope()` signature changed to `UserSchemaAttributeScope getScope()`
+- `String getType()` signature changed to `UserSchemaAttributeType getType()`
+- `UserSchemaAttribute setScope(String scope)` signature changed to `UserSchemaAttribute setScope(UserSchemaAttributeScope scope)`
+- `UserSchemaAttribute setType(String type)` signature changed to `UserSchemaAttribute setType(UserSchemaAttributeType type)`
+
+Below methods have been added.
+- `List<String> getEnum()`
+- `String getExternalName()`
+- `String getExternalNamespace()`
+- `UserSchemaAttributeItems getItems()`
+- `List<UserSchemaAttributeEnum> getOneOf()`
+- `String getPattern()`
+- `UserSchemaAttributeUnion getUnion()`
+- `String getUnique()`
+- `UserSchemaAttribute setEnum(List<String> value)`
+- `UserSchemaAttribute setExternalName(String externalName)`
+- `UserSchemaAttribute setExternalNamespace(String externalNamespace)`
+- `UserSchemaAttribute setItems(UserSchemaAttributeItems items)`
+- `UserSchemaAttribute setOneOf(List<UserSchemaAttributeEnum> oneOf)`
+- `UserSchemaAttribute setPattern(String pattern)`
+- `UserSchemaAttribute setUnion(UserSchemaAttributeUnion union)`
+- `UserSchemaAttribute setUnique(String unique)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeEnum`
+
+This is a newly created interface with methods listed below.
+- `String getConst()`
+- `String getTitle()`
+- `UserSchemaAttributeEnum setConst(String value)`
+- `UserSchemaAttributeEnum setTitle(String title)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeItems`
+
+This is a newly created interface with methods listed below.
+- `List<String> getEnum()`
+- `List<UserSchemaAttributeEnum> getOneOf()`
+- `String getType()`
+- `UserSchemaAttributeItems setEnum(List<String> values)`
+- `UserSchemaAttributeItems setOneOf(List<UserSchemaAttributeEnum> oneOf)`
+- `UserSchemaAttributeItems setType(String type)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeMaster`
+
+Below methods have undergone a signature change.
+- `String getType()` signature changed to `UserSchemaAttributeMasterType getType()`
+- `UserSchemaAttributeMaster setType(String type)` signature changed to `UserSchemaAttributeMaster setType(UserSchemaAttributeMasterType type)`
+
+Below methods have been added.
+- `List<UserSchemaAttributeMasterPriority> getPriority()`
+- `UserSchemaAttributeMaster setPriority(List<UserSchemaAttributeMasterPriority> priority)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeMasterPriority`
+
+This is a newly created interface with methods listed below.
+- `String getType()`
+- `Srring getValuse()`
+- `UserSchemaAttributeMasterPriority setType(String type)`
+- `UserSchemaAttributeMasterPriority setValuse(String valuse)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeMasterType`
+
+This is a newly created enum with fields listed below.
+- `OKTA("OKTA")`
+- `OVERRIDE("OVERRIDE")`
+- `PROFILE_MASTER("PROFILE_MASTER")`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeScope`
+
+This is a newly created enum with fields listed below.
+- `NONE("NONE")`
+- `SELF("SELF")`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeType`
+
+This is a newly created enum with fields listed below.
+- `ARRAY("ARRAY")`
+- `BOOLEAN("BOOLEAN")`
+- `INTEGER("INTEGER")`
+- `NUMBER("NUMBER")`
+- `STRING("STRING")`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeUnion`
+
+This is a newly created enum with fields listed below.
+- `DISABLE("DISABLE")`
+- `ENABLE("ENABLE")`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaProperties`
+
+This is a newly created interface with methods listed below.
+- `UserSchemaPropertiesProfile getProfile()`
+- `UserSchemaProperties setProfile(UserSchemaPropertiesProfile profile)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaPropertiesProfile`
+
+This is a newly created interface with methods listed below.
+- `List<UserSchemaPropertiesProfileItem> getAllOf()`
+- `UserSchemaPropertiesProfile setAllOf(List<UserSchemaPropertiesProfileItem> allOf)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaPropertiesProfileItem`
+
+This is a newly created interface with methods listed below.
+- `String getRef()`
+- `UserSchemaPropertiesProfileItem setRef(String ref)`
 
 ## Migrating from 3.x.x to 4.0.0
 
