@@ -14,6 +14,7 @@ Below methods have been added.
 - `NetworkZone createNetworkZone(NetworkZone zone)`
 - `void deleteDomain(String domainId)`
 - `ThreatInsightConfiguration getCurrentConfiguration()`
+- `Domain getDomain(String domainId)`
 - `NetworkZone getNetworkZone(String zoneId)`
 - `ProfileMapping getProfileMapping(String mappingId)`
 - `DomainList listDomains()`
@@ -23,15 +24,11 @@ Below methods have been added.
 - `ProfileMappingList listProfileMappings()`
 - `Domain verifyDomain(String domainId)`
 
-### Package `com.okta.sdk.client.ClientBuilder`
+### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationSettingsClient` 
 
-Below method has been added.
-- `ClientBuilder setKid(String kid)`
-
-### Package `com.okta.sdk.ds.DataStore`
-
-Below method has been added.
-- `boolean isReady(Supplier<? extends Resource> methodReference)`
+Below methods have been added.
+- `void activate()`
+- `void deactivate()`
 
 ### Package `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy`
 
@@ -45,10 +42,88 @@ Below methods have undergone a signature change.
 - `void activate()` signature changed to `void activate(String authServerId)`
 - `void deactivate()` signature changed to `void deactivate(String authServerId)`
 
-### Package `com.okta.sdk.resource.CollectionResource`
+### Package `com.okta.sdk.resource.domain.DNSRecord`
 
-Below method has been added.
-- `String getNextPageUrl()`
+This is a newly created interface with methods listed below.
+
+- `String getExpiration()`
+- `String getFqdn()`
+- `DNSRecordType getRecordType()`
+- `List getValues()`
+- `DNSRecord setExpiration(String exp)`
+- `DNSRecord setFqdn(String fqdn)`
+- `DNSRecord setRecordType(DNSRecordType dnsRecordType)`
+- `DNSRecord setValues(List values)`
+
+### Package `com.okta.sdk.resource.domain.DNSRecordType`
+
+This is a newly created enum with fields listed below.
+- `CNAME("CNAME")`
+- `TXT("TXT")`
+
+### Package `com.okta.sdk.resource.domain.Domain`
+
+This is a newly created interface with methods listed below.
+
+- `DomainCertificateSourceType getCertificateSourceType()`
+- `List getDnsRecords()`
+- `String getDomain()`
+- `String getId()`
+- `DomainCertificateMetadata getPublicCertificate()`
+- `DomainValidationStatus getValidationStatus()`
+- `Domain setCertificateSourceType(DomainCertificateSourceType value)`
+- `Domain setDnsRecords(List records)`
+- `Domain setDomain(String domain)`
+- `Domain setPublicCertificate(DomainCertificateMetadata value)`
+- `Domain setValidationStatus(DomainValidationStatus status)`
+
+### Package `com.okta.sdk.resource.domain.DomainCertificate`
+
+This is a newly created interface with methods listed below.
+
+- `void createCertificate(String cert)`
+- `String getCertificate()`
+- `String getCertificateChain()`
+- `String getPrivateKey()`
+- `DomainCertificateType getType()`
+- `DomainCertificate setCertificate(String cert)`
+- `DomainCertificate setCertificateChain(String certificateChain)`
+- `DomainCertificate setPrivateKey(String privateKey)`
+- `DomainCertificate setType(DomainCertificateType value)`
+
+### Package `com.okta.sdk.resource.domain.DomainCertificateMetadata`
+
+This is a newly created interface with methods listed below.
+
+- `String getExpiration()`
+- `String getFingerprint()`
+- `String getSubject()`
+- `DomainCertificateMetadata setExpiration(String exp)`
+- `DomainCertificateMetadata setFingerprint(String fingerprint)`
+- `DomainCertificateMetadata setSubject(String subject)`
+
+### Package `com.okta.sdk.resource.domain.DomainCertificateSourceType`
+
+This is a newly created enum with field listed below.
+- `MANUAL("MANUAL")`
+
+### Package `com.okta.sdk.resource.domain.DomainCertificateType`
+
+This is a newly created enum with field listed below.
+- `PEM("PEM")`
+
+### Package `com.okta.sdk.resource.domain.DomainValidationStatus`
+
+This is a newly created enum with fields listed below.
+- `COMPLETED("COMPLETED")`
+- `IN_PROGRESS("IN_PROGRESS")`
+- `NOT_STARTED("NOT_STARTED")`
+- `VERIFIED("VERIFIED")`
+
+### Package `com.okta.sdk.resource.group.rule.GroupRule`
+
+Below methods has been added.
+- `void delete(Boolean)`
 
 ### Package `com.okta.sdk.resource.network.zone.NetworkZone`
 
@@ -211,6 +286,8 @@ This is a newly created interface with methods listed below.
 
 Enum `FactorType` has the below new field definition:
 - `HOTP("HOTP")`
+
+
 
 ## Migrating from 3.x.x to 4.0.0
 
