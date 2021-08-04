@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.notNullValue
  */
 class ThreatInsightConfigurationIT extends ITSupport {
 
-    @Test
+    @Test (groups = "group3")
     void getThreatInsightConfigurationTest() {
 
         ThreatInsightConfiguration currentConfiguration = getClient().getCurrentConfiguration()
@@ -50,7 +50,7 @@ class ThreatInsightConfigurationIT extends ITSupport {
         assertThat(currentConfiguration.getExcludeZones(), notNullValue())
     }
 
-    @Test
+    @Test (groups = "group3")
     void updateThreatInsightConfigurationWithNetworkZoneTest() {
 
         def networkZoneName = "network-zone-it-${uniqueTestName}"

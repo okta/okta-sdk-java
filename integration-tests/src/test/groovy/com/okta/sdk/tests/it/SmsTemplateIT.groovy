@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.*
  */
 class SmsTemplateIT extends ITSupport {
 
-    @Test
+    @Test (groups = "group2")
     void customTemplatesCrudTest() {
         def templateName = "sdk-it-" + UUID.randomUUID().toString()
         def retryCount = 5
