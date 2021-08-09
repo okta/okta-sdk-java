@@ -63,7 +63,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdAuthorizationServer.getAudiences(), contains("api://example"))
     }
 
-    @Test
+    @Test (groups = "group3")
     void listCreatedAuthorizationServerTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -82,7 +82,7 @@ class AuthorizationServerIT extends ITSupport {
         assertPresent(client.listAuthorizationServers(), createdAuthorizationServer)
     }
 
-    @Test
+    @Test (groups = "group3")
     void getAuthorizationServerTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -101,7 +101,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(retrievedAuthorizationServer.getDescription(), equalTo(createdAuthorizationServer.getDescription()))
     }
 
-    @Test
+    @Test (groups = "group3")
     void updateAuthorizationServerTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -121,7 +121,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(updatedAuthorizationServer.getDescription(), equalTo("Updated Test Authorization Server"))
     }
 
-    @Test
+    @Test (groups = "group3")
     void deleteAuthorizationServerTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -144,7 +144,7 @@ class AuthorizationServerIT extends ITSupport {
         assertNotPresent(client.listAuthorizationServers(), createdAuthorizationServer)
     }
 
-    @Test
+    @Test (groups = "group3")
     void deactivateAuthorizationServerTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -169,7 +169,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(retrievedAuthorizationServer.getStatus(), equalTo(AuthorizationServer.StatusEnum.INACTIVE))
     }
 
-    @Test
+    @Test (groups = "group3")
     void activateAuthorizationServerTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -206,7 +206,7 @@ class AuthorizationServerIT extends ITSupport {
 
     // Policy operations
 
-    @Test
+    @Test (groups = "group3")
     void listAuthorizationServerPoliciesTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -218,6 +218,9 @@ class AuthorizationServerIT extends ITSupport {
         )
         registerForCleanup(createdAuthorizationServer)
         assertThat(createdAuthorizationServer, notNullValue())
+
+        // create may not effect immediately in the backend
+        sleep(getTestOperationDelay())
 
         AuthorizationServerList authorizationServerList = client.listAuthorizationServers()
         assertThat(authorizationServerList, notNullValue())
@@ -237,7 +240,7 @@ class AuthorizationServerIT extends ITSupport {
             })
     }
 
-    @Test
+    @Test (groups = "group3")
     void createAuthorizationServerPolicyTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -271,7 +274,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(retrievedPolicy.getName(), equalTo(createdPolicy.getName()))
     }
 
-    @Test
+    @Test (groups = "group3")
     void updateAuthorizationServerPolicyTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -308,7 +311,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(updatedPolicy.getDescription(), equalTo("Test Policy Updated"))
     }
 
-    @Test
+    @Test (groups = "group3")
     void deleteAuthorizationServerPolicyTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -343,7 +346,7 @@ class AuthorizationServerIT extends ITSupport {
         assertNotPresent(createdAuthorizationServer.listPolicies(), createdPolicy)
     }
 
-    @Test
+    @Test (groups = "group3")
     void activateDeactivateAuthorizationServerPolicyTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -388,7 +391,7 @@ class AuthorizationServerIT extends ITSupport {
         assertNotPresent(createdAuthorizationServer.listPolicies(), activatedPolicy)
     }
 
-    @Test
+    @Test (groups = "group3")
     void listAuthorizationServerPolicyRulesTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -420,7 +423,7 @@ class AuthorizationServerIT extends ITSupport {
             })
     }
 
-    @Test
+    @Test (groups = "group3")
     void createAuthorizationServerPolicyRuleTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -487,7 +490,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(createdPolicyRule.getActions().getToken().getRefreshTokenWindowMinutes(), equalTo(10080))
     }
 
-    @Test
+    @Test (groups = "group3")
     void updateAuthorizationServerPolicyRuleTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -572,7 +575,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(retrievedPolicyRule.getActions().getToken().getRefreshTokenWindowMinutes(), equalTo(55))
     }
 
-    @Test
+    @Test (groups = "group3")
     void deleteAuthorizationServerPolicyRuleTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -629,7 +632,7 @@ class AuthorizationServerIT extends ITSupport {
         assertNotPresent(createdPolicy.listPolicyRules(createdAuthorizationServer.getId()), createdPolicyRule)
     }
 
-    @Test
+    @Test (groups = "group3")
     void activateDeactivateAuthorizationServerPolicyRuleTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -692,7 +695,7 @@ class AuthorizationServerIT extends ITSupport {
 
     // Scope operations
 
-    @Test
+    @Test (groups = "group3")
     void listOAuth2ScopesTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -714,7 +717,7 @@ class AuthorizationServerIT extends ITSupport {
         assertPresent(createdAuthorizationServer.listOAuth2Scopes(), createdOAuth2Scope)
     }
 
-    @Test
+    @Test (groups = "group3")
     void getOAuth2ScopesTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -739,7 +742,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(retrievedOAuth2Scope.getId(), equalTo(createdOAuth2Scope.getId()))
     }
 
-    @Test
+    @Test (groups = "group3")
     void updateOAuth2ScopesTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -772,7 +775,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(updatedOAuth2Scope.getName(), equalTo(tobeUpdatedOAuth2Scope.getName()))
     }
 
-    @Test
+    @Test (groups = "group3")
     void deleteOAuth2ScopesTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -802,7 +805,7 @@ class AuthorizationServerIT extends ITSupport {
 
     // Claim operations
 
-    @Test
+    @Test (groups = "group3")
     void listOAuth2ClaimsTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -828,7 +831,7 @@ class AuthorizationServerIT extends ITSupport {
         assertPresent(createdAuthorizationServer.listOAuth2Claims(), createdOAuth2Claim)
     }
 
-    @Test
+    @Test (groups = "group3")
     void getOAuth2ClaimTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -856,7 +859,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(retrievedOAuth2Claim.getId(), equalTo(createdOAuth2Claim.getId()))
     }
 
-    @Test
+    @Test (groups = "group3")
     void updateOAuth2ClaimTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -892,7 +895,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(updatedOAuth2Claim.getName(), equalTo(tobeUpdatedOAuth2Claim.getName()))
     }
 
-    @Test
+    @Test (groups = "group3")
     void deleteOAuth2ClaimTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 

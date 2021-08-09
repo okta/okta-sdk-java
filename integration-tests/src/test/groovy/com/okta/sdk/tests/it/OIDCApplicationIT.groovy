@@ -54,7 +54,7 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
         return (OpenIdConnectApplication) app
     }
 
-    @Test
+    @Test (groups = "group2")
     void createOIDCApplicationWithPrivateKeyJwtTest() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()

@@ -70,7 +70,7 @@ class UserRolesIT extends ITSupport {
         assertThat("Incorrect RoleType", assignedRole.getType() == RoleType.SUPER_ADMIN)
     }
 
-    @Test
+    @Test (groups = "group3")
     @Scenario("group-targets-for-role")
     void groupTargetsForRoleTest() {
 
