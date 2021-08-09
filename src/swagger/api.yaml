@@ -13508,6 +13508,12 @@ definitions:
         type: array
       pattern:
         type: string
+      oneOf:
+        items:
+          $ref: '#/definitions/UserSchemaAttributeEnum'
+        type: array
+      pattern:
+        type: string
       permissions:
         items:
           $ref: '#/definitions/UserSchemaAttributePermission'
@@ -13564,11 +13570,30 @@ definitions:
       - UserSchema
   UserSchemaAttributeMasterPriority:
     properties:
+      priority:
+        items:
+          $ref: '#/definitions/UserSchemaAttributeMasterPriority'
+        type: array
+      type:
+        $ref: '#/definitions/UserSchemaAttributeMasterType'
+    type: object
+    x-okta-tags:
+      - UserSchema
+  UserSchemaAttributeMasterPriority:
+    properties:
       type:
         type: string
       value:
         type: string
     type: object
+    x-okta-tags:
+      - UserSchema
+  UserSchemaAttributeMasterType:
+    enum:
+      - PROFILE_MASTER
+      - OKTA
+      - OVERRIDE
+    type: string
     x-okta-tags:
       - UserSchema
   UserSchemaAttributeMasterType:
