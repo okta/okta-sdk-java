@@ -350,9 +350,9 @@ Below methods have been added.
 
 This is a newly created interface with methods listed below.
 - `String getType()`
-- `Srring getValuse()`
+- `String getValue()`
 - `UserSchemaAttributeMasterPriority setType(String type)`
-- `UserSchemaAttributeMasterPriority setValuse(String valuse)`
+- `UserSchemaAttributeMasterPriority setValue(String value)`
 
 ### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeMasterType`
 
