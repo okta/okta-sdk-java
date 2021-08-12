@@ -88,7 +88,7 @@ class GroupRulesIT implements CrudTestSupport {
         return client.listGroupRules().iterator()
     }
 
-    @Test (groups = "group2")
+    @Test (groups = "group1")
     @Scenario("group-rule-operations")
     @TestResources(rules = ["Test group rule", "Test group rule updated"])
     void groupRuleCrudTest() {
