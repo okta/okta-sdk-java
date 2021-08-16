@@ -59,17 +59,57 @@
 
     <build>
         <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.zalando.maven.plugins</groupId>-->
+<!--                <artifactId>swagger-codegen-maven-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>swagger-codegen-api</id>-->
+<!--                        <goals>-->
+<!--                            <goal>codegen</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <language>okta_java</language>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.openapitools</groupId>-->
+<!--                <artifactId>openapi-generator-maven-plugin</artifactId>-->
+<!--                &lt;!&ndash; RELEASE_VERSION &ndash;&gt;-->
+<!--                <version>5.2.0</version>-->
+<!--                &lt;!&ndash; /RELEASE_VERSION &ndash;&gt;-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>generate</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <inputSpec>src/swagger/api.yaml</inputSpec>-->
+<!--                            <generatorName>java</generatorName>-->
+<!--                            <configOptions>-->
+<!--                                &lt;!&ndash;<sourceFolder>src/gen/java/main</sourceFolder>&ndash;&gt;-->
+<!--                            </configOptions>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
-                <groupId>org.zalando.maven.plugins</groupId>
+                <groupId>io.swagger</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>2.3.1</version>
                 <executions>
                     <execution>
-                        <id>swagger-codegen-api</id>
                         <goals>
-                            <goal>codegen</goal>
+                            <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <language>okta_java</language>
+                            <inputSpec>${project.basedir}/../src/swagger/api.yaml</inputSpec>
+                            <language>java</language>
+                            <configOptions>
+                                <sourceFolder>src/gen/java/main</sourceFolder>
+                            </configOptions>
                         </configuration>
                     </execution>
                 </executions>
