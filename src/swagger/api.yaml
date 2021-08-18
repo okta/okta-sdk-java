@@ -303,6 +303,10 @@ paths:
     post:
       tags:
         - Application
+      consumes:
+        - application/json
+      produces:
+        - application/json
       summary: Publish Certificate Signing Request
       description: Updates a certificate signing request for the app with a signed X.509 certificate and adds it into the application key credentials
       operationId: publishCsrFromApplication
@@ -326,52 +330,52 @@ paths:
             $ref: '#/definitions/JsonWebKey'
       security:
         - api_token: []
-#      x-okta-multi-operation:
-#        - operationId: publishCerCert
-#          encoding: base64
-#          requestBody:
-#            name: certificate
-#            required: true
-#            content:
-#              application/x-x509-ca-cert:
-#                schema:
-#                  type: string
-#        - operationId: publishBinaryCerCert
-#          requestBody:
-#            name: certificate
-#            required: true
-#            content:
-#              application/x-x509-ca-cert:
-#                schema:
-#                  type: string
-#                  format: binary
-#        - operationId: publishDerCert
-#          encoding: base64
-#          requestBody:
-#            name: certificate
-#            required: true
-#            content:
-#              application/pkix-cert:
-#                schema:
-#                  type: string
-#        - operationId: publishBinaryDerCert
-#          requestBody:
-#            name: certificate
-#            required: true
-#            content:
-#              application/pkix-cert:
-#                schema:
-#                  type: string
-#                  format: binary
-#        - operationId: publishBinaryPemCert
-#          requestBody:
-#            name: certificate
-#            required: true
-#            content:
-#              application/x-pem-file:
-#                schema:
-#                  type: string
-#                  format: binary
+      x-okta-multi-operation:
+        - consumes:
+            - application/x-x509-ca-cert
+          encoding: base64
+          operationId: publishCerCert
+          parameters:
+            - in: body
+              name: certificate
+              required: true
+              type: string
+        - consumes:
+            - application/x-x509-ca-cert
+          operationId: publishBinaryCerCert
+          parameters:
+            - format: binary
+              in: body
+              name: certificate
+              required: true
+              type: string
+        - consumes:
+            - application/pkix-cert
+          encoding: base64
+          operationId: publishDerCert
+          parameters:
+            - in: body
+              name: certificate
+              required: true
+              type: string
+        - consumes:
+            - application/pkix-cert
+          operationId: publishBinaryDerCert
+          parameters:
+            - format: binary
+              in: body
+              name: certificate
+              required: true
+              type: string
+        - consumes:
+            - application/x-pem-file
+          operationId: publishBinaryPemCert
+          parameters:
+            - format: binary
+              in: body
+              name: certificate
+              required: true
+              type: string
   /api/v1/apps/{appId}/credentials/keys:
     get:
       tags:
@@ -3999,52 +4003,72 @@ paths:
             $ref: '#/definitions/JsonWebKey'
       security:
         - api_token: []
-#      x-okta-multi-operation:
-#        - operationId: publishCerCertForIdentityProvider
-#          encoding: base64
-#          requestBody:
-#            name: certificate
-#            required: true
-#            content:
-#              application/x-x509-ca-cert:
-#                schema:
-#                  type: string
-#        - operationId: publishBinaryCerCertForIdentityProvider
-#          requestBody:
-#            name: certificate
-#            required: true
-#            content:
-#              application/x-x509-ca-cert:
-#                schema:
-#                  type: string
-#                  format: binary
-#        - operationId: publishDerCertForIdentityProvider
-#          encoding: base64
-#          requestBody:
-#            name: certificate
-#            required: true
-#            content:
-#              application/pkix-cert:
-#                schema:
-#                  type: string
-#        - operationId: publishBinaryDerCertForIdentityProvider
-#          requestBody:
-#            name: certificate
-#            required: true
-#            content:
-#              application/pkix-cert:
-#                schema:
-#                  type: string
-#                  format: binary
-#        - operationId: publishBinaryPemCertForIdentityProvider
-#          requestBody:
-#            name: certificate
-#            required: true
-#            content:
-#              application/x-pem-file:
-#                schema:
-#                  type: string
-#                  format: binary
+      x-okta-multi-operation:
+        - operationId: publishCerCertForIdentityProvider
+          encoding: base64
+          consumes:
+            - application/x-x509-ca-cert
+          #requestBody:
+          parameters:
+            - in: body
+              name: certificate
+              required: true
+              #content:
+                #application/x-x509-ca-cert:
+              schema:
+                type: string
+        - operationId: publishBinaryCerCertForIdentityProvider
+          consumes:
+            - application/x-x509-ca-cert
+          #requestBody:
+          parameters:
+            - in: body
+              name: certificate
+              required: true
+              #content:
+                #application/x-x509-ca-cert:
+              schema:
+                type: string
+                format: binary
+        - operationId: publishDerCertForIdentityProvider
+          encoding: base64
+          consumes:
+            - application/pkix-cert
+          #requestBody:
+          parameters:
+            - in: body
+              name: certificate
+              required: true
+              #content:
+                #application/pkix-cert:
+              schema:
+                type: string
+        - operationId: publishBinaryDerCertForIdentityProvider
+          consumes:
+            - application/pkix-cert
+          #requestBody:
+          parameters:
+            - in: body
+              name: certificate
+              required: true
+              #content:
+                #application/pkix-cert:
+              schema:
+                type: string
+                format: binary
+        - operationId: publishBinaryPemCertForIdentityProvider
+          consumes:
+            - application/x-pem-file
+          #requestBody:
+          parameters:
+            - in: body
+              name: certificate
+              required: true
+              #content:
+                #application/x-pem-file:
+              schema:
+                type: string
+                format: binary
   /api/v1/idps/{idpId}/credentials/keys:
     get:
       tags:
@@ -6312,6 +6336,10 @@ paths:
       x-codegen-request-body-name: userCredentials
   /api/v1/users/{userId}/credentials/forgot_password:
     post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
       tags:
         - User
       summary: Forgot Password
@@ -6330,34 +6358,31 @@ paths:
             #application/json:
           schema:
             $ref: '#/definitions/ForgotPasswordResponse'
-#      x-okta-multi-operation:
-#        - description: Generates a one-time token (OTT) that can be used to reset a user's password
-#          operationId: forgotPasswordGenerateOneTimeToken
-#          parameters:
-#            - default: true
-#              in: query
-#              name: sendEmail
-#              schema:
-#                type: boolean
-#              description: Determines whether an email is sent to the user.
-#        - description: Sets a new password for a user by validating the user's answer to their current recovery question
-#          operationId: forgotPasswordSetNewPassword
-#          parameters:
-#            - default: true
-#              in: query
-#              name: sendEmail
-#              schema:
-#                type: boolean
-#              description: Determines whether an email is sent to the user.
-#          requestBody:
-#            description: Factor
-#            content:
-#              application/json:
-#                schema:
-#                  $ref: '#/components/schemas/UserCredentials'
-#            required: false
-#        security:
-#          - api_token: [ ]
+      x-okta-multi-operation:
+        - description: Generates a one-time token (OTT) that can be used to reset a user's password
+          operationId: forgotPasswordGenerateOneTimeToken
+          parameters:
+            - default: true
+              in: query
+              name: sendEmail
+              schema:
+                type: boolean
+              description: Determines whether an email is sent to the user.
+        - description: Sets a new password for a user by validating the user's answer to their current recovery question
+          operationId: forgotPasswordSetNewPassword
+          parameters:
+            - default: true
+              in: query
+              name: sendEmail
+              schema:
+                type: boolean
+              description: Determines whether an email is sent to the user.
+            - in: body
+              description: Factor
+              name: user
+              schema:
+                $ref: '#/definitions/UserCredentials'
+              required: false
       security:
         - api_token: []
   /api/v1/users/{userId}/factors:
