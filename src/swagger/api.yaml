@@ -1,3 +1,18 @@
+#
+# Copyright 2021-Present Okta, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 swagger: 3.0.1
 info:
   title: Okta API
@@ -312,51 +327,51 @@ paths:
       security:
         - api_token: []
 #      x-okta-multi-operation:
-#        - consumes:
-#            - application/x-x509-ca-cert
+#        - operationId: publishCerCert
 #          encoding: base64
-#          operationId: publishCerCert
-#          parameters:
-#            - in: body
-#              name: certificate
-#              required: true
-#              type: string
-#        - consumes:
-#            - application/x-x509-ca-cert
-#          operationId: publishBinaryCerCert
-#          parameters:
-#            - format: binary
-#              in: body
-#              name: certificate
-#              required: true
-#              type: string
-#        - consumes:
-#            - application/pkix-cert
+#          requestBody:
+#            name: certificate
+#            required: true
+#            content:
+#              application/x-x509-ca-cert:
+#                schema:
+#                  type: string
+#        - operationId: publishBinaryCerCert
+#          requestBody:
+#            name: certificate
+#            required: true
+#            content:
+#              application/x-x509-ca-cert:
+#                schema:
+#                  type: string
+#                  format: binary
+#        - operationId: publishDerCert
 #          encoding: base64
-#          operationId: publishDerCert
-#          parameters:
-#            - in: body
-#              name: certificate
-#              required: true
-#              type: string
-#        - consumes:
-#            - application/pkix-cert
-#          operationId: publishBinaryDerCert
-#          parameters:
-#            - format: binary
-#              in: body
-#              name: certificate
-#              required: true
-#              type: string
-#        - consumes:
-#            - application/x-pem-file
-#          operationId: publishBinaryPemCert
-#          parameters:
-#            - format: binary
-#              in: body
-#              name: certificate
-#              required: true
-#              type: string
+#          requestBody:
+#            name: certificate
+#            required: true
+#            content:
+#              application/pkix-cert:
+#                schema:
+#                  type: string
+#        - operationId: publishBinaryDerCert
+#          requestBody:
+#            name: certificate
+#            required: true
+#            content:
+#              application/pkix-cert:
+#                schema:
+#                  type: string
+#                  format: binary
+#        - operationId: publishBinaryPemCert
+#          requestBody:
+#            name: certificate
+#            required: true
+#            content:
+#              application/x-pem-file:
+#                schema:
+#                  type: string
+#                  format: binary
   /api/v1/apps/{appId}/credentials/keys:
     get:
       tags:
@@ -1021,7 +1036,6 @@ paths:
           schema:
             type: boolean
             default: false
-            x-okta-added-version: 1.5.0
           x-okta-added-version: 1.5.0
       responses:
         '204':
@@ -2163,9 +2177,7 @@ paths:
                 errorLink: E0000165
                 errorId: oaejrB1fWL1S7mc-2KcG-SOtw
                 errorCauses: []
-      description: |-
-        Adds a new CAPTCHA instance to your organization.
-        In current release, we only allow one CAPTCHA instance per org
+      description:  Adds a new CAPTCHA instance to your organization. In current release, we only allow one CAPTCHA instance per org.
       #requestBody:
         #content:
           #application/json:
@@ -2933,7 +2945,6 @@ paths:
           description: If specified as `groupIdToGroupNameMap`, then show group names
           schema:
             type: string
-            x-okta-added-version: 1.3.0
           x-okta-added-version: 1.3.0
       responses:
         '200':
@@ -3989,51 +4000,51 @@ paths:
       security:
         - api_token: []
 #      x-okta-multi-operation:
-#        - consumes:
-#            - application/x-x509-ca-cert
+#        - operationId: publishCerCertForIdentityProvider
 #          encoding: base64
-#          operationId: publishCerCertForIdentityProvider
-#          parameters:
-#            - in: body
-#              name: certificate
-#              required: true
-#              type: string
-#        - consumes:
-#            - application/x-x509-ca-cert
-#          operationId: publishBinaryCerCertForIdentityProvider
-#          parameters:
-#            - format: binary
-#              in: body
-#              name: certificate
-#              required: true
-#              type: string
-#        - consumes:
-#            - application/pkix-cert
+#          requestBody:
+#            name: certificate
+#            required: true
+#            content:
+#              application/x-x509-ca-cert:
+#                schema:
+#                  type: string
+#        - operationId: publishBinaryCerCertForIdentityProvider
+#          requestBody:
+#            name: certificate
+#            required: true
+#            content:
+#              application/x-x509-ca-cert:
+#                schema:
+#                  type: string
+#                  format: binary
+#        - operationId: publishDerCertForIdentityProvider
 #          encoding: base64
-#          operationId: publishDerCertForIdentityProvider
-#          parameters:
-#            - in: body
-#              name: certificate
-#              required: true
-#              type: string
-#        - consumes:
-#            - application/pkix-cert
-#          operationId: publishBinaryDerCertForIdentityProvider
-#          parameters:
-#            - format: binary
-#              in: body
-#              name: certificate
-#              required: true
-#              type: string
-#        - consumes:
-#            - application/x-pem-file
-#          operationId: publishBinaryPemCertForIdentityProvider
-#          parameters:
-#            - format: binary
-#              in: body
-#              name: certificate
-#              required: true
-#              type: string
+#          requestBody:
+#            name: certificate
+#            required: true
+#            content:
+#              application/pkix-cert:
+#                schema:
+#                  type: string
+#        - operationId: publishBinaryDerCertForIdentityProvider
+#          requestBody:
+#            name: certificate
+#            required: true
+#            content:
+#              application/pkix-cert:
+#                schema:
+#                  type: string
+#                  format: binary
+#        - operationId: publishBinaryPemCertForIdentityProvider
+#          requestBody:
+#            name: certificate
+#            required: true
+#            content:
+#              application/x-pem-file:
+#                schema:
+#                  type: string
+#                  format: binary
   /api/v1/idps/{idpId}/credentials/keys:
     get:
       tags:
@@ -4580,6 +4591,7 @@ paths:
           in: query
           schema:
             type: string
+            default: ''
       responses:
         '200':
           description: Success
@@ -4977,6 +4989,7 @@ paths:
           in: query
           schema:
             type: string
+            default: ''
       responses:
         '200':
           description: Success
@@ -5033,6 +5046,7 @@ paths:
           in: query
           schema:
             type: string
+            default: ''
       responses:
         '200':
           description: Success
@@ -5403,9 +5417,7 @@ paths:
         - name: templateType
           in: query
           schema:
-            type: string
-            x-openapi-v3-schema-ref: '#/definitions/SmsTemplateType'
-          x-openapi-v3-schema-ref: '#/definitions/SmsTemplateType'
+            $ref: '#/components/schemas/SmsTemplateType'
       responses:
         '200':
           description: Success
@@ -5823,9 +5835,7 @@ paths:
           in: query
           description: With activate=true, set nextLogin to "changePassword" to have the password be EXPIRED, so user must change it the next time they log in.
           schema:
-            type: string
-            x-okta-added-version: 0.14.0
-            x-openapi-v3-schema-ref: '#/definitions/UserNextLogin'
+            $ref: '#/definitions/UserNextLogin'
           x-okta-added-version: 0.14.0
           x-openapi-v3-schema-ref: '#/definitions/UserNextLogin'
       #requestBody:
@@ -5911,7 +5921,6 @@ paths:
           in: query
           schema:
             type: boolean
-            x-okta-added-version: 1.10.0
           x-okta-added-version: 1.10.0
       #requestBody:
         #content:
@@ -5981,7 +5990,6 @@ paths:
           schema:
             type: boolean
             default: false
-            x-okta-added-version: 1.5.0
           x-okta-added-version: 1.5.0
       responses:
         '202':
@@ -6252,7 +6260,6 @@ paths:
           in: query
           schema:
             type: boolean
-            x-okta-added-version: 1.10.0
           x-okta-added-version: 1.10.0
       #requestBody:
         #content:
@@ -6316,22 +6323,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: sendEmail
-          in: query
-          required: false
-          schema:
-            type: boolean
-            default: true
-          description: Determines whether an email is sent to the user. This only applies when 'user' is not provided in the request body.
-      #requestBody:
-        #description: Factor
-        #content:
-          #application/json:
-        - in: body
-          description: Factor
-          schema:
-            $ref: '#/definitions/UserCredentials'
-          required: false
       responses:
         '200':
           description: The user's security question answer and a new password. When provided and the security question answer is correct, immediately update the user's password to the provided value.
@@ -6339,6 +6330,34 @@ paths:
             #application/json:
           schema:
             $ref: '#/definitions/ForgotPasswordResponse'
+#      x-okta-multi-operation:
+#        - description: Generates a one-time token (OTT) that can be used to reset a user's password
+#          operationId: forgotPasswordGenerateOneTimeToken
+#          parameters:
+#            - default: true
+#              in: query
+#              name: sendEmail
+#              schema:
+#                type: boolean
+#              description: Determines whether an email is sent to the user.
+#        - description: Sets a new password for a user by validating the user's answer to their current recovery question
+#          operationId: forgotPasswordSetNewPassword
+#          parameters:
+#            - default: true
+#              in: query
+#              name: sendEmail
+#              schema:
+#                type: boolean
+#              description: Determines whether an email is sent to the user.
+#          requestBody:
+#            description: Factor
+#            content:
+#              application/json:
+#                schema:
+#                  $ref: '#/components/schemas/UserCredentials'
+#            required: false
+#        security:
+#          - api_token: [ ]
       security:
         - api_token: []
   /api/v1/users/{userId}/factors:
@@ -6392,14 +6411,12 @@ paths:
             type: integer
             format: int32
             default: 300
-            x-okta-added-version: 1.3.0
           x-okta-added-version: 1.3.0
         - name: activate
           in: query
           schema:
             type: boolean
             default: false
-            x-okta-added-version: 1.3.0
           x-okta-added-version: 1.3.0
       #requestBody:
         #description: Factor
@@ -6610,19 +6627,16 @@ paths:
             type: integer
             format: int32
             default: 300
-            x-okta-added-version: 1.3.0
           x-okta-added-version: 1.3.0
         - name: X-Forwarded-For
           in: header
           schema:
             type: string
-            x-okta-added-version: 1.11.0
           x-okta-added-version: 1.11.0
         - name: User-Agent
           in: header
           schema:
             type: string
-            x-okta-added-version: 1.11.0
           x-okta-added-version: 1.11.0
         - name: Accept-Language
           in: header
@@ -6851,7 +6865,6 @@ paths:
           schema:
             type: boolean
             default: false
-            x-okta-added-version: 1.5.0
           x-okta-added-version: 1.5.0
       responses:
         '200':
@@ -6859,7 +6872,7 @@ paths:
           content: {}
       security:
         - api_token: []
-  /api/v1/users/{userId}/lifecycle/expire_password:
+  /api/v1/users/{userId}/lifecycle/expire_password?tempPassword=false:
     post:
       tags:
         - User
@@ -6872,13 +6885,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: tempPassword
-          in: query
-          required: false
-          schema:
-            type: boolean
-            default: false
-          description: When set to 'true' the user's password is reset to a temporary password that is returned. When omitted or set to 'false' the user will be required to change their password at their next login.
       responses:
         '200':
           description: Success
@@ -6888,6 +6894,28 @@ paths:
             $ref: '#/definitions/User'
       security:
         - api_token: []
+  /api/v1/users/{userId}/lifecycle/expire_password?tempPassword=true:
+    post:
+      tags:
+        - User
+      summary: Expire Password
+      description: This operation transitions the user to the status of `PASSWORD_EXPIRED` so that the user is required to change their password at their next login.
+      operationId: expirePasswordAndGetTemporaryPassword
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TempPassword'
+      security:
+        - api_token: [ ]
   /api/v1/users/{userId}/lifecycle/reactivate:
     post:
       tags:
@@ -7670,6 +7698,7 @@ definitions:
           readOnly: true
         id:
           type: string
+          readOnly: false
         lastSync:
           type: string
           format: date-time
@@ -7960,7 +7989,7 @@ definitions:
           operationId: getScopeConsentGrant
       x-okta-tags:
         - Application
-      x-openapi-v3-discriminator:
+      discriminator:
         mapping:
           AUTO_LOGIN: '#/definitions/AutoLoginApplication'
           BASIC_AUTH: '#/definitions/BasicAuthApplication'
@@ -8281,7 +8310,7 @@ definitions:
       x-okta-parent: '#/definitions/Application'
       x-okta-tags:
         - Application
-      x-openapi-v3-discriminator:
+      discriminator:
         mapping:
           template_swa: '#/definitions/SwaApplication'
           template_swa3field: '#/definitions/SwaThreeFieldApplication'
@@ -9682,25 +9711,37 @@ definitions:
         fqdn:
           type: string
         recordType:
-          type: string
-          enum:
-            - TXT
-            - CNAME
+          $ref: '#/definitions/DNSRecordType'
         values:
           type: array
           items:
             type: string
       x-okta-tags:
         - Domain
+    DNSRecordType:
+      type: string
+      enum:
+        - TXT
+        - CNAME
+      x-okta-tags:
+        - Domain
     Domain:
       type: object
       properties:
         certificateSourcetype:
-          type: string
-          enum:
-            - MANUAL
+          $ref: '#/definitions/DomainCertificateSourceType'
+        dnsRecords:
+          type: array
+          items:
+            $ref: '#/definitions/DNSRecord'
         domain:
           type: string
+        id:
+          type: string
+          publicCertificate:
+            $ref: '#/definitions/DomainCertificateMetadata'
+          validationStatus:
+            $ref: '#/definitions/DomainValidationStatus'
       x-okta-tags:
         - Domain
     DomainCertificate:
@@ -9713,9 +9754,7 @@ definitions:
         privateKey:
           type: string
         type:
-          type: string
-          enum:
-            - PEM
+          $ref: '#/definitions/DomainCertificateType'
       x-okta-operations:
         - alias: createCertificate
           arguments:
@@ -9733,6 +9772,18 @@ definitions:
           type: string
         subject:
           type: string
+      x-okta-tags:
+        - Domain
+    DomainCertificateSourceType:
+      type: string
+      enum:
+        - MANUAL
+      x-okta-tags:
+        - Domain
+    DomainCertificateType:
+      type: string
+      enum:
+        - PEM
       x-okta-tags:
         - Domain
     DomainLinks:
@@ -9784,6 +9835,15 @@ definitions:
             - IN_PROGRESS
             - VERIFIED
             - COMPLETED
+      x-okta-tags:
+        - Domain
+    DomainValidationStatus:
+      type: string
+      enum:
+        - NOT_STARTED
+        - IN_PROGRESS
+        - VERIFIED
+        - COMPLETED
       x-okta-tags:
         - Domain
     EventHook:
@@ -12107,7 +12167,7 @@ definitions:
           operationId: getPolicyRule
       x-okta-tags:
         - Policy
-      x-openapi-v3-discriminator:
+      discriminator:
         mapping:
           IDP_DISCOVERY: '#/definitions/IdentityProviderPolicy'
           OAUTH_AUTHORIZATION_POLICY: '#/definitions/OAuthAuthorizationPolicy'
@@ -12238,7 +12298,7 @@ definitions:
           operationId: deactivatePolicyRule
       x-okta-tags:
         - Policy
-      x-openapi-v3-discriminator:
+      discriminator:
         mapping:
           PASSWORD: '#/definitions/PasswordPolicyRule'
           SIGN_ON: '#/definitions/OktaSignOnPolicyRule'
@@ -13270,6 +13330,16 @@ definitions:
             - dest: userId
               src: id
           operationId: changeRecoveryQuestion
+        - alias: forgotPasswordSetNewPassword
+          arguments:
+            - dest: userId
+              src: id
+          operationId: forgotPasswordSetNewPassword
+        - alias: forgotPasswordGenerateOneTimeToken
+          arguments:
+            - dest: userId
+              src: id
+          operationId: forgotPasswordGenerateOneTimeToken
         - alias: assignRole
           arguments:
             - dest: userId
@@ -13390,6 +13460,11 @@ definitions:
             - dest: userId
               src: id
           operationId: expirePassword
+        - alias: expirePasswordAndGetTemporaryPassword
+          arguments:
+            - dest: userId
+              src: id
+          operationId: expirePasswordAndGetTemporaryPassword
         - alias: unlock
           arguments:
             - dest: userId
@@ -13888,7 +13963,7 @@ definitions:
           operationId: verifyFactor
       x-okta-tags:
         - UserFactor
-      x-openapi-v3-discriminator:
+      discriminator:
         mapping:
           call: '#/definitions/CallUserFactor'
           email: '#/definitions/EmailUserFactor'
