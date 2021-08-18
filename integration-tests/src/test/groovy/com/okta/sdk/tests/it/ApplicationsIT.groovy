@@ -674,7 +674,8 @@ class ApplicationsIT extends ITSupport {
         assertNotPresent(app.listCsrs(), csr)
     }
 
-    @Test (groups = "group1")
+    // Quarantining this till OKTA-421154 is fixed
+    @Test (groups = "bacon")
     void oAuth2ScopeConsentGrantTest() {
         Client client = getClient()
 
