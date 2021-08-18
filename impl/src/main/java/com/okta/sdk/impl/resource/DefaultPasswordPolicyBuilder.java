@@ -199,7 +199,7 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
 
     @Override
     public PasswordPolicy buildAndCreate(Client client) {
-        return (PasswordPolicy) client.createPolicy(build(client), isActive);
+        return (PasswordPolicy) client.createPolicy(build(client));
     }
 
     private PasswordPolicy build(Client client) {

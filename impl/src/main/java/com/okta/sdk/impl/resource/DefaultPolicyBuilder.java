@@ -78,7 +78,7 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
 
     @Override
     public Policy buildAndCreate(Client client) {
-        return client.createPolicy(build(client), isActive);
+        return client.createPolicy(build(client));
     }
 
     private Policy build(Client client) {

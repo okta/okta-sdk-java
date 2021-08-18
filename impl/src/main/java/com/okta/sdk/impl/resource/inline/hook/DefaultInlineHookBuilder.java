@@ -107,11 +107,11 @@ public class DefaultInlineHookBuilder implements InlineHookBuilder {
             .setVersion(VERSION)
             .setConfig(inlineHookChannelConfig);
 
-        InlineHook createdInlineHook = client.createInlineHook(client.instantiate(InlineHook.class)
+        InlineHook createdInlineHook = client.instantiate(InlineHook.class)
             .setName(name)
             .setType(hookType)
             .setVersion(VERSION)
-            .setChannel(inlineHookChannel));
+            .setChannel(inlineHookChannel);
 
         return createdInlineHook;
     }

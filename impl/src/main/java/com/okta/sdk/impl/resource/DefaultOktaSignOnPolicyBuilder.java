@@ -55,7 +55,7 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
 
     @Override
     public OktaSignOnPolicy buildAndCreate(Client client) {
-        return (OktaSignOnPolicy) client.createPolicy(build(client), isActive);
+        return (OktaSignOnPolicy) client.createPolicy(build(client));
     }
 
     private OktaSignOnPolicy build(Client client){
