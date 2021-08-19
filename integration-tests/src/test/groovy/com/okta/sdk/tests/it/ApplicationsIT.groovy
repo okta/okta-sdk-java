@@ -477,7 +477,8 @@ class ApplicationsIT extends ITSupport {
         assertThat(client.getApplication(app.getId()).getStatus(), equalTo(Application.StatusEnum.ACTIVE))
     }
 
-    @Test (groups = "group1")
+    // Quarantining this till OKTA-421154 is fixed
+    @Test (groups = "bacon")
     void groupAssignmentWithNullBodyTest() {
 
         Application app = client.createApplication(client.instantiate(AutoLoginApplication)
@@ -721,7 +722,8 @@ class ApplicationsIT extends ITSupport {
         assertNotPresent(app.listScopeConsentGrants(), app.getScopeConsentGrant(oAuth2ScopeConsentGrant.getId()))
     }
 
-    @Test (groups = "group1")
+    // Quarantining this till OKTA-421154 is fixed
+    @Test (groups = "bacon")
     void testExecuteWithoutAcceptHeader() {
         def app = client.instantiate(SamlApplication)
             .setVisibility(client.instantiate(ApplicationVisibility))
