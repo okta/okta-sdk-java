@@ -4,7 +4,7 @@
 [![Support](https://img.shields.io/badge/support-Developer%20Forum-blue.svg)][devforum]
 [![API Reference](https://img.shields.io/badge/docs-reference-lightgrey.svg)][javadocs]
 
-# Okta Java Management SDK
+# Okta Java Mgmt SDK
 
 * [Release status](#release-status)
 * [Need help?](#need-help)
