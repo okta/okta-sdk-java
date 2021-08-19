@@ -213,7 +213,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected void buildDiscriminationMap(Swagger swagger) {
         swagger.getDefinitions().forEach((name, model) -> {
             ObjectNode discriminatorMapExtension =
-                (ObjectNode) model.getVendorExtensions().get("x-openapi-v3-discriminator");
+                (ObjectNode) model.getVendorExtensions().get("discriminator");
             if (discriminatorMapExtension != null) {
                 String propertyName = discriminatorMapExtension.get("propertyName").asText();
                 ObjectNode mapping = (ObjectNode) discriminatorMapExtension.get("mapping");

@@ -78,8 +78,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -114,8 +114,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Application'
       security:
@@ -141,8 +141,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Application'
       security:
@@ -170,8 +170,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Application'
       security:
@@ -211,8 +211,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -242,8 +242,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Csr'
       security:
@@ -270,8 +270,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Csr'
       security:
@@ -324,8 +324,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -392,8 +392,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -419,8 +419,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -446,8 +446,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -479,8 +479,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -504,8 +504,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -534,8 +534,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2ScopeConsentGrant'
       security:
@@ -565,8 +565,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2ScopeConsentGrant'
       security:
@@ -629,8 +629,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -662,8 +662,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/ApplicationGroupAssignment'
       security:
@@ -696,8 +696,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/ApplicationGroupAssignment'
       security:
@@ -793,8 +793,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -842,8 +842,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2Token'
       security:
@@ -914,8 +914,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -945,8 +945,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AppUser'
       security:
@@ -977,8 +977,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AppUser'
       security:
@@ -1011,8 +1011,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AppUser'
       security:
@@ -1073,8 +1073,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -1098,8 +1098,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AuthorizationServer'
         '201':
@@ -1123,8 +1123,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AuthorizationServer'
       security:
@@ -1149,8 +1149,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AuthorizationServer'
       security:
@@ -1188,8 +1188,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -1218,8 +1218,8 @@ paths:
       responses:
         '200':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2Claim'
         '201':
@@ -1248,8 +1248,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2Claim'
       security:
@@ -1281,8 +1281,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2Claim'
       security:
@@ -1325,8 +1325,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -1367,8 +1367,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -1426,8 +1426,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2RefreshToken'
       security:
@@ -1474,8 +1474,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -1503,8 +1503,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -1563,8 +1563,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -1591,8 +1591,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AuthorizationServerPolicy'
         '201':
@@ -1621,8 +1621,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AuthorizationServerPolicy'
       security:
@@ -1654,8 +1654,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AuthorizationServerPolicy'
       security:
@@ -1749,8 +1749,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -1782,8 +1782,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AuthorizationServerPolicyRule'
       security:
@@ -1814,8 +1814,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AuthorizationServerPolicyRule'
       security:
@@ -1850,8 +1850,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/AuthorizationServerPolicyRule'
       security:
@@ -1973,8 +1973,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -2001,8 +2001,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2Scope'
         '201':
@@ -2031,8 +2031,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2Scope'
       security:
@@ -2064,8 +2064,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2Scope'
       security:
@@ -2101,8 +2101,8 @@ paths:
       responses:
         '200':
           description: OK
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -2147,8 +2147,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/CAPTCHAInstance'
           examples:
@@ -2169,8 +2169,8 @@ paths:
                         - DELETE
         '403':
           description: Forbidden
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Error'
           examples:
@@ -2217,8 +2217,8 @@ paths:
       responses:
         '200':
           description: OK
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/CAPTCHAInstance'
           examples:
@@ -2239,8 +2239,8 @@ paths:
                         - DELETE
         '404':
           description: Not Found
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Error'
           examples:
@@ -2261,8 +2261,8 @@ paths:
       responses:
         '200':
           description: OK
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/CAPTCHAInstance'
           examples:
@@ -2283,8 +2283,8 @@ paths:
                         - DELETE
         '400':
           description: Bad Request
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Error'
           examples:
@@ -2297,8 +2297,8 @@ paths:
                 errorCauses: []
         '404':
           description: Not Found
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Error'
           examples:
@@ -2340,8 +2340,8 @@ paths:
         '403':
           description: Forbidden
           headers: {}
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Error'
           examples:
@@ -2354,8 +2354,8 @@ paths:
                 errorCauses: []
         '404':
           description: Not Found
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Error'
           examples:
@@ -2377,8 +2377,8 @@ paths:
       responses:
         '200':
           description: OK
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/CAPTCHAInstance'
           examples:
@@ -2399,14 +2399,14 @@ paths:
                         - DELETE
         '400':
           description: Bad Request
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Error'
         '404':
           description: Not Found
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Error'
           examples:
@@ -2448,8 +2448,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/DomainListResponse'
       security:
@@ -2469,8 +2469,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/DomainResponse'
       security:
@@ -2492,8 +2492,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/DomainResponse'
       security:
@@ -2540,8 +2540,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/DomainResponse'
       security:
@@ -2573,8 +2573,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -2598,8 +2598,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/EventHook'
       security:
@@ -2620,8 +2620,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/EventHook'
       security:
@@ -2647,8 +2647,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/EventHook'
       security:
@@ -2686,8 +2686,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/EventHook'
       security:
@@ -2707,8 +2707,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/EventHook'
       security:
@@ -2728,8 +2728,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/EventHook'
       security:
@@ -2743,8 +2743,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -2766,8 +2766,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Feature'
       security:
@@ -2787,8 +2787,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -2810,8 +2810,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -2842,8 +2842,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Feature'
       security:
@@ -2886,8 +2886,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -2912,8 +2912,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Group'
       security:
@@ -2953,8 +2953,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -2979,8 +2979,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/GroupRule'
       security:
@@ -3006,8 +3006,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/GroupRule'
       security:
@@ -3032,8 +3032,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/GroupRule'
       security:
@@ -3116,8 +3116,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Group'
       security:
@@ -3143,8 +3143,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Group'
       security:
@@ -3196,8 +3196,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -3223,8 +3223,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -3255,8 +3255,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Role'
         '201':
@@ -3285,8 +3285,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Role'
       security:
@@ -3343,8 +3343,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -3504,8 +3504,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -3593,8 +3593,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -3681,8 +3681,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -3707,8 +3707,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/IdentityProvider'
       security:
@@ -3737,8 +3737,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -3762,8 +3762,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -3785,8 +3785,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -3825,8 +3825,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/IdentityProvider'
       security:
@@ -3852,8 +3852,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/IdentityProvider'
       security:
@@ -3893,8 +3893,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -3922,8 +3922,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Csr'
       security:
@@ -3949,8 +3949,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Csr'
       security:
@@ -3997,8 +3997,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -4013,7 +4013,7 @@ paths:
             - in: body
               name: certificate
               required: true
-              #content:
+              content:
                 #application/x-x509-ca-cert:
               schema:
                 type: string
@@ -4025,7 +4025,7 @@ paths:
             - in: body
               name: certificate
               required: true
-              #content:
+              content:
                 #application/x-x509-ca-cert:
               schema:
                 type: string
@@ -4039,7 +4039,7 @@ paths:
             - in: body
               name: certificate
               required: true
-              #content:
+              content:
                 #application/pkix-cert:
               schema:
                 type: string
@@ -4051,7 +4051,7 @@ paths:
             - in: body
               name: certificate
               required: true
-              #content:
+              content:
                 #application/pkix-cert:
               schema:
                 type: string
@@ -4064,7 +4064,7 @@ paths:
             - in: body
               name: certificate
               required: true
-              #content:
+              content:
                 #application/x-pem-file:
               schema:
                 type: string
@@ -4085,8 +4085,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -4116,8 +4116,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -4143,8 +4143,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -4175,8 +4175,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/JsonWebKey'
       security:
@@ -4197,8 +4197,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/IdentityProvider'
       security:
@@ -4219,8 +4219,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/IdentityProvider'
       security:
@@ -4241,8 +4241,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -4269,8 +4269,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/IdentityProviderApplicationUser'
       security:
@@ -4303,8 +4303,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/IdentityProviderApplicationUser'
       security:
@@ -4354,8 +4354,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -4376,8 +4376,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -4398,8 +4398,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/InlineHook'
       security:
@@ -4420,8 +4420,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/InlineHook'
       security:
@@ -4448,8 +4448,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/InlineHook'
       security:
@@ -4494,8 +4494,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/InlineHookResponse'
       security:
@@ -4516,8 +4516,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/InlineHook'
   /api/v1/inlineHooks/{inlineHookId}/lifecycle/deactivate:
@@ -4535,8 +4535,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/InlineHook'
   /api/v1/logs:
@@ -4582,8 +4582,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -4619,8 +4619,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -4643,8 +4643,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/ProfileMapping'
       security:
@@ -4670,8 +4670,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/ProfileMapping'
       security:
@@ -4693,8 +4693,8 @@ paths:
       responses:
         '200':
           description: successful operation
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserSchema'
       security:
@@ -4721,8 +4721,8 @@ paths:
       responses:
         '200':
           description: successful operation
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserSchema'
       security:
@@ -4744,8 +4744,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserSchema'
       security:
@@ -4770,8 +4770,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserSchema'
       security:
@@ -4786,8 +4786,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -4811,8 +4811,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/LinkedObject'
       security:
@@ -4833,8 +4833,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/LinkedObject'
       security:
@@ -4865,8 +4865,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -4890,8 +4890,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserType'
       security:
@@ -4912,8 +4912,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserType'
       security:
@@ -4940,8 +4940,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserType'
       security:
@@ -4969,8 +4969,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserType'
       security:
@@ -5017,8 +5017,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -5047,8 +5047,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Policy'
       security:
@@ -5074,7 +5074,7 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
+          content:
             #application/json:
           schema:
             $ref: '#/definitions/Policy'
@@ -5102,8 +5102,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Policy'
       security:
@@ -5177,8 +5177,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -5207,8 +5207,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/PolicyRule'
       security:
@@ -5234,8 +5234,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/PolicyRule'
       security:
@@ -5267,8 +5267,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/PolicyRule'
       security:
@@ -5361,8 +5361,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Session'
       security:
@@ -5384,8 +5384,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Session'
       security:
@@ -5424,8 +5424,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Session'
       security:
@@ -5445,8 +5445,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -5471,8 +5471,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/SmsTemplate'
       security:
@@ -5494,8 +5494,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/SmsTemplate'
       security:
@@ -5523,8 +5523,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/SmsTemplate'
       security:
@@ -5553,8 +5553,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/SmsTemplate'
       security:
@@ -5587,8 +5587,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/ThreatInsightConfiguration'
       security:
@@ -5609,8 +5609,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/ThreatInsightConfiguration'
       security:
@@ -5644,8 +5644,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -5666,8 +5666,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/TrustedOrigin'
       security:
@@ -5688,8 +5688,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/TrustedOrigin'
       security:
@@ -5716,8 +5716,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/TrustedOrigin'
       security:
@@ -5755,8 +5755,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/TrustedOrigin'
       security:
@@ -5776,8 +5776,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/TrustedOrigin'
       security:
@@ -5828,8 +5828,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -5873,8 +5873,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/User'
       security:
@@ -5923,8 +5923,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/User'
       security:
@@ -5957,8 +5957,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/User'
       security:
@@ -5990,8 +5990,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/User'
       security:
@@ -6037,8 +6037,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -6060,8 +6060,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -6102,8 +6102,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -6166,8 +6166,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -6234,8 +6234,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2RefreshToken'
       security:
@@ -6296,8 +6296,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserCredentials'
       security:
@@ -6327,8 +6327,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserCredentials'
       security:
@@ -6354,8 +6354,8 @@ paths:
       responses:
         '200':
           description: The user's security question answer and a new password. When provided and the security question answer is correct, immediately update the user's password to the provided value.
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/ForgotPasswordResponse'
       x-okta-multi-operation:
@@ -6400,8 +6400,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -6456,8 +6456,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserFactor'
       security:
@@ -6478,8 +6478,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -6501,8 +6501,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -6529,8 +6529,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserFactor'
       security:
@@ -6586,8 +6586,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserFactor'
       security:
@@ -6618,8 +6618,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/VerifyUserFactorResponse'
       security:
@@ -6678,8 +6678,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/VerifyUserFactorResponse'
       security:
@@ -6718,8 +6718,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -6767,8 +6767,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/OAuth2ScopeConsentGrant'
       security:
@@ -6811,8 +6811,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -6835,8 +6835,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -6866,8 +6866,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserActivationToken'
       security:
@@ -6913,8 +6913,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/User'
       security:
@@ -6963,8 +6963,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/UserActivationToken'
       security:
@@ -7009,8 +7009,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/ResetPasswordToken'
       security:
@@ -7102,8 +7102,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -7151,8 +7151,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -7185,8 +7185,8 @@ paths:
       responses:
         '201':
           description: Created
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/Role'
       security:
@@ -7245,8 +7245,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -7427,8 +7427,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -7542,8 +7542,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             type: array
             items:
@@ -7568,8 +7568,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/NetworkZone'
       security:
@@ -7591,8 +7591,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/NetworkZone'
       security:
@@ -7620,8 +7620,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/NetworkZone'
       security:
@@ -7661,8 +7661,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/NetworkZone'
       security:
@@ -7683,8 +7683,8 @@ paths:
       responses:
         '200':
           description: Success
-          #content:
-            #application/json:
+          content:
+            application/json:
           schema:
             $ref: '#/definitions/NetworkZone'
       security:
