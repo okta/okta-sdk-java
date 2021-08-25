@@ -321,6 +321,36 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/x-x509-ca-cert:
+            schema:
+              oneOf:
+                - type: string
+                  format: binary
+                  required: true
+                  x-okta-operationId: publishBinaryCerCert
+                - type: string
+                  format: base64
+                  required: true
+                  x-okta-operationId: publishBase64CerCert
+          application/pkix-cert:
+            schema:
+              oneOf:
+                - type: string
+                  format: binary
+                  required: true
+                  x-okta-operationId: publishBinaryDerCert
+                - type: string
+                  format: base64
+                  required: true
+                  x-okta-operationId: publishBase64DerCert
+          application/x-pem-file:
+            schema:
+              type: string
+              format: binary
+              required: true
+              x-okta-operationId: publishBinaryPemCert
       responses:
         '201':
           description: Created
@@ -330,52 +360,6 @@ paths:
             $ref: '#/definitions/JsonWebKey'
       security:
         - api_token: []
-      x-okta-multi-operation:
-        - consumes:
-            - application/x-x509-ca-cert
-          encoding: base64
-          operationId: publishCerCert
-          parameters:
-            - in: body
-              name: certificate
-              required: true
-              type: string
-        - consumes:
-            - application/x-x509-ca-cert
-          operationId: publishBinaryCerCert
-          parameters:
-            - format: binary
-              in: body
-              name: certificate
-              required: true
-              type: string
-        - consumes:
-            - application/pkix-cert
-          encoding: base64
-          operationId: publishDerCert
-          parameters:
-            - in: body
-              name: certificate
-              required: true
-              type: string
-        - consumes:
-            - application/pkix-cert
-          operationId: publishBinaryDerCert
-          parameters:
-            - format: binary
-              in: body
-              name: certificate
-              required: true
-              type: string
-        - consumes:
-            - application/x-pem-file
-          operationId: publishBinaryPemCert
-          parameters:
-            - format: binary
-              in: body
-              name: certificate
-              required: true
-              type: string
   /api/v1/apps/{appId}/credentials/keys:
     get:
       tags:
@@ -3994,6 +3978,36 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/x-x509-ca-cert:
+            schema:
+              oneOf:
+                - type: string
+                  format: binary
+                  required: true
+                  x-okta-operationId: publishBinaryCerCertForIdentityProvider
+                - type: string
+                  format: base64
+                  required: true
+                  x-okta-operationId: publishBase64CerCertForIdentityProvider
+          application/pkix-cert:
+            schema:
+              oneOf:
+                - type: string
+                  format: binary
+                  required: true
+                  x-okta-operationId: publishBinaryDerCertForIdentityProvider
+                - type: string
+                  format: base64
+                  required: true
+                  x-okta-operationId: publishBase64DerCertForIdentityProvider
+          application/x-pem-file:
+            schema:
+              type: string
+              format: binary
+              required: true
+              x-okta-operationId: publishBinaryPemCertForIdentityProvider
       responses:
         '201':
           description: Created
@@ -4003,72 +4017,6 @@ paths:
             $ref: '#/definitions/JsonWebKey'
       security:
         - api_token: []
-      x-okta-multi-operation:
-        - operationId: publishCerCertForIdentityProvider
-          encoding: base64
-          consumes:
-            - application/x-x509-ca-cert
-          #requestBody:
-          parameters:
-            - in: body
-              name: certificate
-              required: true
-              content:
-                #application/x-x509-ca-cert:
-              schema:
-                type: string
-        - operationId: publishBinaryCerCertForIdentityProvider
-          consumes:
-            - application/x-x509-ca-cert
-          #requestBody:
-          parameters:
-            - in: body
-              name: certificate
-              required: true
-              content:
-                #application/x-x509-ca-cert:
-              schema:
-                type: string
-                format: binary
-        - operationId: publishDerCertForIdentityProvider
-          encoding: base64
-          consumes:
-            - application/pkix-cert
-          #requestBody:
-          parameters:
-            - in: body
-              name: certificate
-              required: true
-              content:
-                #application/pkix-cert:
-              schema:
-                type: string
-        - operationId: publishBinaryDerCertForIdentityProvider
-          consumes:
-            - application/pkix-cert
-          #requestBody:
-          parameters:
-            - in: body
-              name: certificate
-              required: true
-              content:
-                #application/pkix-cert:
-              schema:
-                type: string
-                format: binary
-        - operationId: publishBinaryPemCertForIdentityProvider
-          consumes:
-            - application/x-pem-file
-          #requestBody:
-          parameters:
-            - in: body
-              name: certificate
-              required: true
-              content:
-                #application/x-pem-file:
-              schema:
-                type: string
-                format: binary
   /api/v1/idps/{idpId}/credentials/keys:
     get:
       tags:
@@ -6342,8 +6290,9 @@ paths:
         - application/json
       tags:
         - User
-      summary: Forgot Password
-      description: Initiate forgot password flow, see desciptions for parameters.
+      summary: Initiate Forgot Password
+      description: Initiate forgot password flow. Generates a one-time token (OTT) that
+        can be used to reset a user's password.
       operationId: forgotPassword
       parameters:
         - name: userId
@@ -6353,36 +6302,45 @@ paths:
             type: string
       responses:
         '200':
-          description: The user's security question answer and a new password. When provided and the security question answer is correct, immediately update the user's password to the provided value.
+          description: Reset url
           content:
             application/json:
           schema:
             $ref: '#/definitions/ForgotPasswordResponse'
-      x-okta-multi-operation:
-        - description: Generates a one-time token (OTT) that can be used to reset a user's password
-          operationId: forgotPasswordGenerateOneTimeToken
-          parameters:
-            - default: true
-              in: query
-              name: sendEmail
-              schema:
-                type: boolean
-              description: Determines whether an email is sent to the user.
-        - description: Sets a new password for a user by validating the user's answer to their current recovery question
-          operationId: forgotPasswordSetNewPassword
-          parameters:
-            - default: true
-              in: query
-              name: sendEmail
-              schema:
-                type: boolean
-              description: Determines whether an email is sent to the user.
-            - in: body
-              description: Factor
-              name: user
-              schema:
-                $ref: '#/definitions/UserCredentials'
-              required: false
+      security:
+        - api_token: []
+  /api/v1/users/{userId}/credentials/forgot_password_recovery_question:
+    post:
+      tags:
+        - User
+      summary: Reset Password with Recovery Question
+      description: Resets the user's password to the specified password if the provided
+        answer to the recovery question is correct.
+      operationId: forgotPasswordSetNewPassword
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: sendEmail
+          in: query
+          required: false
+          schema:
+            type: string
+            default: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/UserCredentials'
+      responses:
+        '200':
+          description: Credentials
+          content:
+            application/json:
+          schema:
+            $ref: '#/definitions/UserCredentials'
       security:
         - api_token: []
   /api/v1/users/{userId}/factors:
@@ -6897,12 +6855,13 @@ paths:
           content: {}
       security:
         - api_token: []
-  /api/v1/users/{userId}/lifecycle/expire_password?tempPassword=false:
+  /api/v1/users/{userId}/lifecycle/expire_password:
     post:
       tags:
         - User
       summary: Expire Password
-      description: This operation transitions the user to the status of `PASSWORD_EXPIRED` so that the user is required to change their password at their next login.
+      description: This operation transitions the user to the status of `PASSWORD_EXPIRED`
+        so that the user is required to change their password at their next login.
       operationId: expirePassword
       parameters:
         - name: userId
@@ -6919,12 +6878,14 @@ paths:
             $ref: '#/definitions/User'
       security:
         - api_token: []
-  /api/v1/users/{userId}/lifecycle/expire_password?tempPassword=true:
+  /api/v1/users/{userId}/lifecycle/expire_password_with_temp_password:
     post:
       tags:
         - User
-      summary: Expire Password
-      description: This operation transitions the user to the status of `PASSWORD_EXPIRED` so that the user is required to change their password at their next login.
+      summary: Expire Password and Set Temporary Password
+      description: This operation transitions the user to the status of `PASSWORD_EXPIRED`
+        so that the user is required to change their password at their next login, and
+        also sets the user's password to a temporary password returned in the response.
       operationId: expirePasswordAndGetTemporaryPassword
       parameters:
         - name: userId
