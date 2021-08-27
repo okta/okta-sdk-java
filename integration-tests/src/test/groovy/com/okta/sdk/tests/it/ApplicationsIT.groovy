@@ -23,6 +23,10 @@ import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.*
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.inline.hook.InlineHook
+import com.okta.sdk.resource.inline.hook.InlineHookBuilder
+import com.okta.sdk.resource.inline.hook.InlineHookChannel
+import com.okta.sdk.resource.inline.hook.InlineHookType
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.schema.UserSchema
 import com.okta.sdk.resource.user.schema.UserSchemaDefinitions
@@ -116,7 +120,13 @@ class ApplicationsIT extends ITSupport {
                                             .setSettings(client.instantiate(AutoLoginApplicationSettings)
                                                 .setSignOn(client.instantiate(AutoLoginApplicationSettingsSignOn)
                                                     .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
-                                                    .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
+                                                    .setLoginUrl("http://swaprimaryloginurl.okta.com"))
+                                                .setNotes(
+                                                    client.instantiate(ApplicationSettingsNotes)
+                                                    .setAdmin("Notes for Admin")
+                                                    .setEnduser("Notes for EndUser")
+                                                )
+                                            ))
         // search the resource collection looking for the new resource
         Optional optional = client.listApplications().stream()
                                 .filter {it.getId() == resource.getId()}
@@ -185,6 +195,18 @@ class ApplicationsIT extends ITSupport {
 
     @Test (groups = "group1")
     void crudSaml20() {
+
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+        InlineHook createdInlineHook = InlineHookBuilder.instance()
+            .setName(name)
+            .setHookType(InlineHookType.SAML_TOKENS_TRANSFORM)
+            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setUrl("https://www.example.com/inlineHooks")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .addHeader("X-Test-Header", "Test header value")
+            .buildAndCreate(client)
+        registerForCleanup(createdInlineHook)
+
         doCrudTest(client.instantiate(SamlApplication)
                         .setVisibility(client.instantiate(ApplicationVisibility)
                             .setAutoSubmitToolbar(false)
@@ -209,6 +231,11 @@ class ApplicationsIT extends ITSupport {
                                 .setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport")
                                 .setSpIssuer(null)
                                 .setRequestCompressed(false)
+                                .setInlineHooks(Arrays.asList(
+                                    client
+                                        .instantiate(SignOnInlineHook)
+                                        .setId(createdInlineHook.getId())
+                                ))
                                 .setAttributeStatements(new ArrayList<SamlAttributeStatement>([
                                         client.instantiate(SamlAttributeStatement)
                                                 .setType("EXPRESSION")

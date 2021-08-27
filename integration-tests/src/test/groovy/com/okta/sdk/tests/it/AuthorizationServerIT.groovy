@@ -25,6 +25,11 @@ import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPoli
 import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRuleActions
 import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRuleConditions
 import com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleAction
+import com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleActionInlineHook
+import com.okta.sdk.resource.inline.hook.InlineHook
+import com.okta.sdk.resource.inline.hook.InlineHookBuilder
+import com.okta.sdk.resource.inline.hook.InlineHookChannel
+import com.okta.sdk.resource.inline.hook.InlineHookType
 import com.okta.sdk.resource.policy.*
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
@@ -454,6 +459,17 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(retrievedPolicy, notNullValue())
         assertThat(retrievedPolicy.getId(), equalTo(createdPolicy.getId()))
 
+        String hookName = "java-sdk-it-" + UUID.randomUUID().toString()
+        InlineHook createdInlineHook = InlineHookBuilder.instance()
+            .setName(hookName)
+            .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
+            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setUrl("https://www.example.com/inlineHooks")
+            .setAuthorizationHeaderValue("Test-Api-Key")
+            .addHeader("X-Test-Header", "Test header value")
+            .buildAndCreate(client)
+        registerForCleanup(createdInlineHook)
+
         AuthorizationServerPolicyRule createdPolicyRule = retrievedPolicy.createPolicyRule(createdAuthorizationServer.getId(),
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
@@ -473,6 +489,10 @@ class AuthorizationServerIT extends ITSupport {
                             .setAccessTokenLifetimeMinutes(60)
                             .setRefreshTokenLifetimeMinutes(0)
                             .setRefreshTokenWindowMinutes(10080)
+                            .setInlineHook(
+                                client.instantiate(TokenAuthorizationServerPolicyRuleActionInlineHook)
+                                .setId(createdInlineHook.getId())
+                            )
                     )
                 )
         )
