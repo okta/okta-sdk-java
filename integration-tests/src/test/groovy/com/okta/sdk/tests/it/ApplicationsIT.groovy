@@ -120,7 +120,13 @@ class ApplicationsIT extends ITSupport {
                                             .setSettings(client.instantiate(AutoLoginApplicationSettings)
                                                 .setSignOn(client.instantiate(AutoLoginApplicationSettingsSignOn)
                                                     .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
-                                                    .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
+                                                    .setLoginUrl("http://swaprimaryloginurl.okta.com"))
+                                                .setNotes(
+                                                    client.instantiate(ApplicationSettingsNotes)
+                                                    .setAdmin("Notes for Admin")
+                                                    .setEnduser("Notes for EndUser")
+                                                )
+                                            ))
         // search the resource collection looking for the new resource
         Optional optional = client.listApplications().stream()
                                 .filter {it.getId() == resource.getId()}
