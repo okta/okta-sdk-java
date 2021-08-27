@@ -24,11 +24,39 @@ Below methods have been added.
 - `ProfileMappingList listProfileMappings()`
 - `Domain verifyDomain(String domainId)`
 
+### Package `com.okta.sdk.resource.application.ApplicationSettings`
+
+Below methods have been added.
+- `ApplicationSettingsNotes getNotes()`
+- `ApplicationSettings setNotes(ApplicationSettingsNotes notes)`
+
+### Package `com.okta.sdk.resource.application.ApplicationSettingsNotes`
+
+This is a newly created interface with methods listed below.
+
+- `String getAdmin()`
+- `String getEnduser()`
+- `ApplicationSettingsNotes setAdmin(String admin)`
+- `ApplicationSettingsNotes setEnduser(String enduser)`
+
 ### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationSettingsClient` 
 
 Below methods have been added.
 - `void activate()`
 - `void deactivate()`
+
+### Package `com.okta.sdk.resource.application.SamlApplicationSettingsSignOn`
+
+Below methods have been added.
+- `List<SignOnInlineHook> getInlineHooks()`
+- `SamlApplicationSettingsSignOn setInlineHooks(List<SignOnInlineHook> inlineHooks)`
+
+### Package `com.okta.sdk.resource.application.SignOnInlineHook`
+
+This is a newly created interface with methods listed below.
+
+- `String getId()`
+- `SignOnInlineHook setId(String hookId)`
 
 ### Package `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy`
 
@@ -41,6 +69,19 @@ Below methods have been added.
 Below methods have undergone a signature change.
 - `void activate()` signature changed to `void activate(String authServerId)`
 - `void deactivate()` signature changed to `void deactivate(String authServerId)`
+
+### Package `com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleAction`
+
+Below methods have been added.
+- `TokenAuthorizationServerPolicyRuleActionInlineHook getInlineHook()`
+- `TokenAuthorizationServerPolicyRuleAction setInlineHook(TokenAuthorizationServerPolicyRuleActionInlineHook inlineHook)`
+
+### Package `com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleActionInlineHook`
+
+This is a newly created interface with methods listed below.
+
+- `String getId()`
+- `TokenAuthorizationServerPolicyRuleActionInlineHook setId(String hookId)`
 
 ### Package `com.okta.sdk.resource.domain.DNSRecord`
 
