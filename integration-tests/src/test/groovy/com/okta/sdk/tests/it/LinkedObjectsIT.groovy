@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.notNullValue
  */
 class LinkedObjectsIT extends ITSupport {
 
-    @Test
+    @Test (groups = "group2")
     void addLinkedObjectDefinitionTest() {
         String primaryName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
         String associatedName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
@@ -69,7 +69,7 @@ class LinkedObjectsIT extends ITSupport {
         assertThat(createdLinkedObjectDefinition.getAssociated().getType(), equalTo(LinkedObjectDetailsType.USER))
     }
 
-    @Test
+    @Test (groups = "group2")
     void getLinkedObjectDefinitionByPrimaryNameTest() {
         String primaryName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
         String associatedName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
@@ -107,7 +107,7 @@ class LinkedObjectsIT extends ITSupport {
         assertThat(retrievedLinkedObject.getAssociated().getType(), equalTo(LinkedObjectDetailsType.USER))
     }
 
-    @Test
+    @Test (groups = "group2")
     void getLinkedObjectDefinitionByAssociatedNameTest() {
         String primaryName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
         String associatedName = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(25)
@@ -145,7 +145,7 @@ class LinkedObjectsIT extends ITSupport {
         assertThat(retrievedLinkedObject.getAssociated().getType(), equalTo(LinkedObjectDetailsType.USER))
     }
 
-    @Test
+    @Test (groups = "group2")
     void getAllLinkedObjectDefinitionsTest() {
         // create first linked object definition
 

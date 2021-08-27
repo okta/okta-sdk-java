@@ -67,7 +67,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         return client.listGroups().iterator()
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("list-groups")
     void listGroupsTest() {
 
@@ -85,7 +85,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         assertGroupPresent(client.listGroups(), createdGroup)
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("search-groups")
     void searchGroupTest() {
 
@@ -102,7 +102,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         assertPresent(client.listGroups(groupName, null, null), group)
     }
 
-    @Test
+    @Test (groups = "bacon")
     @Scenario("search-groups-by-search-parameter")
     void searchGroupsBySearchParameterTest() {
 
@@ -120,7 +120,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         assertPresent(client.listGroups(null, "profile.name eq \"" + groupName + "\"", null), group)
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("update-group")
     void updateGroupTest() {
 
@@ -142,7 +142,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         validateGroup(group, groupNameUpdated, 'Description updated')
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("group-user-operations")
     void groupUserOperationsTest() {
 

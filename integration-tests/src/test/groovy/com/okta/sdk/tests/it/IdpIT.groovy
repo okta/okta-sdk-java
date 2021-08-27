@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.*
  */
 class IdpIT extends ITSupport {
 
-    @Test
+    @Test (groups = "group2")
     void oidcIdpLifecycleTest() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -167,7 +167,7 @@ class IdpIT extends ITSupport {
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 
-    @Test
+    @Test (groups = "group2")
     void oidcIdpUserTest() {
 
         // create user
@@ -238,7 +238,7 @@ class IdpIT extends ITSupport {
         createdIdp.delete()
     }
 
-    @Test
+    @Test (groups = "group2")
     void googleIdpTest() {
 
         // create user
@@ -292,7 +292,7 @@ class IdpIT extends ITSupport {
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 
-    @Test
+    @Test (groups = "group2")
     void facebookIdpTest() {
 
         // create user
@@ -401,7 +401,7 @@ class IdpIT extends ITSupport {
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 
-    @Test
+    @Test (groups = "group2")
     void linkedInIdpTest() {
 
         // create user

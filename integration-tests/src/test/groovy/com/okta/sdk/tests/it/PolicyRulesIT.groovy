@@ -68,7 +68,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         return crudTestPolicy.listPolicyRules().iterator()
     }
 
-    @Test
+    @Test (groups = "group2")
     void deactivateTest() {
 
         def group = randomGroup()
@@ -92,7 +92,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.INACTIVE))
     }
 
-    @Test
+    @Test (groups = "group2")
     void listPolicyRulesTest() {
         def group = randomGroup()
         def policy = randomSignOnPolicy(group.getId())
@@ -104,7 +104,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         })
     }
 
-    @Test
+    @Test (groups = "group2")
     void createPasswordPolicyRule() {
 
         def group = randomGroup()
@@ -129,7 +129,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         assertThat policyRule.getConditions().getNetwork().getConnection(), is(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
     }
 
-    @Test
+    @Test (groups = "group2")
     void createOktaSignOnOnPremPolicyRule() {
 
         def group = randomGroup()
@@ -157,7 +157,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
     }
 
-    @Test
+    @Test (groups = "group2")
     void createOktaSignOnRadiusPolicyRule() {
 
         def group = randomGroup()
@@ -182,7 +182,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         assertThat policyRule.getConditions().getNetwork().getConnection(), is(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
     }
 
-    @Test
+    @Test (groups = "group2")
     void createOktaSignOnCloudPolicyRule() {
 
         def group = randomGroup()

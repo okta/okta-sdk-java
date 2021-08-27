@@ -103,12 +103,12 @@ class ApplicationsIT extends ITSupport {
         }
     }
 
-    @Test
+    @Test (groups = "group1")
     void testClientIsReady() {
         assertThat "Expected client to be ready", client.isReady({ -> client.listApplications() })
     }
 
-    @Test
+    @Test (groups = "group1")
     void basicListTest() {
         // Create a resource
         def resource = create(client, client.instantiate(AutoLoginApplication)
@@ -136,7 +136,7 @@ class ApplicationsIT extends ITSupport {
         assertThat "New resource with id ${resource.getId()} was not found in list resource.", optional.isPresent()
     }
 
-    @Test
+    @Test (groups = "group1")
     void crudOpenIdConnect() {
         doCrudTest(client.instantiate(OpenIdConnectApplication)
                         .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
@@ -160,7 +160,7 @@ class ApplicationsIT extends ITSupport {
                                 .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST))))
     }
 
-    @Test
+    @Test (groups = "group1")
     void crudAutoLogin() {
         doCrudTest(client.instantiate(AutoLoginApplication)
                         .setVisibility(client.instantiate(ApplicationVisibility)
@@ -193,7 +193,7 @@ class ApplicationsIT extends ITSupport {
                                 .setUsernameAttribute("username"))))
     }
 
-    @Test
+    @Test (groups = "group1")
     void crudSaml20() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -244,7 +244,7 @@ class ApplicationsIT extends ITSupport {
                                                 .setValues(["Value"])])))))
     }
 
-    @Test
+    @Test (groups = "group1")
     void crudSecurePasswordStore() {
         doCrudTest(client.instantiate(SecurePasswordStoreApplication)
                         .setSettings(client.instantiate(SecurePasswordStoreApplicationSettings)
@@ -260,7 +260,7 @@ class ApplicationsIT extends ITSupport {
                                 .setOptionalField3Value("finalvalue"))))
     }
 
-    @Test
+    @Test (groups = "group1")
     void crudBrowserPlugin() {
         doCrudTest(client.instantiate(SwaApplication)
                         .setLabel(uniqueTestName)
@@ -273,7 +273,7 @@ class ApplicationsIT extends ITSupport {
 //                                        .setLoginUrlRegex("REGEX_EXPRESSION"))
     }
 
-    @Test
+    @Test (groups = "group1")
     void crudBasicAuth() {
         doCrudTest(client.instantiate(BasicAuthApplication)
                         .setSettings(client.instantiate(BasicApplicationSettings)
@@ -282,7 +282,7 @@ class ApplicationsIT extends ITSupport {
                                 .setUrl("https://example.com/login.html"))))
     }
 
-    @Test
+    @Test (groups = "group1")
     void crudBasicAuth_editUsernameAndPassword() {
         doCrudTest(client.instantiate(BasicAuthApplication)
                         .setCredentials(client.instantiate(SchemeApplicationCredentials)
@@ -293,7 +293,7 @@ class ApplicationsIT extends ITSupport {
                                 .setUrl("https://example.com/login.html"))))
     }
 
-    @Test
+    @Test (groups = "group1")
     void crudBasicAuth_adminSetsCredentials() {
         doCrudTest(client.instantiate(BasicAuthApplication)
                         .setCredentials(client.instantiate(SchemeApplicationCredentials)
@@ -305,7 +305,7 @@ class ApplicationsIT extends ITSupport {
                                 .setUrl("https://example.com/login.html"))))
     }
 
-    @Test
+    @Test (groups = "group1")
     void invalidApplicationCredentialsSchemeTest() {
         expect(IllegalArgumentException, {
             client.instantiate(BasicAuthApplication)
@@ -319,7 +319,7 @@ class ApplicationsIT extends ITSupport {
         })
     }
 
-    @Test
+    @Test (groups = "group1")
     void invalidOAuthEndpointAuthenticationMethodTest() {
         expect(IllegalArgumentException ,{client.instantiate(OpenIdConnectApplication)
             .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
@@ -343,7 +343,7 @@ class ApplicationsIT extends ITSupport {
                     .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.SDK_UNKNOWN)))})
     }
 
-    @Test
+    @Test (groups = "group1")
     void invalidOAuthResponseTypeTest() {
         expect(IllegalArgumentException ,{client.instantiate(OpenIdConnectApplication)
             .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
@@ -368,7 +368,7 @@ class ApplicationsIT extends ITSupport {
                     .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))})
     }
 
-    @Test
+    @Test (groups = "group1")
     void invalidOAuthGrantTypeTest() {
         expect(IllegalArgumentException, {client.instantiate(OpenIdConnectApplication)
             .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
@@ -394,7 +394,7 @@ class ApplicationsIT extends ITSupport {
         })
     }
 
-    @Test
+    @Test (groups = "group1")
     void invalidOpenIdConnectApplicationTypeTest() {
         expect(IllegalArgumentException ,{
             client.instantiate(OpenIdConnectApplication)
@@ -420,7 +420,7 @@ class ApplicationsIT extends ITSupport {
         })
     }
 
-    @Test
+    @Test (groups = "group1")
     void crudBookmark() {
         doCrudTest(client.instantiate(BookmarkApplication)
                         .setSettings(client.instantiate(BookmarkApplicationSettings)
@@ -479,7 +479,7 @@ class ApplicationsIT extends ITSupport {
         assertThat(app2Keys.size(), equalTo(2))
     }
 
-    @Test
+    @Test (groups = "group1")
     void deactivateActivateTest() {
         Application app = client.createApplication(client.instantiate(AutoLoginApplication)
                 .setLabel("app-${uniqueTestName}")
@@ -504,7 +504,8 @@ class ApplicationsIT extends ITSupport {
         assertThat(client.getApplication(app.getId()).getStatus(), equalTo(Application.StatusEnum.ACTIVE))
     }
 
-    @Test
+    // Quarantining this till OKTA-421154 is fixed
+    @Test (groups = "bacon")
     void groupAssignmentWithNullBodyTest() {
 
         Application app = client.createApplication(client.instantiate(AutoLoginApplication)
@@ -531,7 +532,7 @@ class ApplicationsIT extends ITSupport {
         assertThat(groupAssignment, notNullValue())
     }
 
-    @Test
+    @Test (groups = "group1")
     void groupAssignmentTest() {
 
         Application app = client.createApplication(client.instantiate(AutoLoginApplication)
@@ -645,7 +646,7 @@ class ApplicationsIT extends ITSupport {
         assertThat readAppUser.getCredentials().getUserName(), equalTo("updated-"+user2.getProfile().getEmail())
     }
 
-    @Test
+    @Test (groups = "group1")
     void csrTest() {
         Client client = getClient()
 
@@ -701,7 +702,8 @@ class ApplicationsIT extends ITSupport {
         assertNotPresent(app.listCsrs(), csr)
     }
 
-    @Test
+    // Quarantining this till OKTA-421154 is fixed
+    @Test (groups = "bacon")
     void oAuth2ScopeConsentGrantTest() {
         Client client = getClient()
 
@@ -747,7 +749,8 @@ class ApplicationsIT extends ITSupport {
         assertNotPresent(app.listScopeConsentGrants(), app.getScopeConsentGrant(oAuth2ScopeConsentGrant.getId()))
     }
 
-    @Test
+    // Quarantining this till OKTA-421154 is fixed
+    @Test (groups = "bacon")
     void testExecuteWithoutAcceptHeader() {
         def app = client.instantiate(SamlApplication)
             .setVisibility(client.instantiate(ApplicationVisibility))
@@ -777,7 +780,7 @@ class ApplicationsIT extends ITSupport {
         assertThat(response.size(), is(3))
     }
 
-    @Test
+    @Test (groups = "group1")
     void testExecuteAcceptIonPlusJson() {
         def app = client.instantiate(SamlApplication)
             .setVisibility(client.instantiate(ApplicationVisibility))
@@ -804,7 +807,7 @@ class ApplicationsIT extends ITSupport {
         assertThat(response.size(), is(3))
     }
 
-    @Test
+    @Test (groups = "group1")
     void testGetRawResponse() {
         def app = client.instantiate(SamlApplication)
             .setVisibility(client.instantiate(ApplicationVisibility))
@@ -838,7 +841,7 @@ class ApplicationsIT extends ITSupport {
         assertThat(x509Certificate.isBlank(), is(false))
     }
 
-    @Test
+    @Test (groups = "group1")
     void getApplicationUserSchemaTest() {
 
         Application createdApp = client.instantiate(AutoLoginApplication)
@@ -869,7 +872,7 @@ class ApplicationsIT extends ITSupport {
         })
     }
 
-    @Test
+    @Test (groups = "group1")
     void updateApplicationUserProfileTest() {
 
         Application createdApp = client.instantiate(AutoLoginApplication)

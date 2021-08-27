@@ -38,7 +38,7 @@ import static com.okta.sdk.tests.it.util.Util.assertNotPresent
  */
 class InlineHooksIT extends ITSupport {
 
-    @Test
+    @Test (groups = "group2")
     void createInlineHookTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -59,7 +59,7 @@ class InlineHooksIT extends ITSupport {
         createdInlineHook.deactivate()
     }
 
-    @Test
+    @Test (groups = "group2")
     void getInlineHookTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -84,7 +84,7 @@ class InlineHooksIT extends ITSupport {
         createdInlineHook.deactivate()
     }
 
-    @Test
+    @Test (groups = "group2")
     void updateInlineHookTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -124,7 +124,7 @@ class InlineHooksIT extends ITSupport {
         updatedInlineHook.deactivate()
     }
 
-    @Test
+    @Test (groups = "group2")
     void deleteInlineHookTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -150,7 +150,7 @@ class InlineHooksIT extends ITSupport {
         assertNotPresent(client.listInlineHooks(), createdInlineHook)
     }
 
-    @Test
+    @Test (groups = "group2")
     void listAllInlineHooksTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -171,7 +171,7 @@ class InlineHooksIT extends ITSupport {
         createdInlineHook.deactivate()
     }
 
-    @Test
+    @Test (groups = "group2")
     void activateDeactivateInlineHookTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 

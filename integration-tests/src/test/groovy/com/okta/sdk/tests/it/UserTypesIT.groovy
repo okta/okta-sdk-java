@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.notNullValue
  */
 class UserTypesIT extends ITSupport {
 
-    @Test
+    @Test (groups = "group2")
     void createUserTypeTest() {
         String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
@@ -64,7 +64,7 @@ class UserTypesIT extends ITSupport {
         })
     }
 
-    @Test
+    @Test (groups = "group2")
     void getUserTypeTest() {
         String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
@@ -81,7 +81,7 @@ class UserTypesIT extends ITSupport {
         assertThat(retrievedUserType.getName(), equalTo(createdUserType.getName()))
     }
 
-    @Test
+    @Test (groups = "group2")
     void updateUserTypeTest() {
         String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
@@ -142,7 +142,7 @@ class UserTypesIT extends ITSupport {
         assertThat(customPropertyMap["permissions"][0]["action"], equalTo("READ_ONLY"))
     }
 
-    @Test
+    @Test (groups = "group2")
     void deleteUserTypeTest() {
         String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
@@ -159,7 +159,7 @@ class UserTypesIT extends ITSupport {
         assertNotPresent(client.listUserTypes(), createdUserType)
     }
 
-    @Test
+    @Test (groups = "group2")
     void listAllUserTypesTest() {
         String name1 = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
