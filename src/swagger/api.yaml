@@ -25,7 +25,7 @@ info:
   license:
     name: Apache-2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-  version: 2.5.0
+  version: 2.6.0
 externalDocs:
   description: Find more info here
   url: 'http://developer.okta.com/docs/api/getting_started/design_principles.html'
@@ -2770,7 +2770,7 @@ paths:
     get:
       consumes:
         - application/json
-      description: Lists all group rules for your organization.
+      description: Fetches a group from your organization.
       operationId: getGroup
       parameters:
         - in: path
@@ -4684,7 +4684,7 @@ paths:
           description: Success
           schema:
             items:
-              $ref: '#/definitions/AuthorizationServerPolicy'
+              $ref: '#/definitions/Policy'
             type: array
       security:
         - api_token: []
@@ -7946,12 +7946,23 @@ definitions:
         type: boolean
       inlineHookId:
         type: string
+      notes:
+        $ref: '#/definitions/ApplicationSettingsNotes'
       notifications:
         $ref: '#/definitions/ApplicationSettingsNotifications'
     type: object
     x-okta-tags:
       - Application
   ApplicationSettingsApplication:
+    x-okta-tags:
+      - Application
+  ApplicationSettingsNotes:
+    properties:
+      admin:
+        type: string
+      enduser:
+        type: string
+    type: object
     x-okta-tags:
       - Application
   ApplicationSettingsNotifications:
@@ -9974,7 +9985,7 @@ definitions:
       x5t:
         readOnly: false
         type: string
-      'x5t#S256':
+      x5t#S256:
         readOnly: false
         type: string
       x5u:
@@ -12261,6 +12272,10 @@ definitions:
         type: boolean
       idpIssuer:
         type: string
+      inlineHooks:
+        items:
+          $ref: '#/definitions/SignOnInlineHook'
+        type: array
       recipient:
         type: string
       recipientOverride:
@@ -12529,6 +12544,12 @@ definitions:
     type: string
     x-okta-tags:
       - Session
+  SignOnInlineHook:
+    properties:
+      id:
+        type: string
+    x-okta-tags:
+      - Application
   SingleLogout:
     properties:
       enabled:
@@ -12763,10 +12784,19 @@ definitions:
     properties:
       accessTokenLifetimeMinutes:
         type: integer
+      inlineHook:
+        $ref: '#/definitions/TokenAuthorizationServerPolicyRuleActionInlineHook'
       refreshTokenLifetimeMinutes:
         type: integer
       refreshTokenWindowMinutes:
         type: integer
+    type: object
+    x-okta-tags:
+      - AuthorizationServerPolicy
+  TokenAuthorizationServerPolicyRuleActionInlineHook:
+    properties:
+      id:
+        type: string
     type: object
     x-okta-tags:
       - AuthorizationServerPolicy
