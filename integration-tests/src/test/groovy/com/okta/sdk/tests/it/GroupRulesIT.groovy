@@ -88,7 +88,7 @@ class GroupRulesIT implements CrudTestSupport {
         return client.listGroupRules().iterator()
     }
 
-    @Test
+    @Test (groups = "group1")
     @Scenario("group-rule-operations")
     @TestResources(rules = ["Test group rule", "Test group rule updated"])
     void groupRuleCrudTest() {
@@ -133,7 +133,7 @@ class GroupRulesIT implements CrudTestSupport {
         // 4. Deactivate the rule and update it
         rule.deactivate()
 
-        rule.name = 'Test group rule updated ${uniqueTestName}'
+        rule.name = ("updated-" + groupRuleName).subSequence(0, 50) //Trim the name to 50 chars (server limit)
         rule.getConditions().getExpression().value = 'user.lastName==\"incorrect\"'
         rule.update()
         rule.activate()
