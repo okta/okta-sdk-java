@@ -2,6 +2,445 @@
  
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
+## Migrating from 4.x.x to 5.0.0
+
+Version 5.0.0 of this SDK introduces a number of breaking changes from previous versions.
+In addition to many new classes/interfaces, some existing classes/interfaces are no longer backward compatible due to method renaming and signature changes.
+
+### Package `com.okta.sdk.client.Client`
+
+Below methods have been added.
+- `Domain createDomain(Domain domain)`
+- `NetworkZone createNetworkZone(NetworkZone zone)`
+- `void deleteDomain(String domainId)`
+- `ThreatInsightConfiguration getCurrentConfiguration()`
+- `Domain getDomain(String domainId)`
+- `NetworkZone getNetworkZone(String zoneId)`
+- `ProfileMapping getProfileMapping(String mappingId)`
+- `DomainList listDomains()`
+- `NetworkZoneList listNetworkZones(String filter)`
+- `NetworkZoneList listNetworkZones()`
+- `ProfileMappingList listProfileMappings(String sourceId, String targetId)`
+- `ProfileMappingList listProfileMappings()`
+- `Domain verifyDomain(String domainId)`
+
+### Package `com.okta.sdk.resource.application.ApplicationSettings`
+
+Below methods have been added.
+- `ApplicationSettingsNotes getNotes()`
+- `ApplicationSettings setNotes(ApplicationSettingsNotes notes)`
+
+### Package `com.okta.sdk.resource.application.ApplicationSettingsNotes`
+
+This is a newly created interface with methods listed below.
+
+- `String getAdmin()`
+- `String getEnduser()`
+- `ApplicationSettingsNotes setAdmin(String admin)`
+- `ApplicationSettingsNotes setEnduser(String enduser)`
+
+### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationSettingsClient` 
+
+Below methods have been added.
+- `void activate()`
+- `void deactivate()`
+
+### Package `com.okta.sdk.resource.application.SamlApplicationSettingsSignOn`
+
+Below methods have been added.
+- `List<SignOnInlineHook> getInlineHooks()`
+- `SamlApplicationSettingsSignOn setInlineHooks(List<SignOnInlineHook> inlineHooks)`
+
+### Package `com.okta.sdk.resource.application.SignOnInlineHook`
+
+This is a newly created interface with methods listed below.
+
+- `String getId()`
+- `SignOnInlineHook setId(String hookId)`
+
+### Package `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy`
+
+Below methods have been added.
+- `void activate(String authServerId)`
+- `void deactivate(String authServerId)`
+
+### Package `com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRule`
+
+Below methods have undergone a signature change.
+- `void activate()` signature changed to `void activate(String authServerId)`
+- `void deactivate()` signature changed to `void deactivate(String authServerId)`
+
+### Package `com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleAction`
+
+Below methods have been added.
+- `TokenAuthorizationServerPolicyRuleActionInlineHook getInlineHook()`
+- `TokenAuthorizationServerPolicyRuleAction setInlineHook(TokenAuthorizationServerPolicyRuleActionInlineHook inlineHook)`
+
+### Package `com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleActionInlineHook`
+
+This is a newly created interface with methods listed below.
+
+- `String getId()`
+- `TokenAuthorizationServerPolicyRuleActionInlineHook setId(String hookId)`
+
+### Package `com.okta.sdk.resource.domain.DNSRecord`
+
+This is a newly created interface with methods listed below.
+
+- `String getExpiration()`
+- `String getFqdn()`
+- `DNSRecordType getRecordType()`
+- `List<String> getValues()`
+- `DNSRecord setExpiration(String exp)`
+- `DNSRecord setFqdn(String fqdn)`
+- `DNSRecord setRecordType(DNSRecordType recordType)`
+- `DNSRecord setValues(List<String> values)`
+
+### Package `com.okta.sdk.resource.domain.DNSRecordType`
+
+This is a newly created enum with fields listed below.
+- `CNAME("CNAME")`
+- `TXT("TXT")`
+
+### Package `com.okta.sdk.resource.domain.Domain`
+
+This is a newly created interface with methods listed below.
+
+- `DomainCertificateSourceType getCertificateSourceType()`
+- `List<DNSRecord> getDnsRecords()`
+- `String getDomain()`
+- `String getId()`
+- `DomainCertificateMetadata getPublicCertificate()`
+- `DomainValidationStatus getValidationStatus()`
+- `Domain setCertificateSourceType(DomainCertificateSourceType value)`
+- `Domain setDnsRecords(List<DNSRecord> records)`
+- `Domain setDomain(String domain)`
+- `Domain setPublicCertificate(DomainCertificateMetadata value)`
+- `Domain setValidationStatus(DomainValidationStatus status)`
+
+### Package `com.okta.sdk.resource.domain.DomainCertificate`
+
+This is a newly created interface with methods listed below.
+
+- `void createCertificate(String cert)`
+- `String getCertificate()`
+- `String getCertificateChain()`
+- `String getPrivateKey()`
+- `DomainCertificateType getType()`
+- `DomainCertificate setCertificate(String cert)`
+- `DomainCertificate setCertificateChain(String certificateChain)`
+- `DomainCertificate setPrivateKey(String privateKey)`
+- `DomainCertificate setType(DomainCertificateType value)`
+
+### Package `com.okta.sdk.resource.domain.DomainCertificateMetadata`
+
+This is a newly created interface with methods listed below.
+
+- `String getExpiration()`
+- `String getFingerprint()`
+- `String getSubject()`
+- `DomainCertificateMetadata setExpiration(String exp)`
+- `DomainCertificateMetadata setFingerprint(String fingerprint)`
+- `DomainCertificateMetadata setSubject(String subject)`
+
+### Package `com.okta.sdk.resource.domain.DomainCertificateSourceType`
+
+This is a newly created enum with field listed below.
+- `MANUAL("MANUAL")`
+
+### Package `com.okta.sdk.resource.domain.DomainCertificateType`
+
+This is a newly created enum with field listed below.
+- `PEM("PEM")`
+
+### Package `com.okta.sdk.resource.domain.DomainValidationStatus`
+
+This is a newly created enum with fields listed below.
+- `COMPLETED("COMPLETED")`
+- `IN_PROGRESS("IN_PROGRESS")`
+- `NOT_STARTED("NOT_STARTED")`
+- `VERIFIED("VERIFIED")`
+
+### Package `com.okta.sdk.resource.group.rule.GroupRule`
+
+Below methods has been added.
+- `void delete(Boolean removeUsers)`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZone`
+
+This is a newly created interface with methods listed below.
+
+- `NetworkZone activate()`
+- `NetworkZone deactivate()`
+- `void delete()`
+- `List<String> getAsns()`
+- `Date getCreated()`
+- `List<NetworkZoneAddress> getGateways()`
+- `String getId()`
+- `Date getLastUpdated()`
+- `Map<String, Object> getLinks()`
+- `List<NetworkZoneLocation> getLocations()`
+- `String getName()`
+- `List<NetworkZoneAddress> getProxies()`
+- `String getProxyType()`
+- `NetworkZoneStatus getStatus()`
+- `Boolean getSystem()`
+- `NetworkZoneType getType()`
+- `NetworkZoneUsage getUsage()`
+- `NetworkZone setAsns(List<String> asns)`
+- `NetworkZone setGateways(List<NetworkZoneAddress> gateways)`
+- `NetworkZone setLocations(List<NetworkZoneLocation> locations)`
+- `NetworkZone setName(String name)`
+- `NetworkZone setProxies(List<NetworkZoneAddress> proxies)`
+- `NetworkZone setProxyType(String proxyType)`
+- `NetworkZone setStatus(NetworkZoneStatus status)`
+- `NetworkZone setSystem(Boolean system)`
+- `NetworkZone setType(NetworkZoneType type)`
+- `NetworkZone setUsage(NetworkZoneUsage usage)`
+- `NetworkZone update()`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneAddress`
+
+This is a newly created interface with methods listed below.
+
+- `NetworkZoneAddressType getType()`
+- `String getValue()`
+- `NetworkZoneAddress setType(NetworkZoneAddressType type)`
+- `NetworkZoneAddress setValue(String value)`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneAddressType`
+
+This is a newly created enum with fields listed below.
+- `CIDR("CIDR")`
+- `RANGE("RANGE")`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneLocation`
+
+This is a newly created interface with methods listed below.
+- `String getCountry()`
+- `String getRegion()`
+- `NetworkZoneLocation setCountry(String country)`
+- `NetworkZoneLocation setRegion(String region)`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneStatus`
+
+This is a newly created enum with fields listed below.
+- `ACTIVE("ACTIVE")`
+- `INACTIVE("INACTIVE")`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneType`
+
+This is a newly created enum with fields listed below.
+- `DYNAMIC("DYNAMIC")`
+- `IP("IP")`
+
+### Package `com.okta.sdk.resource.network.zone.NetworkZoneUsage`
+
+This is a newly created enum with fields listed below.
+- `BLOCKLIST("BLOCKLIST")`
+- `POLICY("POLICY")`
+
+### Package `com.okta.sdk.resource.policy.PolicyRule`
+
+Below methods have been added.
+- `PolicyRuleActions getActions()`
+- `PolicyRuleConditions getConditions()`
+- `String getName()`
+- `PolicyRule setActions(PolicyRuleActions actions)`
+- `PolicyRule setConditions(PolicyRuleConditions conditions)`
+- `PolicyRule setName(String name)`
+
+### Package `com.okta.sdk.resource.policy.PolicyRuleActions`
+
+This is a newly created interface with methods listed below.
+- `PolicyRuleActionsEnroll getEnroll()`
+- `PasswordPolicyRuleAction getPasswordChange()`
+- `PasswordPolicyRuleAction getSelfServicePasswordReset()`
+- `PasswordPolicyRuleAction getSelfServiceUnlock()`
+- `OktaSignOnPolicyRuleSignonActions getSignon()`
+- `PolicyRuleActions setEnroll(PolicyRuleActionsEnroll enroll)`
+- `PolicyRuleActions setPasswordChange(PasswordPolicyRuleAction passwordChange)`
+- `PolicyRuleActions setSelfServicePasswordReset(PasswordPolicyRuleAction selfServicePasswordReset)`
+- `PolicyRuleActions setSelfServiceUnlock(PasswordPolicyRuleAction selfServiceUnlock)`
+- `PolicyRuleActions setSignon(OktaSignOnPolicyRuleSignonActions signon)`
+
+### Package `com.okta.sdk.resource.policy.PolicyRuleActionsEnroll`
+
+This is a newly created interface with methods listed below.
+- `PolicyRuleActionsEnrollSelf getSelf()`
+- `PolicyRuleActionsEnroll setSelf(PolicyRuleActionsEnrollSelf self)`
+
+### Package `com.okta.sdk.resource.policy.PolicyRuleActionsEnrollSelf`
+
+This is a newly created enum with fields listed below.
+- `CHALLENGE("CHALLENGE")`
+- `LOGIN("LOGIN")`
+- `NEVER("NEVER")`
+
+### Package `com.okta.sdk.resource.profile.mapping.ProfileMapping`
+
+This is a newly created interface with methods listed below.
+- `String getId()`
+- `Map<String, Object> getLinks()`
+- `Map<String, ProfileMappingProperty> getProperties()`
+- `ProfileMappingSource getSource()`
+- `ProfileMappingSource getTarget()`
+- `ProfileMapping setSource(ProfileMappingSource source)`
+- `ProfileMapping setTarget(ProfileMappingSource target)`
+- `ProfileMapping update(ProfileMapping profileMapping)`
+
+### Package `com.okta.sdk.resource.profile.mapping.ProfileMappingProperty`
+
+This is a newly created interface with methods listed below.
+- `String getExpression()`
+- `ProfileMappingPropertyPushStatus getPushStatus()`
+- `ProfileMappingProperty setExpression(String expression)`
+- `ProfileMappingProperty setPushStatus(ProfileMappingPropertyPushStatus pushStatus)`
+
+### Package `com.okta.sdk.resource.profile.mapping.ProfileMappingPropertyPushStatus`
+
+This is a newly created enum with fields listed below.
+- `DONT_PUSH("DONT_PUSH")`
+- `PUSH("PUSH")`
+
+### Package `com.okta.sdk.resource.profile.mapping.ProfileMappingSource`
+
+This is a newly created interface with methods listed below.
+- `String getId()`
+- `Map<String, Object> getLinks()`
+- `String getName()`
+- `String getType()`
+
+### Package `com.okta.sdk.resource.threat.insight.ThreatInsightConfiguration`
+
+This is a newly created interface with methods listed below.
+- `String getAction()`
+- `Date getCreated()`
+- `List<String> getExcludeZones()`
+- `Date getLastUpdated()`
+- `Map<String, Object> getLinks()`
+- `ThreatInsightConfiguration setAction(String action)`
+- `ThreatInsightConfiguration setExcludeZones(List<String> excludeZones)`
+- `ThreatInsightConfiguration update()`
+
+### Package `com.okta.sdk.resource.user.factor.FactorType`
+
+Enum `FactorType` has the below new field definition:
+- `HOTP("HOTP")`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchema`
+
+Below method has undergone a signature change.
+- `User getProperties()` signature changed to `UserSchemaProperties getProperties()`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttribute`
+
+Below methods have undergone a signature change.
+- `String getScope()` signature changed to `UserSchemaAttributeScope getScope()`
+- `String getType()` signature changed to `UserSchemaAttributeType getType()`
+- `UserSchemaAttribute setScope(String scope)` signature changed to `UserSchemaAttribute setScope(UserSchemaAttributeScope scope)`
+- `UserSchemaAttribute setType(String type)` signature changed to `UserSchemaAttribute setType(UserSchemaAttributeType type)`
+
+Below methods have been added.
+- `List<String> getEnum()`
+- `String getExternalName()`
+- `String getExternalNamespace()`
+- `UserSchemaAttributeItems getItems()`
+- `List<UserSchemaAttributeEnum> getOneOf()`
+- `String getPattern()`
+- `UserSchemaAttributeUnion getUnion()`
+- `String getUnique()`
+- `UserSchemaAttribute setEnum(List<String> value)`
+- `UserSchemaAttribute setExternalName(String externalName)`
+- `UserSchemaAttribute setExternalNamespace(String externalNamespace)`
+- `UserSchemaAttribute setItems(UserSchemaAttributeItems items)`
+- `UserSchemaAttribute setOneOf(List<UserSchemaAttributeEnum> oneOf)`
+- `UserSchemaAttribute setPattern(String pattern)`
+- `UserSchemaAttribute setUnion(UserSchemaAttributeUnion union)`
+- `UserSchemaAttribute setUnique(String unique)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeEnum`
+
+This is a newly created interface with methods listed below.
+- `String getConst()`
+- `String getTitle()`
+- `UserSchemaAttributeEnum setConst(String value)`
+- `UserSchemaAttributeEnum setTitle(String title)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeItems`
+
+This is a newly created interface with methods listed below.
+- `List<String> getEnum()`
+- `List<UserSchemaAttributeEnum> getOneOf()`
+- `String getType()`
+- `UserSchemaAttributeItems setEnum(List<String> values)`
+- `UserSchemaAttributeItems setOneOf(List<UserSchemaAttributeEnum> oneOf)`
+- `UserSchemaAttributeItems setType(String type)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeMaster`
+
+Below methods have undergone a signature change.
+- `String getType()` signature changed to `UserSchemaAttributeMasterType getType()`
+- `UserSchemaAttributeMaster setType(String type)` signature changed to `UserSchemaAttributeMaster setType(UserSchemaAttributeMasterType type)`
+
+Below methods have been added.
+- `List<UserSchemaAttributeMasterPriority> getPriority()`
+- `UserSchemaAttributeMaster setPriority(List<UserSchemaAttributeMasterPriority> priority)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeMasterPriority`
+
+This is a newly created interface with methods listed below.
+- `String getType()`
+- `String getValue()`
+- `UserSchemaAttributeMasterPriority setType(String type)`
+- `UserSchemaAttributeMasterPriority setValue(String value)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeMasterType`
+
+This is a newly created enum with fields listed below.
+- `OKTA("OKTA")`
+- `OVERRIDE("OVERRIDE")`
+- `PROFILE_MASTER("PROFILE_MASTER")`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeScope`
+
+This is a newly created enum with fields listed below.
+- `NONE("NONE")`
+- `SELF("SELF")`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeType`
+
+This is a newly created enum with fields listed below.
+- `ARRAY("ARRAY")`
+- `BOOLEAN("BOOLEAN")`
+- `INTEGER("INTEGER")`
+- `NUMBER("NUMBER")`
+- `STRING("STRING")`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaAttributeUnion`
+
+This is a newly created enum with fields listed below.
+- `DISABLE("DISABLE")`
+- `ENABLE("ENABLE")`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaProperties`
+
+This is a newly created interface with methods listed below.
+- `UserSchemaPropertiesProfile getProfile()`
+- `UserSchemaProperties setProfile(UserSchemaPropertiesProfile profile)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaPropertiesProfile`
+
+This is a newly created interface with methods listed below.
+- `List<UserSchemaPropertiesProfileItem> getAllOf()`
+- `UserSchemaPropertiesProfile setAllOf(List<UserSchemaPropertiesProfileItem> allOf)`
+
+### Package `com.okta.sdk.resource.user.schema.UserSchemaPropertiesProfileItem`
+
+This is a newly created interface with methods listed below.
+- `String getRef()`
+- `UserSchemaPropertiesProfileItem setRef(String ref)`
+
 ## Migrating from 3.x.x to 4.0.0
 
 Version 4.0.0 of this SDK introduces a number of breaking changes from previous versions.
