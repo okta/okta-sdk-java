@@ -64,11 +64,7 @@
                     <execution>
                         <id>copy to swagger</id>
                         <configuration>
-                            <executable>sh</executable>
-                            <arguments>
-                                <argument>-c</argument>
-                                <argument>cp ../../node_modules/@okta/openapi/dist/spec.yaml ../../src/swagger/api.yaml</argument>
-                            </arguments>
+                            <skip>true</skip>
                         </configuration>
                     </execution>
                     <execution>
