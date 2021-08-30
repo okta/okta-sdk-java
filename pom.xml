@@ -258,6 +258,7 @@
                             </goals>
                             <phase>generate-sources</phase>
                             <configuration>
+                                <skip>${exec.skip}</skip>
                                 <executable>npm</executable>
                                 <arguments>
                                     <argument>install</argument>
