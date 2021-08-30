@@ -17,18 +17,18 @@ swagger: '2.0'
 info:
   title: Okta API
   description: Allows customers to easily access the Okta API
-  termsOfService: 'http://developer.okta.com/terms/'
+  termsOfService: 'https://developer.okta.com/terms/'
   contact:
     name: Okta Developer Team
     email: devex-public@okta.com
-    url: 'http://developer.okta.com/'
+    url: 'https://developer.okta.com/'
   license:
     name: Apache-2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-  version: 2.6.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 2.7.0
 externalDocs:
   description: Find more info here
-  url: 'http://developer.okta.com/docs/api/getting_started/design_principles.html'
+  url: 'https://developer.okta.com/docs/api/getting_started/design_principles.html'
 host: your-subdomain.okta.com
 basePath: /
 schemes:
@@ -4385,6 +4385,51 @@ paths:
         Schema.
       tags:
         - UserSchema
+  /api/v1/meta/schemas/group/default:
+    get:
+      consumes:
+        - application/json
+      description: Fetches the group schema
+      operationId: getGroupSchema
+      parameters: []
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/GroupSchema'
+      security:
+        - api_token: []
+      summary: Fetches the group schema
+      tags:
+        - GroupSchema
+    post:
+      consumes:
+        - application/json
+      description: >-
+        Updates, adds ore removes one or more custom Group Profile properties in
+        the schema
+      operationId: updateGroupSchema
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/GroupSchema'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/GroupSchema'
+      security:
+        - api_token: []
+      summary: >-
+        Updates, adds ore removes one or more custom Group Profile properties in
+        the schema
+      tags:
+        - GroupSchema
   /api/v1/meta/schemas/user/linkedObjects:
     get:
       consumes:
@@ -8018,6 +8063,8 @@ definitions:
         additionalProperties:
           type: boolean
         type: object
+      autoLaunch:
+        type: boolean
       autoSubmitToolbar:
         type: boolean
       hide:
@@ -9426,6 +9473,140 @@ definitions:
     type: object
     x-okta-tags:
       - GroupRule
+  GroupSchema:
+    properties:
+      $schema:
+        readOnly: true
+        type: string
+      _links:
+        additionalProperties:
+          type: object
+        readOnly: true
+        type: object
+      created:
+        readOnly: true
+        type: string
+      definitions:
+        $ref: '#/definitions/GroupSchemaDefinitions'
+      description:
+        type: string
+      id:
+        readOnly: true
+        type: string
+      lastUpdated:
+        readOnly: true
+        type: string
+      name:
+        readOnly: true
+        type: string
+      properties:
+        $ref: '#/definitions/UserSchemaProperties'
+        readOnly: true
+      title:
+        type: string
+      type:
+        readOnly: true
+        type: string
+    type: object
+    x-okta-tags:
+      - GroupSchema
+  GroupSchemaAttribute:
+    properties:
+      description:
+        type: string
+      enum:
+        items:
+          type: string
+        type: array
+      externalName:
+        type: string
+      externalNamespace:
+        type: string
+      items:
+        $ref: '#/definitions/UserSchemaAttributeItems'
+      master:
+        $ref: '#/definitions/UserSchemaAttributeMaster'
+      maxLength:
+        type: integer
+      minLength:
+        type: integer
+      mutability:
+        type: string
+      oneOf:
+        items:
+          $ref: '#/definitions/UserSchemaAttributeEnum'
+        type: array
+      permissions:
+        items:
+          $ref: '#/definitions/UserSchemaAttributePermission'
+        type: array
+      required:
+        type: boolean
+      scope:
+        $ref: '#/definitions/UserSchemaAttributeScope'
+      title:
+        type: string
+      type:
+        $ref: '#/definitions/UserSchemaAttributeType'
+      union:
+        $ref: '#/definitions/UserSchemaAttributeUnion'
+      unique:
+        type: string
+    type: object
+    x-okta-tags:
+      - GroupSchema
+  GroupSchemaBase:
+    properties:
+      id:
+        readOnly: true
+        type: string
+      properties:
+        $ref: '#/definitions/GroupSchemaBaseProperties'
+      required:
+        items:
+          type: string
+        type: array
+      type:
+        type: string
+    type: object
+    x-okta-tags:
+      - GroupSchema
+  GroupSchemaBaseProperties:
+    properties:
+      description:
+        $ref: '#/definitions/GroupSchemaAttribute'
+      name:
+        $ref: '#/definitions/GroupSchemaAttribute'
+    type: object
+    x-okta-tags:
+      - GroupSchema
+  GroupSchemaCustom:
+    properties:
+      id:
+        readOnly: true
+        type: string
+      properties:
+        additionalProperties:
+          $ref: '#/definitions/GroupSchemaAttribute'
+        type: object
+      required:
+        items:
+          type: string
+        type: array
+      type:
+        type: string
+    type: object
+    x-okta-tags:
+      - GroupSchema
+  GroupSchemaDefinitions:
+    properties:
+      base:
+        $ref: '#/definitions/GroupSchemaBase'
+      custom:
+        $ref: '#/definitions/GroupSchemaCustom'
+    type: object
+    x-okta-tags:
+      - GroupSchema
   GroupType:
     enum:
       - OKTA_GROUP
