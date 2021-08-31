@@ -1031,6 +1031,87 @@ paths:
       summary: Update Application Profile for Assigned User
       tags:
         - Application
+  /api/v1/authenticators:
+    get:
+      consumes:
+        - application/json
+      description: Success
+      operationId: listAuthenticators
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/Authenticator'
+            type: array
+      security:
+        - api_token: [ ]
+      tags:
+        - Authenticator
+  '/api/v1/authenticators/{authenticatorId}':
+    get:
+      consumes:
+        - application/json
+      description: Success
+      operationId: getAuthenticator
+      parameters:
+        - in: path
+          name: authenticatorId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Authenticator'
+      security:
+        - api_token: [ ]
+      tags:
+        - Authenticator
+  '/api/v1/authenticators/{authenticatorId}/lifecycle/activate':
+    post:
+      consumes:
+        - application/json
+      description: Success
+      operationId: activateAuthenticator
+      parameters:
+        - in: path
+          name: authenticatorId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+      security:
+        - api_token: [ ]
+      tags:
+        - Authenticator
+  '/api/v1/authenticators/{authenticatorId}/lifecycle/deactivate':
+    post:
+      consumes:
+        - application/json
+      description: Success
+      operationId: deactivateAuthenticator
+      parameters:
+        - in: path
+          name: authenticatorId
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+      security:
+        - api_token: [ ]
+      tags:
+        - Authenticator
   /api/v1/authorizationServers:
     get:
       consumes:
@@ -8061,6 +8142,79 @@ definitions:
     type: string
     x-okta-tags:
       - User
+  Authenticator:
+    properties:
+      _links:
+        additionalProperties:
+          type: object
+          readOnly: true
+        type: object
+      created:
+        format: date-time
+        readOnly: true
+        type: string
+      id:
+        readOnly: true
+        type: string
+      key:
+        type: string
+      status:
+        $ref: '#/definitions/AuthenticatorStatus'
+      lastUpdated:
+        format: date-time
+        readOnly: true
+        type: string
+      name:
+        type: string
+      type:
+        $ref: '#/definitions/AuthenticatorType'
+      settings:
+        $ref: '#/definitions/AuthenticatorSettings'
+    type: object
+    x-okta-operations:
+      - alias: activate
+        arguments:
+          - dest: authenticatorId
+            src: id
+        operationId: activateAuthenticator
+      - alias: deactivate
+        arguments:
+          - dest: authenticatorId
+            src: id
+        operationId: deactivateAuthenticator
+    x-okta-tags:
+      - Authenticator
+  AuthenticatorSettings:
+    properties:
+      allowedFor:
+        enum:
+          - recovery
+          - sso
+          - any
+          - none
+        type: string
+      tokenLifetimeInMinutes:
+        type: integer
+    type: object
+    x-okta-tags:
+      - Authenticator
+  AuthenticatorStatus:
+    enum:
+      - ACTIVE
+      - INACTIVE
+    type: string
+    x-okta-tags:
+      - Authenticator
+  AuthenticatorType:
+    enum:
+      - password
+      - security_question
+      - phone
+      - email
+      - security_key
+    type: string
+    x-okta-tags:
+      - Authenticator
   AuthorizationServer:
     properties:
       _links:
