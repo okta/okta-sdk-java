@@ -1037,6 +1037,7 @@ paths:
         - application/json
       description: Success
       operationId: listAuthenticators
+      parameters: []
       produces:
         - application/json
       responses:
