@@ -152,10 +152,6 @@
 
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.zalando.maven.plugins</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
                 <executions>
