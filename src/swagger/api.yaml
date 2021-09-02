@@ -12674,6 +12674,7 @@ definitions:
   SwaApplication:
     properties:
       name:
+        type: string
         default: template_swa
       settings:
         $ref: '#/definitions/SwaApplicationSettings'
