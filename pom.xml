@@ -276,7 +276,7 @@
                                 <executable>sh</executable>
                                 <arguments>
                                     <argument>-c</argument>
-                                    <argument>cp ${project.basedir}/../node_modules/@okta/openapi/dist/spec.yaml ${project.basedir}/../src/swagger/api.yaml</argument>
+                                    <argument>mkdir ${project.basedir}/../src/swagger | cp ${project.basedir}/../node_modules/@okta/openapi/dist/spec.yaml ${project.basedir}/../src/swagger/api.yaml</argument>
                                 </arguments>
                             </configuration>
                         </execution>
