@@ -20,6 +20,7 @@ package {{package}};
 {{/imports}}
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import com.okta.sdk.ds.DataStore;
 
 {{#operations}}
@@ -67,7 +68,7 @@ public interface {{classname}} extends DataStore {
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/allParams}});
 
     {{#vendorExtensions.hasOptional}}
     /**
@@ -84,7 +85,7 @@ public interface {{classname}} extends DataStore {
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.nonOptionalParams}});
     {{/vendorExtensions.hasOptional}}
 
 {{#vendorExtensions.hasBackwardsCompatibleParams}}
@@ -103,7 +104,7 @@ public interface {{classname}} extends DataStore {
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#value}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/value}});
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#value}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/value}});
 
 {{/vendorExtensions.backwardsCompatibleParamsEntrySet}}
 {{/vendorExtensions.hasBackwardsCompatibleParams}}

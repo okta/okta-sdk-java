@@ -920,9 +920,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 .collect(Collectors.toList());
 
             if (!nonOptionalParams.isEmpty()) {
-                CodegenParameter param = nonOptionalParams.get(nonOptionalParams.size() - 1);
-                //TODO Review
-                //param.getHasMore() = false;
                 co.vendorExtensions.put(NON_OPTIONAL_PRAMS, nonOptionalParams);
             }
 
@@ -984,16 +981,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
             if (resultVersionedParamsMap.size() > 0) {
-
-                // mark the last parm on each versioned param list
-                resultVersionedParamsMap.values().forEach(versionedParams -> {
-                    if (!versionedParams.isEmpty()) {
-                        CodegenParameter lastItem = versionedParams.get(versionedParams.size() - 1);
-                        //TODO Review
-                        //lastItem.hasMore = false;
-                    }
-                });
-
                 // it'd be nice if we could just add new CodegenOperations, but the swagger lib does NOT support this
                 // instead we will add them as a vendorExtension and process them in a template
                 co.vendorExtensions.put("hasBackwardsCompatibleParams", true);
