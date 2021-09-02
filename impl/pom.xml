@@ -152,16 +152,18 @@
 
         <plugins>
             <plugin>
-                <groupId>org.zalando.maven.plugins</groupId>
+                <groupId>io.swagger.codegen.v3</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>swagger-codegen-impl</id>
                         <goals>
-                            <goal>codegen</goal>
+                            <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <language>okta_java_impl</language>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <inputSpec>${maven.multiModuleProjectDirectory}/src/swagger/api.yaml</inputSpec>
+                            <language>com.okta.swagger.codegen.OktaJavaClientImplCodegen</language>
                         </configuration>
                     </execution>
                 </executions>

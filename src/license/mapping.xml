@@ -77,4 +77,9 @@
         <artifactId>auto-service</artifactId>
         <license>Apache License, Version 2.0</license>
     </artifact>
+    <artifact>
+        <groupId>io.swagger.codegen.v3</groupId>
+        <artifactId>swagger-codegen-generators</artifactId>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
 </license-lookup>

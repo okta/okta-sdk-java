@@ -60,16 +60,23 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.zalando.maven.plugins</groupId>
+                <groupId>io.swagger.codegen.v3</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>swagger-codegen-api</id>
                         <goals>
-                            <goal>codegen</goal>
+                            <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <language>okta_java</language>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateModelTests>false</generateModelTests>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <inputSpec>${maven.multiModuleProjectDirectory}/src/swagger/api.yaml</inputSpec>
+                            <language>com.okta.swagger.codegen.OktaJavaClientApiCodegen</language>
+                            <output>${project.build.directory}/generated-sources/swagger-codegen</output>
+                            <templateDirectory>${maven.multiModuleProjectDirectory}/swagger-templates/src/main/resources/OktaJava</templateDirectory>
                         </configuration>
                     </execution>
                 </executions>

@@ -17,12 +17,12 @@ package com.okta.swagger.codegen;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.swagger.codegen.CodegenModel;
-import io.swagger.codegen.CodegenOperation;
-import io.swagger.codegen.CodegenProperty;
-import io.swagger.models.Model;
-import io.swagger.models.Operation;
-import io.swagger.models.Swagger;
+import io.swagger.codegen.v3.CodegenModel;
+import io.swagger.codegen.v3.CodegenOperation;
+import io.swagger.codegen.v3.CodegenProperty;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.media.Schema;
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.io.File;
@@ -56,22 +56,27 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     }
 
     @Override
-    public void preprocessSwagger(Swagger swagger) {
-        super.preprocessSwagger(swagger);
+    public String getDefaultTemplateDir() {
+        return null;
+    }
+
+    @Override
+    public void preprocessOpenAPI(OpenAPI openAPI) {
+        super.preprocessOpenAPI(openAPI);
         // Enum based definitions are created by OktaJavaClientApiCodegen, so they need to be removed here
-        enumList.forEach(enumEntry -> swagger.getDefinitions().remove(enumEntry));
+        enumList.forEach(enumEntry -> openAPI.getComponents().getSchemas().remove(enumEntry));
     }
 
     @Override
     public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
         super.postProcessModelProperty(model, property);
-        if (!BooleanUtils.toBoolean(model.isEnum)) {
+        if (!BooleanUtils.toBoolean(model.getIsEnum())) {
 
             String propertyType;
             String propertyTypeMethod;
             boolean forceCast = false;
 
-            if(property.isListContainer) {
+            if(property.getIsListContainer()) {
                 if (property.items.baseType.equals("String")) {
                     propertyType = "ListProperty";
                     propertyTypeMethod = "getListProperty";
@@ -89,13 +94,13 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                     property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
                 }
                 forceCast = true;
-            } else if (property.isEnum || enumList.contains(property.datatype)) {
+            } else if (property.getIsEnum() || enumList.contains(property.datatype)) {
                 propertyType = "EnumProperty";
                 propertyTypeMethod = "getEnumProperty";
                 property.vendorExtensions.put("itemType", property.datatypeWithEnum);
                 property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatypeWithEnum + ".class");
                 property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
-            } else if(property.isMapContainer || "Object".equals(property.datatype)) {
+            } else if(property.getIsMapContainer() || "Object".equals(property.datatype)) {
                 propertyType = "MapProperty";
                 propertyTypeMethod = "getMap";
             }
@@ -150,8 +155,8 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     }
 
     @Override
-    public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
-        CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
+    public CodegenModel fromModel(String name, Schema schema, Map<String, Schema> allSchemas) {
+        CodegenModel codegenModel = super.fromModel(name, schema, allSchemas);
         codegenModel.imports.add(toModelName(codegenModel.classname)); // The 'Default' gets added in the template
 
         Map<String, String> defaultValuesMap = new LinkedHashMap<>();
@@ -189,13 +194,9 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     public CodegenOperation fromOperation(String path,
                                           String httpMethod,
                                           Operation operation,
-                                          Map<String, Model> definitions,
-                                          Swagger swagger) {
-        CodegenOperation co = super.fromOperation(path,
-                                                  httpMethod,
-                                                  operation,
-                                                  definitions,
-                                                  swagger);
+                                          Map<String, Schema> definitions,
+                                          OpenAPI openAPI) {
+        CodegenOperation co = super.fromOperation(path, httpMethod, operation, definitions, openAPI);
 
         co.vendorExtensions.put("resourceReturnType", co.returnType);
 
@@ -275,8 +276,8 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     }
 
     @Override
-    protected void buildDiscriminationMap(Swagger swagger) {
-        super.buildDiscriminationMap(swagger);
+    protected void buildDiscriminationMap(OpenAPI openAPI) {
+        super.buildDiscriminationMap(openAPI);
 
         Map<String, Object> rootConfigMap = new HashMap<>();
         Map<String, Object> destMap = new HashMap<>();
