@@ -57,7 +57,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     private final static {{vendorExtensions.propertyType}}{{#vendorExtensions.itemType}}<{{{vendorExtensions.itemType}}}>{{/vendorExtensions.itemType}} {{name}}Property = new {{vendorExtensions.propertyType}}("{{baseName}}"{{{vendorExtensions.constructorTypeExtra}}});
 {{/vars}}
 
-    private final static Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap({{#vars}}{{name}}Property{{^-last}}, {{/-last}}{{/vars}});
+    private final static Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap({{#vars}}{{name}}Property{{^@last}}, {{/@last}}{{/vars}});
 
     public Default{{classname}}(InternalDataStore dataStore) {
         super(dataStore);{{#vendorExtensions.defaultSetter}}
@@ -109,7 +109,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
           value    = "{{generatorClass}}",
           date     = "{{generatedDate}}",
           comments = "{{httpMethod}} - {{path}}")
-    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}}) {
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.allParams}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
 {{#vendorExtensions.hasPathParents}}
@@ -149,7 +149,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
           value    = "{{generatorClass}}",
           date     = "{{generatedDate}}",
           comments = "{{httpMethod}} - {{path}}")
-    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}}) {
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.nonOptionalParams}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
 {{#vendorExtensions.hasPathParents}}
@@ -201,7 +201,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#value}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/value}}) {
+    public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#value}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/value}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
 {{#vendorExtensions.hasPathParents}}

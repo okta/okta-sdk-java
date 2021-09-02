@@ -156,14 +156,19 @@
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>swagger-codegen-impl</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateModelTests>false</generateModelTests>
                             <!--suppress UnresolvedMavenProperty -->
                             <inputSpec>${maven.multiModuleProjectDirectory}/src/swagger/api.yaml</inputSpec>
                             <language>com.okta.swagger.codegen.OktaJavaClientImplCodegen</language>
+                            <output>${project.build.directory}/generated-sources/swagger-codegen</output>
+                            <templateDirectory>${maven.multiModuleProjectDirectory}/swagger-templates/src/main/resources/OktaJavaImpl</templateDirectory>
                         </configuration>
                     </execution>
                 </executions>

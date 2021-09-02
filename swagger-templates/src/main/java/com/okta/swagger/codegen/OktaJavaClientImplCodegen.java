@@ -46,13 +46,13 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     public OktaJavaClientImplCodegen() {
         super("okta_java_impl", "OktaJavaImpl", "com.okta.sdk.impl.resource");
 
-        modelTemplateFiles.put("model.mustache", ".java");
+//        modelTemplateFiles.put("model.mustache", ".java");
         overrideModelPackage = "com.okta.sdk.resource";
-        apiPackage           = "com.okta.sdk.impl.client";
-        vendorExtensions().put("overrideModelPackage", overrideModelPackage);
-        vendorExtensions().put("overrideApiPackage", "com.okta.sdk.client");
-
-        apiTemplateFiles.put("api.mustache", ".java");
+//        apiPackage           = "com.okta.sdk.impl.client";
+//        vendorExtensions().put("overrideModelPackage", overrideModelPackage);
+//        vendorExtensions().put("overrideApiPackage", "com.okta.sdk.client");
+//
+//        apiTemplateFiles.put("api.mustache", ".java");
     }
 
     @Override
@@ -161,11 +161,13 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
         Map<String, String> defaultValuesMap = new LinkedHashMap<>();
 
-        ObjectNode rawDefaultValues = (ObjectNode) codegenModel.vendorExtensions.get("x-okta-defined-as");
-        if (rawDefaultValues != null) {
-            rawDefaultValues.fields().forEachRemaining(entry -> {
-                defaultValuesMap.put(entry.getKey(), entry.getValue().textValue());
-            });
+        if (codegenModel.vendorExtensions.containsKey("x-okta-defined-as")) {
+            Object rawDefaultValues = codegenModel.vendorExtensions.get("x-okta-defined-as");
+            if(rawDefaultValues instanceof HashMap) {
+                ((HashMap)rawDefaultValues).forEach((key, value) -> {
+                    defaultValuesMap.put(key.toString(), value.toString());
+                });
+            }
         }
 
         // if the parent is set, we need to check for discrimination

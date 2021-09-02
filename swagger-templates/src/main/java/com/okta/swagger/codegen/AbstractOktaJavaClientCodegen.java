@@ -23,10 +23,14 @@ import com.samskivert.mustache.Mustache;
 import io.swagger.codegen.v3.*;
 import io.swagger.codegen.v3.generators.java.AbstractJavaCodegen;
 import io.swagger.models.Model;
+import io.swagger.models.ModelImpl;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.apache.commons.lang3.BooleanUtils;
@@ -184,12 +188,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         // find any children of these resources
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
-            String parent = (String) model.getExtensions().get("x-okta-parent");
-            if (parent != null) {
-                parent = parent.replaceAll(".*/", "");
+            if(model.getExtensions() != null && model.getExtensions().containsKey("x-okta-parent")) {
+                String parent = (String) model.getExtensions().get("x-okta-parent");
+                if (parent != null) {
+                    parent = parent.replaceAll(".*/", "");
 
-                if (resources.contains(parent)) {
-                    resources.add(parent);
+                    if (resources.contains(parent)) {
+                        resources.add(parent);
+                    }
                 }
             }
         });
@@ -206,25 +212,27 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     protected void buildDiscriminationMap(OpenAPI openAPI) {
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
-            Object discriminatorMapExtension = model.getExtensions().get("x-openapi-v3-discriminator");
-            if (discriminatorMapExtension != null) {
-                if(discriminatorMapExtension instanceof HashMap) {
-                    String propertyName = ((HashMap)discriminatorMapExtension).get("propertyName").toString();
-                    Object mapping = ((HashMap)discriminatorMapExtension).get("mapping");
-                    ObjectMapper mapper = new ObjectMapper();
-                    Map<String, String> result = mapper.convertValue(mapping, Map.class);
-                    result = result.entrySet().stream()
-                        .collect(
-                            Collectors.toMap(
-                                e -> e.getValue().substring(e.getValue().lastIndexOf('/') + 1),
-                                e -> e.getKey(),
-                                (oldValue, newValue) -> newValue
-                            )
-                        );
-                    result.forEach((key, value) -> reverseDiscriminatorMap.put(key, name));
-                    discriminatorMap.put(name, new Discriminator(name, propertyName, result));
-                } else {
-                    System.out.println("");
+            if(model.getExtensions() != null) {
+                Object discriminatorMapExtension = model.getExtensions().get("x-openapi-v3-discriminator");
+                if (discriminatorMapExtension != null) {
+                    if (discriminatorMapExtension instanceof HashMap) {
+                        String propertyName = ((HashMap) discriminatorMapExtension).get("propertyName").toString();
+                        Object mapping = ((HashMap) discriminatorMapExtension).get("mapping");
+                        ObjectMapper mapper = new ObjectMapper();
+                        Map<String, String> result = mapper.convertValue(mapping, Map.class);
+                        result = result.entrySet().stream()
+                            .collect(
+                                Collectors.toMap(
+                                    e -> e.getValue().substring(e.getValue().lastIndexOf('/') + 1),
+                                    e -> e.getKey(),
+                                    (oldValue, newValue) -> newValue
+                                )
+                            );
+                        result.forEach((key, value) -> reverseDiscriminatorMap.put(key, name));
+                        discriminatorMap.put(name, new Discriminator(name, propertyName, result));
+                    } else {
+                        System.out.println("");
+                    }
                 }
             }
         });
@@ -270,18 +278,19 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected void buildModelTagMap(OpenAPI openAPI) {
 
         openAPI.getComponents().getSchemas().forEach((key, definition) -> {
-            Object tags = definition.getExtensions().get("x-okta-tags");
-            if (tags != null) {
-                // if tags is NOT null, then assume it is an array
-                if (tags instanceof List) {
-                    if (!((List) tags).isEmpty()) {
-                        String packageName = tagToPackageName(((List) tags).get(0).toString());
-                        addToModelTagMap(key, packageName);
-                        definition.getExtensions().put("x-okta-package", packageName);
+            if(definition.getExtensions() != null ) {
+                Object tags = definition.getExtensions().get("x-okta-tags");
+                if (tags != null) {
+                    // if tags is NOT null, then assume it is an array
+                    if (tags instanceof List) {
+                        if (!((List) tags).isEmpty()) {
+                            String packageName = tagToPackageName(((List) tags).get(0).toString());
+                            addToModelTagMap(key, packageName);
+                            definition.getExtensions().put("x-okta-package", packageName);
+                        }
+                    } else {
+                        throw new RuntimeException("Model: " + key + " contains 'x-okta-tags' that is NOT a List.");
                     }
-                }
-                else {
-                    throw new RuntimeException("Model: "+ key + " contains 'x-okta-tags' that is NOT a List.");
                 }
             }
         });
@@ -679,7 +688,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         // super add these imports, and we don't want that dependency
         codegenModel.imports.remove("ApiModel");
 
-        if (model.getExtensions().containsKey("x-baseType")) {
+        if (model.getExtensions() !=null && model.getExtensions().containsKey("x-baseType")) {
             String baseType = (String) model.getExtensions().get("x-baseType");
             codegenModel.vendorExtensions.put("baseType", toModelName(baseType));
             codegenModel.imports.add(toModelName(baseType));
@@ -703,16 +712,18 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         //TODO Review
         //codegenModel.isAlias = false;
 
-        String parent = (String) model.getExtensions().get("x-okta-parent");
-        if (StringUtils.isNotEmpty(parent)) {
-            codegenModel.parent = toApiName(parent.substring(parent.lastIndexOf("/")));
+        if(model.getExtensions() != null) {
+            String parent = (String) model.getExtensions().get("x-okta-parent");
+            if (StringUtils.isNotEmpty(parent)) {
+                codegenModel.parent = toApiName(parent.substring(parent.lastIndexOf("/")));
 
-            // figure out the resourceClass if this model has a parent
-            String discriminatorRoot = getRootDiscriminator(name);
-            if (discriminatorRoot != null) {
-                model.getExtensions().put("discriminatorRoot", discriminatorRoot);
+                // figure out the resourceClass if this model has a parent
+                String discriminatorRoot = getRootDiscriminator(name);
+                if (discriminatorRoot != null) {
+                    model.getExtensions().put("discriminatorRoot", discriminatorRoot);
+                }
+
             }
-
         }
 
         // We use '$ref' attributes with siblings, which isn't valid JSON schema (or swagger), so we need process
@@ -1008,15 +1019,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         return camelize(name);
     }
 
-    //TODO Review
     private Schema getArrayPropertyFromOperation(Operation operation) {
-
-
         if (operation != null && operation.getResponses() != null) {
             ApiResponse response = operation.getResponses().get("200");
             if (response != null) {
-                //TODO Review
-                //return response.get$ref();
+                MediaType mediaType = response.getContent().get("application/json");
+                if(mediaType != null) {
+                    return mediaType.getSchema();
+                }
             }
         }
         return null;
@@ -1057,42 +1067,38 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         Map<String, Model> result = new LinkedHashMap<>();
 
-        for (Schema p : properties) {
-            if (p != null && "array".equals(p.getType())) {
+        for (Schema schema : properties) {
+            if (schema instanceof ArraySchema) {
+                ArraySchema arraySchema = (ArraySchema) schema;
+                if (arraySchema.getItems() != null) {
+                    String baseName = ((ArraySchema) schema).getItems().get$ref();
+                    baseName = baseName.substring(baseName.lastIndexOf("/") + 1);
+                    // Do not generate List wrappers for primitives (or strings)
+                    if (!languageSpecificPrimitives.contains(baseName) /* && topLevelResources.contains(baseName)*/) {
 
-                //TODO Review
-//                ArrayProperty arrayProperty = (ArrayProperty) p;
-//                if ( arrayProperty.getItems() instanceof RefProperty) {
-//                    RefProperty ref = (RefProperty) arrayProperty.getItems();
-//
-//                    String baseName = ref.getSimpleRef();
-//
-//                    // Do not generate List wrappers for primitives (or strings)
-//                    if (!languageSpecificPrimitives.contains(baseName) && topLevelResources.contains(baseName)) {
-//
-//                        String modelName = baseName + "List";
-//
-//                        ModelImpl model = new ModelImpl();
-//                        model.setName(modelName);
-//                        model.setAllowEmptyValue(false);
-//                        model.setDescription("Collection List for " + baseName);
-//
-//                        if (baseModel == null) {
-//                            baseModel = swagger.getDefinitions().get(baseName);
-//                        }
-//
-//                        // only add the tags from the base model
-//                        if (baseModel.getVendorExtensions().containsKey("x-okta-tags")) {
-//                            model.setVendorExtension("x-okta-tags", baseModel.getVendorExtensions().get("x-okta-tags"));
-//                        }
-//
-//                        model.setVendorExtension("x-isResourceList", true);
-//                        model.setVendorExtension("x-baseType", baseName);
-//                        model.setType(modelName);
-//
-//                        result.put(modelName, model);
-//                    }
-//                }
+                        String modelName = baseName + "List";
+
+                        ModelImpl model = new ModelImpl();
+                        model.setName(modelName);
+                        model.setAllowEmptyValue(false);
+                        model.setDescription("Collection List for " + baseName);
+
+                        if (baseModel == null) {
+                            baseModel = openAPI.getComponents().getSchemas().get(baseName);
+                        }
+
+                        // only add the tags from the base model
+                        if (baseModel.getExtensions().containsKey("x-okta-tags")) {
+                            model.setVendorExtension("x-okta-tags", baseModel.getExtensions().get("x-okta-tags"));
+                        }
+
+                        model.setVendorExtension("x-isResourceList", true);
+                        model.setVendorExtension("x-baseType", baseName);
+                        model.setType(modelName);
+
+                        result.put(modelName, model);
+                    }
+                }
             }
         }
 
