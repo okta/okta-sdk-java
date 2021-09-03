@@ -188,12 +188,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         // find any children of these resources
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
-            String parent = (String) model.getExtensions().get("x-okta-parent");
-            if (parent != null) {
-                parent = parent.replaceAll(".*/", "");
+            if(model.getExtensions() != null && model.getExtensions().containsKey("x-okta-parent")) {
+                String parent = (String) model.getExtensions().get("x-okta-parent");
+                if (parent != null) {
+                    parent = parent.replaceAll(".*/", "");
 
-                if (resources.contains(parent)) {
-                    resources.add(parent);
+                    if (resources.contains(parent)) {
+                        resources.add(parent);
+                    }
                 }
             }
         });
@@ -210,25 +212,27 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     protected void buildDiscriminationMap(OpenAPI openAPI) {
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
-            Object discriminatorMapExtension = model.getExtensions().get("x-openapi-v3-discriminator");
-            if (discriminatorMapExtension != null) {
-                if(discriminatorMapExtension instanceof HashMap) {
-                    String propertyName = ((HashMap)discriminatorMapExtension).get("propertyName").toString();
-                    Object mapping = ((HashMap)discriminatorMapExtension).get("mapping");
-                    ObjectMapper mapper = new ObjectMapper();
-                    Map<String, String> result = mapper.convertValue(mapping, Map.class);
-                    result = result.entrySet().stream()
-                        .collect(
-                            Collectors.toMap(
-                                e -> e.getValue().substring(e.getValue().lastIndexOf('/') + 1),
-                                e -> e.getKey(),
-                                (oldValue, newValue) -> newValue
-                            )
-                        );
-                    result.forEach((key, value) -> reverseDiscriminatorMap.put(key, name));
-                    discriminatorMap.put(name, new Discriminator(name, propertyName, result));
-                } else {
-                    System.out.println("");
+            if(model.getExtensions() != null) {
+                Object discriminatorMapExtension = model.getExtensions().get("x-openapi-v3-discriminator");
+                if (discriminatorMapExtension != null) {
+                    if (discriminatorMapExtension instanceof HashMap) {
+                        String propertyName = ((HashMap) discriminatorMapExtension).get("propertyName").toString();
+                        Object mapping = ((HashMap) discriminatorMapExtension).get("mapping");
+                        ObjectMapper mapper = new ObjectMapper();
+                        Map<String, String> result = mapper.convertValue(mapping, Map.class);
+                        result = result.entrySet().stream()
+                            .collect(
+                                Collectors.toMap(
+                                    e -> e.getValue().substring(e.getValue().lastIndexOf('/') + 1),
+                                    e -> e.getKey(),
+                                    (oldValue, newValue) -> newValue
+                                )
+                            );
+                        result.forEach((key, value) -> reverseDiscriminatorMap.put(key, name));
+                        discriminatorMap.put(name, new Discriminator(name, propertyName, result));
+                    } else {
+                        System.out.println("");
+                    }
                 }
             }
         });
@@ -274,18 +278,19 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected void buildModelTagMap(OpenAPI openAPI) {
 
         openAPI.getComponents().getSchemas().forEach((key, definition) -> {
-            Object tags = definition.getExtensions().get("x-okta-tags");
-            if (tags != null) {
-                // if tags is NOT null, then assume it is an array
-                if (tags instanceof List) {
-                    if (!((List) tags).isEmpty()) {
-                        String packageName = tagToPackageName(((List) tags).get(0).toString());
-                        addToModelTagMap(key, packageName);
-                        definition.getExtensions().put("x-okta-package", packageName);
+            if(definition.getExtensions() != null ) {
+                Object tags = definition.getExtensions().get("x-okta-tags");
+                if (tags != null) {
+                    // if tags is NOT null, then assume it is an array
+                    if (tags instanceof List) {
+                        if (!((List) tags).isEmpty()) {
+                            String packageName = tagToPackageName(((List) tags).get(0).toString());
+                            addToModelTagMap(key, packageName);
+                            definition.getExtensions().put("x-okta-package", packageName);
+                        }
+                    } else {
+                        throw new RuntimeException("Model: " + key + " contains 'x-okta-tags' that is NOT a List.");
                     }
-                }
-                else {
-                    throw new RuntimeException("Model: "+ key + " contains 'x-okta-tags' that is NOT a List.");
                 }
             }
         });
@@ -683,7 +688,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         // super add these imports, and we don't want that dependency
         codegenModel.imports.remove("ApiModel");
 
-        if (model.getExtensions().containsKey("x-baseType")) {
+        if (model.getExtensions() !=null && model.getExtensions().containsKey("x-baseType")) {
             String baseType = (String) model.getExtensions().get("x-baseType");
             codegenModel.vendorExtensions.put("baseType", toModelName(baseType));
             codegenModel.imports.add(toModelName(baseType));
@@ -707,16 +712,18 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         //TODO Review
         //codegenModel.isAlias = false;
 
-        String parent = (String) model.getExtensions().get("x-okta-parent");
-        if (StringUtils.isNotEmpty(parent)) {
-            codegenModel.parent = toApiName(parent.substring(parent.lastIndexOf("/")));
+        if(model.getExtensions() != null) {
+            String parent = (String) model.getExtensions().get("x-okta-parent");
+            if (StringUtils.isNotEmpty(parent)) {
+                codegenModel.parent = toApiName(parent.substring(parent.lastIndexOf("/")));
 
-            // figure out the resourceClass if this model has a parent
-            String discriminatorRoot = getRootDiscriminator(name);
-            if (discriminatorRoot != null) {
-                model.getExtensions().put("discriminatorRoot", discriminatorRoot);
+                // figure out the resourceClass if this model has a parent
+                String discriminatorRoot = getRootDiscriminator(name);
+                if (discriminatorRoot != null) {
+                    model.getExtensions().put("discriminatorRoot", discriminatorRoot);
+                }
+
             }
-
         }
 
         // We use '$ref' attributes with siblings, which isn't valid JSON schema (or swagger), so we need process

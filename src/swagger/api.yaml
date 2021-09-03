@@ -8908,7 +8908,7 @@ components:
       type: object
       properties:
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/SwaApplicationSettings'
       x-okta-defined-as:
@@ -9526,7 +9526,7 @@ components:
                 type: string
       x-okta-tags:
       - Common
-    hrefObject:
+    HrefObject:
       title: hrefObject
       type: object
       description: Used for links
