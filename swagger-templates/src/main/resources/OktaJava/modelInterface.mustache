@@ -17,6 +17,7 @@ import java.util.Map;
 import com.okta.sdk.resource.ExtensibleResource;
 import com.okta.sdk.resource.Deletable;
 import com.okta.sdk.resource.Saveable;
+import com.okta.sdk.resource.AnyOfIdentityProviderType;
 {{#vendorExtensions.x-okta-extensible}}import com.okta.sdk.resource.PropertyRetriever;{{/vendorExtensions.x-okta-extensible}}
 {{#models}}{{#model}}
 /**
@@ -64,7 +65,7 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.allParams}});
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.allParams}});
 
 {{#vendorExtensions.hasOptional}}
     /**
@@ -81,7 +82,7 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.nonOptionalParams}});
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.nonOptionalParams}});
 {{/vendorExtensions.hasOptional}}
 {{#vendorExtensions.hasBackwardsCompatibleParams}}
 {{#vendorExtensions.backwardsCompatibleParamsEntrySet}}
@@ -100,7 +101,7 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
             comments = "{{httpMethod}} - {{path}}")
-    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{vendorExtensions.alias}}({{#value}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/value}});
+    {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{vendorExtensions.alias}}({{#value}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/value}});
 {{/vendorExtensions.backwardsCompatibleParamsEntrySet}}
 {{/vendorExtensions.hasBackwardsCompatibleParams}}
 {{/.}}
