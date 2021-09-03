@@ -247,42 +247,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.6.0</version>
-                    <executions>
-                        <execution>
-                            <id>npm install (initialize)</id>
-                            <goals>
-                                <goal>exec</goal>
-                            </goals>
-                            <phase>generate-sources</phase>
-                            <configuration>
-                                <skip>${exec.skip}</skip>
-                                <executable>npm</executable>
-                                <arguments>
-                                    <argument>install</argument>
-                                </arguments>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>copy to swagger</id>
-                            <goals>
-                                <goal>exec</goal>
-                            </goals>
-                            <phase>generate-sources</phase>
-                            <configuration>
-                                <skip>${exec.skip}</skip>
-                                <executable>sh</executable>
-                                <arguments>
-                                    <argument>-c</argument>
-                                    <argument>mkdir -p ${project.basedir}/../src/swagger &amp;&amp; cp ${project.basedir}/../node_modules/@okta/openapi/dist/spec.yaml ${project.basedir}/../src/swagger/api.yaml</argument>
-                                </arguments>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
@@ -379,8 +343,8 @@
                         </oldVersion>
                         <parameter>
                             <onlyModified>true</onlyModified>
-                            <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications>
-                            <breakBuildBasedOnSemanticVersioning>false</breakBuildBasedOnSemanticVersioning>
+                            <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
+                            <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
                             <postAnalysisScript>${root.dir}/src/japicmp/postAnalysisScript.groovy</postAnalysisScript>
                         </parameter>
                     </configuration>
