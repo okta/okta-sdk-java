@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.samskivert.mustache.Mustache;
+
 import io.swagger.codegen.v3.*;
 import io.swagger.codegen.v3.generators.java.AbstractJavaCodegen;
 import io.swagger.models.Model;
@@ -28,41 +29,22 @@ import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.media.ArraySchema;
-import io.swagger.v3.oas.models.media.Content;
-import io.swagger.v3.oas.models.media.MediaType;
-import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.*;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen {
 
@@ -143,48 +125,33 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         Set<String> resources = new HashSet<>();
 
         // Loop through all the operations looking for the models that are used as the response and body params
+        openAPI.getPaths().forEach((pathName, path) -> {
 
-        //TODO Review
-        openAPI.getPaths().forEach((pathName, path) -> {}
-//                path.getOperations().forEach(operation -> {
-//                    // find all body params
-//                    operation.getParameters().forEach(parameter -> {
-//                        if (parameter instanceof BodyParameter) {
-//                            resources.add(((RefModel) ((BodyParameter)parameter).getSchema()).getSimpleRef());
-//                        }
-//                    });
-//
-//                    // response objects are a more complicated, start with filter for only the 200 responses
-//                    operation.getResponses().entrySet().stream()
-//                    .filter(entry -> "200".equals(entry.getKey()))
-//                    .forEach(entry -> {
-//                        // this schema could be a ref or an array property containing a ref (or null)
-//                        Property rawSchema = entry.getValue().getSchema();
-//
-//                        if (rawSchema != null) {
-//                            RefProperty refProperty;
-//                            // detect array properties
-//                            if (rawSchema instanceof ArrayProperty) {
-//                                Property innerProp = ((ArrayProperty) rawSchema).getItems();
-//                                if (innerProp instanceof RefProperty) {
-//                                    refProperty = (RefProperty) innerProp;
-//                                } else {
-//                                    // invalid swagger config file
-//                                    throw new SwaggerException("Expected 'schema.items.$ref' to exist.");
-//                                }
-//                            } else if (rawSchema instanceof RefProperty) {
-//                                // non array, standard ref property typically in the format of '#/Definitions/MyModel'
-//                                refProperty = (RefProperty) rawSchema;
-//                            } else {
-//                                throw new SwaggerException("Expected 'schema' to be of type 'ArrayProperty' or 'RefProperty'.");
-//                            }
-//
-//                            // get the simple name 'MyModel' instead of '#/Definitions/MyModel'
-//                            resources.add(refProperty.getSimpleRef());
-//                        }
-//                    });
-//                })
-        );
+            // find all body params
+            Stream.of(path.getPost(), path.getPut()).filter(Objects::nonNull).forEach(operation -> {
+                String bodyType = getRequestBodyType(operation);
+                if (bodyType != null) {
+                    resources.add(bodyType);
+                }
+            });
+
+            // response objects are a more complicated, start with filter for only the 200 responses
+            Stream.of(path.getGet(), path.getPost(), path.getPut(), path.getDelete())
+                .filter(Objects::nonNull).forEach(operation -> {
+                    operation.getResponses().entrySet().stream()
+                        .filter(entry -> "200".equals(entry.getKey()) && entry.getValue().getContent() != null)
+                        .filter(entry -> entry.getValue().getContent().get("application/json") != null)
+                        .forEach(entry -> {
+                            Schema schema = entry.getValue().getContent().get("application/json").getSchema();
+                            if (schema != null) {
+                                if (schema instanceof ArraySchema) {
+                                    String ref = ((ArraySchema) schema).getItems().get$ref();
+                                    resources.add(refToSimpleName(ref));
+                                }
+                            }
+                        });
+                });
+        });
 
         // find any children of these resources
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
@@ -208,6 +175,22 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 });
 
         this.topLevelResources = resources;
+    }
+
+    private String getRequestBodyType(Operation operation) {
+        assert operation != null;
+        if(operation.getRequestBody() == null || operation.getRequestBody().getContent() == null) {
+            return null;
+        }
+        MediaType mediaType = operation.getRequestBody().getContent().get("application/json");
+        if(mediaType == null || mediaType.getSchema() == null) {
+            return null;
+        }
+        return refToSimpleName(mediaType.getSchema().get$ref());
+    }
+
+    private String refToSimpleName(String ref) {
+        return ref == null ? null : ref.substring(ref.lastIndexOf("/") + 1);
     }
 
     protected void buildDiscriminationMap(OpenAPI openAPI) {
@@ -247,7 +230,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 .map(this::reflectionConfig)
                 .collect(Collectors.toList());
 
-            // this is slightly error prone, but this project only has `api` and `impl`
+            // this is slightly error-prone, but this project only has `api` and `impl`
             File projectDir = new File(outputFolder(), "../../..").getCanonicalFile();
             String projectName = projectDir.getName();
 
@@ -267,11 +250,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     protected void tagEnums(OpenAPI openAPI) {
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
-
-            //TODO Review
-//            if (model instanceof ModelImpl && ((ModelImpl) model).getEnum() != null) {
-//                enumList.add(name);
-//            }
+            if (model.getEnum() != null) {
+                enumList.add(name);
+            }
         });
     }
 
@@ -305,15 +286,17 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     }
 
     public void removeListAfterAndLimit(OpenAPI openAPI) {
-        openAPI.getPaths().forEach((pathName, path) -> {}
-            //TODO Review
-//           path.getOperations().forEach(operation ->
-//               operation.getParameters().removeIf(param ->
-//                       !param.getRequired() &&
-//                               ("limit".equals(param.getName()) ||
-//                                "after".equals(param.getName())))
-//           )
-        );
+        openAPI.getPaths().forEach((pathName, path) -> {
+            Stream.of(path.getGet(), path.getPost(), path.getPut(), path.getDelete())
+                .filter(Objects::nonNull)
+                .filter(operation -> operation.getParameters() != null)
+                .forEach(operation -> {
+                    operation.getParameters().removeIf(
+                        param -> !param.getRequired()
+                            && ("limit".equals(param.getName()) || "after".equals(param.getName()))
+                    );
+                });
+        });
     }
 
     private void addAllIfNotNull(List<ObjectNode> destList, List<ObjectNode> srcList) {
@@ -708,10 +691,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             });
         }
 
-        // force alias == false (likely only relevant for Lists, but something changed in swagger 2.2.3 to require this)
-        //TODO Review
-        //codegenModel.isAlias = false;
-
         if(model.getExtensions() != null) {
             String parent = (String) model.getExtensions().get("x-okta-parent");
             if (StringUtils.isNotEmpty(parent)) {
@@ -767,7 +746,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
         List<CodegenOperation> codegenOperations = (List<CodegenOperation>) operations.get("operation");
 
-        // find all of the list return values
+        // find all the list return values
         Set<String> importsToAdd = new HashSet<>();
         codegenOperations.stream()
                 .filter(cgOp -> cgOp.returnType != null)
@@ -1034,54 +1013,55 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     public void addListModels(OpenAPI openAPI) {
 
-        Map<String, Model> listModels = new LinkedHashMap<>();
+        Map<String, Schema> listSchemas = new LinkedHashMap<>();
 
         // lists in paths
         for (PathItem path : openAPI.getPaths().values()) {
-
             List<Schema> properties = new ArrayList<>();
-            properties.add(getArrayPropertyFromOperation(path.getGet()));
-            properties.add(getArrayPropertyFromOperation(path.getPost()));
-            properties.add(getArrayPropertyFromOperation(path.getPatch()));
-            properties.add(getArrayPropertyFromOperation(path.getPut()));
-
-            listModels.putAll(processListsFromProperties(properties, null, openAPI));
+            Stream.of(path.getGet(), path.getPost(), path.getPatch(), path.getPut())
+                .filter(Objects::nonNull)
+                .forEach(operation -> {
+                    properties.add(getArrayPropertyFromOperation(operation));
+                });
+            listSchemas.putAll(processListsFromProperties(properties, null, openAPI));
         }
 
         openAPI.getComponents().getSchemas()
-                .entrySet().stream()
-                .filter(entry -> topLevelResources.contains(entry.getKey()))
-                .forEach(entry -> {
-                    Schema model = entry.getValue();
-                    if (model != null && model.getProperties() != null) {
-                        listModels.putAll(processListsFromProperties(model.getProperties().values(), model, openAPI));
-                    }
-                });
+            .entrySet().stream()
+            .filter(entry -> topLevelResources.contains(entry.getKey()))
+            .forEach(entry -> {
+                Schema model = entry.getValue();
+                if (model != null && model.getProperties() != null) {
+                    listSchemas.putAll(processListsFromProperties(model.getProperties().values(), model, openAPI));
+                }
+            });
 
-        //TODO Review
-        //listModels.forEach(swagger::addDefinition);
-
+        listSchemas.forEach((key, value) -> {
+            openAPI.getComponents().addSchemas(key, value);
+        });
     }
 
-    private Map<String, Model> processListsFromProperties(Collection<Schema> properties, Schema baseModel, OpenAPI openAPI) {
+    private Map<String, Schema> processListsFromProperties(Collection<Schema> properties, Schema baseModel, OpenAPI openAPI) {
 
-        Map<String, Model> result = new LinkedHashMap<>();
+        Map<String, Schema> result = new LinkedHashMap<>();
 
         for (Schema schema : properties) {
             if (schema instanceof ArraySchema) {
                 ArraySchema arraySchema = (ArraySchema) schema;
                 if (arraySchema.getItems() != null) {
                     String baseName = ((ArraySchema) schema).getItems().get$ref();
-                    baseName = baseName.substring(baseName.lastIndexOf("/") + 1);
+                    baseName = refToSimpleName(baseName);
                     // Do not generate List wrappers for primitives (or strings)
-                    if (!languageSpecificPrimitives.contains(baseName) /* && topLevelResources.contains(baseName)*/) {
+                    if (!languageSpecificPrimitives.contains(baseName) && topLevelResources.contains(baseName)) {
 
                         String modelName = baseName + "List";
 
-                        ModelImpl model = new ModelImpl();
-                        model.setName(modelName);
-                        model.setAllowEmptyValue(false);
-                        model.setDescription("Collection List for " + baseName);
+                        ObjectSchema objectSchema = new ObjectSchema();
+                        objectSchema.setName(modelName);
+                        objectSchema.setExtensions(new HashMap<>());
+                        //TODO Review this
+                        //objectSchema.setAllowEmptyValue(false);
+                        objectSchema.setDescription("Collection List for " + baseName);
 
                         if (baseModel == null) {
                             baseModel = openAPI.getComponents().getSchemas().get(baseName);
@@ -1089,14 +1069,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                         // only add the tags from the base model
                         if (baseModel.getExtensions().containsKey("x-okta-tags")) {
-                            model.setVendorExtension("x-okta-tags", baseModel.getExtensions().get("x-okta-tags"));
+                            objectSchema.getExtensions().put("x-okta-tags", baseModel.getExtensions().get("x-okta-tags"));
                         }
 
-                        model.setVendorExtension("x-isResourceList", true);
-                        model.setVendorExtension("x-baseType", baseName);
-                        model.setType(modelName);
+                        objectSchema.getExtensions().put("x-isResourceList", true);
+                        objectSchema.getExtensions().put("x-baseType", baseName);
+                        objectSchema.setType(modelName);
 
-                        result.put(modelName, model);
+                        result.put(modelName, objectSchema);
                     }
                 }
             }
@@ -1111,22 +1091,20 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         if ("password".equals(propertySchema.getFormat())) {
             return "char[]";
         }
+        if (propertySchema instanceof ArraySchema) {
+            ArraySchema ap = (ArraySchema) propertySchema;
+            Schema inner = ap.getItems();
+            if (inner == null) {
+                // mimic super behavior
+                log.warn("{} (array property) does not have a proper inner type defined", ap.getName());
+                return null;
+            }
 
-        //TODO Review
-//        if (propertySchema instanceof ArrayProperty) {
-//            ArrayProperty ap = (ArrayProperty) p;
-//            Property inner = ap.getItems();
-//            if (inner == null) {
-//                // mimic super behavior
-//                log.warn("{} (array property) does not have a proper inner type defined", ap.getName());
-//                return null;
-//            }
-//
-//            String type = super.getTypeDeclaration(inner);
-//            if (!languageSpecificPrimitives.contains(type) && topLevelResources.contains(type)) {
-//                return type + "List";
-//            }
-//        }
+            String type = super.getTypeDeclaration(inner);
+            if (!languageSpecificPrimitives.contains(type) && topLevelResources.contains(type)) {
+                return type + "List";
+            }
+        }
         return super.getTypeDeclaration(propertySchema);
     }
 

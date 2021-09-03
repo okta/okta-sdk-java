@@ -8944,7 +8944,7 @@ components:
       type: object
       properties:
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/SwaThreeFieldApplicationSettings'
       x-okta-defined-as:
