@@ -23,10 +23,14 @@ import com.samskivert.mustache.Mustache;
 import io.swagger.codegen.v3.*;
 import io.swagger.codegen.v3.generators.java.AbstractJavaCodegen;
 import io.swagger.models.Model;
+import io.swagger.models.ModelImpl;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.apache.commons.lang3.BooleanUtils;
@@ -1008,15 +1012,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         return camelize(name);
     }
 
-    //TODO Review
     private Schema getArrayPropertyFromOperation(Operation operation) {
-
-
         if (operation != null && operation.getResponses() != null) {
             ApiResponse response = operation.getResponses().get("200");
             if (response != null) {
-                //TODO Review
-                //return response.get$ref();
+                MediaType mediaType = response.getContent().get("application/json");
+                if(mediaType != null) {
+                    return mediaType.getSchema();
+                }
             }
         }
         return null;
@@ -1057,42 +1060,38 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         Map<String, Model> result = new LinkedHashMap<>();
 
-        for (Schema p : properties) {
-            if (p != null && "array".equals(p.getType())) {
+        for (Schema schema : properties) {
+            if (schema instanceof ArraySchema) {
+                ArraySchema arraySchema = (ArraySchema) schema;
+                if (arraySchema.getItems() != null) {
+                    String baseName = ((ArraySchema) schema).getItems().get$ref();
+                    baseName = baseName.substring(baseName.lastIndexOf("/") + 1);
+                    // Do not generate List wrappers for primitives (or strings)
+                    if (!languageSpecificPrimitives.contains(baseName) /* && topLevelResources.contains(baseName)*/) {
 
-                //TODO Review
-//                ArrayProperty arrayProperty = (ArrayProperty) p;
-//                if ( arrayProperty.getItems() instanceof RefProperty) {
-//                    RefProperty ref = (RefProperty) arrayProperty.getItems();
-//
-//                    String baseName = ref.getSimpleRef();
-//
-//                    // Do not generate List wrappers for primitives (or strings)
-//                    if (!languageSpecificPrimitives.contains(baseName) && topLevelResources.contains(baseName)) {
-//
-//                        String modelName = baseName + "List";
-//
-//                        ModelImpl model = new ModelImpl();
-//                        model.setName(modelName);
-//                        model.setAllowEmptyValue(false);
-//                        model.setDescription("Collection List for " + baseName);
-//
-//                        if (baseModel == null) {
-//                            baseModel = swagger.getDefinitions().get(baseName);
-//                        }
-//
-//                        // only add the tags from the base model
-//                        if (baseModel.getVendorExtensions().containsKey("x-okta-tags")) {
-//                            model.setVendorExtension("x-okta-tags", baseModel.getVendorExtensions().get("x-okta-tags"));
-//                        }
-//
-//                        model.setVendorExtension("x-isResourceList", true);
-//                        model.setVendorExtension("x-baseType", baseName);
-//                        model.setType(modelName);
-//
-//                        result.put(modelName, model);
-//                    }
-//                }
+                        String modelName = baseName + "List";
+
+                        ModelImpl model = new ModelImpl();
+                        model.setName(modelName);
+                        model.setAllowEmptyValue(false);
+                        model.setDescription("Collection List for " + baseName);
+
+                        if (baseModel == null) {
+                            baseModel = openAPI.getComponents().getSchemas().get(baseName);
+                        }
+
+                        // only add the tags from the base model
+                        if (baseModel.getExtensions().containsKey("x-okta-tags")) {
+                            model.setVendorExtension("x-okta-tags", baseModel.getExtensions().get("x-okta-tags"));
+                        }
+
+                        model.setVendorExtension("x-isResourceList", true);
+                        model.setVendorExtension("x-baseType", baseName);
+                        model.setType(modelName);
+
+                        result.put(modelName, model);
+                    }
+                }
             }
         }
 

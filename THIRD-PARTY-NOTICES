@@ -14,7 +14,8 @@ limitations under the License.
 
 This project includes:
   Animal Sniffer Annotations under MIT license
-  Apache Commons Codec under The Apache Software License, Version 2.0
+  Apache Commons Codec under Apache License, Version 2.0
+  Apache Commons IO under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpCore under Apache License, Version 2.0
@@ -24,27 +25,37 @@ This project includes:
   Bean Validation API under The Apache Software License, Version 2.0
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
+  btf under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   commonmark-java core under BSD 2-Clause License
   Commons CLI under The Apache Software License, Version 2.0
-  Commons IO under The Apache Software License, Version 2.0
   FindBugs-jsr305 under The Apache Software License, Version 2.0
+  Handlebars under The Apache Software License, Version 2.0
+  Jackson datatype: JSR310 under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
+  jackson-coreutils under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
+  jackson-coreutils-equivalence under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   jackson-databind under The Apache Software License, Version 2.0
   Jackson-dataformat-YAML under The Apache Software License, Version 2.0
-  JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
-  JavaMail API jar under CDDL or GPLv2+CE
+  Jakarta Bean Validation API under Apache License 2.0
+  jakarta.xml.bind-api under Eclipse Distribution License - v 1.0
+  JavaBeans Activation Framework API jar under EDL 1.0
+  JavaMail API (no providers) under CDDL/GPLv2+CE
   javax.annotation API under CDDL + GPLv2 with classpath exception
   JCL 1.2 implemented over SLF4J under Apache License, Version 2.0
   JJWT :: API under Apache License, Version 2.0
   jmustache under The (New) BSD License
-  Joda-Time under Apache 2
+  Joda-Time under Apache License, Version 2.0
   JOpt Simple under The MIT License
+  JSON in Java under The JSON License
+  json-patch under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-core under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-validator under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   libphonenumber under The Apache Software License, Version 2.0
+  Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
+  Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Mozilla Rhino under Mozilla Public License, Version 2.0
-  null under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
+  msg-simple under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   OkHttp under Apache 2.0
   Okio under Apache 2.0
   Okta Commons :: Config Check under The Apache License, Version 2.0
@@ -56,10 +67,14 @@ This project includes:
   SnakeYAML under Apache License, Version 2.0
   swagger-annotations under Apache License 2.0
   swagger-codegen (core library) under Apache License 2.0
+  swagger-codegen-generators under Apache License, Version 2.0
   swagger-compat-spec-parser under Apache License 2.0
   swagger-core under Apache License 2.0
   swagger-models under Apache License 2.0
   swagger-parser under Apache License 2.0
+  swagger-parser-v2-converter under Apache License 2.0
+  swagger-parser-v3 under Apache License 2.0
+  uri-template under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
 
 
 This project also includes modified code based on the following copyrights:
