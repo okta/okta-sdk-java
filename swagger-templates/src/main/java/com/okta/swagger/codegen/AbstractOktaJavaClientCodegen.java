@@ -15,21 +15,20 @@
  */
 package com.okta.swagger.codegen;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.samskivert.mustache.Mustache;
 
 import io.swagger.codegen.v3.*;
 import io.swagger.codegen.v3.generators.java.AbstractJavaCodegen;
-import io.swagger.models.Model;
-import io.swagger.models.ModelImpl;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.media.*;
+import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.media.ObjectSchema;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.Discriminator;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -195,29 +194,22 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     protected void buildDiscriminationMap(OpenAPI openAPI) {
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
-            if(model.getExtensions() != null) {
-                Object discriminatorMapExtension = model.getExtensions().get("x-openapi-v3-discriminator");
-                if (discriminatorMapExtension != null) {
-                    if (discriminatorMapExtension instanceof HashMap) {
-                        String propertyName = ((HashMap) discriminatorMapExtension).get("propertyName").toString();
-                        Object mapping = ((HashMap) discriminatorMapExtension).get("mapping");
-                        ObjectMapper mapper = new ObjectMapper();
-                        Map<String, String> result = mapper.convertValue(mapping, Map.class);
-                        result = result.entrySet().stream()
-                            .collect(
-                                Collectors.toMap(
-                                    e -> e.getValue().substring(e.getValue().lastIndexOf('/') + 1),
-                                    e -> e.getKey(),
-                                    (oldValue, newValue) -> newValue
-                                )
-                            );
-                        result.forEach((key, value) -> reverseDiscriminatorMap.put(key, name));
-                        discriminatorMap.put(name, new Discriminator(name, propertyName, result));
-                    } else {
-                        System.out.println("");
-                    }
-                }
-            }
+            //TODO Review this
+//            if (model.getDiscriminator() != null) {
+//                Discriminator discriminator = model.getDiscriminator();
+//                String propertyName = discriminator.getPropertyName();
+//                Map<String, String> mapping = discriminator.getMapping();
+//                result = result.entrySet().stream()
+//                    .collect(
+//                        Collectors.toMap(
+//                            e -> e.getValue().substring(e.getValue().lastIndexOf('/') + 1),
+//                            e -> e.getKey(),
+//                            (oldValue, newValue) -> newValue
+//                        )
+//                    );
+//                result.forEach((key, value) -> reverseDiscriminatorMap.put(key, name));
+//                discriminatorMap.put(name, new Discriminator(name, propertyName, result));
+//            }
         });
     }
 

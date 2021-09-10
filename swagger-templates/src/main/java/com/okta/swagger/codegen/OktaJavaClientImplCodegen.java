@@ -22,6 +22,7 @@ import io.swagger.codegen.v3.CodegenOperation;
 import io.swagger.codegen.v3.CodegenProperty;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.media.Discriminator;
 import io.swagger.v3.oas.models.media.Schema;
 import org.apache.commons.lang3.BooleanUtils;
 
@@ -177,8 +178,9 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             if (discriminatorMap.containsKey(parent)) {
                 Discriminator discriminator = discriminatorMap.get(parent);
 
-                String fieldName = discriminator.getFieldName();
-                String defaultValue = discriminator.getDefaultFieldValue(name);
+                //TODO Review this
+                String fieldName = discriminator.getPropertyName();
+                String defaultValue = discriminator.getMapping().get(name);
 
                 defaultValuesMap.put(fieldName, defaultValue);
             }
@@ -285,9 +287,10 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         Map<String, Object> destMap = new HashMap<>();
         rootConfigMap.put("config", destMap);
         discriminatorMap.values().forEach(disc -> {
-            String fqn = toModelImport(disc.getParentDefName());
-            String fieldName = disc.getFieldName();
-            Map<String, String> valueMap = disc.getValueDefMap().entrySet().stream()
+            //TODO Review this
+            String fqn = toModelImport(disc.getPropertyName());
+            String fieldName = disc.getPropertyName();
+            Map<String, String> valueMap = disc.getMapping().entrySet().stream()
                     .collect(Collectors.toMap(e -> e.getValue(), e -> toModelImport(e.getKey())));
             Map<String, Object> entries = new HashMap<>();
             entries.put("fieldName", fieldName);
