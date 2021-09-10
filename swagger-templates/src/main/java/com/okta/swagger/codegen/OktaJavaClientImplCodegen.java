@@ -57,7 +57,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
     @Override
     public String getDefaultTemplateDir() {
-        return null;
+        return "OktaJavaImpl";
     }
 
     @Override

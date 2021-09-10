@@ -299,183 +299,164 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         });
     }
 
-    private void addAllIfNotNull(List<ObjectNode> destList, List<ObjectNode> srcList) {
-        if (srcList != null) {
-            destList.addAll(srcList);
-        }
-    }
-
-    //TODO Review
     private void handleOktaLinkedOperations(OpenAPI openAPI) {
-//        // we want to move any operations defined by the 'x-okta-operations' or 'x-okta-crud'
-//        // or 'x-okta-multi-operation' vendor extension to the model
-//        Map<String, Model> modelMap = swagger.getDefinitions().entrySet().stream()
-//                .filter(e -> e.getValue().getVendorExtensions().containsKey("x-okta-operations")
-//                        || e.getValue().getVendorExtensions().containsKey("x-okta-crud")
-//                        || e.getValue().getVendorExtensions().containsKey("x-okta-multi-operation"))
-//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-//
-//
-//        modelMap.forEach((k, model) -> {
-//            List<ObjectNode> linkNodes = new ArrayList<>();
-//
-//            addAllIfNotNull(linkNodes, (List<ObjectNode>) model.getVendorExtensions().get("x-okta-operations"));
-//            addAllIfNotNull(linkNodes, (List<ObjectNode>) model.getVendorExtensions().get("x-okta-crud"));
-//            addAllIfNotNull(linkNodes, (List<ObjectNode>) model.getVendorExtensions().get("x-okta-multi-operation"));
-//
-//            Map<String, CodegenOperation> operationMap = new HashMap<>();
-//
-//            linkNodes.forEach(n -> {
-//                String operationId = n.get("operationId").textValue();
-//
-//                // find the swagger path operation
-//                swagger.getPaths().forEach((pathName, path) -> {
-//                    Optional<Map.Entry<HttpMethod, Operation>> operationEntry =
-//                        path.getOperationMap().entrySet().stream().filter(
-//                            oper -> {
-//                                //Looking for an operationId in paths:path:operationId
-//                                if (oper.getValue().getOperationId() != null
-//                                    && oper.getValue().getOperationId().equals(operationId)) {
-//                                    return true;
-//                                }
-//                                //Looking for an operationId in paths:path:method:x-okta-multi-operation:operationId
-//                                List<Operation> xOktaMultiOperation = getOktaMultiOperationObject(oper.getValue());
-//                                if (xOktaMultiOperation != null &&
-//                                    xOktaMultiOperation
-//                                        .stream()
-//                                        .anyMatch(multiOper -> multiOper.getOperationId().equals(operationId))
-//                                    ) {
-//                                    return true;
-//                                }
-//                                return false;
-//                            }
-//                        ).findFirst();
-//
-//                    if (operationEntry.isPresent()) {
-//
-//                        Operation operation = operationEntry.get().getValue();
-//
-//                        //Trying to get an Operation from x-okta-multi-operation
-//                        Operation xOktaMultiOperation = produceOperationFromXOktaMultiOperation(operation, operationId);
-//
-//                        CodegenOperation cgOperation = fromOperation(
-//                                pathName,
-//                                operationEntry.get().getKey().name().toLowerCase(),
-//                            xOktaMultiOperation != null ? xOktaMultiOperation : operation,
-//                                swagger.getDefinitions(),
-//                                swagger);
-//
-//                        boolean canLinkMethod = true;
-//
-//                        JsonNode aliasNode = n.get("alias");
-//                        String alias = null;
-//                        if (aliasNode != null) {
-//                            alias = aliasNode.textValue();
-//                            cgOperation.vendorExtensions.put("alias", alias);
-//
-//                            if ("update".equals(alias)) {
-//                                model.getVendorExtensions().put("saveable", true);
-//                            } else if ("delete".equals(alias)) {
-//                                model.getVendorExtensions().put("deletable", true);
-//                                cgOperation.vendorExtensions.put("selfDelete", true);
-//                            }
-//                            else if ("read".equals(alias) || "create".equals(alias)) {
-//                                canLinkMethod = false;
-//                            }
-//                        }
-//
-//                        // we do NOT link read or create methods, those need to be on the parent object
-//                        if (canLinkMethod) {
-//
-//                            // now any params that match the models we need to use the model value directly
-//                            // for example if the path contained {id} we would call getId() instead
-//
-//                            Map<String, String> argMap = createArgMap(n);
-//
-//                            List<CodegenParameter> cgOtherPathParamList = new ArrayList<>();
-//                            List<CodegenParameter> cgParamAllList = new ArrayList<>();
-//                            List<CodegenParameter> cgParamModelList = new ArrayList<>();
-//
-//                            cgOperation.pathParams.forEach(param -> {
-//
-//                                if (argMap.containsKey(param.paramName)) {
-//
-//                                    String paramName = argMap.get(param.paramName);
-//                                    cgParamModelList.add(param);
-//
-//                                    if (model.getProperties() != null) {
-//                                        CodegenProperty cgProperty = fromProperty(paramName, model.getProperties().get(paramName));
-//                                        if(cgProperty == null && cgOperation.operationId.equals("deleteLinkedObjectDefinition")) {
-//                                            cgProperty = new CodegenProperty();
-//                                            cgProperty.getter = "getPrimary().getName";
-//                                        }
-//                                        param.vendorExtensions.put("fromModel", cgProperty);
-//                                    } else {
-//                                        System.err.println("Model '" + model.getTitle() + "' has no properties");
-//                                    }
-//
-//                                } else {
-//                                    cgOtherPathParamList.add(param);
-//                                }
-//                            });
-//
-//                            // remove the body param if the body is the object itself
-//                            for (Iterator<CodegenParameter> iter = cgOperation.bodyParams.iterator(); iter.hasNext(); ) {
-//                                CodegenParameter bodyParam = iter.next();
-//                                if (argMap.containsKey(bodyParam.paramName)) {
-//                                    cgOperation.vendorExtensions.put("bodyIsSelf", true);
-//                                    iter.remove();
-//                                }
-//                            }
-//
-//                            // do not add the parrent path params to the list (they will be parsed from the href)
-//                            SortedSet<String> pathParents = parentPathParams(n);
-//                            cgOtherPathParamList.forEach(param -> {
-//                                if (!pathParents.contains(param.paramName)) {
-//                                    cgParamAllList.add(param);
-//                                }
-//                            });
-//
-//                            //do not implement interface Deletable when delete method has some arguments
-//                            if(alias.equals("delete") && cgParamAllList.size() > 0) {
-//                                model.getVendorExtensions().put("deletable", false);
-//                            }
-//
-//                            if (!pathParents.isEmpty()) {
-//                                cgOperation.vendorExtensions.put("hasPathParents", true);
-//                                cgOperation.vendorExtensions.put("pathParents", pathParents);
-//                            }
-//
-//                            cgParamAllList.addAll(cgOperation.bodyParams);
-//                            cgParamAllList.addAll(cgOperation.queryParams);
-//                            cgParamAllList.addAll(cgOperation.headerParams);
-//
-//                            // set all params to have more
-//                            cgParamAllList.forEach(param -> param.hasMore = true);
-//
-//                            // then grab the last one and mark it as the last
-//                            if (!cgParamAllList.isEmpty()) {
-//                                CodegenParameter param = cgParamAllList.get(cgParamAllList.size() - 1);
-//                                param.hasMore = false;
-//                            }
-//
-//                            cgOperation.vendorExtensions.put("allParams", cgParamAllList);
-//                            cgOperation.vendorExtensions.put("fromModelPathParams", cgParamModelList);
-//
-//                            addOptionalExtensionAndBackwardCompatibleArgs(cgOperation, cgParamAllList);
-//
-//                            operationMap.put(cgOperation.operationId, cgOperation);
-//
-//                            // mark the operation as moved so we do NOT add it to the client
-//                            operation.getVendorExtensions().put("moved", true);
-//
-//                        }
-//                    }
-//                });
-//            });
-//
-//            model.getVendorExtensions().put("operations", operationMap.values());
-//        });
+        // we want to move any operations defined by the 'x-okta-operations' or 'x-okta-crud'
+        // or 'x-okta-multi-operation' vendor extension to the model
+        Map<String, Schema> schemaMap = openAPI.getComponents().getSchemas().entrySet().stream()
+            .filter(e -> e.getValue().getExtensions() != null)
+            .filter(e -> e.getValue().getExtensions().containsKey("x-okta-operations")
+                || e.getValue().getExtensions().containsKey("x-okta-crud")
+                || e.getValue().getExtensions().containsKey("x-okta-multi-operation"))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        schemaMap.forEach((k, schema) -> {
+            List<HashMap> operationsList = new ArrayList<>();
+
+            Stream.of(schema.getExtensions().get("x-okta-operations"),
+                    schema.getExtensions().get("x-okta-crud"),
+                    schema.getExtensions().get("x-okta-multi-operation"))
+                .filter(Objects::nonNull)
+                .forEach(obj -> {
+                    if (obj instanceof List) {
+                        operationsList.addAll((List) obj);
+                    }
+                });
+
+            Map<String, CodegenOperation> operationMap = new HashMap<>();
+
+            operationsList.forEach(operaionNode -> {
+                String operationId = operaionNode.get("operationId").toString();
+
+                // find the swagger path operation
+                openAPI.getPaths().forEach((pathName, path) -> {
+
+                    Map<String, Operation> allMethods = new HashMap<>();
+                    allMethods.put("GET", path.getGet());
+                    allMethods.put("POST", path.getPost());
+                    allMethods.put("PUT", path.getPut());
+                    allMethods.put("DELETE", path.getDelete());
+
+                    Optional<Map.Entry<String, Operation>> operationEntry =
+                        allMethods.entrySet().stream()
+                            .filter(entry -> entry.getValue() != null)
+                            .filter(entry -> entry.getValue().getOperationId() != null
+                                && entry.getValue().getOperationId().equals(operationId))
+                            .findFirst();
+
+                        if (operationEntry.isPresent()) {
+                            String httpMethod = operationEntry.get().getKey();
+                            Operation operation = operationEntry.get().getValue();
+
+                            //Trying to get an Operation from x-okta-multi-operation
+                            Operation xOktaMultiOperation = produceOperationFromXOktaMultiOperation(operation, operationId);
+
+                            CodegenOperation cgOperation = fromOperation(
+                                pathName,
+                                httpMethod,
+                                xOktaMultiOperation != null ? xOktaMultiOperation : operation,
+                                openAPI.getComponents().getSchemas(),
+                                openAPI);
+
+                            boolean canLinkMethod = true;
+
+                            Object aliasNode = operaionNode.get("alias");
+                            String alias = null;
+                            if (aliasNode != null) {
+                                alias = aliasNode.toString();
+                                cgOperation.vendorExtensions.put("alias", alias);
+
+                                if ("update".equals(alias)) {
+                                    schema.getExtensions().put("saveable", true);
+                                } else if ("delete".equals(alias)) {
+                                    schema.getExtensions().put("deletable", true);
+                                    cgOperation.vendorExtensions.put("selfDelete", true);
+                                } else if ("read".equals(alias) || "create".equals(alias)) {
+                                    canLinkMethod = false;
+                                }
+                            }
+
+                            // we do NOT link read or create methods, those need to be on the parent object
+                            if (canLinkMethod) {
+
+                                // now any params that match the models we need to use the model value directly
+                                // for example if the path contained {id} we would call getId() instead
+
+                                Map<String, String> argMap = createArgMap(operaionNode);
+
+                                List<CodegenParameter> cgOtherPathParamList = new ArrayList<>();
+                                List<CodegenParameter> cgParamAllList = new ArrayList<>();
+                                List<CodegenParameter> cgParamModelList = new ArrayList<>();
+
+                                cgOperation.pathParams.forEach(param -> {
+
+                                    if (argMap.containsKey(param.paramName)) {
+
+                                        String paramName = argMap.get(param.paramName);
+                                        cgParamModelList.add(param);
+
+                                        if (schema.getProperties() != null) {
+                                            CodegenProperty cgProperty = fromProperty(paramName, (Schema)schema.getProperties().get(paramName));
+                                            if (cgProperty == null && cgOperation.operationId.equals("deleteLinkedObjectDefinition")) {
+                                                cgProperty = new CodegenProperty();
+                                                cgProperty.getter = "getPrimary().getName";
+                                            }
+                                            param.vendorExtensions.put("fromModel", cgProperty);
+                                        } else {
+                                            System.err.println("Model '" + schema.getTitle() + "' has no properties");
+                                        }
+
+                                    } else {
+                                        cgOtherPathParamList.add(param);
+                                    }
+                                });
+
+                                // remove the body param if the body is the object itself
+                                for (Iterator<CodegenParameter> iter = cgOperation.bodyParams.iterator(); iter.hasNext(); ) {
+                                    CodegenParameter bodyParam = iter.next();
+                                    if (argMap.containsKey(bodyParam.paramName)) {
+                                        cgOperation.vendorExtensions.put("bodyIsSelf", true);
+                                        iter.remove();
+                                    }
+                                }
+
+                                // do not add the parent path params to the list (they will be parsed from the href)
+                                SortedSet<String> pathParents = parentPathParams(operaionNode);
+                                cgOtherPathParamList.forEach(param -> {
+                                    if (!pathParents.contains(param.paramName)) {
+                                        cgParamAllList.add(param);
+                                    }
+                                });
+
+                                //do not implement interface Deletable when delete method has some arguments
+                                if (alias.equals("delete") && cgParamAllList.size() > 0) {
+                                    schema.getExtensions().put("deletable", false);
+                                }
+
+                                if (!pathParents.isEmpty()) {
+                                    cgOperation.vendorExtensions.put("hasPathParents", true);
+                                    cgOperation.vendorExtensions.put("pathParents", pathParents);
+                                }
+
+                                cgParamAllList.addAll(cgOperation.bodyParams);
+                                cgParamAllList.addAll(cgOperation.queryParams);
+                                cgParamAllList.addAll(cgOperation.headerParams);
+
+                                cgOperation.vendorExtensions.put("allParams", cgParamAllList);
+                                cgOperation.vendorExtensions.put("fromModelPathParams", cgParamModelList);
+
+                                addOptionalExtensionAndBackwardCompatibleArgs(cgOperation, cgParamAllList);
+
+                                operationMap.put(cgOperation.operationId, cgOperation);
+
+                                // mark the operation as moved, so we do NOT add it to the client
+                                operation.getExtensions().put("moved", true);
+                            }
+                        }
+                });
+            });
+
+            schema.getExtensions().put("operations", operationMap.values());
+        });
     }
 
     private List<Operation> getOktaMultiOperationObject(Operation operation) {
@@ -550,42 +531,43 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         return xOktaMultiOperation;
     }
 
-    private Map<String, String> createArgMap(ObjectNode n) {
+    private Map<String, String> createArgMap(HashMap hashMap) {
 
         Map<String, String> argMap = new LinkedHashMap<>();
-        ArrayNode argNodeList = (ArrayNode) n.get("arguments");
+        List argNodeList = (List) hashMap.get("arguments");
 
         if (argNodeList != null) {
             for (Iterator argNodeIter = argNodeList.iterator(); argNodeIter.hasNext(); ) {
-                JsonNode argNode = (JsonNode) argNodeIter.next();
+                HashMap argNode = (HashMap) argNodeIter.next();
 
-                if (argNode.has("src")) {
-                    String src = argNode.get("src").textValue();
-                    String dest = argNode.get("dest").textValue();
+                if (argNode.containsKey("src")) {
+                    String src = argNode.get("src").toString();
+                    String dest = argNode.get("dest").toString();
                     if (src != null) {
                         argMap.put(dest, src); // reverse lookup
                     }
                 }
 
-                if (argNode.has("self")) {
-                    String dest = argNode.get("dest").textValue();
-                    argMap.put(dest, "this"); // reverse lookup
+                if (argNode.containsKey("self")) {
+                    String dest = argNode.get("dest").toString();
+                    argMap.put(dest, "this");
                 }
             }
         }
         return argMap;
     }
 
-    private SortedSet<String> parentPathParams(ObjectNode n) {
+    private SortedSet<String> parentPathParams(HashMap hashMap) {
 
         SortedSet<String> result = new TreeSet<>();
-        ArrayNode argNodeList = (ArrayNode) n.get("arguments");
+        List argNodeList = (List) hashMap.get("arguments");
 
         if (argNodeList != null) {
-            for (JsonNode argNode : argNodeList) {
-                if (argNode.has("parentSrc")) {
-                    String src = argNode.get("parentSrc").textValue();
-                    String dest = argNode.get("dest").textValue();
+            for (Iterator argNodeIter = argNodeList.iterator(); argNodeIter.hasNext(); ) {
+                HashMap argNode = (HashMap) argNodeIter.next();
+                if (argNode.containsKey("parentSrc")) {
+                    String src = argNode.get("parentSrc").toString();
+                    String dest = argNode.get("dest").toString();
                     if (src != null) {
                         result.add(dest);
                     }
