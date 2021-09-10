@@ -28,7 +28,6 @@ import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.Discriminator;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -194,22 +193,19 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     protected void buildDiscriminationMap(OpenAPI openAPI) {
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
-            //TODO Review this
-//            if (model.getDiscriminator() != null) {
-//                Discriminator discriminator = model.getDiscriminator();
-//                String propertyName = discriminator.getPropertyName();
-//                Map<String, String> mapping = discriminator.getMapping();
-//                result = result.entrySet().stream()
-//                    .collect(
-//                        Collectors.toMap(
-//                            e -> e.getValue().substring(e.getValue().lastIndexOf('/') + 1),
-//                            e -> e.getKey(),
-//                            (oldValue, newValue) -> newValue
-//                        )
-//                    );
-//                result.forEach((key, value) -> reverseDiscriminatorMap.put(key, name));
-//                discriminatorMap.put(name, new Discriminator(name, propertyName, result));
-//            }
+            if (model.getDiscriminator() != null && model.getDiscriminator().getMapping() != null) {
+                String propertyName = model.getDiscriminator().getPropertyName();
+                Map<String, String> mapping = model.getDiscriminator().getMapping().entrySet().stream()
+                    .collect(
+                        Collectors.toMap(
+                            e -> e.getValue().substring(e.getValue().lastIndexOf('/') + 1),
+                            Map.Entry::getKey,
+                            (oldValue, newValue) -> newValue
+                        )
+                    );
+                mapping.forEach((key, value) -> reverseDiscriminatorMap.put(key, name));
+                discriminatorMap.put(name, new Discriminator(name, propertyName, mapping));
+            }
         });
     }
 
