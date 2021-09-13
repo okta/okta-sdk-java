@@ -1078,6 +1078,10 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         return super.getTypeDeclaration(propertySchema);
     }
 
+    protected void fixUpParentAndInterfaces(CodegenModel codegenModel, Map<String, CodegenModel> allModels) {
+        //Override parental method. Don't need functionality from that
+    }
+
     private Map<String, Object> castToMap(Object object) {
         return (Map<String, Object>) object;
     }

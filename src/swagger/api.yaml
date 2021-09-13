@@ -8119,7 +8119,7 @@ components:
         credentials:
           $ref: '#/components/schemas/SchemeApplicationCredentials'
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/BasicApplicationSettings'
       x-okta-defined-as:
@@ -8131,7 +8131,7 @@ components:
       type: object
       properties:
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/BookmarkApplicationSettings'
       x-okta-defined-as:
@@ -8601,7 +8601,7 @@ components:
         credentials:
           $ref: '#/components/schemas/OAuthApplicationCredentials'
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/OpenIdConnectApplicationSettings'
       x-okta-defined-as:
@@ -8866,7 +8866,7 @@ components:
         credentials:
           $ref: '#/components/schemas/SchemeApplicationCredentials'
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/SecurePasswordStoreApplicationSettings'
       x-okta-defined-as:
@@ -8986,7 +8986,7 @@ components:
       type: object
       properties:
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/WsFederationApplicationSettings'
       x-okta-defined-as:
