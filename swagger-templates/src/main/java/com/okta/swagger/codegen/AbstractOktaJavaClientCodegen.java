@@ -975,7 +975,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     private Schema getArrayPropertyFromOperation(Operation operation) {
         if (operation != null && operation.getResponses() != null) {
             ApiResponse response = operation.getResponses().get("200");
-            if (response != null) {
+            if (response != null && response.getContent() != null) {
                 MediaType mediaType = response.getContent().get("application/json");
                 if(mediaType != null) {
                     return mediaType.getSchema();
