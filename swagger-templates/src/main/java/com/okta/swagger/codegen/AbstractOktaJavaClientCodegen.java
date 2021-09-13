@@ -18,7 +18,11 @@ package com.okta.swagger.codegen;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.samskivert.mustache.Mustache;
 
-import io.swagger.codegen.v3.*;
+import io.swagger.codegen.v3.CodegenModel;
+import io.swagger.codegen.v3.CodegenOperation;
+import io.swagger.codegen.v3.CodegenParameter;
+import io.swagger.codegen.v3.CodegenProperty;
+import io.swagger.codegen.v3.CodegenType;
 import io.swagger.codegen.v3.generators.java.AbstractJavaCodegen;
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -1079,7 +1083,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     }
 
     protected void fixUpParentAndInterfaces(CodegenModel codegenModel, Map<String, CodegenModel> allModels) {
-        //Override parental method. Don't need functionality from that
+        //Override parental method. Doing nothing here.
     }
 
     private Map<String, Object> castToMap(Object object) {
