@@ -10171,19 +10171,17 @@ components:
           - INACTIVE
         type:
           type: string
-          anyOf:
-          - enum:
-            - SAML2
-            - GOOGLE
-            - FACEBOOK
-            - LINKEDIN
-            - MICROSOFT
-            - OIDC
-            - OKTA
-            - IWA
-            - AgentlessDSSO
-            - X509
-          - {}
+          enum:
+          - SAML2
+          - GOOGLE
+          - FACEBOOK
+          - LINKEDIN
+          - MICROSOFT
+          - OIDC
+          - OKTA
+          - IWA
+          - AgentlessDSSO
+          - X509
       x-okta-crud:
       - alias: create
         arguments:
