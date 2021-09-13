@@ -108,7 +108,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     @javax.annotation.Generated(
           value    = "{{generatorClass}}",
           date     = "{{generatedDate}}",
-          comments = "{{httpMethod}} - {{path}}")
+          comments = "{{httpMethod}} - {{path}}") /*D*/
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.allParams}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
@@ -119,15 +119,15 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{/vendorExtensions.pathParents}}
 {{/vendorExtensions.hasPathParents}}
 {{>paramPartial}}
-{{#vendorExtensions.isGet}}
+{{#vendorExtensions.x-is-get-method}}
 {{>apiMethodGet}}
-{{/vendorExtensions.isGet}}
-{{#vendorExtensions.isPut}}
+{{/vendorExtensions.x-is-get-method}}
+{{#vendorExtensions.x-is-put-method}}
 {{>apiMethodPut}}
-{{/vendorExtensions.isPut}}
-{{#vendorExtensions.isPost}}
+{{/vendorExtensions.x-is-put-method}}
+{{#vendorExtensions.x-is-post-method}}
 {{>apiMethodPostResource}}
-{{/vendorExtensions.isPost}}
+{{/vendorExtensions.x-is-post-method}}
 {{#vendorExtensions.isDelete}}
 {{>apiMethodDelete}}
 {{/vendorExtensions.isDelete}}
@@ -148,7 +148,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     @javax.annotation.Generated(
           value    = "{{generatorClass}}",
           date     = "{{generatedDate}}",
-          comments = "{{httpMethod}} - {{path}}")
+          comments = "{{httpMethod}} - {{path}}") /*E*/
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.nonOptionalParams}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
@@ -159,25 +159,25 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{/vendorExtensions.pathParents}}
 {{/vendorExtensions.hasPathParents}}
 {{>paramPartialOnlyRequired}}
-{{#vendorExtensions.isGet}}
+{{#vendorExtensions.x-is-get-method}}
 {{>apiMethodGet}}
-{{/vendorExtensions.isGet}}
-{{#vendorExtensions.isPut}}
+{{/vendorExtensions.x-is-get-method}}
+{{#vendorExtensions.x-is-put-method}}
     {{#vendorExtensions.optionalBody}}
         {{>apiMethodPutNoBody}}
     {{/vendorExtensions.optionalBody}}
     {{^vendorExtensions.optionalBody}}
         {{>apiMethodPut}}
     {{/vendorExtensions.optionalBody}}
-{{/vendorExtensions.isPut}}
-{{#vendorExtensions.isPost}}
+{{/vendorExtensions.x-is-put-method}}
+{{#vendorExtensions.x-is-post-method}}
     {{#vendorExtensions.optionalBody}}
 {{>apiMethodPostNoBody}}
     {{/vendorExtensions.optionalBody}}
     {{^vendorExtensions.optionalBody}}
 {{>apiMethodPostResource}}
     {{/vendorExtensions.optionalBody}}
-{{/vendorExtensions.isPost}}
+{{/vendorExtensions.x-is-post-method}}
 {{#vendorExtensions.isDelete}}
 {{>apiMethodDelete}}
 {{/vendorExtensions.isDelete}}
@@ -200,7 +200,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}")
+            comments = "{{httpMethod}} - {{path}}") /*F*/
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#value}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/value}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
@@ -211,15 +211,15 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{/vendorExtensions.pathParents}}
 {{/vendorExtensions.hasPathParents}}
 {{>paramPartialBackwardsCompat}}
-{{#vendorExtensions.isGet}}
+{{#vendorExtensions.x-is-get-method}}
 {{>apiMethodGet}}
-{{/vendorExtensions.isGet}}
-{{#vendorExtensions.isPut}}
+{{/vendorExtensions.x-is-get-method}}
+{{#vendorExtensions.x-is-put-method}}
 {{>apiMethodPut}}
-{{/vendorExtensions.isPut}}
-{{#vendorExtensions.isPost}}
+{{/vendorExtensions.x-is-put-method}}
+{{#vendorExtensions.x-is-post-method}}
 {{>apiMethodPostClient}}
-{{/vendorExtensions.isPost}}
+{{/vendorExtensions.x-is-post-method}}
 {{#vendorExtensions.isDelete}}
 {{>apiMethodDelete}}
 {{/vendorExtensions.isDelete}}

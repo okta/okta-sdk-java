@@ -63,7 +63,7 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}")
+            comments = "{{httpMethod}} - {{path}}") /*D*/
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.allParams}});
 
 {{#vendorExtensions.hasOptional}}
@@ -80,8 +80,9 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}")
+            comments = "{{httpMethod}} - {{path}}") /*E*/
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.nonOptionalParams}});
+    /*{{{vendorExtensions}}}*/
 {{/vendorExtensions.hasOptional}}
 {{#vendorExtensions.hasBackwardsCompatibleParams}}
 {{#vendorExtensions.backwardsCompatibleParamsEntrySet}}
@@ -99,7 +100,7 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}")
+            comments = "{{httpMethod}} - {{path}}") /*F*/
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{vendorExtensions.alias}}({{#value}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/value}});
 {{/vendorExtensions.backwardsCompatibleParamsEntrySet}}
 {{/vendorExtensions.hasBackwardsCompatibleParams}}

@@ -24,7 +24,7 @@
 {{^vendorExtensions.bodyIsSelf}}
   {{#bodyParam}}
         getDataStore().save(href, {{bodyParam.paramName}}, this, queryArgs, headers);
-        {{#returnType}}return {{/returnType}} {{bodyParam.paramName}};
+        {{#returnType}}return {{bodyParam.paramName}}; {{/returnType}}
   {{/bodyParam}}
   {{^bodyParam}}
         getDataStore().save(href, new DefaultVoidResource(getDataStore()), this, queryArgs, headers);

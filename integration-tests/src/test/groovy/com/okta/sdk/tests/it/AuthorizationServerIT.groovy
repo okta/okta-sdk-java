@@ -25,7 +25,6 @@ import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPoli
 import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRuleActions
 import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRuleConditions
 import com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleAction
-import com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleActionInlineHook
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.inline.hook.InlineHookBuilder
 import com.okta.sdk.resource.inline.hook.InlineHookChannel
