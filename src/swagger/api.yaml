@@ -293,59 +293,59 @@ paths:
           content: {}
       security:
       - api_token: []
-  /api/v1/apps/{appId}/credentials/csrs/{csrId}/lifecycle/publish:
-    post:
-      tags:
-      - Application
-      summary: Publish Certificate Signing Request
-      description: Updates a certificate signing request for the app with a signed X.509 certificate and adds it into the application key credentials
-      operationId: publishCsrFromApplication
-      parameters:
-      - name: appId
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: csrId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/x-x509-ca-cert:
-            schema:
-              oneOf:
-              - type: string
-                format: binary
-                x-okta-operationId: publishBinaryCerCert
-              - type: string
-                format: base64
-                x-okta-operationId: publishBase64CerCert
-          application/pkix-cert:
-            schema:
-              oneOf:
-              - type: string
-                format: binary
-                x-okta-operationId: publishBinaryDerCert
-              - type: string
-                format: base64
-                x-okta-operationId: publishBase64DerCert
-          application/x-pem-file:
-            schema:
-              type: string
-              format: binary
-              x-okta-operationId: publishBinaryPemCert
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonWebKey'
-      security:
-      - api_token: []
+#  /api/v1/apps/{appId}/credentials/csrs/{csrId}/lifecycle/publish:
+#    post:
+#      tags:
+#      - Application
+#      summary: Publish Certificate Signing Request
+#      description: Updates a certificate signing request for the app with a signed X.509 certificate and adds it into the application key credentials
+#      operationId: publishCsrFromApplication
+#      parameters:
+#      - name: appId
+#        in: path
+#        required: true
+#        schema:
+#          type: string
+#      - name: csrId
+#        in: path
+#        required: true
+#        schema:
+#          type: string
+#      requestBody:
+#        required: true
+#        content:
+#          application/x-x509-ca-cert:
+#            schema:
+#              oneOf:
+#              - type: string
+#                format: binary
+#                x-okta-operationId: publishBinaryCerCert
+#              - type: string
+#                format: base64
+#                x-okta-operationId: publishBase64CerCert
+#          application/pkix-cert:
+#            schema:
+#              oneOf:
+#              - type: string
+#                format: binary
+#                x-okta-operationId: publishBinaryDerCert
+#              - type: string
+#                format: base64
+#                x-okta-operationId: publishBase64DerCert
+#          application/x-pem-file:
+#            schema:
+#              type: string
+#              format: binary
+#              x-okta-operationId: publishBinaryPemCert
+#      responses:
+#        '201':
+#          description: Created
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/JsonWebKey'
+#      security:
+#      - api_token: []
   /api/v1/apps/{appId}/credentials/keys:
     get:
       tags:
@@ -658,7 +658,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ApplicationGroupAssignment'
-        required: false
+        required: true
       responses:
         '200':
           description: Success
@@ -2266,6 +2266,7 @@ paths:
                   secretKey: xxxxxxxxxxx
                   siteKey: xxxxxxxxxxx
                   type: HCAPTCHA
+        required: true
         description: ''
       tags:
       - CAPTCHA
@@ -2369,6 +2370,7 @@ paths:
                   name: myHCaptcha
                   siteKey: xxxxxxxxxxx
                   type: HCAPTCHA
+        required: true
         description: ''
       tags:
       - CAPTCHA
@@ -3898,58 +3900,58 @@ paths:
           content: {}
       security:
       - api_token: []
-  /api/v1/idps/{idpId}/credentials/csrs/{csrId}/lifecycle/publish:
-    post:
-      tags:
-      - IdentityProvider
-      description: Update the Certificate Signing Request with a signed X.509 certificate and add it into the signing key credentials for the IdP.
-      operationId: publishCsrForIdentityProvider
-      parameters:
-      - name: idpId
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: csrId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/x-x509-ca-cert:
-            schema:
-              oneOf:
-              - type: string
-                format: binary
-                x-okta-operationId: publishBinaryCerCertForIdentityProvider
-              - type: string
-                format: base64
-                x-okta-operationId: publishBase64CerCertForIdentityProvider
-          application/pkix-cert:
-            schema:
-              oneOf:
-              - type: string
-                format: binary
-                x-okta-operationId: publishBinaryDerCertForIdentityProvider
-              - type: string
-                format: base64
-                x-okta-operationId: publishBase64DerCertForIdentityProvider
-          application/x-pem-file:
-            schema:
-              type: string
-              format: binary
-              x-okta-operationId: publishBinaryPemCertForIdentityProvider
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonWebKey'
-      security:
-      - api_token: []
+#  /api/v1/idps/{idpId}/credentials/csrs/{csrId}/lifecycle/publish:
+#    post:
+#      tags:
+#      - IdentityProvider
+#      description: Update the Certificate Signing Request with a signed X.509 certificate and add it into the signing key credentials for the IdP.
+#      operationId: publishCsrForIdentityProvider
+#      parameters:
+#      - name: idpId
+#        in: path
+#        required: true
+#        schema:
+#          type: string
+#      - name: csrId
+#        in: path
+#        required: true
+#        schema:
+#          type: string
+#      requestBody:
+#        required: true
+#        content:
+#          application/x-x509-ca-cert:
+#            schema:
+#              oneOf:
+#              - type: string
+#                format: binary
+#                x-okta-operationId: publishBinaryCerCertForIdentityProvider
+#              - type: string
+#                format: base64
+#                x-okta-operationId: publishBase64CerCertForIdentityProvider
+#          application/pkix-cert:
+#            schema:
+#              oneOf:
+#              - type: string
+#                format: binary
+#                x-okta-operationId: publishBinaryDerCertForIdentityProvider
+#              - type: string
+#                format: base64
+#                x-okta-operationId: publishBase64DerCertForIdentityProvider
+#          application/x-pem-file:
+#            schema:
+#              type: string
+#              format: binary
+#              x-okta-operationId: publishBinaryPemCertForIdentityProvider
+#      responses:
+#        '201':
+#          description: Created
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/JsonWebKey'
+#      security:
+#      - api_token: []
   /api/v1/idps/{idpId}/credentials/keys:
     get:
       tags:
@@ -8117,7 +8119,7 @@ components:
         credentials:
           $ref: '#/components/schemas/SchemeApplicationCredentials'
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/BasicApplicationSettings'
       x-okta-defined-as:
@@ -8129,7 +8131,7 @@ components:
       type: object
       properties:
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/BookmarkApplicationSettings'
       x-okta-defined-as:
@@ -8599,7 +8601,7 @@ components:
         credentials:
           $ref: '#/components/schemas/OAuthApplicationCredentials'
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/OpenIdConnectApplicationSettings'
       x-okta-defined-as:
@@ -8864,7 +8866,7 @@ components:
         credentials:
           $ref: '#/components/schemas/SchemeApplicationCredentials'
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/SecurePasswordStoreApplicationSettings'
       x-okta-defined-as:
@@ -8984,7 +8986,7 @@ components:
       type: object
       properties:
         name:
-          type: object
+          type: string
         settings:
           $ref: '#/components/schemas/WsFederationApplicationSettings'
       x-okta-defined-as:
@@ -9492,6 +9494,9 @@ components:
             self:
               $ref: '#/components/schemas/hrefObject'
           readOnly: true
+      x-okta-operations:
+      - alias: update
+        operationId: updateCaptchaInstance
       x-okta-tags:
       - CAPTCHA
     EnabledStatus:
@@ -10166,19 +10171,17 @@ components:
           - INACTIVE
         type:
           type: string
-          anyOf:
-          - enum:
-            - SAML2
-            - GOOGLE
-            - FACEBOOK
-            - LINKEDIN
-            - MICROSOFT
-            - OIDC
-            - OKTA
-            - IWA
-            - AgentlessDSSO
-            - X509
-          - {}
+          enum:
+          - SAML2
+          - GOOGLE
+          - FACEBOOK
+          - LINKEDIN
+          - MICROSOFT
+          - OIDC
+          - OKTA
+          - IWA
+          - AgentlessDSSO
+          - X509
       x-okta-crud:
       - alias: create
         arguments:

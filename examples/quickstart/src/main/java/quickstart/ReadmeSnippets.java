@@ -127,7 +127,8 @@ public class ReadmeSnippets {
 
     private void updateUser() {
         user.getProfile().setFirstName("new-first-name");
-        user.update();
+        //TODO Review
+        //user.update();
     }
 
     private void customAttributes() {

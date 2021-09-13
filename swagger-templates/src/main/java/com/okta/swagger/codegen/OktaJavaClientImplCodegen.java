@@ -16,7 +16,6 @@
 package com.okta.swagger.codegen;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.codegen.v3.CodegenModel;
 import io.swagger.codegen.v3.CodegenOperation;
 import io.swagger.codegen.v3.CodegenProperty;
@@ -48,7 +47,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
 //        modelTemplateFiles.put("model.mustache", ".java");
         overrideModelPackage = "com.okta.sdk.resource";
-//        apiPackage           = "com.okta.sdk.impl.client";
+        apiPackage           = "com.okta.sdk.impl.client";
 //        vendorExtensions().put("overrideModelPackage", overrideModelPackage);
 //        vendorExtensions().put("overrideApiPackage", "com.okta.sdk.client");
 //
@@ -57,7 +56,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
     @Override
     public String getDefaultTemplateDir() {
-        return null;
+        return "OktaJavaImpl";
     }
 
     @Override
@@ -288,7 +287,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             String fqn = toModelImport(disc.getParentDefName());
             String fieldName = disc.getFieldName();
             Map<String, String> valueMap = disc.getValueDefMap().entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getValue(), e -> toModelImport(e.getKey())));
+                .collect(Collectors.toMap(e -> e.getValue(), e -> toModelImport(e.getKey())));
             Map<String, Object> entries = new HashMap<>();
             entries.put("fieldName", fieldName);
             entries.put("values", valueMap);
