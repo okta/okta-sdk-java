@@ -163,6 +163,8 @@ paths:
             schema:
               $ref: '#/components/schemas/Application'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'application'
       responses:
         '200':
           description: Success
@@ -970,6 +972,8 @@ paths:
             schema:
               $ref: '#/components/schemas/AppUser'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'appUser'
       responses:
         '200':
           description: Success
@@ -1101,6 +1105,8 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthorizationServer'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'authorizationServer'
       responses:
         '200':
           description: Success
@@ -1229,6 +1235,8 @@ paths:
             schema:
               $ref: '#/components/schemas/OAuth2Claim'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'oAuth2Claim'
       responses:
         '200':
           description: Success
@@ -1600,6 +1608,8 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthorizationServerPolicy'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'authorizationServerPolicy'
       responses:
         '200':
           description: Success
@@ -1796,6 +1806,8 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthorizationServerPolicyRule'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'authorizationServerPolicyRule'
       responses:
         '200':
           description: Success
@@ -2008,6 +2020,8 @@ paths:
             schema:
               $ref: '#/components/schemas/OAuth2Scope'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'oAuth2Scope'
       responses:
         '200':
           description: Success
@@ -2578,6 +2592,8 @@ paths:
             schema:
               $ref: '#/components/schemas/EventHook'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'eventHook'
       responses:
         '200':
           description: Success
@@ -2957,6 +2973,8 @@ paths:
             schema:
               $ref: '#/components/schemas/GroupRule'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'groupRule'
       responses:
         '200':
           description: Success
@@ -3068,6 +3086,8 @@ paths:
             schema:
               $ref: '#/components/schemas/Group'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'group'
       responses:
         '200':
           description: Success
@@ -3772,6 +3792,8 @@ paths:
             schema:
               $ref: '#/components/schemas/IdentityProvider'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'identityProvider'
       responses:
         '200':
           description: Success
@@ -4324,6 +4346,8 @@ paths:
             schema:
               $ref: '#/components/schemas/InlineHook'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'inlineHook'
       responses:
         '200':
           description: Success
@@ -4545,6 +4569,8 @@ paths:
             schema:
               $ref: '#/components/schemas/ProfileMapping'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'profileMapping'
       responses:
         '200':
           description: Success
@@ -4595,6 +4621,8 @@ paths:
             schema:
               $ref: '#/components/schemas/UserSchema'
         required: false
+        extensions:
+          x-codegen-request-body-name: 'userSchema'
       responses:
         '200':
           description: successful operation
@@ -4644,6 +4672,8 @@ paths:
             schema:
               $ref: '#/components/schemas/UserSchema'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'userSchema'
       responses:
         '200':
           description: Success
@@ -4833,6 +4863,8 @@ paths:
             schema:
               $ref: '#/components/schemas/UserType'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'userType'
       responses:
         '200':
           description: Success
@@ -4962,6 +4994,8 @@ paths:
             schema:
               $ref: '#/components/schemas/Policy'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'policy'
       responses:
         '200':
           description: Success
@@ -5123,6 +5157,8 @@ paths:
             schema:
               $ref: '#/components/schemas/PolicyRule'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'policyRule'
       responses:
         '200':
           description: Success
@@ -5371,6 +5407,8 @@ paths:
             schema:
               $ref: '#/components/schemas/SmsTemplate'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'smsTemplate'
       responses:
         '200':
           description: Success
@@ -5399,6 +5437,8 @@ paths:
             schema:
               $ref: '#/components/schemas/SmsTemplate'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'smsTemplate'
       responses:
         '200':
           description: Success
@@ -5453,6 +5493,8 @@ paths:
             schema:
               $ref: '#/components/schemas/ThreatInsightConfiguration'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'threatInsightConfiguration'
       responses:
         '200':
           description: Success
@@ -5558,6 +5600,8 @@ paths:
             schema:
               $ref: '#/components/schemas/TrustedOrigin'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'trustedOrigin'
       responses:
         '200':
           description: Success
@@ -5794,6 +5838,8 @@ paths:
             schema:
               $ref: '#/components/schemas/User'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'user'
       responses:
         '200':
           description: Success
@@ -7447,6 +7493,8 @@ paths:
             schema:
               $ref: '#/components/schemas/NetworkZone'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'networkZone'
       responses:
         '200':
           description: Success
