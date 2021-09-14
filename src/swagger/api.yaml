@@ -7494,7 +7494,7 @@ paths:
               $ref: '#/components/schemas/NetworkZone'
         required: true
         extensions:
-          x-codegen-request-body-name: 'networkZone'
+          x-codegen-request-body-name: 'zone'
       responses:
         '200':
           description: Success

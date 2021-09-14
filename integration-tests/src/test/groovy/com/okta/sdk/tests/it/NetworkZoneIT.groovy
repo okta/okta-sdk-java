@@ -43,7 +43,6 @@ class NetworkZoneIT extends ITSupport {
                 assertThat(networkZone.getStatus() instanceof NetworkZoneStatus, equalTo(true))
                 assertThat(networkZone.getUsage(), notNullValue())
                 assertThat(networkZone.getUsage() instanceof NetworkZoneUsage, equalTo(true))
-                assertThat(networkZone.getSystem(), notNullValue())
             })
     }
 
