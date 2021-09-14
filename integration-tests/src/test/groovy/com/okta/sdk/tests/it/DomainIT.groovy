@@ -18,6 +18,7 @@ package com.okta.sdk.tests.it
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.domain.Domain
 import com.okta.sdk.resource.domain.DomainCertificateSourceType
+import com.okta.sdk.resource.domain.DomainResponse
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
@@ -44,7 +45,7 @@ class DomainIT extends ITSupport {
         assertThat(domainCreated, notNullValue())
         assertThat(domainCreated.getId(), notNullValue())
         assertThat(domainCreated.getDomain(), equalTo(domain))
-        assertThat(domainCreated.getCertificateSourceType(), equalTo(DomainCertificateSourceType.MANUAL))
+        assertThat(domainCreated.getCertificateSourceType(), equalTo(DomainResponse.CertificateSourceTypeEnum.MANUAL))
 
         def domainFetched = client.getDomain(domainCreated.getId())
 
