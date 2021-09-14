@@ -65,7 +65,7 @@ public interface {{classname}} extends DataStore {
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}") /*A*/
+            comments = "{{httpMethod}} - {{path}}")
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/allParams}});
 
     {{#vendorExtensions.hasOptional}}
@@ -82,7 +82,7 @@ public interface {{classname}} extends DataStore {
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}") /*B*/
+            comments = "{{httpMethod}} - {{path}}")
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.nonOptionalParams}});
     {{/vendorExtensions.hasOptional}}
 
@@ -101,7 +101,7 @@ public interface {{classname}} extends DataStore {
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}") /*C*/
+            comments = "{{httpMethod}} - {{path}}")
     {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#value}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/value}});
 
 {{/vendorExtensions.backwardsCompatibleParamsEntrySet}}
