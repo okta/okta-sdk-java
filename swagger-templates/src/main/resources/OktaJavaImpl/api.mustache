@@ -24,8 +24,6 @@ import com.okta.commons.http.QueryString;
 import com.okta.commons.http.HttpHeaders;
 import com.okta.sdk.impl.config.ClientConfiguration;
 
-//import {{vendorExtensions.overrideApiPackage}}.*;
-
 {{#imports}}import {{import}};
 {{/imports}}
 import com.okta.sdk.impl.ds.InternalDataStore;
@@ -90,18 +88,18 @@ public class {{classname}} extends com.okta.sdk.impl.client.BaseClient implement
             comments = "{{httpMethod}} - {{path}}") /*A*/
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/allParams}}) {
 {{>paramPartial}}
-{{#vendorExtensions.isGet}}
+{{#vendorExtensions.x-is-get-method}}
 {{>apiMethodGet}}
-{{/vendorExtensions.isGet}}
-{{#vendorExtensions.isPut}}
+{{/vendorExtensions.x-is-get-method}}
+{{#vendorExtensions.x-is-put-method}}
 {{>apiMethodPut}}
-{{/vendorExtensions.isPut}}
-{{#vendorExtensions.isPost}}
+{{/vendorExtensions.x-is-put-method}}
+{{#vendorExtensions.x-is-post-method}}
 {{>apiMethodPostClient}}
-{{/vendorExtensions.isPost}}
-{{#vendorExtensions.isDelete}}
+{{/vendorExtensions.x-is-post-method}}
+{{#vendorExtensions.x-is-delete-method}}
 {{>apiMethodDelete}}
-{{/vendorExtensions.isDelete}}
+{{/vendorExtensions.x-is-delete-method}}
     /*{{{vendorExtensions}}}*/
     }
 
@@ -123,23 +121,23 @@ public class {{classname}} extends com.okta.sdk.impl.client.BaseClient implement
             comments = "{{httpMethod}} - {{path}}") /*B*/
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.nonOptionalParams}}) {
 {{>paramPartialOnlyRequired}}
-{{#vendorExtensions.isGet}}
+{{#vendorExtensions.x-is-get-method}}
 {{>apiMethodGet}}
-{{/vendorExtensions.isGet}}
-{{#vendorExtensions.isPut}}
+{{/vendorExtensions.x-is-get-method}}
+{{#vendorExtensions.x-is-put-method}}
 {{>apiMethodPut}}
-{{/vendorExtensions.isPut}}
-{{#vendorExtensions.isPost}}
+{{/vendorExtensions.x-is-put-method}}
+{{#vendorExtensions.x-is-post-method}}
 {{#vendorExtensions.optionalBody}}
 {{>apiMethodPostNoBody}}
 {{/vendorExtensions.optionalBody}}
 {{^vendorExtensions.optionalBody}}
 {{>apiMethodPostClient}}
 {{/vendorExtensions.optionalBody}}
-{{/vendorExtensions.isPost}}
-{{#vendorExtensions.isDelete}}
+{{/vendorExtensions.x-is-post-method}}
+{{#vendorExtensions.x-is-delete-method}}
 {{>apiMethodDelete}}
-{{/vendorExtensions.isDelete}}
+{{/vendorExtensions.x-is-delete-method}}
     }
 {{/vendorExtensions.hasOptional}}
 
@@ -162,18 +160,18 @@ public class {{classname}} extends com.okta.sdk.impl.client.BaseClient implement
             comments = "{{httpMethod}} - {{path}}") /*C*/
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#value}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/value}}) {
 {{>paramPartialBackwardsCompat}}
-{{#vendorExtensions.isGet}}
+{{#vendorExtensions.x-is-get-method}}
 {{>apiMethodGet}}
-{{/vendorExtensions.isGet}}
-{{#vendorExtensions.isPut}}
+{{/vendorExtensions.x-is-get-method}}
+{{#vendorExtensions.x-is-put-method}}
 {{>apiMethodPut}}
-{{/vendorExtensions.isPut}}
-{{#vendorExtensions.isPost}}
+{{/vendorExtensions.x-is-put-method}}
+{{#vendorExtensions.x-is-post-method}}
 {{>apiMethodPostClient}}
-{{/vendorExtensions.isPost}}
-{{#vendorExtensions.isDelete}}
+{{/vendorExtensions.x-is-post-method}}
+{{#vendorExtensions.x-is-delete-method}}
 {{>apiMethodDelete}}
-{{/vendorExtensions.isDelete}}
+{{/vendorExtensions.x-is-delete-method}}
     }
 {{/vendorExtensions.backwardsCompatibleParamsEntrySet}}
 {{/vendorExtensions.hasBackwardsCompatibleParams}}

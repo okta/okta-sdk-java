@@ -35,6 +35,7 @@ import com.okta.sdk.impl.resource.EnumProperty;
 import com.okta.sdk.impl.resource.MapProperty;
 import com.okta.sdk.impl.resource.DefaultVoidResource;
 import com.okta.sdk.resource.VoidResource;
+import com.okta.sdk.resource.Resource; //TODO Verify this
 {{#vendorExtensions.top-level}}
 import com.okta.sdk.resource.Resource;
 {{/vendorExtensions.top-level}}
@@ -128,9 +129,9 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{#vendorExtensions.x-is-post-method}}
 {{>apiMethodPostResource}}
 {{/vendorExtensions.x-is-post-method}}
-{{#vendorExtensions.isDelete}}
+{{#vendorExtensions.x-is-delete-method}}
 {{>apiMethodDelete}}
-{{/vendorExtensions.isDelete}}
+{{/vendorExtensions.x-is-delete-method}}
     }
 {{#vendorExtensions.hasOptional}}
 
@@ -178,9 +179,9 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{>apiMethodPostResource}}
     {{/vendorExtensions.optionalBody}}
 {{/vendorExtensions.x-is-post-method}}
-{{#vendorExtensions.isDelete}}
+{{#vendorExtensions.x-is-delete-method}}
 {{>apiMethodDelete}}
-{{/vendorExtensions.isDelete}}
+{{/vendorExtensions.x-is-delete-method}}
      }
 {{/vendorExtensions.hasOptional}}
 
@@ -220,9 +221,9 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{#vendorExtensions.x-is-post-method}}
 {{>apiMethodPostClient}}
 {{/vendorExtensions.x-is-post-method}}
-{{#vendorExtensions.isDelete}}
+{{#vendorExtensions.x-is-delete-method}}
 {{>apiMethodDelete}}
-{{/vendorExtensions.isDelete}}
+{{/vendorExtensions.x-is-delete-method}}
     }
 {{/vendorExtensions.backwardsCompatibleParamsEntrySet}}
 {{/vendorExtensions.hasBackwardsCompatibleParams}}
