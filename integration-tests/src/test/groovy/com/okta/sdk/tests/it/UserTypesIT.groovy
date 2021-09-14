@@ -127,7 +127,7 @@ class UserTypesIT extends ITSupport {
                 }
             })
 
-        def updatedUserSchema = client.updateUserProfile(schemaId, userSchema)
+        def updatedUserSchema = client.updateUserProfile(userSchema, schemaId)
         assertThat(updatedUserSchema, notNullValue())
         assertThat(updatedUserSchema.getDefinitions().getCustom(), notNullValue())
 
