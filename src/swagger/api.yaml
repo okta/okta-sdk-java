@@ -3033,7 +3033,7 @@ paths:
       tags:
       - Group
       summary: List Group Rules
-      description: Lists all group rules for your organization.
+      description: Fetches a group from your organization.
       operationId: getGroup
       parameters:
       - name: groupId
@@ -4889,7 +4889,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AuthorizationServerPolicy'
+                  $ref: '#/components/schemas/Policy'
       security:
       - api_token: []
     post:
@@ -7986,6 +7986,8 @@ components:
           type: string
         notifications:
           $ref: '#/components/schemas/ApplicationSettingsNotifications'
+        notes:
+          $ref: '#/components/schemas/ApplicationSettingsNotes'
       x-okta-tags:
       - Application
     ApplicationSettingsApplication:
@@ -8025,6 +8027,15 @@ components:
             type: string
       x-okta-tags:
       - Application
+    ApplicationSettingsNotes:
+      properties:
+        admin:
+          type: string
+        enduser:
+          type: string
+      type: object
+      x-okta-tags:
+      - Application
     ApplicationSignOnMode:
       type: string
       enum:
@@ -8046,6 +8057,8 @@ components:
           type: object
           additionalProperties:
             type: boolean
+        autoLaunch:
+          type: boolean
         autoSubmitToolbar:
           type: boolean
         hide:
@@ -8770,6 +8783,10 @@ components:
           type: boolean
         idpIssuer:
           type: string
+        inlineHooks:
+          items:
+            $ref: '#/components/schemas/SignOnInlineHook'
+          type: array
         recipient:
           type: string
         recipientOverride:
@@ -8794,6 +8811,13 @@ components:
           type: string
         subjectNameIdTemplate:
           type: string
+      x-okta-tags:
+      - Application
+    SignOnInlineHook:
+      properties:
+        id:
+          type: string
+          readOnly: false
       x-okta-tags:
       - Application
     SpCertificate:
@@ -8911,6 +8935,7 @@ components:
       properties:
         name:
           type: string
+          default: template_swa
         settings:
           $ref: '#/components/schemas/SwaApplicationSettings'
       x-okta-defined-as:
@@ -8947,6 +8972,7 @@ components:
       properties:
         name:
           type: string
+          default: template_swa3field
         settings:
           $ref: '#/components/schemas/SwaThreeFieldApplicationSettings'
       x-okta-defined-as:
@@ -9437,6 +9463,16 @@ components:
           type: integer
         refreshTokenWindowMinutes:
           type: integer
+        inlineHook:
+          $ref: '#/components/schemas/TokenAuthorizationServerPolicyRuleActionInlineHook'
+      x-okta-tags:
+      - AuthorizationServerPolicy
+    TokenAuthorizationServerPolicyRuleActionInlineHook:
+      properties:
+        id:
+          type: string
+          readOnly: false
+      type: object
       x-okta-tags:
       - AuthorizationServerPolicy
     AuthorizationServerPolicyRuleConditions:
@@ -9578,7 +9614,7 @@ components:
     Domain:
       type: object
       properties:
-        certificateSourcetype:
+        certificateSourceType:
           $ref: '#/components/schemas/DomainCertificateSourceType'
         dnsRecords:
           type: array
@@ -9662,7 +9698,7 @@ components:
     DomainResponse:
       type: object
       properties:
-        certificateSourcetype:
+        certificateSourceType:
           type: string
           enum:
           - MANUAL
@@ -14113,7 +14149,7 @@ components:
       properties:
         type:
           type: string
-        valuse:
+        value:
           type: string
       x-okta-tags:
       - UserSchema

@@ -25,6 +25,7 @@ import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPoli
 import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRuleActions
 import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRuleConditions
 import com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleAction
+import com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleActionInlineHook
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.inline.hook.InlineHookBuilder
 import com.okta.sdk.resource.inline.hook.InlineHookChannel
@@ -472,7 +473,7 @@ class AuthorizationServerIT extends ITSupport {
         AuthorizationServerPolicyRule createdPolicyRule = retrievedPolicy.createPolicyRule(createdAuthorizationServer.getId(),
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(AuthorizationServerPolicyRule.TypeEnum.ACCESS)
+                .setType(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS)
                 .setPriority(1)
                 .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
@@ -497,7 +498,7 @@ class AuthorizationServerIT extends ITSupport {
         )
 
         assertThat(createdPolicyRule, notNullValue())
-        assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.ACCESS))
+        assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS))
         assertThat(createdPolicyRule.getPriority(), equalTo(1))
         assertThat(createdPolicyRule.getConditions().getPeople().getGroups().getInclude(), contains("EVERYONE"))
         assertThat(createdPolicyRule.getConditions().getGrantTypes().getInclude(),
@@ -544,7 +545,7 @@ class AuthorizationServerIT extends ITSupport {
         AuthorizationServerPolicyRule createdPolicyRule = retrievedPolicy.createPolicyRule(createdAuthorizationServer.getId(),
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(AuthorizationServerPolicyRule.TypeEnum.ACCESS)
+                .setType(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS)
                 .setPriority(1)
                 .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
@@ -565,7 +566,7 @@ class AuthorizationServerIT extends ITSupport {
         )
 
         assertThat(createdPolicyRule, notNullValue())
-        assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.ACCESS))
+        assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS))
         assertThat(createdPolicyRule.getPriority(), equalTo(1))
         assertThat(createdPolicyRule.getConditions().getPeople().getGroups().getInclude(), contains("EVERYONE"))
         assertThat(createdPolicyRule.getConditions().getGrantTypes().getInclude(),
@@ -628,7 +629,7 @@ class AuthorizationServerIT extends ITSupport {
         AuthorizationServerPolicyRule createdPolicyRule = retrievedPolicy.createPolicyRule(createdAuthorizationServer.getId(),
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(AuthorizationServerPolicyRule.TypeEnum.ACCESS)
+                .setType(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS)
                 .setPriority(1)
                 .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
@@ -641,7 +642,7 @@ class AuthorizationServerIT extends ITSupport {
         )
 
         assertThat(createdPolicyRule, notNullValue())
-        assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.ACCESS))
+        assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS))
 
         createdPolicyRule.delete(createdAuthorizationServer.getId())
 
@@ -681,7 +682,7 @@ class AuthorizationServerIT extends ITSupport {
         AuthorizationServerPolicyRule createdPolicyRule = createdPolicy.createPolicyRule(createdAuthorizationServer.getId(),
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(AuthorizationServerPolicyRule.TypeEnum.ACCESS)
+                .setType(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS)
                 .setPriority(1)
                 .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
