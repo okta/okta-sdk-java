@@ -51,7 +51,7 @@ class SmsTemplateIT extends ITSupport {
         // create template
         SmsTemplate smsTemplate = client.createSmsTemplate(client.instantiate(SmsTemplate)
             .setName(templateName)
-            .setType(SmsTemplateType.CODE)
+            .setType(SmsTemplateType.SMS_VERIFY_CODE)
             .setTemplate("\${org.name}: your verification code is \${code}")
             .setTranslations(smsTemplateTranslations))
         registerForCleanup(smsTemplate)
@@ -87,7 +87,7 @@ class SmsTemplateIT extends ITSupport {
         fullUpdateTranslations.put("de", "\${org.name}: Hier ist Ihr Registrierungscode: \${code}")
 
         smsTemplate.setName("new-" + templateName)
-        smsTemplate.setType(SmsTemplateType.CODE)
+        smsTemplate.setType(SmsTemplateType.SMS_VERIFY_CODE)
         smsTemplate.setTemplate("\${org.name}: Here is your enrollment code: \${code}")
         smsTemplate.setTranslations(fullUpdateTranslations)
 
@@ -104,7 +104,7 @@ class SmsTemplateIT extends ITSupport {
     }
 
     boolean isSmsTemplateAlreadyCreated() {
-        Optional<SmsTemplate> smsTemplate = client.listSmsTemplates(SmsTemplateType.CODE)
+        Optional<SmsTemplate> smsTemplate = client.listSmsTemplates(SmsTemplateType.SMS_VERIFY_CODE)
             .stream()
             .filter({ it.getName().startsWith("sdk-it-") })
             .findFirst()
