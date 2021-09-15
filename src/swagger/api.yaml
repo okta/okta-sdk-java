@@ -5099,6 +5099,8 @@ paths:
             schema:
               $ref: '#/components/schemas/PolicyRule'
         required: true
+        extensions:
+          x-codegen-request-body-name: 'policyRule'
       responses:
         '200':
           description: Success
