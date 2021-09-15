@@ -1807,7 +1807,7 @@ paths:
               $ref: '#/components/schemas/AuthorizationServerPolicyRule'
         required: true
         extensions:
-          x-codegen-request-body-name: 'authorizationServerPolicyRule'
+          x-codegen-request-body-name: 'policyRule'
       responses:
         '200':
           description: Success
