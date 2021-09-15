@@ -27,4 +27,12 @@ public class KeyValuePair {
         this.key = key;
         this.value = value;
     }
+
+    //TODO Used in modelImpl.mustache template
+    @Override
+    public String toString() {
+        return "setProperty(\""
+            + key + "\", \""
+            + value + "\");";
+    }
 }

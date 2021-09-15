@@ -61,8 +61,9 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     private final static Map<String, Property> PROPERTY_DESCRIPTORS = createPropertyDescriptorMap({{#vars}}{{name}}Property{{^@last}}, {{/@last}}{{/vars}});
 
     public Default{{classname}}(InternalDataStore dataStore) {
-        super(dataStore);{{#vendorExtensions.defaultSetter}}
-        setProperty("{{key}}", "{{value}}");{{/vendorExtensions.defaultSetter}}
+        super(dataStore);
+        {{#vendorExtensions.defaultSetter}}
+        {{{.}}}{{/vendorExtensions.defaultSetter}}
     }
 
     public Default{{classname}}(InternalDataStore dataStore, Map<String, Object> properties) {
