@@ -612,6 +612,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     }
 
     @Override
+    public String toBooleanGetter(String name) {
+        return "get" + getterAndSetterCapitalize(name);
+    }
+
+    @Override
     public String toModelFilename(String name) {
         if (modelTagMap.containsKey(name)) {
             String tag = modelTagMap.get(name);
