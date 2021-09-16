@@ -7923,8 +7923,8 @@ components:
           BOOKMARK: '#/components/schemas/BookmarkApplication'
           BROWSER_PLUGIN: '#/components/schemas/BrowserPluginApplication'
           OPENID_CONNECT: '#/components/schemas/OpenIdConnectApplication'
-          SAML_2_0: '#/components/schemas/SamlApplication'
           SAML_1_1: '#/components/schemas/SamlApplication'
+          SAML_2_0: '#/components/schemas/SamlApplication'
           SECURE_PASSWORD_STORE: '#/components/schemas/SecurePasswordStoreApplication'
           WS_FEDERATION: '#/components/schemas/WsFederationApplication'
         propertyName: signOnMode
