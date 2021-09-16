@@ -44,7 +44,22 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -54,7 +69,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     public static final String API_FILE_KEY = "apiFile";
     private static final String NON_OPTIONAL_PRAMS = "nonOptionalParams";
-    static final String X_OPENAPI_V3_SCHEMA_REF = "x-openapi-v3-schema-ref";
 
     @SuppressWarnings("hiding")
     private final Logger log = LoggerFactory.getLogger(AbstractOktaJavaClientCodegen.class);
@@ -849,17 +863,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         Map<String, Object> vendorExtensions = new LinkedHashMap<>();
         co.vendorExtensions.forEach(vendorExtensions::put);
         co.vendorExtensions = vendorExtensions;
-
-        // scan params for X_OPENAPI_V3_SCHEMA_REF, and _correct_ the param
-        co.allParams.forEach(param -> {
-            if (param.vendorExtensions.containsKey(X_OPENAPI_V3_SCHEMA_REF)) {
-                String enumDef = param.vendorExtensions.get(X_OPENAPI_V3_SCHEMA_REF).toString().replaceFirst(".*/","");
-                // TODO Review
-                // param.isEnum = true;
-                param.enumName = enumDef;
-                param.dataType = enumDef;
-            }
-        });
 
         // mark the operation as having optional params, so we can take advantage of it in the template
         addOptionalExtensionAndBackwardCompatibleArgs(co, co.allParams);
