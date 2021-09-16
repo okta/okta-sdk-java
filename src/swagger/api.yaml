@@ -662,7 +662,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ApplicationGroupAssignment'
-        required: true
+        required: false
         extensions:
           x-codegen-request-body-name: 'applicationGroupAssignment'
       responses:
