@@ -17,7 +17,7 @@ openapi: 3.0.1
 info:
   title: Okta API
   description: Allows customers to easily access the Okta API
-  termsOfService: http://developer.okta.com/terms/
+  termsOfService: https://developer.okta.com/terms/
   contact:
     name: Okta Developer Team
     url: https://developer.okta.com/
