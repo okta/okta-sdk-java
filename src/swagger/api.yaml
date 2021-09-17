@@ -8205,6 +8205,7 @@ components:
           $ref: '#/components/schemas/SchemeApplicationCredentials'
         name:
           type: string
+          default: template_basic_auth
         settings:
           $ref: '#/components/schemas/BasicApplicationSettings'
       x-okta-defined-as:
@@ -8217,6 +8218,7 @@ components:
       properties:
         name:
           type: string
+          default: bookmark
         settings:
           $ref: '#/components/schemas/BookmarkApplicationSettings'
       x-okta-defined-as:
@@ -8687,6 +8689,7 @@ components:
           $ref: '#/components/schemas/OAuthApplicationCredentials'
         name:
           type: string
+          default: oidc_client
         settings:
           $ref: '#/components/schemas/OpenIdConnectApplicationSettings'
       x-okta-defined-as:
@@ -8963,6 +8966,7 @@ components:
           $ref: '#/components/schemas/SchemeApplicationCredentials'
         name:
           type: string
+          default: template_sps
         settings:
           $ref: '#/components/schemas/SecurePasswordStoreApplicationSettings'
       x-okta-defined-as:
@@ -9085,6 +9089,7 @@ components:
       properties:
         name:
           type: string
+          default: template_wsfed
         settings:
           $ref: '#/components/schemas/WsFederationApplicationSettings'
       x-okta-defined-as:

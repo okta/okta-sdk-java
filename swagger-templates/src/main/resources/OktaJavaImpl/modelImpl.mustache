@@ -63,7 +63,8 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     public Default{{classname}}(InternalDataStore dataStore) {
         super(dataStore);
         {{#vendorExtensions.defaultSetter}}
-        {{{.}}}{{/vendorExtensions.defaultSetter}}
+        {{{.}}}
+        {{/vendorExtensions.defaultSetter}}
     }
 
     public Default{{classname}}(InternalDataStore dataStore, Map<String, Object> properties) {
