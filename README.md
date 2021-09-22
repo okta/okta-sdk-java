@@ -15,6 +15,12 @@
 * [Building the SDK](#building-the-sdk)
 * [Contributing](#contributing)
 
+<a href="https://foojay.io/today/works-with-openjdk">
+   <img align="right" 
+        src="https://github.com/foojayio/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png"   
+        width="100">
+</a>
+
 This repository contains the Okta management SDK for Java. This SDK can be used in your server-side code to interact with the Okta management API and:
  
 * Create and update users with the [Users API](https://developer.okta.com/docs/api/resources/users)
@@ -41,7 +47,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 | ------- | ------------------------- |
 | 0.0.x | :warning: Retired |
 | 1.x   | :warning: Retired |
-| 2.x.x | :clock9: Retiring effective September 03, 2021 |
+| 2.x.x | :warning: Retired |
 | 3.x.x | :clock9: Retiring effective November 10, 2021 |
 | 4.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-3xx-to-400)) |
 | 5.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-4xx-to-500)) |
