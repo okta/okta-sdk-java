@@ -17,6 +17,8 @@
 
 set -e
 
+echo "Test"
+
 COMMON_SCRIPT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/common.sh"
 # shellcheck source=src/ci/common.sh
 source "${COMMON_SCRIPT}"
