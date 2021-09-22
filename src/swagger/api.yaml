@@ -1016,6 +1016,82 @@ paths:
           content: {}
       security:
       - api_token: []
+  /api/v1/authenticators:
+    get:
+      summary: List Authenticators
+      description: Enumerates authenticators in your organization.
+      operationId: listAuthenticators
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Authenticator'
+                type: array
+      security:
+      - api_token: []
+      tags:
+      - Authenticator
+  /api/v1/authenticators/{authenticatorId}:
+    get:
+      summary: Get Authenticator
+      description: Fetches an authenticator from your Okta organization by `authenticatorId`.
+      operationId: getAuthenticator
+      parameters:
+      - in: path
+        name: authenticatorId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authenticator'
+      security:
+      - api_token: []
+      tags:
+      - Authenticator
+  /api/v1/authenticators/{authenticatorId}/lifecycle/activate:
+    post:
+      summary: Activate Authenticator
+      description: Activates an authenticator by `authenticatorId`.
+      operationId: activateAuthenticator
+      parameters:
+      - in: path
+        name: authenticatorId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+      security:
+      - api_token: []
+      tags:
+      - Authenticator
+  /api/v1/authenticators/{authenticatorId}/lifecycle/deactivate:
+    post:
+      summary: Deactivate Authenticator
+      description: Deactivates an authenticator by `authenticatorId`.
+      operationId: deactivateAuthenticator
+      parameters:
+      - in: path
+        name: authenticatorId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+      security:
+      - api_token: []
+      tags:
+      - Authenticator
   /api/v1/authorizationServers:
     get:
       tags:
@@ -4648,6 +4724,44 @@ paths:
                 $ref: '#/components/schemas/UserSchema'
       security:
       - api_token: []
+      x-codegen-request-body-name: body
+  /api/v1/meta/schemas/group/default:
+    get:
+      description: Fetches the group schema
+      operationId: getGroupSchema
+      parameters: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupSchema'
+      security:
+      - api_token: []
+      summary: Fetches the group schema
+      tags:
+      - GroupSchema
+    post:
+      description: Updates, adds ore removes one or more custom Group Profile properties in the schema
+      operationId: updateGroupSchema
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupSchema'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupSchema'
+      security:
+      - api_token: []
+      summary: Updates, adds ore removes one or more custom Group Profile properties in the schema
+      tags:
+      - GroupSchema
   /api/v1/meta/schemas/user/{schemaId}:
     get:
       tags:
@@ -4908,6 +5022,306 @@ paths:
           content: {}
       security:
       - api_token: []
+  /api/v1/org:
+    get:
+      description: Get settings of your organization.
+      operationId: getOrgSettings
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgSetting'
+      security:
+      - api_token: []
+      summary: Get org settings
+      tags:
+      - Org
+    post:
+      description: Partial update settings of your organization.
+      operationId: partialUpdateOrgSetting
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgSetting'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgSetting'
+      security:
+      - api_token: []
+      summary: Partial update Org Setting
+      tags:
+      - Org
+    put:
+      description: Update settings of your organization.
+      operationId: updateOrgSetting
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgSetting'
+        required: true
+        extensions:
+          x-codegen-request-body-name: 'orgSetting'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgSetting'
+      security:
+      - api_token: []
+      summary: Update Org setting
+      tags:
+      - Org
+  /api/v1/org/contacts:
+    get:
+      description: Gets Contact Types of your organization.
+      operationId: getOrgContactTypes
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/OrgContactTypeObj'
+                type: array
+      security:
+      - api_token: []
+      summary: Get org contact types
+      tags:
+      - Org
+  /api/v1/org/contacts/{contactType}:
+    get:
+      description: Retrieves the URL of the User associated with the specified Contact Type.
+      operationId: getOrgContactUser
+      parameters:
+      - in: path
+        name: contactType
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgContactUser'
+      security:
+      - api_token: []
+      summary: Get org contact user
+      tags:
+      - Org
+#    put:
+#      description: Updates the User associated with the specified Contact Type.
+#      operationId: updateOrgContactUser
+#      parameters:
+#      - in: path
+#        name: contactType
+#        required: true
+#        schema:
+#          type: string
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/UserIdString'
+#        required: true
+#        extensions:
+#          x-codegen-request-body-name: 'userIdString'
+#      responses:
+#        '200':
+#          description: Success
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/OrgContactUser'
+#      security:
+#      - api_token: []
+#      summary: Update org contact user
+#      tags:
+#      - Org
+  /api/v1/org/privacy/oktaSupport:
+    get:
+      description: Gets Okta Support Settings of your organization.
+      operationId: getOrgOktaSupportSettings
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgOktaSupportSettingsObj'
+      security:
+      - api_token: []
+      summary: Get Okta Support settings
+      tags:
+      - Org
+  /api/v1/org/privacy/oktaSupport/grant:
+    post:
+      description: Enables you to temporarily allow Okta Support to access your org as an administrator for eight hours.
+      operationId: grantOktaSupport
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgOktaSupportSettingsObj'
+      security:
+      - api_token: []
+      summary: Grant Okta Support
+      tags:
+      - Org
+  /api/v1/org/privacy/oktaSupport/extend:
+    post:
+      description: Extends the length of time that Okta Support can access your org by 24 hours. This means that 24 hours are added to the remaining access time.
+      operationId: extendOktaSupport
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgOktaSupportSettingsObj'
+      security:
+      - api_token: []
+      summary: Extend Okta Support
+      tags:
+      - Org
+  /api/v1/org/privacy/oktaSupport/revoke:
+    post:
+      description: Revokes Okta Support access to your organization.
+      operationId: revokeOktaSupport
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgOktaSupportSettingsObj'
+      security:
+      - api_token: []
+      summary: Extend Okta Support
+      tags:
+      - Org
+  /api/v1/org/privacy/oktaCommunication:
+    get:
+      description: Gets Okta Communication Settings of your organization.
+      operationId: getOktaCommunicationSettings
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgOktaCommunicationSetting'
+      security:
+      - api_token: []
+      summary: Get Okta Communication Settings
+      tags:
+      - Org
+  /api/v1/org/privacy/oktaCommunication/optOut:
+    post:
+      description: Opts out all users of this org from Okta Communication emails.
+      operationId: optOutUsersFromOktaCommunicationEmails
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgOktaCommunicationSetting'
+      security:
+      - api_token: []
+      summary: Opt out all users from Okta Communication emails
+      tags:
+      - Org
+  /api/v1/org/privacy/oktaCommunication/optIn:
+    post:
+      description: Opts in all users of this org to Okta Communication emails.
+      operationId: optInUsersToOktaCommunicationEmails
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgOktaCommunicationSetting'
+      security:
+      - api_token: []
+      summary: Opt in all users to Okta Communication emails
+      tags:
+      - Org
+  /api/v1/org/preferences:
+    get:
+      description: Gets preferences of your organization.
+      operationId: getOrgPreferences
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgPreferences'
+      security:
+      - api_token: []
+      summary: Get org preferences
+      tags:
+      - Org
+  /api/v1/org/preferences/showEndUserFooter:
+    post:
+      description: Makes the Okta UI footer visible for all end users of your organization.
+      operationId: showOktaUIFooter
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgPreferences'
+      security:
+      - api_token: []
+      summary: Show Okta UI Footer
+      tags:
+      - Org
+  /api/v1/org/preferences/hideEndUserFooter:
+    post:
+      description: Hide the Okta UI footer for all end users of your organization.
+      operationId: hideOktaUIFooter
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgPreferences'
+      security:
+      - api_token: []
+      summary: Show Okta UI Footer
+      tags:
+      - Org
   /api/v1/policies:
     get:
       tags:
@@ -7120,6 +7534,31 @@ paths:
           content: {}
       security:
       - api_token: []
+    get:
+      description: Gets role that is assigned to user.
+      operationId: getUserRole
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: roleId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+      security:
+      - api_token: []
+      tags:
+      - User
   /api/v1/users/{userId}/roles/{roleId}/targets/catalog/apps:
     get:
       tags:
@@ -9135,6 +9574,83 @@ components:
       x-okta-parent: '#/components/schemas/ApplicationSettingsApplication'
       x-okta-tags:
       - Application
+    Authenticator:
+      properties:
+        _links:
+          additionalProperties:
+            type: object
+          readOnly: true
+          type: object
+        created:
+          format: date-time
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: string
+        key:
+          type: string
+        status:
+          $ref: '#/components/schemas/AuthenticatorStatus'
+        lastUpdated:
+          format: date-time
+          readOnly: true
+          type: string
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/AuthenticatorType'
+        settings:
+          $ref: '#/components/schemas/AuthenticatorSettings'
+      type: object
+      x-okta-operations:
+      - alias: activate
+        arguments:
+        - dest: authenticatorId
+          src: id
+        operationId: activateAuthenticator
+      - alias: deactivate
+        arguments:
+        - dest: authenticatorId
+          src: id
+        operationId: deactivateAuthenticator
+      x-okta-tags:
+      - Authenticator
+    AuthenticatorSettings:
+      properties:
+        allowedFor:
+          $ref: '#/components/schemas/AllowedForEnum'
+        tokenLifetimeInMinutes:
+          type: integer
+      type: object
+      x-okta-tags:
+      - Authenticator
+    AuthenticatorStatus:
+      enum:
+      - ACTIVE
+      - INACTIVE
+      type: string
+      x-okta-tags:
+      - Authenticator
+    AuthenticatorType:
+      enum:
+      - password
+      - security_question
+      - phone
+      - email
+      - security_key
+      type: string
+      x-okta-tags:
+      - Authenticator
+    AllowedForEnum:
+      enum:
+      - recovery
+      - sso
+      - any
+      - none
+      type: string
+      x-okta-tags:
+      - Authenticator
     ApplicationCredentialsSigningUse:
       type: string
       enum:
@@ -10246,6 +10762,139 @@ components:
             type: string
       x-okta-tags:
       - GroupRule
+    GroupSchema:
+      properties:
+        $schema:
+          readOnly: true
+          type: string
+        _links:
+          additionalProperties:
+            type: object
+          readOnly: true
+          type: object
+        created:
+          readOnly: true
+          type: string
+        definitions:
+          $ref: '#/components/schemas/GroupSchemaDefinitions'
+        description:
+          type: string
+        id:
+          readOnly: true
+          type: string
+        lastUpdated:
+          readOnly: true
+          type: string
+        name:
+          readOnly: true
+          type: string
+        properties:
+          $ref: '#/components/schemas/UserSchemaProperties'
+        title:
+          type: string
+        type:
+          readOnly: true
+          type: string
+      type: object
+      x-okta-tags:
+      - GroupSchema
+    GroupSchemaAttribute:
+      properties:
+        description:
+          type: string
+        enum:
+          items:
+            type: string
+          type: array
+        externalName:
+          type: string
+        externalNamespace:
+          type: string
+        items:
+          $ref: '#/components/schemas/UserSchemaAttributeItems'
+        master:
+          $ref: '#/components/schemas/UserSchemaAttributeMaster'
+        maxLength:
+          type: integer
+        minLength:
+          type: integer
+        mutability:
+          type: string
+        oneOf:
+          items:
+            $ref: '#/components/schemas/UserSchemaAttributeEnum'
+          type: array
+        permissions:
+          items:
+            $ref: '#/components/schemas/UserSchemaAttributePermission'
+          type: array
+        required:
+          type: boolean
+        scope:
+          $ref: '#/components/schemas/UserSchemaAttributeScope'
+        title:
+          type: string
+        type:
+          $ref: '#/components/schemas/UserSchemaAttributeType'
+        union:
+          $ref: '#/components/schemas/UserSchemaAttributeUnion'
+        unique:
+          type: string
+      type: object
+      x-okta-tags:
+      - GroupSchema
+    GroupSchemaBase:
+      properties:
+        id:
+          readOnly: true
+          type: string
+        properties:
+          $ref: '#/components/schemas/GroupSchemaBaseProperties'
+        required:
+          items:
+            type: string
+          type: array
+        type:
+          type: string
+      type: object
+      x-okta-tags:
+      - GroupSchema
+    GroupSchemaBaseProperties:
+      properties:
+        description:
+          $ref: '#/components/schemas/GroupSchemaAttribute'
+        name:
+          $ref: '#/components/schemas/GroupSchemaAttribute'
+      type: object
+      x-okta-tags:
+      - GroupSchema
+    GroupSchemaCustom:
+      properties:
+        id:
+          readOnly: true
+          type: string
+        properties:
+          additionalProperties:
+            $ref: '#/components/schemas/GroupSchemaAttribute'
+          type: object
+        required:
+          items:
+            type: string
+          type: array
+        type:
+          type: string
+      type: object
+      x-okta-tags:
+      - GroupSchema
+    GroupSchemaDefinitions:
+      properties:
+        base:
+          $ref: '#/components/schemas/GroupSchemaBase'
+        custom:
+          $ref: '#/components/schemas/GroupSchemaCustom'
+      type: object
+      x-okta-tags:
+      - GroupSchema
     IdentityProvider:
       type: object
       properties:
@@ -11406,6 +12055,174 @@ components:
       - RANGE
       x-okta-tags:
       - NetworkZone
+    OrgOktaCommunicationSetting:
+      properties:
+        _links:
+          additionalProperties:
+            type: object
+        optOutEmailUsers:
+          type: boolean
+          readOnly: true
+      type: object
+      x-okta-operations:
+      - alias: optInUsersToOktaCommunicationEmails
+        operationId: optInUsersToOktaCommunicationEmails
+      - alias: optOutUsersFromOktaCommunicationEmails
+        operationId: optOutUsersFromOktaCommunicationEmails
+      x-okta-tags:
+      - Org
+    OrgContactTypeObj:
+      properties:
+        _links:
+          additionalProperties:
+            type: object
+        contactType:
+          $ref: '#/components/schemas/OrgContactType'
+      type: object
+      x-okta-crud:
+      - alias: read
+        arguments: []
+        operationId: getOrgContactTypes
+      x-okta-tags:
+      - Org
+    OrgContactType:
+      enum:
+      - BILLING
+      - TECHNICAL
+      type: string
+      x-okta-tags:
+      - Org
+    OrgContactUser:
+      properties:
+        _links:
+          additionalProperties:
+            type: object
+          readOnly: true
+          type: object
+        userId:
+          type: string
+      type: object
+#      x-okta-operations:
+#      - alias: updateContactUser
+#        arguments:
+#        - dest: userId
+#          src: userId
+#        operationId: updateOrgContactUser
+      x-okta-tags:
+      - Org
+    OrgSetting:
+      properties:
+        _links:
+          additionalProperties:
+            type: object
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        companyName:
+          type: string
+        country:
+          type: string
+        created:
+          format: date-time
+          readOnly: true
+          type: string
+        endUserSupportHelpURL:
+          type: string
+        expiresAt:
+          format: date-time
+          readOnly: true
+          type: string
+        id:
+          readOnly: true
+          type: string
+        lastUpdated:
+          format: date-time
+          readOnly: true
+          type: string
+        phoneNumber:
+          type: string
+        postalCode:
+          type: string
+        state:
+          type: string
+        status:
+          readOnly: true
+          type: string
+        subdomain:
+          readOnly: true
+          type: string
+        supportPhoneNumber:
+          type: string
+        website:
+          type: string
+      type: object
+      x-okta-crud:
+      - alias: update
+        arguments:
+        - dest: orgSetting
+          self: true
+        operationId: updateOrgSetting
+      - alias: partialUpdate
+        arguments:
+        - dest: orgSetting
+          self: true
+        operationId: partialUpdateOrgSetting
+      x-okta-tags:
+      - Org
+    OrgOktaSupportSetting:
+      enum:
+      - DISABLED
+      - ENABLED
+      type: string
+      x-okta-tags:
+      - Org
+    OrgOktaSupportSettingsObj:
+      properties:
+        _links:
+          additionalProperties:
+            type: object
+        expiration:
+          format: date-time
+          type: string
+          readOnly: true
+        support:
+          $ref: '#/components/schemas/OrgOktaSupportSetting'
+      type: object
+      x-okta-operations:
+      - alias: extendOktaSupport
+        operationId: extendOktaSupport
+      - alias: grantOktaSupport
+        operationId: grantOktaSupport
+      - alias: revokeOktaSupport
+        operationId: revokeOktaSupport
+      x-okta-tags:
+      - Org
+    OrgPreferences:
+      properties:
+        _links:
+          additionalProperties:
+            type: object
+        showEndUserFooter:
+          type: boolean
+          readOnly: true
+      type: object
+      x-okta-operations:
+      - alias: hideEndUserFooter
+        operationId: hideOktaUIFooter
+      - alias: showEndUserFooter
+        operationId: showOktaUIFooter
+      x-okta-tags:
+      - Org
+    UserIdString:
+      properties:
+        userId:
+          type: string
+      type: object
+      x-okta-tags:
+      - Org
     AppAndInstanceConditionEvaluatorAppOrInstance:
       type: object
       properties:
@@ -14396,6 +15213,7 @@ components:
       - UserType
 tags:
 - name: Application
+- name: Authenticator
 - name: AuthorizationServer
 - name: AuthorizationServerPolicy
 - name: CAPTCHA
@@ -14405,12 +15223,14 @@ tags:
 - name: Feature
 - name: Group
 - name: GroupRule
+- name: GroupSchema
 - name: IdentityProvider
 - name: InlineHook
 - name: Ion
 - name: LinkedObject
 - name: Log
 - name: NetworkZone
+- name: Org
 - name: Policy
 - name: ProfileMapping
 - name: Role
