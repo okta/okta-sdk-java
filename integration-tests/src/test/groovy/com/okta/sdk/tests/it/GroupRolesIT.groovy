@@ -38,7 +38,7 @@ import static com.okta.sdk.tests.it.util.Util.validateGroup
  */
 class GroupRolesIT extends ITSupport {
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("list-roles-assigned-to-group")
     void listRolesAssignedToGroupTest() {
 
@@ -76,7 +76,7 @@ class GroupRolesIT extends ITSupport {
         assertRolePresent(roles, appAdminRole)
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("unassigned-roles-for-group")
     void unassignRoleForGroupTest() {
 
@@ -110,7 +110,7 @@ class GroupRolesIT extends ITSupport {
         assertRoleAbsent(client.listGroupAssignedRoles(createdGroup.getId()), userAdminRole)
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("list-group-targets-for-group")
     void listGroupTargetsForGroupTest() {
 
@@ -145,7 +145,7 @@ class GroupRolesIT extends ITSupport {
         assertGroupPresent(client.listGroupTargetsForGroupRole(createdGroup1.getId(), userAdminRole.getId()), createdGroup2)
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("list-group-targets-for-group")
     void removeGroupTargetFromGroupAdministratorRoleGivenToGroupTest() {
 

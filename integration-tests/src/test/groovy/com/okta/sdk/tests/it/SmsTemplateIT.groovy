@@ -32,14 +32,21 @@ import static org.hamcrest.Matchers.*
  */
 class SmsTemplateIT extends ITSupport {
 
-    @Test
+    @Test (groups = "group2")
     void customTemplatesCrudTest() {
-        def templateName = "template-" + UUID.randomUUID().toString()
+        def templateName = "sdk-it-" + UUID.randomUUID().toString()
+        def retryCount = 5
 
         // create translations
         SmsTemplateTranslations smsTemplateTranslations = client.instantiate(SmsTemplateTranslations)
         smsTemplateTranslations.put("de", "\${org.name}: ihre bestätigungscode ist \${code}")
         smsTemplateTranslations.put("it", "\${org.name}: il codice di verifica è \${code}")
+
+        while(isSmsTemplateAlreadyCreated() && retryCount > 0) {
+            //Looks like another Travis CI build has created an SMS Template already. Need to wait
+            sleep(getTestOperationDelay())
+            retryCount--
+        }
 
         // create template
         SmsTemplate smsTemplate = client.createSmsTemplate(client.instantiate(SmsTemplate)
@@ -94,5 +101,14 @@ class SmsTemplateIT extends ITSupport {
         // delete template
         smsTemplate.delete()
         assertNotPresent(client.listSmsTemplates(), smsTemplate)
+    }
+
+    boolean isSmsTemplateAlreadyCreated() {
+        Optional<SmsTemplate> smsTemplate = client.listSmsTemplates(SmsTemplateType.CODE)
+            .stream()
+            .filter({ it.getName().startsWith("sdk-it-") })
+            .findFirst()
+
+        return smsTemplate.isPresent()
     }
 }

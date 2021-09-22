@@ -38,12 +38,13 @@ class AbstractCollectionResourceTest {
         def page2 = createTestPage(200, 200, "https://example.com/resource?nextPage=2")
         def page3 = createTestPage(400, 13, null)
 
+        def collectionResource1 = new TestCollectionResource(ds, page1)
         expectPage(page1, ds)
         def collectionResource2 = new TestCollectionResource(ds, page2)
-        when(ds.getResource("https://example.com/resource?nextPage=1", TestCollectionResource)).thenReturn(collectionResource2)
+        when(ds.getResource(collectionResource1.getNextPageUrl(), TestCollectionResource)).thenReturn(collectionResource2)
         expectPage(page2, ds)
         def collectionResource3 = new TestCollectionResource(ds, page3)
-        when(ds.getResource("https://example.com/resource?nextPage=2", TestCollectionResource)).thenReturn(collectionResource3)
+        when(ds.getResource(collectionResource2.getNextPageUrl(), TestCollectionResource)).thenReturn(collectionResource3)
         expectPage(page3, ds)
 
         verifyCollection(new TestCollectionResource(ds, page1), 413)

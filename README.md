@@ -15,6 +15,12 @@
 * [Building the SDK](#building-the-sdk)
 * [Contributing](#contributing)
 
+<a href="https://foojay.io/today/works-with-openjdk">
+   <img align="right" 
+        src="https://github.com/foojayio/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png"   
+        width="100">
+</a>
+
 This repository contains the Okta management SDK for Java. This SDK can be used in your server-side code to interact with the Okta management API and:
  
 * Create and update users with the [Users API](https://developer.okta.com/docs/api/resources/users)
@@ -35,15 +41,17 @@ You can learn more on the [Okta + Java][lang-landing] page in our documentation.
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The current stable major version series is: 3.x.x
+:heavy_check_mark: The current stable major version series is: 5.x.x
 
 | Version | Status                    |
 | ------- | ------------------------- |
 | 0.0.x | :warning: Retired |
-| 1.x   | :clock9: Retiring effective April 07, 2021 |
-| 2.x.x | :clock9: Retiring effective September 03, 2021 |
-| 3.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-2xx-to-300)) |
- 
+| 1.x   | :warning: Retired |
+| 2.x.x | :warning: Retired |
+| 3.x.x | :clock9: Retiring effective November 10, 2021 |
+| 4.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-3xx-to-400)) |
+| 5.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-4xx-to-500)) |
+
 The latest release can always be found on the [releases page][github-releases].
  
 ## Need help?
@@ -119,6 +127,14 @@ Client client = Clients.builder()
  
 Hard-coding the Okta domain and API token works for quick tests, but for real projects you should use a more secure way of storing these values (such as environment variables). This library supports a few different configuration sources, covered in the [configuration reference](#configuration-reference) section.
 
+In some cases, it maybe needed to check if the client is ready and able to execute requests. The _**isReady**_ method can be used for this. It does not produce exceptions if the wrong orgUrl or token have been used, but it returns a boolean indicating the client readiness.
+
+[//]: # (method: isClientReady)
+```java
+boolean isClientReadyStatus = client.isReady(client::listApplications);
+```
+[//]: # (end: isClientReady)
+
 ## OAuth 2.0
 
 Okta allows you to interact with Okta APIs using scoped OAuth 2.0 access tokens. Each access token enables the bearer to perform specific actions on specific Okta endpoints, with that ability controlled by which scopes the access token contains.
@@ -133,6 +149,7 @@ Client client = Clients.builder()
     .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
     .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
     .setClientId("{clientId}")
+    .setKid("{kid}") // key id (optional)
     .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
     .setPrivateKey("/path/to/yourPrivateKey.pem")
     // (or) .setPrivateKey("full PEM payload")

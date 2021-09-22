@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>5.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>okta-sdk-impl</artifactId>
@@ -121,7 +121,12 @@
             <artifactId>slf4j-simple</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>9.9.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

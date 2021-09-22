@@ -16,6 +16,7 @@
  */
 package com.okta.sdk.client;
 
+import com.okta.commons.http.RequestExecutorFactory;
 import com.okta.commons.http.config.Proxy;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
@@ -385,6 +386,16 @@ public interface ClientBuilder {
     ClientBuilder setClientId(String clientId);
 
     /**
+     * Allows specifying the Key ID (kid) instead of relying on the YAML config.
+     *
+     * @param kid string representing the Key ID.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 4.0.1
+     */
+    ClientBuilder setKid(String kid);
+
+    /**
      * Sets both the timeout until a connection is established and the socket timeout (i.e. a maximum period of inactivity
      * between two consecutive data packets).  A timeout value of zero is interpreted as an infinite timeout.
      *
@@ -420,6 +431,15 @@ public interface ClientBuilder {
      * @return the ClientBuilder instance for method chaining
      */
     ClientBuilder setRetryMaxAttempts(int maxAttempts);
+
+    /**
+     * Sets the {@link RequestExecutorFactory}, otherwise it will be loaded as a Service / SPI 
+     * via the {@link RequestExecutorFactory} class.
+     *
+     * @param requestExecutorFactory that should be used to create the RequestExecutor
+     * @return the ClientBuilder instance for method chaining
+     */
+    ClientBuilder setRequestExecutorFactory(RequestExecutorFactory requestExecutorFactory);
 
     /**
      * Constructs a new {@link Client} instance based on the ClientBuilder's current configuration state.

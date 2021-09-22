@@ -179,7 +179,7 @@ trait ClientProvider implements IHookable {
         }
     }
 
-    @AfterMethod
+    @AfterMethod (groups = ["group1", "group2", "group3"])
     void clean() {
         if (!isRunningWithTestServer()) {
             // delete them in reverse order so dependencies are resolved

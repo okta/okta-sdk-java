@@ -17,6 +17,7 @@
 package com.okta.sdk.impl.client;
 
 import com.okta.commons.configcheck.ConfigurationValidator;
+import com.okta.commons.http.RequestExecutorFactory;
 import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
@@ -50,6 +51,8 @@ import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,6 +105,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     private boolean allowNonHttpsForTesting = false;
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
+    private RequestExecutorFactory requestExecutorFactory;
 
     private AccessTokenRetrieverService accessTokenRetrieverService;
 
@@ -330,6 +334,12 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
+    public ClientBuilder setRequestExecutorFactory(RequestExecutorFactory requestExecutorFactory) {
+        this.requestExecutorFactory = requestExecutorFactory;
+        return this;
+    }
+
+    @Override
     public Client build() {
         if (!this.clientConfig.isCacheManagerEnabled()) {
             log.debug("CacheManager disabled. Defaulting to DisabledCacheManager");
@@ -373,7 +383,9 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
         }
 
-        return new DefaultClient(clientConfig, cacheManager);
+        return requestExecutorFactory == null
+            ? new DefaultClient(clientConfig, cacheManager)
+            : new DefaultClient(clientConfig, cacheManager, requestExecutorFactory.create(clientConfig));
     }
 
     /**
@@ -455,10 +467,16 @@ public class DefaultClientBuilder implements ClientBuilder {
             Assert.notNull(privateKey, "Missing privateKeyFile");
             String algorithm = privateKey.getAlgorithm();
             if (algorithm.equals("RSA")) {
-                String encodedString = ConfigUtil.RSA_PRIVATE_KEY_HEADER + "\n"
-                    + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
-                    + ConfigUtil.RSA_PRIVATE_KEY_FOOTER;
-                this.clientConfig.setPrivateKey(encodedString);
+                PrivateKeyInfo privateKeyInfo = PrivateKeyInfo.getInstance(privateKey.getEncoded());
+                try {
+                    ASN1Primitive primitive = privateKeyInfo.parsePrivateKey().toASN1Primitive();
+                    String encodedString = ConfigUtil.RSA_PRIVATE_KEY_HEADER + "\n"
+                        + Base64.getEncoder().encodeToString(primitive.getEncoded()) + "\n"
+                        + ConfigUtil.RSA_PRIVATE_KEY_FOOTER;
+                    this.clientConfig.setPrivateKey(encodedString);
+                } catch (IOException e) {
+                    throw new IllegalArgumentException("Could not parse private key");
+                }
             } else if(algorithm.equals("EC")) {
                 String encodedString = ConfigUtil.EC_PRIVATE_KEY_HEADER + "\n"
                     + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
@@ -509,6 +527,13 @@ public class DefaultClientBuilder implements ClientBuilder {
     public ClientBuilder setClientId(String clientId) {
         ConfigurationValidator.assertClientId(clientId);
         this.clientConfig.setClientId(clientId);
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setKid(String kid) {
+        Assert.notNull(kid, "kid cannot be null.");
+        this.clientConfig.setKid(kid);
         return this;
     }
 

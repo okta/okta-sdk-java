@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.*
  */
 trait CrudTestSupport implements ClientProvider {
 
-    @Test
+    @Test (groups = ["group1"])
     void basicCrudTest() {
 
         Client client = getClient()
@@ -55,7 +55,7 @@ trait CrudTestSupport implements ClientProvider {
         assertDelete(client, resource)
     }
 
-    @Test
+    @Test (groups = ["group1"])
     void basicListTest() {
 
         // Create a resource

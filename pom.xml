@@ -20,12 +20,12 @@
     <parent>
         <groupId>com.okta</groupId>
         <artifactId>okta-parent</artifactId>
-        <version>19</version>
+        <version>21</version>
     </parent>
 
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-root</artifactId>
-    <version>4.0.1-SNAPSHOT</version>
+    <version>5.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Okta Java SDK</name>
@@ -39,8 +39,8 @@
         <snakeyaml.version>1.26</snakeyaml.version>
         <bouncycastle.version>1.68</bouncycastle.version>
         <jjwt.version>0.11.1</jjwt.version>
-        <okta.sdk.previousVersion>4.0.0</okta.sdk.previousVersion>
-        <okta.commons.version>1.2.5</okta.commons.version>
+        <okta.sdk.previousVersion>5.0.0</okta.sdk.previousVersion>
+        <okta.commons.version>1.2.6</okta.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
@@ -72,27 +72,27 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-api</artifactId>
-                <version>4.0.1-SNAPSHOT</version>
+                <version>5.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-impl</artifactId>
-                <version>4.0.1-SNAPSHOT</version>
+                <version>5.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-api-swagger-templates</artifactId>
-                <version>4.0.1-SNAPSHOT</version>
+                <version>5.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-httpclient</artifactId>
-                <version>4.0.1-SNAPSHOT</version>
+                <version>5.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-okhttp</artifactId>
-                <version>4.0.1-SNAPSHOT</version>
+                <version>5.0.1-SNAPSHOT</version>
             </dependency>
 
             <!-- Other Okta Projects -->
@@ -131,14 +131,14 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-integration-tests</artifactId>
-                <version>4.0.1-SNAPSHOT</version>
+                <version>5.0.1-SNAPSHOT</version>
             </dependency>
 
             <!-- Examples -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-examples-quickstart</artifactId>
-                <version>4.0.1-SNAPSHOT</version>
+                <version>5.0.1-SNAPSHOT</version>
             </dependency>
 
             <!-- Logging -->
@@ -205,7 +205,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
+                <version>7.0.0</version>
                 <scope>test</scope>
                 <exclusions>
                     <exclusion>
@@ -316,7 +316,7 @@
                         <dependency>
                             <groupId>com.okta.sdk</groupId>
                             <artifactId>okta-api-swagger-templates</artifactId>
-                            <version>4.0.1-SNAPSHOT</version>
+                            <version>5.0.1-SNAPSHOT</version>
                         </dependency>
                     </dependencies>
                 </plugin>

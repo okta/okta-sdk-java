@@ -31,6 +31,8 @@ import com.okta.sdk.impl.ds.DefaultDataStore;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.resource.Resource;
 
+import java.util.function.Supplier;
+
 /**
  * The base client class.
  * @since 1.1.0
@@ -40,9 +42,12 @@ public abstract class BaseClient implements DataStore {
     private final InternalDataStore dataStore;
 
     public BaseClient(ClientConfiguration clientConfiguration, CacheManager cacheManager) {
+        this(clientConfiguration, cacheManager, null);
+    }
+
+    public BaseClient(ClientConfiguration clientConfiguration, CacheManager cacheManager, RequestExecutor requestExecutor) {
         Assert.notNull(clientConfiguration, "clientConfiguration argument cannot be null.");
-        RequestExecutor requestExecutor = createRequestExecutor(clientConfiguration);
-        this.dataStore = createDataStore(requestExecutor,
+        this.dataStore = createDataStore(requestExecutor != null ? requestExecutor : createRequestExecutor(clientConfiguration),
                                          clientConfiguration.getBaseUrlResolver(),
                                          clientConfiguration.getClientCredentialsResolver(),
                                          cacheManager);
@@ -124,5 +129,10 @@ public abstract class BaseClient implements DataStore {
     @Override
     public RequestBuilder http() {
         return this.dataStore.http();
+    }
+
+    @Override
+    public boolean isReady(Supplier<? extends Resource> methodReference) {
+        return this.dataStore.isReady(methodReference);
     }
 }

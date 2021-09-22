@@ -54,7 +54,7 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
         return (OpenIdConnectApplication) app
     }
 
-    @Test
+    @Test (groups = "group2")
     void createOIDCApplicationWithPrivateKeyJwtTest() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -105,13 +105,13 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
     @Override
     void update(Client client, def application) {
         application.setLabel(application.label +"-2")
-        application.visibility.hide.iOS = false
+        application.visibility.hide.iOS = true
         application.update()
     }
 
     @Override
     void assertUpdate(Client client, def app) {
         assertThat app.label, matchesPattern('^java-sdk-it-.*-2$')
-        assertThat app.visibility.hide.iOS, is(false)
+        assertThat app.visibility.hide.iOS, is(true)
     }
 }

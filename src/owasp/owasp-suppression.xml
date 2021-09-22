@@ -25,6 +25,7 @@
         <sha1>0f6f1fa2b59ae770ca14f975726bed8d6620ed9b</sha1>
         <cve>CVE-2016-6199</cve>
         <cve>CVE-2020-11979</cve>
+        <cve>CVE-2021-32751</cve>
     </suppress>
 
     <!-- build time dependency contains older version of gradle (which this project does NOT use) -->
@@ -34,6 +35,8 @@
         <cve>CVE-2019-11065</cve>
         <cve>CVE-2019-15052</cve>
         <cve>CVE-2019-16370</cve>
+        <cve>CVE-2021-29429</cve>
+        <cve>CVE-2021-29428</cve>
     </suppress>
 
     <!-- this project does not use the offending method com.google.common.io.Files.createTempDir -->

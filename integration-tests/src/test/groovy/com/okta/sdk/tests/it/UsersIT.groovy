@@ -16,9 +16,11 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.impl.resource.DefaultGroupBuilder
 import com.okta.sdk.resource.ExtensibleResource
 import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
+import com.okta.sdk.resource.application.ApplicationGroupAssignment
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettings
@@ -77,7 +79,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         ensureCustomProperties()
     }
 
-    @Test
+    @Test (groups = "group2")
     void userProfileNumberValues() {
 
         def email = "joe.coder+${uniqueTestName}@example.com"
@@ -180,7 +182,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         return client.listUsers().iterator()
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("create-user-with-user-type")
     void createUserWithUserTypeTest() {
 
@@ -224,7 +226,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertPresent(users, user)
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("user-activate")
     void userActivateTest() {
 
@@ -254,7 +256,28 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertPresent(users, user)
     }
 
-    @Test
+    @Test (groups = "group2")
+    @Scenario("user-with-special-character")
+    void userWithSpecialCharacterTest() {
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'hashtag'
+        def email = "john-${uniqueTestName}#@example.com"
+
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password.toCharArray())
+                .buildAndCreate(client)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        Thread.sleep(getTestOperationDelay())
+        assertThat(client.getUser(email), equalTo(user))
+    }
+
+    @Test (groups = "group2")
     @Scenario("user-role-assign")
     void roleAssignTest() {
 
@@ -290,7 +313,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertNotPresent(user.listAssignedRoles(), role)
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("user-change-password")
     void changePasswordTest() {
 
@@ -321,7 +344,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         client.getUser(user.getId())
     }
 
-    @Test
+    @Test (groups = "group2")
     void changeStrictPasswordTest() {
 
         def password = 'Passw0rd!2@3#'
@@ -380,7 +403,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         client.getUser(user.getId())
     }
 
-    @Test(expectedExceptions = ResourceException)
+    @Test(expectedExceptions = ResourceException, groups = "group2")
     @Scenario("user-change-recovery-question")
     void changeRecoveryQuestionTest() {
 
@@ -446,7 +469,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat response.getResetPasswordUrl(), containsString("/reset_password/")
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("user-expire-password")
     void expirePasswordTest() {
 
@@ -473,7 +496,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     }
 
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("user-get-reset-password-url")
     void resetPasswordUrlTest() {
 
@@ -498,7 +521,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat token.getResetPasswordUrl(), notNullValue()
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("user-get")
     void getUserTest() {
 
@@ -536,7 +559,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         }
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("user-group-target-role")
     void groupTargetRoleTest() {
 
@@ -594,7 +617,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertGroupTargetPresent(user, group, role)
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("user-profile-update")
     void userProfileUpdate() {
 
@@ -626,7 +649,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat(updatedUser.getProfile().get("nickName"), equalTo("Batman"))
     }
 
-    @Test
+    @Test (groups = "group2")
     @Scenario("user-suspend")
     void userSuspendTest() {
 
@@ -659,7 +682,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertPresent(client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null), user)
     }
 
-    @Test
+    @Test (groups = "group2")
     void getUserInvalidUserId() {
         try {
             def userId = "invalid-user-id-${uniqueTestName}@example.com"
@@ -670,7 +693,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         }
     }
 
-    @Test
+    @Test (groups = "group2")
     void getUserNullUserId() {
         try {
             getClient().getUser(null)
@@ -680,7 +703,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         }
     }
 
-    @Test
+    @Test (groups = "group2")
     void getUserEmptyUserId() {
         try {
             getClient().getUser("")
@@ -690,7 +713,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         }
     }
 
-    @Test
+    @Test (groups = "group2")
     void createUserWithGroups() {
 
         def groupName = "Group-to-Assign-${uniqueTestName}"
@@ -724,7 +747,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat groups.get(1).getId(), equalTo(group.id)
     }
 
-    @Test
+    @Test (groups = "group3")
     void setUserPasswordWithoutReset() {
 
         def user = randomUser()
@@ -744,7 +767,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat(result, instanceOf(User))
     }
 
-    @Test
+    @Test (groups = "group3")
     void importUserWithSha512Password() {
 
         def salt = "aSalt"
@@ -763,7 +786,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.IMPORT)
     }
 
-    @Test
+    @Test (groups = "group3")
     @Scenario("user-forgot-password-generate-one-time-token")
     void forgotPasswordGenerateOttTest() {
 
@@ -789,7 +812,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat response.getResetPasswordUrl(), containsString("/signin/reset-password/")
     }
 
-    @Test
+    @Test (groups = "group3")
     @Scenario("user-forgot-password-set-new-password")
     void forgotPasswordSetNewPasswordTest() {
 
@@ -824,7 +847,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat response.get("provider")["name"], equalTo("OKTA")
     }
 
-    @Test
+    @Test (groups = "group3")
     void userWithAuthenticationProviderTest() {
 
         def firstName = 'John'
@@ -849,6 +872,55 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertThat user.getCredentials(), notNullValue()
         assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.FEDERATION)
         assertThat user.getCredentials().getProvider().getName(), equalTo(AuthenticationProviderType.FEDERATION.name())
+    }
+
+    @Test (groups = "group3")
+    void testGetNextPageUrl() {
+        def user1 = create(client)
+        def user2 = create(client)
+        def user3 = create(client)
+        registerForCleanup(user1)
+        registerForCleanup(user2)
+        registerForCleanup(user3)
+
+        String pageSize = "2"
+
+        def userListFirstPage = client.http()
+            .addQueryParameter("limit", pageSize)
+            .get("/api/v1/users", UserList.class)
+        assertThat userListFirstPage, notNullValue()
+        assertThat userListFirstPage.getNextPageUrl(), notNullValue()
+        assertThat userListFirstPage.getProperties().get("currentPage").getProperties().get("items").collect().size(), is(2)
+
+        def userListSecondPage = client.http()
+            .addQueryParameter("limit", pageSize)
+            .get(userListFirstPage.getNextPageUrl(), UserList.class)
+        assertThat userListSecondPage, notNullValue()
+        assertThat userListSecondPage.getProperties().get("currentPage").getProperties().get("items").collect().size(), is(greaterThanOrEqualTo(1))
+    }
+
+    @Test (groups = "group3")
+    void testListGroupAssignmentsWithExpand() {
+        //  Create more than 20 groups
+        for (int i = 1; i < 30; i++) {
+            registerForCleanup(new DefaultGroupBuilder().setName("test-group_" + i + "_${uniqueTestName}").buildAndCreate(client))
+        }
+
+        //  Fetch the GroupAssignment list in two requests
+        def expandParameter = "group"
+        List<ApplicationGroupAssignment> groupAssignments = client.listApplications().first()
+            .listGroupAssignments(null, expandParameter)
+            .stream()
+            .collect(Collectors.toList())
+
+        //  Make sure both pages (all resources) contain an expand parameter
+        for (ApplicationGroupAssignment groupAssignment : groupAssignments) {
+            def embedded = groupAssignment.getEmbedded()
+            assertThat(embedded, notNullValue())
+            assertThat(embedded.get(expandParameter), notNullValue())
+            assertThat(embedded.get(expandParameter).get("type"), notNullValue())
+            assertThat(embedded.get(expandParameter).get("profile"), notNullValue())
+        }
     }
 
     private void ensureCustomProperties() {

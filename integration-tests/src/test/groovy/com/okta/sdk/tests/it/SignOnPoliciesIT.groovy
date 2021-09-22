@@ -57,7 +57,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
         return client.listPolicies(PolicyType.OKTA_SIGN_ON.toString()).iterator()
     }
 
-    @Test
+    @Test (groups = "group2")
     void signOnPolicyWithGroupConditions() {
 
         def group = GroupBuilder.instance()

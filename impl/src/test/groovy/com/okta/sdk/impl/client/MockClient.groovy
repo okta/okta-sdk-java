@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when
 
 class MockClient extends DefaultClient {
 
-    RequestExecutor mockRequestExecutor
+    static RequestExecutor mockRequestExecutor
 
     static ClientConfiguration defaultClientConfig = new ClientConfiguration() {{
         setBaseUrlResolver(new DefaultBaseUrlResolver("https://okta.example.com"))
@@ -42,13 +42,7 @@ class MockClient extends DefaultClient {
 
 
     MockClient(ClientConfiguration clientConfig = defaultClientConfig) {
-        super(clientConfig, new DisabledCacheManager())
-    }
-
-    @Override
-    protected RequestExecutor createRequestExecutor(ClientConfiguration clientConfiguration) {
-        mockRequestExecutor = Mockito.mock(RequestExecutor)
-        return mockRequestExecutor
+        super(clientConfig, new DisabledCacheManager(), mockRequestExecutor = Mockito.mock(RequestExecutor))
     }
 
     MockClient withMockResponse(Request request, Response response) {

@@ -15,16 +15,21 @@
  */
 package com.okta.sdk.impl.oauth2
 
+import com.nimbusds.jose.jwk.RSAKey
 import com.okta.commons.http.config.BaseUrlResolver
+import com.okta.sdk.client.AuthorizationMode
+import com.okta.sdk.client.Clients
 import com.okta.sdk.ds.RequestBuilder
 import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
+import com.okta.sdk.impl.client.DefaultClientBuilder
 import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.error.DefaultError
 import com.okta.sdk.resource.ResourceException
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
+import org.bouncycastle.openssl.PEMException
 import org.testng.annotations.Test
 
 import java.security.KeyPair
@@ -48,6 +53,62 @@ import static org.testng.Assert.assertEquals
  * @since 1.6.0
  */
 class AccessTokenRetrieverServiceImplTest {
+
+    private static final String PRIVATE_KEY = "-----BEGIN PRIVATE KEY-----\n" +
+        "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDH0Y47a8w/Tgiv" +
+        "V4mytjBSR/5HIu+P58/v3g6gbYvxC/NWPzPZ3hjTeRskJpB1AfNwm55rAhjSD99d" +
+        "4ZiHWMEFjEeSKIaEtMxDPU1pg23R/e+sATVevEfx1G1+IoaSu6SKLnHN7iNtvWlK" +
+        "reR5pNUVHKcRotg/auiNUd8P9Wok8FQhFGxbZEdYhjvICLfHLrZKQKOR1AwqPscX" +
+        "+FnLF2F+9X0QXRAX3XW/D4S9sfS9JN+J6mhhOQpy78p5VDxGPZim2bk/WNhB3uQ+" +
+        "4UE7xdMYIMBPxP3kd2/vhBLG+AhqGvh1XhROvCQ2mtuRq+vTFCfd+tObx1b5a7eU" +
+        "UwVWM8AxAgMBAAECggEBAJ1vapU+1ep63TTpz8BS87egqaP6zq2fg6IGX5ffOAdv" +
+        "1wX5Pi1GZGEaZlwRVngaVWg/9I1zVYMMpn0dpkPdlhd881chPvuIR/gicL/Voc12" +
+        "OkRXn2lJB5ZuPObI5SbvWTDWbyxFmPx55F/GquF9EbZUoP2wRJmS7i+Kdinovvzi" +
+        "Rwgevpdo/IA3uosX5NzIazIhCeb4v1v2tpvNH63pfAzKsEHVF0bVQ7yRtrDE5bbp" +
+        "NbyNR5em30G2CXqNQIdKMQAL3b4LfCGkXrJABVszjTXQO117PhCnifNmLGzlVhBD" +
+        "qC65Luh5GJ21qvj2InWIYdLft0DvzUVH29Bb9uB4H5ECgYEA/+FIE5PDRx+PP9Zq" +
+        "kKtXaTtBstZAUbx0vwIs1IruB9Xio/lskZ8woAXDqWYR4VOkqR6JeOPImHFN8keK" +
+        "Vvd04J/2nDEHa4SPy23Ww0YcmtvlpRwsWZ1JktO9PFK1YadyUEYWVjWToSGmbZD3" +
+        "aPOSKf+uFDuOUClyGUjZiWBMWRMCgYEAx+mLOk76eraiLC3QIJ7g9XjBDBmBBBQA" +
+        "3yk7F86zrrRxb/FA7G9zc19GkMjnGT5QYG7Qdw0LRbh4AT3zkMPVbd4Cy3YRhKFi" +
+        "XwF5loOv4YHKlB+Ny9yKC7Jz9tzhccOAxjyjwDtY2tw/DQP4xdgtDuMccr7DLdrB" +
+        "8mrZNn1vTisCgYAxdd50yk8o5FTQRiX7KOOQl7+vTfLI2eDHOyhnPSOdqB5TC9eM" +
+        "nnTLudGEYRJ7t6tQdXKlR4Jy1RP4DRQUk2ioMsN8lY2Vnt4cuHKW9Gp7FJ5jN/rq" +
+        "p5idJQijLGmbIr7Z/XI738dVkieVbjwksVBDhgSkLI7pt9kyQf6qq06WuQKBgQC6" +
+        "E2b1ghfhauduacIk6t2HfrtpkL+m1RuunEkVst9KyUghIxUEPgTfKZqcH3QD6h2U" +
+        "dPDzLyAD6F1DArAYWj/pwNEnIqHRqwnOVqge8joek9nEn84zJ/cSRitsZ1IsuwW8" +
+        "/yqIPnVJWeISMlU3iiz+g2SyZV906f7Grq+56W1V+wKBgQDrgV2VHJyIHuHS6t+A" +
+        "BV89ditsFt4n2h2SPzX9xI5uwUclwPy01bCaMccKvzPwhmJWMRDzIeKgLy3aJWkl" +
+        "8zZeebOsKqNB3Nlm8wNrYbJJvpTEyt6kpZi+YJ/S4mQ/0CzIpmq6014aKm16NJxv" +
+        "AHYKHuDUvhiDFwadf8Q7kSK5KA==\n" +
+        "-----END PRIVATE KEY-----"
+    private static final String RSA_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n" +
+        "MIIEpQIBAAKCAQEAx9GOO2vMP04Ir1eJsrYwUkf+RyLvj+fP794OoG2L8QvzVj8z" +
+        "2d4Y03kbJCaQdQHzcJueawIY0g/fXeGYh1jBBYxHkiiGhLTMQz1NaYNt0f3vrAE1" +
+        "XrxH8dRtfiKGkrukii5xze4jbb1pSq3keaTVFRynEaLYP2rojVHfD/VqJPBUIRRs" +
+        "W2RHWIY7yAi3xy62SkCjkdQMKj7HF/hZyxdhfvV9EF0QF911vw+EvbH0vSTfiepo" +
+        "YTkKcu/KeVQ8Rj2Yptm5P1jYQd7kPuFBO8XTGCDAT8T95Hdv74QSxvgIahr4dV4U" +
+        "TrwkNprbkavr0xQn3frTm8dW+Wu3lFMFVjPAMQIDAQABAoIBAQCdb2qVPtXqet00" +
+        "6c/AUvO3oKmj+s6tn4OiBl+X3zgHb9cF+T4tRmRhGmZcEVZ4GlVoP/SNc1WDDKZ9" +
+        "HaZD3ZYXfPNXIT77iEf4InC/1aHNdjpEV59pSQeWbjzmyOUm71kw1m8sRZj8eeRf" +
+        "xqrhfRG2VKD9sESZku4vinYp6L784kcIHr6XaPyAN7qLF+TcyGsyIQnm+L9b9rab" +
+        "zR+t6XwMyrBB1RdG1UO8kbawxOW26TW8jUeXpt9Btgl6jUCHSjEAC92+C3whpF6y" +
+        "QAVbM4010Dtdez4Qp4nzZixs5VYQQ6guuS7oeRidtar49iJ1iGHS37dA781FR9vQ" +
+        "W/bgeB+RAoGBAP/hSBOTw0cfjz/WapCrV2k7QbLWQFG8dL8CLNSK7gfV4qP5bJGf" +
+        "MKAFw6lmEeFTpKkeiXjjyJhxTfJHilb3dOCf9pwxB2uEj8tt1sNGHJrb5aUcLFmd" +
+        "SZLTvTxStWGnclBGFlY1k6Ehpm2Q92jzkin/rhQ7jlApchlI2YlgTFkTAoGBAMfp" +
+        "izpO+nq2oiwt0CCe4PV4wQwZgQQUAN8pOxfOs660cW/xQOxvc3NfRpDI5xk+UGBu" +
+        "0HcNC0W4eAE985DD1W3eAst2EYShYl8BeZaDr+GBypQfjcvciguyc/bc4XHDgMY8" +
+        "o8A7WNrcPw0D+MXYLQ7jHHK+wy3awfJq2TZ9b04rAoGAMXXedMpPKORU0EYl+yjj" +
+        "kJe/r03yyNngxzsoZz0jnageUwvXjJ50y7nRhGESe7erUHVypUeCctUT+A0UFJNo" +
+        "qDLDfJWNlZ7eHLhylvRqexSeYzf66qeYnSUIoyxpmyK+2f1yO9/HVZInlW48JLFQ" +
+        "Q4YEpCyO6bfZMkH+qqtOlrkCgYEAuhNm9YIX4WrnbmnCJOrdh367aZC/ptUbrpxJ" +
+        "FbLfSslIISMVBD4E3ymanB90A+odlHTw8y8gA+hdQwKwGFo/6cDRJyKh0asJzlao" +
+        "HvI6HpPZxJ/OMyf3EkYrbGdSLLsFvP8qiD51SVniEjJVN4os/oNksmVfdOn+xq6v" +
+        "ueltVfsCgYEA64FdlRyciB7h0urfgAVfPXYrbBbeJ9odkj81/cSObsFHJcD8tNWw" +
+        "mjHHCr8z8IZiVjEQ8yHioC8t2iVpJfM2XnmzrCqjQdzZZvMDa2GySb6UxMrepKWY" +
+        "vmCf0uJkP9AsyKZqutNeGiptejScbwB2Ch7g1L4YgxcGnX/EO5EiuSg=\n" +
+        "-----END RSA PRIVATE KEY-----"
 
     @Test
     void testInstantiationWithNullClientConfig() {
@@ -294,4 +355,40 @@ class AccessTokenRetrieverServiceImplTest {
         return new AccessTokenRetrieverServiceImpl(clientConfiguration)
     }
 
+    @Test
+    void testConvertPemKeyToRsaPrivateKey() {
+        DefaultClientBuilder oktaClient = (DefaultClientBuilder) Clients.builder()
+            .setBaseUrlResolver({ -> "https://sample.okta.com" })
+            .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+            .setPrivateKey(RSAKey.parseFromPEMEncodedObjects(PRIVATE_KEY).toRSAKey().toPrivateKey())
+
+        ClientConfiguration clientConfiguration = oktaClient.getClientConfiguration()
+
+        assertEquals(clientConfiguration.getPrivateKey(), RSA_PRIVATE_KEY)
+
+        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfiguration).createSignedJWT()
+        assertThat(signedJwt, notNullValue())
+    }
+
+    @Test
+    void testParseRsaPrivateKey() {
+        DefaultClientBuilder oktaClient = (DefaultClientBuilder) Clients.builder()
+            .setBaseUrlResolver({ -> "https://sample.okta.com" })
+            .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+            .setPrivateKey(RSAKey.parseFromPEMEncodedObjects(RSA_PRIVATE_KEY).toRSAKey().toPrivateKey())
+
+        String signedJwt = getAccessTokenRetrieverServiceInstance(oktaClient.getClientConfiguration()).createSignedJWT()
+        assertThat(signedJwt, notNullValue())
+    }
+
+    @Test(expectedExceptions = PEMException.class)
+    void testParsePemKeyAsRsaPrivateKey() {
+        ClientConfiguration clientConfigMock = mock(ClientConfiguration)
+        BaseUrlResolver baseUrlResolver = { -> "https://sample.okta.com" }
+        when(clientConfigMock.getBaseUrlResolver()).thenReturn(baseUrlResolver)
+        when(clientConfigMock.getPrivateKey()).thenReturn(PRIVATE_KEY.replaceAll(" PRIVATE ", " RSA PRIVATE "))
+
+        String signedJwt = getAccessTokenRetrieverServiceInstance(clientConfigMock).createSignedJWT()
+        assertThat(signedJwt, notNullValue())
+    }
 }
