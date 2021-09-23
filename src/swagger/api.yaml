@@ -659,8 +659,6 @@ paths:
             schema:
               $ref: '#/components/schemas/ApplicationGroupAssignment'
         required: false
-        extensions:
-          x-codegen-request-body-name: 'applicationGroupAssignment'
       responses:
         '200':
           description: Success
@@ -2219,12 +2217,11 @@ paths:
                   secretKey: xxxxxxxxxxx
                   siteKey: xxxxxxxxxxx
                   type: HCAPTCHA
-        extensions:
-          x-codegen-request-body-name: 'instance'
       tags:
       - CAPTCHA
       security:
       - api_token: []
+      x-codegen-request-body-name: 'instance'
   /api/v1/captchas/{captchaId}:
     parameters:
     - schema:
@@ -2348,12 +2345,11 @@ paths:
                   type: HCAPTCHA
         required: true
         description: ''
-        extensions:
-          x-codegen-request-body-name: 'instance'
       tags:
       - CAPTCHA
       security:
       - api_token: []
+      x-codegen-request-body-name: 'instance'
     delete:
       summary: Delete CAPTCHA Instance
       operationId: deleteCaptchaInstance
@@ -2454,12 +2450,11 @@ paths:
                   type: HCAPTCHA
         required: true
         description: ''
-        extensions:
-          x-codegen-request-body-name: 'instance'
       tags:
       - CAPTCHA
       security:
       - api_token: []
+      x-codegen-request-body-name: 'instance'
   /api/v1/domains:
     get:
       tags:
@@ -5027,8 +5022,6 @@ paths:
             schema:
               $ref: '#/components/schemas/OrgSetting'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'orgSetting'
       responses:
         '200':
           description: Success
@@ -5041,6 +5034,7 @@ paths:
       summary: Update Org setting
       tags:
       - Org
+      x-codegen-request-body-name: 'orgSetting'
   /api/v1/org/contacts:
     get:
       description: Gets Contact Types of your organization.
@@ -6641,8 +6635,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserCredentials'
-        extensions:
-          x-codegen-request-body-name: 'userCredentials'
       responses:
         '200':
           description: Credentials
@@ -6652,6 +6644,7 @@ paths:
                 $ref: '#/components/schemas/UserCredentials'
       security:
       - api_token: []
+      x-codegen-request-body-name: 'userCredentials'
   /api/v1/users/{userId}/factors:
     get:
       tags:
