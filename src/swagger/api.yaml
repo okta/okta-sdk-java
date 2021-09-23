@@ -5076,35 +5076,34 @@ paths:
       summary: Get org contact user
       tags:
       - Org
-#    put:
-#      description: Updates the User associated with the specified Contact Type.
-#      operationId: updateOrgContactUser
-#      parameters:
-#      - in: path
-#        name: contactType
-#        required: true
-#        schema:
-#          type: string
-#      requestBody:
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/UserIdString'
-#        required: true
-#        extensions:
-#          x-codegen-request-body-name: 'userIdString'
-#      responses:
-#        '200':
-#          description: Success
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/OrgContactUser'
-#      security:
-#      - api_token: []
-#      summary: Update org contact user
-#      tags:
-#      - Org
+    put:
+      description: Updates the User associated with the specified Contact Type.
+      operationId: updateOrgContactUser
+      parameters:
+      - in: path
+        name: contactType
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgContactUser'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgContactUser'
+      security:
+      - api_token: []
+      summary: Update org contact user
+      tags:
+      - Org
+      x-codegen-request-body-name: orgContactUser
   /api/v1/org/privacy/oktaSupport:
     get:
       description: Gets Okta Support Settings of your organization.
@@ -12032,12 +12031,12 @@ components:
         userId:
           type: string
       type: object
-#      x-okta-operations:
-#      - alias: updateContactUser
-#        arguments:
-#        - dest: userId
-#          src: userId
-#        operationId: updateOrgContactUser
+      x-okta-operations:
+      - alias: updateContactUser
+        arguments:
+        - dest: userId
+          src: userId
+        operationId: updateOrgContactUser
       x-okta-tags:
       - Org
     OrgSetting:
