@@ -1089,6 +1089,8 @@ paths:
       responses:
         '200':
           description: Success
+          schema:
+            $ref: '#/definitions/Authenticator'
       security:
         - api_token: [ ]
       tags:
@@ -1109,6 +1111,8 @@ paths:
       responses:
         '200':
           description: Success
+          schema:
+            $ref: '#/definitions/Authenticator'
       security:
         - api_token: [ ]
       tags:

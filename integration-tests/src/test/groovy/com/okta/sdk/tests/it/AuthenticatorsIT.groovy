@@ -41,7 +41,7 @@ class AuthenticatorsIT extends ITSupport {
 
         AuthenticatorList authenticators = client.listAuthenticators()
         assertThat(authenticators, notNullValue())
-        assertThat(authenticators.size(), greaterThan(0))  // TODO: safe to assume this?
+        assertThat(authenticators.size(), greaterThan(0))
 
         List<String> authenticatorIds = authenticators.stream()
             .map(Authenticator::getId).collect(Collectors.toList())
@@ -62,7 +62,7 @@ class AuthenticatorsIT extends ITSupport {
 
         AuthenticatorList authenticators = client.listAuthenticators()
         assertThat(authenticators, notNullValue())
-        assertThat(authenticators.size(), greaterThan(0)) // TODO: safe to assume this?
+        assertThat(authenticators.size(), greaterThan(0))
 
         // get active authenticators
         List<String> activeAuthenticatorIds = authenticators.stream()
@@ -71,6 +71,7 @@ class AuthenticatorsIT extends ITSupport {
         assertThat(activeAuthenticatorIds, notNullValue())
         assertThat(activeAuthenticatorIds.size(), greaterThan(0))
 
+        //okta verify is fine to deactivate
         // deactivate an authenticator
         Authenticator activeAuthenticator = client.getAuthenticator(activeAuthenticatorIds.get(0))
         activeAuthenticator.deactivate() // TODO: this could return error depending on the Org policy setup - "HTTP 403, Okta E0000148 (Cannot modify/disable this authenticator because it is enabled in one or more policies. To continue, disable the authenticator in these policies. - '2 causes')"
