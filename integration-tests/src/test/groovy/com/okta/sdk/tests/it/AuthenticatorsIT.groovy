@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.*
 
 /**
  * Tests for {@code /api/v1/authenticators}.
- * @since 5.x.x
+ * @since 6.x.x
  */
 class AuthenticatorsIT extends ITSupport {
 
