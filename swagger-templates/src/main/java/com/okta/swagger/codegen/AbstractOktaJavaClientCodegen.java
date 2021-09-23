@@ -81,7 +81,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected Set<String> topLevelResources = new HashSet<>();
     protected Map<String, Object> rawSwaggerConfig;
 
-    public AbstractOktaJavaClientCodegen(String codeGenName, String relativeTemplateDir, String modelPackage) {
+    public AbstractOktaJavaClientCodegen(String codeGenName, String modelPackage) {
         super();
         this.codeGenName = codeGenName;
         this.dateLibrary = "legacy";
@@ -154,11 +154,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         .filter(entry -> entry.getValue().getContent().get("application/json") != null)
                         .forEach(entry -> {
                             Schema schema = entry.getValue().getContent().get("application/json").getSchema();
-                            if (schema != null) {
-                                if (schema instanceof ArraySchema) {
-                                    String ref = ((ArraySchema) schema).getItems().get$ref();
-                                    resources.add(refToSimpleName(ref));
-                                }
+                            if (schema != null && schema instanceof ArraySchema) {
+                                String ref = ((ArraySchema) schema).getItems().get$ref();
+                                resources.add(refToSimpleName(ref));
                             }
                         });
                 });
