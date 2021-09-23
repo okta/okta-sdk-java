@@ -2343,8 +2343,8 @@ paths:
                   secretKey: xxxxxxxxxxx
                   siteKey: xxxxxxxxxxx
                   type: HCAPTCHA
-        required: true
         description: ''
+        required: true
       tags:
       - CAPTCHA
       security:
@@ -2448,8 +2448,8 @@ paths:
                   name: myHCaptcha
                   siteKey: xxxxxxxxxxx
                   type: HCAPTCHA
-        required: true
         description: ''
+        required: true
       tags:
       - CAPTCHA
       security:
