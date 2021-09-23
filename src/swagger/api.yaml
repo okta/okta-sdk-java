@@ -109,8 +109,6 @@ paths:
             schema:
               $ref: '#/components/schemas/Application'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'application'
       responses:
         '200':
           description: Success
@@ -120,6 +118,7 @@ paths:
                 $ref: '#/components/schemas/Application'
       security:
       - api_token: []
+      x-codegen-request-body-name: application
   /api/v1/apps/{appId}:
     get:
       tags:
@@ -164,8 +163,6 @@ paths:
             schema:
               $ref: '#/components/schemas/Application'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'application'
       responses:
         '200':
           description: Success
@@ -175,6 +172,7 @@ paths:
                 $ref: '#/components/schemas/Application'
       security:
       - api_token: []
+      x-codegen-request-body-name: application
     delete:
       tags:
       - Application
@@ -235,8 +233,6 @@ paths:
             schema:
               $ref: '#/components/schemas/CsrMetadata'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'metadata'
       responses:
         '201':
           description: Created
@@ -246,6 +242,7 @@ paths:
                 $ref: '#/components/schemas/Csr'
       security:
       - api_token: []
+      x-codegen-request-body-name: metadata
   /api/v1/apps/{appId}/credentials/csrs/{csrId}:
     get:
       tags:
@@ -502,8 +499,6 @@ paths:
             schema:
               $ref: '#/components/schemas/OAuth2ScopeConsentGrant'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'oAuth2ScopeConsentGrant'
       responses:
         '201':
           description: Created
@@ -513,6 +508,7 @@ paths:
                 $ref: '#/components/schemas/OAuth2ScopeConsentGrant'
       security:
       - api_token: []
+      x-codegen-request-body-name: oAuth2ScopeConsentGrant
   /api/v1/apps/{appId}/grants/{grantId}:
     get:
       tags:
@@ -674,6 +670,7 @@ paths:
                 $ref: '#/components/schemas/ApplicationGroupAssignment'
       security:
       - api_token: []
+      x-codegen-request-body-name: applicationGroupAssignment
     delete:
       tags:
       - Application
@@ -911,8 +908,6 @@ paths:
             schema:
               $ref: '#/components/schemas/AppUser'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'appUser'
       responses:
         '200':
           description: Success
@@ -922,6 +917,7 @@ paths:
                 $ref: '#/components/schemas/AppUser'
       security:
       - api_token: []
+      x-codegen-request-body-name: appUser
   /api/v1/apps/{appId}/users/{userId}:
     get:
       tags:
@@ -976,8 +972,6 @@ paths:
             schema:
               $ref: '#/components/schemas/AppUser'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'appUser'
       responses:
         '200':
           description: Success
@@ -987,6 +981,7 @@ paths:
                 $ref: '#/components/schemas/AppUser'
       security:
       - api_token: []
+      x-codegen-request-body-name: appUser
     delete:
       tags:
       - Application
@@ -1133,8 +1128,6 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthorizationServer'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'authorizationServer'
       responses:
         '200':
           description: Success
@@ -1147,6 +1140,7 @@ paths:
           content: {}
       security:
       - api_token: []
+      x-codegen-request-body-name: authorizationServer
   /api/v1/authorizationServers/{authServerId}:
     get:
       tags:
@@ -1185,8 +1179,6 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthorizationServer'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'authorizationServer'
       responses:
         '200':
           description: Success
@@ -1196,6 +1188,7 @@ paths:
                 $ref: '#/components/schemas/AuthorizationServer'
       security:
       - api_token: []
+      x-codegen-request-body-name: authorizationServer
     delete:
       tags:
       - AuthorizationServer
@@ -1253,8 +1246,6 @@ paths:
             schema:
               $ref: '#/components/schemas/OAuth2Claim'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'oAuth2Claim'
       responses:
         '200':
           description: Created
@@ -1267,6 +1258,7 @@ paths:
           content: {}
       security:
       - api_token: []
+      x-codegen-request-body-name: oAuth2Claim
   /api/v1/authorizationServers/{authServerId}/claims/{claimId}:
     get:
       tags:
@@ -1315,8 +1307,6 @@ paths:
             schema:
               $ref: '#/components/schemas/OAuth2Claim'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'oAuth2Claim'
       responses:
         '200':
           description: Success
@@ -1326,6 +1316,7 @@ paths:
                 $ref: '#/components/schemas/OAuth2Claim'
       security:
       - api_token: []
+      x-codegen-request-body-name: oAuth2Claim
     delete:
       tags:
       - AuthorizationServer
@@ -1538,8 +1529,6 @@ paths:
             schema:
               $ref: '#/components/schemas/JwkUse'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'use'
       responses:
         '200':
           description: Success
@@ -1551,6 +1540,7 @@ paths:
                   $ref: '#/components/schemas/JsonWebKey'
       security:
       - api_token: []
+      x-codegen-request-body-name: use
   /api/v1/authorizationServers/{authServerId}/lifecycle/activate:
     post:
       tags:
@@ -1627,8 +1617,6 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthorizationServerPolicy'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'policy'
       responses:
         '200':
           description: Success
@@ -1641,6 +1629,7 @@ paths:
           content: {}
       security:
       - api_token: []
+      x-codegen-request-body-name: policy
   /api/v1/authorizationServers/{authServerId}/policies/{policyId}:
     get:
       tags:
@@ -1689,8 +1678,6 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthorizationServerPolicy'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'authorizationServerPolicy'
       responses:
         '200':
           description: Success
@@ -1700,6 +1687,7 @@ paths:
                 $ref: '#/components/schemas/AuthorizationServerPolicy'
       security:
       - api_token: []
+      x-codegen-request-body-name: policy
     delete:
       tags:
       - AuthorizationServer
@@ -1818,8 +1806,6 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthorizationServerPolicyRule'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'policyRule'
       responses:
         '200':
           description: Success
@@ -1829,6 +1815,7 @@ paths:
                 $ref: '#/components/schemas/AuthorizationServerPolicyRule'
       security:
       - api_token: []
+      x-codegen-request-body-name: policyRule
   /api/v1/authorizationServers/{authServerId}/policies/{policyId}/rules/{ruleId}:
     get:
       tags:
@@ -1887,8 +1874,6 @@ paths:
             schema:
               $ref: '#/components/schemas/AuthorizationServerPolicyRule'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'policyRule'
       responses:
         '200':
           description: Success
@@ -1898,6 +1883,7 @@ paths:
                 $ref: '#/components/schemas/AuthorizationServerPolicyRule'
       security:
       - api_token: []
+      x-codegen-request-body-name: policyRule
     delete:
       tags:
       - AuthorizationServer
@@ -2039,8 +2025,6 @@ paths:
             schema:
               $ref: '#/components/schemas/OAuth2Scope'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'oAuth2Scope'
       responses:
         '200':
           description: Success
@@ -2053,6 +2037,7 @@ paths:
           content: {}
       security:
       - api_token: []
+      x-codegen-request-body-name: oAuth2Scope
   /api/v1/authorizationServers/{authServerId}/scopes/{scopeId}:
     get:
       tags:
@@ -2101,8 +2086,6 @@ paths:
             schema:
               $ref: '#/components/schemas/OAuth2Scope'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'oAuth2Scope'
       responses:
         '200':
           description: Success
@@ -2112,6 +2095,7 @@ paths:
                 $ref: '#/components/schemas/OAuth2Scope'
       security:
       - api_token: []
+      x-codegen-request-body-name: oAuth2Scope
     delete:
       tags:
       - AuthorizationServer
@@ -2504,8 +2488,6 @@ paths:
             schema:
               $ref: '#/components/schemas/Domain'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'domain'
       responses:
         '200':
           description: Success
@@ -2515,6 +2497,7 @@ paths:
                 $ref: '#/components/schemas/DomainResponse'
       security:
       - api_token: []
+      x-codegen-request-body-name: domain
   /api/v1/domains/{domainId}/verify:
     post:
       tags:
@@ -2556,14 +2539,13 @@ paths:
             schema:
               $ref: '#/components/schemas/DomainCertificate'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'certificate'
       responses:
         '204':
           description: No Content
           content: {}
       security:
       - api_token: []
+      x-codegen-request-body-name: certificate
   /api/v1/domains/{domainId}:
     get:
       tags:
@@ -2632,8 +2614,6 @@ paths:
             schema:
               $ref: '#/components/schemas/EventHook'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'eventHook'
       responses:
         '200':
           description: Success
@@ -2643,6 +2623,7 @@ paths:
                 $ref: '#/components/schemas/EventHook'
       security:
       - api_token: []
+      x-codegen-request-body-name: eventHook
   /api/v1/eventHooks/{eventHookId}:
     get:
       tags:
@@ -2681,8 +2662,6 @@ paths:
             schema:
               $ref: '#/components/schemas/EventHook'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'eventHook'
       responses:
         '200':
           description: Success
@@ -2692,6 +2671,7 @@ paths:
                 $ref: '#/components/schemas/EventHook'
       security:
       - api_token: []
+      x-codegen-request-body-name: eventHook
     delete:
       tags:
       - EventHook
@@ -2944,8 +2924,6 @@ paths:
             schema:
               $ref: '#/components/schemas/Group'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'group'
       responses:
         '200':
           description: Success
@@ -2955,6 +2933,7 @@ paths:
                 $ref: '#/components/schemas/Group'
       security:
       - api_token: []
+      x-codegen-request-body-name: group
   /api/v1/groups/rules:
     get:
       tags:
@@ -3009,8 +2988,6 @@ paths:
             schema:
               $ref: '#/components/schemas/GroupRule'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'groupRule'
       responses:
         '200':
           description: Success
@@ -3020,6 +2997,7 @@ paths:
                 $ref: '#/components/schemas/GroupRule'
       security:
       - api_token: []
+      x-codegen-request-body-name: groupRule
   /api/v1/groups/rules/{ruleId}:
     get:
       tags:
@@ -3063,8 +3041,6 @@ paths:
             schema:
               $ref: '#/components/schemas/GroupRule'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'groupRule'
       responses:
         '200':
           description: Success
@@ -3074,6 +3050,7 @@ paths:
                 $ref: '#/components/schemas/GroupRule'
       security:
       - api_token: []
+      x-codegen-request-body-name: groupRule
     delete:
       tags:
       - Group
@@ -3175,8 +3152,6 @@ paths:
             schema:
               $ref: '#/components/schemas/Group'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'group'
       responses:
         '200':
           description: Success
@@ -3186,6 +3161,7 @@ paths:
                 $ref: '#/components/schemas/Group'
       security:
       - api_token: []
+      x-codegen-request-body-name: group
     delete:
       tags:
       - Group
@@ -3288,8 +3264,6 @@ paths:
             schema:
               $ref: '#/components/schemas/AssignRoleRequest'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'assignRoleRequest'
       responses:
         '200':
           description: Success
@@ -3302,6 +3276,7 @@ paths:
           content: {}
       security:
       - api_token: []
+      x-codegen-request-body-name: assignRoleRequest
   /api/v1/groups/{groupId}/roles/{roleId}:
     get:
       tags:
@@ -3738,8 +3713,6 @@ paths:
             schema:
               $ref: '#/components/schemas/IdentityProvider'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'identityProvider'
       responses:
         '200':
           description: Success
@@ -3749,6 +3722,7 @@ paths:
                 $ref: '#/components/schemas/IdentityProvider'
       security:
       - api_token: []
+      x-codegen-request-body-name: identityProvider
   /api/v1/idps/credentials/keys:
     get:
       tags:
@@ -3792,8 +3766,6 @@ paths:
             schema:
               $ref: '#/components/schemas/JsonWebKey'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'jsonWebKey'
       responses:
         '200':
           description: Success
@@ -3803,6 +3775,7 @@ paths:
                 $ref: '#/components/schemas/JsonWebKey'
       security:
       - api_token: []
+      x-codegen-request-body-name: jsonWebKey
   /api/v1/idps/credentials/keys/{keyId}:
     get:
       tags:
@@ -3883,8 +3856,6 @@ paths:
             schema:
               $ref: '#/components/schemas/IdentityProvider'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'identityProvider'
       responses:
         '200':
           description: Success
@@ -3894,6 +3865,7 @@ paths:
                 $ref: '#/components/schemas/IdentityProvider'
       security:
       - api_token: []
+      x-codegen-request-body-name: identityProvider
     delete:
       tags:
       - IdentityProvider
@@ -3954,8 +3926,6 @@ paths:
             schema:
               $ref: '#/components/schemas/CsrMetadata'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'metadata'
       responses:
         '201':
           description: Created
@@ -3965,6 +3935,7 @@ paths:
                 $ref: '#/components/schemas/Csr'
       security:
       - api_token: []
+      x-codegen-request-body-name: metadata
   /api/v1/idps/{idpId}/credentials/csrs/{csrId}:
     get:
       tags:
@@ -4294,8 +4265,6 @@ paths:
             schema:
               $ref: '#/components/schemas/UserIdentityProviderLinkRequest'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'userIdentityProviderLinkRequest'
       responses:
         '200':
           description: Success
@@ -4305,6 +4274,7 @@ paths:
                 $ref: '#/components/schemas/IdentityProviderApplicationUser'
       security:
       - api_token: []
+      x-codegen-request-body-name: userIdentityProviderLinkRequest
     delete:
       tags:
       - IdentityProvider
@@ -4390,8 +4360,6 @@ paths:
             schema:
               $ref: '#/components/schemas/InlineHook'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'inlineHook'
       responses:
         '200':
           description: Success
@@ -4401,6 +4369,7 @@ paths:
                 $ref: '#/components/schemas/InlineHook'
       security:
       - api_token: []
+      x-codegen-request-body-name: inlineHook
   /api/v1/inlineHooks/{inlineHookId}:
     get:
       tags:
@@ -4439,8 +4408,6 @@ paths:
             schema:
               $ref: '#/components/schemas/InlineHook'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'inlineHook'
       responses:
         '200':
           description: Success
@@ -4450,6 +4417,7 @@ paths:
                 $ref: '#/components/schemas/InlineHook'
       security:
       - api_token: []
+      x-codegen-request-body-name: inlineHook
     delete:
       tags:
       - InlineHook
@@ -4485,8 +4453,6 @@ paths:
             schema:
               $ref: '#/components/schemas/InlineHookPayload'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'payloadData'
       responses:
         '200':
           description: Success
@@ -4496,6 +4462,7 @@ paths:
                 $ref: '#/components/schemas/InlineHookResponse'
       security:
       - api_token: []
+      x-codegen-request-body-name: payloadData
   /api/v1/inlineHooks/{inlineHookId}/lifecycle/activate:
     post:
       tags:
@@ -4662,8 +4629,6 @@ paths:
             schema:
               $ref: '#/components/schemas/ProfileMapping'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'profileMapping'
       responses:
         '200':
           description: Success
@@ -4673,6 +4638,7 @@ paths:
                 $ref: '#/components/schemas/ProfileMapping'
       security:
       - api_token: []
+      x-codegen-request-body-name: profileMapping
   /api/v1/meta/schemas/apps/{appInstanceId}/default:
     get:
       tags:
@@ -4713,8 +4679,6 @@ paths:
             schema:
               $ref: '#/components/schemas/UserSchema'
         required: false
-        extensions:
-          x-codegen-request-body-name: 'userSchema'
       responses:
         '200':
           description: successful operation
@@ -4801,8 +4765,6 @@ paths:
             schema:
               $ref: '#/components/schemas/UserSchema'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'userSchema'
       responses:
         '200':
           description: Success
@@ -4812,6 +4774,7 @@ paths:
                 $ref: '#/components/schemas/UserSchema'
       security:
       - api_token: []
+      x-codegen-request-body-name: userSchema
   /api/v1/meta/schemas/user/linkedObjects:
     get:
       tags:
@@ -4840,8 +4803,6 @@ paths:
             schema:
               $ref: '#/components/schemas/LinkedObject'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'linkedObject'
       responses:
         '201':
           description: Created
@@ -4851,6 +4812,7 @@ paths:
                 $ref: '#/components/schemas/LinkedObject'
       security:
       - api_token: []
+      x-codegen-request-body-name: linkedObject
   /api/v1/meta/schemas/user/linkedObjects/{linkedObjectName}:
     get:
       tags:
@@ -4917,8 +4879,6 @@ paths:
             schema:
               $ref: '#/components/schemas/UserType'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'userType'
       responses:
         '200':
           description: Success
@@ -4928,6 +4888,7 @@ paths:
                 $ref: '#/components/schemas/UserType'
       security:
       - api_token: []
+      x-codegen-request-body-name: userType
   /api/v1/meta/types/user/{typeId}:
     get:
       tags:
@@ -4966,8 +4927,6 @@ paths:
             schema:
               $ref: '#/components/schemas/UserType'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'userType'
       responses:
         '200':
           description: Success
@@ -4977,6 +4936,7 @@ paths:
                 $ref: '#/components/schemas/UserType'
       security:
       - api_token: []
+      x-codegen-request-body-name: userType
     post:
       tags:
       - UserType
@@ -4994,8 +4954,6 @@ paths:
             schema:
               $ref: '#/components/schemas/UserType'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'userType'
       responses:
         '200':
           description: Success
@@ -5005,6 +4963,7 @@ paths:
                 $ref: '#/components/schemas/UserType'
       security:
       - api_token: []
+      x-codegen-request-body-name: userType
     delete:
       tags:
       - UserType
@@ -5371,8 +5330,6 @@ paths:
             schema:
               $ref: '#/components/schemas/Policy'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'policy'
       responses:
         '200':
           description: Success
@@ -5382,6 +5339,7 @@ paths:
                 $ref: '#/components/schemas/Policy'
       security:
       - api_token: []
+      x-codegen-request-body-name: policy
   /api/v1/policies/{policyId}:
     get:
       tags:
@@ -5425,8 +5383,6 @@ paths:
             schema:
               $ref: '#/components/schemas/Policy'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'policy'
       responses:
         '200':
           description: Success
@@ -5436,6 +5392,7 @@ paths:
                 $ref: '#/components/schemas/Policy'
       security:
       - api_token: []
+      x-codegen-request-body-name: policy
     delete:
       tags:
       - Policy
@@ -5529,8 +5486,6 @@ paths:
             schema:
               $ref: '#/components/schemas/PolicyRule'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'policyRule'
       responses:
         '200':
           description: Success
@@ -5540,6 +5495,7 @@ paths:
                 $ref: '#/components/schemas/PolicyRule'
       security:
       - api_token: []
+      x-codegen-request-body-name: policyRule
   /api/v1/policies/{policyId}/rules/{ruleId}:
     get:
       tags:
@@ -5588,8 +5544,6 @@ paths:
             schema:
               $ref: '#/components/schemas/PolicyRule'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'policyRule'
       responses:
         '200':
           description: Success
@@ -5599,6 +5553,7 @@ paths:
                 $ref: '#/components/schemas/PolicyRule'
       security:
       - api_token: []
+      x-codegen-request-body-name: policyRule
     delete:
       tags:
       - Policy
@@ -5680,8 +5635,6 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateSessionRequest'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'createSessionRequest'
       responses:
         '200':
           description: Success
@@ -5691,6 +5644,7 @@ paths:
                 $ref: '#/components/schemas/Session'
       security:
       - api_token: []
+      x-codegen-request-body-name: createSessionRequest
   /api/v1/sessions/{sessionId}:
     get:
       tags:
@@ -5788,8 +5742,6 @@ paths:
             schema:
               $ref: '#/components/schemas/SmsTemplate'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'smsTemplate'
       responses:
         '200':
           description: Success
@@ -5799,6 +5751,7 @@ paths:
                 $ref: '#/components/schemas/SmsTemplate'
       security:
       - api_token: []
+      x-codegen-request-body-name: smsTemplate
   /api/v1/templates/sms/{templateId}:
     get:
       tags:
@@ -5839,8 +5792,6 @@ paths:
             schema:
               $ref: '#/components/schemas/SmsTemplate'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'smsTemplate'
       responses:
         '200':
           description: Success
@@ -5850,6 +5801,7 @@ paths:
                 $ref: '#/components/schemas/SmsTemplate'
       security:
       - api_token: []
+      x-codegen-request-body-name: smsTemplate
     post:
       tags:
       - Template
@@ -5868,8 +5820,6 @@ paths:
             schema:
               $ref: '#/components/schemas/SmsTemplate'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'smsTemplate'
       responses:
         '200':
           description: Success
@@ -5879,6 +5829,7 @@ paths:
                 $ref: '#/components/schemas/SmsTemplate'
       security:
       - api_token: []
+      x-codegen-request-body-name: smsTemplate
     delete:
       tags:
       - Template
@@ -5923,8 +5874,6 @@ paths:
             schema:
               $ref: '#/components/schemas/ThreatInsightConfiguration'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'threatInsightConfiguration'
       responses:
         '200':
           description: Success
@@ -5934,6 +5883,7 @@ paths:
                 $ref: '#/components/schemas/ThreatInsightConfiguration'
       security:
       - api_token: []
+      x-codegen-request-body-name: ThreatInsightConfiguration
   /api/v1/trustedOrigins:
     get:
       tags:
@@ -5981,8 +5931,6 @@ paths:
             schema:
               $ref: '#/components/schemas/TrustedOrigin'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'trustedOrigin'
       responses:
         '200':
           description: Success
@@ -5992,6 +5940,7 @@ paths:
                 $ref: '#/components/schemas/TrustedOrigin'
       security:
       - api_token: []
+      x-codegen-request-body-name: trustedOrigin
   /api/v1/trustedOrigins/{trustedOriginId}:
     get:
       tags:
@@ -6030,8 +5979,6 @@ paths:
             schema:
               $ref: '#/components/schemas/TrustedOrigin'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'trustedOrigin'
       responses:
         '200':
           description: Success
@@ -6041,6 +5988,7 @@ paths:
                 $ref: '#/components/schemas/TrustedOrigin'
       security:
       - api_token: []
+      x-codegen-request-body-name: trustedOrigin
     delete:
       tags:
       - TrustedOrigin
@@ -6185,8 +6133,6 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateUserRequest'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'createUserRequest'
       responses:
         '200':
           description: Success
@@ -6196,6 +6142,7 @@ paths:
                 $ref: '#/components/schemas/User'
       security:
       - api_token: []
+      x-codegen-request-body-name: body
   /api/v1/users/{associatedUserId}/linkedObjects/{primaryRelationshipName}/{primaryUserId}:
     put:
       tags:
@@ -6268,8 +6215,6 @@ paths:
             schema:
               $ref: '#/components/schemas/User'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'user'
       responses:
         '200':
           description: Success
@@ -6279,6 +6224,7 @@ paths:
                 $ref: '#/components/schemas/User'
       security:
       - api_token: []
+      x-codegen-request-body-name: user
     post:
       tags:
       - User
@@ -6300,8 +6246,6 @@ paths:
             schema:
               $ref: '#/components/schemas/User'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'user'
       responses:
         '200':
           description: Success
@@ -6311,6 +6255,7 @@ paths:
                 $ref: '#/components/schemas/User'
       security:
       - api_token: []
+      x-codegen-request-body-name: user
     delete:
       tags:
       - User
@@ -6605,8 +6550,6 @@ paths:
             schema:
               $ref: '#/components/schemas/ChangePasswordRequest'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'changePasswordRequest'
       responses:
         '200':
           description: Success
@@ -6616,6 +6559,7 @@ paths:
                 $ref: '#/components/schemas/UserCredentials'
       security:
       - api_token: []
+      x-codegen-request-body-name: changePasswordRequest
   /api/v1/users/{userId}/credentials/change_recovery_question:
     post:
       tags:
@@ -6635,8 +6579,6 @@ paths:
             schema:
               $ref: '#/components/schemas/UserCredentials'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'userCredentials'
       responses:
         '200':
           description: Success
@@ -6646,6 +6588,7 @@ paths:
                 $ref: '#/components/schemas/UserCredentials'
       security:
       - api_token: []
+      x-codegen-request-body-name: userCredentials
   /api/v1/users/{userId}/credentials/forgot_password:
     post:
       tags:
@@ -6774,8 +6717,6 @@ paths:
             schema:
               $ref: '#/components/schemas/UserFactor'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'userFactor'
       responses:
         '200':
           description: Success
@@ -6785,6 +6726,7 @@ paths:
                 $ref: '#/components/schemas/UserFactor'
       security:
       - api_token: []
+      x-codegen-request-body-name: body
   /api/v1/users/{userId}/factors/catalog:
     get:
       tags:
@@ -6903,8 +6845,6 @@ paths:
             schema:
               $ref: '#/components/schemas/ActivateFactorRequest'
         required: false
-        extensions:
-          x-codegen-request-body-name: 'activateFactorRequest'
       responses:
         '200':
           description: Success
@@ -6914,6 +6854,7 @@ paths:
                 $ref: '#/components/schemas/UserFactor'
       security:
       - api_token: []
+      x-codegen-request-body-name: body
   /api/v1/users/{userId}/factors/{factorId}/transactions/{transactionId}:
     get:
       tags:
@@ -6994,8 +6935,6 @@ paths:
             schema:
               $ref: '#/components/schemas/VerifyFactorRequest'
         required: false
-        extensions:
-          x-codegen-request-body-name: 'verifyFactorRequest'
       responses:
         '200':
           description: Success
@@ -7005,6 +6944,7 @@ paths:
                 $ref: '#/components/schemas/VerifyUserFactorResponse'
       security:
       - api_token: []
+      x-codegen-request-body-name: body
   /api/v1/users/{userId}/grants:
     get:
       tags:
@@ -7500,8 +7440,6 @@ paths:
             schema:
               $ref: '#/components/schemas/AssignRoleRequest'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'assignRoleRequest'
       responses:
         '201':
           description: Created
@@ -7511,6 +7449,7 @@ paths:
                 $ref: '#/components/schemas/Role'
       security:
       - api_token: []
+      x-codegen-request-body-name: assignRoleRequest
   /api/v1/users/{userId}/roles/{roleId}:
     delete:
       tags:
@@ -7906,8 +7845,6 @@ paths:
             schema:
               $ref: '#/components/schemas/NetworkZone'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'zone'
       responses:
         '200':
           description: Success
@@ -7917,6 +7854,7 @@ paths:
                 $ref: '#/components/schemas/NetworkZone'
       security:
       - api_token: []
+      x-codegen-request-body-name: zone
   /api/v1/zones/{zoneId}:
     get:
       tags:
@@ -7957,8 +7895,6 @@ paths:
             schema:
               $ref: '#/components/schemas/NetworkZone'
         required: true
-        extensions:
-          x-codegen-request-body-name: 'zone'
       responses:
         '200':
           description: Success
@@ -7968,6 +7904,7 @@ paths:
                 $ref: '#/components/schemas/NetworkZone'
       security:
       - api_token: []
+      x-codegen-request-body-name: zone
     delete:
       tags:
       - NetworkZone
