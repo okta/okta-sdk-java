@@ -28,14 +28,11 @@ import static org.hamcrest.Matchers.*
 
 /**
  * Tests for {@code /api/v1/authenticators}.
+ * These tests requires the Org to be OIE enabled.
  * @since 6.x.x
  */
 class AuthenticatorsIT extends ITSupport {
 
-    // This test requires an API Token created by Org admin, otherwise the below error would be returned:
-    // HTTP 401, Okta E0000015 (You do not have permission to access the feature you are requesting)
-
-    //TODO: given the above, check if its still a good idea to write this IT.
     @Test(groups = "group3")
     void listAndGetAuthenticatorsTest() {
 
@@ -64,29 +61,25 @@ class AuthenticatorsIT extends ITSupport {
         assertThat(authenticators, notNullValue())
         assertThat(authenticators.size(), greaterThan(0))
 
-        // get active authenticators
-        List<String> activeAuthenticatorIds = authenticators.stream()
-            .filter(authenticator -> authenticator.getStatus() == AuthenticatorStatus.ACTIVE)
+        // get okta verify authenticator
+        String oktaVerifyAuthenticatorId = authenticators.stream()
+            .filter(authenticator -> authenticator.getName() == "Okta Verify")
             .map(Authenticator::getId).collect(Collectors.toList())
-        assertThat(activeAuthenticatorIds, notNullValue())
-        assertThat(activeAuthenticatorIds.size(), greaterThan(0))
+        assertThat(oktaVerifyAuthenticatorId, notNullValue())
 
-        //okta verify is fine to deactivate
-        // deactivate an authenticator
-        Authenticator activeAuthenticator = client.getAuthenticator(activeAuthenticatorIds.get(0))
-        activeAuthenticator.deactivate() // TODO: this could return error depending on the Org policy setup - "HTTP 403, Okta E0000148 (Cannot modify/disable this authenticator because it is enabled in one or more policies. To continue, disable the authenticator in these policies. - '2 causes')"
-        // TODO: given the above, it is likely not a good idea to attempt to test deactivate/activate in IT.
+        oktaVerifyAuthenticatorId = oktaVerifyAuthenticatorId.substring(1, oktaVerifyAuthenticatorId.length() - 1)
+
+        // deactivate okta verify authenticator
+        Authenticator oktaVerifyAuthenticator = client.getAuthenticator(oktaVerifyAuthenticatorId)
+        Authenticator deactivatedOktaVerifyAuthenticator = oktaVerifyAuthenticator.deactivate()
 
         // check authenticator status
-        Authenticator updatedAuthenticator = client.getAuthenticator(activeAuthenticatorIds.get(0))
-        assertThat(updatedAuthenticator.getStatus(), equalTo(AuthenticatorStatus.INACTIVE))
+        assertThat(deactivatedOktaVerifyAuthenticator.getStatus(), equalTo(AuthenticatorStatus.INACTIVE))
 
         // activate it back
-        Authenticator inactiveAuthenticator = updatedAuthenticator
-        inactiveAuthenticator.activate()
+        Authenticator activatedOktaVerifyAuthenticator = deactivatedOktaVerifyAuthenticator.activate()
 
         // check authenticator status
-        updatedAuthenticator = client.getAuthenticator(activeAuthenticatorIds.get(0))
-        assertThat(updatedAuthenticator.getStatus(), equalTo(AuthenticatorStatus.ACTIVE))
+        assertThat(activatedOktaVerifyAuthenticator.getStatus(), equalTo(AuthenticatorStatus.ACTIVE))
     }
 }
