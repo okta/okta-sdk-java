@@ -2221,7 +2221,7 @@ paths:
       - CAPTCHA
       security:
       - api_token: []
-      x-codegen-request-body-name: 'instance'
+      x-codegen-request-body-name: instance
   /api/v1/captchas/{captchaId}:
     parameters:
     - schema:
@@ -2349,7 +2349,7 @@ paths:
       - CAPTCHA
       security:
       - api_token: []
-      x-codegen-request-body-name: 'instance'
+      x-codegen-request-body-name: instance
     delete:
       summary: Delete CAPTCHA Instance
       operationId: deleteCaptchaInstance
@@ -2454,7 +2454,7 @@ paths:
       - CAPTCHA
       security:
       - api_token: []
-      x-codegen-request-body-name: 'instance'
+      x-codegen-request-body-name: instance
   /api/v1/domains:
     get:
       tags:
@@ -5034,7 +5034,7 @@ paths:
       summary: Update Org setting
       tags:
       - Org
-      x-codegen-request-body-name: 'orgSetting'
+      x-codegen-request-body-name: orgSetting
   /api/v1/org/contacts:
     get:
       description: Gets Contact Types of your organization.
@@ -5877,7 +5877,7 @@ paths:
                 $ref: '#/components/schemas/ThreatInsightConfiguration'
       security:
       - api_token: []
-      x-codegen-request-body-name: ThreatInsightConfiguration
+      x-codegen-request-body-name: threatInsightConfiguration
   /api/v1/trustedOrigins:
     get:
       tags:
@@ -6644,7 +6644,7 @@ paths:
                 $ref: '#/components/schemas/UserCredentials'
       security:
       - api_token: []
-      x-codegen-request-body-name: 'userCredentials'
+      x-codegen-request-body-name: userCredentials
   /api/v1/users/{userId}/factors:
     get:
       tags:
