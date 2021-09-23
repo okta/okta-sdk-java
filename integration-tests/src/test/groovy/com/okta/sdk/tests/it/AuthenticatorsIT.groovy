@@ -78,6 +78,14 @@ class AuthenticatorsIT extends ITSupport {
 
         // check authenticator status
         Authenticator updatedAuthenticator = client.getAuthenticator(activeAuthenticatorIds.get(0))
+        assertThat(updatedAuthenticator.getStatus(), equalTo(AuthenticatorStatus.INACTIVE))
+
+        // activate it back
+        Authenticator inactiveAuthenticator = updatedAuthenticator
+        inactiveAuthenticator.activate()
+
+        // check authenticator status
+        updatedAuthenticator = client.getAuthenticator(activeAuthenticatorIds.get(0))
         assertThat(updatedAuthenticator.getStatus(), equalTo(AuthenticatorStatus.ACTIVE))
     }
 }
