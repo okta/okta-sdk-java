@@ -87,13 +87,13 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     public {{{datatypeWithEnum}}} {{getter}}() {
         return {{#vendorExtensions.forceCast}}({{{datatypeWithEnum}}}){{/vendorExtensions.forceCast}} {{vendorExtensions.propertyTypeMethod}}({{name}}Property);
     }
-    {{^isReadOnly}}
+    {{^vendorExtensions.x-is-read-only}}
 
     public {{classname}} {{setter}}({{{datatypeWithEnum}}} {{name}}) {
         setProperty({{name}}Property, {{name}});
         return this;
     }
-    {{/isReadOnly}}
+    {{/vendorExtensions.x-is-read-only}}
 {{/vars}}
 {{#vendorExtensions.operations}}{{#.}}
 

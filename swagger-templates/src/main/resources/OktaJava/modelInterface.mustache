@@ -31,10 +31,10 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
         {{{vendorExtensions.extraAnnotation}}}
     {{/vendorExtensions.extraAnnotation}}
     {{{datatypeWithEnum}}} {{getter}}();
-{{^isReadOnly}}
+{{^vendorExtensions.x-is-read-only}}
 
     {{classname}} {{setter}}({{{datatypeWithEnum}}} {{name}});
-{{/isReadOnly}}
+{{/vendorExtensions.x-is-read-only}}
 
 {{#isEnum}}
     {{^isContainer}}

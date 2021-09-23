@@ -32,6 +32,7 @@ import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -63,12 +64,13 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.yaml.snakeyaml.Yaml;
+
 public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen {
 
     private final String codeGenName;
-
-    public static final String API_FILE_KEY = "apiFile";
     private static final String NON_OPTIONAL_PRAMS = "nonOptionalParams";
+    private static final String X_CODEGEN_REQUEST_BODY_NAME = "x-codegen-request-body-name";
 
     @SuppressWarnings("hiding")
     private final Logger log = LoggerFactory.getLogger(AbstractOktaJavaClientCodegen.class);
@@ -102,21 +104,15 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     @Override
     public void preprocessOpenAPI(OpenAPI openAPI) {
 
-        //TODO Review
-        // make sure we have the apiFile location
-//        String apiFile = (String) additionalProperties.get(API_FILE_KEY);
-//        if (apiFile == null || apiFile.isEmpty()) {
-//
-//            //TODO REVIEW
-//            throw new RuntimeException("'additionalProperties."+API_FILE_KEY +" property is required. This must be " +
-//                    "set to the same file that Swagger is using.");
-//        }
-//
-//        try (Reader reader = new InputStreamReader(new FileInputStream(apiFile), StandardCharsets.UTF_8.toString())) {
-//            rawSwaggerConfig = new Yaml().loadAs(reader, Map.class);
-//        } catch (IOException e) {
-//            throw new IllegalStateException("Failed to parse apiFile: "+ apiFile, e);
-//        }
+        //Reading raw config
+        try {
+            rawSwaggerConfig = new Yaml().loadAs(inputSpec, Map.class);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to parse inputSpec variable", e);
+        }
+
+        //Process requestBody argument name
+        preprocessRequestBodyName(openAPI);
 
         //TODO Review
         //vendorExtensions.put("basePath", openAPI.getBasePath());
@@ -260,6 +256,41 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 enumList.add(name);
             }
         });
+    }
+
+    protected void preprocessRequestBodyName(OpenAPI openAPI) {
+        Map<String, Object> allPaths = castToMap(rawSwaggerConfig.get("paths"));
+        if(allPaths != null) {
+            allPaths.forEach((pathName, value) -> {
+                Map<String, Object> pathItem = castToMap(value);
+                if(pathItem != null) {
+                    Map<String, Object> postOperation = castToMap(pathItem.get("post"));
+                    if(postOperation != null && postOperation.containsKey(X_CODEGEN_REQUEST_BODY_NAME)) {
+                        String requestBodyName = postOperation.get(X_CODEGEN_REQUEST_BODY_NAME).toString();
+                        if(requestBodyName != null) {
+                            RequestBody requestBody = openAPI.getPaths().get(pathName)
+                                .getPost().getRequestBody();
+                            if(requestBody.getExtensions() == null) {
+                                requestBody.setExtensions(new HashMap<>());
+                            }
+                            requestBody.getExtensions().put(X_CODEGEN_REQUEST_BODY_NAME, requestBodyName);
+                        }
+                    }
+                    Map<String, Object> putOperation = castToMap(pathItem.get("put"));
+                    if(putOperation != null && putOperation.containsKey(X_CODEGEN_REQUEST_BODY_NAME)) {
+                        String requestBodyName = putOperation.get(X_CODEGEN_REQUEST_BODY_NAME).toString();
+                        if(requestBodyName != null) {
+                            RequestBody requestBody = openAPI.getPaths().get(pathName)
+                                .getPut().getRequestBody();
+                            if(requestBody.getExtensions() == null) {
+                                requestBody.setExtensions(new HashMap<>());
+                            }
+                            requestBody.getExtensions().put(X_CODEGEN_REQUEST_BODY_NAME, requestBodyName);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     protected void buildModelTagMap(OpenAPI openAPI) {
@@ -698,15 +729,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             }
         }
 
-        // We use '$ref' attributes with siblings, which isn't valid JSON schema (or swagger), so we need process
-        // additional attributes from the raw schema
-        Map<String, Object> modelDef = getRawSwaggerDefinition(name);
-        codegenModel.vars.forEach(codegenProperty -> {
-            Map<String, Object> rawPropertyMap = getRawSwaggerProperty(modelDef, codegenProperty.baseName);
-            //TODO Review
-            //codegenProperty.isReadOnly = Boolean.TRUE.equals(rawPropertyMap.get("readOnly"));
-        });
-
        return codegenModel;
     }
 
@@ -1095,18 +1117,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     }
 
     private Map<String, Object> castToMap(Object object) {
-        return (Map<String, Object>) object;
-    }
-
-    //TODO Review
-    protected Map<String, Object> getRawSwaggerDefinition(String name) {
-        return new HashMap<>();
-        //return castToMap(castToMap(rawSwaggerConfig.get("definitions")).get(name));
-    }
-
-    //TODO Review
-    protected Map<String, Object> getRawSwaggerProperty(Map<String, Object> definition, String propertyName) {
-        return new HashMap<>();
-        //return castToMap(castToMap(definition.get("properties")).get(propertyName));
+        if (object instanceof Map) {
+            return (Map<String, Object>) object;
+        }
+        return null;
     }
 }
