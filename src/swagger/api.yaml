@@ -118,7 +118,7 @@ paths:
                 $ref: '#/components/schemas/Application'
       security:
       - api_token: []
-      x-codegen-request-body-name: application
+      x-okta-request-body-name: application
   /api/v1/apps/{appId}:
     get:
       tags:
@@ -172,7 +172,7 @@ paths:
                 $ref: '#/components/schemas/Application'
       security:
       - api_token: []
-      x-codegen-request-body-name: application
+      x-okta-request-body-name: application
     delete:
       tags:
       - Application
@@ -242,7 +242,7 @@ paths:
                 $ref: '#/components/schemas/Csr'
       security:
       - api_token: []
-      x-codegen-request-body-name: metadata
+      x-okta-request-body-name: metadata
   /api/v1/apps/{appId}/credentials/csrs/{csrId}:
     get:
       tags:
@@ -508,7 +508,7 @@ paths:
                 $ref: '#/components/schemas/OAuth2ScopeConsentGrant'
       security:
       - api_token: []
-      x-codegen-request-body-name: oAuth2ScopeConsentGrant
+      x-okta-request-body-name: oAuth2ScopeConsentGrant
   /api/v1/apps/{appId}/grants/{grantId}:
     get:
       tags:
@@ -668,7 +668,7 @@ paths:
                 $ref: '#/components/schemas/ApplicationGroupAssignment'
       security:
       - api_token: []
-      x-codegen-request-body-name: applicationGroupAssignment
+      x-okta-request-body-name: applicationGroupAssignment
     delete:
       tags:
       - Application
@@ -915,7 +915,7 @@ paths:
                 $ref: '#/components/schemas/AppUser'
       security:
       - api_token: []
-      x-codegen-request-body-name: appUser
+      x-okta-request-body-name: appUser
   /api/v1/apps/{appId}/users/{userId}:
     get:
       tags:
@@ -979,7 +979,7 @@ paths:
                 $ref: '#/components/schemas/AppUser'
       security:
       - api_token: []
-      x-codegen-request-body-name: appUser
+      x-okta-request-body-name: appUser
     delete:
       tags:
       - Application
@@ -1138,7 +1138,7 @@ paths:
           content: {}
       security:
       - api_token: []
-      x-codegen-request-body-name: authorizationServer
+      x-okta-request-body-name: authorizationServer
   /api/v1/authorizationServers/{authServerId}:
     get:
       tags:
@@ -1186,7 +1186,7 @@ paths:
                 $ref: '#/components/schemas/AuthorizationServer'
       security:
       - api_token: []
-      x-codegen-request-body-name: authorizationServer
+      x-okta-request-body-name: authorizationServer
     delete:
       tags:
       - AuthorizationServer
@@ -1256,7 +1256,7 @@ paths:
           content: {}
       security:
       - api_token: []
-      x-codegen-request-body-name: oAuth2Claim
+      x-okta-request-body-name: oAuth2Claim
   /api/v1/authorizationServers/{authServerId}/claims/{claimId}:
     get:
       tags:
@@ -1314,7 +1314,7 @@ paths:
                 $ref: '#/components/schemas/OAuth2Claim'
       security:
       - api_token: []
-      x-codegen-request-body-name: oAuth2Claim
+      x-okta-request-body-name: oAuth2Claim
     delete:
       tags:
       - AuthorizationServer
@@ -1538,7 +1538,7 @@ paths:
                   $ref: '#/components/schemas/JsonWebKey'
       security:
       - api_token: []
-      x-codegen-request-body-name: use
+      x-okta-request-body-name: use
   /api/v1/authorizationServers/{authServerId}/lifecycle/activate:
     post:
       tags:
@@ -1627,7 +1627,7 @@ paths:
           content: {}
       security:
       - api_token: []
-      x-codegen-request-body-name: policy
+      x-okta-request-body-name: policy
   /api/v1/authorizationServers/{authServerId}/policies/{policyId}:
     get:
       tags:
@@ -1685,7 +1685,7 @@ paths:
                 $ref: '#/components/schemas/AuthorizationServerPolicy'
       security:
       - api_token: []
-      x-codegen-request-body-name: policy
+      x-okta-request-body-name: policy
     delete:
       tags:
       - AuthorizationServer
@@ -1813,7 +1813,7 @@ paths:
                 $ref: '#/components/schemas/AuthorizationServerPolicyRule'
       security:
       - api_token: []
-      x-codegen-request-body-name: policyRule
+      x-okta-request-body-name: policyRule
   /api/v1/authorizationServers/{authServerId}/policies/{policyId}/rules/{ruleId}:
     get:
       tags:
@@ -1881,7 +1881,7 @@ paths:
                 $ref: '#/components/schemas/AuthorizationServerPolicyRule'
       security:
       - api_token: []
-      x-codegen-request-body-name: policyRule
+      x-okta-request-body-name: policyRule
     delete:
       tags:
       - AuthorizationServer
@@ -2035,7 +2035,7 @@ paths:
           content: {}
       security:
       - api_token: []
-      x-codegen-request-body-name: oAuth2Scope
+      x-okta-request-body-name: oAuth2Scope
   /api/v1/authorizationServers/{authServerId}/scopes/{scopeId}:
     get:
       tags:
@@ -2093,7 +2093,7 @@ paths:
                 $ref: '#/components/schemas/OAuth2Scope'
       security:
       - api_token: []
-      x-codegen-request-body-name: oAuth2Scope
+      x-okta-request-body-name: oAuth2Scope
     delete:
       tags:
       - AuthorizationServer
@@ -2221,7 +2221,7 @@ paths:
       - CAPTCHA
       security:
       - api_token: []
-      x-codegen-request-body-name: instance
+      x-okta-request-body-name: instance
   /api/v1/captchas/{captchaId}:
     parameters:
     - schema:
@@ -2349,7 +2349,7 @@ paths:
       - CAPTCHA
       security:
       - api_token: []
-      x-codegen-request-body-name: instance
+      x-okta-request-body-name: instance
     delete:
       summary: Delete CAPTCHA Instance
       operationId: deleteCaptchaInstance
@@ -2454,7 +2454,7 @@ paths:
       - CAPTCHA
       security:
       - api_token: []
-      x-codegen-request-body-name: instance
+      x-okta-request-body-name: instance
   /api/v1/domains:
     get:
       tags:
@@ -2492,7 +2492,7 @@ paths:
                 $ref: '#/components/schemas/DomainResponse'
       security:
       - api_token: []
-      x-codegen-request-body-name: domain
+      x-okta-request-body-name: domain
   /api/v1/domains/{domainId}/verify:
     post:
       tags:
@@ -2540,7 +2540,7 @@ paths:
           content: {}
       security:
       - api_token: []
-      x-codegen-request-body-name: certificate
+      x-okta-request-body-name: certificate
   /api/v1/domains/{domainId}:
     get:
       tags:
@@ -2618,7 +2618,7 @@ paths:
                 $ref: '#/components/schemas/EventHook'
       security:
       - api_token: []
-      x-codegen-request-body-name: eventHook
+      x-okta-request-body-name: eventHook
   /api/v1/eventHooks/{eventHookId}:
     get:
       tags:
@@ -2666,7 +2666,7 @@ paths:
                 $ref: '#/components/schemas/EventHook'
       security:
       - api_token: []
-      x-codegen-request-body-name: eventHook
+      x-okta-request-body-name: eventHook
     delete:
       tags:
       - EventHook
@@ -2928,7 +2928,7 @@ paths:
                 $ref: '#/components/schemas/Group'
       security:
       - api_token: []
-      x-codegen-request-body-name: group
+      x-okta-request-body-name: group
   /api/v1/groups/rules:
     get:
       tags:
@@ -2992,7 +2992,7 @@ paths:
                 $ref: '#/components/schemas/GroupRule'
       security:
       - api_token: []
-      x-codegen-request-body-name: groupRule
+      x-okta-request-body-name: groupRule
   /api/v1/groups/rules/{ruleId}:
     get:
       tags:
@@ -3045,7 +3045,7 @@ paths:
                 $ref: '#/components/schemas/GroupRule'
       security:
       - api_token: []
-      x-codegen-request-body-name: groupRule
+      x-okta-request-body-name: groupRule
     delete:
       tags:
       - Group
@@ -3156,7 +3156,7 @@ paths:
                 $ref: '#/components/schemas/Group'
       security:
       - api_token: []
-      x-codegen-request-body-name: group
+      x-okta-request-body-name: group
     delete:
       tags:
       - Group
@@ -3271,7 +3271,7 @@ paths:
           content: {}
       security:
       - api_token: []
-      x-codegen-request-body-name: assignRoleRequest
+      x-okta-request-body-name: assignRoleRequest
   /api/v1/groups/{groupId}/roles/{roleId}:
     get:
       tags:
@@ -3717,7 +3717,7 @@ paths:
                 $ref: '#/components/schemas/IdentityProvider'
       security:
       - api_token: []
-      x-codegen-request-body-name: identityProvider
+      x-okta-request-body-name: identityProvider
   /api/v1/idps/credentials/keys:
     get:
       tags:
@@ -3770,7 +3770,7 @@ paths:
                 $ref: '#/components/schemas/JsonWebKey'
       security:
       - api_token: []
-      x-codegen-request-body-name: jsonWebKey
+      x-okta-request-body-name: jsonWebKey
   /api/v1/idps/credentials/keys/{keyId}:
     get:
       tags:
@@ -3860,7 +3860,7 @@ paths:
                 $ref: '#/components/schemas/IdentityProvider'
       security:
       - api_token: []
-      x-codegen-request-body-name: identityProvider
+      x-okta-request-body-name: identityProvider
     delete:
       tags:
       - IdentityProvider
@@ -3930,7 +3930,7 @@ paths:
                 $ref: '#/components/schemas/Csr'
       security:
       - api_token: []
-      x-codegen-request-body-name: metadata
+      x-okta-request-body-name: metadata
   /api/v1/idps/{idpId}/credentials/csrs/{csrId}:
     get:
       tags:
@@ -4269,7 +4269,7 @@ paths:
                 $ref: '#/components/schemas/IdentityProviderApplicationUser'
       security:
       - api_token: []
-      x-codegen-request-body-name: userIdentityProviderLinkRequest
+      x-okta-request-body-name: userIdentityProviderLinkRequest
     delete:
       tags:
       - IdentityProvider
@@ -4364,7 +4364,7 @@ paths:
                 $ref: '#/components/schemas/InlineHook'
       security:
       - api_token: []
-      x-codegen-request-body-name: inlineHook
+      x-okta-request-body-name: inlineHook
   /api/v1/inlineHooks/{inlineHookId}:
     get:
       tags:
@@ -4412,7 +4412,7 @@ paths:
                 $ref: '#/components/schemas/InlineHook'
       security:
       - api_token: []
-      x-codegen-request-body-name: inlineHook
+      x-okta-request-body-name: inlineHook
     delete:
       tags:
       - InlineHook
@@ -4457,7 +4457,7 @@ paths:
                 $ref: '#/components/schemas/InlineHookResponse'
       security:
       - api_token: []
-      x-codegen-request-body-name: payloadData
+      x-okta-request-body-name: payloadData
   /api/v1/inlineHooks/{inlineHookId}/lifecycle/activate:
     post:
       tags:
@@ -4633,7 +4633,7 @@ paths:
                 $ref: '#/components/schemas/ProfileMapping'
       security:
       - api_token: []
-      x-codegen-request-body-name: profileMapping
+      x-okta-request-body-name: profileMapping
   /api/v1/meta/schemas/apps/{appInstanceId}/default:
     get:
       tags:
@@ -4683,7 +4683,7 @@ paths:
                 $ref: '#/components/schemas/UserSchema'
       security:
       - api_token: []
-      x-codegen-request-body-name: body
+      x-okta-request-body-name: body
   /api/v1/meta/schemas/group/default:
     get:
       description: Fetches the group schema
@@ -4769,7 +4769,7 @@ paths:
                 $ref: '#/components/schemas/UserSchema'
       security:
       - api_token: []
-      x-codegen-request-body-name: userSchema
+      x-okta-request-body-name: userSchema
   /api/v1/meta/schemas/user/linkedObjects:
     get:
       tags:
@@ -4807,7 +4807,7 @@ paths:
                 $ref: '#/components/schemas/LinkedObject'
       security:
       - api_token: []
-      x-codegen-request-body-name: linkedObject
+      x-okta-request-body-name: linkedObject
   /api/v1/meta/schemas/user/linkedObjects/{linkedObjectName}:
     get:
       tags:
@@ -4883,7 +4883,7 @@ paths:
                 $ref: '#/components/schemas/UserType'
       security:
       - api_token: []
-      x-codegen-request-body-name: userType
+      x-okta-request-body-name: userType
   /api/v1/meta/types/user/{typeId}:
     get:
       tags:
@@ -4931,7 +4931,7 @@ paths:
                 $ref: '#/components/schemas/UserType'
       security:
       - api_token: []
-      x-codegen-request-body-name: userType
+      x-okta-request-body-name: userType
     post:
       tags:
       - UserType
@@ -4958,7 +4958,7 @@ paths:
                 $ref: '#/components/schemas/UserType'
       security:
       - api_token: []
-      x-codegen-request-body-name: userType
+      x-okta-request-body-name: userType
     delete:
       tags:
       - UserType
@@ -5034,7 +5034,7 @@ paths:
       summary: Update Org setting
       tags:
       - Org
-      x-codegen-request-body-name: orgSetting
+      x-okta-request-body-name: orgSetting
   /api/v1/org/contacts:
     get:
       description: Gets Contact Types of your organization.
@@ -5103,7 +5103,7 @@ paths:
       summary: Update org contact user
       tags:
       - Org
-      x-codegen-request-body-name: orgContactUser
+      x-okta-request-body-name: orgContactUser
   /api/v1/org/privacy/oktaSupport:
     get:
       description: Gets Okta Support Settings of your organization.
@@ -5332,7 +5332,7 @@ paths:
                 $ref: '#/components/schemas/Policy'
       security:
       - api_token: []
-      x-codegen-request-body-name: policy
+      x-okta-request-body-name: policy
   /api/v1/policies/{policyId}:
     get:
       tags:
@@ -5385,7 +5385,7 @@ paths:
                 $ref: '#/components/schemas/Policy'
       security:
       - api_token: []
-      x-codegen-request-body-name: policy
+      x-okta-request-body-name: policy
     delete:
       tags:
       - Policy
@@ -5488,7 +5488,7 @@ paths:
                 $ref: '#/components/schemas/PolicyRule'
       security:
       - api_token: []
-      x-codegen-request-body-name: policyRule
+      x-okta-request-body-name: policyRule
   /api/v1/policies/{policyId}/rules/{ruleId}:
     get:
       tags:
@@ -5546,7 +5546,7 @@ paths:
                 $ref: '#/components/schemas/PolicyRule'
       security:
       - api_token: []
-      x-codegen-request-body-name: policyRule
+      x-okta-request-body-name: policyRule
     delete:
       tags:
       - Policy
@@ -5637,7 +5637,7 @@ paths:
                 $ref: '#/components/schemas/Session'
       security:
       - api_token: []
-      x-codegen-request-body-name: createSessionRequest
+      x-okta-request-body-name: createSessionRequest
   /api/v1/sessions/{sessionId}:
     get:
       tags:
@@ -5744,7 +5744,7 @@ paths:
                 $ref: '#/components/schemas/SmsTemplate'
       security:
       - api_token: []
-      x-codegen-request-body-name: smsTemplate
+      x-okta-request-body-name: smsTemplate
   /api/v1/templates/sms/{templateId}:
     get:
       tags:
@@ -5794,7 +5794,7 @@ paths:
                 $ref: '#/components/schemas/SmsTemplate'
       security:
       - api_token: []
-      x-codegen-request-body-name: smsTemplate
+      x-okta-request-body-name: smsTemplate
     post:
       tags:
       - Template
@@ -5822,7 +5822,7 @@ paths:
                 $ref: '#/components/schemas/SmsTemplate'
       security:
       - api_token: []
-      x-codegen-request-body-name: smsTemplate
+      x-okta-request-body-name: smsTemplate
     delete:
       tags:
       - Template
@@ -5876,7 +5876,7 @@ paths:
                 $ref: '#/components/schemas/ThreatInsightConfiguration'
       security:
       - api_token: []
-      x-codegen-request-body-name: threatInsightConfiguration
+      x-okta-request-body-name: threatInsightConfiguration
   /api/v1/trustedOrigins:
     get:
       tags:
@@ -5933,7 +5933,7 @@ paths:
                 $ref: '#/components/schemas/TrustedOrigin'
       security:
       - api_token: []
-      x-codegen-request-body-name: trustedOrigin
+      x-okta-request-body-name: trustedOrigin
   /api/v1/trustedOrigins/{trustedOriginId}:
     get:
       tags:
@@ -5981,7 +5981,7 @@ paths:
                 $ref: '#/components/schemas/TrustedOrigin'
       security:
       - api_token: []
-      x-codegen-request-body-name: trustedOrigin
+      x-okta-request-body-name: trustedOrigin
     delete:
       tags:
       - TrustedOrigin
@@ -6135,7 +6135,7 @@ paths:
                 $ref: '#/components/schemas/User'
       security:
       - api_token: []
-      x-codegen-request-body-name: body
+      x-okta-request-body-name: body
   /api/v1/users/{associatedUserId}/linkedObjects/{primaryRelationshipName}/{primaryUserId}:
     put:
       tags:
@@ -6217,7 +6217,7 @@ paths:
                 $ref: '#/components/schemas/User'
       security:
       - api_token: []
-      x-codegen-request-body-name: user
+      x-okta-request-body-name: user
     post:
       tags:
       - User
@@ -6248,7 +6248,7 @@ paths:
                 $ref: '#/components/schemas/User'
       security:
       - api_token: []
-      x-codegen-request-body-name: user
+      x-okta-request-body-name: user
     delete:
       tags:
       - User
@@ -6552,7 +6552,7 @@ paths:
                 $ref: '#/components/schemas/UserCredentials'
       security:
       - api_token: []
-      x-codegen-request-body-name: changePasswordRequest
+      x-okta-request-body-name: changePasswordRequest
   /api/v1/users/{userId}/credentials/change_recovery_question:
     post:
       tags:
@@ -6581,7 +6581,7 @@ paths:
                 $ref: '#/components/schemas/UserCredentials'
       security:
       - api_token: []
-      x-codegen-request-body-name: userCredentials
+      x-okta-request-body-name: userCredentials
   /api/v1/users/{userId}/credentials/forgot_password:
     post:
       tags:
@@ -6643,7 +6643,7 @@ paths:
                 $ref: '#/components/schemas/UserCredentials'
       security:
       - api_token: []
-      x-codegen-request-body-name: userCredentials
+      x-okta-request-body-name: userCredentials
   /api/v1/users/{userId}/factors:
     get:
       tags:
@@ -6718,7 +6718,7 @@ paths:
                 $ref: '#/components/schemas/UserFactor'
       security:
       - api_token: []
-      x-codegen-request-body-name: body
+      x-okta-request-body-name: body
   /api/v1/users/{userId}/factors/catalog:
     get:
       tags:
@@ -6846,7 +6846,7 @@ paths:
                 $ref: '#/components/schemas/UserFactor'
       security:
       - api_token: []
-      x-codegen-request-body-name: body
+      x-okta-request-body-name: body
   /api/v1/users/{userId}/factors/{factorId}/transactions/{transactionId}:
     get:
       tags:
@@ -6936,7 +6936,7 @@ paths:
                 $ref: '#/components/schemas/VerifyUserFactorResponse'
       security:
       - api_token: []
-      x-codegen-request-body-name: body
+      x-okta-request-body-name: body
   /api/v1/users/{userId}/grants:
     get:
       tags:
@@ -7441,7 +7441,7 @@ paths:
                 $ref: '#/components/schemas/Role'
       security:
       - api_token: []
-      x-codegen-request-body-name: assignRoleRequest
+      x-okta-request-body-name: assignRoleRequest
   /api/v1/users/{userId}/roles/{roleId}:
     delete:
       tags:
@@ -7846,7 +7846,7 @@ paths:
                 $ref: '#/components/schemas/NetworkZone'
       security:
       - api_token: []
-      x-codegen-request-body-name: zone
+      x-okta-request-body-name: zone
   /api/v1/zones/{zoneId}:
     get:
       tags:
@@ -7896,7 +7896,7 @@ paths:
                 $ref: '#/components/schemas/NetworkZone'
       security:
       - api_token: []
-      x-codegen-request-body-name: zone
+      x-okta-request-body-name: zone
     delete:
       tags:
       - NetworkZone

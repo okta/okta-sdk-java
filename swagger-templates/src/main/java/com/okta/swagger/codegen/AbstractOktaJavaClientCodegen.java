@@ -70,6 +70,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     private final String codeGenName;
     private static final String NON_OPTIONAL_PRAMS = "nonOptionalParams";
     private static final String X_CODEGEN_REQUEST_BODY_NAME = "x-codegen-request-body-name";
+    private static final String X_OKTA_REQUEST_BODY_NAME = "x-okta-request-body-name";
 
     @SuppressWarnings("hiding")
     private final Logger log = LoggerFactory.getLogger(AbstractOktaJavaClientCodegen.class);
@@ -262,8 +263,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 Map<String, Object> pathItem = castToMap(value);
                 if(pathItem != null) {
                     Map<String, Object> postOperation = castToMap(pathItem.get("post"));
-                    if(postOperation != null && postOperation.containsKey(X_CODEGEN_REQUEST_BODY_NAME)) {
-                        String requestBodyName = postOperation.get(X_CODEGEN_REQUEST_BODY_NAME).toString();
+                    if(postOperation != null && postOperation.containsKey(X_OKTA_REQUEST_BODY_NAME)) {
+                        String requestBodyName = postOperation.get(X_OKTA_REQUEST_BODY_NAME).toString();
                         if(requestBodyName != null) {
                             RequestBody requestBody = openAPI.getPaths().get(pathName)
                                 .getPost().getRequestBody();
@@ -274,8 +275,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         }
                     }
                     Map<String, Object> putOperation = castToMap(pathItem.get("put"));
-                    if(putOperation != null && putOperation.containsKey(X_CODEGEN_REQUEST_BODY_NAME)) {
-                        String requestBodyName = putOperation.get(X_CODEGEN_REQUEST_BODY_NAME).toString();
+                    if(putOperation != null && putOperation.containsKey(X_OKTA_REQUEST_BODY_NAME)) {
+                        String requestBodyName = putOperation.get(X_OKTA_REQUEST_BODY_NAME).toString();
                         if(requestBodyName != null) {
                             RequestBody requestBody = openAPI.getPaths().get(pathName)
                                 .getPut().getRequestBody();
