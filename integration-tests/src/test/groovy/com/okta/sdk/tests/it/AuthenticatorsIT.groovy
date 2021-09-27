@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.*
  */
 class AuthenticatorsIT extends ITSupport {
 
-    @Test(groups = "group3")
+    @Test (groups = "bacon")
     void listAndGetAuthenticatorsTest() {
 
         AuthenticatorList authenticators = client.listAuthenticators()
@@ -56,7 +56,7 @@ class AuthenticatorsIT extends ITSupport {
 
     // temporarily disabled until we figure out if its safe to toggle authenticator status on an Org
     // where several other management ITs run in parallel.
-    @Test(groups = "group3", enabled = false)
+    @Test (groups = "bacon", enabled = false)
     void deactivateAndActivateAuthenticatorTest() {
 
         AuthenticatorList authenticators = client.listAuthenticators()
