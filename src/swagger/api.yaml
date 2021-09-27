@@ -10050,7 +10050,7 @@ components:
           type: object
           properties:
             self:
-              $ref: '#/components/schemas/hrefObject'
+              $ref: '#/components/schemas/HrefObject'
           readOnly: true
       x-okta-operations:
       - alias: update
