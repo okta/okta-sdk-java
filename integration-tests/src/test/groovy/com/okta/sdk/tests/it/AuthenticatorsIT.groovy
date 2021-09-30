@@ -33,7 +33,10 @@ import static org.hamcrest.Matchers.*
  */
 class AuthenticatorsIT extends ITSupport {
 
-    @Test (groups = "bacon")
+    // temporarily disabled until we figure out if its safe to toggle authenticator status on an Org
+    // where several other management ITs run in parallel.
+    // https://oktainc.atlassian.net/browse/OKTA-433369
+    @Test (groups = "bacon", enabled = false)
     void listAndGetAuthenticatorsTest() {
 
         AuthenticatorList authenticators = client.listAuthenticators()
@@ -56,6 +59,7 @@ class AuthenticatorsIT extends ITSupport {
 
     // temporarily disabled until we figure out if its safe to toggle authenticator status on an Org
     // where several other management ITs run in parallel.
+    // https://oktainc.atlassian.net/browse/OKTA-433369
     @Test (groups = "bacon", enabled = false)
     void deactivateAndActivateAuthenticatorTest() {
 
