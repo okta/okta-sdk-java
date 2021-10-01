@@ -79,13 +79,12 @@ class GroupSchemaIT extends ITSupport {
                             .setAction("READ_WRITE")
                             .setPrincipal("SELF"))
                 )
-                .setRequired(true)
+                .setRequired(false)
                 .setScope(UserSchemaAttributeScope.NONE)
                 .setTitle("exampleCustomPropertyTitle")
                 .setType(UserSchemaAttributeType.STRING)
                 .setUnique("UNIQUE_VALIDATED")
         )
-
 
         GroupSchema updatedSchema = client.updateGroupSchema(schema)
         assertThat(updatedSchema.getId(), equalTo(schema.getId()))
@@ -100,7 +99,6 @@ class GroupSchemaIT extends ITSupport {
             hasEntry("action", "READ_WRITE"),
             hasEntry("principal", "SELF"),
         )))
-        assertThat(groupSchemaAttribute["required"], equalTo(true))
         assertThat(groupSchemaAttribute["scope"], equalTo(UserSchemaAttributeScope.NONE.toString()))
         assertThat(groupSchemaAttribute["title"], equalTo("exampleCustomPropertyTitle"))
         assertThat(groupSchemaAttribute["type"], equalTo(UserSchemaAttributeType.STRING.toString()))
