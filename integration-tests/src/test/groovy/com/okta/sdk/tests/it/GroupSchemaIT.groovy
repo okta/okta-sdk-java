@@ -66,10 +66,6 @@ class GroupSchemaIT extends ITSupport {
         schema.getDefinitions().getCustom().getProperties().put(customPropertyKey,
             client.instantiate(GroupSchemaAttribute)
                 .setDescription("exampleCustomPropertyDescription")
-                .setMaster(
-                    client.instantiate(UserSchemaAttributeMaster)
-                        .setType(UserSchemaAttributeMasterType.PROFILE_MASTER)
-                )
                 .setMaxLength(20)
                 .setMinLength(1)
                 .setMutability("READ_WRITE")
@@ -90,7 +86,6 @@ class GroupSchemaIT extends ITSupport {
         def groupSchemaAttribute = updatedSchema.getDefinitions().getCustom().getProperties().get(customPropertyKey)
         assertThat(groupSchemaAttribute, notNullValue())
         assertThat(groupSchemaAttribute["description"], equalTo("exampleCustomPropertyDescription"))
-        assertThat(groupSchemaAttribute["master"]["type"], equalTo(UserSchemaAttributeMasterType.PROFILE_MASTER.toString()))
         assertThat(groupSchemaAttribute["maxLength"], equalTo(20))
         assertThat(groupSchemaAttribute["minLength"], equalTo(1))
         assertThat(groupSchemaAttribute["mutability"], equalTo("READ_WRITE"))
