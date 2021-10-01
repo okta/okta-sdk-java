@@ -62,7 +62,6 @@ class GroupSchemaIT extends ITSupport {
     void updateGroupSchemaTest() {
 
         String customPropertyKey = "java_sdk_it_custom_property_" + RandomStringUtils.randomAlphanumeric(10)
-
         GroupSchema schema = client.getGroupSchema()
         schema.getDefinitions().getCustom().getProperties().put(customPropertyKey,
             client.instantiate(GroupSchemaAttribute)
@@ -103,7 +102,6 @@ class GroupSchemaIT extends ITSupport {
         assertThat(groupSchemaAttribute["title"], equalTo("exampleCustomPropertyTitle"))
         assertThat(groupSchemaAttribute["type"], equalTo(UserSchemaAttributeType.STRING.toString()))
         assertThat(groupSchemaAttribute["unique"], equalTo("UNIQUE_VALIDATED"))
-
 
         updatedSchema.getDefinitions().getCustom().getProperties().put(customPropertyKey, null)
         GroupSchema restoredSchema = client.updateGroupSchema(updatedSchema)
