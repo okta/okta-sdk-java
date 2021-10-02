@@ -55,6 +55,7 @@
         <module>integration-tests</module>
         <module>examples</module>
         <module>coverage</module>
+        <module>bom</module>
     </modules>
 
     <dependencyManagement>
