@@ -16,18 +16,22 @@
 package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.ExtensibleResource
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.*
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
+import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
 import com.okta.sdk.tests.Scenario
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.testng.ITestContext
 import org.testng.annotations.AfterSuite
 import org.testng.annotations.BeforeSuite
+import org.testng.annotations.Listeners
 
+@Listeners(value = ConditionalSkipTestAnalyzer.class)
 abstract class ITSupport implements ClientProvider {
 
     private final static Logger log = LoggerFactory.getLogger(ITSupport)
@@ -36,6 +40,7 @@ abstract class ITSupport implements ClientProvider {
     public static final TEST_SERVER_ALL_SCENARIOS = "okta.testServer.allScenarios"
     public static final IT_OPERATION_DELAY = "okta.it.operationDelay"
 
+    public static boolean isOIEEnvironment
     private TestServer testServer
 
     @BeforeSuite
@@ -60,6 +65,8 @@ abstract class ITSupport implements ClientProvider {
             testServer = new TestServer().start(scenarios)
             System.setProperty(TestServer.TEST_SERVER_BASE_URL, "http://localhost:${testServer.getMockPort()}/")
         }
+
+        isOIEEnvironment = isOIEEnvironment()
     }
 
     @AfterSuite()
@@ -149,5 +156,16 @@ abstract class ITSupport implements ClientProvider {
         registerForCleanup(policy)
 
         return policy
+    }
+
+    boolean isOIEEnvironment() {
+
+        Object pipeline = client.http()
+            .get("/.well-known/okta-organization", ExtensibleResource.class)
+            .get("pipeline");
+        if(pipeline != null && pipeline.toString().equals("idx")) {
+            return true;
+        }
+        return false;
     }
 }

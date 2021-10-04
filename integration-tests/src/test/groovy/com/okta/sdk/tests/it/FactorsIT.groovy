@@ -26,23 +26,17 @@ import com.okta.sdk.resource.user.factor.EmailUserFactorProfile
 import com.okta.sdk.resource.user.factor.FactorProvider
 import com.okta.sdk.resource.user.factor.FactorStatus
 import com.okta.sdk.resource.user.factor.FactorType
-import com.okta.sdk.resource.user.factor.HardwareUserFactor
-import com.okta.sdk.resource.user.factor.HardwareUserFactorProfile
 import com.okta.sdk.resource.user.factor.PushUserFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionUserFactor
 import com.okta.sdk.resource.user.factor.SecurityQuestionList
 import com.okta.sdk.resource.user.factor.SmsUserFactor
 import com.okta.sdk.resource.user.factor.TokenUserFactor
-import com.okta.sdk.resource.user.factor.TokenUserFactorProfile
 import com.okta.sdk.resource.user.factor.TotpUserFactor
-import com.okta.sdk.resource.user.factor.U2fUserFactor
-import com.okta.sdk.resource.user.factor.U2fUserFactorProfile
 import com.okta.sdk.resource.user.factor.UserFactor
 import com.okta.sdk.resource.user.factor.UserFactorList
 import com.okta.sdk.resource.user.factor.VerifyFactorRequest
 import com.okta.sdk.resource.user.factor.VerifyUserFactorResponse
-import com.okta.sdk.resource.user.factor.WebUserFactor
-import com.okta.sdk.resource.user.factor.WebUserFactorProfile
+import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.it.util.ITSupport
 import org.jboss.aerogear.security.otp.Totp
 import org.testng.annotations.Test
@@ -54,6 +48,7 @@ class FactorsIT extends ITSupport {
 
     private String smsTestNumber = "185 635 15491"
 
+    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void factorListTest() {
 
@@ -83,6 +78,7 @@ class FactorsIT extends ITSupport {
                 hasProperty("id", is(securityQuestionUserFactor.getId())))))
     }
 
+    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testSecurityQuestionFactorCreation() {
         Client client = getClient()
@@ -100,6 +96,7 @@ class FactorsIT extends ITSupport {
         assertThat securityQuestionUserFactor.id, notNullValue()
     }
 
+    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testCallFactorCreation() {
         Client client = getClient()
@@ -115,6 +112,7 @@ class FactorsIT extends ITSupport {
         assertThat callUserFactor.id, notNullValue()
     }
 
+    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testSmsFactorCreation() {
         Client client = getClient()
@@ -130,6 +128,7 @@ class FactorsIT extends ITSupport {
         assertThat smsUserFactor.id, notNullValue()
     }
 
+    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testPushFactorCreation() {
         Client client = getClient()
@@ -156,6 +155,7 @@ class FactorsIT extends ITSupport {
         assertThat factors, iterableWithSize(greaterThan(1))
     }
 
+    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void activateTotpFactor() {
         User user = randomUser()
@@ -190,6 +190,7 @@ class FactorsIT extends ITSupport {
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
     }
 
+    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testEmailUserFactor() {
         User user = randomUser()
@@ -213,6 +214,7 @@ class FactorsIT extends ITSupport {
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.CHALLENGE)
     }
 
+    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testGoogleTotpUserFactorCreation() {
         User user = randomUser()
@@ -228,6 +230,7 @@ class FactorsIT extends ITSupport {
         assertThat tokenUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
     }
 
+    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void deleteFactorTest() {
 
