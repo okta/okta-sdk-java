@@ -19,6 +19,7 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.resource.policy.*
 import com.okta.sdk.resource.policy.rule.PasswordPolicyRuleBuilder
 import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder
+import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
@@ -158,6 +159,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
     }
 
     @Test (groups = "group2")
+    @NonOIEEnvironmentOnly
     void createOktaSignOnRadiusPolicyRule() {
 
         def group = randomGroup()
