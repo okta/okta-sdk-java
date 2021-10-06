@@ -722,7 +722,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             if(property.getVendorExtensions().containsKey("x-okta-known-values")) {
                 property.getVendorExtensions().put("x-okta-known-values-exists", true);
                 property.getVendorExtensions()
-                    .put("x-okta-known-values-class-name", property.getNameInCamelCase() + "KnownValues");
+                    .put("x-okta-known-values-class-name", property.getNameInCamelCase() + "Values");
             }
 
             String datatype = property.datatype;

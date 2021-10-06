@@ -36,7 +36,7 @@ public class FacebookIdentityProviderBuilder extends DefaultIdentityProviderBuil
     public IdentityProvider buildAndCreate(Client client) {
 
         IdentityProvider createdIdp = client.createIdentityProvider(client.instantiate(IdentityProvider.class)
-            .setType(IdentityProvider.TypeKnownValues.FACEBOOK)
+            .setType(IdentityProvider.TypeValues.FACEBOOK)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
                 .setType(Protocol.TypeEnum.OAUTH2)

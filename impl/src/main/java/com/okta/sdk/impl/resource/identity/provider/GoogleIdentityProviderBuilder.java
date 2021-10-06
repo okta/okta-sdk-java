@@ -36,7 +36,7 @@ public class GoogleIdentityProviderBuilder extends DefaultIdentityProviderBuilde
     public IdentityProvider buildAndCreate(Client client) {
 
         return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
-            .setType(IdentityProvider.TypeKnownValues.GOOGLE)
+            .setType(IdentityProvider.TypeValues.GOOGLE)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
                 .setType(Protocol.TypeEnum.OIDC)

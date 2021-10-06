@@ -36,7 +36,7 @@ public class MicrosoftIdentityProviderBuilder extends DefaultIdentityProviderBui
     public IdentityProvider buildAndCreate(Client client) {
 
         return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
-            .setType(IdentityProvider.TypeKnownValues.MICROSOFT)
+            .setType(IdentityProvider.TypeValues.MICROSOFT)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
                 .setType(Protocol.TypeEnum.OIDC)
