@@ -170,7 +170,7 @@ public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<
     @Override
     public IdentityProvider buildAndCreate(Client client) {
         return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
-            .setType(IdentityProvider.TypeEnum.OIDC)
+            .setType(IdentityProvider.TypeKnownValues.OIDC)
             .setName(name)
             .setIssuerMode(issuerMode)
             .setProtocol(client.instantiate(Protocol.class)
