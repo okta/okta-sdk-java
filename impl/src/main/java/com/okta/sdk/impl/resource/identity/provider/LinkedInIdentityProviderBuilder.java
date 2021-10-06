@@ -36,7 +36,7 @@ public class LinkedInIdentityProviderBuilder extends DefaultIdentityProviderBuil
     public IdentityProvider buildAndCreate(Client client) {
 
         return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
-            .setType(IdentityProvider.TypeEnum.LINKEDIN)
+            .setType(IdentityProvider.TypeKnownValues.LINKEDIN)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
                 .setType(Protocol.TypeEnum.OAUTH2)

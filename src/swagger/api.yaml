@@ -10862,7 +10862,7 @@ components:
           - INACTIVE
         type:
           type: string
-          enum:
+          x-okta-known-values:
           - SAML2
           - GOOGLE
           - FACEBOOK
