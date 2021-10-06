@@ -35,7 +35,7 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
 
     {{#vendorExtensions.x-okta-known-values-exists}}
     /**
-    * OKTA known values declared in @{{{vendorExtensions.x-okta-known-values-class-name}}}
+    * List of OKTA known values declared in {@link {{{vendorExtensions.x-okta-known-values-class-name}}} }
     */
     {{/vendorExtensions.x-okta-known-values-exists}}
     {{classname}} {{setter}}({{{datatypeWithEnum}}} {{name}});
