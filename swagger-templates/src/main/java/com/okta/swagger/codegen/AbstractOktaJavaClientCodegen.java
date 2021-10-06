@@ -719,6 +719,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 property.datatypeWithEnum = property.baseType + "<" + property.complexType + ">";
             }
 
+            if(property.getVendorExtensions().containsKey("x-okta-known-values")) {
+                property.getVendorExtensions().put("x-okta-known-values-exists", true);
+                property.getVendorExtensions()
+                    .put("x-okta-known-values-class-name", property.getNameInCamelCase() + "KnownValues");
+            }
+
             String datatype = property.datatype;
             if (datatype != null
                     && datatype.matches(".+List$")
