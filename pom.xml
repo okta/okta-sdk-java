@@ -432,11 +432,6 @@
                     <plugin>
                         <groupId>com.okta</groupId>
                         <artifactId>okta-doclist-maven-plugin</artifactId>
-                        <configuration>
-                            <legacyVersions>
-                                <legacyVersion>0.0.4</legacyVersion>
-                            </legacyVersions>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
