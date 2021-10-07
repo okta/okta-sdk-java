@@ -33,6 +33,7 @@ public class DefaultMFAEnrollPolicyBuilder
     private PolicyMFAFactor fidoU2f;
     private PolicyMFAFactor fidoWebauthn;
     private PolicyMFAFactor googleOtp;
+    private PolicyMFAFactor hotp;
     private PolicyMFAFactor oktaCall;
     private PolicyMFAFactor oktaEmail;
     private PolicyMFAFactor oktaOtp;
@@ -73,6 +74,7 @@ public class DefaultMFAEnrollPolicyBuilder
         if (Objects.nonNull(fidoU2f)) policyFactorsSettings.setFidoU2f(fidoU2f);
         if (Objects.nonNull(fidoWebauthn)) policyFactorsSettings.setFidoWebauthn(fidoWebauthn);
         if (Objects.nonNull(googleOtp)) policyFactorsSettings.setGoogleOtp(googleOtp);
+        if (Objects.nonNull(hotp)) policyFactorsSettings.setHotp(hotp);
         if (Objects.nonNull(oktaCall)) policyFactorsSettings.setOktaCall(oktaCall);
         if (Objects.nonNull(oktaEmail)) policyFactorsSettings.setOktaEmail(oktaEmail);
         if (Objects.nonNull(oktaOtp)) policyFactorsSettings.setOktaOtp(oktaOtp);
@@ -108,6 +110,12 @@ public class DefaultMFAEnrollPolicyBuilder
     @Override
     public MFAEnrollPolicyBuilder setGoogleOtp(PolicyMFAFactor googleOtp) {
         this.googleOtp = googleOtp;
+        return this;
+    }
+
+    @Override
+    public MFAEnrollPolicyBuilder setHotp(PolicyMFAFactor hotp) {
+        this.hotp = hotp;
         return this;
     }
 

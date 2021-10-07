@@ -31,6 +31,8 @@ public interface MFAEnrollPolicyBuilder extends PolicyBuilder<MFAEnrollPolicyBui
 
     MFAEnrollPolicyBuilder setGoogleOtp(PolicyMFAFactor googleOtp);
 
+    MFAEnrollPolicyBuilder setHotp(PolicyMFAFactor hotp);
+
     MFAEnrollPolicyBuilder setOktaCall(PolicyMFAFactor oktaCall);
 
     MFAEnrollPolicyBuilder setOktaEmail(PolicyMFAFactor oktaEmail);
