@@ -111,8 +111,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             throw new IllegalStateException("Failed to parse inputSpec variable", e);
         }
 
-        //Process requestBody argument name
         preprocessRequestBodyName(openAPI);
+        preprocessPolymorphismOperations(openAPI);
 
         //TODO Review
         //vendorExtensions.put("basePath", openAPI.getBasePath());
@@ -291,6 +291,44 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         }
     }
 
+    //TODO Review
+    protected void preprocessPolymorphismOperations(OpenAPI openAPI) {
+        Map<String, Object> allPaths = castToMap(rawSwaggerConfig.get("paths"));
+        if(allPaths != null) {
+            allPaths.forEach((pathName, value) -> {
+                Map<String, Object> pathItem = castToMap(value);
+                if(pathItem != null) {
+                    Map<String, Object> postOperation = castToMap(pathItem.get("post"));
+                    if(postOperation != null && postOperation.containsKey("requestBody")) {
+                        Map<String, Object> requestBodyObject = castToMap(postOperation.get("requestBody"));
+                        if(requestBodyObject != null) {
+                            Map<String, Object> content = castToMap(requestBodyObject.get("content"));
+                            Map<String, Object> contentUpdated = new HashMap<>();
+                            List<String> keysToRemove = new ArrayList<>();
+                            for(Iterator<String> iterator = content.keySet().iterator(); iterator.hasNext(); ) {
+                                String key = iterator.next();
+                                Map<String, Object> schema = castToMap(content.get(key));
+                                if (castToMap(schema.get("schema")).containsKey("oneOf")) {
+                                    List<Object> allOneOffItems = castToList(castToMap(schema.get("schema")).get("oneOf"));
+                                    for (int i = 0; i < allOneOffItems.size(); i++) {
+                                        Map<String, Object> oneOfItem = new HashMap<>();
+                                        oneOfItem.put("schema", allOneOffItems.get(i));
+                                        contentUpdated.put(key + "#" + i, oneOfItem);
+                                    }
+                                    keysToRemove.add(key);
+                                }
+                            }
+                            content.putAll(contentUpdated);
+                            for (String key: keysToRemove) {
+                                content.remove(key);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     protected void buildModelTagMap(OpenAPI openAPI) {
 
         openAPI.getComponents().getSchemas().forEach((key, definition) -> {
@@ -357,8 +395,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
             Map<String, CodegenOperation> operationMap = new HashMap<>();
 
-            operationsList.forEach(operaionNode -> {
-                String operationId = operaionNode.get("operationId").toString();
+            operationsList.forEach(operationNode -> {
+                String operationId = operationNode.get("operationId").toString();
 
                 // find the swagger path operation
                 openAPI.getPaths().forEach((pathName, path) -> {
@@ -389,7 +427,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                             boolean canLinkMethod = true;
 
-                            Object aliasNode = operaionNode.get("alias");
+                            Object aliasNode = operationNode.get("alias");
                             String alias = null;
                             if (aliasNode != null) {
                                 alias = aliasNode.toString();
@@ -411,7 +449,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 // now any params that match the models we need to use the model value directly
                                 // for example if the path contained {id} we would call getId() instead
 
-                                Map<String, String> argMap = createArgMap(operaionNode);
+                                Map<String, String> argMap = createArgMap(operationNode);
 
                                 List<CodegenParameter> cgOtherPathParamList = new ArrayList<>();
                                 List<CodegenParameter> cgParamAllList = new ArrayList<>();
@@ -450,7 +488,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 }
 
                                 // do not add the parent path params to the list (they will be parsed from the href)
-                                SortedSet<String> pathParents = parentPathParams(operaionNode);
+                                SortedSet<String> pathParents = parentPathParams(operationNode);
                                 cgOtherPathParamList.forEach(param -> {
                                     if (!pathParents.contains(param.paramName)) {
                                         cgParamAllList.add(param);
@@ -1046,6 +1084,13 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     private Map<String, Object> castToMap(Object object) {
         if (object instanceof Map) {
             return (Map<String, Object>) object;
+        }
+        return null;
+    }
+
+    private List<Object> castToList(Object object) {
+        if (object instanceof List) {
+            return (List<Object>) object;
         }
         return null;
     }

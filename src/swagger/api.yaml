@@ -3979,26 +3979,30 @@ paths:
           content: {}
       security:
       - api_token: []
-#  /api/v1/idps/{idpId}/credentials/csrs/{csrId}/lifecycle/publish:
-#    post:
-#      tags:
-#      - IdentityProvider
-#      description: Update the Certificate Signing Request with a signed X.509 certificate and add it into the signing key credentials for the IdP.
-#      operationId: publishCsrForIdentityProvider
-#      parameters:
-#      - name: idpId
-#        in: path
-#        required: true
-#        schema:
-#          type: string
-#      - name: csrId
-#        in: path
-#        required: true
-#        schema:
-#          type: string
-#      requestBody:
-#        required: true
-#        content:
+  /api/v1/idps/{idpId}/credentials/csrs/{csrId}/lifecycle/publish:
+    post:
+      tags:
+      - IdentityProvider
+      description: Update the Certificate Signing Request with a signed X.509 certificate and add it into the signing key credentials for the IdP.
+      operationId: publishCsrForIdentityProvider
+      parameters:
+      - name: idpId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: csrId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
 #          application/x-x509-ca-cert:
 #            schema:
 #              oneOf:
@@ -4022,15 +4026,15 @@ paths:
 #              type: string
 #              format: binary
 #              x-okta-operationId: publishBinaryPemCertForIdentityProvider
-#      responses:
-#        '201':
-#          description: Created
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/JsonWebKey'
-#      security:
-#      - api_token: []
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonWebKey'
+      security:
+      - api_token: []
   /api/v1/idps/{idpId}/credentials/keys:
     get:
       tags:
@@ -10915,6 +10919,36 @@ components:
         - dest: idpId
           src: id
         operationId: getCsrForIdentityProvider
+      - alias: publishCsr
+        arguments:
+        - dest: idpId
+          src: id
+        operationId: publishCsrForIdentityProvider
+      - alias: publishBinaryCerCert
+        arguments:
+          - dest: idpId
+            src: id
+        operationId: publishBinaryCerCertForIdentityProvider
+      - alias: publishBase64CerCert
+        arguments:
+          - dest: idpId
+            src: id
+        operationId: publishBase64CerCertForIdentityProvider
+      - alias: publishBinaryDerCert
+        arguments:
+          - dest: idpId
+            src: id
+        operationId: publishBinaryDerCertForIdentityProvider
+      - alias: publishBase64DerCert
+        arguments:
+          - dest: idpId
+            src: id
+        operationId: publishBase64DerCertForIdentityProvider
+      - alias: publishBinaryPemCert
+        arguments:
+          - dest: idpId
+            src: id
+        operationId: publishBinaryPemCertForIdentityProvider
       - alias: listSigningKeys
         arguments:
         - dest: idpId
