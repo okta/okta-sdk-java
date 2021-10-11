@@ -85,7 +85,7 @@ public class {{classname}} extends com.okta.sdk.impl.client.BaseClient implement
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}") /*A*/
+            comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/allParams}}) {
 {{>paramPartial}}
 {{#vendorExtensions.x-is-get-method}}
@@ -100,7 +100,6 @@ public class {{classname}} extends com.okta.sdk.impl.client.BaseClient implement
 {{#vendorExtensions.x-is-delete-method}}
 {{>apiMethodDelete}}
 {{/vendorExtensions.x-is-delete-method}}
-    /*{{{vendorExtensions}}}*/
     }
 
 {{#vendorExtensions.hasOptional}}
@@ -118,7 +117,7 @@ public class {{classname}} extends com.okta.sdk.impl.client.BaseClient implement
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}") /*B*/
+            comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.nonOptionalParams}}) {
 {{>paramPartialOnlyRequired}}
 {{#vendorExtensions.x-is-get-method}}
@@ -157,7 +156,7 @@ public class {{classname}} extends com.okta.sdk.impl.client.BaseClient implement
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}") /*C*/
+            comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#value}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/value}}) {
 {{>paramPartialBackwardsCompat}}
 {{#vendorExtensions.x-is-get-method}}

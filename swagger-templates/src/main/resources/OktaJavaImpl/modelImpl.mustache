@@ -35,7 +35,7 @@ import com.okta.sdk.impl.resource.EnumProperty;
 import com.okta.sdk.impl.resource.MapProperty;
 import com.okta.sdk.impl.resource.DefaultVoidResource;
 import com.okta.sdk.resource.VoidResource;
-import com.okta.sdk.resource.Resource; //TODO Verify this
+import com.okta.sdk.resource.Resource;
 {{#vendorExtensions.top-level}}
 import com.okta.sdk.resource.Resource;
 {{/vendorExtensions.top-level}}
@@ -111,7 +111,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     @javax.annotation.Generated(
           value    = "{{generatorClass}}",
           date     = "{{generatedDate}}",
-          comments = "{{httpMethod}} - {{path}}") /*D*/
+          comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.allParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.allParams}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
@@ -151,7 +151,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     @javax.annotation.Generated(
           value    = "{{generatorClass}}",
           date     = "{{generatedDate}}",
-          comments = "{{httpMethod}} - {{path}}") /*E*/
+          comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#vendorExtensions.nonOptionalParams}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/vendorExtensions.nonOptionalParams}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}
@@ -203,7 +203,7 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
     @javax.annotation.Generated(
             value    = "{{generatorClass}}",
             date     = "{{generatedDate}}",
-            comments = "{{httpMethod}} - {{path}}") /*F*/
+            comments = "{{httpMethod}} - {{path}}")
     public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{#vendorExtensions.alias}}{{vendorExtensions.alias}}{{/vendorExtensions.alias}}{{^vendorExtensions.alias}}{{operationId}}{{/vendorExtensions.alias}}({{#value}}{{{dataType}}} {{paramName}}{{^@last}}, {{/@last}}{{/value}}) {
 
 {{#vendorExtensions.fromModelPathParams}}{{#.}}        {{{dataType}}} {{paramName}} = {{vendorExtensions.fromModel.getter}}();{{/.}}{{/vendorExtensions.fromModelPathParams}}

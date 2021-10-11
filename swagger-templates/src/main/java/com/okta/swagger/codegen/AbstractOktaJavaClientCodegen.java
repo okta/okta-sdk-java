@@ -86,19 +86,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         super();
         this.codeGenName = codeGenName;
         this.dateLibrary = "legacy";
-//
-//        outputFolder = "generated-code" + File.separator + codeGenName;
-//        embeddedTemplateDir = templateDir = relativeTemplateDir;
-//
-//        artifactId = "not_used";
-//
         this.modelPackage = modelPackage;
-//        // TODO: these are hard coded for now, calling Maven Plugin does NOT set the packages correctly.
-//        invokerPackage = "com.okta.sdk.invoker";
         apiPackage = "com.okta.sdk.client";
-
         apiTemplateFiles.clear();
-//        modelTemplateFiles.clear();
     }
 
     @Override
@@ -110,12 +100,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         } catch (Exception e) {
             throw new IllegalStateException("Failed to parse inputSpec variable", e);
         }
-
         preprocessRequestBodyName(openAPI);
-        preprocessPolymorphismOperations(openAPI);
 
-        //TODO Review
-        //vendorExtensions.put("basePath", openAPI.getBasePath());
         super.preprocessOpenAPI(openAPI);
         tagEnums(openAPI);
         buildTopLevelResourceList(openAPI);
@@ -284,44 +270,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 requestBody.setExtensions(new HashMap<>());
                             }
                             requestBody.getExtensions().put(X_CODEGEN_REQUEST_BODY_NAME, requestBodyName);
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    //TODO Review
-    protected void preprocessPolymorphismOperations(OpenAPI openAPI) {
-        Map<String, Object> allPaths = castToMap(rawSwaggerConfig.get("paths"));
-        if(allPaths != null) {
-            allPaths.forEach((pathName, value) -> {
-                Map<String, Object> pathItem = castToMap(value);
-                if(pathItem != null) {
-                    Map<String, Object> postOperation = castToMap(pathItem.get("post"));
-                    if(postOperation != null && postOperation.containsKey("requestBody")) {
-                        Map<String, Object> requestBodyObject = castToMap(postOperation.get("requestBody"));
-                        if(requestBodyObject != null) {
-                            Map<String, Object> content = castToMap(requestBodyObject.get("content"));
-                            Map<String, Object> contentUpdated = new HashMap<>();
-                            List<String> keysToRemove = new ArrayList<>();
-                            for(Iterator<String> iterator = content.keySet().iterator(); iterator.hasNext(); ) {
-                                String key = iterator.next();
-                                Map<String, Object> schema = castToMap(content.get(key));
-                                if (castToMap(schema.get("schema")).containsKey("oneOf")) {
-                                    List<Object> allOneOffItems = castToList(castToMap(schema.get("schema")).get("oneOf"));
-                                    for (int i = 0; i < allOneOffItems.size(); i++) {
-                                        Map<String, Object> oneOfItem = new HashMap<>();
-                                        oneOfItem.put("schema", allOneOffItems.get(i));
-                                        contentUpdated.put(key + "#" + i, oneOfItem);
-                                    }
-                                    keysToRemove.add(key);
-                                }
-                            }
-                            content.putAll(contentUpdated);
-                            for (String key: keysToRemove) {
-                                content.remove(key);
-                            }
                         }
                     }
                 }
@@ -1028,8 +976,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         ObjectSchema objectSchema = new ObjectSchema();
                         objectSchema.setName(modelName);
                         objectSchema.setExtensions(new HashMap<>());
-                        //TODO Review this
-                        //objectSchema.setAllowEmptyValue(false);
                         objectSchema.setDescription("Collection List for " + baseName);
 
                         if (baseModel == null) {

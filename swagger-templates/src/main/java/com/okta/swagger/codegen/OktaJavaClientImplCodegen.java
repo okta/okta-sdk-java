@@ -44,12 +44,8 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
 
     public OktaJavaClientImplCodegen() {
         super("okta_java_impl", "com.okta.sdk.impl.resource");
-
-//        modelTemplateFiles.put("model.mustache", ".java");
         overrideModelPackage = "com.okta.sdk.resource";
         apiPackage           = "com.okta.sdk.impl.client";
-//        vendorExtensions().put("overrideModelPackage", overrideModelPackage);
-//        apiTemplateFiles.put("api.mustache", ".java");
     }
 
     @Override
