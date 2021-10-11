@@ -4003,29 +4003,29 @@ paths:
             schema:
               type: string
               format: binary
-#          application/x-x509-ca-cert:
-#            schema:
-#              oneOf:
-#              - type: string
-#                format: binary
-#                x-okta-operationId: publishBinaryCerCertForIdentityProvider
-#              - type: string
-#                format: base64
-#                x-okta-operationId: publishBase64CerCertForIdentityProvider
-#          application/pkix-cert:
-#            schema:
-#              oneOf:
-#              - type: string
-#                format: binary
-#                x-okta-operationId: publishBinaryDerCertForIdentityProvider
-#              - type: string
-#                format: base64
-#                x-okta-operationId: publishBase64DerCertForIdentityProvider
-#          application/x-pem-file:
-#            schema:
-#              type: string
-#              format: binary
-#              x-okta-operationId: publishBinaryPemCertForIdentityProvider
+          application/x-x509-ca-cert:
+            schema:
+              oneOf:
+              - type: string
+                format: binary
+                x-okta-operationId: publishBinaryCerCertForIdentityProvider
+              - type: string
+                format: base64
+                x-okta-operationId: publishBase64CerCertForIdentityProvider
+          application/pkix-cert:
+            schema:
+              oneOf:
+              - type: string
+                format: binary
+                x-okta-operationId: publishBinaryDerCertForIdentityProvider
+              - type: string
+                format: base64
+                x-okta-operationId: publishBase64DerCertForIdentityProvider
+          application/x-pem-file:
+            schema:
+              type: string
+              format: binary
+              x-okta-operationId: publishBinaryPemCertForIdentityProvider
       responses:
         '201':
           description: Created
