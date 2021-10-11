@@ -293,59 +293,63 @@ paths:
           content: {}
       security:
       - api_token: []
-#  /api/v1/apps/{appId}/credentials/csrs/{csrId}/lifecycle/publish:
-#    post:
-#      tags:
-#      - Application
-#      summary: Publish Certificate Signing Request
-#      description: Updates a certificate signing request for the app with a signed X.509 certificate and adds it into the application key credentials
-#      operationId: publishCsrFromApplication
-#      parameters:
-#      - name: appId
-#        in: path
-#        required: true
-#        schema:
-#          type: string
-#      - name: csrId
-#        in: path
-#        required: true
-#        schema:
-#          type: string
-#      requestBody:
-#        required: true
-#        content:
-#          application/x-x509-ca-cert:
-#            schema:
-#              oneOf:
-#              - type: string
-#                format: binary
-#                x-okta-operationId: publishBinaryCerCert
-#              - type: string
-#                format: base64
-#                x-okta-operationId: publishBase64CerCert
-#          application/pkix-cert:
-#            schema:
-#              oneOf:
-#              - type: string
-#                format: binary
-#                x-okta-operationId: publishBinaryDerCert
-#              - type: string
-#                format: base64
-#                x-okta-operationId: publishBase64DerCert
-#          application/x-pem-file:
-#            schema:
-#              type: string
-#              format: binary
-#              x-okta-operationId: publishBinaryPemCert
-#      responses:
-#        '201':
-#          description: Created
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/JsonWebKey'
-#      security:
-#      - api_token: []
+  /api/v1/apps/{appId}/credentials/csrs/{csrId}/lifecycle/publish:
+    post:
+      tags:
+      - Application
+      summary: Publish Certificate Signing Request
+      description: Updates a certificate signing request for the app with a signed X.509 certificate and adds it into the application key credentials
+      operationId: publishCsrFromApplication
+      parameters:
+      - name: appId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: csrId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+          application/x-x509-ca-cert:
+            schema:
+              oneOf:
+              - type: string
+                format: binary
+                x-okta-operationId: publishBinaryCerCert
+              - type: string
+                format: base64
+                x-okta-operationId: publishBase64CerCert
+          application/pkix-cert:
+            schema:
+              oneOf:
+              - type: string
+                format: binary
+                x-okta-operationId: publishBinaryDerCert
+              - type: string
+                format: base64
+                x-okta-operationId: publishBase64DerCert
+          application/x-pem-file:
+            schema:
+              type: string
+              format: binary
+              x-okta-operationId: publishBinaryPemCert
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonWebKey'
+      security:
+      - api_token: []
   /api/v1/apps/{appId}/credentials/keys:
     get:
       tags:
