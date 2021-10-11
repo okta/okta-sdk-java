@@ -47,6 +47,7 @@ import com.okta.sdk.resource.user.UserCredentials
 import com.okta.sdk.resource.user.UserList
 import com.okta.sdk.resource.user.UserStatus
 import com.okta.sdk.resource.user.type.UserType
+import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
@@ -344,6 +345,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         client.getUser(user.getId())
     }
 
+    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void changeStrictPasswordTest() {
 
