@@ -1033,11 +1033,4 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         }
         return null;
     }
-
-    private List<Object> castToList(Object object) {
-        if (object instanceof List) {
-            return (List<Object>) object;
-        }
-        return null;
-    }
 }
