@@ -51,6 +51,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 3.x.x | :clock9: Retiring effective November 10, 2021 |
 | 4.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-3xx-to-400)) |
 | 5.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-4xx-to-500)) |
+| 6.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-5xx-to-600)) |
 
 The latest release can always be found on the [releases page][github-releases].
  
