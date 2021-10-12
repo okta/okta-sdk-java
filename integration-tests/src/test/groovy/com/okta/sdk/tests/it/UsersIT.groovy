@@ -395,8 +395,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setOldPassword(client.instantiate(PasswordCredential).setValue('Passw0rd!2@3#'.toCharArray()))
             .setNewPassword(client.instantiate(PasswordCredential).setValue('!2@3#Passw0rd'.toCharArray()))
 
+        // would throw a HTTP 403
         def exception = expect ResourceException, {user.changePassword(request, true)}
-        assertThat exception.getMessage(), containsString("E0000014") // Update of credentials failed.
 
         def credentials = user.changePassword(request, false)
         assertThat credentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
