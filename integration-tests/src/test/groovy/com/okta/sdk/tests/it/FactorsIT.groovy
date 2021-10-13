@@ -48,14 +48,12 @@ class FactorsIT extends ITSupport {
 
     private String smsTestNumber = "185 635 15491"
 
-    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void factorListTest() {
 
         Client client = getClient()
         User user = randomUser()
-
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor)
         smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
@@ -69,22 +67,23 @@ class FactorsIT extends ITSupport {
 
         UserFactorList factorsList = user.listFactors()
         List<UserFactor> factorsArrayList = Lists.newArrayList(factorsList)
-        assertThat factorsArrayList, allOf(hasSize(2), containsInAnyOrder(
+        assertThat factorsArrayList, hasItems(
             allOf(
                 instanceOf(SmsUserFactor),
-                hasProperty("id", is(smsUserFactor.getId()))),
+                hasProperty("id", is(smsUserFactor.getId()))
+            ),
             allOf(
                 instanceOf(SecurityQuestionUserFactor),
-                hasProperty("id", is(securityQuestionUserFactor.getId())))))
+                hasProperty("id", is(securityQuestionUserFactor.getId()))
+            )
+        )
     }
 
-    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testSecurityQuestionFactorCreation() {
         Client client = getClient()
         User user = randomUser()
-
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
         securityQuestionUserFactor.getProfile()
@@ -96,13 +95,11 @@ class FactorsIT extends ITSupport {
         assertThat securityQuestionUserFactor.id, notNullValue()
     }
 
-    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testCallFactorCreation() {
         Client client = getClient()
         User user = randomUser()
-
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         CallUserFactor callUserFactor = client.instantiate(CallUserFactor)
         callUserFactor.getProfile().setPhoneNumber(smsTestNumber)
@@ -112,13 +109,11 @@ class FactorsIT extends ITSupport {
         assertThat callUserFactor.id, notNullValue()
     }
 
-    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testSmsFactorCreation() {
         Client client = getClient()
         User user = randomUser()
-
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor)
         smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
@@ -128,12 +123,11 @@ class FactorsIT extends ITSupport {
         assertThat smsUserFactor.id, notNullValue()
     }
 
-    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testPushFactorCreation() {
         Client client = getClient()
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         PushUserFactor pushUserFactor = client.instantiate(PushUserFactor)
         assertThat pushUserFactor.id, nullValue()
@@ -155,11 +149,11 @@ class FactorsIT extends ITSupport {
         assertThat factors, iterableWithSize(greaterThan(1))
     }
 
-    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void activateTotpFactor() {
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
+
         TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
         user.enrollFactor(totpUserFactor)
 
@@ -214,11 +208,10 @@ class FactorsIT extends ITSupport {
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.CHALLENGE)
     }
 
-    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testGoogleTotpUserFactorCreation() {
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         TokenUserFactor tokenUserFactor = client.instantiate(TokenUserFactor)
             .setFactorType(FactorType.TOKEN_SOFTWARE_TOTP)
@@ -230,15 +223,27 @@ class FactorsIT extends ITSupport {
         assertThat tokenUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
     }
 
-    @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void deleteFactorTest() {
 
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
         TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
         totpUserFactor.setProvider(FactorProvider.OKTA)
         user.enrollFactor(totpUserFactor)
         totpUserFactor.delete()
+    }
+
+    void assertListFactors(User user) {
+        if(!isOIEEnvironment) {
+            assertThat user.listFactors(), emptyIterable()
+        } else {
+            assertThat user.listFactors(), hasItem(
+                allOf(
+                    instanceOf(EmailUserFactor),
+                    hasProperty("id", is(notNullValue()))
+                )
+            )
+        }
     }
 }
