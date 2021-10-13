@@ -158,8 +158,10 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
     }
 
-    @Test (groups = "group2")
-    @NonOIEEnvironmentOnly
+    // We do not support RADIUS rules in the Okta SoP anymore.
+    // “Authenticates via RADIUS” has been deprecated for a long time and we have removed it completely in OIE.
+    // https://oktainc.atlassian.net/browse/OKTA-431665?focusedCommentId=2166278
+    @Test (groups = "group2", enabled = false)
     void createOktaSignOnRadiusPolicyRule() {
 
         def group = randomGroup()
