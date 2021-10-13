@@ -67,13 +67,11 @@ class FactorsIT extends ITSupport {
 
         UserFactorList factorsList = user.listFactors()
         List<UserFactor> factorsArrayList = Lists.newArrayList(factorsList)
-        assertThat factorsArrayList, hasItem(
+        assertThat factorsArrayList, hasItems(
             allOf(
                 instanceOf(SmsUserFactor),
                 hasProperty("id", is(smsUserFactor.getId()))
-            )
-        )
-        assertThat factorsArrayList, hasItem(
+            ),
             allOf(
                 instanceOf(SecurityQuestionUserFactor),
                 hasProperty("id", is(securityQuestionUserFactor.getId()))
