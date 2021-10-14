@@ -786,6 +786,8 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 String name = WordUtils.capitalizeFully(property.name);
                 property.vendorExtensions.put("x-okta-known-values-exists", true);
                 property.vendorExtensions.put("x-okta-known-values-class-name", name + "Values");
+                property.datatypeWithEnum = property.baseType;
+                property.isEnum = false;
             }
 
             String datatype = property.datatype;

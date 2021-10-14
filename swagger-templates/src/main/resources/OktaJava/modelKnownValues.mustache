@@ -14,10 +14,8 @@
     limitations under the License.
 }}
 
-public static class {{#vendorExtensions.x-okta-known-values-class-name}}{{{.}}}
-{{/vendorExtensions.x-okta-known-values-class-name}} {
-
-{{#vendorExtensions.x-okta-known-values}}
-    public static final String {{{.}}} = "{{{.}}}";
-{{/vendorExtensions.x-okta-known-values}}
-}
+    public static class {{#vendorExtensions.x-okta-known-values-class-name}}{{{.}}}{{/vendorExtensions.x-okta-known-values-class-name}} {
+        {{#vendorExtensions.x-okta-known-values}}
+        public static final String {{{.}}} = "{{{.}}}";
+        {{/vendorExtensions.x-okta-known-values}}
+    }
