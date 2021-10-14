@@ -1135,6 +1135,4 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected Map<String, Object> getRawSwaggerProperty(Map<String, Object> definition, String propertyName) {
         return castToMap(castToMap(definition.get("properties")).get(propertyName));
     }
-
-
 }
