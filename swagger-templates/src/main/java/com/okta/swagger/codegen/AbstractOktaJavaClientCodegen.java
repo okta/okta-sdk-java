@@ -783,7 +783,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             }
 
             if (property.vendorExtensions.containsKey("x-okta-known-values")) {
-                String name = StringUtils.remove(WordUtils.capitalizeFully(property.name, '_'), "_");
+                String name = WordUtils.capitalizeFully(property.name);
                 property.vendorExtensions.put("x-okta-known-values-exists", true);
                 property.vendorExtensions.put("x-okta-known-values-class-name", name + "Values");
             }
