@@ -35,6 +35,9 @@ public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/pa
     {{classname}} {{setter}}({{{datatypeWithEnum}}} {{name}});
 {{/isReadOnly}}
 
+{{#vendorExtensions.x-okta-known-values-exists}}
+    {{>modelKnownValues}}
+{{/vendorExtensions.x-okta-known-values-exists}}
 {{#isEnum}}
     {{^isContainer}}
 {{>modelInnerEnum}}

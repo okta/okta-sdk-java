@@ -43,6 +43,7 @@ import io.swagger.parser.SwaggerException;
 import io.swagger.util.Json;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -781,6 +782,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 property.datatypeWithEnum = property.baseType + "<" + property.complexType + ">";
             }
 
+            if (property.vendorExtensions.containsKey("x-okta-known-values")) {
+                String name = StringUtils.remove(WordUtils.capitalizeFully(property.name, '_'), "_");
+                property.vendorExtensions.put("x-okta-known-values-exists", true);
+                property.vendorExtensions.put("x-okta-known-values-class-name", name + "Values");
+            }
+
             String datatype = property.datatype;
             if (datatype != null
                     && datatype.matches(".+List$")
@@ -1128,4 +1135,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected Map<String, Object> getRawSwaggerProperty(Map<String, Object> definition, String propertyName) {
         return castToMap(castToMap(definition.get("properties")).get(propertyName));
     }
+
+
 }
