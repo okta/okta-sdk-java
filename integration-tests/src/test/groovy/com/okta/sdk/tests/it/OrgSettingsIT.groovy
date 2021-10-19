@@ -109,7 +109,7 @@ class OrgSettingsIT extends ITSupport {
     @Test (groups = "group2")
     @Scenario("get-org-contacts")
     void getOrgContactsTest() {
-        def contactTypes = client.getOrgContactTypes()
+        def contactTypes = client.getOrgSettings().getContactTypes()
 
         contactTypes.asList().stream().forEach(contact -> {
             assertThat(contact, instanceOf(OrgContactTypeObj))
@@ -121,7 +121,7 @@ class OrgSettingsIT extends ITSupport {
     @Test (groups = "group3")
     @Scenario("get-user-of-contact-type-test")
     void getUserOfContactTypeTest() {
-        def orgContactUser = client.getOrgContactUser(OrgContactType.BILLING.toString())
+        def orgContactUser = client.getOrgSettings().getOrgContactUser(OrgContactType.BILLING.toString())
         assertThat(orgContactUser, notNullValue())
         assertThat(orgContactUser.getUserId(), notNullValue())
 
@@ -155,55 +155,55 @@ class OrgSettingsIT extends ITSupport {
     @Test (groups = "group1")
     @Scenario("get-org-preferences-test")
     void getOrgPreferencesTest() {
-        def orgPreferences = client.getOrgPreferences()
+        def orgPreferences = client.getOrgSettings().orgPreferences()
         assertThat(orgPreferences, notNullValue())
         assertThat(orgPreferences.getShowEndUserFooter(), notNullValue())
         assertThat(orgPreferences.getShowEndUserFooter(), oneOf(true, false))
 
         boolean showEndUserFooter = orgPreferences.getShowEndUserFooter()
         if(showEndUserFooter) {
-            orgPreferences.hideEndUserFooter()
-            assertThat(client.getOrgPreferences().getShowEndUserFooter(), is(false))
+            client.getOrgSettings().orgPreferences().hideEndUserFooter()
+            assertThat(client.getOrgSettings().orgPreferences().getShowEndUserFooter(), is(false))
             //revert to previous state
-            orgPreferences.showEndUserFooter()
-            assertThat(client.getOrgPreferences().getShowEndUserFooter(), is(true))
+            client.getOrgSettings().orgPreferences().showEndUserFooter()
+            assertThat(client.getOrgSettings().orgPreferences().getShowEndUserFooter(), is(true))
         } else {
-            orgPreferences.showEndUserFooter()
-            assertThat(client.getOrgPreferences().getShowEndUserFooter(), is(true))
+            client.getOrgSettings().orgPreferences().showEndUserFooter()
+            assertThat(client.getOrgSettings().orgPreferences().getShowEndUserFooter(), is(true))
             //revert to previous state
-            orgPreferences.hideEndUserFooter()
-            assertThat(client.getOrgPreferences().getShowEndUserFooter(), is(false))
+            client.getOrgSettings().orgPreferences().hideEndUserFooter()
+            assertThat(client.getOrgSettings().orgPreferences().getShowEndUserFooter(), is(false))
         }
     }
 
     @Test (groups = "group2")
     @Scenario("get-okta-communication-settings-test")
     void getOktaCommunicationSettingsTest() {
-        def commSettings = client.getOktaCommunicationSettings()
+        def commSettings = client.getOrgSettings().communicationSettings()
         assertThat(commSettings, notNullValue())
         assertThat(commSettings.getOptOutEmailUsers(), notNullValue())
         assertThat(commSettings.getOptOutEmailUsers(), oneOf(true, false))
 
         boolean optOutEmailUsers = commSettings.getOptOutEmailUsers()
         if(optOutEmailUsers) {
-            commSettings.optInUsersToOktaCommunicationEmails()
-            assertThat(client.getOktaCommunicationSettings().getOptOutEmailUsers(), is(false))
+            client.getOrgSettings().communicationSettings().optInUsersToOktaCommunicationEmails()
+            assertThat(client.getOrgSettings().communicationSettings().getOptOutEmailUsers(), is(false))
             //revert to previous state
-            commSettings.optOutUsersFromOktaCommunicationEmails()
-            assertThat(client.getOktaCommunicationSettings().getOptOutEmailUsers(), is(true))
+            client.getOrgSettings().communicationSettings().optOutUsersFromOktaCommunicationEmails()
+            assertThat(client.getOrgSettings().communicationSettings().getOptOutEmailUsers(), is(true))
         } else {
-            commSettings.optOutUsersFromOktaCommunicationEmails()
-            assertThat(client.getOktaCommunicationSettings().getOptOutEmailUsers(), is(true))
+            client.getOrgSettings().communicationSettings().optOutUsersFromOktaCommunicationEmails()
+            assertThat(client.getOrgSettings().communicationSettings().getOptOutEmailUsers(), is(true))
             //revert to previous state
-            commSettings.optInUsersToOktaCommunicationEmails()
-            assertThat(client.getOktaCommunicationSettings().getOptOutEmailUsers(), is(false))
+            client.getOrgSettings().communicationSettings().optInUsersToOktaCommunicationEmails()
+            assertThat(client.getOrgSettings().communicationSettings().getOptOutEmailUsers(), is(false))
         }
     }
 
     @Test (groups = "group3")
     @Scenario("get-org-okta-support-settings-test")
     void getOrgOktaSupportSettingsTest() {
-        def supportSettings = client.getOrgOktaSupportSettings()
+        def supportSettings = client.getOrgSettings().getSupportSettings()
         assertThat(supportSettings, notNullValue())
         assertThat(supportSettings.getSupport(), notNullValue())
         assertThat(supportSettings.getSupport(), oneOf(OrgOktaSupportSetting.ENABLED, OrgOktaSupportSetting.DISABLED))
@@ -212,22 +212,22 @@ class OrgSettingsIT extends ITSupport {
         if(orgOktaSupportSettings == OrgOktaSupportSetting.DISABLED) {
             assertThat(supportSettings.getExpiration(), nullValue())
 
-            supportSettings.grantOktaSupport()
-            assertThat(client.getOrgOktaSupportSettings().getSupport(), is(OrgOktaSupportSetting.ENABLED))
-            assertThat(client.getOrgOktaSupportSettings().getExpiration(), notNullValue())
-            Date expiration = client.getOrgOktaSupportSettings().getExpiration()
+            client.getOrgSettings().getSupportSettings().grantOktaSupport()
+            assertThat(client.getOrgSettings().getSupportSettings().getSupport(), is(OrgOktaSupportSetting.ENABLED))
+            assertThat(client.getOrgSettings().getSupportSettings().getExpiration(), notNullValue())
+            Date expiration = client.getOrgSettings().getSupportSettings().getExpiration()
 
-            supportSettings.extendOktaSupport()
-            assertThat(client.getOrgOktaSupportSettings().getSupport(), is(OrgOktaSupportSetting.ENABLED))
-            assertThat(client.getOrgOktaSupportSettings().getExpiration(), notNullValue())
-            Date extendedExpiration = client.getOrgOktaSupportSettings().getExpiration()
+            client.getOrgSettings().getSupportSettings().extendOktaSupport()
+            assertThat(client.getOrgSettings().getSupportSettings().getSupport(), is(OrgOktaSupportSetting.ENABLED))
+            assertThat(client.getOrgSettings().getSupportSettings().getExpiration(), notNullValue())
+            Date extendedExpiration = client.getOrgSettings().getSupportSettings().getExpiration()
             def hoursExtended = (int)TimeUnit.HOURS
                 .convert(extendedExpiration.getTime() - expiration.getTime(), TimeUnit.MILLISECONDS)
             assertThat(hoursExtended, is(greaterThanOrEqualTo(24)))
 
             //revert to previous state
-            supportSettings.revokeOktaSupport()
-            assertThat(client.getOrgOktaSupportSettings().getSupport(), is(OrgOktaSupportSetting.DISABLED))
+            client.getOrgSettings().getSupportSettings().revokeOktaSupport()
+            assertThat(client.getOrgSettings().getSupportSettings().getSupport(), is(OrgOktaSupportSetting.DISABLED))
         } else {
             assertThat(supportSettings.getExpiration(), notNullValue())
         }
