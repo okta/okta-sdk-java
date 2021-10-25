@@ -78,7 +78,7 @@ class IdpIT extends ITSupport {
         String newName = "java-sdk-it-" + UUID.randomUUID().toString()
 
         IdentityProvider updatedIdp = createdIdp.update(client.instantiate(IdentityProvider)
-            .setType(IdentityProvider.TypeEnum.OIDC)
+            .setType(IdentityProvider.TypeValues.OIDC)
             .setName(newName)
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
             .setProtocol(client.instantiate(Protocol)
