@@ -19,7 +19,7 @@
             this,
 {{/vendorExtensions.bodyIsSelf}}
 {{^vendorExtensions.bodyIsSelf}}
-            new DefaultVoidResource(getDataStore()),
+            {{#vendorExtensions.isUserFactor}}getVerify() != null ? getVerify() : {{/vendorExtensions.isUserFactor}}new DefaultVoidResource(getDataStore()),
 {{/vendorExtensions.bodyIsSelf}}
             null,
             {{#returnType}}{{returnType}}.class,{{/returnType}}
