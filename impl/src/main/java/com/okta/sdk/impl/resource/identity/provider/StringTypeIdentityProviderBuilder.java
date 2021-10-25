@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.impl.resource.identity.provider;
 
+import com.okta.commons.lang.Assert;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
@@ -30,16 +31,24 @@ import com.okta.sdk.resource.policy.PolicyAccountLink;
 import com.okta.sdk.resource.policy.PolicySubject;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
-public class GoogleIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
+public class StringTypeIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
+
+    private String type;
+
+    public StringTypeIdentityProviderBuilder(String type) {
+        this.type = type;
+    }
 
     @Override
     public IdentityProvider buildAndCreate(Client client) {
 
+        Assert.notNull(type, "type cannot be empty");
+
         return client.createIdentityProvider(client.instantiate(IdentityProvider.class)
-            .setType(IdentityProvider.TypeValues.GOOGLE)
+            .setType(type)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
-                .setType(Protocol.TypeEnum.OIDC)
+                .setType(Protocol.TypeEnum.OAUTH2)
                 .setScopes(scopes)
                 .setCredentials(client.instantiate(IdentityProviderCredentials.class)
                     .setClient(client.instantiate(IdentityProviderCredentialsClient.class)

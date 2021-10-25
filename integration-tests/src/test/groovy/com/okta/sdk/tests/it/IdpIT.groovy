@@ -78,7 +78,7 @@ class IdpIT extends ITSupport {
         String newName = "java-sdk-it-" + UUID.randomUUID().toString()
 
         IdentityProvider updatedIdp = createdIdp.update(client.instantiate(IdentityProvider)
-            .setType(IdentityProvider.TypeEnum.OIDC)
+            .setType(IdentityProvider.TypeValues.OIDC)
             .setName(newName)
             .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
             .setProtocol(client.instantiate(Protocol)
@@ -418,6 +418,60 @@ class IdpIT extends ITSupport {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         IdentityProvider createdIdp = IdentityProviderBuilders.linkedin()
+            .setName(name)
+            .setScopes(["r_basicprofile", "r_emailaddress"])
+            .setClientId("your-client-id")
+            .setClientSecret("your-client-secret")
+            .isProfileMaster(true)
+            .setMaxClockSkew(120000)
+            .setUserName("idpuser.email")
+            .setMatchType(PolicySubjectMatchType.EMAIL)
+            .buildAndCreate(client)
+        registerForCleanup(createdIdp)
+
+        // list linked idp users
+        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+
+        // link user
+        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
+            client.instantiate(UserIdentityProviderLinkRequest)
+                .setExternalId("externalId"))
+
+        assertThat(createdIdp.listUsers(), iterableWithSize(1))
+        assertPresent(createdIdp.listUsers(), idpAppUser)
+
+        // unlink user
+        createdIdp.unlinkUser(createdUser.getId())
+
+        // list linked idp users
+        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+
+        // deactivate
+        createdIdp.deactivate()
+
+        // delete
+        createdIdp.delete()
+
+        assertNotPresent(client.listIdentityProviders(), createdIdp)
+    }
+
+    @Test (groups = "group2")
+    void idpWithStringTypeTest() {
+
+        // create user
+        def email = "joe.coder+${uniqueTestName}@example.com"
+        User createdUser = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName("Joe")
+            .setLastName("Code")
+            .setPassword("Password1".toCharArray())
+            .buildAndCreate(client)
+        registerForCleanup(createdUser)
+
+        // create Linkedin idp
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
+        IdentityProvider createdIdp = IdentityProviderBuilders.ofType("GOOGLE")
             .setName(name)
             .setScopes(["r_basicprofile", "r_emailaddress"])
             .setClientId("your-client-id")

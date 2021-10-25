@@ -43,6 +43,7 @@ import io.swagger.parser.SwaggerException;
 import io.swagger.util.Json;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -779,6 +780,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             //Do not use JsonWebKeyList because it's based on Map<K,V> but API require a simple List<JsonWebKey>
             if(model.name.equals("OpenIdConnectApplicationSettingsClientKeys")) {
                 property.datatypeWithEnum = property.baseType + "<" + property.complexType + ">";
+            }
+
+            if (property.vendorExtensions.containsKey("x-okta-known-values")) {
+                String name = WordUtils.capitalizeFully(property.name);
+                property.vendorExtensions.put("x-okta-known-values-exists", true);
+                property.vendorExtensions.put("x-okta-known-values-class-name", name + "Values");
+                property.datatypeWithEnum = property.baseType;
+                property.isEnum = false;
             }
 
             String datatype = property.datatype;
