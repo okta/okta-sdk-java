@@ -184,6 +184,21 @@ class FactorsIT extends ITSupport {
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
     }
 
+    @Test (groups = "group2")
+    void verifyQuestionFactor_withoutBody() {
+        User user = randomUser()
+
+        SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
+        securityQuestionUserFactor.getProfile()
+            .setQuestion("disliked_food")
+            .setAnswer("pizza")
+        user.enrollFactor(securityQuestionUserFactor)
+
+        VerifyFactorRequest request = client.instantiate(VerifyFactorRequest).setAnswer("pizza")
+        VerifyUserFactorResponse response = securityQuestionUserFactor.setVerify(request).verify()
+        assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
+    }
+
     @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void testEmailUserFactor() {
