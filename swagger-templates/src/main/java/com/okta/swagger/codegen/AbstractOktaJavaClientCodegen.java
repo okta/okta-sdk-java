@@ -478,6 +478,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                             // mark the operation as moved so we do NOT add it to the client
                             operation.getVendorExtensions().put("moved", true);
 
+                            if ("VerifyUserFactorResponse".equals(cgOperation.returnType)) {
+                                cgOperation.vendorExtensions.put("isUserFactor", true);
+                            }
                         }
                     }
                 });
