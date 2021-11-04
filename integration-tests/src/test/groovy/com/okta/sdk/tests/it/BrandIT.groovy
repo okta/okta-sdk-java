@@ -38,7 +38,7 @@ import static org.hamcrest.Matchers.*
  */
 class BrandIT extends ITSupport {
 
-    @Test (groups = "group1")
+    @Test (groups = "bacon")
     @Scenario("basic-brand")
     void basicBrandTest() {
 
@@ -66,7 +66,7 @@ class BrandIT extends ITSupport {
         assertThat(brand.getRemovePoweredByOkta(), equalTo(removePoweredByOkta))
     }
 
-    @Test (groups = "group2")
+    @Test (groups = "bacon")
     @Scenario("basic-brand-theme")
     void basicBrandThemeTest() {
 
