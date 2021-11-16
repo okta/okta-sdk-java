@@ -22,7 +22,6 @@ import com.okta.sdk.resource.brand.EndUserDashboardTouchPointVariant
 import com.okta.sdk.resource.brand.ErrorPageTouchPointVariant
 import com.okta.sdk.resource.brand.SignInPageTouchPointVariant
 import com.okta.sdk.resource.brand.Theme
-import com.okta.sdk.resource.brand.ThemeResponse
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
@@ -65,14 +64,14 @@ class BrandIT extends ITSupport {
         assertThat(brand.getRemovePoweredByOkta(), equalTo(removePoweredByOkta))
     }
 
-    @Test (groups = "bacon", enabled = false)
+    @Test (groups = "bacon")
     @Scenario("basic-brand-theme")
     void basicBrandThemeTest() {
 
         String brandId = getBrandId()
         String themeId = getThemeId(brandId)
 
-        ThemeResponse theme = client.getBrandTheme(brandId, themeId)
+        Theme theme = client.getBrandTheme(brandId, themeId)
         String primaryColorHex = theme.getPrimaryColorHex()
         String secondaryColorHex = theme.getSecondaryColorHex()
         SignInPageTouchPointVariant signInPageTPV = theme.getSignInPageTouchPointVariant()
@@ -87,7 +86,7 @@ class BrandIT extends ITSupport {
             .setEndUserDashboardTouchPointVariant(EndUserDashboardTouchPointVariant.FULL_THEME)
             .setErrorPageTouchPointVariant(ErrorPageTouchPointVariant.BACKGROUND_IMAGE)
             .setEmailTemplateTouchPointVariant(EmailTemplateTouchPointVariant.FULL_THEME)
-        ThemeResponse themeResponse = themeToUpdate.update(brandId, themeId, themeToUpdate)
+        Theme themeResponse = themeToUpdate.update(brandId, themeId, themeToUpdate)
 
         assertThat(themeResponse.getPrimaryColorHex(), equalTo("#1662dd"))
         assertThat(themeResponse.getSecondaryColorHex(), equalTo("#ebebed"))
@@ -131,7 +130,7 @@ class BrandIT extends ITSupport {
         assertThat(themeList, notNullValue())
 
         assertThat(themeList.asList().size(), equalTo(1))
-        ThemeResponse themeFromList = themeList[0]
+        Theme themeFromList = themeList[0]
         return themeFromList.getId()
     }
 }
