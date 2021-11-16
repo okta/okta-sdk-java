@@ -22,8 +22,7 @@ import com.okta.sdk.resource.brand.EndUserDashboardTouchPointVariant
 import com.okta.sdk.resource.brand.ErrorPageTouchPointVariant
 import com.okta.sdk.resource.brand.SignInPageTouchPointVariant
 import com.okta.sdk.resource.brand.Theme
-import com.okta.sdk.resource.brand.ThemeList
-import com.okta.sdk.resource.brand.ThemeSettings
+import com.okta.sdk.resource.brand.ThemeResponse
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
@@ -66,14 +65,14 @@ class BrandIT extends ITSupport {
         assertThat(brand.getRemovePoweredByOkta(), equalTo(removePoweredByOkta))
     }
 
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     @Scenario("basic-brand-theme")
     void basicBrandThemeTest() {
 
         String brandId = getBrandId()
         String themeId = getThemeId(brandId)
 
-        Theme theme = client.getBrandTheme(brandId, themeId)
+        ThemeResponse theme = client.getBrandTheme(brandId, themeId)
         String primaryColorHex = theme.getPrimaryColorHex()
         String secondaryColorHex = theme.getSecondaryColorHex()
         SignInPageTouchPointVariant signInPageTPV = theme.getSignInPageTouchPointVariant()
@@ -81,31 +80,31 @@ class BrandIT extends ITSupport {
         ErrorPageTouchPointVariant errorPageTPV = theme.getErrorPageTouchPointVariant()
         EmailTemplateTouchPointVariant emailTemplateTPV = theme.getEmailTemplateTouchPointVariant()
 
-        ThemeSettings themeSettings = client.instantiate(ThemeSettings)
+        Theme themeToUpdate = client.instantiate(Theme)
             .setPrimaryColorHex("#1662dd")
             .setSecondaryColorHex("#ebebed")
             .setSignInPageTouchPointVariant(SignInPageTouchPointVariant.BACKGROUND_IMAGE)
             .setEndUserDashboardTouchPointVariant(EndUserDashboardTouchPointVariant.FULL_THEME)
             .setErrorPageTouchPointVariant(ErrorPageTouchPointVariant.BACKGROUND_IMAGE)
             .setEmailTemplateTouchPointVariant(EmailTemplateTouchPointVariant.FULL_THEME)
-        theme.update(brandId, themeSettings)
+        ThemeResponse themeResponse = themeToUpdate.update(brandId, themeId, themeToUpdate)
 
-        assertThat(themeSettings.getPrimaryColorHex(), equalTo("#1662dd"))
-        assertThat(themeSettings.getSecondaryColorHex(), equalTo("#ebebed"))
-        assertThat(themeSettings.getSignInPageTouchPointVariant(), equalTo(SignInPageTouchPointVariant.BACKGROUND_IMAGE))
-        assertThat(themeSettings.getEndUserDashboardTouchPointVariant(), equalTo(EndUserDashboardTouchPointVariant.FULL_THEME))
-        assertThat(themeSettings.getErrorPageTouchPointVariant(), equalTo(ErrorPageTouchPointVariant.BACKGROUND_IMAGE))
-        assertThat(themeSettings.getEmailTemplateTouchPointVariant(), equalTo(EmailTemplateTouchPointVariant.FULL_THEME))
+        assertThat(themeResponse.getPrimaryColorHex(), equalTo("#1662dd"))
+        assertThat(themeResponse.getSecondaryColorHex(), equalTo("#ebebed"))
+        assertThat(themeResponse.getSignInPageTouchPointVariant(), equalTo(SignInPageTouchPointVariant.BACKGROUND_IMAGE))
+        assertThat(themeResponse.getEndUserDashboardTouchPointVariant(), equalTo(EndUserDashboardTouchPointVariant.FULL_THEME))
+        assertThat(themeResponse.getErrorPageTouchPointVariant(), equalTo(ErrorPageTouchPointVariant.BACKGROUND_IMAGE))
+        assertThat(themeResponse.getEmailTemplateTouchPointVariant(), equalTo(EmailTemplateTouchPointVariant.FULL_THEME))
 
         //restore previous state
-        ThemeSettings restoredThemeSettings = client.instantiate(ThemeSettings)
+        Theme themeToRestore = client.instantiate(Theme)
             .setPrimaryColorHex(primaryColorHex)
             .setSecondaryColorHex(secondaryColorHex)
             .setSignInPageTouchPointVariant(signInPageTPV)
             .setEndUserDashboardTouchPointVariant(endUserDashboardTPV)
             .setErrorPageTouchPointVariant(errorPageTPV)
             .setEmailTemplateTouchPointVariant(emailTemplateTPV)
-        theme.update(brandId, restoredThemeSettings)
+        themeToRestore.update(brandId, themeId, themeToRestore)
     }
 
     /**
@@ -128,11 +127,11 @@ class BrandIT extends ITSupport {
      */
     String getThemeId(String brandId) {
 
-        ThemeList themeList = client.listBrandThemes(brandId)
+        def themeList = client.listBrandThemes(brandId)
         assertThat(themeList, notNullValue())
 
         assertThat(themeList.asList().size(), equalTo(1))
-        Theme themeFromList = themeList[0]
+        ThemeResponse themeFromList = themeList[0]
         return themeFromList.getId()
     }
 }
