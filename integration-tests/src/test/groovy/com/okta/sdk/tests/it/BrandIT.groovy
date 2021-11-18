@@ -42,7 +42,7 @@ class BrandIT extends ITSupport {
     void basicBrandTest() {
 
         Brand brand = client.getBrand(getBrandId())
-        //remember origin values
+        //remember original values
         String customPrivacyPolicyUrl = brand.getCustomPrivacyPolicyUrl()
         Boolean removePoweredByOkta = brand.getRemovePoweredByOkta()
 
