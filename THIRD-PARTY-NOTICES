@@ -14,7 +14,8 @@ limitations under the License.
 
 This project includes:
   Animal Sniffer Annotations under MIT license
-  Apache Commons Codec under The Apache Software License, Version 2.0
+  Apache Commons Codec under Apache License, Version 2.0
+  Apache Commons IO under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpCore under Apache License, Version 2.0
@@ -22,11 +23,11 @@ This project includes:
   AutoService under Apache 2.0
   AutoService Processor under Apache 2.0
   Bean Validation API under The Apache Software License, Version 2.0
+  Bouncy Castle ASN.1 Extension and Utility APIs under Bouncy Castle Licence
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
   commonmark-java core under BSD 2-Clause License
   Commons CLI under The Apache Software License, Version 2.0
-  Commons IO under The Apache Software License, Version 2.0
   FindBugs-jsr305 under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0

@@ -210,6 +210,9 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             else {
                 co.vendorExtensions.put("dsMethod", "save");
             }
+            if (operation.getOperationId() != null && operation.getOperationId().equals("updateBrandTheme")) {
+                co.vendorExtensions.put("forceToCreateObject", "true");
+            }
         } else if ("post".equals(httpMethod) ) {
 
             co.vendorExtensions.put("dsMethod", "create");
