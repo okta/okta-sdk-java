@@ -103,7 +103,8 @@ class SignOnPoliciesIT implements CrudTestSupport {
         assertThat profileEnrollmentPolicy.getStatus(), is(Policy.StatusEnum.ACTIVE)
     }
 
-    @Test (groups = "group2")
+    // disable running them in bacon
+    @Test (groups = "bacon")
     void createAccessPolicyRule() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -161,7 +162,8 @@ class SignOnPoliciesIT implements CrudTestSupport {
         assertThat(accessPolicyRuleActions.getAppSignOn().getVerificationMethod().getReauthenticateIn(), is("PT43800H"))
     }
 
-    @Test
+    // disable running them in bacon
+    @Test (groups = "bacon")
     void createProfileEnrollmentPolicyRule() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
