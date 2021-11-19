@@ -22,14 +22,19 @@
   {{/returnType}}
 {{/vendorExtensions.bodyIsSelf}}
 {{^vendorExtensions.bodyIsSelf}}
-  {{#bodyParam}}
+    {{#vendorExtensions.forceToCreateObject}}
+        return getDataStore().create(href, {{bodyParam.paramName}}, null, {{{vendorExtensions.resourceReturnType}}}.class);
+    {{/vendorExtensions.forceToCreateObject}}
+    {{^vendorExtensions.forceToCreateObject}}
+    {{#bodyParam}}
         getDataStore().save(href, {{bodyParam.paramName}}, this, queryArgs, headers);
         {{#returnType}}return {{/returnType}} {{bodyParam.paramName}};
-  {{/bodyParam}}
-  {{^bodyParam}}
+    {{/bodyParam}}
+    {{^bodyParam}}
         getDataStore().save(href, new DefaultVoidResource(getDataStore()), this, queryArgs, headers);
-    {{#returnType}}
+      {{#returnType}}
         return this;
-    {{/returnType}}
-  {{/bodyParam}}
+      {{/returnType}}
+    {{/bodyParam}}
+    {{/vendorExtensions.forceToCreateObject}}
 {{/vendorExtensions.bodyIsSelf}}
