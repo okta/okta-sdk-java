@@ -264,6 +264,11 @@ public class DefaultDataStore implements InternalDataStore {
     }
 
     @Override
+    public <T extends Resource, R extends Resource> R save(String parentHref, T resource, Class<? extends R> returnType, boolean create) {
+        return save(parentHref, resource, null, headers(null), returnType,  new QueryString(), create);
+    }
+
+    @Override
     public <T extends Resource> void save(T resource) {
         save(resource.getResourceHref(), resource);
     }

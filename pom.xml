@@ -43,6 +43,7 @@
         <okta.commons.version>1.2.8</okta.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
+        <npm.exec.skip>false</npm.exec.skip>
     </properties>
 
 
@@ -258,7 +259,7 @@
                             </goals>
                             <phase>generate-sources</phase>
                             <configuration>
-                                <skip>${exec.skip}</skip>
+                                <skip>${npm.exec.skip}</skip>
                                 <executable>npm</executable>
                                 <arguments>
                                     <argument>install</argument>
@@ -272,7 +273,7 @@
                             </goals>
                             <phase>generate-sources</phase>
                             <configuration>
-                                <skip>${exec.skip}</skip>
+                                <skip>${npm.exec.skip}</skip>
                                 <executable>sh</executable>
                                 <arguments>
                                     <argument>-c</argument>
