@@ -43,7 +43,7 @@
         <okta.commons.version>1.2.8</okta.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
-        <npm.exec.skip>false</npm.exec.skip>
+        <npm.exec.skip>false</npm.exec.skip> <!-- Set it to `true` to skip openAPI spec regeneration -->
     </properties>
 
 
