@@ -46,4 +46,9 @@
         <cve>CVE-2020-8908</cve>
     </suppress>
 
+    <!-- build time dependency (related to npm validator.js which this project does NOT use)  -->
+    <suppress>
+        <notes><![CDATA[ file name: package.json ]]></notes>
+        <cve>CVE-2021-3765</cve>
+    </suppress>
 </suppressions>
