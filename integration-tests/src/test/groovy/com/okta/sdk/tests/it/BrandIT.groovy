@@ -65,8 +65,7 @@ class BrandIT extends ITSupport {
         assertThat(brand.getRemovePoweredByOkta(), equalTo(removePoweredByOkta))
     }
 
-    //TODO: fix and enable (OKTA-448365)
-    @Test (groups = "bacon", enabled = false)
+    @Test (groups = "bacon")
     @Scenario("basic-brand-theme")
     void basicBrandThemeTest() {
 
