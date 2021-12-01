@@ -178,7 +178,7 @@
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>     @Override
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>     <strong class="jxr_keyword">public</strong> <a name="IdentityProvider" href="../../../../../../../com/okta/sdk/resource/identity/provider/IdentityProvider.html#IdentityProvider">IdentityProvider</a> buildAndCreate(<a name="Client" href="../../../../../../../com/okta/sdk/client/Client.html#Client">Client</a> client) {
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>         <strong class="jxr_keyword">return</strong> client.createIdentityProvider(client.instantiate(IdentityProvider.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>             .setType(IdentityProvider.TypeValues.OIDC)
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>             .setType(IdentityProvider.TypeEnum.OIDC)
 <a class="jxr_linenumber" name="L174" href="#L174">174</a>             .setName(name)
 <a class="jxr_linenumber" name="L175" href="#L175">175</a>             .setIssuerMode(issuerMode)
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>             .setProtocol(client.instantiate(Protocol.<strong class="jxr_keyword">class</strong>)

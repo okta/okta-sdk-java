@@ -44,7 +44,7 @@
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">public</strong> <a name="IdentityProvider" href="../../../../../../../com/okta/sdk/resource/identity/provider/IdentityProvider.html#IdentityProvider">IdentityProvider</a> buildAndCreate(<a name="Client" href="../../../../../../../com/okta/sdk/client/Client.html#Client">Client</a> client) {
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>          <strong class="jxr_keyword">return</strong> client.createIdentityProvider(client.instantiate(IdentityProvider.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>              .setType(IdentityProvider.TypeValues.LINKEDIN)
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>              .setType(IdentityProvider.TypeEnum.LINKEDIN)
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>              .setName(name)
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>              .setProtocol(client.instantiate(Protocol.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>                  .setType(Protocol.TypeEnum.OAUTH2)
