@@ -35,12 +35,12 @@
 
     <properties>
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
-        <jackson.version>2.12.5</jackson.version>
+        <jackson.version>2.13.0</jackson.version>
         <snakeyaml.version>1.29</snakeyaml.version>
         <bouncycastle.version>1.69</bouncycastle.version>
         <jjwt.version>0.11.1</jjwt.version>
         <okta.sdk.previousVersion>6.0.0</okta.sdk.previousVersion>
-        <okta.commons.version>1.2.8</okta.commons.version>
+        <okta.commons.version>1.2.9</okta.commons.version>
 
         <github.slug>okta/okta-sdk-java</github.slug>
         <npm.exec.skip>false</npm.exec.skip> <!-- Set it to `true` to skip openAPI spec regeneration -->
