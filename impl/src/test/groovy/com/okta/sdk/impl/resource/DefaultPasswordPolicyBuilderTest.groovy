@@ -76,7 +76,7 @@ class DefaultPasswordPolicyBuilderTest {
         when(client.instantiate(PasswordPolicyRecoveryEmailRecoveryToken.class)).thenReturn(passwordPolicyRecoveryEmailRecoveryToken)
 
         new DefaultPasswordPolicyBuilder()
-            .setAuthProvider(PasswordPolicyAuthenticationProviderCondition.ProviderEnum.OKTA)
+            .setAuthProvider(PasswordPolicyAuthenticationProviderType.OKTA)
             .setExcludePasswordDictionary(false)
             .setExcludeUserNameInPassword(false)
             .setMinPasswordLength(8)
@@ -93,11 +93,11 @@ class DefaultPasswordPolicyBuilderTest {
             .setPasswordAutoUnlockMinutes(5)
             .setPasswordMaxAttempts(3)
             .setShowLockoutFailures(true)
-            .setPasswordRecoveryOktaSMS(PasswordPolicyRecoveryFactorSettings.StatusEnum.ACTIVE)
-            .setPasswordRecoveryOktaCall(PasswordPolicyRecoveryFactorSettings.StatusEnum.ACTIVE)
+            .setPasswordRecoveryOktaSMS(LifecycleStatus.ACTIVE)
+            .setPasswordRecoveryOktaCall(LifecycleStatus.ACTIVE)
             .setPasswordRecoveryTokenLifeMinutes(500)
             .setType(PolicyType.PASSWORD)
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .setPriority(1)
             .setDescription("Dummy policy for sdk test")
             .setName("SDK created policy")
@@ -108,11 +108,11 @@ class DefaultPasswordPolicyBuilderTest {
         verify(passwordPolicy).setName("SDK created policy")
         verify(passwordPolicy).setDescription("Dummy policy for sdk test")
         verify(passwordPolicy).setPriority(1)
-        verify(passwordPolicy).setStatus(Policy.StatusEnum.ACTIVE)
+        verify(passwordPolicy).setStatus(LifecycleStatus.ACTIVE)
         verify(passwordPolicy).setType(PolicyType.PASSWORD)
         verify(passwordPolicyPasswordSettingsLockout).setShowLockoutFailures(true)
-        verify(passwordPolicyRecoveryFactors).setOktaSms(passwordPolicyRecoveryFactorSettings.setStatus(PasswordPolicyRecoveryFactorSettings.StatusEnum.ACTIVE))
-        verify(passwordPolicyRecoveryFactors).setOktaCall(passwordPolicyRecoveryFactorSettings.setStatus(PasswordPolicyRecoveryFactorSettings.StatusEnum.ACTIVE))
+        verify(passwordPolicyRecoveryFactors).setOktaSms(passwordPolicyRecoveryFactorSettings.setStatus(LifecycleStatus.ACTIVE))
+        verify(passwordPolicyRecoveryFactors).setOktaCall(passwordPolicyRecoveryFactorSettings.setStatus(LifecycleStatus.ACTIVE))
         verify(passwordPolicyRecoveryEmailRecoveryToken).setTokenLifetimeMinutes(500)
         verify(passwordPolicyPasswordSettingsLockout).setMaxAttempts(3)
         verify(passwordPolicyPasswordSettingsLockout).setAutoUnlockMinutes(5)
@@ -131,7 +131,7 @@ class DefaultPasswordPolicyBuilderTest {
         verify(passwordPolicyPasswordSettingsComplexity).setMinLength(8)
         verify(passwordPolicyPasswordSettingsComplexity).setExcludeUsername(false)
         verify(passwordDictionaryCommon).setExclude(false)
-        verify(passwordPolicyAuthenticationProviderCondition).setProvider(PasswordPolicyAuthenticationProviderCondition.ProviderEnum.OKTA)
+        verify(passwordPolicyAuthenticationProviderCondition).setProvider(PasswordPolicyAuthenticationProviderType.OKTA)
     }
 
     @Test
@@ -150,7 +150,7 @@ class DefaultPasswordPolicyBuilderTest {
                 .setPriority(1)
                 .setGroups(groupList)
                 .setType(PolicyType.OKTA_SIGN_ON)
-                .setStatus(Policy.StatusEnum.ACTIVE)
+                .setStatus(LifecycleStatus.ACTIVE)
                 .buildAndCreate(client)
         }
     }

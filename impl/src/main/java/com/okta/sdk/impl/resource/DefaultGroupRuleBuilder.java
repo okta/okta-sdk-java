@@ -18,7 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.group.rule.*;
+import com.okta.sdk.resource.group.*;
 
 import java.util.ArrayList;
 import java.util.List;

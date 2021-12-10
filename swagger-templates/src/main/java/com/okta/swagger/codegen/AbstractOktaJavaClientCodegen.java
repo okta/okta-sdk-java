@@ -155,8 +155,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 String parent = (String) model.getExtensions().get("x-okta-parent");
                 if (parent != null) {
                     parent = parent.replaceAll(".*/", "");
-
-                    if (resources.contains(parent)) {
+                    if (!resources.contains(parent)) {
                         resources.add(parent);
                     }
                 }
@@ -165,7 +164,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         // mark each model with a 'top-level' vendorExtension
         resources.stream()
-                .map(resourceName -> openAPI.getComponents().getSchemas().get(resourceName))
+                .map(resourceName -> { 
+                    return openAPI.getComponents().getSchemas().get(resourceName);
+                })
                 .forEach(model -> {
                     model.getExtensions().put("top-level", true);
                 });

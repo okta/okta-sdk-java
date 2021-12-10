@@ -27,7 +27,9 @@ import com.okta.sdk.resource.event.hook.EventHookChannelConfig;
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigHeader;
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme;
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthSchemeType;
+import com.okta.sdk.resource.event.hook.EventHookChannelType;
 import com.okta.sdk.resource.event.hook.EventSubscriptions;
+import com.okta.sdk.resource.event.hook.EventSubscriptionType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -77,7 +79,7 @@ public class DefaultEventHookBuilder implements EventHookBuilder {
     public EventHook buildAndCreate(Client client) {
 
         EventSubscriptions eventSubscriptions = client.instantiate(EventSubscriptions.class)
-            .setType(EventSubscriptions.TypeEnum.EVENT_TYPE)
+            .setType(EventSubscriptionType.EVENT_TYPE)
             .setItems(Arrays.asList(LIFECYCLE_EVENT_CREATE, LIFECYCLE_EVENT_ACTIVATE));
 
         EventHookChannelConfigAuthScheme eventHookChannelConfigAuthScheme =
@@ -100,7 +102,7 @@ public class DefaultEventHookBuilder implements EventHookBuilder {
             .setAuthScheme(eventHookChannelConfigAuthScheme);
 
         EventHookChannel eventHookChannel = client.instantiate(EventHookChannel.class)
-            .setType(EventHookChannel.TypeEnum.HTTP)
+            .setType(EventHookChannelType.HTTP)
             .setVersion(VERSION)
             .setConfig(eventHookChannelConfig);
 

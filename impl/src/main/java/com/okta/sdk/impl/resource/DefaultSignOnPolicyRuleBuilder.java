@@ -30,16 +30,16 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
     private String name;
     private List<String> groupIds = new ArrayList<>();
     private List<String> userIds = new ArrayList<>();
-    private OktaSignOnPolicyRuleSignonActions.AccessEnum access;
+    private PolicyAccess access;
     private Integer factorLifetime;
-    private OktaSignOnPolicyRuleSignonActions.FactorPromptModeEnum factorPromptMode;
+    private OktaSignOnPolicyFactorPromptMode factorPromptMode;
     private Boolean rememberDeviceByDefault;
     private Boolean requireFactor;
     private Integer maxSessionIdleMinutes;
     private Integer maxSessionLifetimeMinutes;
     private Boolean usePersistentCookie;
-    private PolicyRuleAuthContextCondition.AuthTypeEnum authType;
-    private PolicyNetworkCondition.ConnectionEnum connection;
+    private PolicyRuleAuthContextType authType;
+    private PolicyNetworkConnection connection;
 
     @Override
     public SignOnPolicyRuleBuilder setName(String name) {
@@ -48,7 +48,7 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
     }
 
     @Override
-    public SignOnPolicyRuleBuilder setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum access) {
+    public SignOnPolicyRuleBuilder setAccess(PolicyAccess access) {
         this.access = access;
         return this;
     }
@@ -60,7 +60,7 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
     }
 
     @Override
-    public SignOnPolicyRuleBuilder setFactorPromptMode(OktaSignOnPolicyRuleSignonActions.FactorPromptModeEnum factorPromptMode) {
+    public SignOnPolicyRuleBuilder setFactorPromptMode(OktaSignOnPolicyFactorPromptMode factorPromptMode) {
         this.factorPromptMode = factorPromptMode;
         return this;
     }
@@ -96,13 +96,13 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
     }
 
     @Override
-    public SignOnPolicyRuleBuilder setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum authType) {
+    public SignOnPolicyRuleBuilder setAuthType(PolicyRuleAuthContextType authType) {
         this.authType = authType;
         return this;
     }
 
     @Override
-    public SignOnPolicyRuleBuilder setNetworkConnection(PolicyNetworkCondition.ConnectionEnum connection) {
+    public SignOnPolicyRuleBuilder setNetworkConnection(PolicyNetworkConnection connection) {
         this.connection = connection;
         return this;
     }
@@ -146,7 +146,7 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
         if (Objects.nonNull(status)) policyRule.setStatus(status);
 
         if (Objects.nonNull(type))
-            if(type.equals(PolicyRule.TypeEnum.SIGN_ON))
+            if(type.equals(PolicyRuleType.SIGN_ON))
                 policyRule.setType(type);
             else
                 throw new IllegalArgumentException("Type should be SIGN_ON while using SignOnPolicyRuleBuilder.");

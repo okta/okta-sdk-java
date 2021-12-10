@@ -38,7 +38,7 @@ class DefaultPolicyBuilderTest {
             .setDescription("dummy policy for test")
             .setPriority(1)
             .setType(PolicyType.OKTA_SIGN_ON)
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .buildAndCreate(client)
 
         verify(client).createPolicy(eq(policy), eq(true))
@@ -57,7 +57,7 @@ class DefaultPolicyBuilderTest {
                 .setName("Test Policy")
                 .setDescription("dummy policy for test")
                 .setPriority(1)
-                .setStatus(Policy.StatusEnum.ACTIVE)
+                .setStatus(LifecycleStatus.ACTIVE)
                 .buildAndCreate(client)
         }
     }

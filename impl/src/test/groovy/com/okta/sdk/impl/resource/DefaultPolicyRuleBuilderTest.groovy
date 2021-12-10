@@ -35,13 +35,13 @@ class DefaultPolicyRuleBuilderTest {
         when(client.instantiate(PolicyRule.class)).thenReturn(policyRule)
 
         new DefaultPolicyRuleBuilder()
-            .setStatus(PolicyRule.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .setPriority(1)
         .buildAndCreate(client, policy)
 
         verify(policy).createRule(eq(policyRule))
         verify(policyRule).setPriority(1)
-        verify(policyRule).setStatus(PolicyRule.StatusEnum.ACTIVE)
+        verify(policyRule).setStatus(LifecycleStatus.ACTIVE)
 
     }
 }

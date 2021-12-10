@@ -18,6 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.common.LifecycleStatus;
 import com.okta.sdk.resource.policy.*;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.Objects;
 
 public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordPolicyBuilder> implements PasswordPolicyBuilder {
 
-    private PasswordPolicyAuthenticationProviderCondition.ProviderEnum provider;
+    private PasswordPolicyAuthenticationProviderType provider;
     private List<String> groupIds = new ArrayList<>();
     private List<String> userIds = new ArrayList<>();
     private Boolean excludePasswordDictionary;
@@ -44,9 +45,9 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
     private Integer pwdAutoUnlockMinutes;
     private Integer pwdMaxAttempts;
     private Boolean showLockoutFailures;
-    private PasswordPolicyRecoveryFactorSettings.StatusEnum pwdRecoveryOktaCall;
-    private PasswordPolicyRecoveryFactorSettings.StatusEnum pwdRecoveryOktaSMS;
-    private PasswordPolicyRecoveryFactorSettings.StatusEnum pwdPolicyRecoveryEmailStatus;
+    private LifecycleStatus pwdRecoveryOktaCall;
+    private LifecycleStatus pwdRecoveryOktaSMS;
+    private LifecycleStatus pwdPolicyRecoveryEmailStatus;
     private Integer pwdRecoveryTokenLifeMinutes;
 
     public DefaultPasswordPolicyBuilder() {
@@ -54,7 +55,7 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
     }
 
     @Override
-    public PasswordPolicyBuilder setAuthProvider(PasswordPolicyAuthenticationProviderCondition.ProviderEnum provider) {
+    public PasswordPolicyBuilder setAuthProvider(PasswordPolicyAuthenticationProviderType provider) {
         this.provider = provider;
         return this;
     }
@@ -174,19 +175,19 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
     }
 
     @Override
-    public PasswordPolicyBuilder setPasswordRecoveryOktaCall(PasswordPolicyRecoveryFactorSettings.StatusEnum pwdRecoveryOktaCall) {
+    public PasswordPolicyBuilder setPasswordRecoveryOktaCall(LifecycleStatus pwdRecoveryOktaCall) {
         this.pwdRecoveryOktaCall = pwdRecoveryOktaCall;
         return this;
     }
 
     @Override
-    public PasswordPolicyBuilder setPasswordRecoveryOktaSMS(PasswordPolicyRecoveryFactorSettings.StatusEnum pwdRecoveryOktaSMS) {
+    public PasswordPolicyBuilder setPasswordRecoveryOktaSMS(LifecycleStatus pwdRecoveryOktaSMS) {
         this.pwdRecoveryOktaSMS = pwdRecoveryOktaSMS;
         return this;
     }
 
     @Override
-    public PasswordPolicyBuilder setPasswordPolicyRecoveryEmailStatus(PasswordPolicyRecoveryFactorSettings.StatusEnum status) {
+    public PasswordPolicyBuilder setPasswordPolicyRecoveryEmailStatus(LifecycleStatus status) {
         this.pwdPolicyRecoveryEmailStatus = status;
         return this;
     }

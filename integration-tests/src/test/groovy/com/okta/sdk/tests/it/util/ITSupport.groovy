@@ -132,9 +132,9 @@ abstract class ITSupport implements ClientProvider {
 
         PasswordPolicy policy = PasswordPolicyBuilder.instance()
             .setName("java-sdk-it-" + UUID.randomUUID().toString())
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .setDescription("IT created Policy")
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .setPriority(1)
             .addGroup(groupId)
         .buildAndCreate(client)
@@ -149,7 +149,7 @@ abstract class ITSupport implements ClientProvider {
         OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
             .setName("java-sdk-it-" + UUID.randomUUID().toString())
             .setDescription("IT created Policy")
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
         .setType(PolicyType.OKTA_SIGN_ON)
         .buildAndCreate(client)
 

@@ -26,6 +26,7 @@ import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.inline.hook.InlineHookBuilder
 import com.okta.sdk.resource.inline.hook.InlineHookChannel
+import com.okta.sdk.resource.inline.hook.InlineHookChannelType
 import com.okta.sdk.resource.inline.hook.InlineHookType
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.schema.UserSchema
@@ -200,7 +201,7 @@ class ApplicationsIT extends ITSupport {
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
             .setHookType(InlineHookType.SAML_TOKENS_TRANSFORM)
-            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setChannelType(InlineHookChannelType.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")

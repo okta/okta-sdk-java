@@ -18,7 +18,7 @@ package com.okta.sdk.tests.it.util
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.group.rule.GroupRule
+import com.okta.sdk.resource.group.GroupRule
 import com.okta.sdk.resource.policy.PolicyType
 import com.okta.sdk.resource.user.UserStatus
 import org.slf4j.Logger

@@ -16,8 +16,8 @@
 package com.okta.sdk.resource.policy.rule;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.resource.policy.PasswordPolicyRuleAction;
-import com.okta.sdk.resource.policy.PolicyNetworkCondition;
+import com.okta.sdk.resource.policy.PolicyNetworkConnection;
+import com.okta.sdk.resource.policy.PolicyAccess;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +31,7 @@ public interface PasswordPolicyRuleBuilder extends PolicyRuleBuilder<PasswordPol
 
     PasswordPolicyRuleBuilder setName(String name);
 
-    PasswordPolicyRuleBuilder setNetworkConnection(PolicyNetworkCondition.ConnectionEnum connection);
+    PasswordPolicyRuleBuilder setNetworkConnection(PolicyNetworkConnection connection);
 
     default PasswordPolicyRuleBuilder setUsers(String... userIds) {
         return setUsers(Arrays.stream(userIds).collect(Collectors.toList()));
@@ -49,10 +49,10 @@ public interface PasswordPolicyRuleBuilder extends PolicyRuleBuilder<PasswordPol
 
     PasswordPolicyRuleBuilder addGroup(String groupId);
 
-    PasswordPolicyRuleBuilder setSelfServiceUnlockAccess(PasswordPolicyRuleAction.AccessEnum unlockAccess);
+    PasswordPolicyRuleBuilder setSelfServiceUnlockAccess(PolicyAccess unlockAccess);
 
-    PasswordPolicyRuleBuilder setSelfServicePasswordResetAccess(PasswordPolicyRuleAction.AccessEnum passwordResetAccess);
+    PasswordPolicyRuleBuilder setSelfServicePasswordResetAccess(PolicyAccess passwordResetAccess);
 
-    PasswordPolicyRuleBuilder setPasswordChangeAccess(PasswordPolicyRuleAction.AccessEnum passwordChangeAccess);
+    PasswordPolicyRuleBuilder setPasswordChangeAccess(PolicyAccess passwordChangeAccess);
 
 }
