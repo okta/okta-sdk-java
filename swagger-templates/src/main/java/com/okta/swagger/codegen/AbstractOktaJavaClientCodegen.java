@@ -459,6 +459,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                             cgParamAllList.addAll(cgOperation.queryParams);
                             cgParamAllList.addAll(cgOperation.headerParams);
 
+                            if(cgOperation.formParams.stream().anyMatch(x -> x.isFile)) {
+                                cgOperation.vendorExtensions.put("fileUpload", true);
+                                cgOperation.vendorExtensions.put("fileFormDataName", cgOperation.formParams.get(0).paramName);
+                                cgParamAllList.addAll(cgOperation.formParams);
+                            }
+
                             // set all params to have more
                             cgParamAllList.forEach(param -> param.hasMore = true);
 
