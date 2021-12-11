@@ -11266,50 +11266,84 @@ components:
     EmailCustomization:
       x-okta-tags:
       - Brand
-      x-okta-parent: '#/components/schemas/EmailContent'
-      type: object
-      properties:
-        id:
-          type: string
-          readOnly: true
-        language:
-          type: string
-        isDefault:
-          type: boolean
-        created:
-          type: string
-          format: date-time
-          readOnly: true
-        lastUpdated:
-          type: string
-          format: date-time
-          readOnly: true
+      title: Email Customization
+      x-examples:
+      - id: oel11u6DqUiMbQkpl0g4
+        language: cs-CZ
+        isDefault: true
+        subject: Welcome to $org.name
+        body: Hello, $user.profile.firstName!
+        created: '2021-11-09T20:38:10.000Z'
+        lastUpdated: '2021-11-11T20:38:10.000Z'
         _links:
-          type: object
-          properties:
-            self:
-              $ref: '#/components/schemas/HrefObject'
-            template:
-              $ref: '#/components/schemas/HrefObject'
-            preview:
-              $ref: '#/components/schemas/HrefObject'
-          readOnly: true
-      required:
-      - language
-      readOnly: true
+          self:
+            href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4
+            hints:
+              allow:
+              - GET
+              - PUT
+              - DELETE
+          template:
+            href: /templates/email/email.welcome
+            hints:
+              allow:
+              - GET
+          preview:
+            href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4/preview
+            hints:
+              allow:
+              - GET
+      description: A customized email template
+      allOf:
+      - $ref: '#/components/schemas/EmailContent'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: ''
+            example: oel11u6DqUiMbQkpl0g4
+            readOnly: true
+          language:
+            type: string
+            example: cs-CZ
+            description: unique under each email templage
+          isDefault:
+            type: boolean
+          created:
+            type: string
+            format: date-time
+            readOnly: true
+          lastUpdated:
+            type: string
+            format: date-time
+            readOnly: true
+          _links:
+            type: object
+            properties:
+              self:
+                $ref: '#/components/schemas/HrefObject'
+              template:
+                $ref: '#/components/schemas/HrefObject'
+              preview:
+                $ref: '#/components/schemas/HrefObject'
+            readOnly: true
+        required:
+        - language
+        readOnly: true
     EmailContentWithSender:
       title: EmailSender
-      type: object
-      properties:
-        fromAddress:
-          type: string
-        fromName:
-          type: string
-      required:
-      - fromAddress
-      - fromName
+      allOf:
+      - $ref: '#/components/schemas/EmailContent'
+      - type: object
+        properties:
+          fromAddress:
+            type: string
+          fromName:
+            type: string
+        required:
+        - fromAddress
+        - fromName
       x-internal: true
-      x-okta-parent: '#/components/schemas/EmailContent'
       x-okta-tags:
       - Brand
     EmailContent:

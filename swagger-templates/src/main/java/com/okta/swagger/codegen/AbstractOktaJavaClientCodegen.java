@@ -31,6 +31,7 @@ import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.apache.commons.lang3.BooleanUtils;
@@ -151,22 +152,19 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         // find any children of these resources
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
-            if(model.getExtensions() != null && model.getExtensions().containsKey("x-okta-parent")) {
-                String parent = (String) model.getExtensions().get("x-okta-parent");
-                if (parent != null) {
-                    parent = parent.replaceAll(".*/", "");
-                    if (!resources.contains(parent)) {
-                        resources.add(parent);
-                    }
+            String parent = getParentModelRef(model);
+            if (parent != null) {
+                parent = parent.replaceAll(".*/", "");
+
+                if (resources.contains(parent)) {
+                    resources.add(name);
                 }
             }
         });
 
         // mark each model with a 'top-level' vendorExtension
         resources.stream()
-                .map(resourceName -> { 
-                    return openAPI.getComponents().getSchemas().get(resourceName);
-                })
+                .map(resourceName -> openAPI.getComponents().getSchemas().get(resourceName))
                 .forEach(model -> {
                     model.getExtensions().put("top-level", true);
                 });
@@ -623,21 +621,34 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             });
         }
 
-        if(model.getExtensions() != null) {
-            String parent = (String) model.getExtensions().get("x-okta-parent");
-            if (StringUtils.isNotEmpty(parent)) {
-                codegenModel.parent = toApiName(parent.substring(parent.lastIndexOf("/")));
+        String parent = getParentModelRef(model);
 
-                // figure out the resourceClass if this model has a parent
-                String discriminatorRoot = getRootDiscriminator(name);
-                if (discriminatorRoot != null) {
-                    model.getExtensions().put("discriminatorRoot", discriminatorRoot);
-                }
+        if (StringUtils.isNotEmpty(parent)) {
+            codegenModel.parent = toApiName(parent.substring(parent.lastIndexOf("/")));
 
+            // figure out the resourceClass if this model has a parent
+            String discriminatorRoot = getRootDiscriminator(name);
+            if (discriminatorRoot != null) {
+                model.getExtensions().put("discriminatorRoot", discriminatorRoot);
             }
+
         }
 
+
        return codegenModel;
+    }
+
+    private String getParentModelRef(Schema model) {
+        if (model.getExtensions() != null && model.getExtensions().get("x-okta-parent") != null) {
+            return (String) model.getExtensions().get("x-okta-parent");
+        } else if (model instanceof ComposedSchema) {
+            // Assumes first entry is the parent $ref
+            ComposedSchema composed = (ComposedSchema) model;
+            if (composed.getAllOf() != null && !composed.getAllOf().isEmpty()) {
+                return composed.getAllOf().get(0).get$ref();
+            }
+        }
+        return null;
     }
 
     private List<CodegenOperation> sortOperations(Collection<CodegenOperation> operations) {
