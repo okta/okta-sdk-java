@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.resource.policy;
 
+import com.okta.sdk.resource.common.LifecycleStatus;
+
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
 
@@ -33,7 +35,7 @@ public interface PolicyBuilder<T extends PolicyBuilder> {
 
     T setPriority(Integer priority);
 
-    T setStatus(Policy.StatusEnum status);
+    T setStatus(LifecycleStatus status);
 
     Policy buildAndCreate(Client client);
 

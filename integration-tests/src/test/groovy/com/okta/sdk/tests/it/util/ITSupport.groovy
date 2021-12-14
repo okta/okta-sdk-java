@@ -17,6 +17,7 @@ package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.ExtensibleResource
+import com.okta.sdk.resource.common.LifecycleStatus
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.*
@@ -132,9 +133,9 @@ abstract class ITSupport implements ClientProvider {
 
         PasswordPolicy policy = PasswordPolicyBuilder.instance()
             .setName("java-sdk-it-" + UUID.randomUUID().toString())
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .setDescription("IT created Policy")
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .setPriority(1)
             .addGroup(groupId)
         .buildAndCreate(client)
@@ -149,7 +150,7 @@ abstract class ITSupport implements ClientProvider {
         OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
             .setName("java-sdk-it-" + UUID.randomUUID().toString())
             .setDescription("IT created Policy")
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
         .setType(PolicyType.OKTA_SIGN_ON)
         .buildAndCreate(client)
 

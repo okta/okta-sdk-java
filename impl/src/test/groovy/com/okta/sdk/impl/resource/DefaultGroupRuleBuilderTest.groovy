@@ -16,7 +16,14 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.group.rule.*
+import com.okta.sdk.resource.group.GroupRule
+import com.okta.sdk.resource.group.GroupRuleAction
+import com.okta.sdk.resource.group.GroupRuleConditions
+import com.okta.sdk.resource.group.GroupRuleExpression
+import com.okta.sdk.resource.group.GroupRuleGroupAssignment
+import com.okta.sdk.resource.group.GroupRuleGroupCondition
+import com.okta.sdk.resource.group.GroupRulePeopleCondition
+import com.okta.sdk.resource.group.GroupRuleUserCondition
 import org.testng.annotations.Test
 
 import static org.mockito.ArgumentMatchers.eq

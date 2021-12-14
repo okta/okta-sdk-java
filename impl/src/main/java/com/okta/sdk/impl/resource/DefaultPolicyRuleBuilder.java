@@ -16,8 +16,10 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.common.LifecycleStatus;
 import com.okta.sdk.resource.policy.Policy;
 import com.okta.sdk.resource.policy.PolicyRule;
+import com.okta.sdk.resource.policy.PolicyRuleType;
 import com.okta.sdk.resource.policy.rule.PolicyRuleBuilder;
 
 import java.util.Objects;
@@ -25,10 +27,10 @@ import java.util.Objects;
 public class DefaultPolicyRuleBuilder<T extends PolicyRuleBuilder> implements PolicyRuleBuilder<T> {
 
     protected Integer priority;
-    protected PolicyRule.TypeEnum type;
-    protected PolicyRule.StatusEnum status;
+    protected PolicyRuleType type;
+    protected LifecycleStatus status;
 
-    DefaultPolicyRuleBuilder(){ this.type = PolicyRule.TypeEnum.SIGN_ON; }
+    DefaultPolicyRuleBuilder(){ this.type = PolicyRuleType.SIGN_ON; }
 
     @Override
     public T setPriority(Integer priority) {
@@ -37,13 +39,13 @@ public class DefaultPolicyRuleBuilder<T extends PolicyRuleBuilder> implements Po
     }
 
     @Override
-    public T setStatus(PolicyRule.StatusEnum status) {
+    public T setStatus(LifecycleStatus status) {
         this.status = status;
         return self();
     }
 
     @Override
-    public T setType(PolicyRule.TypeEnum type) {
+    public T setType(PolicyRuleType type) {
         this.type = type;
         return self();
     }

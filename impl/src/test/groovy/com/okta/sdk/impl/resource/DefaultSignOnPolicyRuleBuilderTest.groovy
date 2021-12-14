@@ -16,6 +16,7 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.common.LifecycleStatus
 import com.okta.sdk.resource.policy.*
 import org.testng.annotations.Test
 
@@ -55,15 +56,15 @@ class DefaultSignOnPolicyRuleBuilderTest {
 
         new DefaultSignOnPolicyRuleBuilder()
             .setName("name here")
-            .setStatus(PolicyRule.StatusEnum.ACTIVE)
-            .setType(PolicyRule.TypeEnum.SIGN_ON)
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setType(PolicyRuleType.SIGN_ON)
             .setPriority(1)
             .addGroup("sdjfsdyfjsfsj")
-            .setNetworkConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
-            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
-            .setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
+            .setNetworkConnection(PolicyNetworkConnection.ANYWHERE)
+            .setAccess(PolicyAccess.ALLOW)
+            .setAuthType(PolicyRuleAuthContextType.ANY)
             .setFactorLifetime(1)
-            .setFactorPromptMode(OktaSignOnPolicyRuleSignonActions.FactorPromptModeEnum.SESSION)
+            .setFactorPromptMode(OktaSignOnPolicyFactorPromptMode.SESSION)
             .setRequireFactor(true)
             .setUsePersistentCookie(true)
             .setRememberDeviceByDefault(true)
@@ -73,15 +74,15 @@ class DefaultSignOnPolicyRuleBuilderTest {
 
         verify(policy).createRule(eq(signOnPolicyRule))
         verify(signOnPolicyRule).setName("name here")
-        verify(signOnPolicyRule).setType(PolicyRule.TypeEnum.SIGN_ON)
+        verify(signOnPolicyRule).setType(PolicyRuleType.SIGN_ON)
         verify(oktaSignOnPolicyRuleSignonActions).setFactorLifetime(1)
         verify(oktaSignOnPolicyRuleSignonActions).setRememberDeviceByDefault(true)
         verify(oktaSignOnPolicyRuleSignonActions).setRequireFactor(true)
-        verify(oktaSignOnPolicyRuleSignonActions).setFactorPromptMode(OktaSignOnPolicyRuleSignonActions.FactorPromptModeEnum.SESSION)
+        verify(oktaSignOnPolicyRuleSignonActions).setFactorPromptMode(OktaSignOnPolicyFactorPromptMode.SESSION)
         verify(oktaSignOnPolicyRuleSignonSessionActions).setMaxSessionIdleMinutes(5)
         verify(oktaSignOnPolicyRuleSignonSessionActions).setMaxSessionLifetimeMinutes(10)
-        verify(policyRuleAuthContextCondition).setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum.ANY)
-        verify(oktaSignOnPolicyRuleSignonActions).setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
+        verify(policyRuleAuthContextCondition).setAuthType(PolicyRuleAuthContextType.ANY)
+        verify(oktaSignOnPolicyRuleSignonActions).setAccess(PolicyAccess.ALLOW)
     }
 
     @Test
@@ -94,8 +95,8 @@ class DefaultSignOnPolicyRuleBuilderTest {
         expect IllegalArgumentException, {
             new DefaultSignOnPolicyRuleBuilder()
                 .setName("test name")
-                .setStatus(PolicyRule.StatusEnum.ACTIVE)
-                .setType(PolicyRule.TypeEnum.PASSWORD)
+                .setStatus(LifecycleStatus.ACTIVE)
+                .setType(PolicyRuleType.PASSWORD)
             .buildAndCreate(client, policy)
         }
 

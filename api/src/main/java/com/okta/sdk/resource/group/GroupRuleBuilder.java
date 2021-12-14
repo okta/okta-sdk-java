@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.resource.group.rule;
+package com.okta.sdk.resource.group;
 
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;

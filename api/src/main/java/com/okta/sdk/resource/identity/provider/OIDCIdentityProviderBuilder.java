@@ -15,37 +15,38 @@
  */
 package com.okta.sdk.resource.identity.provider;
 
+import com.okta.sdk.resource.common.IssuerMode;
 import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 
 public interface OIDCIdentityProviderBuilder extends IdentityProviderBuilder<OIDCIdentityProviderBuilder> {
 
-    OIDCIdentityProviderBuilder setIssuerMode(IdentityProvider.IssuerModeEnum issuerMode);
+    OIDCIdentityProviderBuilder setIssuerMode(IssuerMode issuerMode);
 
     OIDCIdentityProviderBuilder setRequestSignatureAlgorithm(String requestSignatureAlgorithm);
 
-    OIDCIdentityProviderBuilder setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum requestSignatureScope);
+    OIDCIdentityProviderBuilder setRequestSignatureScope(ProtocolAlgorithmTypeSignatureScope requestSignatureScope);
 
     OIDCIdentityProviderBuilder setResponseSignatureAlgorithm(String responseSignatureAlgorithm);
 
-    OIDCIdentityProviderBuilder setResponseSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum responseSignatureScope);
+    OIDCIdentityProviderBuilder setResponseSignatureScope(ProtocolAlgorithmTypeSignatureScope responseSignatureScope);
 
-    OIDCIdentityProviderBuilder setAcsEndpointBinding(ProtocolEndpoint.BindingEnum acsEndpointBinding);
+    OIDCIdentityProviderBuilder setAcsEndpointBinding(ProtocolEndpointBinding acsEndpointBinding);
 
-    OIDCIdentityProviderBuilder setAcsEndpointType(ProtocolEndpoint.TypeEnum acsEndpointType);
+    OIDCIdentityProviderBuilder setAcsEndpointType(ProtocolEndpointType acsEndpointType);
 
-    OIDCIdentityProviderBuilder setAuthorizationEndpointBinding(ProtocolEndpoint.BindingEnum authorizationEndpointBinding);
+    OIDCIdentityProviderBuilder setAuthorizationEndpointBinding(ProtocolEndpointBinding authorizationEndpointBinding);
 
     OIDCIdentityProviderBuilder setAuthorizationEndpointUrl(String authorizationEndpointUrl);
 
-    OIDCIdentityProviderBuilder setTokenEndpointBinding(ProtocolEndpoint.BindingEnum tokenEndpointBinding);
+    OIDCIdentityProviderBuilder setTokenEndpointBinding(ProtocolEndpointBinding tokenEndpointBinding);
 
     OIDCIdentityProviderBuilder setTokenEndpointUrl(String tokenEndpointUrl);
 
-    OIDCIdentityProviderBuilder setUserInfoEndpointBinding(ProtocolEndpoint.BindingEnum userInfoEndpointBinding);
+    OIDCIdentityProviderBuilder setUserInfoEndpointBinding(ProtocolEndpointBinding userInfoEndpointBinding);
 
     OIDCIdentityProviderBuilder setUserInfoEndpointUrl(String userInfoEndpointUrl);
 
-    OIDCIdentityProviderBuilder setJwksEndpointBinding(ProtocolEndpoint.BindingEnum jwksEndpointBinding);
+    OIDCIdentityProviderBuilder setJwksEndpointBinding(ProtocolEndpointBinding jwksEndpointBinding);
 
     OIDCIdentityProviderBuilder setJwksEndpointUrl(String jwksEndpointUrl);
 

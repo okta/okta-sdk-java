@@ -20,7 +20,7 @@ import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.application.AppUser;
 import com.okta.sdk.resource.application.Application;
 import com.okta.sdk.resource.group.Group;
-import com.okta.sdk.resource.group.rule.GroupRule;
+import com.okta.sdk.resource.group.GroupRule;
 import com.okta.sdk.resource.user.Role;
 
 import java.util.Map;

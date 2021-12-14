@@ -45,7 +45,7 @@ class DomainIT extends ITSupport {
         assertThat(domainCreated, notNullValue())
         assertThat(domainCreated.getId(), notNullValue())
         assertThat(domainCreated.getDomain(), equalTo(domain))
-        assertThat(domainCreated.getCertificateSourceType(), equalTo(DomainResponse.CertificateSourceTypeEnum.MANUAL))
+        assertThat(domainCreated.getCertificateSourceType(), equalTo(DomainCertificateSourceType.MANUAL))
 
         def domainFetched = client.getDomain(domainCreated.getId())
 

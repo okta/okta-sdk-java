@@ -16,9 +16,10 @@
 package com.okta.sdk.resource.policy.rule;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.resource.policy.OktaSignOnPolicyRuleSignonActions;
-import com.okta.sdk.resource.policy.PolicyNetworkCondition;
-import com.okta.sdk.resource.policy.PolicyRuleAuthContextCondition;
+import com.okta.sdk.resource.policy.PolicyAccess;
+import com.okta.sdk.resource.policy.OktaSignOnPolicyFactorPromptMode;
+import com.okta.sdk.resource.policy.PolicyRuleAuthContextType;
+import com.okta.sdk.resource.policy.PolicyNetworkConnection;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,11 +32,11 @@ public interface SignOnPolicyRuleBuilder extends PolicyRuleBuilder<SignOnPolicyR
 
     SignOnPolicyRuleBuilder setName(String name);
 
-    SignOnPolicyRuleBuilder setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum access);
+    SignOnPolicyRuleBuilder setAccess(PolicyAccess access);
 
     SignOnPolicyRuleBuilder setFactorLifetime(Integer factorLifetime);
 
-    SignOnPolicyRuleBuilder setFactorPromptMode(OktaSignOnPolicyRuleSignonActions.FactorPromptModeEnum factorPromptMode);
+    SignOnPolicyRuleBuilder setFactorPromptMode(OktaSignOnPolicyFactorPromptMode factorPromptMode);
 
     SignOnPolicyRuleBuilder setRememberDeviceByDefault(Boolean rememberDeviceByDefault);
 
@@ -47,9 +48,9 @@ public interface SignOnPolicyRuleBuilder extends PolicyRuleBuilder<SignOnPolicyR
 
     SignOnPolicyRuleBuilder setUsePersistentCookie(Boolean usePersistentCookie);
 
-    SignOnPolicyRuleBuilder setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum authType);
+    SignOnPolicyRuleBuilder setAuthType(PolicyRuleAuthContextType authType);
 
-    SignOnPolicyRuleBuilder setNetworkConnection(PolicyNetworkCondition.ConnectionEnum connection);
+    SignOnPolicyRuleBuilder setNetworkConnection(PolicyNetworkConnection connection);
 
     default SignOnPolicyRuleBuilder setUsers(String... userIds) {
         return setUsers(Arrays.stream(userIds).collect(Collectors.toList()));

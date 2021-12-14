@@ -17,6 +17,7 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy
+import com.okta.sdk.resource.common.LifecycleStatus
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.*
 import org.testng.annotations.Test
@@ -32,7 +33,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
             .setName("policy+" + UUID.randomUUID().toString())
             .setDescription("IT created Policy - signOn CRUD"))
 
-        assertThat policy.getStatus(), is(Policy.StatusEnum.ACTIVE)
+        assertThat policy.getStatus(), is(LifecycleStatus.ACTIVE)
         return policy
     }
 
@@ -67,7 +68,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
 
         OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
                 .setName("policy+" + UUID.randomUUID().toString())
-                .setStatus(Policy.StatusEnum.ACTIVE)
+                .setStatus(LifecycleStatus.ACTIVE)
                 .setDescription("IT created Policy - signOnPolicyWithGroupConditions")
                 .setType(PolicyType.OKTA_SIGN_ON)
                 .addGroup(group.getId())
@@ -87,7 +88,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
             .setName("policy+" + UUID.randomUUID().toString())
             .setDescription("IT created Policy - signOnActionsTest")
             .setType(PolicyType.OKTA_SIGN_ON)
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .buildAndCreate(client);
 
         registerForCleanup(policy)
@@ -97,7 +98,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
             .setName(policyRuleName)
             .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
                 .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
-                    .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.DENY)
+                    .setAccess(PolicyAccess.DENY)
                     .setRequireFactor(false))))
         registerForCleanup(policyRule)
 
@@ -112,22 +113,22 @@ class SignOnPoliciesIT implements CrudTestSupport {
                 .setName("policy+" + UUID.randomUUID().toString())
                 .setDescription("IT created Policy - activateDeactivateTest")
                 .setType(PolicyType.OKTA_SIGN_ON)
-                .setStatus(Policy.StatusEnum.INACTIVE)
+                .setStatus(LifecycleStatus.INACTIVE)
         .buildAndCreate(client)
 
         registerForCleanup(policy)
 
-        assertThat(policy.getStatus(), is(Policy.StatusEnum.INACTIVE))
+        assertThat(policy.getStatus(), is(LifecycleStatus.INACTIVE))
 
         // activate
         policy.activate()
         policy = client.getPolicy(policy.getId())
-        assertThat(policy.getStatus(), is(Policy.StatusEnum.ACTIVE))
+        assertThat(policy.getStatus(), is(LifecycleStatus.ACTIVE))
 
         // deactivate
         policy.deactivate()
         policy = client.getPolicy(policy.getId())
-        assertThat(policy.getStatus(), is(Policy.StatusEnum.INACTIVE))
+        assertThat(policy.getStatus(), is(LifecycleStatus.INACTIVE))
     }
 
     @Test
@@ -153,7 +154,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
                 .limit(5)
                 .forEach { assertRulesNotExpanded(it) }
 
-        policies = client.listPolicies(PolicyType.OKTA_SIGN_ON.toString(), Policy.StatusEnum.ACTIVE.toString(), "rules")
+        policies = client.listPolicies(PolicyType.OKTA_SIGN_ON.toString(), LifecycleStatus.ACTIVE.toString(), "rules")
         assertThat policies, not(empty())
         policies.stream()
                 .limit(5)

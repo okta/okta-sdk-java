@@ -17,6 +17,7 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.common.LifecycleStatus;
 import com.okta.sdk.resource.policy.Policy;
 import com.okta.sdk.resource.policy.PolicyBuilder;
 import com.okta.sdk.resource.policy.PolicyType;
@@ -30,11 +31,11 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     protected String description;
     protected PolicyType policyType;
     protected Integer priority;
-    protected Policy.StatusEnum status;
+    protected LifecycleStatus status;
     protected Boolean isActive = true;
 
     DefaultPolicyBuilder(){
-        this.status = Policy.StatusEnum.ACTIVE;
+        this.status = LifecycleStatus.ACTIVE;
     }
 
     @Override
@@ -62,9 +63,9 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     }
 
     @Override
-    public T setStatus(Policy.StatusEnum status) {
+    public T setStatus(LifecycleStatus status) {
         this.status = status;
-        if (Policy.StatusEnum.ACTIVE.equals(status))
+        if (LifecycleStatus.ACTIVE.equals(status))
             this.isActive = true;
         else
             this.isActive = false;

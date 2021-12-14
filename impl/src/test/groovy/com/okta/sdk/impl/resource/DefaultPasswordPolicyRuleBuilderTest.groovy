@@ -16,6 +16,7 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.common.LifecycleStatus
 import com.okta.sdk.resource.policy.*
 import org.testng.annotations.Test
 
@@ -51,21 +52,21 @@ class DefaultPasswordPolicyRuleBuilderTest {
 
         new DefaultPasswordPolicyRuleBuilder()
             .setName("name here")
-            .setStatus(PolicyRule.StatusEnum.ACTIVE)
-            .setType(PolicyRule.TypeEnum.PASSWORD)
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setType(PolicyRuleType.PASSWORD)
             .setPriority(1)
             .addGroup("sdjfsdyfjsfsj")
-            .setNetworkConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)
-            .setSelfServicePasswordResetAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW)
-            .setSelfServiceUnlockAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW)
-            .setSelfServiceUnlockAccess(PasswordPolicyRuleAction.AccessEnum.DENY)
+            .setNetworkConnection(PolicyNetworkConnection.ANYWHERE)
+            .setSelfServicePasswordResetAccess(PolicyAccess.ALLOW)
+            .setSelfServiceUnlockAccess(PolicyAccess.ALLOW)
+            .setSelfServiceUnlockAccess(PolicyAccess.DENY)
         .buildAndCreate(client, policy)
 
         verify(policy).createRule(eq(passwordPolicyRule))
         verify(passwordPolicyRule).setName("name here")
-        verify(passwordPolicyRule).setType(PolicyRule.TypeEnum.PASSWORD)
-        verify(passwordPolicyRuleActions).setSelfServicePasswordReset(passwordPolicyRuleAction.setAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW))
-        verify(passwordPolicyRuleConditions).setNetwork(policyNetworkCondition.setConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE))
+        verify(passwordPolicyRule).setType(PolicyRuleType.PASSWORD)
+        verify(passwordPolicyRuleActions).setSelfServicePasswordReset(passwordPolicyRuleAction.setAccess(PolicyAccess.ALLOW))
+        verify(passwordPolicyRuleConditions).setNetwork(policyNetworkCondition.setConnection(PolicyNetworkConnection.ANYWHERE))
     }
 
     @Test
@@ -78,7 +79,7 @@ class DefaultPasswordPolicyRuleBuilderTest {
         expect IllegalArgumentException, {
             new DefaultPasswordPolicyRuleBuilder()
                 .setName("test rule")
-                .setStatus(PolicyRule.StatusEnum.ACTIVE)
+                .setStatus(LifecycleStatus.ACTIVE)
             .buildAndCreate(client, policy)
         }
     }
@@ -93,8 +94,8 @@ class DefaultPasswordPolicyRuleBuilderTest {
         expect IllegalArgumentException, {
             new DefaultPasswordPolicyRuleBuilder()
                 .setName("test rule")
-                .setStatus(PolicyRule.StatusEnum.ACTIVE)
-                .setType(PolicyRule.TypeEnum.SIGN_ON)
+                .setStatus(LifecycleStatus.ACTIVE)
+                .setType(PolicyRuleType.SIGN_ON)
                 .buildAndCreate(client, policy)
         }
     }

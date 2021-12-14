@@ -17,6 +17,7 @@ package com.okta.sdk.tests.it
 
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.common.LifecycleStatus
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.policy.*
 import com.okta.sdk.tests.it.util.ITSupport
@@ -29,7 +30,7 @@ class PasswordPoliciesIT extends ITSupport implements CrudTestSupport  {
     def create(Client client) {
         Group group = randomGroup()
         Policy passwordPolicy = PasswordPolicyBuilder.instance()
-                                    .setAuthProvider(PasswordPolicyAuthenticationProviderCondition.ProviderEnum.OKTA)
+                                    .setAuthProvider(PasswordPolicyAuthenticationProviderType.OKTA)
                                     .setExcludePasswordDictionary(false)
                                     .setExcludeUserNameInPassword(false)
                                     .setMinPasswordLength(8)
@@ -46,9 +47,9 @@ class PasswordPoliciesIT extends ITSupport implements CrudTestSupport  {
                                     .setPasswordAutoUnlockMinutes(5)
                                     .setPasswordMaxAttempts(3)
                                     .setShowLockoutFailures(true)
-                                    .setPasswordRecoveryOktaSMS(PasswordPolicyRecoveryFactorSettings.StatusEnum.ACTIVE)
+                                    .setPasswordRecoveryOktaSMS(LifecycleStatus.ACTIVE)
                                     .setType(PolicyType.PASSWORD)
-                                    .setStatus(Policy.StatusEnum.ACTIVE)
+                                    .setStatus(LifecycleStatus.ACTIVE)
                                     .setPriority(1)
                                     .setDescription("Dummy policy for sdk test")
                                     .setName("SDK policy "+ UUID.randomUUID().toString())

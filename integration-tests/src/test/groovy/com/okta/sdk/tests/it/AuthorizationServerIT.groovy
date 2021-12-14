@@ -16,19 +16,24 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.application.OAuth2Claim
+import com.okta.sdk.resource.application.OAuth2ClaimType
+import com.okta.sdk.resource.application.OAuth2ClaimValueType
 import com.okta.sdk.resource.application.OAuth2Scope
+import com.okta.sdk.resource.application.OAuth2ScopeConsentType
+import com.okta.sdk.resource.application.OAuth2ScopeMetadataPublish
 import com.okta.sdk.resource.application.OAuth2ScopesMediationPolicyRuleCondition
 import com.okta.sdk.resource.authorization.server.AuthorizationServer
 import com.okta.sdk.resource.authorization.server.AuthorizationServerList
 import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy
-import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRule
-import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRuleActions
-import com.okta.sdk.resource.authorization.server.policy.AuthorizationServerPolicyRuleConditions
-import com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleAction
-import com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleActionInlineHook
+import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyRule
+import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyRuleActions
+import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyRuleConditions
+import com.okta.sdk.resource.authorization.server.TokenAuthorizationServerPolicyRuleAction
+import com.okta.sdk.resource.authorization.server.TokenAuthorizationServerPolicyRuleActionInlineHook
+import com.okta.sdk.resource.common.LifecycleStatus
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.inline.hook.InlineHookBuilder
-import com.okta.sdk.resource.inline.hook.InlineHookChannel
+import com.okta.sdk.resource.inline.hook.InlineHookChannelType
 import com.okta.sdk.resource.inline.hook.InlineHookType
 import com.okta.sdk.resource.policy.*
 import com.okta.sdk.tests.it.util.ITSupport
@@ -161,7 +166,7 @@ class AuthorizationServerIT extends ITSupport {
         )
         registerForCleanup(createdAuthorizationServer)
         assertThat(createdAuthorizationServer, notNullValue())
-        assertThat(createdAuthorizationServer.getStatus(), equalTo(AuthorizationServer.StatusEnum.ACTIVE))
+        assertThat(createdAuthorizationServer.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
         createdAuthorizationServer.deactivate()
 
@@ -171,7 +176,7 @@ class AuthorizationServerIT extends ITSupport {
         AuthorizationServer retrievedAuthorizationServer = client.getAuthorizationServer(createdAuthorizationServer.getId())
         assertThat(retrievedAuthorizationServer, notNullValue())
         assertThat(retrievedAuthorizationServer.getId(), equalTo(createdAuthorizationServer.getId()))
-        assertThat(retrievedAuthorizationServer.getStatus(), equalTo(AuthorizationServer.StatusEnum.INACTIVE))
+        assertThat(retrievedAuthorizationServer.getStatus(), equalTo(LifecycleStatus.INACTIVE))
     }
 
     @Test (groups = "group3")
@@ -186,7 +191,7 @@ class AuthorizationServerIT extends ITSupport {
         )
         registerForCleanup(createdAuthorizationServer)
         assertThat(createdAuthorizationServer, notNullValue())
-        assertThat(createdAuthorizationServer.getStatus(), equalTo(AuthorizationServer.StatusEnum.ACTIVE))
+        assertThat(createdAuthorizationServer.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
         createdAuthorizationServer.deactivate()
 
@@ -196,7 +201,7 @@ class AuthorizationServerIT extends ITSupport {
         AuthorizationServer retrievedAuthorizationServer = client.getAuthorizationServer(createdAuthorizationServer.getId())
         assertThat(retrievedAuthorizationServer, notNullValue())
         assertThat(retrievedAuthorizationServer.getId(), equalTo(createdAuthorizationServer.getId()))
-        assertThat(retrievedAuthorizationServer.getStatus(), equalTo(AuthorizationServer.StatusEnum.INACTIVE))
+        assertThat(retrievedAuthorizationServer.getStatus(), equalTo(LifecycleStatus.INACTIVE))
 
         createdAuthorizationServer.activate()
 
@@ -206,7 +211,7 @@ class AuthorizationServerIT extends ITSupport {
         retrievedAuthorizationServer = client.getAuthorizationServer(createdAuthorizationServer.getId())
         assertThat(retrievedAuthorizationServer, notNullValue())
         assertThat(retrievedAuthorizationServer.getId(), equalTo(createdAuthorizationServer.getId()))
-        assertThat(retrievedAuthorizationServer.getStatus(), equalTo(AuthorizationServer.StatusEnum.ACTIVE))
+        assertThat(retrievedAuthorizationServer.getStatus(), equalTo(LifecycleStatus.ACTIVE))
     }
 
     // Policy operations
@@ -265,7 +270,7 @@ class AuthorizationServerIT extends ITSupport {
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
-                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
+                        [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
             )
@@ -299,7 +304,7 @@ class AuthorizationServerIT extends ITSupport {
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
-                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
+                        [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
             )
@@ -336,7 +341,7 @@ class AuthorizationServerIT extends ITSupport {
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
-                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
+                        [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
             )
@@ -371,7 +376,7 @@ class AuthorizationServerIT extends ITSupport {
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
-                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
+                        [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
             )
@@ -381,12 +386,12 @@ class AuthorizationServerIT extends ITSupport {
         createdPolicy.deactivate(createdAuthorizationServer.getId())
         def deactivatedPolicy = createdAuthorizationServer.getPolicy(createdPolicy.getId())
         assertThat(deactivatedPolicy, notNullValue())
-        assertThat(deactivatedPolicy.getStatus(), equalTo(AuthorizationServerPolicy.StatusEnum.INACTIVE))
+        assertThat(deactivatedPolicy.getStatus(), equalTo(LifecycleStatus.INACTIVE))
 
         deactivatedPolicy.activate(createdAuthorizationServer.getId())
         def activatedPolicy = createdAuthorizationServer.getPolicy(deactivatedPolicy.getId())
         assertThat(activatedPolicy, notNullValue())
-        assertThat(activatedPolicy.getStatus(), equalTo(AuthorizationServerPolicy.StatusEnum.ACTIVE))
+        assertThat(activatedPolicy.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
         createdAuthorizationServer.deletePolicy(activatedPolicy.getId())
 
@@ -448,7 +453,7 @@ class AuthorizationServerIT extends ITSupport {
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
-                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
+                        [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
             )
@@ -463,7 +468,7 @@ class AuthorizationServerIT extends ITSupport {
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(hookName)
             .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
-            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setChannelType(InlineHookChannelType.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
@@ -530,7 +535,7 @@ class AuthorizationServerIT extends ITSupport {
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
-                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
+                        [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
             )
@@ -615,7 +620,7 @@ class AuthorizationServerIT extends ITSupport {
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
-                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
+                        [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
             )
@@ -672,7 +677,7 @@ class AuthorizationServerIT extends ITSupport {
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
-                        [OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS.name()]
+                        [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
             )
@@ -777,8 +782,8 @@ class AuthorizationServerIT extends ITSupport {
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
             .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
-            .setConsent(OAuth2Scope.ConsentEnum.REQUIRED)
-            .setMetadataPublish(OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS)
+            .setConsent(OAuth2ScopeConsentType.REQUIRED)
+            .setMetadataPublish(OAuth2ScopeMetadataPublish.ALL_CLIENTS)
 
         OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
 
@@ -786,8 +791,8 @@ class AuthorizationServerIT extends ITSupport {
 
         OAuth2Scope tobeUpdatedOAuth2Scope = client.instantiate(OAuth2Scope)
             .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10) + "-updated")
-            .setConsent(OAuth2Scope.ConsentEnum.REQUIRED)
-            .setMetadataPublish(OAuth2Scope.MetadataPublishEnum.ALL_CLIENTS)
+            .setConsent(OAuth2ScopeConsentType.REQUIRED)
+            .setMetadataPublish(OAuth2ScopeMetadataPublish.ALL_CLIENTS)
 
         OAuth2Scope updatedOAuth2Scope = createdAuthorizationServer.updateOAuth2Scope(createdOAuth2Scope.getId(), tobeUpdatedOAuth2Scope)
 
@@ -840,9 +845,9 @@ class AuthorizationServerIT extends ITSupport {
 
         OAuth2Claim oAuth2Claim = client.instantiate(OAuth2Claim)
             .setName("java-sdk-it-claims" + RandomStringUtils.randomAlphanumeric(10))
-            .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
-            .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
-            .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
+            .setStatus(LifecycleStatus.INACTIVE)
+            .setClaimType(OAuth2ClaimType.RESOURCE)
+            .setValueType(OAuth2ClaimValueType.EXPRESSION)
             .setValue("\"driving!\"") // value must be an Okta EL expression if valueType is EXPRESSION
 
         OAuth2Claim createdOAuth2Claim = createdAuthorizationServer.createOAuth2Claim(oAuth2Claim)
@@ -866,9 +871,9 @@ class AuthorizationServerIT extends ITSupport {
 
         OAuth2Claim oAuth2Claim = client.instantiate(OAuth2Claim)
             .setName("java-sdk-it-claims" + RandomStringUtils.randomAlphanumeric(10))
-            .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
-            .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
-            .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
+            .setStatus(LifecycleStatus.INACTIVE)
+            .setClaimType(OAuth2ClaimType.RESOURCE)
+            .setValueType(OAuth2ClaimValueType.EXPRESSION)
             .setValue("\"driving!\"")
 
         OAuth2Claim createdOAuth2Claim = createdAuthorizationServer.createOAuth2Claim(oAuth2Claim)
@@ -894,9 +899,9 @@ class AuthorizationServerIT extends ITSupport {
 
         OAuth2Claim oAuth2Claim = client.instantiate(OAuth2Claim)
             .setName("java-sdk-it-claims" + RandomStringUtils.randomAlphanumeric(10))
-            .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
-            .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
-            .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
+            .setStatus(LifecycleStatus.INACTIVE)
+            .setClaimType(OAuth2ClaimType.RESOURCE)
+            .setValueType(OAuth2ClaimValueType.EXPRESSION)
             .setValue("\"driving!\"")
 
         OAuth2Claim createdOAuth2Claim = createdAuthorizationServer.createOAuth2Claim(oAuth2Claim)
@@ -904,9 +909,9 @@ class AuthorizationServerIT extends ITSupport {
 
         OAuth2Claim tobeUpdatedOAuth2Claim = client.instantiate(OAuth2Claim)
             .setName("java-sdk-it-claims" + RandomStringUtils.randomAlphanumeric(10) + "-updated")
-            .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
-            .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
-            .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
+            .setStatus(LifecycleStatus.INACTIVE)
+            .setClaimType(OAuth2ClaimType.RESOURCE)
+            .setValueType(OAuth2ClaimValueType.EXPRESSION)
             .setValue("\"driving!\"")
 
         OAuth2Claim updatedOAuth2Claim = createdAuthorizationServer.updateOAuth2Claim(createdOAuth2Claim.getId(), tobeUpdatedOAuth2Claim)
@@ -930,9 +935,9 @@ class AuthorizationServerIT extends ITSupport {
 
         OAuth2Claim oAuth2Claim = client.instantiate(OAuth2Claim)
             .setName("java-sdk-it-claims" + RandomStringUtils.randomAlphanumeric(10))
-            .setStatus(OAuth2Claim.StatusEnum.INACTIVE)
-            .setClaimType(OAuth2Claim.ClaimTypeEnum.RESOURCE)
-            .setValueType(OAuth2Claim.ValueTypeEnum.EXPRESSION)
+            .setStatus(LifecycleStatus.INACTIVE)
+            .setClaimType(OAuth2ClaimType.RESOURCE)
+            .setValueType(OAuth2ClaimValueType.EXPRESSION)
             .setValue("\"driving!\"")
 
         OAuth2Claim createdOAuth2Claim = createdAuthorizationServer.createOAuth2Claim(oAuth2Claim)

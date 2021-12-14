@@ -28,12 +28,12 @@ import java.util.Objects;
 public class DefaultPasswordPolicyRuleBuilder extends DefaultPolicyRuleBuilder<PasswordPolicyRuleBuilder> implements PasswordPolicyRuleBuilder {
 
     private String name;
-    private PolicyNetworkCondition.ConnectionEnum connection;
+    private PolicyNetworkConnection connection;
     private List<String> userIds = new ArrayList<>();
     private List<String> groupIds = new ArrayList<>();
-    private PasswordPolicyRuleAction.AccessEnum unlockAccess;
-    private PasswordPolicyRuleAction.AccessEnum passwordResetAccess;
-    private PasswordPolicyRuleAction.AccessEnum passwordChangeAccess;
+    private PolicyAccess unlockAccess;
+    private PolicyAccess passwordResetAccess;
+    private PolicyAccess passwordChangeAccess;
 
 
 
@@ -44,7 +44,7 @@ public class DefaultPasswordPolicyRuleBuilder extends DefaultPolicyRuleBuilder<P
     }
 
     @Override
-    public PasswordPolicyRuleBuilder setNetworkConnection(PolicyNetworkCondition.ConnectionEnum connection) {
+    public PasswordPolicyRuleBuilder setNetworkConnection(PolicyNetworkConnection connection) {
         this.connection = connection;
         return this;
     }
@@ -74,19 +74,19 @@ public class DefaultPasswordPolicyRuleBuilder extends DefaultPolicyRuleBuilder<P
     }
 
     @Override
-    public PasswordPolicyRuleBuilder setSelfServiceUnlockAccess(PasswordPolicyRuleAction.AccessEnum unlockAccess) {
+    public PasswordPolicyRuleBuilder setSelfServiceUnlockAccess(PolicyAccess unlockAccess) {
         this.unlockAccess = unlockAccess;
         return this;
     }
 
     @Override
-    public PasswordPolicyRuleBuilder setSelfServicePasswordResetAccess(PasswordPolicyRuleAction.AccessEnum passwordResetAccess) {
+    public PasswordPolicyRuleBuilder setSelfServicePasswordResetAccess(PolicyAccess passwordResetAccess) {
         this.passwordResetAccess = passwordResetAccess;
         return this;
     }
 
     @Override
-    public PasswordPolicyRuleBuilder setPasswordChangeAccess(PasswordPolicyRuleAction.AccessEnum passwordChangeAccess) {
+    public PasswordPolicyRuleBuilder setPasswordChangeAccess(PolicyAccess passwordChangeAccess) {
         this.passwordChangeAccess = passwordChangeAccess;
         return this;
     }
@@ -106,7 +106,7 @@ public class DefaultPasswordPolicyRuleBuilder extends DefaultPolicyRuleBuilder<P
         if (Strings.hasText(name)) policyRule.setName(name);
 
         if (Objects.nonNull(type))
-            if(type.equals(PolicyRule.TypeEnum.PASSWORD))
+            if(type.equals(PolicyRuleType.PASSWORD))
                 policyRule.setType(type);
             else
                 throw new IllegalArgumentException("Type should be specified as PASSWORD while using PasswordPolicyRuleBuilder.");

@@ -16,6 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.ResourceException
+import com.okta.sdk.resource.common.LifecycleStatus
 import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.resource.event.hook.EventHookBuilder
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme
@@ -52,7 +53,7 @@ class EventHooksIT extends ITSupport {
 
         assertThat(createdEventHook.getId(), notNullValue())
         assertThat(createdEventHook.getName(), equalTo(name))
-        assertThat(createdEventHook.getStatus(), equalTo(EventHook.StatusEnum.ACTIVE))
+        assertThat(createdEventHook.getStatus(), equalTo(LifecycleStatus.ACTIVE))
         assertThat(createdEventHook.getEvents().getItems(), iterableWithSize(2))
         assertThat(createdEventHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooks"))
 
@@ -77,7 +78,7 @@ class EventHooksIT extends ITSupport {
 
         assertThat(retrievedEventHook.getId(), notNullValue())
         assertThat(retrievedEventHook.getName(), equalTo(name))
-        assertThat(createdEventHook.getStatus(), equalTo(EventHook.StatusEnum.ACTIVE))
+        assertThat(createdEventHook.getStatus(), equalTo(LifecycleStatus.ACTIVE))
         assertThat(retrievedEventHook.getEvents().getItems(), iterableWithSize(2))
         assertThat(retrievedEventHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooks"))
 
@@ -110,7 +111,7 @@ class EventHooksIT extends ITSupport {
 
         assertThat(updatedEventHook.getId(), notNullValue())
         assertThat(updatedEventHook.getId(), equalTo(createdEventHook.getId()))
-        assertThat(createdEventHook.getStatus(), equalTo(EventHook.StatusEnum.ACTIVE))
+        assertThat(createdEventHook.getStatus(), equalTo(LifecycleStatus.ACTIVE))
         assertThat(updatedEventHook.getName(), equalTo("updated-" + name))
         assertThat(updatedEventHook.getEvents().getItems(), iterableWithSize(3))
         assertThat(updatedEventHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooksUpdated"))
@@ -134,7 +135,7 @@ class EventHooksIT extends ITSupport {
 
         EventHook retrievedEventHook = client.getEventHook(createdEventHook.getId())
         assertThat(retrievedEventHook.getId(), equalTo(createdEventHook.getId()))
-        assertThat(retrievedEventHook.getStatus(), equalTo(EventHook.StatusEnum.ACTIVE))
+        assertThat(retrievedEventHook.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
         createdEventHook.deactivate()
         createdEventHook.delete()
@@ -179,12 +180,12 @@ class EventHooksIT extends ITSupport {
         registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
-        assertThat(createdEventHook.getStatus(), equalTo(EventHook.StatusEnum.ACTIVE))
+        assertThat(createdEventHook.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
         createdEventHook.deactivate()
 
         EventHook retrievedEventHook = client.getEventHook(createdEventHook.getId())
 
-        assertThat(retrievedEventHook.getStatus(), equalTo(EventHook.StatusEnum.INACTIVE))
+        assertThat(retrievedEventHook.getStatus(), equalTo(LifecycleStatus.INACTIVE))
     }
 }

@@ -16,6 +16,7 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.common.LifecycleStatus
 import com.okta.sdk.resource.policy.*
 import org.testng.annotations.Test
 
@@ -45,7 +46,7 @@ class DefaultOktaSignOnPolicyBuilderTest {
             .setName("dummy_policy")
             .setDescription("dummy")
             .setPriority(1)
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .setType(PolicyType.OKTA_SIGN_ON)
             .addGroup("abcdef123456")
             .buildAndCreate(client);
@@ -54,7 +55,7 @@ class DefaultOktaSignOnPolicyBuilderTest {
         verify(oktaSignOnPolicy).setName("dummy_policy")
         verify(oktaSignOnPolicy).setDescription("dummy")
         verify(oktaSignOnPolicy).setPriority(1)
-        verify(oktaSignOnPolicy).setStatus(Policy.StatusEnum.ACTIVE)
+        verify(oktaSignOnPolicy).setStatus(LifecycleStatus.ACTIVE)
         verify(oktaSignOnPolicy).setType(PolicyType.OKTA_SIGN_ON)
         verify(groupCondition).setInclude(new ArrayList<String>(Arrays.asList("abcdef123456")))
 
@@ -76,7 +77,7 @@ class DefaultOktaSignOnPolicyBuilderTest {
                 .setPriority(1)
                 .setGroups(groupList)
                 .setType(PolicyType.PASSWORD)
-                .setStatus(Policy.StatusEnum.ACTIVE)
+                .setStatus(LifecycleStatus.ACTIVE)
                 .buildAndCreate(client)
         }
     }

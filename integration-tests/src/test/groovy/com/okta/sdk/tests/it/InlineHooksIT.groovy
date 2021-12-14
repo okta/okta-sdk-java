@@ -20,6 +20,7 @@ import com.okta.sdk.resource.inline.hook.InlineHookBuilder
 import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigAuthScheme
 import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigHeaders
 import com.okta.sdk.resource.inline.hook.InlineHookChannel
+import com.okta.sdk.resource.inline.hook.InlineHookChannelType
 import com.okta.sdk.resource.inline.hook.InlineHookStatus
 import com.okta.sdk.resource.inline.hook.InlineHookType
 import com.okta.sdk.tests.it.util.ITSupport
@@ -45,7 +46,7 @@ class InlineHooksIT extends ITSupport {
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
             .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
-            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setChannelType(InlineHookChannelType.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
@@ -66,7 +67,7 @@ class InlineHooksIT extends ITSupport {
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
             .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
-            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setChannelType(InlineHookChannelType.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
@@ -91,7 +92,7 @@ class InlineHooksIT extends ITSupport {
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
             .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
-            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setChannelType(InlineHookChannelType.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
@@ -131,7 +132,7 @@ class InlineHooksIT extends ITSupport {
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
             .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
-            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setChannelType(InlineHookChannelType.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
@@ -157,7 +158,7 @@ class InlineHooksIT extends ITSupport {
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
             .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
-            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setChannelType(InlineHookChannelType.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
@@ -178,7 +179,7 @@ class InlineHooksIT extends ITSupport {
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
             .setHookType(InlineHookType.OAUTH2_TOKENS_TRANSFORM)
-            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setChannelType(InlineHookChannelType.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")

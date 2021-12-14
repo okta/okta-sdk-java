@@ -36,6 +36,7 @@ import com.okta.sdk.resource.user.factor.UserFactor
 import com.okta.sdk.resource.user.factor.UserFactorList
 import com.okta.sdk.resource.user.factor.VerifyFactorRequest
 import com.okta.sdk.resource.user.factor.VerifyUserFactorResponse
+import com.okta.sdk.resource.user.factor.VerifyUserFactorResult
 import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.it.util.ITSupport
 import org.jboss.aerogear.security.otp.Totp
@@ -187,7 +188,7 @@ class FactorsIT extends ITSupport {
         request.setAnswer("pizza")
         VerifyUserFactorResponse response =
             securityQuestionUserFactor.verify(request, null, null, null, null, null)
-        assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
+        assertThat response.getFactorResult(), is(VerifyUserFactorResult.SUCCESS)
     }
 
     @NonOIEEnvironmentOnly
@@ -211,7 +212,7 @@ class FactorsIT extends ITSupport {
         VerifyFactorRequest request = client.instantiate(VerifyFactorRequest)
         VerifyUserFactorResponse response =
             emailUserFactor.verify(request, null, null, null, null, null)
-        assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.CHALLENGE)
+        assertThat response.getFactorResult(), is(VerifyUserFactorResult.CHALLENGE)
     }
 
     @NonOIEEnvironmentOnly

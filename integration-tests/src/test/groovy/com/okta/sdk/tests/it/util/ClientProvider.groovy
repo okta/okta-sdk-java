@@ -26,9 +26,9 @@ import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.authorization.server.AuthorizationServer
 import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.resource.group.GroupList
-import com.okta.sdk.resource.group.rule.GroupRule
-import com.okta.sdk.resource.group.rule.GroupRuleList
-import com.okta.sdk.resource.group.rule.GroupRuleStatus
+import com.okta.sdk.resource.group.GroupRule
+import com.okta.sdk.resource.group.GroupRuleList
+import com.okta.sdk.resource.group.GroupRuleStatus
 import com.okta.sdk.resource.identity.provider.IdentityProvider
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.linked.object.LinkedObject

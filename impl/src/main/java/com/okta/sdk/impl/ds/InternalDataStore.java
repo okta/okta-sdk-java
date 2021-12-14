@@ -105,4 +105,6 @@ public interface InternalDataStore extends DataStore {
     }
 
     InputStream getRawResponse(String href, Map<String, Object> queryParameters, Map<String, List<String>> headerParameters);
+
+    <T extends Resource, R extends Resource> R save(String parentHref, T resource, Class<? extends R> returnType, boolean create);
 }

@@ -18,7 +18,13 @@ package com.okta.sdk.tests.it
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.group.rule.*
+import com.okta.sdk.resource.group.GroupRule
+import com.okta.sdk.resource.group.GroupRuleAction
+import com.okta.sdk.resource.group.GroupRuleBuilder
+import com.okta.sdk.resource.group.GroupRuleConditions
+import com.okta.sdk.resource.group.GroupRuleExpression
+import com.okta.sdk.resource.group.GroupRuleGroupAssignment
+import com.okta.sdk.resource.group.GroupRuleStatus
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario

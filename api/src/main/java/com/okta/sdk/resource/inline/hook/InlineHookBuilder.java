@@ -24,7 +24,7 @@ public interface InlineHookBuilder {
 
     InlineHookBuilder setHookType(InlineHookType hookType);
 
-    InlineHookBuilder setChannelType(InlineHookChannel.TypeEnum channelType);
+    InlineHookBuilder setChannelType(InlineHookChannelType channelType);
 
     InlineHookBuilder setUrl(String url);
 

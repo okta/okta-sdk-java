@@ -16,23 +16,33 @@
 package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.common.IssuerMode;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
 import com.okta.sdk.resource.identity.provider.OIDCIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.Protocol;
+import com.okta.sdk.resource.identity.provider.ProtocolType;
 import com.okta.sdk.resource.identity.provider.ProtocolAlgorithmType;
 import com.okta.sdk.resource.identity.provider.ProtocolAlgorithmTypeSignature;
+import com.okta.sdk.resource.identity.provider.ProtocolAlgorithmTypeSignatureScope;
 import com.okta.sdk.resource.identity.provider.ProtocolAlgorithms;
 import com.okta.sdk.resource.identity.provider.ProtocolEndpoint;
+import com.okta.sdk.resource.identity.provider.ProtocolEndpointBinding;
+import com.okta.sdk.resource.identity.provider.ProtocolEndpointType;
 import com.okta.sdk.resource.identity.provider.ProtocolEndpoints;
 import com.okta.sdk.resource.identity.provider.Provisioning;
+import com.okta.sdk.resource.identity.provider.ProvisioningAction;
 import com.okta.sdk.resource.identity.provider.ProvisioningConditions;
+import com.okta.sdk.resource.identity.provider.ProvisioningDeprovisionedAction;
 import com.okta.sdk.resource.identity.provider.ProvisioningDeprovisionedCondition;
 import com.okta.sdk.resource.identity.provider.ProvisioningGroups;
+import com.okta.sdk.resource.identity.provider.ProvisioningGroupsAction;
+import com.okta.sdk.resource.identity.provider.ProvisioningSuspendedAction;
 import com.okta.sdk.resource.identity.provider.ProvisioningSuspendedCondition;
 import com.okta.sdk.resource.policy.IdentityProviderPolicy;
 import com.okta.sdk.resource.policy.PolicyAccountLink;
+import com.okta.sdk.resource.policy.PolicyAccountLinkAction;
 import com.okta.sdk.resource.policy.PolicySubject;
 import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
@@ -40,27 +50,27 @@ import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<OIDCIdentityProviderBuilder>
     implements OIDCIdentityProviderBuilder {
 
-    private IdentityProvider.IssuerModeEnum issuerMode;
+    private IssuerMode issuerMode;
     private String requestSignatureAlgorithm;
-    private ProtocolAlgorithmTypeSignature.ScopeEnum requestSignatureScope;
+    private ProtocolAlgorithmTypeSignatureScope requestSignatureScope;
     private String responseSignatureAlgorithm;
-    private ProtocolAlgorithmTypeSignature.ScopeEnum responseSignatureScope;
-    private ProtocolEndpoint.BindingEnum acsEndpointBinding;
-    private ProtocolEndpoint.TypeEnum acsEndpointType;
-    private ProtocolEndpoint.BindingEnum authorizationEndpointBinding;
+    private ProtocolAlgorithmTypeSignatureScope responseSignatureScope;
+    private ProtocolEndpointBinding acsEndpointBinding;
+    private ProtocolEndpointType acsEndpointType;
+    private ProtocolEndpointBinding authorizationEndpointBinding;
     private String authorizationEndpointUrl;
-    private ProtocolEndpoint.BindingEnum tokenEndpointBinding;
+    private ProtocolEndpointBinding tokenEndpointBinding;
     private String tokenEndpointUrl;
-    private ProtocolEndpoint.BindingEnum userInfoEndpointBinding;
+    private ProtocolEndpointBinding userInfoEndpointBinding;
     private String userInfoEndpointUrl;
-    private ProtocolEndpoint.BindingEnum jwksEndpointBinding;
+    private ProtocolEndpointBinding jwksEndpointBinding;
     private String jwksEndpointUrl;
     private String issuerUrl;
     private String userName;
     private PolicySubjectMatchType matchType;
 
     @Override
-    public OidcIdentityProviderBuilder setIssuerMode(IdentityProvider.IssuerModeEnum issuerMode) {
+    public OidcIdentityProviderBuilder setIssuerMode(IssuerMode issuerMode) {
         this.issuerMode = issuerMode;
         return this;
     }
@@ -72,7 +82,7 @@ public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<
     }
 
     @Override
-    public OidcIdentityProviderBuilder setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum requestSignatureScope) {
+    public OidcIdentityProviderBuilder setRequestSignatureScope(ProtocolAlgorithmTypeSignatureScope requestSignatureScope) {
         this.requestSignatureScope = requestSignatureScope;
         return this;
     }
@@ -84,25 +94,25 @@ public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<
     }
 
     @Override
-    public OidcIdentityProviderBuilder setResponseSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum responseSignatureScope) {
+    public OidcIdentityProviderBuilder setResponseSignatureScope(ProtocolAlgorithmTypeSignatureScope responseSignatureScope) {
         this.responseSignatureScope = responseSignatureScope;
         return this;
     }
 
     @Override
-    public OidcIdentityProviderBuilder setAcsEndpointBinding(ProtocolEndpoint.BindingEnum acsEndpointBinding) {
+    public OidcIdentityProviderBuilder setAcsEndpointBinding(ProtocolEndpointBinding acsEndpointBinding) {
         this.acsEndpointBinding = acsEndpointBinding;
         return this;
     }
 
     @Override
-    public OidcIdentityProviderBuilder setAcsEndpointType(ProtocolEndpoint.TypeEnum acsEndpointType) {
+    public OidcIdentityProviderBuilder setAcsEndpointType(ProtocolEndpointType acsEndpointType) {
         this.acsEndpointType = acsEndpointType;
         return this;
     }
 
     @Override
-    public OidcIdentityProviderBuilder setAuthorizationEndpointBinding(ProtocolEndpoint.BindingEnum authorizationEndpointBinding) {
+    public OidcIdentityProviderBuilder setAuthorizationEndpointBinding(ProtocolEndpointBinding authorizationEndpointBinding) {
         this.authorizationEndpointBinding = authorizationEndpointBinding;
         return this;
     }
@@ -114,7 +124,7 @@ public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<
     }
 
     @Override
-    public OidcIdentityProviderBuilder setTokenEndpointBinding(ProtocolEndpoint.BindingEnum tokenEndpointBinding) {
+    public OidcIdentityProviderBuilder setTokenEndpointBinding(ProtocolEndpointBinding tokenEndpointBinding) {
         this.tokenEndpointBinding = tokenEndpointBinding;
         return this;
     }
@@ -126,7 +136,7 @@ public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<
     }
 
     @Override
-    public OidcIdentityProviderBuilder setUserInfoEndpointBinding(ProtocolEndpoint.BindingEnum userInfoEndpointBinding) {
+    public OidcIdentityProviderBuilder setUserInfoEndpointBinding(ProtocolEndpointBinding userInfoEndpointBinding) {
         this.userInfoEndpointBinding = userInfoEndpointBinding;
         return this;
     }
@@ -138,7 +148,7 @@ public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<
     }
 
     @Override
-    public OidcIdentityProviderBuilder setJwksEndpointBinding(ProtocolEndpoint.BindingEnum jwksEndpointBinding) {
+    public OidcIdentityProviderBuilder setJwksEndpointBinding(ProtocolEndpointBinding jwksEndpointBinding) {
         this.jwksEndpointBinding = jwksEndpointBinding;
         return this;
     }
@@ -200,7 +210,7 @@ public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<
                         .setBinding(jwksEndpointBinding)
                         .setUrl(jwksEndpointUrl)))
                 .setScopes(scopes)
-                .setType(Protocol.TypeEnum.OIDC)
+                .setType(ProtocolType.OIDC)
                 .setCredentials(client.instantiate(IdentityProviderCredentials.class)
                     .setClient(client.instantiate(IdentityProviderCredentialsClient.class)
                         .setClientId(clientId)
@@ -209,17 +219,17 @@ public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<
                     .setUrl(issuerUrl)))
             .setPolicy(client.instantiate(IdentityProviderPolicy.class)
                 .setAccountLink(client.instantiate(PolicyAccountLink.class)
-                    .setAction(PolicyAccountLink.ActionEnum.AUTO)
+                    .setAction(PolicyAccountLinkAction.AUTO)
                     .setFilter(null))
                 .setProvisioning(client.instantiate(Provisioning.class)
-                    .setAction(Provisioning.ActionEnum.AUTO)
+                    .setAction(ProvisioningAction.AUTO)
                     .setConditions(client.instantiate(ProvisioningConditions.class)
                         .setDeprovisioned(client.instantiate(ProvisioningDeprovisionedCondition.class)
-                            .setAction(ProvisioningDeprovisionedCondition.ActionEnum.NONE))
+                            .setAction(ProvisioningDeprovisionedAction.NONE))
                         .setSuspended(client.instantiate(ProvisioningSuspendedCondition.class)
-                            .setAction(ProvisioningSuspendedCondition.ActionEnum.NONE)))
+                            .setAction(ProvisioningSuspendedAction.NONE)))
                     .setGroups(client.instantiate(ProvisioningGroups.class)
-                        .setAction(ProvisioningGroups.ActionEnum.NONE)))
+                        .setAction(ProvisioningGroupsAction.NONE)))
                 .setMaxClockSkew(maxClockSkew)
                 .setSubject(client.instantiate(PolicySubject.class)
                     .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate.class)

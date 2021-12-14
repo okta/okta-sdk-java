@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.user.schema.UserSchema
+import com.okta.sdk.resource.schema.UserSchema
 import com.okta.sdk.resource.user.type.UserType
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test

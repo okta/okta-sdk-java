@@ -17,8 +17,10 @@ package com.okta.sdk.resource.policy.rule;
 
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.common.LifecycleStatus;
 import com.okta.sdk.resource.policy.Policy;
 import com.okta.sdk.resource.policy.PolicyRule;
+import com.okta.sdk.resource.policy.PolicyRuleType;
 
 public interface PolicyRuleBuilder<T extends PolicyRuleBuilder> {
 
@@ -28,9 +30,9 @@ public interface PolicyRuleBuilder<T extends PolicyRuleBuilder> {
 
     T setPriority(Integer priority);
 
-    T setStatus(PolicyRule.StatusEnum status);
+    T setStatus(LifecycleStatus status);
 
-    T setType(PolicyRule.TypeEnum type);
+    T setType(PolicyRuleType type);
 
     PolicyRule buildAndCreate(Client client, Policy policy);
 

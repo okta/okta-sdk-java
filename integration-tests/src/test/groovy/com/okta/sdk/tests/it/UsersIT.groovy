@@ -30,9 +30,10 @@ import com.okta.sdk.resource.policy.PasswordPolicyRuleAction
 import com.okta.sdk.resource.policy.PasswordPolicyRuleActions
 import com.okta.sdk.resource.policy.PasswordPolicyRuleConditions
 import com.okta.sdk.resource.policy.PasswordPolicySettings
+import com.okta.sdk.resource.policy.PolicyAccess
 import com.okta.sdk.resource.policy.PolicyNetworkCondition
-import com.okta.sdk.resource.role.AssignRoleRequest
-import com.okta.sdk.resource.role.RoleType
+import com.okta.sdk.resource.policy.PolicyNetworkConnection
+import com.okta.sdk.resource.user.AssignRoleRequest
 import com.okta.sdk.resource.user.AuthenticationProvider
 import com.okta.sdk.resource.user.AuthenticationProviderType
 import com.okta.sdk.resource.user.ChangePasswordRequest
@@ -41,6 +42,7 @@ import com.okta.sdk.resource.user.PasswordCredential
 import com.okta.sdk.resource.user.RecoveryQuestionCredential
 import com.okta.sdk.resource.user.ResetPasswordToken
 import com.okta.sdk.resource.user.Role
+import com.okta.sdk.resource.user.RoleType
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.resource.user.UserCredentials
@@ -366,14 +368,14 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         PasswordPolicyRule policyRule = policy.createRule(client.instantiate(PasswordPolicyRule)
             .setConditions(client.instantiate(PasswordPolicyRuleConditions)
                 .setNetwork(client.instantiate(PolicyNetworkCondition)
-                    .setConnection(PolicyNetworkCondition.ConnectionEnum.ANYWHERE)))
+                    .setConnection(PolicyNetworkConnection.ANYWHERE)))
                 .setActions(client.instantiate(PasswordPolicyRuleActions)
                     .setPasswordChange(client.instantiate(PasswordPolicyRuleAction)
-                        .setAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW))
+                        .setAccess(PolicyAccess.ALLOW))
                     .setSelfServicePasswordReset(client.instantiate(PasswordPolicyRuleAction)
-                        .setAccess(PasswordPolicyRuleAction.AccessEnum.ALLOW))
+                        .setAccess(PolicyAccess.ALLOW))
                     .setSelfServiceUnlock(client.instantiate(PasswordPolicyRuleAction)
-                        .setAccess(PasswordPolicyRuleAction.AccessEnum.DENY)))
+                        .setAccess(PolicyAccess.DENY)))
             .setName(policyRuleName))
         registerForCleanup(policyRule)
 

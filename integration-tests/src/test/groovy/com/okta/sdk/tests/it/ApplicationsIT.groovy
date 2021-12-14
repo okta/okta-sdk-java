@@ -25,12 +25,12 @@ import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.inline.hook.InlineHookBuilder
-import com.okta.sdk.resource.inline.hook.InlineHookChannel
+import com.okta.sdk.resource.inline.hook.InlineHookChannelType
 import com.okta.sdk.resource.inline.hook.InlineHookType
+import com.okta.sdk.resource.schema.UserSchema
+import com.okta.sdk.resource.schema.UserSchemaDefinitions
+import com.okta.sdk.resource.schema.UserSchemaPublic
 import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.schema.UserSchema
-import com.okta.sdk.resource.user.schema.UserSchemaDefinitions
-import com.okta.sdk.resource.user.schema.UserSchemaPublic
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
@@ -200,7 +200,7 @@ class ApplicationsIT extends ITSupport {
         InlineHook createdInlineHook = InlineHookBuilder.instance()
             .setName(name)
             .setHookType(InlineHookType.SAML_TOKENS_TRANSFORM)
-            .setChannelType(InlineHookChannel.TypeEnum.HTTP)
+            .setChannelType(InlineHookChannelType.HTTP)
             .setUrl("https://www.example.com/inlineHooks")
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
@@ -490,18 +490,18 @@ class ApplicationsIT extends ITSupport {
                         .setWeb(false)))
                 .setSettings(client.instantiate(AutoLoginApplicationSettings)
                     .setSignOn(client.instantiate(AutoLoginApplicationSettingsSignOn)
-                        .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
-                        .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
+                        .setRedirectUrl("https://swasecondaryredirecturl.okta.com")
+                        .setLoginUrl("https://swaprimaryloginurl.okta.com"))))
 
         registerForCleanup(app)
 
-        assertThat(app.getStatus(), equalTo(Application.StatusEnum.ACTIVE))
+        assertThat(app.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         app.deactivate()
-        assertThat(client.getApplication(app.getId()).getStatus(), equalTo(Application.StatusEnum.INACTIVE))
+        assertThat(client.getApplication(app.getId()).getStatus(), equalTo(ApplicationLifecycleStatus.INACTIVE))
 
         app.activate()
-        assertThat(client.getApplication(app.getId()).getStatus(), equalTo(Application.StatusEnum.ACTIVE))
+        assertThat(client.getApplication(app.getId()).getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     // Quarantining this till OKTA-421154 is fixed
@@ -675,7 +675,7 @@ class ApplicationsIT extends ITSupport {
         client.createApplication(app)
         registerForCleanup(app)
 
-        assertThat(app.getStatus(), equalTo(Application.StatusEnum.ACTIVE))
+        assertThat(app.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // create csr metadata
         CsrMetadata csrMetadata = client.instantiate(CsrMetadata)
@@ -732,7 +732,7 @@ class ApplicationsIT extends ITSupport {
         client.createApplication(app)
         registerForCleanup(app)
 
-        assertThat(app.getStatus(), equalTo(Application.StatusEnum.ACTIVE))
+        assertThat(app.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // grant consent
         OAuth2ScopeConsentGrant oAuth2ScopeConsentGrant = app.grantConsentToScope(client.instantiate(OAuth2ScopeConsentGrant)
