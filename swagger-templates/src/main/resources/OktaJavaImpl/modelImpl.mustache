@@ -34,6 +34,7 @@ import com.okta.sdk.impl.resource.DateProperty;
 import com.okta.sdk.impl.resource.EnumProperty;
 import com.okta.sdk.impl.resource.MapProperty;
 import com.okta.sdk.impl.resource.DefaultVoidResource;
+import com.okta.sdk.impl.resource.DefaultFileResource;
 import com.okta.sdk.resource.VoidResource;
 {{#vendorExtensions.top-level}}
 import com.okta.sdk.resource.Resource;
@@ -126,7 +127,12 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{>apiMethodPut}}
 {{/vendorExtensions.isPut}}
 {{#vendorExtensions.isPost}}
+{{#vendorExtensions.fileUpload}}
+{{>apiMethodPostFileResource}}
+{{/vendorExtensions.fileUpload}}
+{{^vendorExtensions.fileUpload}}
 {{>apiMethodPostResource}}
+{{/vendorExtensions.fileUpload}}
 {{/vendorExtensions.isPost}}
 {{#vendorExtensions.isDelete}}
 {{>apiMethodDelete}}

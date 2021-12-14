@@ -20,6 +20,7 @@ import com.okta.sdk.resource.brand.BrandList
 import com.okta.sdk.resource.brand.EmailTemplateTouchPointVariant
 import com.okta.sdk.resource.brand.EndUserDashboardTouchPointVariant
 import com.okta.sdk.resource.brand.ErrorPageTouchPointVariant
+import com.okta.sdk.resource.brand.ImageUploadResponse
 import com.okta.sdk.resource.brand.SignInPageTouchPointVariant
 import com.okta.sdk.resource.brand.Theme
 import com.okta.sdk.resource.brand.ThemeResponse
@@ -36,6 +37,9 @@ import static org.hamcrest.Matchers.*
  * @since 7.x.x
  */
 class BrandIT extends ITSupport {
+
+    private final String pathToImage = "src/test/resources/okta_logo_white.png"
+    private final String pathToFavicon = "src/test/resources/okta_logo_favicon.png"
 
     @Test (groups = "bacon")
     @Scenario("basic-brand")
@@ -106,6 +110,51 @@ class BrandIT extends ITSupport {
             .setErrorPageTouchPointVariant(errorPageTPV)
             .setEmailTemplateTouchPointVariant(emailTemplateTPV)
         themeToRestore.update(brandId, themeId, themeToRestore)
+    }
+
+    @Test (groups = "bacon")
+    @Scenario("brand-theme-logo")
+    void brandThemeLogoTest() {
+
+        String brandId = getBrandId()
+        String themeId = getThemeId(brandId)
+        File file = new File(pathToImage)
+
+        ImageUploadResponse resp = client.instantiate(Theme).uploadBrandThemeLogo(brandId, themeId, file)
+        assertThat(resp, notNullValue())
+        assertThat(resp.getUrl(), notNullValue())
+
+        client.instantiate(Theme).deleteBrandThemeLogo(brandId, themeId)
+    }
+
+    @Test (groups = "bacon")
+    @Scenario("brand-theme-background-image")
+    void brandThemeBackgroundImageTest() {
+
+        String brandId = getBrandId()
+        String themeId = getThemeId(brandId)
+        File file = new File(pathToImage)
+
+        ImageUploadResponse resp = client.instantiate(Theme).updateBrandThemeBackgroundImage(brandId, themeId, file)
+        assertThat(resp, notNullValue())
+        assertThat(resp.getUrl(), notNullValue())
+
+        client.instantiate(Theme).deleteBrandThemeBackgroundImage(brandId, themeId)
+    }
+
+    @Test (groups = "bacon")
+    @Scenario("brand-theme-favicon")
+    void brandThemeFaviconTest() {
+
+        String brandId = getBrandId()
+        String themeId = getThemeId(brandId)
+        File file = new File(pathToFavicon)
+
+        ImageUploadResponse resp = client.instantiate(Theme).updateBrandThemeFavicon(brandId, themeId, file)
+        assertThat(resp, notNullValue())
+        assertThat(resp.getUrl(), notNullValue())
+
+        client.instantiate(Theme).deleteBrandThemeFavicon(brandId, themeId)
     }
 
     /**
