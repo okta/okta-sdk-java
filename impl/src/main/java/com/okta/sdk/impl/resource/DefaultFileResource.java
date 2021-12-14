@@ -18,24 +18,24 @@ package com.okta.sdk.impl.resource;
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.resource.FileResource;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
 
 public class DefaultFileResource extends AbstractResource implements FileResource {
 
-    private final File file;
+    private final Path path;
     private final String formDataName;
 
-    public DefaultFileResource(InternalDataStore dataStore, File file, String formDataName) {
+    public DefaultFileResource(InternalDataStore dataStore, Path filePath, String formDataName) {
         super(dataStore);
-        this.file = file;
+        this.path = filePath;
         this.formDataName = formDataName;
     }
 
     @Override
     public String getLocation() {
-        return file.getAbsolutePath();
+        return path.toAbsolutePath().toString();
     }
 
     @Override

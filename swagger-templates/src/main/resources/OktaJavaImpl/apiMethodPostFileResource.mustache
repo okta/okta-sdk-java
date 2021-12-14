@@ -15,7 +15,7 @@
 }}
         {{#returnType}}{{^vendorExtensions.updateBody}}return {{/vendorExtensions.updateBody}}{{/returnType}}getDataStore().create(
             "{{{vendorExtensions.hrefFiltered}}}",
-            new DefaultFileResource(getDataStore(), file, "{{vendorExtensions.fileFormDataName}}"),
+            new DefaultFileResource(getDataStore(), file.getAbsoluteFile().toPath(), "{{vendorExtensions.fileFormDataName}}"),
             null,
 {{^returnType}}
             VoidResource.class,
