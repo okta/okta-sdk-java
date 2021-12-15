@@ -56,8 +56,8 @@ body:
     id: sdkVersion
     attributes:
       label: SDK Version
-      description: 
-      
+      description: | 
+        SDK Version
     validations:
       required: true
 
