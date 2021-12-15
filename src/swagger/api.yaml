@@ -2574,345 +2574,401 @@ paths:
       summary: Update a themes logo
       tags:
       - Brand
-#  /api/v1/brands/{brandId}/templates/email:
-#    parameters:
-#    - schema:
-#        type: string
-#      name: brandId
-#      in: path
-#      required: true
-#      description: brand id
-#    get:
-#      summary: List Email Templates
-#      responses:
-#        '200':
-#          description: Successfully fetch a list of email templates.
-#          content:
-#            application/json:
-#              schema:
-#                type: array
-#                items:
-#                  $ref: '#/components/schemas/EmailTemplate'
-#          headers:
-#            Link:
-#              schema:
-#                type: string
-#                example: <http://oienapa.okta1.com:1802/api/v1/brands/{brandId}/templates/email?limit=200>; rel="self"
-#              description: Links to the current and next page of results.
-#      operationId: listEmailTemplates
-#      description: List email templates in your organization with pagination.
-#      security:
-#      - api_token: []
-#      parameters:
-#      - schema:
-#          type: string
-#        in: query
-#        description: Specifies the pagination cursor for the next page of email templates.
-#        name: after
-#      - schema:
-#          type: integer
-#          default: 20
-#        in: query
-#        name: limit
-#        description: Specifies the number of results returned (maximum 200)
-#      tags:
-#      - Brand
-#  /api/v1/brands/{brandId}/templates/email/{templateName}:
-#    get:
-#      summary: Get Email Template
-#      responses:
-#        '200':
-#          description: Successfully fetch an email template by name.
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/EmailTemplate'
-#      operationId: getEmailTemplate
-#      description: Fetch an email template by `templateName`
-#      security:
-#      - api_token: []
-#      tags:
-#      - Brand
-#    parameters:
-#    - schema:
-#        type: string
-#      name: brandId
-#      in: path
-#      required: true
-#    - schema:
-#        type: string
-#      name: templateName
-#      in: path
-#      required: true
-#  /api/v1/brands/{brandId}/templates/email/{templateName}/default-content:
-#    get:
-#      summary: Get Default Content of Email Template
-#      responses:
-#        '200':
-#          description: Successfully fetch the default content for an email template.
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/EmailDefaultContent'
-#      operationId: getEmailTemplateDefaultContent
-#      description: Fetch the default content for an email template.
-#      security:
-#      - api_token: []
-#      tags:
-#      - Brand
-#    parameters:
-#    - schema:
-#        type: string
-#      name: brandId
-#      in: path
-#      required: true
-#    - schema:
-#        type: string
-#      name: templateName
-#      in: path
-#      required: true
-#  /api/v1/brands/{brandId}/templates/email/{templateName}/default-content/preview:
-#    parameters:
-#    - schema:
-#        type: string
-#      name: brandId
-#      in: path
-#      required: true
-#    - schema:
-#        type: string
-#      name: templateName
-#      in: path
-#      required: true
-#    get:
-#      summary: Get Preview of Email Template Default Content
-#      responses:
-#        '200':
-#          description: ' Successfully fetch the preview of an email template''s default content.'
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/EmailPreview'
-#      operationId: previewEmailDefaultContent
-#      security:
-#      - api_token: []
-#      description: Fetch a preview of an email template's default content by populating velocity references with the current user's environment.
-#      tags:
-#      - Brand
-#  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations:
-#    get:
-#      summary: List Email Customizations
-#      responses:
-#        '200':
-#          description: Successfully fetch all email customizations of a given email template name.
-#          content:
-#            application/json:
-#              schema:
-#                type: array
-#                items:
-#                  $ref: '#/components/schemas/EmailCustomization'
-#      operationId: getAllEmailCustomizations
-#      description: List all email customcations for an email template
-#      security:
-#      - api_token: []
-#      tags:
-#      - Brand
-#    parameters:
-#    - schema:
-#        type: string
-#      name: brandId
-#      in: path
-#      required: true
-#    - schema:
-#        type: string
-#      name: templateName
-#      in: path
-#      required: true
-#    delete:
-#      summary: Delete Email Customizations
-#      operationId: deleteAllCustomizations
-#      responses:
-#        '204':
-#          description: Successfully deletes all customizations for an email template.
-#          content: {}
-#      description: Delete all customizations for an email template. Also known as “Reset to Default”.
-#      security:
-#      - api_token: []
-#      tags:
-#      - Brand
-#    post:
-#      summary: Create Email Customization
-#      operationId: createEmailCustomization
-#      responses:
-#        '201':
-#          description: If success, return the created email customization
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/EmailCustomization'
-#      description: Create an email customization
-#      tags:
-#      - Brand
-#      security:
-#      - api_token: []
-#      requestBody:
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/EmailCustomization'
-#            examples:
-#              example-1:
-#                value:
-#                  language: cs-CZ
-#                  isDefault: true
-#                  subject: Welcome to $org.name
-#                  body: Hello, $user.profile.firstName!
-#                  fromAddress: noreply@okta.com
-#                  fromName: $org.name
-#      x-okta-request-body-name: instance
-#  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations/{customizationId}:
-#    parameters:
-#    - schema:
-#        type: string
-#      name: brandId
-#      in: path
-#      required: true
-#    - schema:
-#        type: string
-#      name: templateName
-#      in: path
-#      required: true
-#    - schema:
-#        type: string
-#      name: customizationId
-#      in: path
-#      required: true
-#    get:
-#      summary: Get Email Customization
-#      responses:
-#        '200':
-#          description: Successfully get an email template's customization by `id`.
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/EmailCustomization'
-#      operationId: getEmailCustomization
-#      security:
-#      - api_token: []
-#      description: Fetch an email customization by `id`.
-#      tags:
-#      - Brand
-#    put:
-#      summary: Update Email Customization
-#      operationId: updateEmailCustomization
-#      responses:
-#        '200':
-#          description: If update successfully, return the updated email customization
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/EmailCustomization'
-#      description: Update an email customization
-#      security:
-#      - api_token: []
-#      requestBody:
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/EmailCustomization'
-#            examples:
-#              example-1:
-#                value:
-#                  language: cs-CZ
-#                  isDefault: true
-#                  subject: Welcome to $org.name
-#                  body: Hello, $user.profile.firstName!
-#                  fromAddress: noreply@okta.com
-#                  fromName: $org.name
-#        description: Request
-#      tags:
-#      - Brand
-#      x-okta-request-body-name: instance
-#    delete:
-#      summary: Delete Email Customization
-#      operationId: deleteEmailCustomization
-#      responses:
-#        '204':
-#          description: Successfully delete an email customization by `id`
-#          content: {}
-#      security:
-#      - api_token: []
-#      description: Delete an email customization
-#      tags:
-#      - Brand
-#  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations/{customizationId}/preview:
-#    parameters:
-#    - schema:
-#        type: string
-#      name: brandId
-#      in: path
-#      required: true
-#    - schema:
-#        type: string
-#      name: templateName
-#      in: path
-#      required: true
-#    - schema:
-#        type: string
-#      name: customizationId
-#      in: path
-#      required: true
-#    get:
-#      summary: Get Preview Content of Email Customization
-#      responses:
-#        '200':
-#          description: Successfully fetch the preview content of an email customization.
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/EmailPreview'
-#      operationId: previewEmailCustomizationContent
-#      description: Get a preview of an email template customization.
-#      security:
-#      - api_token: []
-#      tags:
-#      - Brand
-#  /api/v1/brands/{brandId}/templates/email/{templateName}/test:
-#    post:
-#      summary: Send Test Email
-#      operationId: sendTestEmailFromTemplate
-#      responses:
-#        '204':
-#          description: No Content
-#          content: {}
-#      description: |-
-#        Send a test email to the current user’s primary and secondary email addresses. The email content is selected based on the following priority:
-#        1. An email customization specifically for the user’s locale.
-#        2. The default language of email customizations.
-#        3. The email template’s default content.
-#      security:
-#      - api_token: []
-#      requestBody:
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/EmailTestResponse'
-#            examples:
-#              example-1:
-#                value:
-#                  customizationId: oel11u6DqUiMbQkpl0g4
-#      tags:
-#      - Brand
-#    parameters:
-#    - schema:
-#        type: string
-#      name: templateName
-#      in: path
-#      required: true
-#    - schema:
-#        type: string
-#      name: brandId
-#      in: path
-#      required: true
+  /api/v1/brands/{brandId}/templates/email:
+    get:
+      operationId: listEmailTemplates
+      description: List email templates in your organization with pagination.
+      summary: List Email Templates
+      responses:
+        '200':
+          description: Successfully fetch a list of email templates.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmailTemplate'
+          headers:
+            Link:
+              schema:
+                type: string
+                example: <http://oienapa.okta1.com:1802/api/v1/brands/{brandId}/templates/email?limit=200>; rel="self"
+              description: Links to the current and next page of results.
+      security:
+      - api_token: []
+      parameters:
+      - schema:
+          type: string
+        name: brandId
+        in: path
+        required: true
+        description: brand id
+      - schema:
+          type: string
+        in: query
+        description: Specifies the pagination cursor for the next page of email templates.
+        name: after
+      - schema:
+          type: integer
+          default: 20
+        in: query
+        name: limit
+        description: Specifies the number of results returned (maximum 200)
+      tags:
+      - Brand
+  /api/v1/brands/{brandId}/templates/email/{templateName}:
+    get:
+      summary: Get Email Template
+      responses:
+        '200':
+          description: Successfully fetch an email template by name.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailTemplate'
+      operationId: getEmailTemplate
+      description: Fetch an email template by `templateName`
+      security:
+      - api_token: []
+      tags:
+      - Brand
+      parameters:
+      - schema:
+          type: string
+        name: brandId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: templateName
+        in: path
+        required: true
+  /api/v1/brands/{brandId}/templates/email/{templateName}/default-content:
+    get:
+      summary: Get Default Content of Email Template
+      responses:
+        '200':
+          description: Successfully fetch the default content for an email template.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailDefaultContent'
+      operationId: getEmailTemplateDefaultContent
+      description: Fetch the default content for an email template.
+      security:
+      - api_token: []
+      tags:
+      - Brand
+    parameters:
+    - schema:
+        type: string
+      name: brandId
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: templateName
+      in: path
+      required: true
+  /api/v1/brands/{brandId}/templates/email/{templateName}/default-content/preview:
+    parameters:
+    - schema:
+        type: string
+      name: brandId
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: templateName
+      in: path
+      required: true
+    get:
+      summary: Get Preview of Email Template Default Content
+      responses:
+        '200':
+          description: ' Successfully fetch the preview of an email template''s default content.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailPreview'
+      operationId: previewEmailDefaultContent
+      security:
+      - api_token: []
+      description: Fetch a preview of an email template's default content by populating velocity references with the current user's environment.
+      tags:
+      - Brand
+  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations:
+    get:
+      description: List all email customcations for an email template
+      operationId: getAllEmailCustomizations
+      parameters:
+      - schema:
+          type: string
+        name: brandId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: templateName
+        in: path
+        required: true
+      responses:
+        '200':
+          description: Successfully fetch all email customizations of a given email template name.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmailCustomization'
+      summary: List Email Customizations
+      security:
+      - api_token: []
+      tags:
+      - Brand
+    delete:
+      description: Delete all customizations for an email template. Also known as “Reset to Default”.
+      operationId: deleteAllCustomizations
+      parameters:
+        - schema:
+            type: string
+          name: brandId
+          in: path
+          required: true
+        - schema:
+            type: string
+          name: templateName
+          in: path
+          required: true
+      responses:
+        '204':
+          description: Successfully deletes all customizations for an email template.
+          content: {}
+      summary: Delete Email Customizations
+      security:
+      - api_token: []
+      tags:
+      - Brand
+    post:
+      description: Create an email customization
+      operationId: createEmailCustomization
+      parameters:
+        - schema:
+            type: string
+          name: brandId
+          in: path
+          required: true
+        - schema:
+            type: string
+          name: templateName
+          in: path
+          required: true
+      responses:
+        '201':
+          description: If success, return the created email customization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailCustomization'
+      summary: Create Email Customization
+      tags:
+      - Brand
+      security:
+      - api_token: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailCustomization'
+            examples:
+              example-1:
+                value:
+                  language: cs-CZ
+                  isDefault: true
+                  subject: Welcome to $org.name
+                  body: Hello, $user.profile.firstName!
+                  fromAddress: noreply@okta.com
+                  fromName: $org.name
+        required: true
+      x-okta-request-body-name: instance
+  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations/{customizationId}:
+    get:
+      summary: Get Email Customization
+      responses:
+        '200':
+          description: Successfully get an email template's customization by `id`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailCustomization'
+      operationId: getEmailCustomization
+      parameters:
+      - schema:
+          type: string
+        name: brandId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: templateName
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: customizationId
+        in: path
+        required: true
+      security:
+      - api_token: []
+      description: Fetch an email customization by `id`.
+      tags:
+      - Brand
+    put:
+      summary: Update Email Customization
+      operationId: updateEmailCustomization
+      responses:
+        '200':
+          description: If update successfully, return the updated email customization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailCustomization'
+      description: Update an email customization
+      security:
+      - api_token: []
+      parameters:
+      - schema:
+          type: string
+        name: brandId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: templateName
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: customizationId
+        in: path
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailCustomization'
+            examples:
+              example-1:
+                value:
+                  language: cs-CZ
+                  isDefault: true
+                  subject: Welcome to $org.name
+                  body: Hello, $user.profile.firstName!
+                  fromAddress: noreply@okta.com
+                  fromName: $org.name
+        description: Request
+      tags:
+      - Brand
+      x-okta-request-body-name: instance
+    delete:
+      summary: Delete Email Customization
+      operationId: deleteEmailCustomization
+      parameters:
+      - schema:
+          type: string
+        name: brandId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: templateName
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: customizationId
+        in: path
+        required: true
+      responses:
+        '204':
+          description: Successfully delete an email customization by `id`
+          content: {}
+      security:
+      - api_token: []
+      description: Delete an email customization
+      tags:
+      - Brand
+  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations/{customizationId}/preview:
+    parameters:
+    - schema:
+        type: string
+      name: brandId
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: templateName
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: customizationId
+      in: path
+      required: true
+    get:
+      summary: Get Preview Content of Email Customization
+      responses:
+        '200':
+          description: Successfully fetch the preview content of an email customization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailPreview'
+      operationId: previewEmailCustomizationContent
+      description: Get a preview of an email template customization.
+      security:
+      - api_token: []
+      tags:
+      - Brand
+  /api/v1/brands/{brandId}/templates/email/{templateName}/test:
+    parameters:
+    - schema:
+        type: string
+      name: templateName
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: brandId
+      in: path
+      required: true
+    post:
+      summary: Send Test Email
+      operationId: sendTestEmailFromTemplate
+      responses:
+        '204':
+          description: No Content
+          content: {}
+      description: |-
+        Send a test email to the current user’s primary and secondary email addresses. The email content is selected based on the following priority:
+        1. An email customization specifically for the user’s locale.
+        2. The default language of email customizations.
+        3. The email template’s default content.
+      security:
+      - api_token: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTestResponse'
+            examples:
+              example-1:
+                value:
+                  customizationId: oel11u6DqUiMbQkpl0g4
+      tags:
+      - Brand
   /api/v1/captchas:
     get:
       summary: List CAPTCHA instances
@@ -10996,13 +11052,13 @@ components:
       type: string
       x-okta-tags:
       - Brand
-#    EmailTestResponse:
-#      type: object
-#      properties:
-#        customizationId:
-#          type: string
-#      x-okta-tags:
-#      - Brand
+    EmailTestResponse:
+      type: object
+      properties:
+        customizationId:
+          type: string
+      x-okta-tags:
+      - Brand
     EndUserDashboardTouchPointVariant:
       enum:
       - OKTA_DEFAULT
@@ -11121,248 +11177,250 @@ components:
           $ref: '#/components/schemas/SignInPageTouchPointVariant'
       x-okta-tags:
       - Brand
-#    EmailTemplate:
-#      x-okta-tags:
-#      - Brand
-#      title: EmailTemplate
-#      type: object
-#      x-examples:
-#      - name: email.welcome
-#        _links:
-#          self:
-#            href: /templates/email/email.welcome
-#            hints:
-#              allow:
-#              - GET
-#          customizations:
-#            href: /templates/email/email.welcome/customizations
-#            hints:
-#              allow:
-#              - GET
-#          defaultContent:
-#            href: /templates/email/email.welcome/default-content
-#            hints:
-#              allow:
-#              - GET
-#          test:
-#            href: /templates/email/email.welcome/test
-#            hints:
-#              allow:
-#              - POST
-#      description: An email template object
-#      properties:
-#        name:
-#          type: string
-#        _links:
-#          type: object
-#          properties:
-#            self:
-#              $ref: '#/components/schemas/HrefObject'
-#            customizations:
-#              $ref: '#/components/schemas/HrefObject'
-#            defaultContent:
-#              $ref: '#/components/schemas/HrefObject'
-#            test:
-#              $ref: '#/components/schemas/HrefObject'
-#          readOnly: true
-#      x-tags:
-#      - Brand
-#    EmailDefaultContent:
-#      x-okta-tags:
-#      - Brand
-#      title: EmailDefaultContent
-#      description: The default content for an email template
-#      x-examples:
-#      - subject: Welcome to Okta!
-#        body: '...<tr><td style="color: #5e5e5e; font-size: 22px; line-height: 22px;">${org.name} - Welcome to Okta!</td></tr><tr><td style="padding-top: 24px; vertical-align: bottom;">Hi ${f:escapeHtml(user.firstName)},</td></tr>...'
-#        fromAddress: noreply@okta.com
-#        fromName: Okta
-#        _links:
-#          self:
-#            href: /templates/email/email.welcome/default-content
-#            hints:
-#              allow:
-#              - GET
-#          template:
-#            href: /templates/email/email.welcome
-#            hints:
-#              allow:
-#              - GET
-#      x-okta-parent: '#/components/schemas/EmailContentWithSender'
-#      type: object
-#      properties:
-#        _links:
-#          type: object
-#          properties:
-#            self:
-#              $ref: '#/components/schemas/HrefObject'
-#            template:
-#              $ref: '#/components/schemas/HrefObject'
-#            preview:
-#              $ref: '#/components/schemas/HrefObject'
-#          readOnly: true
-#    EmailPreview:
-#      x-okta-tags:
-#      - Brand
-#      title: EmailPreview
-#      x-examples:
-#      - subject: Welcome to Okta!
-#        body: |
-#          <tr>
-#          <td style="color:#5e5e5e;font-size:22px;line-height:22px"> henryli-oie - Welcome to Okta! </td>
-#          </tr>
-#          <tr>
-#          <td style="padding-top:24px;vertical-align:bottom"> Hi Henry, </td>
-#          </tr>
-#        fromAddress: noreply@okta.com
-#        fromName: Okta
-#        _links:
-#          self:
-#            href: /templates/email/email.welcome/default-content/preview
-#            hints:
-#              allow:
-#              - GET
-#          contentSource:
-#            href: /templates/email/email.welcome/default-content
-#            hints:
-#              allow:
-#              - GET
-#          template:
-#            href: /templates/email/email.welcome
-#            hints:
-#              allow:
-#              - GET
-#      - subject: Welcome to MyOrg!
-#        body: Hello, Henry Li!
-#        fromAddress: noreply@okta.com
-#        fromName: MyOrg
-#        _links:
-#          self:
-#            href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4/preview
-#            hints:
-#              allow:
-#              - GET
-#          contentSource:
-#            href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4
-#            hints:
-#              allow:
-#              - GET
-#          template:
-#            href: /templates/email/email.welcome
-#            hints:
-#              allow:
-#              - GET
-#      description: The preview content of email template based on current user
-#      x-okta-parent: '#/components/schemas/EmailContentWithSender'
-#      type: object
-#      properties:
-#        _links:
-#          type: object
-#          properties:
-#            self:
-#              $ref: '#/components/schemas/HrefObject'
-#            contentSource:
-#              $ref: '#/components/schemas/HrefObject'
-#            template:
-#              $ref: '#/components/schemas/HrefObject'
-#          readOnly: true
-#    EmailCustomization:
-#      x-okta-tags:
-#      - Brand
-#      title: Email Customization
-#      x-examples:
-#      - id: oel11u6DqUiMbQkpl0g4
-#        language: cs-CZ
-#        isDefault: true
-#        subject: Welcome to $org.name
-#        body: Hello, $user.profile.firstName!
-#        created: '2021-11-09T20:38:10.000Z'
-#        lastUpdated: '2021-11-11T20:38:10.000Z'
-#        _links:
-#          self:
-#            href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4
-#            hints:
-#              allow:
-#              - GET
-#              - PUT
-#              - DELETE
-#          template:
-#            href: /templates/email/email.welcome
-#            hints:
-#              allow:
-#              - GET
-#          preview:
-#            href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4/preview
-#            hints:
-#              allow:
-#              - GET
-#      description: A customized email template
-#      allOf:
-#      - $ref: '#/components/schemas/EmailContent'
-#      - type: object
-#        properties:
-#          id:
-#            type: string
-#            description: ''
-#            example: oel11u6DqUiMbQkpl0g4
-#            readOnly: true
-#          language:
-#            type: string
-#            example: cs-CZ
-#            description: unique under each email templage
-#          isDefault:
-#            type: boolean
-#          created:
-#            type: string
-#            format: date-time
-#            readOnly: true
-#          lastUpdated:
-#            type: string
-#            format: date-time
-#            readOnly: true
-#          _links:
-#            type: object
-#            properties:
-#              self:
-#                $ref: '#/components/schemas/HrefObject'
-#              template:
-#                $ref: '#/components/schemas/HrefObject'
-#              preview:
-#                $ref: '#/components/schemas/HrefObject'
-#            readOnly: true
-#        required:
-#        - language
-#        readOnly: true
-#    EmailContentWithSender:
-#      title: EmailSender
-#      allOf:
-#      - $ref: '#/components/schemas/EmailContent'
-#      - type: object
-#        properties:
-#          fromAddress:
-#            type: string
-#          fromName:
-#            type: string
-#        required:
-#        - fromAddress
-#        - fromName
-#      x-internal: true
-#      x-okta-tags:
-#      - Brand
-#    EmailContent:
-#      title: EmailContent
-#      type: object
-#      properties:
-#        subject:
-#          type: string
-#        body:
-#          type: string
-#      required:
-#      - subject
-#      - body
-#      x-internal: true
-#      x-okta-tags:
-#      - Brand
+    EmailTemplate:
+      x-okta-tags:
+      - Brand
+      title: EmailTemplate
+      type: object
+      x-examples:
+      - name: email.welcome
+        _links:
+          self:
+            href: /templates/email/email.welcome
+            hints:
+              allow:
+              - GET
+          customizations:
+            href: /templates/email/email.welcome/customizations
+            hints:
+              allow:
+              - GET
+          defaultContent:
+            href: /templates/email/email.welcome/default-content
+            hints:
+              allow:
+              - GET
+          test:
+            href: /templates/email/email.welcome/test
+            hints:
+              allow:
+              - POST
+      description: An email template object
+      properties:
+        name:
+          type: string
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HrefObject'
+            customizations:
+              $ref: '#/components/schemas/HrefObject'
+            defaultContent:
+              $ref: '#/components/schemas/HrefObject'
+            test:
+              $ref: '#/components/schemas/HrefObject'
+          readOnly: true
+      x-tags:
+      - Brand
+    EmailDefaultContent:
+      x-okta-tags:
+      - Brand
+      title: EmailDefaultContent
+      description: The default content for an email template
+      x-examples:
+      - subject: Welcome to Okta!
+        body: '...<tr><td style="color: #5e5e5e; font-size: 22px; line-height: 22px;">${org.name} - Welcome to Okta!</td></tr><tr><td style="padding-top: 24px; vertical-align: bottom;">Hi ${f:escapeHtml(user.firstName)},</td></tr>...'
+        fromAddress: noreply@okta.com
+        fromName: Okta
+        _links:
+          self:
+            href: /templates/email/email.welcome/default-content
+            hints:
+              allow:
+              - GET
+          template:
+            href: /templates/email/email.welcome
+            hints:
+              allow:
+              - GET
+      x-okta-parent: '#/components/schemas/EmailContentWithSender'
+      type: object
+      properties:
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HrefObject'
+            template:
+              $ref: '#/components/schemas/HrefObject'
+            preview:
+              $ref: '#/components/schemas/HrefObject'
+          readOnly: true
+    EmailPreview:
+      x-okta-tags:
+      - Brand
+      title: EmailPreview
+      x-examples:
+      - subject: Welcome to Okta!
+        body: |
+          <tr>
+          <td style="color:#5e5e5e;font-size:22px;line-height:22px"> henryli-oie - Welcome to Okta! </td>
+          </tr>
+          <tr>
+          <td style="padding-top:24px;vertical-align:bottom"> Hi Henry, </td>
+          </tr>
+        fromAddress: noreply@okta.com
+        fromName: Okta
+        _links:
+          self:
+            href: /templates/email/email.welcome/default-content/preview
+            hints:
+              allow:
+              - GET
+          contentSource:
+            href: /templates/email/email.welcome/default-content
+            hints:
+              allow:
+              - GET
+          template:
+            href: /templates/email/email.welcome
+            hints:
+              allow:
+              - GET
+      - subject: Welcome to MyOrg!
+        body: Hello, Henry Li!
+        fromAddress: noreply@okta.com
+        fromName: MyOrg
+        _links:
+          self:
+            href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4/preview
+            hints:
+              allow:
+              - GET
+          contentSource:
+            href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4
+            hints:
+              allow:
+              - GET
+          template:
+            href: /templates/email/email.welcome
+            hints:
+              allow:
+              - GET
+      description: The preview content of email template based on current user
+      x-okta-parent: '#/components/schemas/EmailContentWithSender'
+      type: object
+      properties:
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HrefObject'
+            contentSource:
+              $ref: '#/components/schemas/HrefObject'
+            template:
+              $ref: '#/components/schemas/HrefObject'
+          readOnly: true
+    EmailCustomization:
+      x-okta-tags:
+      - Brand
+      title: Email Customization
+      x-examples:
+      - id: oel11u6DqUiMbQkpl0g4
+        language: cs-CZ
+        isDefault: true
+        subject: Welcome to $org.name
+        body: Hello, $user.profile.firstName!
+        created: '2021-11-09T20:38:10.000Z'
+        lastUpdated: '2021-11-11T20:38:10.000Z'
+        _links:
+          self:
+            href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4
+            hints:
+              allow:
+              - GET
+              - PUT
+              - DELETE
+          template:
+            href: /templates/email/email.welcome
+            hints:
+              allow:
+              - GET
+          preview:
+            href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4/preview
+            hints:
+              allow:
+              - GET
+      description: A customized email template
+      properties:
+        id:
+          type: string
+          description: ''
+          example: oel11u6DqUiMbQkpl0g4
+          readOnly: true
+        language:
+          type: string
+          required: true
+          example: cs-CZ
+          description: unique under each email template
+        isDefault:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        lastUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+        subject:
+          type: string
+          required: true
+        body:
+          type: string
+          required: true
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HrefObject'
+            template:
+              $ref: '#/components/schemas/HrefObject'
+            preview:
+              $ref: '#/components/schemas/HrefObject'
+          readOnly: true
+      type: object
+      x-okta-operations:
+      - alias: updateEmailCustomization
+        operationId: updateEmailCustomization
+    EmailContentWithSender:
+      title: EmailSender
+      type: object
+      properties:
+        fromAddress:
+          type: string
+          required: true
+        fromName:
+          type: string
+          required: true
+      x-internal: true
+      x-okta-parent: '#/components/schemas/EmailContent'
+      x-okta-tags:
+      - Brand
+    EmailContent:
+      title: EmailContent
+      type: object
+      properties:
+        subject:
+          type: string
+          required: true
+        body:
+          type: string
+          required: true
+      x-internal: true
+      x-okta-tags:
+      - Brand
     CAPTCHAInstance:
       title: CAPTCHAInstance
       type: object
