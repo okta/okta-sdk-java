@@ -41,7 +41,7 @@ You can learn more on the [Okta + Java][lang-landing] page in our documentation.
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The current stable major version series is: 7.x.x
+:heavy_check_mark: The current stable major version series is: 8.x.x
 
 | Version | Status                    |
 | ------- | ------------------------- |
@@ -50,6 +50,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 5.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-4xx-to-500)) |
 | 6.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-5xx-to-600)) |
 | 7.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-6xx-to-700)) |
+| 8.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-7xx-to-800)) |
 
 The latest release can always be found on the [releases page][github-releases].
  
