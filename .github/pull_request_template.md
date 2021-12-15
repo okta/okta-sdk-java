@@ -15,12 +15,6 @@ Thank you for submitting a pull request! A few things to know first:
 ## Description
 <!-- Add a brief description of the issue. Be concise with your summary, but explain what changed. -->
 
-## Reproduction Steps
-<!-- Add notes on how to reproduce the reported issue. -->
-
-- SDK Version:
-- Java Version:
-
 ## Category
 - [ ] Bugfix
 - [ ] Enhancement
