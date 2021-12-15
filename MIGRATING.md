@@ -2,6 +2,20 @@
  
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
+## Migrating from 7.x.x to 8.0.0
+
+Version 8.0.0 of this SDK introduces few breaking changes from previous versions.
+
+### Package `com.okta.sdk.resource.brand.Theme`
+
+Below methods will now take `file` object as additional param. This was missing from earlier release (bug) and this release fixes it.
+- `updateBrandThemeBackgroundImage` 
+- `updateBrandThemeFavicon`
+- `uploadBrandThemeLogo`
+
+### Package `com.okta.sdk.resource.org.OrgSetting`
+- `updateOrgLogo` will now take `file` object as a parameter. This was missing from earlier release (bug) and this release fixes it. 
+
 ## Migrating from 5.x.x to 6.0.0
 
 Version 6.0.0 of this SDK introduces a number of breaking changes from previous versions.
