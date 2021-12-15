@@ -18,8 +18,8 @@ Thank you for submitting a pull request! A few things to know first:
 ## Reproduction Steps
 <!-- Add notes on how to reproduce the reported issue. -->
 
-SDK Version:
-Java Version:
+- SDK Version:
+- Java Version:
 
 ## Category
 - [ ] Bugfix
