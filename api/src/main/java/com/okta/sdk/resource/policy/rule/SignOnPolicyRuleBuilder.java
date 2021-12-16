@@ -17,7 +17,6 @@ package com.okta.sdk.resource.policy.rule;
 
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.resource.policy.*;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
