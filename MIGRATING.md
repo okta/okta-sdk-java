@@ -2,6 +2,118 @@
  
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
+## Migrating from 7.x.x to 8.0.0
+
+Version 8.0.0 of this SDK introduces few breaking changes from previous versions.
+
+### Package `com.okta.sdk.resource.brand.Theme`
+
+Below methods will now take `file` object as additional param. This was missing from earlier release (bug) and this release fixes it.
+- `updateBrandThemeBackgroundImage` 
+- `updateBrandThemeFavicon`
+- `uploadBrandThemeLogo`
+
+### Package `com.okta.sdk.resource.org.OrgSetting`
+- `updateOrgLogo` will now take `file` object as a parameter. This was missing from earlier release (bug) and this release fixes it. 
+
+## Migrating from 6.x.x to 7.0.0
+
+### Package `com.okta.sdk.client.Client`
+
+Below methods have been added.
+- `Brand getBrand(String brandId)`
+- `ThemeResponse getBrandTheme(String brandId, String themeId)`
+- `BrandList listBrands()`
+- `ThemeResponseList listBrandThemes(String brandId)`
+
+Below methods have been moved to `com.okta.sdk.resource.org.OrgSetting`.
+- `getOktaCommunicationSettings()`
+- `getOrgContactTypes()`
+- `getOrgContactUser(String contactType)`
+- `getOrgOktaSupportSettings()`
+- `getOrgPreferences()`
+
+### Package `com.okta.sdk.resource.user.User`
+
+- `assignRole(AssignRoleRequest request, String disableNotifications)` changed signature to 
+  `assignRole(AssignRoleRequest request, Boolean disableNotifications)`
+
+### Package `com.okta.sdk.resource.policy`
+
+New Interfaces have been introduced.
+- `com.okta.sdk.resource.policy.VerificationMethod`
+- `com.okta.sdk.resource.policy.UserTypeCondition`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicyRuleProfileAttribute`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicyRuleActivationRequirement`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicyRuleActions`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicyRuleAction`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicyRule`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicy`
+- `com.okta.sdk.resource.policy.PreRegistrationInlineHook`
+- `com.okta.sdk.resource.policy.PossessionConstraint`
+- `com.okta.sdk.resource.policy.KnowledgeConstraint`
+- `com.okta.sdk.resource.policy.DeviceAccessPolicyRuleCondition`
+- `com.okta.sdk.resource.policy.AccessPolicyRuleCustomCondition`
+- `com.okta.sdk.resource.policy.AccessPolicyRuleConditions`
+- `com.okta.sdk.resource.policy.AccessPolicyRuleApplicationSignOn`
+- `com.okta.sdk.resource.policy.AccessPolicyRuleActions`
+- `com.okta.sdk.resource.policy.AccessPolicyRule`
+- `com.okta.sdk.resource.policy.AccessPolicyConstraints`
+- `com.okta.sdk.resource.policy.AccessPolicyConstraint`
+- `com.okta.sdk.resource.policy.AccessPolicy`
+
+### Package `com.okta.sdk.resource.identity.provider.IdentityProviderBuilders`
+
+Identity Provider of type String can be constructed with the new method introduced.
+- `ofType(java.lang.String)`
+
+### Package `com.okta.sdk.resource.identity.provider.IdentityProvider`
+
+- `setType(com.okta.sdk.resource.identity.provider.IdentityProvider$TypeEnum)` has changed signature to 
+  `setType(String identityProvider)`.
+- `getType()` would now return `String` instead of `com.okta.sdk.resource.identity.provider.IdentityProvider$TypeEnum` type.
+
+### Package `com.okta.sdk.resource.brand`
+
+New models related to Theme and Brands API have been introduced.
+- `Theme`
+- `Brand`
+- `BrandList`
+- `ThemeResponse`
+- `ImageUploadResponse`
+- `SignInPageTouchPointVariant`
+- `ErrorPageTouchPointVariant`
+- `EndUserDashboardTouchPointVariant`
+
+### Package `com.okta.sdk.resource.authenticator`
+
+New Interfaces have been introduced.
+- `ChannelBinding`
+- `Compliance`
+- `AuthenticatorProviderConfigurationUserNamePlate`
+- `AuthenticatorProviderConfiguration`
+- `AuthenticatorProvider`
+
+New methods have been added to `Authenticator` interface.
+- `AuthenticatorProvider getProvider()`
+- `setProvider(AuthenticatorProvider authenticationProvider)`
+- `Authenticator update`
+
+### Package `com.okta.sdk.resource.application`
+
+New methods have been added to `SwaApplicationSettingsApplication` interface.
+- `String getCheckbox`
+- `String getRedirectUrl`
+- `SwaApplicationSettingsApplication setCheckbox(String checkBox)`
+- `SwaApplicationSettingsApplication setRedirectUrl(String redirectUrl)`
+
+New method have been added to `OIDCApplicationBuilder` interface.
+- `OIDCApplicationBuilder setPostLogoutRedirectUris(List uris)`
+
+New methods have been added to `ApplicationCredentialsUsernameTemplate` interface.
+- `String getPushStatus()`
+- `ApplicationCredentialsUsernameTemplate setPushStatus(String pushStatus)`
+
 ## Migrating from 5.x.x to 6.0.0
 
 Version 6.0.0 of this SDK introduces a number of breaking changes from previous versions.
