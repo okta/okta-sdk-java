@@ -2575,9 +2575,14 @@ paths:
       tags:
       - Brand
   /api/v1/brands/{brandId}/templates/email:
+    parameters:
+    - schema:
+        type: string
+      name: brandId
+      in: path
+      required: true
+      description: brand id
     get:
-      operationId: listEmailTemplates
-      description: List email templates in your organization with pagination.
       summary: List Email Templates
       responses:
         '200':
@@ -2594,15 +2599,11 @@ paths:
                 type: string
                 example: <http://oienapa.okta1.com:1802/api/v1/brands/{brandId}/templates/email?limit=200>; rel="self"
               description: Links to the current and next page of results.
+      operationId: listEmailTemplates
+      description: List email templates in your organization with pagination.
       security:
       - api_token: []
       parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-        description: brand id
       - schema:
           type: string
         in: query
@@ -2632,17 +2633,17 @@ paths:
       - api_token: []
       tags:
       - Brand
-      parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
+    parameters:
+    - schema:
+        type: string
+      name: brandId
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: templateName
+      in: path
+      required: true
   /api/v1/brands/{brandId}/templates/email/{templateName}/default-content:
     get:
       summary: Get Default Content of Email Template
@@ -2699,19 +2700,7 @@ paths:
       - Brand
   /api/v1/brands/{brandId}/templates/email/{templateName}/customizations:
     get:
-      description: List all email customcations for an email template
-      operationId: getAllEmailCustomizations
-      parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
+      summary: List Email Customizations
       responses:
         '200':
           description: Successfully fetch all email customizations of a given email template name.
@@ -2721,48 +2710,38 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/EmailCustomization'
-      summary: List Email Customizations
+      operationId: getAllEmailCustomizations
+      description: List all email customcations for an email template
       security:
       - api_token: []
       tags:
       - Brand
+    parameters:
+    - schema:
+        type: string
+      name: brandId
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: templateName
+      in: path
+      required: true
     delete:
-      description: Delete all customizations for an email template. Also known as “Reset to Default”.
+      summary: Delete Email Customizations
       operationId: deleteAllCustomizations
-      parameters:
-        - schema:
-            type: string
-          name: brandId
-          in: path
-          required: true
-        - schema:
-            type: string
-          name: templateName
-          in: path
-          required: true
       responses:
         '204':
           description: Successfully deletes all customizations for an email template.
           content: {}
-      summary: Delete Email Customizations
+      description: Delete all customizations for an email template. Also known as “Reset to Default”.
       security:
       - api_token: []
       tags:
       - Brand
     post:
-      description: Create an email customization
+      summary: Create Email Customization
       operationId: createEmailCustomization
-      parameters:
-        - schema:
-            type: string
-          name: brandId
-          in: path
-          required: true
-        - schema:
-            type: string
-          name: templateName
-          in: path
-          required: true
       responses:
         '201':
           description: If success, return the created email customization
@@ -2770,7 +2749,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EmailCustomization'
-      summary: Create Email Customization
+      description: Create an email customization
       tags:
       - Brand
       security:
@@ -2792,6 +2771,22 @@ paths:
         required: true
       x-okta-request-body-name: instance
   /api/v1/brands/{brandId}/templates/email/{templateName}/customizations/{customizationId}:
+    parameters:
+    - schema:
+        type: string
+      name: brandId
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: templateName
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: customizationId
+      in: path
+      required: true
     get:
       summary: Get Email Customization
       responses:
@@ -2802,22 +2797,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/EmailCustomization'
       operationId: getEmailCustomization
-      parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: customizationId
-        in: path
-        required: true
       security:
       - api_token: []
       description: Fetch an email customization by `id`.
@@ -2836,22 +2815,6 @@ paths:
       description: Update an email customization
       security:
       - api_token: []
-      parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: customizationId
-        in: path
-        required: true
       requestBody:
         required: true
         content:
@@ -2874,22 +2837,6 @@ paths:
     delete:
       summary: Delete Email Customization
       operationId: deleteEmailCustomization
-      parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: customizationId
-        in: path
-        required: true
       responses:
         '204':
           description: Successfully delete an email customization by `id`
@@ -2932,17 +2879,6 @@ paths:
       tags:
       - Brand
   /api/v1/brands/{brandId}/templates/email/{templateName}/test:
-    parameters:
-    - schema:
-        type: string
-      name: templateName
-      in: path
-      required: true
-    - schema:
-        type: string
-      name: brandId
-      in: path
-      required: true
     post:
       summary: Send Test Email
       operationId: sendTestEmailFromTemplate
@@ -2969,6 +2905,17 @@ paths:
                   customizationId: oel11u6DqUiMbQkpl0g4
       tags:
       - Brand
+    parameters:
+    - schema:
+        type: string
+      name: templateName
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: brandId
+      in: path
+      required: true
   /api/v1/captchas:
     get:
       summary: List CAPTCHA instances
