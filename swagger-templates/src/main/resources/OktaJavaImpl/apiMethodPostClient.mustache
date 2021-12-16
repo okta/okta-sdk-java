@@ -42,6 +42,9 @@
             {{returnType}}.class,
 {{/vendorExtensions.updateBody}}
 {{/returnType}}
+{{^returnType}}
+            VoidResource.class,
+{{/returnType}}
             queryArgs,
             headers);
 {{#returnType}}
