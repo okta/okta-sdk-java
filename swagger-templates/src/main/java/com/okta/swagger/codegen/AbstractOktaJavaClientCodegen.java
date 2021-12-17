@@ -633,6 +633,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                     model.getExtensions().put("discriminatorRoot", discriminatorRoot);
                 }
 
+            } else if(codegenModel.parent != null) {
+                // handle correctly model inheritance described as
+                // allOf:
+                // - $ref:
+                codegenModel.parent = toApiName(codegenModel.parent);
+                codegenModel.getVendorExtensions().remove("top-level");
             }
         }
 
