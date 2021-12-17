@@ -27,7 +27,12 @@
 {{/vendorExtensions.bodyIsSelf}}
 {{^vendorExtensions.bodyIsSelf}}
 {{#bodyParam}}
+    {{#bodyParam.vendorExtensions.x-is-binary}}
+            new DefaultInputStreamResource(getDataStore(), {{bodyParam.paramName}}),
+    {{/bodyParam.vendorExtensions.x-is-binary}}
+    {{^bodyParam.vendorExtensions.x-is-binary}}
             {{bodyParam.paramName}},
+    {{/bodyParam.vendorExtensions.x-is-binary}}
 {{/bodyParam}}
 {{/vendorExtensions.bodyIsSelf}}
 {{^bodyParam}}

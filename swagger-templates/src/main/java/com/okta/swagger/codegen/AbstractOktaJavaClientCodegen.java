@@ -23,11 +23,13 @@ import io.swagger.codegen.v3.CodegenOperation;
 import io.swagger.codegen.v3.CodegenParameter;
 import io.swagger.codegen.v3.CodegenProperty;
 import io.swagger.codegen.v3.CodegenType;
+import io.swagger.codegen.v3.CodegenConstants;
 import io.swagger.codegen.v3.generators.java.AbstractJavaCodegen;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.BinarySchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
@@ -816,6 +818,18 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         });
 
         return co;
+    }
+
+    @Override
+    public CodegenParameter fromRequestBody(RequestBody body, String name, Schema schema, Map<String, Schema> schemas, Set<String> imports) {
+        CodegenParameter codegenParameter = super.fromRequestBody(body, name, schema, schemas, imports);
+        if (schema instanceof BinarySchema) {
+            codegenParameter.dataType = "InputStream";
+            codegenParameter.baseType = "InputStream";
+            codegenParameter.getVendorExtensions().put(CodegenConstants.IS_BINARY_EXT_NAME, Boolean.TRUE);
+        }
+
+        return codegenParameter;
     }
 
     private void addOptionalExtensionAndBackwardCompatibleArgs(CodegenOperation co, List<CodegenParameter> params) {
