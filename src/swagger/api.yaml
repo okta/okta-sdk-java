@@ -4783,62 +4783,54 @@ paths:
           content: {}
       security:
       - api_token: []
-#  /api/v1/idps/{idpId}/credentials/csrs/{csrId}/lifecycle/publish:
-#    post:
-#      tags:
-#      - IdentityProvider
-#      description: Update the Certificate Signing Request with a signed X.509 certificate and add it into the signing key credentials for the IdP.
-#      operationId: publishCsrForIdentityProvider
-#      parameters:
-#      - name: idpId
-#        in: path
-#        required: true
-#        schema:
-#          type: string
-#      - name: csrId
-#        in: path
-#        required: true
-#        schema:
-#          type: string
-#      requestBody:
-#        required: true
-#        content:
-#          application/octet-stream:
-#            schema:
-#              type: string
-#              format: binary
-#          application/x-x509-ca-cert:
-#            schema:
-#              oneOf:
-#              - type: string
-#                format: binary
-#                x-okta-operationId: publishBinaryCerCertForIdentityProvider
-#              - type: string
-#                format: base64
-#                x-okta-operationId: publishBase64CerCertForIdentityProvider
-#          application/pkix-cert:
-#            schema:
-#              oneOf:
-#              - type: string
-#                format: binary
-#                x-okta-operationId: publishBinaryDerCertForIdentityProvider
-#              - type: string
-#                format: base64
-#                x-okta-operationId: publishBase64DerCertForIdentityProvider
-#          application/x-pem-file:
-#            schema:
-#              type: string
-#              format: binary
-#              x-okta-operationId: publishBinaryPemCertForIdentityProvider
-#      responses:
-#        '201':
-#          description: Created
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/JsonWebKey'
-#      security:
-#      - api_token: []
+  /api/v1/idps/{idpId}/credentials/csrs/{csrId}/lifecycle/publish:
+    post:
+      tags:
+      - IdentityProvider
+      description: Update the Certificate Signing Request with a signed X.509 certificate and add it into the signing key credentials for the IdP.
+      operationId: publishCsrForIdentityProvider
+      parameters:
+      - name: idpId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: csrId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+          application/x-x509-ca-cert:
+            schema:
+              type: string
+              format: binary
+              x-okta-operationId: publishBinaryCerCertForIdentityProvider
+          application/pkix-cert:
+            schema:
+              type: string
+              format: binary
+              x-okta-operationId: publishBinaryDerCertForIdentityProvider
+          application/x-pem-file:
+            schema:
+              type: string
+              format: binary
+              x-okta-operationId: publishBinaryPemCertForIdentityProvider
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonWebKey'
+      security:
+      - api_token: []
   /api/v1/idps/{idpId}/credentials/keys:
     get:
       tags:
