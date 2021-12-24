@@ -75,18 +75,18 @@ For Apache Maven:
 <dependency>
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-api</artifactId>
-    <version>${okta.version}</version>
+    <version>${okta.sdk.version}</version>
 </dependency>
 <dependency>
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-impl</artifactId>
-    <version>${okta.version}</version>
+    <version>${okta.sdk.version}</version>
     <scope>runtime</scope>
 </dependency>
 <dependency>
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-httpclient</artifactId>
-    <version>${okta.version}</version>
+    <version>${okta.sdk.version}</version>
     <scope>runtime</scope>
 </dependency>
 ```
@@ -94,10 +94,12 @@ For Apache Maven:
 For Gradle:
 
 ```groovy
-compile "com.okta.sdk:okta-sdk-api:${okta.version}"
-runtime "com.okta.sdk:okta-sdk-impl:${okta.version}"
-runtime "com.okta.sdk:okta-sdk-httpclient:${okta.version}"
+compile "com.okta.sdk:okta-sdk-api:${okta.sdk.version}"
+runtime "com.okta.sdk:okta-sdk-impl:${okta.sdk.version}"
+runtime "com.okta.sdk:okta-sdk-httpclient:${okta.sdk.version}"
 ```
+
+where ${okta.sdk.version} is the latest published version in [Maven Central](https://search.maven.org/search?q=g:com.okta.sdk%20a:okta-sdk-api).
 
 ### SNAPSHOT Dependencies
 
