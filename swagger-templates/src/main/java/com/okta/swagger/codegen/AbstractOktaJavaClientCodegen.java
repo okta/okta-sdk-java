@@ -33,6 +33,7 @@ import io.swagger.v3.oas.models.media.BinarySchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.apache.commons.lang3.BooleanUtils;
@@ -132,6 +133,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 String bodyType = getRequestBodyType(operation);
                 if (bodyType != null) {
                     resources.add(bodyType);
+                    backfillTag(openAPI, bodyType, operation.getTags().get(0)); // assuming singular tag
                 }
             });
 
@@ -145,7 +147,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                             Schema schema = entry.getValue().getContent().get("application/json").getSchema();
                             if (schema != null && schema instanceof ArraySchema) {
                                 String ref = ((ArraySchema) schema).getItems().get$ref();
-                                resources.add(refToSimpleName(ref));
+                                String requestType = refToSimpleName(ref);
+                                resources.add(requestType);
+                                backfillTag(openAPI, requestType, operation.getTags().get(0)); // assuming singular tag
                             }
                         });
                 });
@@ -153,14 +157,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         // find any children of these resources
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
-            if(model.getExtensions() != null && model.getExtensions().containsKey("x-okta-parent")) {
-                String parent = (String) model.getExtensions().get("x-okta-parent");
-                if (parent != null) {
-                    parent = parent.replaceAll(".*/", "");
+            String parent = getParentModelRef(model); 
+            if (parent != null) {
+                parent = refToSimpleName(parent);
 
-                    if (resources.contains(parent)) {
-                        resources.add(parent);
-                    }
+                if (resources.contains(parent)) {
+                    resources.add(name);
                 }
             }
         });
@@ -169,10 +171,62 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         resources.stream()
                 .map(resourceName -> openAPI.getComponents().getSchemas().get(resourceName))
                 .forEach(model -> {
+                    if(model.getExtensions() == null) {
+                        model.setExtensions(new HashMap<>());
+                    }
                     model.getExtensions().put("top-level", true);
+
+                    List<String> oktaTags = (List<String>) model.getExtensions().get("x-okta-tags");
+                    if (oktaTags != null) {
+                        if (resourceName.equals("HrefObject")) { // Hardcode a few cleanups for now
+                            oktaTags.clear();
+                            oktaTags.add("Common");
+                        } else if (oktaTags.size() > 2) { // too commonly shared, just assume common
+                            oktaTags.clear();
+                            oktaTags.add("Common");
+                        } else if (oktaTags.size() == 2) { // have some take precidence
+                            if (oktaTags.contains("Policy")) {
+                                oktaTags.clear();
+                                oktaTags.add("Policy");
+                            } else if (oktaTags.contains("Application")) {
+                                oktaTags.clear();
+                                oktaTags.add("Application");
+                            }
+                        }
+                    }
                 });
 
         this.topLevelResources = resources;
+    }
+
+    private void backfillTag(OpenAPI openAPI, String modelName, String tag) {
+        Schema model = openAPI.getComponents().getSchemas().get(modelName);
+        if(model.getExtensions() == null) {
+            model.setExtensions(new HashMap<>());
+        }
+        // skip if exists
+        if (model.getExtensions().get("x-okta-tags") == null) {
+            model.getExtensions().put("x-okta-tags", new ArrayList<String>());
+        }
+        List<String> oktaTags = (List<String>) model.getExtensions().get("x-okta-tags");
+        if (!oktaTags.contains(tag)) {
+            oktaTags.add(tag);
+        }
+        if (model.getProperties() != null) {
+            model.getProperties().values().stream().forEach(prop -> {
+                Schema schema = (Schema) prop;
+                if (schema.get$ref() != null) {
+                    String propertyModelName = refToSimpleName(schema.get$ref());
+                    backfillTag(openAPI, propertyModelName, tag);
+                }
+            });
+        }
+
+        String parentRef = getParentModelRef(model);
+        if (parentRef != null) {
+            String parent = refToSimpleName(parentRef);
+            backfillTag(openAPI, parent, tag);
+        }
     }
 
     private String getRequestBodyType(Operation operation) {
@@ -1041,6 +1095,19 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             }
         }
         return super.getTypeDeclaration(propertySchema);
+    }
+
+    private String getParentModelRef(Schema model) {
+        if (model.getExtensions() != null && model.getExtensions().get("x-okta-parent") != null) {
+            return (String) model.getExtensions().get("x-okta-parent");
+        } else if (model instanceof ComposedSchema) {
+            // Assumes first entry is the parent $ref
+            ComposedSchema composed = (ComposedSchema) model;
+            if (composed.getAllOf() != null && !composed.getAllOf().isEmpty()) {
+                return composed.getAllOf().get(0).get$ref();
+            }
+        }
+        return null;
     }
 
     protected void fixUpParentAndInterfaces(CodegenModel codegenModel, Map<String, CodegenModel> allModels) {
