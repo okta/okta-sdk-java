@@ -169,22 +169,21 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         // mark each model with a 'top-level' vendorExtension
         resources.stream()
-                .map(resourceName -> openAPI.getComponents().getSchemas().get(resourceName))
-                .forEach(model -> {
-                    if(model.getExtensions() == null) {
-                        model.setExtensions(new HashMap<>());
+                .forEach(resourceName -> {
+                    if (openAPI.getComponents().getSchemas().get(resourceName).getExtensions() == null) {
+                        openAPI.getComponents().getSchemas().get(resourceName).setExtensions(new HashMap<>());
                     }
-                    model.getExtensions().put("top-level", true);
+                    openAPI.getComponents().getSchemas().get(resourceName).getExtensions().put("top-level", true);
 
-                    List<String> oktaTags = (List<String>) model.getExtensions().get("x-okta-tags");
+                    List<String> oktaTags = (List<String>) openAPI.getComponents().getSchemas().get(resourceName).getExtensions().get("x-okta-tags");
                     if (oktaTags != null) {
-                        if ("resourceName".equals("HrefObject")) { // Hardcode a few cleanups for now
+                        if (resourceName.equals("HrefObject")) { // Hardcode a few cleanups for now
                             oktaTags.clear();
                             oktaTags.add("Common");
                         } else if (oktaTags.size() > 2) { // too commonly shared, just assume common
                             oktaTags.clear();
                             oktaTags.add("Common");
-                        } else if (oktaTags.size() == 2) { // have some take precidence
+                        } else if (oktaTags.size() == 2) { // have some take precedence
                             if (oktaTags.contains("Policy")) {
                                 oktaTags.clear();
                                 oktaTags.add("Policy");
@@ -195,6 +194,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         }
                     }
                 });
+
 
         this.topLevelResources = resources;
     }
