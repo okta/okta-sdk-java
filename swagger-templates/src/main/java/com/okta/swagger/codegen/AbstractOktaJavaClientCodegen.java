@@ -157,9 +157,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         // find any children of these resources
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
-            String parent = getParentModelRef(model); 
+            String parent = getParentModelRef(model);
             if (parent != null) {
-                parent = refToSimpleName(parent);
+                parent = parent.replaceAll(".*/", "");
 
                 if (resources.contains(parent)) {
                     resources.add(name);
@@ -178,7 +178,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                     List<String> oktaTags = (List<String>) model.getExtensions().get("x-okta-tags");
                     if (oktaTags != null) {
-                        if (resourceName.equals("HrefObject")) { // Hardcode a few cleanups for now
+                        if ("resourceName".equals("HrefObject")) { // Hardcode a few cleanups for now
                             oktaTags.clear();
                             oktaTags.add("Common");
                         } else if (oktaTags.size() > 2) { // too commonly shared, just assume common
@@ -835,7 +835,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 // for enum model
                 if (Boolean.TRUE.equals(cm.getIsEnum()) && cm.allowableValues != null) {
                     cm.imports.add(importMapping.get("SerializedName"));
-                    Map<String, String> item = new HashMap<String, String>();
+                    Map<String, String> item = new HashMap<>();
                     item.put("import", importMapping.get("SerializedName"));
                     imports.add(item);
                 }

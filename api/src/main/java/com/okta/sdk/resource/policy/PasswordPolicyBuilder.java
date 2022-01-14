@@ -16,7 +16,8 @@
 package com.okta.sdk.resource.policy;
 
 import com.okta.commons.lang.Classes;
-    import com.okta.sdk.resource.common.LifecycleStatus;
+import com.okta.sdk.resource.authorization.server.LifecycleStatus;
+import com.okta.sdk.resource.authorization.server.PasswordPolicyAuthenticationProviderType;
 
 import java.util.Arrays;
 import java.util.List;

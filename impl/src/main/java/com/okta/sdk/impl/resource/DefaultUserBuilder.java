@@ -15,20 +15,20 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.sdk.client.Client;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.resource.user.AuthenticationProvider;
-import com.okta.sdk.resource.user.PasswordCredentialHook;
-import com.okta.sdk.resource.user.RecoveryQuestionCredential;
-import com.okta.sdk.resource.user.UserBuilder;
-import com.okta.sdk.resource.user.PasswordCredential;
-import com.okta.sdk.resource.user.User;
-import com.okta.sdk.resource.user.UserCredentials;
-import com.okta.sdk.resource.user.UserNextLogin;
-import com.okta.sdk.resource.user.UserProfile;
-import com.okta.sdk.resource.user.type.UserType;
+import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.UserNextLogin;
+import com.okta.sdk.resource.common.UserType;
+import com.okta.sdk.resource.group.AuthenticationProvider;
+import com.okta.sdk.resource.group.PasswordCredential;
+import com.okta.sdk.resource.group.PasswordCredentialHook;
+import com.okta.sdk.resource.group.RecoveryQuestionCredential;
+import com.okta.sdk.resource.group.User;
+import com.okta.sdk.resource.group.UserCredentials;
+import com.okta.sdk.resource.group.UserProfile;
 import com.okta.sdk.resource.user.CreateUserRequest;
+import com.okta.sdk.resource.user.UserBuilder;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -16,10 +16,25 @@
 package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.common.IssuerMode;
+import com.okta.sdk.resource.PolicyAccountLink;
+import com.okta.sdk.resource.PolicyAccountLinkAction;
+import com.okta.sdk.resource.PolicySubject;
+import com.okta.sdk.resource.PolicySubjectMatchType;
+import com.okta.sdk.resource.PolicyUserNameTemplate;
+import com.okta.sdk.resource.Provisioning;
+import com.okta.sdk.resource.ProvisioningAction;
+import com.okta.sdk.resource.ProvisioningConditions;
+import com.okta.sdk.resource.ProvisioningDeprovisionedAction;
+import com.okta.sdk.resource.ProvisioningDeprovisionedCondition;
+import com.okta.sdk.resource.ProvisioningGroups;
+import com.okta.sdk.resource.ProvisioningGroupsAction;
+import com.okta.sdk.resource.ProvisioningSuspendedAction;
+import com.okta.sdk.resource.ProvisioningSuspendedCondition;
+import com.okta.sdk.resource.authorization.server.IssuerMode;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
 import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
+import com.okta.sdk.resource.identity.provider.IdentityProviderPolicy;
 import com.okta.sdk.resource.identity.provider.OIDCIdentityProviderBuilder;
 import com.okta.sdk.resource.identity.provider.Protocol;
 import com.okta.sdk.resource.identity.provider.ProtocolType;
@@ -31,21 +46,6 @@ import com.okta.sdk.resource.identity.provider.ProtocolEndpoint;
 import com.okta.sdk.resource.identity.provider.ProtocolEndpointBinding;
 import com.okta.sdk.resource.identity.provider.ProtocolEndpointType;
 import com.okta.sdk.resource.identity.provider.ProtocolEndpoints;
-import com.okta.sdk.resource.identity.provider.Provisioning;
-import com.okta.sdk.resource.identity.provider.ProvisioningAction;
-import com.okta.sdk.resource.identity.provider.ProvisioningConditions;
-import com.okta.sdk.resource.identity.provider.ProvisioningDeprovisionedAction;
-import com.okta.sdk.resource.identity.provider.ProvisioningDeprovisionedCondition;
-import com.okta.sdk.resource.identity.provider.ProvisioningGroups;
-import com.okta.sdk.resource.identity.provider.ProvisioningGroupsAction;
-import com.okta.sdk.resource.identity.provider.ProvisioningSuspendedAction;
-import com.okta.sdk.resource.identity.provider.ProvisioningSuspendedCondition;
-import com.okta.sdk.resource.policy.IdentityProviderPolicy;
-import com.okta.sdk.resource.policy.PolicyAccountLink;
-import com.okta.sdk.resource.policy.PolicyAccountLinkAction;
-import com.okta.sdk.resource.policy.PolicySubject;
-import com.okta.sdk.resource.policy.PolicySubjectMatchType;
-import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
 
 public class OidcIdentityProviderBuilder extends DefaultIdentityProviderBuilder<OIDCIdentityProviderBuilder>
     implements OIDCIdentityProviderBuilder {

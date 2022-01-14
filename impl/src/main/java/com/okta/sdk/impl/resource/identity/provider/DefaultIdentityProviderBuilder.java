@@ -16,9 +16,9 @@
 package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.PolicySubjectMatchType;
 import com.okta.sdk.resource.identity.provider.IdentityProvider;
 import com.okta.sdk.resource.identity.provider.IdentityProviderBuilder;
-import com.okta.sdk.resource.policy.PolicySubjectMatchType;
 
 import java.util.List;
 

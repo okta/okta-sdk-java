@@ -18,7 +18,18 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.policy.*;
+import com.okta.sdk.resource.PasswordPolicyRule;
+import com.okta.sdk.resource.PasswordPolicyRuleActions;
+import com.okta.sdk.resource.PasswordPolicyRuleConditions;
+import com.okta.sdk.resource.authorization.server.GroupCondition;
+import com.okta.sdk.resource.authorization.server.PasswordPolicyRuleAction;
+import com.okta.sdk.resource.authorization.server.PolicyAccess;
+import com.okta.sdk.resource.authorization.server.PolicyNetworkCondition;
+import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection;
+import com.okta.sdk.resource.authorization.server.PolicyPeopleCondition;
+import com.okta.sdk.resource.authorization.server.PolicyRuleType;
+import com.okta.sdk.resource.authorization.server.UserCondition;
+import com.okta.sdk.resource.common.Policy;
 import com.okta.sdk.resource.policy.rule.PasswordPolicyRuleBuilder;
 
 import java.util.ArrayList;
@@ -34,8 +45,6 @@ public class DefaultPasswordPolicyRuleBuilder extends DefaultPolicyRuleBuilder<P
     private PolicyAccess unlockAccess;
     private PolicyAccess passwordResetAccess;
     private PolicyAccess passwordChangeAccess;
-
-
 
     @Override
     public PasswordPolicyRuleBuilder setName(String name) {
@@ -92,8 +101,8 @@ public class DefaultPasswordPolicyRuleBuilder extends DefaultPolicyRuleBuilder<P
     }
 
     @Override
-    public PasswordPolicyRule buildAndCreate(Client client, Policy policy){
-        return (PasswordPolicyRule) policy.createRule(build(client));
+    public PasswordPolicyRule buildAndCreate(Client client, Policy policy) {
+        return (PasswordPolicyRule) client.createPolicyRule(build(client), policy.getId());
     }
 
     private PasswordPolicyRule build(Client client){

@@ -16,8 +16,8 @@
 package com.okta.sdk.resource.policy.rule;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.resource.policy.PolicyNetworkConnection;
-import com.okta.sdk.resource.policy.PolicyAccess;
+import com.okta.sdk.resource.authorization.server.PolicyAccess;
+import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection;
 
 import java.util.Arrays;
 import java.util.List;

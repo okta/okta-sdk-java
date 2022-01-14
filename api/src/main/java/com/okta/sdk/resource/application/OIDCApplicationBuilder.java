@@ -16,6 +16,12 @@
 package com.okta.sdk.resource.application;
 
 import com.okta.commons.lang.Classes;
+import com.okta.sdk.resource.OAuthEndpointAuthenticationMethod;
+import com.okta.sdk.resource.OAuthGrantType;
+import com.okta.sdk.resource.OAuthResponseType;
+import com.okta.sdk.resource.OpenIdConnectApplicationConsentMethod;
+import com.okta.sdk.resource.OpenIdConnectApplicationType;
+import com.okta.sdk.resource.common.JsonWebKey;
 
 import java.util.List;
 

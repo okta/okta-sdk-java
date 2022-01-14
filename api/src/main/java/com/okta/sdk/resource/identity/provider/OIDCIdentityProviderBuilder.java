@@ -15,8 +15,8 @@
  */
 package com.okta.sdk.resource.identity.provider;
 
-import com.okta.sdk.resource.common.IssuerMode;
-import com.okta.sdk.resource.policy.PolicySubjectMatchType;
+import com.okta.sdk.resource.PolicySubjectMatchType;
+import com.okta.sdk.resource.authorization.server.IssuerMode;
 
 public interface OIDCIdentityProviderBuilder extends IdentityProviderBuilder<OIDCIdentityProviderBuilder> {
 

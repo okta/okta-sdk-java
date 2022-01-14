@@ -15,10 +15,12 @@
  */
 package com.okta.sdk.resource.policy;
 
-import com.okta.sdk.resource.common.LifecycleStatus;
+import com.okta.sdk.resource.authorization.server.LifecycleStatus;
+import com.okta.sdk.resource.authorization.server.PolicyType;
 
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.common.Policy;
 
 
 public interface PolicyBuilder<T extends PolicyBuilder> {

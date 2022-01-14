@@ -18,7 +18,22 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.policy.*;
+import com.okta.sdk.resource.OktaSignOnPolicyRule;
+import com.okta.sdk.resource.OktaSignOnPolicyRuleActions;
+import com.okta.sdk.resource.OktaSignOnPolicyRuleConditions;
+import com.okta.sdk.resource.authorization.server.GroupCondition;
+import com.okta.sdk.resource.authorization.server.OktaSignOnPolicyFactorPromptMode;
+import com.okta.sdk.resource.authorization.server.OktaSignOnPolicyRuleSignonActions;
+import com.okta.sdk.resource.authorization.server.OktaSignOnPolicyRuleSignonSessionActions;
+import com.okta.sdk.resource.authorization.server.PolicyAccess;
+import com.okta.sdk.resource.authorization.server.PolicyNetworkCondition;
+import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection;
+import com.okta.sdk.resource.authorization.server.PolicyPeopleCondition;
+import com.okta.sdk.resource.authorization.server.PolicyRuleAuthContextCondition;
+import com.okta.sdk.resource.authorization.server.PolicyRuleAuthContextType;
+import com.okta.sdk.resource.authorization.server.PolicyRuleType;
+import com.okta.sdk.resource.authorization.server.UserCondition;
+import com.okta.sdk.resource.common.Policy;
 import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder;
 
 import java.util.ArrayList;
@@ -133,7 +148,7 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
 
     @Override
     public OktaSignOnPolicyRule buildAndCreate(Client client, Policy policy) {
-        return (OktaSignOnPolicyRule) policy.createRule(build(client));
+        return (OktaSignOnPolicyRule) client.createPolicyRule(build(client), policy.getId());
     }
 
     private OktaSignOnPolicyRule build(Client client){

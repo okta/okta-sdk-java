@@ -18,18 +18,17 @@ package com.okta.sdk.impl.resource.event.hook;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.HttpHeaders;
-
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.EventHookChannelConfigHeader;
 import com.okta.sdk.resource.event.hook.EventHook;
 import com.okta.sdk.resource.event.hook.EventHookBuilder;
 import com.okta.sdk.resource.event.hook.EventHookChannel;
 import com.okta.sdk.resource.event.hook.EventHookChannelConfig;
-import com.okta.sdk.resource.event.hook.EventHookChannelConfigHeader;
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme;
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthSchemeType;
 import com.okta.sdk.resource.event.hook.EventHookChannelType;
-import com.okta.sdk.resource.event.hook.EventSubscriptions;
 import com.okta.sdk.resource.event.hook.EventSubscriptionType;
+import com.okta.sdk.resource.event.hook.EventSubscriptions;
 
 import java.util.Arrays;
 import java.util.List;

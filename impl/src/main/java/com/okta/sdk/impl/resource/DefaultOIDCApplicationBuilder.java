@@ -17,7 +17,19 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.ApplicationCredentialsOAuthClient;
+import com.okta.sdk.resource.OAuthApplicationCredentials;
+import com.okta.sdk.resource.OAuthEndpointAuthenticationMethod;
+import com.okta.sdk.resource.OAuthGrantType;
+import com.okta.sdk.resource.OAuthResponseType;
+import com.okta.sdk.resource.OpenIdConnectApplication;
+import com.okta.sdk.resource.OpenIdConnectApplicationConsentMethod;
+import com.okta.sdk.resource.OpenIdConnectApplicationSettings;
+import com.okta.sdk.resource.OpenIdConnectApplicationSettingsClient;
+import com.okta.sdk.resource.OpenIdConnectApplicationSettingsClientKeys;
+import com.okta.sdk.resource.OpenIdConnectApplicationType;
 import com.okta.sdk.resource.application.*;
+import com.okta.sdk.resource.common.JsonWebKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +51,6 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     private Boolean autoKeyRotation;
     private OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
     private List<JsonWebKey> jsonWebKeyList = new ArrayList<>();
-
 
     @Override
     public OIDCApplicationBuilder setApplicationType(OpenIdConnectApplicationType applicationType) {

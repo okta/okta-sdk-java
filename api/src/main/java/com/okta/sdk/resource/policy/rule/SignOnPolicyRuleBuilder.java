@@ -16,7 +16,11 @@
 package com.okta.sdk.resource.policy.rule;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.resource.policy.*;
+import com.okta.sdk.resource.authorization.server.OktaSignOnPolicyFactorPromptMode;
+import com.okta.sdk.resource.authorization.server.PolicyAccess;
+import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection;
+import com.okta.sdk.resource.authorization.server.PolicyRuleAuthContextType;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -17,13 +17,12 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.common.LifecycleStatus;
-import com.okta.sdk.resource.policy.Policy;
+import com.okta.sdk.resource.authorization.server.LifecycleStatus;
+import com.okta.sdk.resource.authorization.server.PolicyType;
+import com.okta.sdk.resource.common.Policy;
 import com.okta.sdk.resource.policy.PolicyBuilder;
-import com.okta.sdk.resource.policy.PolicyType;
 
 import java.util.Objects;
-
 
 public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuilder<T> {
 

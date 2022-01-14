@@ -18,6 +18,12 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.OktaSignOnPolicy;
+import com.okta.sdk.resource.OktaSignOnPolicyConditions;
+import com.okta.sdk.resource.authorization.server.GroupCondition;
+import com.okta.sdk.resource.authorization.server.PolicyPeopleCondition;
+import com.okta.sdk.resource.authorization.server.PolicyType;
+import com.okta.sdk.resource.authorization.server.UserCondition;
 import com.okta.sdk.resource.policy.*;
 
 import java.util.ArrayList;

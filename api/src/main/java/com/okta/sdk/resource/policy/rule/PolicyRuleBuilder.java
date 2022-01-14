@@ -17,10 +17,10 @@ package com.okta.sdk.resource.policy.rule;
 
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.common.LifecycleStatus;
-import com.okta.sdk.resource.policy.Policy;
+import com.okta.sdk.resource.authorization.server.LifecycleStatus;
+import com.okta.sdk.resource.authorization.server.PolicyRuleType;
+import com.okta.sdk.resource.common.Policy;
 import com.okta.sdk.resource.policy.PolicyRule;
-import com.okta.sdk.resource.policy.PolicyRuleType;
 
 public interface PolicyRuleBuilder<T extends PolicyRuleBuilder> {
 

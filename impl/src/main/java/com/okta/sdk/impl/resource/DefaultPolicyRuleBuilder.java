@@ -16,10 +16,10 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.common.LifecycleStatus;
-import com.okta.sdk.resource.policy.Policy;
+import com.okta.sdk.resource.authorization.server.LifecycleStatus;
+import com.okta.sdk.resource.authorization.server.PolicyRuleType;
+import com.okta.sdk.resource.common.Policy;
 import com.okta.sdk.resource.policy.PolicyRule;
-import com.okta.sdk.resource.policy.PolicyRuleType;
 import com.okta.sdk.resource.policy.rule.PolicyRuleBuilder;
 
 import java.util.Objects;
@@ -52,7 +52,7 @@ public class DefaultPolicyRuleBuilder<T extends PolicyRuleBuilder> implements Po
 
     @Override
     public PolicyRule buildAndCreate(Client client, Policy policy) {
-        return (PolicyRule) policy.createRule(build(client));
+        return client.createPolicyRule(build(client), policy.getId());
     }
 
     @SuppressWarnings("unchecked")
