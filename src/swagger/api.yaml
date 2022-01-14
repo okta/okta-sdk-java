@@ -10206,12 +10206,12 @@ components:
     AuthorizationServerPolicyRule:
       allOf:
         - $ref: '#/components/schemas/PolicyRule'
-#        - type: object
-#          properties:
-#            conditions:
-#              $ref: '#/components/schemas/AuthorizationServerPolicyRuleConditions'
-#            actions:
-#              $ref: '#/components/schemas/AuthorizationServerPolicyRuleActions'
+        - type: object
+          properties:
+            conditions:
+              $ref: '#/components/schemas/AuthorizationServerPolicyRuleConditions'
+            actions:
+              $ref: '#/components/schemas/AuthorizationServerPolicyRuleActions'
     AuthorizationServerPolicyRuleActions:
       type: object
       properties:
@@ -10380,9 +10380,9 @@ components:
           $ref: '#/components/schemas/CAPTCHAType'
         _link:
           type: object
-#          properties:
-#            self:
-#              $ref: '#/components/schemas/HrefObject'
+          properties:
+            self:
+              $ref: '#/components/schemas/HrefObject'
           readOnly: true
     CAPTCHAType:
       type: string
@@ -10940,18 +10940,18 @@ components:
       properties:
         name:
           type: string
-#        _links:
-#          type: object
-#          properties:
-#            self:
-#              $ref: '#/components/schemas/HrefObject'
-#            customizations:
-#              $ref: '#/components/schemas/HrefObject'
-#            defaultContent:
-#              $ref: '#/components/schemas/HrefObject'
-#            test:
-#              $ref: '#/components/schemas/HrefObject'
-#          readOnly: true
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HrefObject'
+            customizations:
+              $ref: '#/components/schemas/HrefObject'
+            defaultContent:
+              $ref: '#/components/schemas/HrefObject'
+            test:
+              $ref: '#/components/schemas/HrefObject'
+          readOnly: true
     EmailTemplateTouchPointVariant:
       type: string
       enum:
