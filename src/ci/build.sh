@@ -30,12 +30,8 @@ cron () {
 }
 
 deploy () {
-    echo "Deploying SNAPSHOT build"
-    ${MVN_CMD} deploy -Pci
-
-    # also deploy the javadocs to the site
-    git clone -b gh-pages "https://github.com/${REPO_SLUG}.git" target/gh-pages/
-    ${MVN_CMD} javadoc:aggregate com.okta:okta-doclist-maven-plugin:generate jxr:aggregate -Ppub-docs -Pci
+    echo "Running mvn verify"
+    ${MVN_CMD} verify -Pci
 }
 
 full_build () {

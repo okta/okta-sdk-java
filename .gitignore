@@ -47,3 +47,6 @@ npm-debug.log
 travis_phantomjs
 .DS_Store
 .vscode
+
+# api.yaml will be fetched from NPM, the local copy will not be used.
+src/swagger/api.yaml

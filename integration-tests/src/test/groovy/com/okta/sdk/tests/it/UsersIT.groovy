@@ -309,10 +309,13 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // 3. List roles for the user and verify added role
         assertPresent(user.listAssignedRoles(), role)
 
-        // 4. Remove role for the user
+        // 4. Verify added role
+        assertThat(user.getRole(role.getId()).getId(), equalTo(role.getId()))
+
+        // 5. Remove role for the user
         user.removeRole(role.getId())
 
-        // 5. List roles for user and verify role was removed
+        // 6. List roles for user and verify role was removed
         assertNotPresent(user.listAssignedRoles(), role)
     }
 
@@ -396,8 +399,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setOldPassword(client.instantiate(PasswordCredential).setValue('Passw0rd!2@3#'.toCharArray()))
             .setNewPassword(client.instantiate(PasswordCredential).setValue('!2@3#Passw0rd'.toCharArray()))
 
+        // would throw a HTTP 403
         def exception = expect ResourceException, {user.changePassword(request, true)}
-        assertThat exception.getMessage(), containsString("E0000014") // Update of credentials failed.
 
         def credentials = user.changePassword(request, false)
         assertThat credentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)

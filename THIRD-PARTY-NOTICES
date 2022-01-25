@@ -18,11 +18,13 @@ This project includes:
   Apache Commons IO under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
+  Apache HttpClient Mime under Apache License, Version 2.0
   Apache HttpCore under Apache License, Version 2.0
   Auto Common Libraries under Apache 2.0
   AutoService under Apache 2.0
   AutoService Processor under Apache 2.0
   Bean Validation API under The Apache Software License, Version 2.0
+  Bouncy Castle ASN.1 Extension and Utility APIs under Bouncy Castle Licence
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
   btf under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
@@ -31,6 +33,7 @@ This project includes:
   FindBugs-jsr305 under The Apache Software License, Version 2.0
   Handlebars under The Apache Software License, Version 2.0
   Jackson datatype: JSR310 under The Apache Software License, Version 2.0
+  IntelliJ IDEA Annotations under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
   jackson-coreutils under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
@@ -51,13 +54,15 @@ This project includes:
   json-patch under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-core under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-validator under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
+  Kotlin Stdlib under The Apache License, Version 2.0
+  Kotlin Stdlib Common under The Apache License, Version 2.0
   libphonenumber under The Apache Software License, Version 2.0
   Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Mozilla Rhino under Mozilla Public License, Version 2.0
   msg-simple under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
-  OkHttp under Apache 2.0
-  Okio under Apache 2.0
+  okhttp under The Apache Software License, Version 2.0
+  Okio under The Apache Software License, Version 2.0
   Okta Commons :: Config Check under The Apache License, Version 2.0
   Okta Commons :: HTTP :: API under The Apache License, Version 2.0
   Okta Commons :: HTTP :: HTTP Client under The Apache License, Version 2.0

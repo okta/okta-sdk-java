@@ -39,6 +39,8 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
 
     OIDCApplicationBuilder setPolicyUri(String policyUri);
 
+    OIDCApplicationBuilder setPostLogoutRedirectUris(List<String> postLogoutRedirectUris);
+
     OIDCApplicationBuilder setRedirectUris(List<String> redirectUris);
 
     OIDCApplicationBuilder addRedirectUris(String redirectUri);

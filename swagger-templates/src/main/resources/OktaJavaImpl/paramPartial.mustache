@@ -20,3 +20,6 @@
 
         HttpHeaders headers = new HttpHeaders();{{#headerParams}}
         if ({{paramName}} != null) headers.add("{{baseName}}", {{paramName}});{{/headerParams}}
+        {{#vendorExtensions.fileUpload}}
+        headers.add("x-contentType", "{{{vendorExtensions.x-contentType}}}");
+        {{/vendorExtensions.fileUpload}}

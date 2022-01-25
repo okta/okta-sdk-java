@@ -38,4 +38,8 @@ public class IdentityProviderBuilders {
     public static IdentityProviderBuilder linkedin() {
         return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.LinkedInIdentityProviderBuilder");
     }
+
+    public static IdentityProviderBuilder ofType(String type) {
+        return Classes.newInstance("com.okta.sdk.impl.resource.identity.provider.StringTypeIdentityProviderBuilder", type);
+    }
 }

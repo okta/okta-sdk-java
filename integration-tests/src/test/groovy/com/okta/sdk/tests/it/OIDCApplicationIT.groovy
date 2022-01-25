@@ -37,6 +37,7 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
             .setName(name)
             .setLabel(name)
             .addRedirectUris("http://www.example.com")
+            .setPostLogoutRedirectUris(Collections.singletonList("http://www.example.com/logout"))
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
