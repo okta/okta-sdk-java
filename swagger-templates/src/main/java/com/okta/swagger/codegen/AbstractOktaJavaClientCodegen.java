@@ -678,6 +678,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             });
         }
 
+        // Do we need this code? x-okta-parent tag is not present in yaml file anymore
         if(model.getExtensions() != null) {
             String parent = (String) model.getExtensions().get("x-okta-parent");
             if (StringUtils.isNotEmpty(parent)) {
@@ -688,14 +689,15 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 if (discriminatorRoot != null) {
                     model.getExtensions().put("discriminatorRoot", discriminatorRoot);
                 }
-
-            } else if(codegenModel.parent != null) {
-                // handle correctly model inheritance described as
-                // allOf:
-                // - $ref:
-                codegenModel.parent = toApiName(codegenModel.parent);
-                codegenModel.getVendorExtensions().remove("top-level");
             }
+        }
+
+        if(codegenModel.parent != null) {
+            // handle correctly model inheritance described as
+            // allOf:
+            // - $ref:
+            codegenModel.parent = toApiName(codegenModel.parent);
+            codegenModel.getVendorExtensions().remove("top-level");
         }
 
        return codegenModel;
