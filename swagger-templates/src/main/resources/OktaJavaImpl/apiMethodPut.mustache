@@ -27,11 +27,11 @@
   {{/vendorExtensions.forceToCreateObject}}
   {{^vendorExtensions.forceToCreateObject}}
   {{#bodyParam}}
-        getDataStore().save(href, {{bodyParam.paramName}}, this, queryArgs, headers);
+        getDataStore().save(href, {{bodyParam.paramName}}, null, queryArgs, headers);
         {{#returnType}}return {{bodyParam.paramName}}; {{/returnType}}
   {{/bodyParam}}
   {{^bodyParam}}
-        getDataStore().save(href, new DefaultVoidResource(getDataStore()), this, queryArgs, headers);
+        getDataStore().save(href, new DefaultVoidResource(getDataStore()), null, queryArgs, headers);
   {{#returnType}}
         return this;
   {{/returnType}}
