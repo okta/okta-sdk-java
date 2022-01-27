@@ -376,24 +376,24 @@ paths:
             schema:
               type: string
               format: binary
-          application/x-x509-ca-cert:
-            schema:
-              oneOf:
-                - type: string
-                  format: binary
-                  x-okta-operationId: publishBinaryCerCert
-                - type: string
-                  format: base64
-                  x-okta-operationId: publishBase64CerCert
-          application/pkix-cert:
-            schema:
-              oneOf:
-                - type: string
-                  format: binary
-                  x-okta-operationId: publishBinaryDerCert
-                - type: string
-                  format: base64
-                  x-okta-operationId: publishBase64DerCert
+          #          application/x-x509-ca-cert:
+          #            schema:
+          #              oneOf:
+          #                - type: string
+          #                  format: binary
+          #                  x-okta-operationId: publishBinaryCerCert
+          #                - type: string
+          #                  format: base64
+          #                  x-okta-operationId: publishBase64CerCert
+          #          application/pkix-cert:
+          #            schema:
+          #              oneOf:
+          #                - type: string
+          #                  format: binary
+          #                  x-okta-operationId: publishBinaryDerCert
+          #                - type: string
+          #                  format: base64
+          #                  x-okta-operationId: publishBase64DerCert
           application/x-pem-file:
             schema:
               type: string
@@ -5141,24 +5141,24 @@ paths:
             schema:
               type: string
               format: binary
-          application/x-x509-ca-cert:
-            schema:
-              oneOf:
-                - type: string
-                  format: binary
-                  x-okta-operationId: publishBinaryCerCertForIdentityProvider
-                - type: string
-                  format: base64
-                  x-okta-operationId: publishBase64CerCertForIdentityProvider
-          application/pkix-cert:
-            schema:
-              oneOf:
-                - type: string
-                  format: binary
-                  x-okta-operationId: publishBinaryDerCertForIdentityProvider
-                - type: string
-                  format: base64
-                  x-okta-operationId: publishBase64DerCertForIdentityProvider
+          #          application/x-x509-ca-cert:
+          #            schema:
+          #              oneOf:
+          #                - type: string
+          #                  format: binary
+          #                  x-okta-operationId: publishBinaryCerCertForIdentityProvider
+          #                - type: string
+          #                  format: base64
+          #                  x-okta-operationId: publishBase64CerCertForIdentityProvider
+          #          application/pkix-cert:
+          #            schema:
+          #              oneOf:
+          #                - type: string
+          #                  format: binary
+          #                  x-okta-operationId: publishBinaryDerCertForIdentityProvider
+          #                - type: string
+          #                  format: base64
+          #                  x-okta-operationId: publishBase64DerCertForIdentityProvider
           application/x-pem-file:
             schema:
               type: string
@@ -10206,12 +10206,12 @@ components:
     AuthorizationServerPolicyRule:
       allOf:
         - $ref: '#/components/schemas/PolicyRule'
-        - type: object
-          properties:
-            conditions:
-              $ref: '#/components/schemas/AuthorizationServerPolicyRuleConditions'
-            actions:
-              $ref: '#/components/schemas/AuthorizationServerPolicyRuleActions'
+    #        - type: object
+    #          properties:
+    #            conditions:
+    #              $ref: '#/components/schemas/AuthorizationServerPolicyRuleConditions'
+    #            actions:
+    #              $ref: '#/components/schemas/AuthorizationServerPolicyRuleActions'
     AuthorizationServerPolicyRuleActions:
       type: object
       properties:
@@ -10262,11 +10262,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettingsApplication'
         - type: object
-          properties:
-            authURL:
-              type: string
-            url:
-              type: string
+      properties:
+        authURL:
+          type: string
+        url:
+          type: string
     BasicAuthApplication:
       x-okta-defined-as:
         name: template_basic_auth
@@ -10337,9 +10337,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/Application'
         - type: object
-          properties:
-            credentials:
-              $ref: '#/components/schemas/SchemeApplicationCredentials'
+      properties:
+        credentials:
+          $ref: '#/components/schemas/SchemeApplicationCredentials'
       discriminator:
         propertyName: name
         mapping:
@@ -10380,9 +10380,9 @@ components:
           $ref: '#/components/schemas/CAPTCHAType'
         _link:
           type: object
-          properties:
-            self:
-              $ref: '#/components/schemas/HrefObject'
+          #          properties:
+          #            self:
+          #              $ref: '#/components/schemas/HrefObject'
           readOnly: true
     CAPTCHAType:
       type: string
@@ -10546,11 +10546,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
-          properties:
-            factorProfileId:
-              type: string
-            profile:
-              $ref: '#/components/schemas/CustomHotpUserFactorProfile'
+      properties:
+        factorProfileId:
+          type: string
+        profile:
+          $ref: '#/components/schemas/CustomHotpUserFactorProfile'
     CustomHotpUserFactorProfile:
       type: object
       properties:
@@ -10940,18 +10940,18 @@ components:
       properties:
         name:
           type: string
-        _links:
-          type: object
-          properties:
-            self:
-              $ref: '#/components/schemas/HrefObject'
-            customizations:
-              $ref: '#/components/schemas/HrefObject'
-            defaultContent:
-              $ref: '#/components/schemas/HrefObject'
-            test:
-              $ref: '#/components/schemas/HrefObject'
-          readOnly: true
+    #        _links:
+    #          type: object
+    #          properties:
+    #            self:
+    #              $ref: '#/components/schemas/HrefObject'
+    #            customizations:
+    #              $ref: '#/components/schemas/HrefObject'
+    #            defaultContent:
+    #              $ref: '#/components/schemas/HrefObject'
+    #            test:
+    #              $ref: '#/components/schemas/HrefObject'
+    #          readOnly: true
     EmailTemplateTouchPointVariant:
       type: string
       enum:
@@ -12549,9 +12549,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/ApplicationCredentials'
         - type: object
-          properties:
-            oauthClient:
-              $ref: '#/components/schemas/ApplicationCredentialsOAuthClient'
+      properties:
+        oauthClient:
+          $ref: '#/components/schemas/ApplicationCredentialsOAuthClient'
     OAuthEndpointAuthenticationMethod:
       type: string
       enum:
@@ -12656,14 +12656,14 @@ components:
       allOf:
         - $ref: '#/components/schemas/Application'
         - type: object
-          properties:
-            credentials:
-              $ref: '#/components/schemas/OAuthApplicationCredentials'
-            name:
-              type: string
-              default: oidc_client
-            settings:
-              $ref: '#/components/schemas/OpenIdConnectApplicationSettings'
+      properties:
+        credentials:
+          $ref: '#/components/schemas/OAuthApplicationCredentials'
+        name:
+          type: string
+          default: oidc_client
+        settings:
+          $ref: '#/components/schemas/OpenIdConnectApplicationSettings'
     OpenIdConnectApplicationConsentMethod:
       type: string
       enum:
@@ -13079,13 +13079,13 @@ components:
       allOf:
         - $ref: '#/components/schemas/PolicyRule'
         - type: object
-          properties:
-            actions:
-              $ref: '#/components/schemas/PasswordPolicyRuleActions'
-            conditions:
-              $ref: '#/components/schemas/PasswordPolicyRuleConditions'
-            name:
-              type: string
+      properties:
+        actions:
+          $ref: '#/components/schemas/PasswordPolicyRuleActions'
+        conditions:
+          $ref: '#/components/schemas/PasswordPolicyRuleConditions'
+        name:
+          type: string
     PasswordPolicyRuleAction:
       type: object
       properties:
@@ -13473,11 +13473,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/PolicyRule'
         - type: object
-          properties:
-            actions:
-              $ref: '#/components/schemas/ProfileEnrollmentPolicyRuleActions'
-            name:
-              type: string
+      properties:
+        actions:
+          $ref: '#/components/schemas/ProfileEnrollmentPolicyRuleActions'
+        name:
+          type: string
     ProfileEnrollmentPolicyRuleAction:
       type: object
       properties:
@@ -13964,17 +13964,17 @@ components:
       allOf:
         - $ref: '#/components/schemas/ApplicationCredentials'
         - type: object
-          properties:
-            password:
-              $ref: '#/components/schemas/PasswordCredential'
-            revealPassword:
-              type: boolean
-            scheme:
-              $ref: '#/components/schemas/ApplicationCredentialsScheme'
-            signing:
-              $ref: '#/components/schemas/ApplicationCredentialsSigning'
-            userName:
-              type: string
+      properties:
+        password:
+          $ref: '#/components/schemas/PasswordCredential'
+        revealPassword:
+          type: boolean
+        scheme:
+          $ref: '#/components/schemas/ApplicationCredentialsScheme'
+        signing:
+          $ref: '#/components/schemas/ApplicationCredentialsSigning'
+        userName:
+          type: string
     Scope:
       type: object
       properties:
@@ -14044,9 +14044,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
-          properties:
-            profile:
-              $ref: '#/components/schemas/SecurityQuestionUserFactorProfile'
+      properties:
+        profile:
+          $ref: '#/components/schemas/SecurityQuestionUserFactorProfile'
     SecurityQuestionUserFactorProfile:
       type: object
       properties:
@@ -14228,76 +14228,76 @@ components:
       allOf:
         - $ref: '#/components/schemas/BrowserPluginApplication'
         - type: object
-          properties:
-            name:
-              type: string
-              default: template_swa
-            settings:
-              $ref: '#/components/schemas/SwaApplicationSettings'
+      properties:
+        name:
+          type: string
+          default: template_swa
+        settings:
+          $ref: '#/components/schemas/SwaApplicationSettings'
     SwaApplicationSettings:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettings'
         - type: object
-          properties:
-            app:
-              $ref: '#/components/schemas/SwaApplicationSettingsApplication'
+      properties:
+        app:
+          $ref: '#/components/schemas/SwaApplicationSettingsApplication'
     SwaApplicationSettingsApplication:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettingsApplication'
         - type: object
-          properties:
-            buttonField:
-              type: string
-            checkbox:
-              type: string
-            loginUrlRegex:
-              type: string
-            passwordField:
-              type: string
-            redirectUrl:
-              type: string
-            url:
-              type: string
-            usernameField:
-              type: string
+      properties:
+        buttonField:
+          type: string
+        checkbox:
+          type: string
+        loginUrlRegex:
+          type: string
+        passwordField:
+          type: string
+        redirectUrl:
+          type: string
+        url:
+          type: string
+        usernameField:
+          type: string
     SwaThreeFieldApplication:
       x-okta-defined-as:
         name: template_swa3field
       allOf:
         - $ref: '#/components/schemas/BrowserPluginApplication'
         - type: object
-          properties:
-            name:
-              type: string
-              default: template_swa3field
-            settings:
-              $ref: '#/components/schemas/SwaThreeFieldApplicationSettings'
+      properties:
+        name:
+          type: string
+          default: template_swa3field
+        settings:
+          $ref: '#/components/schemas/SwaThreeFieldApplicationSettings'
     SwaThreeFieldApplicationSettings:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettings'
         - type: object
-          properties:
-            app:
-              $ref: '#/components/schemas/SwaThreeFieldApplicationSettingsApplication'
+      properties:
+        app:
+          $ref: '#/components/schemas/SwaThreeFieldApplicationSettingsApplication'
     SwaThreeFieldApplicationSettingsApplication:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettingsApplication'
         - type: object
-          properties:
-            buttonSelector:
-              type: string
-            extraFieldSelector:
-              type: string
-            extraFieldValue:
-              type: string
-            loginUrlRegex:
-              type: string
-            passwordSelector:
-              type: string
-            targetURL:
-              type: string
-            userNameSelector:
-              type: string
+      properties:
+        buttonSelector:
+          type: string
+        extraFieldSelector:
+          type: string
+        extraFieldValue:
+          type: string
+        loginUrlRegex:
+          type: string
+        passwordSelector:
+          type: string
+        targetURL:
+          type: string
+        userNameSelector:
+          type: string
     TempPassword:
       type: object
       properties:
@@ -15144,9 +15144,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
-          properties:
-            profile:
-              $ref: '#/components/schemas/WebAuthnUserFactorProfile'
+      properties:
+        profile:
+          $ref: '#/components/schemas/WebAuthnUserFactorProfile'
     WebAuthnUserFactorProfile:
       type: object
       properties:
@@ -15158,9 +15158,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
-          properties:
-            profile:
-              $ref: '#/components/schemas/WebUserFactorProfile'
+      properties:
+        profile:
+          $ref: '#/components/schemas/WebUserFactorProfile'
     WebUserFactorProfile:
       type: object
       properties:
