@@ -740,7 +740,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ApplicationGroupAssignment'
-        required: false
+        required: true
       responses:
         '200':
           description: Success
@@ -1182,6 +1182,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Authenticator'
+        required: true
       responses:
         '200':
           description: OK
@@ -2448,6 +2449,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Brand'
+        required: true
       responses:
         '200':
           description: OK
@@ -2465,345 +2467,6 @@ paths:
         - api_token: []
         - oauth2:
             - okta.brands.manage
-      tags:
-        - Brand
-  /api/v1/brands/{brandId}/templates/email:
-    parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-        description: brand id
-    get:
-      summary: List Email Templates
-      description: List email templates in your organization with pagination.
-      operationId: listEmailTemplates
-      parameters:
-        - schema:
-            type: string
-          in: query
-          description: Specifies the pagination cursor for the next page of email templates.
-          name: after
-        - schema:
-            type: integer
-            default: 20
-          in: query
-          name: limit
-          description: Specifies the number of results returned (maximum 200)
-      responses:
-        '200':
-          description: Successfully fetch a list of email templates.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/EmailTemplate'
-          headers:
-            Link:
-              schema:
-                type: string
-                example: <http://oienapa.okta1.com:1802/api/v1/brands/{brandId}/templates/email?limit=200>; rel="self"
-              description: Links to the current and next page of results.
-      security:
-        - api_token: []
-      tags:
-        - Brand
-  /api/v1/brands/{brandId}/templates/email/{templateName}:
-    parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
-    get:
-      summary: Get Email Template
-      description: Fetch an email template by `templateName`
-      operationId: getEmailTemplate
-      responses:
-        '200':
-          description: Successfully fetch an email template by name.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmailTemplate'
-      security:
-        - api_token: []
-      tags:
-        - Brand
-  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations:
-    parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
-    get:
-      summary: List Email Customizations
-      description: List all email customcations for an email template
-      operationId: getAllEmailCustomizations
-      responses:
-        '200':
-          description: Successfully fetch all email customizations of a given email template name.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/EmailCustomization'
-      security:
-        - api_token: []
-      tags:
-        - Brand
-    post:
-      summary: Create Email Customization
-      description: Create an email customization
-      operationId: createEmailCustomization
-      x-codegen-request-body-name: instance
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EmailCustomization'
-            examples:
-              example-1:
-                value:
-                  language: cs-CZ
-                  isDefault: true
-                  subject: Welcome to $org.name
-                  body: Hello, $user.profile.firstName!
-                  fromAddress: noreply@okta.com
-                  fromName: $org.name
-      responses:
-        '201':
-          description: If success, return the created email customization
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmailCustomization'
-      security:
-        - api_token: []
-      tags:
-        - Brand
-    delete:
-      summary: Delete Email Customizations
-      description: Delete all customizations for an email template. Also known as “Reset to Default”.
-      operationId: deleteAllCustomizations
-      responses:
-        '204':
-          description: Successfully deletes all customizations for an email template.
-          content: {}
-      security:
-        - api_token: []
-      tags:
-        - Brand
-  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations/{customizationId}:
-    parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: customizationId
-        in: path
-        required: true
-    get:
-      summary: Get Email Customization
-      description: Fetch an email customization by `id`.
-      operationId: getEmailCustomization
-      responses:
-        '200':
-          description: Successfully get an email template's customization by `id`.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmailCustomization'
-      security:
-        - api_token: []
-      tags:
-        - Brand
-    put:
-      summary: Update Email Customization
-      description: Update an email customization
-      operationId: updateEmailCustomization
-      x-codegen-request-body-name: instance
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EmailCustomization'
-            examples:
-              example-1:
-                value:
-                  language: cs-CZ
-                  isDefault: true
-                  subject: Welcome to $org.name
-                  body: Hello, $user.profile.firstName!
-                  fromAddress: noreply@okta.com
-                  fromName: $org.name
-        description: Request
-      responses:
-        '200':
-          description: If update successfully, return the updated email customization
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmailCustomization'
-      security:
-        - api_token: []
-      tags:
-        - Brand
-    delete:
-      summary: Delete Email Customization
-      description: Delete an email customization
-      operationId: deleteEmailCustomization
-      responses:
-        '204':
-          description: Successfully delete an email customization by `id`
-          content: {}
-      security:
-        - api_token: []
-      tags:
-        - Brand
-  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations/{customizationId}/preview:
-    parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: customizationId
-        in: path
-        required: true
-    get:
-      summary: Get Preview Content of Email Customization
-      description: Get a preview of an email template customization.
-      operationId: previewEmailCustomizationContent
-      responses:
-        '200':
-          description: Successfully fetch the preview content of an email customization.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmailPreview'
-      security:
-        - api_token: []
-      tags:
-        - Brand
-  /api/v1/brands/{brandId}/templates/email/{templateName}/default-content:
-    parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
-    get:
-      summary: Get Default Content of Email Template
-      description: Fetch the default content for an email template.
-      operationId: getEmailTemplateDefaultContent
-      responses:
-        '200':
-          description: Successfully fetch the default content for an email template.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmailDefaultContent'
-      security:
-        - api_token: []
-      tags:
-        - Brand
-  /api/v1/brands/{brandId}/templates/email/{templateName}/default-content/preview:
-    parameters:
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
-    get:
-      summary: Get Preview of Email Template Default Content
-      description: Fetch a preview of an email template's default content by populating velocity references with the current user's environment.
-      operationId: previewEmailDefaultContent
-      responses:
-        '200':
-          description: ' Successfully fetch the preview of an email template''s default content.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmailPreview'
-      security:
-        - api_token: []
-      tags:
-        - Brand
-  /api/v1/brands/{brandId}/templates/email/{templateName}/test:
-    parameters:
-      - schema:
-          type: string
-        name: templateName
-        in: path
-        required: true
-      - schema:
-          type: string
-        name: brandId
-        in: path
-        required: true
-    post:
-      summary: Send Test Email
-      description: |-
-        Send a test email to the current user’s primary and secondary email addresses. The email content is selected based on the following priority:
-        1. An email customization specifically for the user’s locale.
-        2. The default language of email customizations.
-        3. The email template’s default content.
-      operationId: sendTestEmailFromTemplate
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EmailTestResponse'
-            examples:
-              example-1:
-                value:
-                  customizationId: oel11u6DqUiMbQkpl0g4
-      responses:
-        '204':
-          description: No Content
-          content: {}
-      security:
-        - api_token: []
       tags:
         - Brand
   /api/v1/brands/{brandId}/themes:
@@ -2871,6 +2534,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Theme'
+        required: true
       responses:
         '200':
           description: OK
@@ -5141,24 +4805,24 @@ paths:
             schema:
               type: string
               format: binary
-          #          application/x-x509-ca-cert:
-          #            schema:
-          #              oneOf:
-          #                - type: string
-          #                  format: binary
-          #                  x-okta-operationId: publishBinaryCerCertForIdentityProvider
-          #                - type: string
-          #                  format: base64
-          #                  x-okta-operationId: publishBase64CerCertForIdentityProvider
-          #          application/pkix-cert:
-          #            schema:
-          #              oneOf:
-          #                - type: string
-          #                  format: binary
-          #                  x-okta-operationId: publishBinaryDerCertForIdentityProvider
-          #                - type: string
-          #                  format: base64
-          #                  x-okta-operationId: publishBase64DerCertForIdentityProvider
+#          application/x-x509-ca-cert:
+#            schema:
+#              oneOf:
+#                - type: string
+#                  format: binary
+#                  x-okta-operationId: publishBinaryCerCertForIdentityProvider
+#                - type: string
+#                  format: base64
+#                  x-okta-operationId: publishBase64CerCertForIdentityProvider
+#          application/pkix-cert:
+#            schema:
+#              oneOf:
+#                - type: string
+#                  format: binary
+#                  x-okta-operationId: publishBinaryDerCertForIdentityProvider
+#                - type: string
+#                  format: base64
+#                  x-okta-operationId: publishBase64DerCertForIdentityProvider
           application/x-pem-file:
             schema:
               type: string
@@ -10206,12 +9870,12 @@ components:
     AuthorizationServerPolicyRule:
       allOf:
         - $ref: '#/components/schemas/PolicyRule'
-    #        - type: object
-    #          properties:
-    #            conditions:
-    #              $ref: '#/components/schemas/AuthorizationServerPolicyRuleConditions'
-    #            actions:
-    #              $ref: '#/components/schemas/AuthorizationServerPolicyRuleActions'
+#        - type: object
+#          properties:
+#            conditions:
+#              $ref: '#/components/schemas/AuthorizationServerPolicyRuleConditions'
+#            actions:
+#              $ref: '#/components/schemas/AuthorizationServerPolicyRuleActions'
     AuthorizationServerPolicyRuleActions:
       type: object
       properties:
@@ -10380,9 +10044,9 @@ components:
           $ref: '#/components/schemas/CAPTCHAType'
         _link:
           type: object
-          #          properties:
-          #            self:
-          #              $ref: '#/components/schemas/HrefObject'
+          properties:
+            self:
+              $ref: '#/components/schemas/HrefObject'
           readOnly: true
     CAPTCHAType:
       type: string
@@ -10908,50 +10572,6 @@ components:
                 template:
                   $ref: '#/components/schemas/HrefObject'
               readOnly: true
-    EmailTemplate:
-      title: EmailTemplate
-      x-examples:
-        - name: email.welcome
-          _links:
-            self:
-              href: /templates/email/email.welcome
-              hints:
-                allow:
-                  - GET
-            customizations:
-              href: /templates/email/email.welcome/customizations
-              hints:
-                allow:
-                  - GET
-            defaultContent:
-              href: /templates/email/email.welcome/default-content
-              hints:
-                allow:
-                  - GET
-            test:
-              href: /templates/email/email.welcome/test
-              hints:
-                allow:
-                  - POST
-      description: An email template object
-      x-tags:
-        - Brand
-      type: object
-      properties:
-        name:
-          type: string
-    #        _links:
-    #          type: object
-    #          properties:
-    #            self:
-    #              $ref: '#/components/schemas/HrefObject'
-    #            customizations:
-    #              $ref: '#/components/schemas/HrefObject'
-    #            defaultContent:
-    #              $ref: '#/components/schemas/HrefObject'
-    #            test:
-    #              $ref: '#/components/schemas/HrefObject'
-    #          readOnly: true
     EmailTemplateTouchPointVariant:
       type: string
       enum:

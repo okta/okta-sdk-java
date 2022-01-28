@@ -150,7 +150,14 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     @Override
     public CodegenModel fromModel(String name, Schema schema, Map<String, Schema> allSchemas) {
         CodegenModel codegenModel = super.fromModel(name, schema, allSchemas);
-        codegenModel.imports.add(toModelName(codegenModel.classname)); // The 'Default' gets added in the template
+
+        if (codegenModel.classname.equals("CAPTCHAInstance")) {
+            addToModelTagMap("CAPTCHAInstanceLink", "c.ap.tc.ha");
+        } else if (codegenModel.classname.equals("HrefObject")) {
+            addToModelTagMap("HrefObjectHints", "c.ap.tc.ha");
+        } else {
+            codegenModel.imports.add(toModelName(codegenModel.classname)); // The 'Default' gets added in the template
+        }
 
         Map<String, String> defaultValuesMap = new LinkedHashMap<>();
 
@@ -196,7 +203,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         co.vendorExtensions.put("resourceReturnType", co.returnType);
 
         if (operation.getOperationId() != null && operation.getOperationId().equals("updateBrandTheme")) {
-            co.vendorExtensions.put("forceToCreateObject", "true");
+                co.vendorExtensions.put("forceToCreateObject", "true");
         }
 
         if ("put".equals(httpMethod) ) {

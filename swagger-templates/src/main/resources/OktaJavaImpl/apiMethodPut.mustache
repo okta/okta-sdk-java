@@ -23,7 +23,7 @@
 {{/vendorExtensions.bodyIsSelf}}
 {{^vendorExtensions.bodyIsSelf}}
   {{#vendorExtensions.forceToCreateObject}}
-        return getDataStore().create(href, {{bodyParam.paramName}}, null, {{{vendorExtensions.resourceReturnType}}}.class);
+        return getDataStore().save(href, {{bodyParam.paramName}}, {{{vendorExtensions.resourceReturnType}}}.class, false);
   {{/vendorExtensions.forceToCreateObject}}
   {{^vendorExtensions.forceToCreateObject}}
   {{#bodyParam}}
