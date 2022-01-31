@@ -16,8 +16,9 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.common.LifecycleStatus
-import com.okta.sdk.resource.policy.*
+import com.okta.sdk.resource.authorization.server.*
+import com.okta.sdk.resource.*
+import com.okta.sdk.resource.common.*
 import org.testng.annotations.Test
 
 import static com.okta.sdk.impl.Util.expect

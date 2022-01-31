@@ -16,6 +16,8 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.*
+import com.okta.sdk.resource.common.JsonWebKey
 import com.okta.sdk.resource.application.*
 import org.testng.annotations.Test
 

@@ -15,26 +15,12 @@
  */
 package com.okta.sdk.impl.resource.log
 
-import com.okta.sdk.impl.client.MockClient
 import com.okta.commons.http.Request
-import com.okta.sdk.resource.log.LogActor
-import com.okta.sdk.resource.log.LogAuthenticationContext
-import com.okta.sdk.resource.log.LogClient
-import com.okta.sdk.resource.log.LogDebugContext
-import com.okta.sdk.resource.log.LogEvent
-import com.okta.sdk.resource.log.LogGeographicalContext
-import com.okta.sdk.resource.log.LogGeolocation
-import com.okta.sdk.resource.log.LogIpAddress
-import com.okta.sdk.resource.log.LogOutcome
-import com.okta.sdk.resource.log.LogRequest
-import com.okta.sdk.resource.log.LogSecurityContext
-import com.okta.sdk.resource.log.LogSeverity
-import com.okta.sdk.resource.log.LogTransaction
-import com.okta.sdk.resource.log.LogUserAgent
+import com.okta.sdk.impl.client.MockClient
+import com.okta.sdk.resource.system.log.*
+import com.okta.sdk.resource.LogIpAddress
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
-import static org.mockito.Mockito.verify
-
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
@@ -42,8 +28,9 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.stream.Collectors
 
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
-import static org.hamcrest.MatcherAssert.*
+import static org.mockito.Mockito.verify
 
 class LogsTest {
     MockClient client

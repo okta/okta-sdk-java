@@ -19,7 +19,7 @@ import com.okta.sdk.resource.application.AppUser
 import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupRule
-import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.group.User
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat

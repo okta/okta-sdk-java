@@ -16,8 +16,8 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.common.LifecycleStatus
-import com.okta.sdk.resource.policy.Policy
+import com.okta.sdk.resource.authorization.server.LifecycleStatus
+import com.okta.sdk.resource.common.Policy
 import com.okta.sdk.resource.policy.PolicyRule
 import org.testng.annotations.Test
 
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*
 class DefaultPolicyRuleBuilderTest {
 
     @Test
-    void basicUsage(){
+    void basicUsage() {
         def policy = mock(Policy)
         def client = mock(Client)
         def policyRule = mock(PolicyRule)
@@ -40,9 +40,9 @@ class DefaultPolicyRuleBuilderTest {
             .setPriority(1)
         .buildAndCreate(client, policy)
 
-        verify(policy).createRule(eq(policyRule))
+        //verify(policy).createRule(eq(policyRule))
+        verify(client).createPolicyRule(eq(policyRule), eq(policy.getId()))
         verify(policyRule).setPriority(1)
         verify(policyRule).setStatus(LifecycleStatus.ACTIVE)
-
     }
 }

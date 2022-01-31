@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.impl.resource
 
-import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.group.User
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat

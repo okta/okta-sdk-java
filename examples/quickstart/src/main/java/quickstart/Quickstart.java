@@ -23,9 +23,9 @@ import com.okta.sdk.resource.ResourceException;
 import com.okta.sdk.resource.user.UserBuilder;
 
 import com.okta.sdk.resource.group.Group;
-import com.okta.sdk.resource.user.User;
-import com.okta.sdk.resource.user.UserList;
-import com.okta.sdk.resource.user.UserStatus;
+import com.okta.sdk.resource.group.User;
+import com.okta.sdk.resource.group.UserList;
+import com.okta.sdk.resource.group.UserStatus;
 
 import java.util.UUID;
 
@@ -77,7 +77,7 @@ public class Quickstart {
                 .buildAndCreate(client);
 
             // add user to the newly created group
-            user.addToGroup(group.getId());
+            client.addUserToGroup(group.getId(), user.getId());
 
             String userId = user.getId();
             println("User created with ID: " + userId);
@@ -117,14 +117,13 @@ public class Quickstart {
             // deactivate (if de-provisioned) and delete user
             if (user != null) {
                 if (user.getStatus() != UserStatus.DEPROVISIONED) {
-                    user.deactivate();
+                    client.deactivateOrDeleteUser(user.getId());
                 }
-                user.delete();
             }
 
             // delete group
             if (group != null) {
-                group.delete();
+                client.deleteGroup(group.getId());
             }
         }
     }

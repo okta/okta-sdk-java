@@ -18,7 +18,7 @@ package com.okta.sdk.impl.ds
 import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.user.factor.UserFactor
 import com.okta.sdk.resource.user.factor.FactorType
-import com.okta.sdk.resource.user.factor.TotpUserFactor
+import com.okta.sdk.resource.TotpUserFactor
 import org.testng.annotations.Test
 
 import static org.hamcrest.Matchers.equalTo
