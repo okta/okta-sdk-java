@@ -21,7 +21,6 @@ import com.okta.sdk.resource.common.Policy
 import com.okta.sdk.resource.policy.PolicyRule
 import org.testng.annotations.Test
 
-import static org.mockito.ArgumentMatchers.eq
 import static org.mockito.Mockito.*
 
 class DefaultPolicyRuleBuilderTest {
@@ -40,8 +39,7 @@ class DefaultPolicyRuleBuilderTest {
             .setPriority(1)
         .buildAndCreate(client, policy)
 
-        //verify(policy).createRule(eq(policyRule))
-        verify(client).createPolicyRule(eq(policyRule), eq(policy.getId()))
+        verify(client).createPolicyRule(policyRule, policy.getId())
         verify(policyRule).setPriority(1)
         verify(policyRule).setStatus(LifecycleStatus.ACTIVE)
     }

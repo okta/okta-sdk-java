@@ -15,15 +15,25 @@
  */
 package com.okta.sdk.impl.resource.session
 
+import com.okta.commons.http.RequestExecutor
+import com.okta.commons.http.config.BaseUrlResolver
+import com.okta.sdk.authc.credentials.TokenClientCredentials
+import com.okta.sdk.cache.CacheManager
+import com.okta.sdk.client.AuthenticationScheme
+import com.okta.sdk.client.Client
+import com.okta.sdk.impl.api.ClientCredentialsResolver
+import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
+import com.okta.sdk.impl.cache.DisabledCacheManager
+import com.okta.sdk.impl.client.DefaultClient
+import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.ds.InternalDataStore
 import com.okta.sdk.impl.resource.feature.DefaultFeature
+import com.okta.sdk.impl.util.DefaultBaseUrlResolver
 import com.okta.sdk.resource.feature.Feature
 import org.testng.annotations.Test
 
-import static org.mockito.ArgumentMatchers.any
-import static org.mockito.ArgumentMatchers.eq
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
+import static org.mockito.ArgumentMatchers.*
+import static org.mockito.Mockito.*
 
 /**
  * Tests for the Features API.
@@ -35,27 +45,57 @@ class FeaturesTest {
     @Test
     void toggleFeatureTest() {
 
-        InternalDataStore dataStore = mock(InternalDataStore)
+        ClientConfiguration clientConfig = new ClientConfiguration()
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
 
-        Feature featureToEnable = new DefaultFeature(dataStore, [id: "test_feature_id", name: "test feature", status: "DISABLED"])
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
+            protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
+                                                        BaseUrlResolver baseUrlResolver,
+                                                        ClientCredentialsResolver clientCredentialsResolver,
+                                                        CacheManager cacheManager) {
+
+                final InternalDataStore dataStore = mock(InternalDataStore)
+
+                DefaultFeature enabledFeature = new DefaultFeature(dataStore, [id: "test_feature_id", name: "test feature", status: "ENABLED"])
+                when(dataStore.create(
+                    (String) eq("/api/v1/features/test_feature_id/enable"),
+                    any(),
+                    isNull(),
+                    (Class) eq(Feature.class),
+                    eq(Collections.emptyMap()),
+                    eq(Collections.emptyMap())))
+                    .thenReturn(enabledFeature)
+
+                DefaultFeature disabledFeature = new DefaultFeature(dataStore, [id: "test_feature_id", name: "test feature", status: "DISABLED"])
+                when(dataStore.create(
+                    (String) eq("/api/v1/features/test_feature_id/disable"),
+                    any(),
+                    isNull(),
+                    (Class) eq(Feature.class),
+                    eq(Collections.emptyMap()),
+                    eq(Collections.emptyMap())))
+                    .thenReturn(disabledFeature)
+                return dataStore
+            }
+        }
 
         // enable
-        featureToEnable.updateLifecycle("enable", "force")
+        client.updateFeatureLifecycle("test_feature_id", "enable", "force")
 
-        verify(dataStore).create(
-                (String) eq("/api/v1/features/test_feature_id/enable".toString()),
-                any(),
-                any(),
-                (Class) eq(Feature.class),
-                eq(Collections.singletonMap("mode", "force")),
-                eq(Collections.emptyMap()))
-
-        Feature featureToDisable = new DefaultFeature(dataStore, [id: "test_feature_id", name: "test feature", status: "ENABLED"])
+        verify(client.dataStore).create(
+            (String) eq("/api/v1/features/test_feature_id/enable".toString()),
+            any(),
+            any(),
+            (Class) eq(Feature.class),
+            eq(Collections.singletonMap("mode", "force")),
+            eq(Collections.emptyMap()))
 
         // disable
-        featureToDisable.updateLifecycle("disable", "force")
+        client.updateFeatureLifecycle("test_feature_id", "disable", "force")
 
-        verify(dataStore).create(
+        verify(client.dataStore).create(
             (String) eq("/api/v1/features/test_feature_id/disable".toString()),
             any(),
             any(),

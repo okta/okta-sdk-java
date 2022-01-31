@@ -22,13 +22,12 @@ import com.okta.sdk.resource.common.*
 import org.testng.annotations.Test
 
 import static com.okta.sdk.impl.Util.expect
-import static org.mockito.ArgumentMatchers.eq
 import static org.mockito.Mockito.*
 
 class DefaultPasswordPolicyRuleBuilderTest {
 
     @Test
-    void basicUsage(){
+    void basicUsage() {
         def client = mock(Client)
         def policy = mock(Policy)
         def passwordPolicyRule = mock(PasswordPolicyRule)
@@ -63,7 +62,7 @@ class DefaultPasswordPolicyRuleBuilderTest {
             .setSelfServiceUnlockAccess(PolicyAccess.DENY)
         .buildAndCreate(client, policy)
 
-        verify(policy).createRule(eq(passwordPolicyRule))
+        verify(client).createPolicyRule(passwordPolicyRule, policy.getId())
         verify(passwordPolicyRule).setName("name here")
         verify(passwordPolicyRule).setType(PolicyRuleType.PASSWORD)
         verify(passwordPolicyRuleActions).setSelfServicePasswordReset(passwordPolicyRuleAction.setAccess(PolicyAccess.ALLOW))
@@ -71,7 +70,7 @@ class DefaultPasswordPolicyRuleBuilderTest {
     }
 
     @Test
-    void createWithoutType(){
+    void createWithoutType() {
         def client = mock(Client)
         def policy = mock(Policy)
         def passwordPolicyRule = mock(PasswordPolicyRule)
@@ -86,7 +85,7 @@ class DefaultPasswordPolicyRuleBuilderTest {
     }
 
     @Test
-    void createWithSignOnType(){
+    void createWithSignOnType() {
         def client = mock(Client)
         def policy = mock(Policy)
         def passwordPolicyRule = mock(PasswordPolicyRule)
