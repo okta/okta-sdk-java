@@ -18,7 +18,7 @@ package com.okta.sdk.tests.it
 import com.okta.sdk.resource.common.*;
 import com.okta.sdk.resource.identity.provider.*
 import com.okta.sdk.resource.policy.*
-import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.group.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test

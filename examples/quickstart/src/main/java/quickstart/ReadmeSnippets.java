@@ -127,8 +127,7 @@ public class ReadmeSnippets {
 
     private void updateUser() {
         user.getProfile().setFirstName("new-first-name");
-        //TODO Review
-        //user.update();
+        client.updateUser(user, "userId");
     }
 
     private void customAttributes() {
@@ -137,12 +136,11 @@ public class ReadmeSnippets {
     }
 
     private void deleteUser() {
-        user.deactivate();
-        user.delete();
+        client.deactivateOrDeleteUser("userId");
     }
 
     private void listUsersGroup() {
-        GroupList groups = user.listGroups();
+        GroupList groups = client.listGroups();
     }
 
     private void createGroup() {
@@ -153,31 +151,32 @@ public class ReadmeSnippets {
     }
 
     private void addUserToGroup() {
-        user.addToGroup("groupId");
+        client.addUserToGroup("groupId", "userId");
     }
 
     private void listUserFactors() {
-        UserFactorList factors = user.listFactors();
+        UserFactorList factors = client.listFactors("userId");
     }
 
     private void enrollUserInFactor() {
         SmsUserFactor smsFactor = client.instantiate(SmsUserFactor.class);
         smsFactor.getProfile().setPhoneNumber("555 867 5309");
-        user.enrollFactor(smsFactor);
+        client.enrollFactor(smsFactor, "userId");
     }
 
     private void activateFactor() {
-        UserFactor factor = user.getFactor("factorId");
+        UserFactor factor = client.getFactor("userId", "factorId");
         ActivateFactorRequest activateFactorRequest = client.instantiate(ActivateFactorRequest.class);
         activateFactorRequest.setPassCode("123456");
-        factor.activate(activateFactorRequest);
+        client.activateFactor("userId", "factorId", activateFactorRequest);
     }
 
     private void verifyFactor() {
-        UserFactor factor = user.getFactor("factorId");
+        UserFactor factor = client.getFactor("userId", "factorId");
         VerifyFactorRequest verifyFactorRequest = client.instantiate(VerifyFactorRequest.class);
         verifyFactorRequest.setPassCode("123456");
-        VerifyUserFactorResponse verifyUserFactorResponse = factor.setVerify(verifyFactorRequest).verify();
+        VerifyUserFactorResponse verifyUserFactorResponse = client.verifyFactor("userId", "factorId",
+            verifyFactorRequest, null, null, null, null, null);
     }
 
     private void listApplication() {

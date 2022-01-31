@@ -16,6 +16,8 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.*
+import com.okta.sdk.resource.common.*
 import com.okta.sdk.resource.application.*
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test

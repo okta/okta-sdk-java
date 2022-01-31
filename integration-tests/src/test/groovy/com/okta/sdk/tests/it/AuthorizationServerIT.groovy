@@ -15,22 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.application.OAuth2Claim
-import com.okta.sdk.resource.application.OAuth2ClaimType
-import com.okta.sdk.resource.application.OAuth2ClaimValueType
-import com.okta.sdk.resource.application.OAuth2Scope
-import com.okta.sdk.resource.application.OAuth2ScopeConsentType
-import com.okta.sdk.resource.application.OAuth2ScopeMetadataPublish
-import com.okta.sdk.resource.application.OAuth2ScopesMediationPolicyRuleCondition
-import com.okta.sdk.resource.authorization.server.AuthorizationServer
-import com.okta.sdk.resource.authorization.server.AuthorizationServerList
-import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy
-import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyRule
-import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyRuleActions
-import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyRuleConditions
-import com.okta.sdk.resource.authorization.server.TokenAuthorizationServerPolicyRuleAction
-import com.okta.sdk.resource.authorization.server.TokenAuthorizationServerPolicyRuleActionInlineHook
-import com.okta.sdk.resource.common.LifecycleStatus
+import com.okta.sdk.resource.authorization.server.*
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.inline.hook.InlineHookBuilder
 import com.okta.sdk.resource.inline.hook.InlineHookChannelType

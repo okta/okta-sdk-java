@@ -44,7 +44,7 @@ public class Quickstart {
         final char[] password = {'P','a','s','s','w','o','r','d','1'};
 
         ClientBuilder builder;
-        Client client;
+        Client client = null;
         Group group = null;
         User user = null;
 

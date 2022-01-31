@@ -16,8 +16,8 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.common.LifecycleStatus
-import com.okta.sdk.resource.policy.*
+import com.okta.sdk.resource.*
+import com.okta.sdk.resource.authorization.server.LifecycleStatus
 import com.okta.sdk.resource.policy.rule.PasswordPolicyRuleBuilder
 import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder
 import com.okta.sdk.tests.NonOIEEnvironmentOnly

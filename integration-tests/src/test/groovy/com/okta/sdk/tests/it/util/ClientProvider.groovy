@@ -32,8 +32,8 @@ import com.okta.sdk.resource.group.GroupRuleStatus
 import com.okta.sdk.resource.identity.provider.IdentityProvider
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.linked.object.LinkedObject
-import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserStatus
+import com.okta.sdk.resource.group.User
+import com.okta.sdk.resource.group.UserStatus
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.slf4j.Logger

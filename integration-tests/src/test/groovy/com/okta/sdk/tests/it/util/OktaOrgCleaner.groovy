@@ -19,8 +19,8 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.GroupRule
-import com.okta.sdk.resource.policy.PolicyType
-import com.okta.sdk.resource.user.UserStatus
+import com.okta.sdk.resource.authorization.server.PolicyType
+import com.okta.sdk.resource.group.UserStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

@@ -15,10 +15,10 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.InlineHookChannelConfigHeaders
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.inline.hook.InlineHookBuilder
 import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigAuthScheme
-import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigHeaders
 import com.okta.sdk.resource.inline.hook.InlineHookChannel
 import com.okta.sdk.resource.inline.hook.InlineHookChannelType
 import com.okta.sdk.resource.inline.hook.InlineHookStatus

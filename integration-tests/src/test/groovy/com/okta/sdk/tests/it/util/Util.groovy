@@ -20,9 +20,9 @@ import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupList
 import com.okta.sdk.resource.linked.object.LinkedObject
-import com.okta.sdk.resource.user.Role
-import com.okta.sdk.resource.user.RoleList
-import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.group.Role
+import com.okta.sdk.resource.group.RoleList
+import com.okta.sdk.resource.group.User
 import org.testng.Assert
 
 import java.util.stream.Collectors

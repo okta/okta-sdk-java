@@ -17,14 +17,14 @@ package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.ExtensibleResource
-import com.okta.sdk.resource.common.LifecycleStatus
+import com.okta.sdk.resource.authorization.server.LifecycleStatus
+import com.okta.sdk.resource.*
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.policy.*
-import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.group.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
-import com.okta.sdk.tests.Scenario
+import com.okta.sdk.tests.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.testng.ITestContext

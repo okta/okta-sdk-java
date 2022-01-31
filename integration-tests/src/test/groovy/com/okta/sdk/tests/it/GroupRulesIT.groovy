@@ -25,7 +25,7 @@ import com.okta.sdk.resource.group.GroupRuleConditions
 import com.okta.sdk.resource.group.GroupRuleExpression
 import com.okta.sdk.resource.group.GroupRuleGroupAssignment
 import com.okta.sdk.resource.group.GroupRuleStatus
-import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.group.User
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources

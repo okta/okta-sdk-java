@@ -16,7 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.common.LifecycleStatus
+import com.okta.sdk.resource.authorization.server.LifecycleStatus
 import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.resource.event.hook.EventHookBuilder
 import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme

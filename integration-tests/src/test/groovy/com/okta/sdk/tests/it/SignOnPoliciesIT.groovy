@@ -16,10 +16,12 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.OktaSignOnPolicy
+import com.okta.sdk.resource.OktaSignOnPolicyRule
+import com.okta.sdk.resource.common.Policy
 import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy
-import com.okta.sdk.resource.common.LifecycleStatus
+import com.okta.sdk.resource.authorization.server.LifecycleStatus
 import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.policy.*
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat

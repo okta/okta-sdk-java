@@ -17,10 +17,10 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.user.AssignRoleRequest
-import com.okta.sdk.resource.user.RoleType
-import com.okta.sdk.resource.user.Role
-import com.okta.sdk.resource.user.RoleList
+import com.okta.sdk.resource.group.AssignRoleRequest
+import com.okta.sdk.resource.group.RoleType
+import com.okta.sdk.resource.group.Role
+import com.okta.sdk.resource.group.RoleList
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test

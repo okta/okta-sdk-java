@@ -15,11 +15,11 @@
  */
 package com.okta.sdk.tests.it
 
-
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.common.LifecycleStatus
+import com.okta.sdk.resource.authorization.server.LifecycleStatus
+import com.okta.sdk.resource.PasswordPolicy
+import com.okta.sdk.resource.common.Policy
 import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.policy.*
 import com.okta.sdk.tests.it.util.ITSupport
 
 import static org.hamcrest.MatcherAssert.assertThat
