@@ -25,15 +25,9 @@ import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.authorization.server.AuthorizationServer
 import com.okta.sdk.resource.event.hook.EventHook
-import com.okta.sdk.resource.group.GroupList
-import com.okta.sdk.resource.group.GroupRule
-import com.okta.sdk.resource.group.GroupRuleList
-import com.okta.sdk.resource.group.GroupRuleStatus
+import com.okta.sdk.resource.group.*
 import com.okta.sdk.resource.identity.provider.IdentityProvider
 import com.okta.sdk.resource.inline.hook.InlineHook
-import com.okta.sdk.resource.linked.object.LinkedObject
-import com.okta.sdk.resource.group.User
-import com.okta.sdk.resource.group.UserStatus
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.slf4j.Logger
@@ -43,7 +37,6 @@ import org.testng.IHookable
 import org.testng.ITestResult
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.Listeners
-
 
 /**
  * Creates a thread local client for a test method to use. The client may be connected to an actual Okta instance or a Test Server.
@@ -81,7 +74,7 @@ trait ClientProvider implements IHookable {
         }
 
         Client client = Clients.builder().build()
-        client.dataStore.requestExecutor.numRetries = 10
+        //client.dataStore.requestExecutor.numRetries = 10
         return client
     }
 

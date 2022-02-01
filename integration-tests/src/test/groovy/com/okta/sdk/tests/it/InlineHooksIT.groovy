@@ -16,22 +16,15 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.InlineHookChannelConfigHeaders
-import com.okta.sdk.resource.inline.hook.InlineHook
-import com.okta.sdk.resource.inline.hook.InlineHookBuilder
-import com.okta.sdk.resource.inline.hook.InlineHookChannelConfigAuthScheme
-import com.okta.sdk.resource.inline.hook.InlineHookChannel
-import com.okta.sdk.resource.inline.hook.InlineHookChannelType
-import com.okta.sdk.resource.inline.hook.InlineHookStatus
-import com.okta.sdk.resource.inline.hook.InlineHookType
+import com.okta.sdk.resource.inline.hook.*
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
+import static com.okta.sdk.tests.it.util.Util.assertNotPresent
+import static com.okta.sdk.tests.it.util.Util.assertPresent
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.notNullValue
-
-import static com.okta.sdk.tests.it.util.Util.assertPresent
-import static com.okta.sdk.tests.it.util.Util.assertNotPresent
 
 /**
  * Tests for {@code /api/v1/inlineHooks}.

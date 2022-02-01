@@ -17,11 +17,13 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
-import com.okta.sdk.resource.ExtensibleResource
 import com.okta.sdk.resource.*
-import com.okta.sdk.resource.common.*
 import com.okta.sdk.resource.application.ApplicationGroupAssignment
-import com.okta.sdk.resource.authorization.server.*
+import com.okta.sdk.resource.authorization.server.PasswordPolicyRuleAction
+import com.okta.sdk.resource.authorization.server.PolicyAccess
+import com.okta.sdk.resource.authorization.server.PolicyNetworkCondition
+import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection
+import com.okta.sdk.resource.common.UserType
 import com.okta.sdk.resource.group.*
 import com.okta.sdk.resource.user.ChangePasswordRequest
 import com.okta.sdk.resource.user.UserBuilder
@@ -33,17 +35,12 @@ import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils
 
-import java.time.Duration
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
+import java.time.Duration
 import java.util.stream.Collectors
 
-import static com.okta.sdk.tests.it.util.Util.assertGroupTargetPresent
-import static com.okta.sdk.tests.it.util.Util.assertNotPresent
-import static com.okta.sdk.tests.it.util.Util.assertPresent
-import static com.okta.sdk.tests.it.util.Util.expect
-import static com.okta.sdk.tests.it.util.Util.validateGroup
-import static com.okta.sdk.tests.it.util.Util.validateUser
+import static com.okta.sdk.tests.it.util.Util.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 

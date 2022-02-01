@@ -15,15 +15,14 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.common.*;
-import com.okta.sdk.resource.identity.provider.*
-import com.okta.sdk.resource.policy.*
 import com.okta.sdk.resource.group.User
+import com.okta.sdk.resource.identity.provider.*
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
-import static com.okta.sdk.tests.it.util.Util.*
+import static com.okta.sdk.tests.it.util.Util.assertNotPresent
+import static com.okta.sdk.tests.it.util.Util.assertPresent
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 

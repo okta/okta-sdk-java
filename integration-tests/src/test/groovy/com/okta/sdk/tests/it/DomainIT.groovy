@@ -16,7 +16,6 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.DomainResponse
 import com.okta.sdk.resource.domain.Domain
 import com.okta.sdk.resource.domain.DomainCertificateSourceType
 import com.okta.sdk.tests.it.util.ITSupport
@@ -24,7 +23,8 @@ import org.testng.Assert
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.*
+import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.Matchers.notNullValue
 
 /**
  * Tests for {@code /api/v1/domains}.

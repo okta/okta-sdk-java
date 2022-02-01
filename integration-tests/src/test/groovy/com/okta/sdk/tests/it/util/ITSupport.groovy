@@ -163,10 +163,10 @@ abstract class ITSupport implements ClientProvider {
 
         Object pipeline = client.http()
             .get("/.well-known/okta-organization", ExtensibleResource.class)
-            .get("pipeline");
-        if(pipeline != null && pipeline.toString().equals("idx")) {
-            return true;
+            .get("pipeline")
+        if (pipeline != null && pipeline.toString() == "idx") {
+            return true
         }
-        return false;
+        return false
     }
 }

@@ -15,12 +15,12 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.authorization.server.*
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.inline.hook.InlineHookBuilder
 import com.okta.sdk.resource.inline.hook.InlineHookChannelType
 import com.okta.sdk.resource.inline.hook.InlineHookType
-import com.okta.sdk.resource.policy.*
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils
@@ -48,7 +48,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"])
         )
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
 
         assertThat(createdAuthorizationServer, notNullValue())
         assertThat(createdAuthorizationServer.getId(), notNullValue())

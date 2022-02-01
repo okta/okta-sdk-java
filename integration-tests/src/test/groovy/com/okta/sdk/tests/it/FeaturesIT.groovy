@@ -36,7 +36,7 @@ class FeaturesIT extends ITSupport {
         assertThat(featureList, iterableWithSize(greaterThan(0)))
 
         // pick first one from the list
-        Feature feature = featureList.getAt(0)
+        Feature feature = featureList[0]
         assertThat(feature, notNullValue())
 
         // get feature by id

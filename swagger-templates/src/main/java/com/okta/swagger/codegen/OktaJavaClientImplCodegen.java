@@ -203,7 +203,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
         co.vendorExtensions.put("resourceReturnType", co.returnType);
 
         if (operation.getOperationId() != null && operation.getOperationId().equals("updateBrandTheme")) {
-                co.vendorExtensions.put("forceToCreateObject", "true");
+            co.vendorExtensions.put("forceToCreateObject", "true");
         }
 
         if ("put".equals(httpMethod) ) {
