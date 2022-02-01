@@ -15,6 +15,23 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.Deletable
+import com.okta.sdk.resource.PolicyAccountLink
+import com.okta.sdk.resource.PolicyAccountLinkAction
+import com.okta.sdk.resource.PolicySubject
+import com.okta.sdk.resource.PolicySubjectMatchType
+import com.okta.sdk.resource.PolicyUserNameTemplate
+import com.okta.sdk.resource.Provisioning
+import com.okta.sdk.resource.ProvisioningAction
+import com.okta.sdk.resource.ProvisioningConditions
+import com.okta.sdk.resource.ProvisioningDeprovisionedAction
+import com.okta.sdk.resource.ProvisioningDeprovisionedCondition
+import com.okta.sdk.resource.ProvisioningGroups
+import com.okta.sdk.resource.ProvisioningGroupsAction
+import com.okta.sdk.resource.ProvisioningSuspendedAction
+import com.okta.sdk.resource.ProvisioningSuspendedCondition
+import com.okta.sdk.resource.authorization.server.IssuerMode
+import com.okta.sdk.resource.authorization.server.LifecycleStatus
 import com.okta.sdk.resource.group.User
 import com.okta.sdk.resource.identity.provider.*
 import com.okta.sdk.resource.user.UserBuilder
@@ -63,7 +80,7 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.email")
             .setMatchType(PolicySubjectMatchType.USERNAME)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp)
+        registerForCleanup(createdIdp as Deletable)
 
         assertThat(createdIdp, notNullValue())
         assertThat(createdIdp.getId(), notNullValue())
@@ -77,7 +94,7 @@ class IdpIT extends ITSupport {
         // update
         String newName = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProvider updatedIdp = createdIdp.update(client.instantiate(IdentityProvider)
+        IdentityProvider updatedIdp = client.updateIdentityProvider(client.instantiate(IdentityProvider)
             .setType(IdentityProvider.TypeValues.OIDC)
             .setName(newName)
             .setIssuerMode(IssuerMode.ORG_URL)
@@ -132,8 +149,8 @@ class IdpIT extends ITSupport {
                 .setSubject(client.instantiate(PolicySubject)
                     .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate)
                         .setTemplate("idpuser.email"))
-                    .setMatchType(PolicySubjectMatchType.USERNAME))))
-        registerForCleanup(updatedIdp)
+                    .setMatchType(PolicySubjectMatchType.USERNAME))), createdIdp.getId())
+        registerForCleanup(updatedIdp as Deletable)
 
         IdentityProvider retrievedUpdatedIdp = client.getIdentityProvider(updatedIdp.getId())
         assertThat(retrievedUpdatedIdp.getId(), equalTo(createdIdp.getId()))
@@ -156,10 +173,10 @@ class IdpIT extends ITSupport {
         assertPresent(client.listIdentityProviders(), updatedIdp)
 
         // deactivate
-        createdIdp.deactivate()
+        client.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
+        client.deleteIdentityProvider(createdIdp.getId())
 
         // earlier operation may not complete immediately
         sleep(getTestOperationDelay())
@@ -178,7 +195,7 @@ class IdpIT extends ITSupport {
             .setLastName("Code")
             .setPassword("Password1".toCharArray())
             .buildAndCreate(client)
-        registerForCleanup(createdUser)
+        registerForCleanup(createdUser as Deletable)
 
         // create idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -208,34 +225,34 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.email")
             .setMatchType(PolicySubjectMatchType.USERNAME)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp)
+        registerForCleanup(createdIdp as Deletable)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
+        IdentityProviderApplicationUser idpAppUser = client.linkUserToIdentityProvider(
             client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
+                .setExternalId("externalId"), createdIdp.getId(), createdUser.getId())
 
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+        assertPresent(client.listIdentityProviderApplicationUsers(createdIdp.getId()), idpAppUser)
 
         // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
+        client.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // list social auth tokens
-        SocialAuthTokenList socialAuthTokenList = createdIdp.listSocialAuthTokens(createdUser.getId())
+        SocialAuthTokenList socialAuthTokenList = client.listSocialAuthTokens(createdIdp.getId(), createdUser.getId())
         assertThat(socialAuthTokenList, iterableWithSize(0))
 
         // deactivate
-        createdIdp.deactivate()
+        client.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
+        client.deleteIdentityProvider(createdIdp.getId())
     }
 
     @Test (groups = "group2")
@@ -249,7 +266,7 @@ class IdpIT extends ITSupport {
             .setLastName("Code")
             .setPassword("Password1".toCharArray())
             .buildAndCreate(client)
-        registerForCleanup(createdUser)
+        registerForCleanup(createdUser as Deletable)
 
         // create Google idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -264,30 +281,30 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.email")
             .setMatchType(PolicySubjectMatchType.USERNAME)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp)
+        registerForCleanup(createdIdp as Deletable)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
+        IdentityProviderApplicationUser idpAppUser = client.linkUserToIdentityProvider(
             client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
+                .setExternalId("externalId"), createdIdp.getId(), createdUser.getId())
 
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+        assertPresent(client.listIdentityProviderApplicationUsers(createdIdp.getId()), idpAppUser)
 
         // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
+        client.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // deactivate
-        createdIdp.deactivate()
+        client.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
+        client.deleteIdentityProvider(createdIdp.getId())
 
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
@@ -303,7 +320,7 @@ class IdpIT extends ITSupport {
             .setLastName("Code")
             .setPassword("Password1".toCharArray())
             .buildAndCreate(client)
-        registerForCleanup(createdUser)
+        registerForCleanup(createdUser as Deletable)
 
         // create Facebook idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -318,30 +335,30 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.email")
             .setMatchType(PolicySubjectMatchType.USERNAME)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp)
+        registerForCleanup(createdIdp as Deletable)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
+        IdentityProviderApplicationUser idpAppUser = client.linkUserToIdentityProvider(
             client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
+                .setExternalId("externalId"), createdIdp.getId(), createdUser.getId())
 
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+        assertPresent(client.listIdentityProviderApplicationUsers(createdIdp.getId()), idpAppUser)
 
         // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
+        client.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // deactivate
-        createdIdp.deactivate()
+        client.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
+        client.deleteIdentityProvider(createdIdp.getId())
 
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
@@ -358,7 +375,7 @@ class IdpIT extends ITSupport {
             .setLastName("Code")
             .setPassword("Password1".toCharArray())
             .buildAndCreate(client)
-        registerForCleanup(createdUser)
+        registerForCleanup(createdUser as Deletable)
 
         // create Microsoft idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -373,30 +390,30 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.userPrincipalName")
             .setMatchType(PolicySubjectMatchType.USERNAME)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp)
+        registerForCleanup(createdIdp as Deletable)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
+        IdentityProviderApplicationUser idpAppUser = client.linkUserToIdentityProvider(
             client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
+                .setExternalId("externalId"), createdIdp.getId(), createdUser.getId())
 
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+        assertPresent(client.listIdentityProviderApplicationUsers(createdIdp.getId()), idpAppUser)
 
         // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
+        client.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // deactivate
-        createdIdp.deactivate()
+        client.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
+        client.deleteIdentityProvider(createdIdp.getId())
 
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
@@ -412,7 +429,7 @@ class IdpIT extends ITSupport {
             .setLastName("Code")
             .setPassword("Password1".toCharArray())
             .buildAndCreate(client)
-        registerForCleanup(createdUser)
+        registerForCleanup(createdUser as Deletable)
 
         // create Linkedin idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -427,30 +444,29 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.email")
             .setMatchType(PolicySubjectMatchType.EMAIL)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp)
+        registerForCleanup(createdIdp as Deletable)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
-        // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
+        IdentityProviderApplicationUser idpAppUser = client.linkUserToIdentityProvider(
             client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
+                .setExternalId("externalId"), createdIdp.getId(), createdUser.getId())
 
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+        assertPresent(client.listIdentityProviderApplicationUsers(createdIdp.getId()), idpAppUser)
 
         // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
+        client.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // deactivate
-        createdIdp.deactivate()
+        client.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
+        client.deleteIdentityProvider(createdIdp.getId())
 
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }

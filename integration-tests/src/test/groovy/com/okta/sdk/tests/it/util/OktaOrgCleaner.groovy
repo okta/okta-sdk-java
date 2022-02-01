@@ -17,9 +17,8 @@ package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
-import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.group.GroupRule
 import com.okta.sdk.resource.authorization.server.PolicyType
+import com.okta.sdk.resource.group.GroupRule
 import com.okta.sdk.resource.group.UserStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -40,14 +39,13 @@ class OktaOrgCleaner {
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
             .forEach {
                 log.info("\t ${it.getProfile().getEmail()}")
-                it.deactivate()
-                it.delete()
+                client.deactivateOrDeleteUser(it.getId())
             }
 
         client.listUsers(null, "status eq \"${UserStatus.DEPROVISIONED}\"", null, null, null).stream()
             .forEach {
                 log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
-                it.delete()
+                client.deactivateOrDeleteUser(it.getId())
             }
 
         log.info("Deleting Applications:")
@@ -55,8 +53,7 @@ class OktaOrgCleaner {
             .filter { it.getLabel().startsWith(prefix) && it.getLabel().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getLabel()}")
-                it.deactivate()
-                it.delete()
+                client.deleteApplication(it.getId())
             }
 
         log.info("Deleting Groups:")
@@ -64,7 +61,7 @@ class OktaOrgCleaner {
             .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getProfile().getName()}")
-                it.delete()
+                client.deleteGroup(it.getId())
             }
 
         log.info("Deleting Group Rules:")
@@ -73,71 +70,67 @@ class OktaOrgCleaner {
             .forEach {
                 GroupRule rule = it
                 log.info("\t ${rule.getName()}")
-                Util.ignoring(ResourceException) {
-                    rule.deactivate()
-                }
-                rule.delete()
+                client.deleteGroupRule(rule.getId())
             }
 
         log.info("Deleting Policies:")
         client.listPolicies(PolicyType.OKTA_SIGN_ON.toString()).stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
-                it.delete()
+                client.deletePolicy(it.getId())
             }
 
         log.info("Deleting LinkedObjectDefinitions:")
         client.listLinkedObjectDefinitions().stream()
             .filter { it.getPrimary().getName().startsWith("java_sdk_it_") }
             .forEach {
-                it.setName(it.getPrimary().getName())
-                it.delete()
+                client.deleteLinkedObjectDefinition(it.getPrimary().getName())
             }
 
         log.info("Deleting InlineHooks:")
         client.listInlineHooks().stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
-                it.deactivate()
-                it.delete()
+                client.deactivateInlineHook(it.getId())
+                client.deleteInlineHook(it.getId())
             }
 
         log.info("Deleting EventHooks:")
         client.listEventHooks().stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
-                it.deactivate()
-                it.delete()
+                client.deactivateEventHook(it.getId())
+                client.deleteEventHook(it.getId())
             }
 
         log.info("Deleting UserTypes:")
         client.listUserTypes().stream()
             .filter { it.getName().startsWith("java_sdk_it_") && !it.getDefault() }
             .forEach {
-                it.delete()
+                client.deleteUserType(it.getId())
             }
 
         log.info("Deleting AuthorizationServers:")
         client.listAuthorizationServers().stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
-                it.deactivate()
-                it.delete()
+                client.deactivateAuthorizationServer(it.getId())
+                client.deleteAuthorizationServer(it.getId())
             }
 
         log.info("Deleting IdentityProviders:")
         client.listIdentityProviders().stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
-                it.deactivate()
-                it.delete()
+                client.deactivateIdentityProvider(it.getId())
+                client.deleteIdentityProvider(it.getId())
             }
 
         log.info("Deleting SmsTemplates:")
         client.listSmsTemplates().stream()
             .filter { it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
-                it.delete()
+                client.deleteSmsTemplate(it.getId())
             }
     }
 }

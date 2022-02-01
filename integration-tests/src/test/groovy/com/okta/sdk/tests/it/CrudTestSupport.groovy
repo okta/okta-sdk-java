@@ -16,6 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.tests.it.util.ClientProvider
 import org.testng.Assert
@@ -60,7 +61,7 @@ trait CrudTestSupport implements ClientProvider {
 
         // Create a resource
         def resource = create(client)
-        registerForCleanup(resource)
+        registerForCleanup(resource as Deletable)
 
         // search the resource collection looking for the new resource
         Optional optional = getResourceListStream(client)

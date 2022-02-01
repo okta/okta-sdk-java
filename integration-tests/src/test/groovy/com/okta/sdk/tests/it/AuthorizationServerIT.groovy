@@ -67,7 +67,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         // create operation may not take effect immediately in the backend
@@ -87,7 +87,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"])
         )
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         AuthorizationServer retrievedAuthorizationServer = client.getAuthorizationServer(createdAuthorizationServer.getId())
@@ -106,12 +106,12 @@ class AuthorizationServerIT extends ITSupport {
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"])
         )
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         createdAuthorizationServer.setDescription("Updated Test Authorization Server")
 
-        AuthorizationServer updatedAuthorizationServer = createdAuthorizationServer.update()
+        AuthorizationServer updatedAuthorizationServer = client.updateAuthorizationServer(createdAuthorizationServer, createdAuthorizationServer.getId())
         assertThat(updatedAuthorizationServer.getId(), equalTo(createdAuthorizationServer.getId()))
         assertThat(updatedAuthorizationServer.getDescription(), equalTo("Updated Test Authorization Server"))
     }
@@ -125,13 +125,13 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         assertThat(client.getAuthorizationServer(createdAuthorizationServer.getId()), notNullValue())
 
-        createdAuthorizationServer.deactivate()
-        createdAuthorizationServer.delete()
+        client.deactivateAuthorizationServer(createdAuthorizationServer.getId())
+        client.deleteAuthorizationServer(createdAuthorizationServer.getId())
 
         // delete operation may not effect immediately in the backend
         sleep(getTestOperationDelay())
@@ -149,11 +149,11 @@ class AuthorizationServerIT extends ITSupport {
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"])
         )
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
         assertThat(createdAuthorizationServer.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
-        createdAuthorizationServer.deactivate()
+        client.deactivateAuthorizationServer(createdAuthorizationServer.getId())
 
         // delete operation may not effect immediately in the backend
         sleep(getTestOperationDelay())
@@ -174,11 +174,11 @@ class AuthorizationServerIT extends ITSupport {
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"])
         )
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
         assertThat(createdAuthorizationServer.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
-        createdAuthorizationServer.deactivate()
+        client.deactivateAuthorizationServer(createdAuthorizationServer.getId())
 
         // delete operation may not effect immediately in the backend
         sleep(getTestOperationDelay())
@@ -188,7 +188,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(retrievedAuthorizationServer.getId(), equalTo(createdAuthorizationServer.getId()))
         assertThat(retrievedAuthorizationServer.getStatus(), equalTo(LifecycleStatus.INACTIVE))
 
-        createdAuthorizationServer.activate()
+        client.activateAuthorizationServer(createdAuthorizationServer.getId())
 
         // delete operation may not effect immediately in the backend
         sleep(getTestOperationDelay())
@@ -211,7 +211,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"])
         )
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         // create may not effect immediately in the backend
@@ -228,8 +228,8 @@ class AuthorizationServerIT extends ITSupport {
             })
             .forEach({
                 authServer ->
-                    assertThat(authServer.listPolicies(), notNullValue())
-                    authServer.listPolicies().forEach({
+                    assertThat(client.listAuthorizationServerPolicies(authServer.getId()), notNullValue())
+                    client.listAuthorizationServerPolicies(authServer.getId()).forEach({
                         authPolicy -> assertThat(authPolicy.getId(), notNullValue())
                     })
             })
@@ -244,7 +244,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
@@ -258,11 +258,11 @@ class AuthorizationServerIT extends ITSupport {
                         [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
-            )
-        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
+            ) as AuthorizationServerPolicy
+        AuthorizationServerPolicy createdPolicy = client.createPolicy(authorizationServerPolicy) as AuthorizationServerPolicy
         assertThat(createdPolicy, notNullValue())
 
-        AuthorizationServerPolicy retrievedPolicy = createdAuthorizationServer.getPolicy(createdPolicy.getId())
+        AuthorizationServerPolicy retrievedPolicy = client.getAuthorizationServerPolicy(createdAuthorizationServer.getId(), createdPolicy.getId())
         assertThat(retrievedPolicy, notNullValue())
         assertThat(retrievedPolicy.getId(), equalTo(createdPolicy.getId()))
         assertThat(retrievedPolicy.getDescription(), equalTo(createdPolicy.getDescription()))
@@ -278,7 +278,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
@@ -292,14 +292,14 @@ class AuthorizationServerIT extends ITSupport {
                         [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
-            )
-        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
+            ) as AuthorizationServerPolicy
+        AuthorizationServerPolicy createdPolicy = client.createAuthorizationServerPolicy(authorizationServerPolicy, createdAuthorizationServer.getId())
         assertThat(createdPolicy, notNullValue())
 
         createdPolicy.setName("Test Policy Updated")
         createdPolicy.setDescription("Test Policy Updated")
 
-        AuthorizationServerPolicy updatedPolicy = createdAuthorizationServer.updatePolicy(createdPolicy.getId(), createdPolicy)
+        AuthorizationServerPolicy updatedPolicy = client.updateAuthorizationServerPolicy(createdPolicy, createdAuthorizationServer.getId(), createdPolicy.getId())
         assertThat(updatedPolicy, notNullValue())
         assertThat(updatedPolicy.getId(), equalTo(createdPolicy.getId()))
         assertThat(updatedPolicy.getName(), equalTo("Test Policy Updated"))
@@ -315,7 +315,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
@@ -329,16 +329,16 @@ class AuthorizationServerIT extends ITSupport {
                         [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
-            )
-        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
+            ) as AuthorizationServerPolicy
+        AuthorizationServerPolicy createdPolicy = client.createAuthorizationServerPolicy(authorizationServerPolicy, createdAuthorizationServer.getId())
         assertThat(createdPolicy, notNullValue())
 
-        createdAuthorizationServer.deletePolicy(createdPolicy.getId())
+        client.deleteAuthorizationServerPolicy(createdAuthorizationServer.getId(), createdPolicy.getId())
 
         // delete may not effect immediately in the backend
         sleep(getTestOperationDelay())
 
-        assertNotPresent(createdAuthorizationServer.listPolicies(), createdPolicy)
+        assertNotPresent(client.listAuthorizationServerPolicies(createdAuthorizationServer.getId()), createdPolicy)
     }
 
     @Test (groups = "group3")
@@ -350,7 +350,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
@@ -364,26 +364,28 @@ class AuthorizationServerIT extends ITSupport {
                         [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
-            )
-        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
+            ) as AuthorizationServerPolicy
+        AuthorizationServerPolicy createdPolicy = client.createAuthorizationServerPolicy(authorizationServerPolicy, createdAuthorizationServer.getId())
         assertThat(createdPolicy, notNullValue())
 
-        createdPolicy.deactivate(createdAuthorizationServer.getId())
-        def deactivatedPolicy = createdAuthorizationServer.getPolicy(createdPolicy.getId())
+        client.deactivateAuthorizationServerPolicy(createdAuthorizationServer.getId(), createdPolicy.getId())
+
+        def deactivatedPolicy = client.getAuthorizationServerPolicy(createdAuthorizationServer.getId(), createdPolicy.getId())
         assertThat(deactivatedPolicy, notNullValue())
         assertThat(deactivatedPolicy.getStatus(), equalTo(LifecycleStatus.INACTIVE))
 
-        deactivatedPolicy.activate(createdAuthorizationServer.getId())
-        def activatedPolicy = createdAuthorizationServer.getPolicy(deactivatedPolicy.getId())
+        client.activateAuthorizationServerPolicy(createdAuthorizationServer.getId(), deactivatedPolicy.getId())
+
+        def activatedPolicy = client.getAuthorizationServerPolicy(createdAuthorizationServer.getId(), deactivatedPolicy.getId())
         assertThat(activatedPolicy, notNullValue())
         assertThat(activatedPolicy.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
-        createdAuthorizationServer.deletePolicy(activatedPolicy.getId())
+        client.deletePolicy(activatedPolicy.getId())
 
         // delete may not effect immediately in the backend
         sleep(getTestOperationDelay())
 
-        assertNotPresent(createdAuthorizationServer.listPolicies(), activatedPolicy)
+        assertNotPresent(client.listAuthorizationServerPolicies(createdAuthorizationServer.getId()), activatedPolicy)
     }
 
     @Test (groups = "group3")
@@ -395,7 +397,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         AuthorizationServerList authorizationServerList = client.listAuthorizationServers()
@@ -409,11 +411,11 @@ class AuthorizationServerIT extends ITSupport {
             })
             .forEach({
                 authServer ->
-                    assertThat(authServer.listPolicies(), notNullValue())
-                    authServer.listPolicies().forEach({ authPolicy ->
+                    assertThat(client.listAuthorizationServerPolicies(authServer.getId()), notNullValue())
+                    client.listAuthorizationServerPolicies(authServer.getId()).forEach({ authPolicy ->
                         assertThat(authPolicy, notNullValue())
                         assertThat(authPolicy.getId(), notNullValue())
-                        assertThat(authPolicy.listPolicyRules(authServer.getId()), notNullValue())
+                        assertThat(client.listAuthorizationServerPolicyRules(authPolicy.getId(), authServer.getId()), notNullValue())
                     })
             })
     }
@@ -427,7 +429,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
@@ -441,11 +443,11 @@ class AuthorizationServerIT extends ITSupport {
                         [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
-            )
-        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
+            ) as AuthorizationServerPolicy
+        AuthorizationServerPolicy createdPolicy = client.createAuthorizationServerPolicy(authorizationServerPolicy, createdAuthorizationServer.getId())
         assertThat(createdPolicy, notNullValue())
 
-        AuthorizationServerPolicy retrievedPolicy = createdAuthorizationServer.getPolicy(createdPolicy.getId())
+        AuthorizationServerPolicy retrievedPolicy = client.getAuthorizationServerPolicy(createdAuthorizationServer.getId(), createdPolicy.getId())
         assertThat(retrievedPolicy, notNullValue())
         assertThat(retrievedPolicy.getId(), equalTo(createdPolicy.getId()))
 
@@ -458,14 +460,14 @@ class AuthorizationServerIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook)
+        registerForCleanup(createdInlineHook as Deletable)
 
-        AuthorizationServerPolicyRule createdPolicyRule = retrievedPolicy.createPolicyRule(createdAuthorizationServer.getId(),
+        AuthorizationServerPolicyRule createdPolicyRule = client.createAuthorizationServerPolicyRule(
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS)
+                .setType(PolicyRuleType.ACCESS_POLICY)
                 .setPriority(1)
-                .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
+                .setConditions(client.instantiate(PolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
                         .setGroups(client.instantiate(GroupCondition)
                             .setInclude(["EVERYONE"])))
@@ -473,7 +475,7 @@ class AuthorizationServerIT extends ITSupport {
                         .setInclude(["implicit", "client_credentials", "authorization_code", "password"]))
                     .setScopes(client.instantiate(OAuth2ScopesMediationPolicyRuleCondition).setInclude(["openid", "email", "address"]))
                 )
-                .setActions(client.instantiate(AuthorizationServerPolicyRuleActions)
+                .setActions(client.instantiate(PolicyRuleActions)
                     .setToken(
                         client.instantiate(TokenAuthorizationServerPolicyRuleAction)
                             .setAccessTokenLifetimeMinutes(60)
@@ -484,11 +486,10 @@ class AuthorizationServerIT extends ITSupport {
                                 .setId(createdInlineHook.getId())
                             )
                     )
-                )
-        )
+                ) as AuthorizationServerPolicyRule, "", "")
 
         assertThat(createdPolicyRule, notNullValue())
-        assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS))
+        assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.ACCESS_POLICY))
         assertThat(createdPolicyRule.getPriority(), equalTo(1))
         assertThat(createdPolicyRule.getConditions().getPeople().getGroups().getInclude(), contains("EVERYONE"))
         assertThat(createdPolicyRule.getConditions().getGrantTypes().getInclude(),
@@ -509,7 +510,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer  as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
@@ -523,19 +524,19 @@ class AuthorizationServerIT extends ITSupport {
                         [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
-            )
+            ) as AuthorizationServerPolicy
 
-        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
+        AuthorizationServerPolicy createdPolicy = client.createAuthorizationServerPolicy(authorizationServerPolicy, createdAuthorizationServer.getId())
         assertThat(createdPolicy, notNullValue())
 
-        AuthorizationServerPolicy retrievedPolicy = createdAuthorizationServer.getPolicy(createdPolicy.getId())
+        AuthorizationServerPolicy retrievedPolicy = client.getAuthorizationServerPolicy(createdAuthorizationServer.getId(), createdPolicy.getId())
         assertThat(retrievedPolicy, notNullValue())
         assertThat(retrievedPolicy.getId(), equalTo(createdPolicy.getId()))
 
-        AuthorizationServerPolicyRule createdPolicyRule = retrievedPolicy.createPolicyRule(createdAuthorizationServer.getId(),
+        AuthorizationServerPolicyRule createdPolicyRule = client.createAuthorizationServerPolicyRule(
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS)
+                .setType(PolicyRuleType.ACCESS_POLICY)
                 .setPriority(1)
                 .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
@@ -552,11 +553,10 @@ class AuthorizationServerIT extends ITSupport {
                             .setRefreshTokenLifetimeMinutes(0)
                             .setRefreshTokenWindowMinutes(10080)
                     )
-                )
-        )
+                ) as AuthorizationServerPolicyRule, createdPolicy.getId(), createdAuthorizationServer.getId())
 
         assertThat(createdPolicyRule, notNullValue())
-        assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS))
+        assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.ACCESS_POLICY))
         assertThat(createdPolicyRule.getPriority(), equalTo(1))
         assertThat(createdPolicyRule.getConditions().getPeople().getGroups().getInclude(), contains("EVERYONE"))
         assertThat(createdPolicyRule.getConditions().getGrantTypes().getInclude(),
@@ -594,7 +594,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
@@ -651,7 +651,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
         assertThat(createdAuthorizationServer, notNullValue())
 
         AuthorizationServerPolicy authorizationServerPolicy = client.instantiate(AuthorizationServerPolicy)
@@ -665,8 +665,8 @@ class AuthorizationServerIT extends ITSupport {
                         [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
-            )
-        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
+            ) as AuthorizationServerPolicy
+        AuthorizationServerPolicy createdPolicy = client.createAuthorizationServerPolicy(authorizationServerPolicy, createdAuthorizationServer.getId())
         assertThat(createdPolicy, notNullValue())
 
         AuthorizationServerPolicyRule createdPolicyRule = createdPolicy.createPolicyRule(createdAuthorizationServer.getId(),
@@ -690,6 +690,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(deactivatedPolicyRule, notNullValue())
         assertThat(deactivatedPolicyRule.getStatus(), equalTo(AuthorizationServerPolicyRule.StatusEnum.INACTIVE))
 
+        client.deactivateAuthorizationServerPolicyRule(createdAuthorizationServer.getId(), createdPolicy.getId())
         deactivatedPolicyRule.activate(createdAuthorizationServer.getId())
         def activatedPolicyRule = createdPolicy.getPolicyRule(createdAuthorizationServer.getId(), createdPolicyRule.getId())
         assertThat(activatedPolicyRule, notNullValue())
@@ -700,7 +701,7 @@ class AuthorizationServerIT extends ITSupport {
         // delete may not effect immediately in the backend
         sleep(getTestOperationDelay())
 
-        assertNotPresent(createdPolicy.listPolicyRules(createdAuthorizationServer.getId()), activatedPolicyRule)
+        assertNotPresent(client.listAuthorizationServerPolicyRules(activatedPolicyRcreatedAuthorizationServer.getId()), activatedPolicyRule)
     }
 
     // Scope operations
@@ -714,17 +715,17 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
 
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
             .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
 
-        OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
+        OAuth2Scope createdOAuth2Scope = client.createOAuth2Scope(oAuth2Scope, createdAuthorizationServer.getId())
 
         assertThat(createdOAuth2Scope, notNullValue())
-        assertPresent(createdAuthorizationServer.listOAuth2Scopes(), createdOAuth2Scope)
+        assertPresent(client.listOAuth2Scopes(createdAuthorizationServer.getId()), createdOAuth2Scope)
     }
 
     @Test (groups = "group3")
@@ -736,18 +737,18 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
 
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
             .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
 
-        OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
+        OAuth2Scope createdOAuth2Scope = client.createOAuth2Scope(oAuth2Scope, createdAuthorizationServer.getId())
 
         assertThat(createdOAuth2Scope, notNullValue())
 
-        OAuth2Scope retrievedOAuth2Scope = createdAuthorizationServer.getOAuth2Scope(createdOAuth2Scope.getId())
+        OAuth2Scope retrievedOAuth2Scope = client.getOAuth2Scope(createdAuthorizationServer.getId(), createdOAuth2Scope.getId())
 
         assertThat(retrievedOAuth2Scope.getId(), equalTo(createdOAuth2Scope.getId()))
     }
@@ -761,7 +762,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
 
         assertThat(createdAuthorizationServer, notNullValue())
 
@@ -770,7 +771,7 @@ class AuthorizationServerIT extends ITSupport {
             .setConsent(OAuth2ScopeConsentType.REQUIRED)
             .setMetadataPublish(OAuth2ScopeMetadataPublish.ALL_CLIENTS)
 
-        OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
+        OAuth2Scope createdOAuth2Scope = client.createOAuth2Scope(oAuth2Scope, createdAuthorizationServer.getId())
 
         assertThat(createdOAuth2Scope, notNullValue())
 
@@ -779,7 +780,7 @@ class AuthorizationServerIT extends ITSupport {
             .setConsent(OAuth2ScopeConsentType.REQUIRED)
             .setMetadataPublish(OAuth2ScopeMetadataPublish.ALL_CLIENTS)
 
-        OAuth2Scope updatedOAuth2Scope = createdAuthorizationServer.updateOAuth2Scope(createdOAuth2Scope.getId(), tobeUpdatedOAuth2Scope)
+        OAuth2Scope updatedOAuth2Scope = client.updateOAuth2Scope(tobeUpdatedOAuth2Scope, createdAuthorizationServer.getId(), createdOAuth2Scope.getId())
 
         assertThat(updatedOAuth2Scope.getId(), equalTo(tobeUpdatedOAuth2Scope.getId()))
         assertThat(updatedOAuth2Scope.getName(), equalTo(tobeUpdatedOAuth2Scope.getName()))
@@ -794,23 +795,23 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
 
         assertThat(createdAuthorizationServer, notNullValue())
 
         OAuth2Scope oAuth2Scope = client.instantiate(OAuth2Scope)
             .setName("java-sdk-it-" + RandomStringUtils.randomAlphanumeric(10))
 
-        OAuth2Scope createdOAuth2Scope = createdAuthorizationServer.createOAuth2Scope(oAuth2Scope)
+        OAuth2Scope createdOAuth2Scope = client.createOAuth2Scope(oAuth2Scope, createdAuthorizationServer.getId())
 
         assertThat(createdOAuth2Scope, notNullValue())
 
-        createdAuthorizationServer.deleteOAuth2Scope(createdOAuth2Scope.getId())
+        client.deleteOAuth2Scope(createdAuthorizationServer.getId(), createdOAuth2Scope.getId())
 
         // delete may not effect immediately in the backend
         sleep(getTestOperationDelay())
 
-        assertNotPresent(createdAuthorizationServer.listOAuth2Scopes(), createdOAuth2Scope)
+        assertNotPresent(client.listOAuth2Scopes(createdAuthorizationServer.getId()), createdOAuth2Scope)
     }
 
     // Claim operations
@@ -824,7 +825,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
 
         assertThat(createdAuthorizationServer, notNullValue())
 
@@ -835,10 +836,10 @@ class AuthorizationServerIT extends ITSupport {
             .setValueType(OAuth2ClaimValueType.EXPRESSION)
             .setValue("\"driving!\"") // value must be an Okta EL expression if valueType is EXPRESSION
 
-        OAuth2Claim createdOAuth2Claim = createdAuthorizationServer.createOAuth2Claim(oAuth2Claim)
+        OAuth2Claim createdOAuth2Claim = client.createOAuth2Claim(oAuth2Claim, createdAuthorizationServer.getId())
         assertThat(createdOAuth2Claim, notNullValue())
 
-        assertPresent(createdAuthorizationServer.listOAuth2Claims(), createdOAuth2Claim)
+        assertPresent(client.listOAuth2Claims(createdAuthorizationServer.getId()), createdOAuth2Claim)
     }
 
     @Test (groups = "group3")
@@ -850,7 +851,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
 
         assertThat(createdAuthorizationServer, notNullValue())
 
@@ -861,10 +862,10 @@ class AuthorizationServerIT extends ITSupport {
             .setValueType(OAuth2ClaimValueType.EXPRESSION)
             .setValue("\"driving!\"")
 
-        OAuth2Claim createdOAuth2Claim = createdAuthorizationServer.createOAuth2Claim(oAuth2Claim)
+        OAuth2Claim createdOAuth2Claim = client.createOAuth2Claim(oAuth2Claim, createdAuthorizationServer.getId())
         assertThat(createdOAuth2Claim, notNullValue())
 
-        OAuth2Claim retrievedOAuth2Claim = createdAuthorizationServer.getOAuth2Claim(createdOAuth2Claim.getId())
+        OAuth2Claim retrievedOAuth2Claim = client.getOAuth2Claim(createdAuthorizationServer.getId(), createdOAuth2Claim.getId())
         assertThat(retrievedOAuth2Claim, notNullValue())
         assertThat(retrievedOAuth2Claim.getId(), equalTo(createdOAuth2Claim.getId()))
     }
@@ -878,7 +879,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
 
         assertThat(createdAuthorizationServer, notNullValue())
 
@@ -889,7 +890,7 @@ class AuthorizationServerIT extends ITSupport {
             .setValueType(OAuth2ClaimValueType.EXPRESSION)
             .setValue("\"driving!\"")
 
-        OAuth2Claim createdOAuth2Claim = createdAuthorizationServer.createOAuth2Claim(oAuth2Claim)
+        OAuth2Claim createdOAuth2Claim = client.createOAuth2Claim(oAuth2Claim, createdAuthorizationServer.getId())
         assertThat(createdOAuth2Claim, notNullValue())
 
         OAuth2Claim tobeUpdatedOAuth2Claim = client.instantiate(OAuth2Claim)
@@ -899,8 +900,7 @@ class AuthorizationServerIT extends ITSupport {
             .setValueType(OAuth2ClaimValueType.EXPRESSION)
             .setValue("\"driving!\"")
 
-        OAuth2Claim updatedOAuth2Claim = createdAuthorizationServer.updateOAuth2Claim(createdOAuth2Claim.getId(), tobeUpdatedOAuth2Claim)
-
+        OAuth2Claim updatedOAuth2Claim = client.updateOAuth2Claim(tobeUpdatedOAuth2Claim, createdAuthorizationServer.getId(), createdOAuth2Claim.getId())
         assertThat(updatedOAuth2Claim.getId(), equalTo(tobeUpdatedOAuth2Claim.getId()))
         assertThat(updatedOAuth2Claim.getName(), equalTo(tobeUpdatedOAuth2Claim.getName()))
     }
@@ -914,7 +914,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setDescription("Test Authorization Server")
                 .setAudiences(["api://example"]))
-        registerForCleanup(createdAuthorizationServer)
+        registerForCleanup(createdAuthorizationServer as Deletable)
 
         assertThat(createdAuthorizationServer, notNullValue())
 
@@ -925,14 +925,14 @@ class AuthorizationServerIT extends ITSupport {
             .setValueType(OAuth2ClaimValueType.EXPRESSION)
             .setValue("\"driving!\"")
 
-        OAuth2Claim createdOAuth2Claim = createdAuthorizationServer.createOAuth2Claim(oAuth2Claim)
+        OAuth2Claim createdOAuth2Claim = client.createOAuth2Claim(oAuth2Claim, createdAuthorizationServer.getId())
         assertThat(createdOAuth2Claim, notNullValue())
 
-        createdAuthorizationServer.deleteOAuth2Claim(createdOAuth2Claim.getId())
+        client.deleteOAuth2Claim(createdAuthorizationServer.getId(), oAuth2Claim.getId())
 
         // delete may not effect immediately in the backend
         sleep(getTestOperationDelay())
 
-        assertNotPresent(createdAuthorizationServer.listOAuth2Claims(), createdOAuth2Claim)
+        assertNotPresent(client.listOAuth2Claims(createdAuthorizationServer.getId()), createdOAuth2Claim)
     }
 }

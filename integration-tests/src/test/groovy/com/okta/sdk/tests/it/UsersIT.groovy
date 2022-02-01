@@ -573,7 +573,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         user.addGroupTarget(role.getId(), group.getId())
 
         // 4. List Group Targets for Role
-        assertGroupTargetPresent(user, group, role)
+        assertGroupTargetPresent(client, user, group, role)
 
         // 5. Remove Group Target from Admin User Role and verify removed
         // Note: Don’t remove the last group target from a role assignment, as this causes an exception.
@@ -591,7 +591,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         user.addGroupTarget(role.getId(), adminGroup.getId())
         user.removeGroupTarget(role.getId(), adminGroup.getId())
 
-        assertGroupTargetPresent(user, group, role)
+        assertGroupTargetPresent(client, user, group, role)
     }
 
     @Test (groups = "group2")

@@ -16,6 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.UserBuilder
@@ -54,7 +55,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
     @Override
     void update(Client client, def group) {
         group.getProfile().description = "IT created Group - Updated"
-        group.update()
+        client.updateGroup(group, group.id)
     }
 
     @Override
@@ -77,7 +78,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         Group createdGroup = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup)
+        registerForCleanup(createdGroup as Deletable)
 
         validateGroup(createdGroup, groupName)
 
@@ -95,7 +96,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         Group group = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(group)
+        registerForCleanup(group as Deletable)
         validateGroup(group, groupName)
 
         // 2. Search the group by name
@@ -112,7 +113,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         Group group = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(group)
+        registerForCleanup(group as Deletable)
         validateGroup(group, groupName)
 
         // 2. Search the group by search parameter
@@ -131,13 +132,13 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         Group group = GroupBuilder.instance()
                 .setName(groupName)
                 .buildAndCreate(client)
-        registerForCleanup(group)
+        registerForCleanup(group as Deletable)
         validateGroup(group, groupName)
 
         // 2. Update the group name and description
         group.getProfile().name = groupNameUpdated
         group.getProfile().description = 'Description updated'
-        group.update()
+        client.updateGroup(group, group.getId())
 
         validateGroup(group, groupNameUpdated, 'Description updated')
     }
@@ -159,7 +160,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         String groupName = "Group-Member API Test Group ${uniqueTestName}"
@@ -167,17 +168,17 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         Group group = GroupBuilder.instance()
                 .setName(groupName)
                 .buildAndCreate(client)
-        registerForCleanup(group)
+        registerForCleanup(group as Deletable)
         validateGroup(group, groupName)
 
         // 2. Add user to the group and validate user present in group
-        user.addToGroup(group.getId())
+        client.addUserToGroup(group.getId(), user.getId())
 
-        assertUserInGroup(user, group, 5, getTestOperationDelay())
+        assertUserInGroup(client, user, group, 5, getTestOperationDelay())
 
         // 3. Remove user from group and validate user removed
-        group.removeUser(user.getId())
+        client.removeUserFromGroup(group.getId(), user.getId())
 
-        assertUserNotInGroup(user, group, 5, getTestOperationDelay())
+        assertUserNotInGroup(client, user, group, 5, getTestOperationDelay())
     }
 }

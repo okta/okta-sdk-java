@@ -56,19 +56,19 @@ class FactorsIT extends ITSupport {
         Client client = getClient()
         User user = randomUser()
 
-        assertThat user.listFactors(), emptyIterable()
+        assertThat client.listFactors(user.getId()), emptyIterable()
 
         SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor)
         smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
-        user.enrollFactor(smsUserFactor)
+        client.enrollFactor(smsUserFactor, user.getId())
 
         SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
         securityQuestionUserFactor.getProfile()
             .setQuestion("disliked_food")
             .setAnswer("pizza")
-        user.enrollFactor(securityQuestionUserFactor)
+        client.enrollFactor(securityQuestionUserFactor, user.getId())
 
-        UserFactorList factorsList = user.listFactors()
+        UserFactorList factorsList = client.listFactors(user.getId())
         List<UserFactor> factorsArrayList = Lists.newArrayList(factorsList)
         assertThat factorsArrayList, allOf(hasSize(2), containsInAnyOrder(
             allOf(
@@ -85,7 +85,7 @@ class FactorsIT extends ITSupport {
         Client client = getClient()
         User user = randomUser()
 
-        assertThat user.listFactors(), emptyIterable()
+        assertThat client.listFactors(user.getId()), emptyIterable()
 
         SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
         securityQuestionUserFactor.getProfile()
@@ -93,7 +93,7 @@ class FactorsIT extends ITSupport {
             .setAnswer("pizza")
 
         assertThat securityQuestionUserFactor.id, nullValue()
-        assertThat securityQuestionUserFactor, sameInstance(user.enrollFactor(securityQuestionUserFactor))
+        assertThat securityQuestionUserFactor, sameInstance(client.enrollFactor(securityQuestionUserFactor, user.getId()))
         assertThat securityQuestionUserFactor.id, notNullValue()
     }
 
@@ -103,13 +103,13 @@ class FactorsIT extends ITSupport {
         Client client = getClient()
         User user = randomUser()
 
-        assertThat user.listFactors(), emptyIterable()
+        assertThat client.listFactors(user.getId()), emptyIterable()
 
         CallUserFactor callUserFactor = client.instantiate(CallUserFactor)
         callUserFactor.getProfile().setPhoneNumber(smsTestNumber)
 
         assertThat callUserFactor.id, nullValue()
-        assertThat callUserFactor, sameInstance(user.enrollFactor(callUserFactor))
+        assertThat callUserFactor, sameInstance(client.enrollFactor(callUserFactor, user.getId()))
         assertThat callUserFactor.id, notNullValue()
     }
 
@@ -119,13 +119,13 @@ class FactorsIT extends ITSupport {
         Client client = getClient()
         User user = randomUser()
 
-        assertThat user.listFactors(), emptyIterable()
+        assertThat client.listFactors(user.getId()), emptyIterable()
 
         SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor)
         smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
 
         assertThat smsUserFactor.id, nullValue()
-        assertThat smsUserFactor, sameInstance(user.enrollFactor(smsUserFactor))
+        assertThat smsUserFactor, sameInstance(client.enrollFactor(smsUserFactor, user.getId()))
         assertThat smsUserFactor.id, notNullValue()
     }
 
@@ -134,25 +134,25 @@ class FactorsIT extends ITSupport {
     void testPushFactorCreation() {
         Client client = getClient()
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertThat client.listFactors(user.getId()), emptyIterable()
 
         PushUserFactor pushUserFactor = client.instantiate(PushUserFactor)
         assertThat pushUserFactor.id, nullValue()
-        assertThat pushUserFactor, sameInstance(user.enrollFactor(pushUserFactor))
+        assertThat pushUserFactor, sameInstance(client.enrollFactor(pushUserFactor, user.getId()))
         assertThat pushUserFactor.id, notNullValue()
     }
 
     @Test (groups = "group2")
     void testListSecurityQuestionsNotEmpty() {
         User user = randomUser()
-        SecurityQuestionList securityQuestions = user.listSupportedSecurityQuestions()
+        SecurityQuestionList securityQuestions = client.listSupportedSecurityQuestions(user.getId())
         assertThat securityQuestions, iterableWithSize(greaterThan(1))
     }
 
     @Test (groups = "group2")
     void testAvailableFactorsNotEmpty() {
         User user = randomUser()
-        UserFactorList factors = user.listSupportedFactors()
+        UserFactorList factors = client.listSupportedFactors(user.getId())
         assertThat factors, iterableWithSize(greaterThan(1))
     }
 
@@ -160,16 +160,16 @@ class FactorsIT extends ITSupport {
     @Test (groups = "group2")
     void activateTotpFactor() {
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertThat client.listFactors(user.getId()), emptyIterable()
         TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
-        user.enrollFactor(totpUserFactor)
+        client.enrollFactor(totpUserFactor, user.getId())
 
         assertThat totpUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
         Totp totp = new Totp(totpUserFactor.getEmbedded().get("activation").get("sharedSecret"))
 
         ActivateFactorRequest activateFactorRequest = client.instantiate(ActivateFactorRequest)
         activateFactorRequest.setPassCode(totp.now())
-        UserFactor factorResult = totpUserFactor.activate(activateFactorRequest)
+        UserFactor factorResult = client.activateFactor(user.getId(), totpUserFactor.getId(), activateFactorRequest)
         assertThat factorResult.getStatus(), is(FactorStatus.ACTIVE)
         assertThat factorResult, instanceOf(TotpUserFactor)
     }
@@ -182,12 +182,12 @@ class FactorsIT extends ITSupport {
         securityQuestionUserFactor.getProfile()
             .setQuestion("disliked_food")
             .setAnswer("pizza")
-        user.enrollFactor(securityQuestionUserFactor)
+        client.enrollFactor(securityQuestionUserFactor, user.getId())
 
         VerifyFactorRequest request = client.instantiate(VerifyFactorRequest)
         request.setAnswer("pizza")
         VerifyUserFactorResponse response =
-            securityQuestionUserFactor.verify(request, null, null, null, null, null)
+            client.verifyFactor(user.getId(), securityQuestionUserFactor.getId(), request, null, null, null, null, null)
         assertThat response.getFactorResult(), is(VerifyUserFactorResult.SUCCESS)
     }
 
@@ -195,7 +195,7 @@ class FactorsIT extends ITSupport {
     @Test (groups = "group2")
     void testEmailUserFactor() {
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertThat client.listFactors(user.getId()), emptyIterable()
 
         EmailUserFactor emailUserFactor = client.instantiate(EmailUserFactor)
             .setFactorType(FactorType.EMAIL)
@@ -205,13 +205,13 @@ class FactorsIT extends ITSupport {
 
         assertThat emailUserFactor.id, nullValue()
         // enroll and activate
-        assertThat emailUserFactor, sameInstance(user.enrollFactor(emailUserFactor, false, null, null, true))
+        assertThat emailUserFactor, sameInstance(client.enrollFactor(emailUserFactor, user.getId(),false, null, null, true))
         assertThat emailUserFactor.getStatus(), is(FactorStatus.ACTIVE)
         assertThat emailUserFactor.id, notNullValue()
 
         VerifyFactorRequest request = client.instantiate(VerifyFactorRequest)
         VerifyUserFactorResponse response =
-            emailUserFactor.verify(request, null, null, null, null, null)
+            client.verifyFactor(user.getId(), emailUserFactor.getId(), request, null, null, null, null, null)
         assertThat response.getFactorResult(), is(VerifyUserFactorResult.CHALLENGE)
     }
 
@@ -219,14 +219,14 @@ class FactorsIT extends ITSupport {
     @Test (groups = "group2")
     void testGoogleTotpUserFactorCreation() {
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertThat client.listFactors(user.getId()), emptyIterable()
 
         TokenUserFactor tokenUserFactor = client.instantiate(TokenUserFactor)
             .setFactorType(FactorType.TOKEN_SOFTWARE_TOTP)
-            .setProvider(FactorProvider.GOOGLE)
+            .setProvider(FactorProvider.GOOGLE) as TokenUserFactor
 
         assertThat tokenUserFactor.id, nullValue()
-        assertThat tokenUserFactor, sameInstance(user.enrollFactor(tokenUserFactor))
+        assertThat tokenUserFactor, sameInstance(client.enrollFactor(tokenUserFactor, user.getId()))
         assertThat tokenUserFactor.id, notNullValue()
         assertThat tokenUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
     }
@@ -234,12 +234,11 @@ class FactorsIT extends ITSupport {
     @NonOIEEnvironmentOnly
     @Test (groups = "group2")
     void deleteFactorTest() {
-
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertThat client.listFactors(user.getId()), emptyIterable()
         TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
         totpUserFactor.setProvider(FactorProvider.OKTA)
-        user.enrollFactor(totpUserFactor)
-        totpUserFactor.delete()
+        client.enrollFactor(totpUserFactor, user.getId())
+        client.deleteFactor(user.getId(), totpUserFactor.getId())
     }
 }

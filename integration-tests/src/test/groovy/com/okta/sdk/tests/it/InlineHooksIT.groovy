@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.InlineHookChannelConfigHeaders
 import com.okta.sdk.resource.inline.hook.*
 import com.okta.sdk.tests.it.util.ITSupport
@@ -44,13 +45,13 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook)
+        registerForCleanup(createdInlineHook as Deletable)
 
         assertThat(createdInlineHook.getId(), notNullValue())
         assertThat(createdInlineHook.getName(), equalTo(name))
         assertThat(createdInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooks"))
 
-        createdInlineHook.deactivate()
+        client.deactivateInlineHook(createdInlineHook.getId())
     }
 
     @Test (groups = "group2")
@@ -65,7 +66,7 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook)
+        registerForCleanup(createdInlineHook as Deletable)
 
         assertThat(createdInlineHook.getId(), notNullValue())
 
@@ -75,7 +76,7 @@ class InlineHooksIT extends ITSupport {
         assertThat(retrievedInlineHook.getName(), equalTo(name))
         assertThat(retrievedInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooks"))
 
-        createdInlineHook.deactivate()
+        client.deactivateInlineHook(createdInlineHook.getId())
     }
 
     @Test (groups = "group2")
@@ -90,7 +91,7 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook)
+        registerForCleanup(createdInlineHook as Deletable)
 
         assertThat(createdInlineHook.getId(), notNullValue())
 
@@ -107,7 +108,7 @@ class InlineHooksIT extends ITSupport {
             .setValue("Test-Api-Key-Updated"))
             .setUri("https://www.example.com/inlineHooksUpdated")
 
-        InlineHook updatedInlineHook = toBeUpdatedInlineHook.update()
+        InlineHook updatedInlineHook = client.updateInlineHook(toBeUpdatedInlineHook, createdInlineHook.getId())
 
         assertThat(updatedInlineHook.getId(), notNullValue())
         assertThat(updatedInlineHook.getId(), equalTo(createdInlineHook.getId()))
@@ -115,7 +116,7 @@ class InlineHooksIT extends ITSupport {
         assertThat(updatedInlineHook.getType(), equalTo(InlineHookType.OAUTH2_TOKENS_TRANSFORM))
         assertThat(updatedInlineHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/inlineHooksUpdated"))
 
-        updatedInlineHook.deactivate()
+        client.deactivateInlineHook(createdInlineHook.getId())
     }
 
     @Test (groups = "group2")
@@ -130,7 +131,7 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook)
+        registerForCleanup(createdInlineHook as Deletable)
 
         assertThat(createdInlineHook.getId(), notNullValue())
 
@@ -138,8 +139,8 @@ class InlineHooksIT extends ITSupport {
         assertThat(retrievedInlineHook.getId(), equalTo(createdInlineHook.getId()))
         assertThat(retrievedInlineHook.getName(), equalTo(name))
 
-        createdInlineHook.deactivate()
-        createdInlineHook.delete()
+        client.deactivateInlineHook(createdInlineHook.getId())
+        client.deleteInlineHook(createdInlineHook.getId())
 
         assertNotPresent(client.listInlineHooks(), createdInlineHook)
     }
@@ -156,13 +157,13 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook)
+        registerForCleanup(createdInlineHook as Deletable)
 
         assertThat(createdInlineHook.getId(), notNullValue())
         assertThat(createdInlineHook.getName(), equalTo(name))
         assertPresent(client.listInlineHooks(), createdInlineHook)
 
-        createdInlineHook.deactivate()
+        client.deactivateInlineHook(createdInlineHook.getId())
     }
 
     @Test (groups = "group2")
@@ -177,18 +178,18 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook)
+        registerForCleanup(createdInlineHook as Deletable)
 
         assertThat(createdInlineHook.getId(), notNullValue())
         assertThat(createdInlineHook.getName(), equalTo(name))
         assertThat(createdInlineHook.getStatus(), equalTo(InlineHookStatus.ACTIVE))
 
-        createdInlineHook.deactivate()
+        client.deactivateInlineHook(createdInlineHook.getId())
 
         InlineHook retrievedInlineHook = client.getInlineHook(createdInlineHook.getId())
 
         assertThat(retrievedInlineHook.getStatus(), equalTo(InlineHookStatus.INACTIVE))
 
-        retrievedInlineHook.delete()
+        client.deleteInlineHook(createdInlineHook.getId())
     }
 }

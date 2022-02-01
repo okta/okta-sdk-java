@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.AssignRoleRequest
@@ -48,7 +49,7 @@ class GroupRolesIT extends ITSupport {
         Group createdGroup = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup)
+        registerForCleanup(createdGroup as Deletable)
 
         validateGroup(createdGroup, groupName)
 
@@ -63,8 +64,8 @@ class GroupRolesIT extends ITSupport {
         appAdminRoleRequest.setType(RoleType.APP_ADMIN)
 
         // 4. Assign USER_ADMIN & APP_ADMIN roles
-        Role userAdminRole = createdGroup.assignRole(userAdminRoleRequest)
-        Role appAdminRole = createdGroup.assignRole(appAdminRoleRequest)
+        Role userAdminRole = client.assignRoleToGroup(userAdminRoleRequest, createdGroup.getId())
+        Role appAdminRole =  client.assignRoleToGroup(appAdminRoleRequest, createdGroup.getId())
 
         // fix flakiness seen in PDV tests
         Thread.sleep(getTestOperationDelay())
@@ -86,7 +87,7 @@ class GroupRolesIT extends ITSupport {
         Group createdGroup = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup)
+        registerForCleanup(createdGroup as Deletable)
 
         validateGroup(createdGroup, groupName)
 
@@ -98,7 +99,7 @@ class GroupRolesIT extends ITSupport {
         userAdminRoleRequest.setType(RoleType.USER_ADMIN)
 
         // 4. Assign the above role
-        Role userAdminRole = createdGroup.assignRole(userAdminRoleRequest)
+        Role userAdminRole = client.assignRoleToGroup(userAdminRoleRequest, createdGroup.getId())
 
         // 5. List assigned group roles and check the assignments
         assertRolePresent(client.listGroupAssignedRoles(createdGroup.getId()), userAdminRole)
@@ -124,8 +125,8 @@ class GroupRolesIT extends ITSupport {
         Group createdGroup2 = GroupBuilder.instance()
             .setName(groupName2)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup1)
-        registerForCleanup(createdGroup2)
+        registerForCleanup(createdGroup1 as Deletable)
+        registerForCleanup(createdGroup2 as Deletable)
 
         validateGroup(createdGroup1, groupName1)
         validateGroup(createdGroup2, groupName2)
@@ -135,11 +136,11 @@ class GroupRolesIT extends ITSupport {
         assertGroupPresent(client.listGroups(), createdGroup2)
 
         // 3. Create a USER_ADMIN role & assign it to the first group
-        Role userAdminRole = createdGroup1.assignRole(client.instantiate(AssignRoleRequest)
-            .setType(RoleType.USER_ADMIN))
+        Role userAdminRole = client.assignRoleToGroup(client.instantiate(AssignRoleRequest)
+            .setType(RoleType.USER_ADMIN), createdGroup1.getId())
 
         // 4. Add second group as the admin target for the user admin role
-        userAdminRole.addAdminGroupTarget(createdGroup2.getId())
+        client.addGroupTargetToGroupAdministratorRoleForGroup(createdGroup1.getId(), userAdminRole.getId(), createdGroup2.getId())
 
         // 5. Verify the same
         assertGroupPresent(client.listGroupTargetsForGroupRole(createdGroup1.getId(), userAdminRole.getId()), createdGroup2)
@@ -163,9 +164,9 @@ class GroupRolesIT extends ITSupport {
         Group createdGroup3 = GroupBuilder.instance()
             .setName(groupName3)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup1)
-        registerForCleanup(createdGroup2)
-        registerForCleanup(createdGroup3)
+        registerForCleanup(createdGroup1 as Deletable)
+        registerForCleanup(createdGroup2 as Deletable)
+        registerForCleanup(createdGroup3 as Deletable)
 
         validateGroup(createdGroup1, groupName1)
         validateGroup(createdGroup2, groupName2)
@@ -177,14 +178,14 @@ class GroupRolesIT extends ITSupport {
         assertGroupPresent(client.listGroups(), createdGroup3)
 
         // 3. Create a USER_ADMIN role & assign it to the first group
-        Role userAdminRole = createdGroup1.assignRole(client.instantiate(AssignRoleRequest)
-            .setType(RoleType.USER_ADMIN))
+        Role userAdminRole = client.assignRoleToGroup(client.instantiate(AssignRoleRequest)
+            .setType(RoleType.USER_ADMIN), createdGroup1.getId())
 
         // 4. Add second group as the admin target for the user admin role
-        userAdminRole.addAdminGroupTarget(createdGroup2.getId())
+        client.addGroupTargetToGroupAdministratorRoleForGroup(createdGroup1.getId(), userAdminRole.getId(), createdGroup2.getId())
 
         // 5. Add third group as the admin target for the user admin role
-        userAdminRole.addAdminGroupTarget(createdGroup3.getId())
+        client.addGroupTargetToGroupAdministratorRoleForGroup(createdGroup1.getId(), userAdminRole.getId(), createdGroup3.getId())
 
         // 6. Verify if both the above targets (group 2 & group 3) are added
         assertGroupPresent(client.listGroupTargetsForGroupRole(createdGroup1.getId(), userAdminRole.getId()), createdGroup2)

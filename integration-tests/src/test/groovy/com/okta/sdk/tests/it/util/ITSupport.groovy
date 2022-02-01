@@ -16,15 +16,20 @@
 package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ExtensibleResource
+import com.okta.sdk.resource.OktaSignOnPolicy
+import com.okta.sdk.resource.PasswordPolicy
 import com.okta.sdk.resource.authorization.server.LifecycleStatus
-import com.okta.sdk.resource.*
+import com.okta.sdk.resource.authorization.server.PolicyType
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.group.User
+import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
+import com.okta.sdk.resource.policy.PasswordPolicyBuilder
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
-import com.okta.sdk.tests.*
+import com.okta.sdk.tests.Scenario
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.testng.ITestContext
@@ -87,7 +92,7 @@ abstract class ITSupport implements ClientProvider {
      * - System property 'okta.it.operationDelay'
      * - Env variable 'OKTA_IT_OPERATION_DELAY'
      */
-    long getTestOperationDelay() {
+    static long getTestOperationDelay() {
         Long testDelay = Long.getLong(IT_OPERATION_DELAY)
 
         if (testDelay == null) {
@@ -113,7 +118,7 @@ abstract class ITSupport implements ClientProvider {
                 .setPassword("Password1".toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
 
         return user
     }
@@ -124,7 +129,7 @@ abstract class ITSupport implements ClientProvider {
             .setName(name)
             .setDescription(name)
             .buildAndCreate(getClient())
-        registerForCleanup(group)
+        registerForCleanup(group as Deletable)
 
         return group
     }
@@ -138,9 +143,9 @@ abstract class ITSupport implements ClientProvider {
             .setStatus(LifecycleStatus.ACTIVE)
             .setPriority(1)
             .addGroup(groupId)
-        .buildAndCreate(client)
+        .buildAndCreate(client) as PasswordPolicy
 
-        registerForCleanup(policy)
+        registerForCleanup(policy as Deletable)
 
         return policy
     }
@@ -152,9 +157,9 @@ abstract class ITSupport implements ClientProvider {
             .setDescription("IT created Policy")
             .setStatus(LifecycleStatus.ACTIVE)
         .setType(PolicyType.OKTA_SIGN_ON)
-        .buildAndCreate(client)
+        .buildAndCreate(client) as OktaSignOnPolicy
 
-        registerForCleanup(policy)
+        registerForCleanup(policy as Deletable)
 
         return policy
     }
