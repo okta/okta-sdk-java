@@ -17,6 +17,8 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.*
 import com.okta.sdk.resource.network.zone.NetworkZone
+import com.okta.sdk.resource.network.zone.NetworkZoneStatus
+import com.okta.sdk.resource.network.zone.NetworkZoneType
 import com.okta.sdk.resource.threat.insight.ThreatInsightConfiguration
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
@@ -70,14 +72,15 @@ class ThreatInsightConfigurationIT extends ITSupport {
         def createdNetworkZone = getClient().createNetworkZone(networkZone)
         assertThat(createdNetworkZone, notNullValue())
         assertThat(createdNetworkZone.getId(), notNullValue())
-        registerForCleanup(createdNetworkZone)
+        registerForCleanup(createdNetworkZone as Deletable)
 
         ThreatInsightConfiguration currentConfiguration = getClient().getCurrentConfiguration()
+
         def prevActionValue = currentConfiguration.getAction()
         String newActionValue
-        if(prevActionValue.equals("audit")) {
+        if (prevActionValue == "audit") {
             newActionValue = "none"
-        } else if(prevActionValue.equals("none")) {
+        } else if (prevActionValue == "none") {
             newActionValue = "audit"
         } else {
             newActionValue = prevActionValue
@@ -85,7 +88,8 @@ class ThreatInsightConfigurationIT extends ITSupport {
         currentConfiguration.setAction(newActionValue)
         currentConfiguration.setExcludeZones(Arrays.asList(createdNetworkZone.getId()))
 
-        ThreatInsightConfiguration updatedConfiguration = currentConfiguration.update()
+        ThreatInsightConfiguration updatedConfiguration = client.updateConfiguration(currentConfiguration)
+
         assertThat(updatedConfiguration, notNullValue())
         assertThat(updatedConfiguration.getAction(), equalTo(newActionValue))
         assertThat(updatedConfiguration.getExcludeZones(), iterableWithSize(1))
@@ -94,7 +98,9 @@ class ThreatInsightConfigurationIT extends ITSupport {
         //restore ThreatInsightConfiguration's action
         updatedConfiguration.setAction(prevActionValue)
         updatedConfiguration.setExcludeZones(Arrays.asList())
-        ThreatInsightConfiguration restoredConfiguration = updatedConfiguration.update()
+
+        ThreatInsightConfiguration restoredConfiguration = client.updateConfiguration(updatedConfiguration)
+
         assertThat(restoredConfiguration, notNullValue())
         assertThat(restoredConfiguration.getAction(), equalTo(prevActionValue))
         assertThat(restoredConfiguration.getExcludeZones(), iterableWithSize(0))

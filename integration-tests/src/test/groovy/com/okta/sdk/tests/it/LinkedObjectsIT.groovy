@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.linked.object.LinkedObject
 import com.okta.sdk.resource.linked.object.LinkedObjectDetailsType
 import com.okta.sdk.resource.linked.object.LinkedObjectDetails
@@ -53,7 +54,7 @@ class LinkedObjectsIT extends ITSupport {
         LinkedObject linkedObject = client.instantiate(LinkedObject)
             .setPrimary(primary)
             .setAssociated(associated)
-        registerForCleanup(linkedObject)
+        registerForCleanup(linkedObject as Deletable)
 
         LinkedObject createdLinkedObjectDefinition = client.addLinkedObjectDefinition(linkedObject)
 
@@ -89,7 +90,7 @@ class LinkedObjectsIT extends ITSupport {
         LinkedObject linkedObject = client.instantiate(LinkedObject)
             .setPrimary(primary)
             .setAssociated(associated)
-        registerForCleanup(linkedObject)
+        registerForCleanup(linkedObject as Deletable)
 
         client.addLinkedObjectDefinition(linkedObject)
 
@@ -127,7 +128,7 @@ class LinkedObjectsIT extends ITSupport {
         LinkedObject linkedObject = client.instantiate(LinkedObject)
             .setPrimary(primary)
             .setAssociated(associated)
-        registerForCleanup(linkedObject)
+        registerForCleanup(linkedObject as Deletable)
 
         client.addLinkedObjectDefinition(linkedObject)
 
@@ -167,7 +168,7 @@ class LinkedObjectsIT extends ITSupport {
         LinkedObject linkedObject1 = client.instantiate(LinkedObject)
             .setPrimary(primary1)
             .setAssociated(associated1)
-        registerForCleanup(linkedObject1)
+        registerForCleanup(linkedObject1 as Deletable)
 
         LinkedObject createdLinkedObjectDefinition1 = client.addLinkedObjectDefinition(linkedObject1)
 
@@ -191,7 +192,7 @@ class LinkedObjectsIT extends ITSupport {
         LinkedObject linkedObject2 = client.instantiate(LinkedObject)
             .setPrimary(primary2)
             .setAssociated(associated2)
-        registerForCleanup(linkedObject2)
+        registerForCleanup(linkedObject2 as Deletable)
 
         LinkedObject createdLinkedObjectDefinition2 = client.addLinkedObjectDefinition(linkedObject2)
 

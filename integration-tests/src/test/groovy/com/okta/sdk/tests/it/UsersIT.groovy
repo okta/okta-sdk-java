@@ -75,7 +75,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                     customIntegerArray: [1, 2, 3]
                 ])
                 .buildAndCreate(getClient())
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
 
         // check the values after create
         assertThat(user.getProfile().getString("firstName"), equalTo("Joe"))
@@ -93,7 +93,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                         customStringArray: user.getProfile().getStringList("customStringArray"),
                         customNumberArray: user.getProfile().getNumberList("customNumberArray"),
                         customIntegerArray: user.getProfile().getIntegerList("customIntegerArray")])
-        user.update()
+        client.updateUser(user, user.getId())
 
         // same check as before
         assertThat(user.getProfile().getNumber("customNumber"), equalTo(1.5d))
@@ -110,7 +110,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         user.getProfile().remove("customStringArray")
         user.getProfile().remove("customNumberArray")
         user.getProfile().remove("customIntegerArray")
-        user.update()
+        client.updateUser(user, user.getId())
 
         // everything should be null
         assertThat(user.getProfile().getNumber("customNumber"), nullValue())
@@ -133,7 +133,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         return user
     }
 
@@ -145,7 +145,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Override
     void update(Client client, def user) {
         user.getProfile().lastName = "Coder"
-        user.update()
+        client.updateUser(user, user.id)
     }
 
     @Override
@@ -168,13 +168,13 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def email = "john-activate=${uniqueTestName}@example.com"
 
         // 1. Create a User Type
-        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
             .setDisplayName(name)
             .setDescription(name + "_test_description"))
-        registerForCleanup(createdUserType)
+        registerForCleanup(createdUserType as Deletable)
 
         assertThat(createdUserType.getId(), notNullValue())
 
@@ -188,7 +188,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // See https://developer.okta.com/docs/reference/api/user-types/#specify-the-user-type-of-a-new-user
             .setType(createdUserType.getId())
             .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 3. Assert User Type
@@ -219,11 +219,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 2. Activate the user and verify user in list of active users
-        user.activate(false)
+        client.activateUser(user.getId(), false)
 
         // fix flakiness seen in PDV tests
         Thread.sleep(getTestOperationDelay())
@@ -246,7 +246,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setLastName(lastName)
                 .setPassword(password.toCharArray())
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         Thread.sleep(getTestOperationDelay())
@@ -270,23 +270,23 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 2. Assign USER_ADMIN role to the user
         AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
         assignRoleRequest.setType(RoleType.USER_ADMIN)
 
-        Role role = user.assignRole(assignRoleRequest)
+        Role role = client.assignRoleToUser(assignRoleRequest, user.getId())
 
         // 3. List roles for the user and verify added role
-        assertPresent(user.listAssignedRoles(), role)
+        assertPresent(client.listAssignedRolesForUser(user.getId()), role)
 
         // 4. Remove role for the user
-        user.removeRole(role.getId())
+        client.removeRoleFromUser(user.getId(), role.getId())
 
         // 5. List roles for user and verify role was removed
-        assertNotPresent(user.listAssignedRoles(), role)
+        assertNotPresent(client.listAssignedRolesForUser(user.getId()), role)
     }
 
     @Test (groups = "group2")
@@ -306,13 +306,13 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 2. Change the user's password
-        UserCredentials credentials = user.changePassword(client.instantiate(ChangePasswordRequest)
+        UserCredentials credentials = client.changePassword(client.instantiate(ChangePasswordRequest)
             .setOldPassword(client.instantiate(PasswordCredential).setValue('Passw0rd!2@3#'.toCharArray()))
-            .setNewPassword(client.instantiate(PasswordCredential).setValue('!2@3#Passw0rd'.toCharArray())), true)
+            .setNewPassword(client.instantiate(PasswordCredential).setValue('!2@3#Passw0rd'.toCharArray())), user.getId())
         assertThat credentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
@@ -335,10 +335,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setPassword(client.instantiate(PasswordPolicyPasswordSettings)
                 .setAge(client.instantiate(PasswordPolicyPasswordSettingsAge)
                     .setMinAgeMinutes(Duration.ofDays(2L).toMinutes() as int))))
-            .update()
+        client.updatePolicy(policy, policy.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        PasswordPolicyRule policyRule = policy.createRule(client.instantiate(PasswordPolicyRule)
+        PasswordPolicyRule policyRule = client.createPolicyRule(client.instantiate(PasswordPolicyRule)
             .setConditions(client.instantiate(PasswordPolicyRuleConditions)
                 .setNetwork(client.instantiate(PolicyNetworkCondition)
                     .setConnection(PolicyNetworkConnection.ANYWHERE)))
@@ -349,8 +349,8 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                         .setAccess(PolicyAccess.ALLOW))
                     .setSelfServiceUnlock(client.instantiate(PasswordPolicyRuleAction)
                         .setAccess(PolicyAccess.DENY)))
-            .setName(policyRuleName))
-        registerForCleanup(policyRule)
+            .setName(policyRuleName), policy.getId()) as PasswordPolicyRule
+        registerForCleanup(policyRule as Deletable)
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -361,7 +361,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setActive(true)
                 .setGroups(group.getId())
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 2. Change the user's password
@@ -369,10 +369,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setOldPassword(client.instantiate(PasswordCredential).setValue('Passw0rd!2@3#'.toCharArray()))
             .setNewPassword(client.instantiate(PasswordCredential).setValue('!2@3#Passw0rd'.toCharArray()))
 
-        def exception = expect ResourceException, {user.changePassword(request, true)}
+        def exception = expect ResourceException, {client.changePassword(request, user.getId(),true)}
         assertThat exception.getMessage(), containsString("E0000014") // Update of credentials failed.
 
-        def credentials = user.changePassword(request, false)
+        def credentials = client.changePassword(request, user.getId())
         assertThat credentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
@@ -397,16 +397,16 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setPassword(password.toCharArray())
             .setActive(true)
             .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 2. Change the recovery question
-        UserCredentials userCredentials = user.changeRecoveryQuestion(client.instantiate(UserCredentials)
+        UserCredentials userCredentials = client.changeRecoveryQuestion(client.instantiate(UserCredentials)
             .setPassword(client.instantiate(PasswordCredential)
                 .setValue('Passw0rd!2@3#'.toCharArray()))
             .setRecoveryQuestion(client.instantiate(RecoveryQuestionCredential)
                 .setQuestion('How many roads must a man walk down?')
-                .setAnswer('forty two')))
+                .setAnswer('forty two')), user.getId())
 
         assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
         assertThat userCredentials.getRecoveryQuestion().question, equalTo('How many roads must a man walk down?')
@@ -416,7 +416,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         userCredentials.getRecoveryQuestion().answer = 'forty two'
 
         // below would throw HTTP 403 exception
-        user.changeRecoveryQuestion(userCredentials)
+        client.changeRecoveryQuestion(userCredentials, user.getId())
 
         // 4. make the test recording happy, and call a get on the user
         // TODO: fix har file
@@ -439,10 +439,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
-        ResetPasswordToken response = user.resetPassword(false)
+        ResetPasswordToken response = client.resetPassword(user.getId(), false)
         assertThat response.getResetPasswordUrl(), containsString("/reset_password/")
     }
 
@@ -463,11 +463,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 2. Expire the user's password
-        User updatedUser = user.expirePassword()
+        User updatedUser = client.expirePassword(user.getId())
         assertThat updatedUser, notNullValue()
         assertThat updatedUser.getStatus(), is(UserStatus.PASSWORD_EXPIRED)
     }
@@ -490,11 +490,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 2. Get the reset password link
-        ResetPasswordToken token = user.resetPassword(false)
+        ResetPasswordToken token = client.resetPassword(user.getId(), false)
         assertThat token.getResetPasswordUrl(), notNullValue()
     }
 
@@ -515,7 +515,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
-        registerForCleanup(createUser)
+        registerForCleanup(createUser as Deletable)
         validateUser(createUser, firstName, lastName, email)
 
         // 2. Get the user by user ID
@@ -527,11 +527,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(userByLogin, firstName, lastName, email)
 
         // 3. delete the user
-        user.deactivate()
-        user.delete()
+        client.deactivateOrDeleteUser(user.getId())
 
         // 4. get user expect 404
-        expect(ResourceException) {
+        expect (ResourceException) {
             client.getUser(email)
         }
     }
@@ -554,23 +553,23 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         Group group = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(group)
+        registerForCleanup(group as Deletable)
         validateGroup(group, groupName)
 
         // 2. Assign USER_ADMIN role to the user
         AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
         assignRoleRequest.setType(RoleType.USER_ADMIN)
 
-        Role role = user.assignRole(assignRoleRequest)
+        Role role = client.assignRoleToUser(assignRoleRequest, user.getId())
 
         // 3. Add Group Target to User Admin Role
-        user.addGroupTarget(role.getId(), group.getId())
+        client.addGroupTargetToRole(user.getId(), role.getId(), group.getId())
 
         // 4. List Group Targets for Role
         assertGroupTargetPresent(client, user, group, role)
@@ -585,11 +584,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         Group adminGroup = GroupBuilder.instance()
             .setName(adminGroupName)
             .buildAndCreate(client)
-        registerForCleanup(adminGroup)
+        registerForCleanup(adminGroup as Deletable)
         validateGroup(adminGroup, adminGroupName)
 
-        user.addGroupTarget(role.getId(), adminGroup.getId())
-        user.removeGroupTarget(role.getId(), adminGroup.getId())
+        client.addGroupTargetToRole(user.getId(), role.getId(), adminGroup.getId())
+        client.removeGroupTargetFromRole(user.getId(), role.getId(), adminGroup.getId())
 
         assertGroupTargetPresent(client, user, group, role)
     }
@@ -611,7 +610,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         def originalLastUpdated = user.lastUpdated
@@ -620,7 +619,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // Need to wait 1 second here as that is the minimum time resolution of the 'lastUpdated' field
         sleep(1000)
         user.getProfile().put("nickName", "Batman")
-        user.update()
+        client.updateUser(user, user.getId())
         assertThat(user.lastUpdated, greaterThan(originalLastUpdated))
         User updatedUser = client.getUser(user.getId())
         assertThat(updatedUser.getProfile().get("nickName"), equalTo("Batman"))
@@ -643,11 +642,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 2. Suspend the user and verify user in list of suspended users
-        user.suspend()
+        client.suspendUser(user.getId())
 
         // fix flakiness seen in PDV tests
         Thread.sleep(getTestOperationDelay())
@@ -655,7 +654,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertPresent(client.listUsers(null, 'status eq \"SUSPENDED\"', null, null, null), user)
 
         // 3. Unsuspend the user and verify user in list of active users
-        user.unsuspend()
+        client.unsuspendUser(user.getId())
         assertPresent(client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null), user)
     }
 
@@ -703,7 +702,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         Group group = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(group)
+        registerForCleanup(group as Deletable)
         validateGroup(group, groupName)
 
         // 2. Create a user
@@ -715,10 +714,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setActive(false)
                 .addGroup(group.getId())
                 .buildAndCreate(client)
-        registerForCleanup(createUser)
+        registerForCleanup(createUser as Deletable)
         validateUser(createUser, firstName, lastName, email)
 
-        List<Group> groups = createUser.listGroups().stream().collect(Collectors.toList())
+        List<Group> groups = client.listGroups().stream().collect(Collectors.toList())
         assertThat groups, allOf(hasSize(2))
         assertThat groups.get(0).getProfile().name, equalTo("Everyone")
         assertThat groups.get(1).getId(), equalTo(group.id)
@@ -757,7 +756,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setLastName("Code")
                 .setSha512PasswordHash(hashedPassword, salt, "PREFIX")
                 .buildAndCreate(getClient())
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
 
         assertThat user.getCredentials(), notNullValue()
         assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.IMPORT)
@@ -782,10 +781,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setSecurityQuestion("How many roads must a man walk down?")
             .setSecurityQuestionAnswer("forty two")
             .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
-        ForgotPasswordResponse response = user.forgotPasswordGenerateOneTimeToken(false)
+        ForgotPasswordResponse response = client.forgotPassword(user.getId(), false)
         assertThat response.getResetPasswordUrl(), containsString("/signin/reset-password/")
     }
 
@@ -808,7 +807,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setSecurityQuestion("How many roads must a man walk down?")
             .setSecurityQuestionAnswer("forty two")
             .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         UserCredentials userCredentials = client.instantiate(UserCredentials)
@@ -818,7 +817,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setQuestion('How many roads must a man walk down?')
                 .setAnswer('forty two'))
 
-        UserCredentials response = user.forgotPasswordSetNewPassword(userCredentials, false)
+        UserCredentials response = client.forgotPasswordSetNewPassword(user.getId(), userCredentials, false)
         assertThat response.get("recovery_question")["question"], equalTo("How many roads must a man walk down?")
         assertThat response.get("provider")["type"], equalTo("OKTA")
         assertThat response.get("provider")["name"], equalTo("OKTA")
@@ -843,7 +842,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setLogin(email)
             .setProvider(authenticationProvider)
             .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         assertThat user.getCredentials(), notNullValue()
@@ -856,9 +855,9 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def user1 = create(client)
         def user2 = create(client)
         def user3 = create(client)
-        registerForCleanup(user1)
-        registerForCleanup(user2)
-        registerForCleanup(user3)
+        registerForCleanup(user1 as Deletable)
+        registerForCleanup(user2 as Deletable)
+        registerForCleanup(user3 as Deletable)
 
         String pageSize = "2"
 
@@ -880,13 +879,14 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     void testListGroupAssignmentsWithExpand() {
         //  Create more than 20 groups
         for (int i = 1; i < 30; i++) {
-            registerForCleanup(new DefaultGroupBuilder().setName("test-group_" + i + "_${uniqueTestName}").buildAndCreate(client))
+            registerForCleanup(new DefaultGroupBuilder().setName("test-group_" + i + "_${uniqueTestName}").buildAndCreate(client) as Deletable)
         }
 
         //  Fetch the GroupAssignment list in two requests
         def expandParameter = "group"
-        List<ApplicationGroupAssignment> groupAssignments = client.listApplications().first()
-            .listGroupAssignments(null, expandParameter)
+        def appId = client.listApplications().first().getId()
+        List<ApplicationGroupAssignment> groupAssignments = client
+            .listApplicationGroupAssignments(appId, null, expandParameter)
             .stream()
             .collect(Collectors.toList())
 
@@ -932,7 +932,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         return addProperty
     }
 
-    private String hashPassword(String password, String salt) {
+    private static String hashPassword(String password, String salt) {
         def messageDigest = MessageDigest.getInstance("SHA-512")
         messageDigest.update(salt.getBytes(StandardCharsets.UTF_8))
         def bytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8))

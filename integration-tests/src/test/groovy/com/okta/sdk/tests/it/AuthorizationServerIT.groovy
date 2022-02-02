@@ -15,7 +15,11 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.AuthorizationServerPolicyRuleActions
+import com.okta.sdk.resource.AuthorizationServerPolicyRuleConditions
 import com.okta.sdk.resource.Deletable
+import com.okta.sdk.resource.TokenAuthorizationServerPolicyRuleAction
+import com.okta.sdk.resource.TokenAuthorizationServerPolicyRuleActionInlineHook
 import com.okta.sdk.resource.authorization.server.*
 import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.resource.inline.hook.InlineHookBuilder
@@ -462,12 +466,12 @@ class AuthorizationServerIT extends ITSupport {
             .buildAndCreate(client)
         registerForCleanup(createdInlineHook as Deletable)
 
-        AuthorizationServerPolicyRule createdPolicyRule = client.createAuthorizationServerPolicyRule(
+        AuthorizationServerPolicyRule createdPolicyRule = client.createPolicyRule(
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
                 .setType(PolicyRuleType.ACCESS_POLICY)
                 .setPriority(1)
-                .setConditions(client.instantiate(PolicyRuleConditions)
+                .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
                         .setGroups(client.instantiate(GroupCondition)
                             .setInclude(["EVERYONE"])))
@@ -475,7 +479,7 @@ class AuthorizationServerIT extends ITSupport {
                         .setInclude(["implicit", "client_credentials", "authorization_code", "password"]))
                     .setScopes(client.instantiate(OAuth2ScopesMediationPolicyRuleCondition).setInclude(["openid", "email", "address"]))
                 )
-                .setActions(client.instantiate(PolicyRuleActions)
+                .setActions(client.instantiate(AuthorizationServerPolicyRuleActions)
                     .setToken(
                         client.instantiate(TokenAuthorizationServerPolicyRuleAction)
                             .setAccessTokenLifetimeMinutes(60)
@@ -486,7 +490,7 @@ class AuthorizationServerIT extends ITSupport {
                                 .setId(createdInlineHook.getId())
                             )
                     )
-                ) as AuthorizationServerPolicyRule, "", "")
+                ),createdAuthorizationServer.getId()) as AuthorizationServerPolicyRule
 
         assertThat(createdPolicyRule, notNullValue())
         assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.ACCESS_POLICY))
@@ -538,7 +542,7 @@ class AuthorizationServerIT extends ITSupport {
                 .setName(name)
                 .setType(PolicyRuleType.ACCESS_POLICY)
                 .setPriority(1)
-                .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
+                .setConditions(client.instantiate(PolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
                         .setGroups(client.instantiate(GroupCondition)
                             .setInclude(["EVERYONE"])))
@@ -553,7 +557,8 @@ class AuthorizationServerIT extends ITSupport {
                             .setRefreshTokenLifetimeMinutes(0)
                             .setRefreshTokenWindowMinutes(10080)
                     )
-                ) as AuthorizationServerPolicyRule, createdPolicy.getId(), createdAuthorizationServer.getId())
+                ) as AuthorizationServerPolicyRule
+        , createdPolicy.getId(), createdAuthorizationServer.getId())
 
         assertThat(createdPolicyRule, notNullValue())
         assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.ACCESS_POLICY))
@@ -577,7 +582,9 @@ class AuthorizationServerIT extends ITSupport {
                 )
             )
 
-        AuthorizationServerPolicyRule retrievedPolicyRule = createdPolicyRule.update(createdAuthorizationServer.getId())
+        AuthorizationServerPolicyRule retrievedPolicyRule =
+            client.updateAuthorizationServerPolicyRule(createdPolicyRule,
+                createdPolicy.getId(), createdAuthorizationServer.getId(), createdPolicyRule.getId())
 
         assertThat(retrievedPolicyRule, notNullValue())
         assertThat(retrievedPolicyRule.getActions().getToken().getAccessTokenLifetimeMinutes(), equalTo(55))
@@ -608,18 +615,20 @@ class AuthorizationServerIT extends ITSupport {
                         [OAuth2ScopeMetadataPublish.ALL_CLIENTS.name()]
                     )
                 )
-            )
-        AuthorizationServerPolicy createdPolicy = createdAuthorizationServer.createPolicy(authorizationServerPolicy)
+            ) as AuthorizationServerPolicy
+        AuthorizationServerPolicy createdPolicy =
+            client.createAuthorizationServerPolicy(authorizationServerPolicy, createdAuthorizationServer.getId())
         assertThat(createdPolicy, notNullValue())
 
-        AuthorizationServerPolicy retrievedPolicy = createdAuthorizationServer.getPolicy(createdPolicy.getId())
+        AuthorizationServerPolicy retrievedPolicy =
+            client.getAuthorizationServerPolicy(createdAuthorizationServer.getId(), createdPolicy.getId())
         assertThat(retrievedPolicy, notNullValue())
         assertThat(retrievedPolicy.getId(), equalTo(createdPolicy.getId()))
 
-        AuthorizationServerPolicyRule createdPolicyRule = retrievedPolicy.createPolicyRule(createdAuthorizationServer.getId(),
+        AuthorizationServerPolicyRule createdPolicyRule = client.createAuthorizationServerPolicyRule(
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS)
+                .setType(PolicyRuleType.ACCESS_POLICY)
                 .setPriority(1)
                 .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
@@ -628,18 +637,18 @@ class AuthorizationServerIT extends ITSupport {
                     .setGrantTypes(client.instantiate(GrantTypePolicyRuleCondition)
                         .setInclude(["implicit", "client_credentials", "authorization_code", "password"]))
                     .setScopes(client.instantiate(OAuth2ScopesMediationPolicyRuleCondition).setInclude(["openid", "email", "address"]))
-                )
-        )
+                ) as AuthorizationServerPolicyRule
+        , retrievedPolicy.getId(), createdAuthorizationServer.getId())
 
         assertThat(createdPolicyRule, notNullValue())
-        assertThat(createdPolicyRule.getType(), equalTo(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS))
+        assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.ACCESS_POLICY))
 
-        createdPolicyRule.delete(createdAuthorizationServer.getId())
+        client.deletePolicyRule(retrievedPolicy.getId(), createdPolicyRule.getId())
 
         // delete may not effect immediately in the backend
         sleep(getTestOperationDelay())
 
-        assertNotPresent(createdPolicy.listPolicyRules(createdAuthorizationServer.getId()), createdPolicyRule)
+        assertNotPresent(client.listPolicyRules(retrievedPolicy.getId()), createdPolicyRule)
     }
 
     @Test (groups = "group3")
@@ -669,10 +678,10 @@ class AuthorizationServerIT extends ITSupport {
         AuthorizationServerPolicy createdPolicy = client.createAuthorizationServerPolicy(authorizationServerPolicy, createdAuthorizationServer.getId())
         assertThat(createdPolicy, notNullValue())
 
-        AuthorizationServerPolicyRule createdPolicyRule = createdPolicy.createPolicyRule(createdAuthorizationServer.getId(),
+        AuthorizationServerPolicyRule createdPolicyRule = client.createAuthorizationServerPolicyRule(
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(AuthorizationServerPolicyRule.TypeEnum.RESOURCE_ACCESS)
+                .setType(PolicyRuleType.ACCESS_POLICY)
                 .setPriority(1)
                 .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
@@ -681,27 +690,30 @@ class AuthorizationServerIT extends ITSupport {
                     .setGrantTypes(client.instantiate(GrantTypePolicyRuleCondition)
                         .setInclude(["implicit", "client_credentials", "authorization_code", "password"]))
                     .setScopes(client.instantiate(OAuth2ScopesMediationPolicyRuleCondition).setInclude(["openid", "email", "address"]))
-                )
-        )
+                ) as AuthorizationServerPolicyRule
+        , createdPolicy.getId(), createdAuthorizationServer.getId())
         assertThat(createdPolicyRule, notNullValue())
 
-        createdPolicyRule.deactivate(createdAuthorizationServer.getId())
-        def deactivatedPolicyRule = createdPolicy.getPolicyRule(createdAuthorizationServer.getId(), createdPolicyRule.getId())
+        client.deactivateAuthorizationServerPolicyRule(createdAuthorizationServer.getId(), createdPolicy.getId(), createdPolicyRule.getId())
+
+        def deactivatedPolicyRule =
+            client.getAuthorizationServerPolicyRule(createdPolicy.getId(), createdAuthorizationServer.getId(), createdPolicyRule.getId())
         assertThat(deactivatedPolicyRule, notNullValue())
-        assertThat(deactivatedPolicyRule.getStatus(), equalTo(AuthorizationServerPolicyRule.StatusEnum.INACTIVE))
+        assertThat(deactivatedPolicyRule.getStatus(), equalTo(LifecycleStatus.INACTIVE))
 
-        client.deactivateAuthorizationServerPolicyRule(createdAuthorizationServer.getId(), createdPolicy.getId())
-        deactivatedPolicyRule.activate(createdAuthorizationServer.getId())
-        def activatedPolicyRule = createdPolicy.getPolicyRule(createdAuthorizationServer.getId(), createdPolicyRule.getId())
+        client.activateAuthorizationServerPolicyRule(createdAuthorizationServer.getId(), createdPolicy.getId(), createdPolicyRule.getId())
+
+        def activatedPolicyRule =
+            client.getAuthorizationServerPolicyRule(createdPolicy.getId(), createdAuthorizationServer.getId(), createdPolicyRule.getId())
         assertThat(activatedPolicyRule, notNullValue())
-        assertThat(activatedPolicyRule.getStatus(), equalTo(AuthorizationServerPolicyRule.StatusEnum.ACTIVE))
+        assertThat(activatedPolicyRule.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
-        activatedPolicyRule.delete(createdAuthorizationServer.getId())
+        client.deleteAuthorizationServerPolicyRule(createdPolicy.getId(), createdAuthorizationServer.getId(), createdPolicyRule.getId())
 
         // delete may not effect immediately in the backend
         sleep(getTestOperationDelay())
 
-        assertNotPresent(client.listAuthorizationServerPolicyRules(activatedPolicyRcreatedAuthorizationServer.getId()), activatedPolicyRule)
+        assertNotPresent(client.listAuthorizationServerPolicyRules(createdPolicy.getId(), createdAuthorizationServer.getId()), activatedPolicyRule)
     }
 
     // Scope operations

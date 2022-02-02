@@ -53,7 +53,7 @@ class ApplicationsIT extends ITSupport {
 
         // Create a resource
         def resource = create(client, app)
-        registerForCleanup(resource)
+        registerForCleanup(resource as Deletable)
 
         // getting the resource again should result in the same object
         def readResource = read(client, resource.getId())
@@ -74,15 +74,15 @@ class ApplicationsIT extends ITSupport {
 
     def create(Client client, Application app) {
         app.setLabel("java-sdk-it-" + UUID.randomUUID().toString())
-        registerForCleanup(app)
+        registerForCleanup(app as Deletable)
         return client.createApplication(app)
     }
 
-    def read(Client client, String id) {
+    static def read(Client client, String id) {
         return client.getApplication(id)
     }
 
-    void updateAndValidate(Client client, def resource) {
+    static void updateAndValidate(Client client, def resource) {
         String newLabel = resource.label + "-update"
         resource.label = newLabel
         resource.update()
@@ -92,8 +92,7 @@ class ApplicationsIT extends ITSupport {
     }
 
     void deleteAndValidate(def resource) {
-        resource.deactivate()
-        resource.delete()
+        client.delete(resource.getResourceHref(), resource)
 
         try {
             read(client, resource.getId())
@@ -887,7 +886,7 @@ class ApplicationsIT extends ITSupport {
                     .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
                     .setLoginUrl("http://swaprimaryloginurl.okta.com")))
         client.createApplication(createdApp)
-        registerForCleanup(createdApp)
+        registerForCleanup(createdApp as Deletable)
 
         def userSchema = client.getApplicationUserSchema(createdApp.getId())
         assertThat(userSchema, notNullValue())

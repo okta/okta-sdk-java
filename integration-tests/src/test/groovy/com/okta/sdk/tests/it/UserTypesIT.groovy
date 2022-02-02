@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.schema.UserSchema
 import com.okta.sdk.resource.common.UserType
 import com.okta.sdk.tests.it.util.ITSupport
@@ -41,7 +42,7 @@ class UserTypesIT extends ITSupport {
             .setName(name)
             .setDisplayName(name)
             .setDescription(name + "_test_description"))
-        registerForCleanup(createdUserType)
+        registerForCleanup(createdUserType as Deletable)
 
         assertThat(createdUserType.getId(), notNullValue())
         assertThat(createdUserType.getName(), equalTo(name))
@@ -72,7 +73,7 @@ class UserTypesIT extends ITSupport {
             .setName(name)
             .setDisplayName(name)
             .setDescription(name + "_test_description"))
-        registerForCleanup(createdUserType)
+        registerForCleanup(createdUserType as Deletable)
 
         assertThat(createdUserType.getId(), notNullValue())
 
@@ -89,12 +90,13 @@ class UserTypesIT extends ITSupport {
             .setName(name)
             .setDisplayName(name)
             .setDescription(name + "_test_description"))
-        registerForCleanup(createdUserType)
+        registerForCleanup(createdUserType as Deletable)
 
         assertThat(createdUserType.getId(), notNullValue())
 
-        createdUserType.setDisplayName(name + "_updated").setDescription(name + "_test_description_updated")
-            .update()
+        createdUserType = createdUserType.setDisplayName(name + "_updated").setDescription(name + "_test_description_updated")
+
+        client.updateUserType(createdUserType, createdUserType.getId())
 
         assertThat(createdUserType.getId(), notNullValue())
         assertThat(createdUserType.getDisplayName(), equalTo(name + "_updated"))
@@ -150,11 +152,11 @@ class UserTypesIT extends ITSupport {
             .setName(name)
             .setDisplayName(name)
             .setDescription(name + "_test_description"))
-        registerForCleanup(createdUserType)
+        registerForCleanup(createdUserType as Deletable)
 
         assertThat(createdUserType.getId(), notNullValue())
 
-        createdUserType.delete()
+        client.deleteUserType(createdUserType.getId())
 
         assertNotPresent(client.listUserTypes(), createdUserType)
     }
@@ -167,7 +169,7 @@ class UserTypesIT extends ITSupport {
             .setName(name1)
             .setDisplayName(name1)
             .setDescription(name1 + "_test_description"))
-        registerForCleanup(createdUserType1)
+        registerForCleanup(createdUserType1 as Deletable)
 
         assertThat(createdUserType1.getId(), notNullValue())
 
@@ -177,14 +179,14 @@ class UserTypesIT extends ITSupport {
             .setName(name2)
             .setDisplayName(name2)
             .setDescription(name2 + "_test_description"))
-        registerForCleanup(createdUserType2)
+        registerForCleanup(createdUserType2 as Deletable)
 
         assertThat(client.listUserTypes(), notNullValue())
         assertPresent(client.listUserTypes(), createdUserType1)
         assertPresent(client.listUserTypes(), createdUserType2)
     }
 
-    String getSchemaIdForUserType(UserType userType) {
+    static String getSchemaIdForUserType(UserType userType) {
         def schema = userType.getLinks().get("schema")
         assertThat(schema, notNullValue())
         assertThat(schema instanceof LinkedHashMap, equalTo(true))
@@ -198,7 +200,7 @@ class UserTypesIT extends ITSupport {
         return schemaId
     }
 
-    String getTypeIdFromUserSchema(UserSchema userSchema) {
+    static String getTypeIdFromUserSchema(UserSchema userSchema) {
 
         def type = userSchema.getLinks().get("type")
         assertThat(type, notNullValue())
@@ -212,6 +214,4 @@ class UserTypesIT extends ITSupport {
 
         return typeId
     }
-
-
 }

@@ -9870,28 +9870,32 @@ components:
     AuthorizationServerPolicyRule:
       allOf:
         - $ref: '#/components/schemas/PolicyRule'
-#        - type: object
-#          properties:
-#            conditions:
-#              $ref: '#/components/schemas/AuthorizationServerPolicyRuleConditions'
-#            actions:
-#              $ref: '#/components/schemas/AuthorizationServerPolicyRuleActions'
+        - type: object
+          properties:
+            conditions:
+              $ref: '#/components/schemas/AuthorizationServerPolicyRuleConditions'
+            actions:
+              $ref: '#/components/schemas/AuthorizationServerPolicyRuleActions'
     AuthorizationServerPolicyRuleActions:
-      type: object
-      properties:
-        token:
-          $ref: '#/components/schemas/TokenAuthorizationServerPolicyRuleAction'
+      allOf:
+        - $ref: '#/components/schemas/PolicyRuleActions'
+        - type: object
+          properties:
+            token:
+              $ref: '#/components/schemas/TokenAuthorizationServerPolicyRuleAction'
     AuthorizationServerPolicyRuleConditions:
-      type: object
-      properties:
-        people:
-          $ref: '#/components/schemas/PolicyPeopleCondition'
-        clients:
-          $ref: '#/components/schemas/ClientPolicyCondition'
-        grantTypes:
-          $ref: '#/components/schemas/GrantTypePolicyRuleCondition'
-        scopes:
-          $ref: '#/components/schemas/OAuth2ScopesMediationPolicyRuleCondition'
+      allOf:
+        - $ref: '#/components/schemas/PolicyRuleConditions'
+        - type: object
+          properties:
+            people:
+              $ref: '#/components/schemas/PolicyPeopleCondition'
+            clients:
+              $ref: '#/components/schemas/ClientPolicyCondition'
+            grantTypes:
+              $ref: '#/components/schemas/GrantTypePolicyRuleCondition'
+            scopes:
+              $ref: '#/components/schemas/OAuth2ScopesMediationPolicyRuleCondition'
     AutoLoginApplication:
       allOf:
         - $ref: '#/components/schemas/Application'

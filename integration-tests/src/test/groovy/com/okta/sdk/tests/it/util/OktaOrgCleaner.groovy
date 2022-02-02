@@ -34,6 +34,9 @@ class OktaOrgCleaner {
 
         Client client = Clients.builder().build()
 
+        println("User Types: " + client.listUserTypes())
+        println("# of User Types: " + client.listUserTypes().size())
+
         log.info("Deleting Active Users:")
         client.listUsers().stream()
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
@@ -53,6 +56,7 @@ class OktaOrgCleaner {
             .filter { it.getLabel().startsWith(prefix) && it.getLabel().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getLabel()}")
+                client.deactivateApplication(it.getId())
                 client.deleteApplication(it.getId())
             }
 
@@ -105,7 +109,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting UserTypes:")
         client.listUserTypes().stream()
-            .filter { it.getName().startsWith("java_sdk_it_") && !it.getDefault() }
+            .filter { it.getName().startsWith("java_sdk_") && !it.getDefault() }
             .forEach {
                 client.deleteUserType(it.getId())
             }

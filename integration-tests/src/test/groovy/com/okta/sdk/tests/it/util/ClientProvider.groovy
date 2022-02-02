@@ -140,10 +140,7 @@ trait ClientProvider implements IHookable {
     void deleteUser(String email, Client client) {
         Util.ignoring(ResourceException) {
             User user = client.getUser(email)
-            if (user.status != UserStatus.DEPROVISIONED) {
-                user.deactivate()
-            }
-            user.delete()
+            client.deactivateOrDeleteUser(user.getId())
         }
     }
 
@@ -151,8 +148,8 @@ trait ClientProvider implements IHookable {
         Util.ignoring(ResourceException) {
             GroupList groups = client.listGroups(groupName, null, null)
             groups.each {group ->
-                if (groupName.equals(group.profile.name)) {
-                    group.delete()
+                if (groupName == group.profile.name) {
+                    client.deleteGroup(group.getId())
                 }
             }
         }
@@ -162,11 +159,11 @@ trait ClientProvider implements IHookable {
         Util.ignoring(ResourceException) {
             GroupRuleList rules = client.listGroupRules()
             rules.each {rule ->
-                if (ruleName.equals(rule.name)) {
+                if (ruleName == rule.name) {
                     if (rule.status == GroupRuleStatus.ACTIVE) {
-                        rule.deactivate()
+                        client.deactivateGroupRule(rule.getId())
                     }
-                    rule.delete()
+                    client.deleteGroupRule(rule.getId())
                 }
             }
         }

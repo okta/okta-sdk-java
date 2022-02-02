@@ -16,12 +16,17 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.OktaSignOnPolicy
 import com.okta.sdk.resource.OktaSignOnPolicyRule
+import com.okta.sdk.resource.OktaSignOnPolicyRuleActions
+import com.okta.sdk.resource.authorization.server.OktaSignOnPolicyRuleSignonActions
+import com.okta.sdk.resource.authorization.server.PolicyAccess
+import com.okta.sdk.resource.authorization.server.PolicyType
 import com.okta.sdk.resource.common.Policy
-import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy
 import com.okta.sdk.resource.authorization.server.LifecycleStatus
 import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
@@ -66,7 +71,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
         def group = GroupBuilder.instance()
                 .setName("group-" + UUID.randomUUID().toString())
                 .buildAndCreate(client)
-        registerForCleanup(group)
+        registerForCleanup(group as Deletable)
 
         OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
                 .setName("policy+" + UUID.randomUUID().toString())
@@ -74,9 +79,9 @@ class SignOnPoliciesIT implements CrudTestSupport {
                 .setDescription("IT created Policy - signOnPolicyWithGroupConditions")
                 .setType(PolicyType.OKTA_SIGN_ON)
                 .addGroup(group.getId())
-        .buildAndCreate(client)
+        .buildAndCreate(client) as OktaSignOnPolicy
 
-        registerForCleanup(policy)
+        registerForCleanup(policy as Deletable)
 
         assertThat policy.getId(), notNullValue()
         assertThat policy.getConditions().getPeople().getGroups().getInclude(), is(Collections.singletonList(group.getId()))
@@ -91,18 +96,18 @@ class SignOnPoliciesIT implements CrudTestSupport {
             .setDescription("IT created Policy - signOnActionsTest")
             .setType(PolicyType.OKTA_SIGN_ON)
             .setStatus(LifecycleStatus.ACTIVE)
-            .buildAndCreate(client);
+            .buildAndCreate(client) as OktaSignOnPolicy;
 
-        registerForCleanup(policy)
+        registerForCleanup(policy as Deletable)
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        OktaSignOnPolicyRule policyRule = policy.createRule(client.instantiate(OktaSignOnPolicyRule)
+        OktaSignOnPolicyRule policyRule = client.createPolicyRule(client.instantiate(OktaSignOnPolicyRule)
             .setName(policyRuleName)
             .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
                 .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
                     .setAccess(PolicyAccess.DENY)
-                    .setRequireFactor(false))))
-        registerForCleanup(policyRule)
+                    .setRequireFactor(false))), policy.getId()) as OktaSignOnPolicyRule
+        registerForCleanup(policyRule as Deletable)
 
         assertThat(policyRule.getId(), notNullValue())
         assertThat(policyRule.name, is(policyRuleName))
@@ -118,17 +123,17 @@ class SignOnPoliciesIT implements CrudTestSupport {
                 .setStatus(LifecycleStatus.INACTIVE)
         .buildAndCreate(client)
 
-        registerForCleanup(policy)
+        registerForCleanup(policy as Deletable)
 
         assertThat(policy.getStatus(), is(LifecycleStatus.INACTIVE))
 
         // activate
-        policy.activate()
+        client.activatePolicy(policy.getId())
         policy = client.getPolicy(policy.getId())
         assertThat(policy.getStatus(), is(LifecycleStatus.ACTIVE))
 
         // deactivate
-        policy.deactivate()
+        client.deactivatePolicy(policy.getId())
         policy = client.getPolicy(policy.getId())
         assertThat(policy.getStatus(), is(LifecycleStatus.INACTIVE))
     }
@@ -136,7 +141,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
     @Test
     void expandTest() {
         def resource = create(client)
-        registerForCleanup(resource)
+        registerForCleanup(resource as Deletable)
 
         // verify a regular get does NOT return the embedded map with "rules"
         assertRulesNotExpanded(client.getPolicy(resource.getId()))
@@ -148,7 +153,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
     @Test
     void listPoliciesWithParams() {
         def resource = create(client)
-        registerForCleanup(resource)
+        registerForCleanup(resource as Deletable)
 
         def policies = client.listPolicies(PolicyType.OKTA_SIGN_ON.toString())
         assertThat policies, not(empty())
@@ -167,15 +172,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
         assertThat policy.getEmbedded(), anyOf(nullValue(), not(hasKey("rules")))
     }
 
-    static void assertRulesNotExpanded(AuthorizationServerPolicy policy) {
-        assertThat policy.getEmbedded(), anyOf(nullValue(), not(hasKey("rules")))
-    }
-
     static void assertRulesExpanded(Policy policy) {
-        assertThat policy.getEmbedded(), allOf(notNullValue(), hasKey("rules"))
-    }
-
-    static void assertRulesExpanded(AuthorizationServerPolicy policy) {
         assertThat policy.getEmbedded(), allOf(notNullValue(), hasKey("rules"))
     }
 }

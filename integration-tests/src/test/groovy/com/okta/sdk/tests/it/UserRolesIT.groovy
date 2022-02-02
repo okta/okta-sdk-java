@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.AssignRoleRequest
@@ -56,7 +57,7 @@ class UserRolesIT extends ITSupport {
             .setPassword(password.toCharArray())
             .setActive(true)
             .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 2. Assign SUPER_ADMIN role
@@ -66,7 +67,7 @@ class UserRolesIT extends ITSupport {
         // fix flakiness seen in PDV tests
         Thread.sleep(getTestOperationDelay())
 
-        Role assignedRole = user.assignRole(assignRoleRequest)
+        Role assignedRole = client.assignRoleToUser(assignRoleRequest, user.getId())
         assertThat("Incorrect RoleType", assignedRole.getType() == RoleType.SUPER_ADMIN)
     }
 
@@ -87,7 +88,7 @@ class UserRolesIT extends ITSupport {
             .setPassword(password.toCharArray())
             .setActive(true)
             .buildAndCreate(client)
-        registerForCleanup(user)
+        registerForCleanup(user as Deletable)
         validateUser(user, firstName, lastName, email)
 
         // 2. Create two groups
@@ -100,8 +101,8 @@ class UserRolesIT extends ITSupport {
         Group group2 = GroupBuilder.instance()
             .setName(groupName2)
             .buildAndCreate(client)
-        registerForCleanup(group1)
-        registerForCleanup(group2)
+        registerForCleanup(group1 as Deletable)
+        registerForCleanup(group2 as Deletable)
 
         validateGroup(group1, groupName1)
         validateGroup(group2, groupName2)
@@ -110,20 +111,20 @@ class UserRolesIT extends ITSupport {
         AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
         assignRoleRequest.setType(RoleType.USER_ADMIN)
 
-        Role superAdminRole = user.assignRole(assignRoleRequest)
+        Role superAdminRole = client.assignRoleToUser(assignRoleRequest, user.getId())
 
         // 4. Add the created groups as role targets
         // Need 2 groups, because if you remove the last one it throws an (expected) exception.
-        user.addGroupTarget(superAdminRole.getId(), group1.getId())
-        user.addGroupTarget(superAdminRole.getId(), group2.getId())
+        client.addGroupTargetToRole(user.getId(), superAdminRole.getId(), group1.getId())
+        client.addGroupTargetToRole(user.getId(), superAdminRole.getId(), group2.getId())
 
-        assertGroupPresent(user.listGroupTargets(superAdminRole.getId()), group1)
-        assertGroupPresent(user.listGroupTargets(superAdminRole.getId()), group2)
+        assertGroupPresent(client.listGroupTargetsForRole(user.getId(), superAdminRole.getId()), group1)
+        assertGroupPresent(client.listGroupTargetsForRole(user.getId(), superAdminRole.getId()), group2)
 
         // 5. Remove the target
-        user.removeGroupTarget(superAdminRole.getId(), group1.getId())
+        client.removeGroupTargetFromRole(user.getId(), superAdminRole.getId(), group1.getId())
 
-        assertGroupAbsent(user.listGroupTargets(superAdminRole.getId()), group1)
+        assertGroupAbsent(client.listGroupTargetsForRole(user.getId(), superAdminRole.getId()), group1)
     }
 }
 

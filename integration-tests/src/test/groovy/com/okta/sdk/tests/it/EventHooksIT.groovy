@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.authorization.server.LifecycleStatus
 import com.okta.sdk.resource.event.hook.EventHook
@@ -49,7 +50,7 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook)
+        registerForCleanup(createdEventHook as Deletable)
 
         assertThat(createdEventHook.getId(), notNullValue())
         assertThat(createdEventHook.getName(), equalTo(name))
@@ -57,7 +58,7 @@ class EventHooksIT extends ITSupport {
         assertThat(createdEventHook.getEvents().getItems(), iterableWithSize(2))
         assertThat(createdEventHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooks"))
 
-        createdEventHook.deactivate()
+        client.deactivateEventHook(createdEventHook.getId())
     }
 
     @Test (groups = "group3")
@@ -70,7 +71,7 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook)
+        registerForCleanup(createdEventHook as Deletable)
 
         assertThat(createdEventHook.getId(), notNullValue())
 
@@ -82,7 +83,7 @@ class EventHooksIT extends ITSupport {
         assertThat(retrievedEventHook.getEvents().getItems(), iterableWithSize(2))
         assertThat(retrievedEventHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooks"))
 
-        createdEventHook.deactivate()
+        client.deactivateEventHook(createdEventHook.getId())
     }
 
     @Test (groups = "group3")
@@ -95,7 +96,7 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook)
+        registerForCleanup(createdEventHook as Deletable)
 
         assertThat(createdEventHook.getId(), notNullValue())
 
@@ -107,7 +108,7 @@ class EventHooksIT extends ITSupport {
             .setValue("Test-Api-Key-Updated"))
         .setUri("https://www.example.com/eventHooksUpdated")
 
-        EventHook updatedEventHook = toBeUpdatedEventHook.update()
+        EventHook updatedEventHook = client.updateEventHook(toBeUpdatedEventHook, toBeUpdatedEventHook.getId())
 
         assertThat(updatedEventHook.getId(), notNullValue())
         assertThat(updatedEventHook.getId(), equalTo(createdEventHook.getId()))
@@ -116,7 +117,7 @@ class EventHooksIT extends ITSupport {
         assertThat(updatedEventHook.getEvents().getItems(), iterableWithSize(3))
         assertThat(updatedEventHook.getChannel().getConfig().getUri(), equalTo("https://www.example.com/eventHooksUpdated"))
 
-        createdEventHook.deactivate()
+        client.deactivateEventHook(createdEventHook.getId())
     }
 
     @Test (groups = "group3")
@@ -129,7 +130,7 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook)
+        registerForCleanup(createdEventHook as Deletable)
 
         assertThat(createdEventHook.getId(), notNullValue())
 
@@ -137,8 +138,8 @@ class EventHooksIT extends ITSupport {
         assertThat(retrievedEventHook.getId(), equalTo(createdEventHook.getId()))
         assertThat(retrievedEventHook.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
-        createdEventHook.deactivate()
-        createdEventHook.delete()
+        client.deactivateEventHook(createdEventHook.getId())
+        client.deleteEventHook(createdEventHook.getId())
 
         try {
             client.getEventHook(createdEventHook.getId())
@@ -158,13 +159,13 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook)
+        registerForCleanup(createdEventHook as Deletable)
 
         assertThat(createdEventHook.getId(), notNullValue())
 
         assertPresent(client.listEventHooks(), createdEventHook)
 
-        createdEventHook.deactivate()
+        client.deactivateEventHook(createdEventHook.getId())
     }
 
     @Test (groups = "group3")
@@ -177,12 +178,12 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook)
+        registerForCleanup(createdEventHook as Deletable)
 
         assertThat(createdEventHook.getId(), notNullValue())
         assertThat(createdEventHook.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
-        createdEventHook.deactivate()
+        client.deactivateEventHook(createdEventHook.getId())
 
         EventHook retrievedEventHook = client.getEventHook(createdEventHook.getId())
 

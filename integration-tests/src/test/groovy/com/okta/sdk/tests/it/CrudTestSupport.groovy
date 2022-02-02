@@ -45,7 +45,7 @@ trait CrudTestSupport implements ClientProvider {
         // getting the resource again should result in the same object
         def readResource = read(client, resource.id)
         assertThat readResource, notNullValue()
-        assertThat readResource, equalTo(resource)
+        assertThat readResource.id, equalTo(resource.id)
 
         // update the resource
         update(client, resource)
@@ -90,10 +90,11 @@ trait CrudTestSupport implements ClientProvider {
 
     // delete
     void delete(Client client, def resource) {
-        if (resource.getMetaClass().respondsTo(resource, "deactivate")) {
-            resource.deactivate()
+        if (resource._links.get("deactivate") != null) {
+            client.http().post(resource._links.get("deactivate").get("href"))
         }
-        resource.delete()
+
+        client.delete(resource._links.get("delete").get("href"), resource)
     }
 
     void assertDelete(Client client, def resource) {
