@@ -175,6 +175,12 @@ trait ClientProvider implements IHookable {
             // delete them in reverse order so dependencies are resolved
             toBeDeleted.reverse().each { deletable ->
                 try {
+                    if (deletable instanceof User) {
+                        getClient().deactivateOrDeleteUser(deletable.getId())
+                    }
+                    if (deletable instanceof Group) {
+                        getClient().deleteGroup(deletable.getId())
+                    }
                     if (deletable instanceof User ||
                         deletable instanceof Application ||
                         deletable instanceof AuthorizationServer ||

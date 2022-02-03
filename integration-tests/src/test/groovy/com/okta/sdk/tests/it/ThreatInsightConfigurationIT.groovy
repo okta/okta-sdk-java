@@ -52,7 +52,7 @@ class ThreatInsightConfigurationIT extends ITSupport {
     @Test (groups = "group3")
     void updateThreatInsightConfigurationWithNetworkZoneTest() {
 
-        def networkZoneName = "network-zone-it-${uniqueTestName}"
+        def networkZoneName = SPINE_NAME_PREFIX + "${uniqueTestName}"
 
         NetworkZone networkZone = getClient().instantiate(NetworkZone)
             .setType(NetworkZoneType.IP)

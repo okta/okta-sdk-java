@@ -57,13 +57,13 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
 
     @Override
     def read(Client client, String id) {
-        return client.listPolicyRules(id)
+        return client.getPolicyRule(crudTestPolicy.getId(), id)
     }
 
     @Override
     void update(Client client, def policyRule) {
         policyRule.setName(policyRule.name +"-2")
-        policyRule.update()
+        client.updatePolicyRule(policyRule, crudTestPolicy.getId(), policyRule.id)
     }
 
     @Override
@@ -83,12 +83,12 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
-        OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
+        def policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
             .setAccess(PolicyAccess.ALLOW)
             .setRequireFactor(false)
-            .setStatus(LifecycleStatus.INACTIVE)
-        .buildAndCreate(client, policy) as OktaSignOnPolicyRule
+            .setStatus(LifecycleStatus.ACTIVE)
+        .buildAndCreate(client, policy)
         registerForCleanup(policyRule as Deletable)
 
         // policy rule is ACTIVE by default
@@ -97,7 +97,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         // deactivate
         client.deactivatePolicyRule(policy.getId(), policyRule.getId())
 
-        policyRule = client.getPolicyRule(policy.getId(), policyRule.getId()) as OktaSignOnPolicyRule
+        policyRule = client.getPolicyRule(policy.getId(), policyRule.getId())
         assertThat(policyRule.getStatus(), is(LifecycleStatus.INACTIVE))
     }
 

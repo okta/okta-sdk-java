@@ -38,20 +38,21 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
         Application app = OIDCApplicationBuilder.instance()
             .setName(name)
             .setLabel(name)
-            .addRedirectUris("http://www.example.com")
+            .addRedirectUris("https://www.example.com")
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
             .setClientId(UUID.randomUUID().toString())
             .setClientSecret(UUID.randomUUID().toString())
+            .setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
             .setAutoKeyRotation(true)
             .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
             .setIOS(false)
             .setWeb(true)
-            .setLoginRedirectUrl("http://www.myapp.com")
-            .setErrorRedirectUrl("http://www.myapp.com/error")
+            .setLoginRedirectUrl("https://www.myapp.com")
+            .setErrorRedirectUrl("https://www.myapp.com/error")
             .buildAndCreate(client)
-        registerForCleanup(app)
+        registerForCleanup(app as Deletable)
 
         return (OpenIdConnectApplication) app
     }
@@ -72,18 +73,22 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
             .setLabel(name)
             .setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
             .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.PRIVATE_KEY_JWT)
-            .addRedirectUris("http://www.example.com")
+            .addRedirectUris("https://www.example.com")
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
             .setJwks(Arrays.asList(createdKey))
             .buildAndCreate(client)
-        registerForCleanup(app)
+        registerForCleanup(app as Deletable)
 
         assertThat(app, instanceOf(OpenIdConnectApplication))
-        assertThat(app.getSettings().getOAuthClient().getJwks() , instanceOf(OpenIdConnectApplicationSettingsClientKeys))
 
-        OpenIdConnectApplicationSettingsClientKeys keys = app.getSettings().getOAuthClient().getJwks()
+        OpenIdConnectApplicationSettings openIdConnectApplicationSettings = app.getSettings() as OpenIdConnectApplicationSettings
+        OpenIdConnectApplicationSettingsClient openIdConnectApplicationSettingsClient = openIdConnectApplicationSettings.getOAuthClient()
+
+        assertThat(openIdConnectApplicationSettingsClient.getJwks() , instanceOf(OpenIdConnectApplicationSettingsClientKeys))
+
+        OpenIdConnectApplicationSettingsClientKeys keys = openIdConnectApplicationSettingsClient.getJwks()
         assertThat(keys.getKeys(), hasSize(1))
         assertThat(keys.getKeys().get(0), instanceOf(JsonWebKey))
 
@@ -108,7 +113,7 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
     void update(Client client, def application) {
         application.setLabel(application.label +"-2")
         application.visibility.hide.iOS = true
-        application.update()
+        client.updateApplication(application, application.id)
     }
 
     @Override

@@ -52,7 +52,7 @@ class NetworkZoneIT extends ITSupport {
     @Test (groups = "group2")
     void createAndDeleteNetworkZoneTest() {
 
-        String networkZoneName = "network-zone-it-${uniqueTestName}"
+        String networkZoneName = SPINE_NAME_PREFIX + "${uniqueTestName}"
 
         NetworkZone networkZone = client.instantiate(NetworkZone)
             .setType(NetworkZoneType.IP)
@@ -93,7 +93,7 @@ class NetworkZoneIT extends ITSupport {
     @Test (groups = "group2")
     void updateNetworkZoneTest() {
 
-        String networkZoneName = "network-zone-it-${uniqueTestName}"
+        String networkZoneName = SPINE_NAME_PREFIX + "${uniqueTestName}"
 
         NetworkZone networkZone = client.instantiate(NetworkZone)
             .setType(NetworkZoneType.IP)
@@ -150,7 +150,7 @@ class NetworkZoneIT extends ITSupport {
     @Test (groups = "group2")
     void activateDeactivateNetworkZoneTest() {
 
-        String networkZoneName = "network-zone-it-${uniqueTestName}"
+        String networkZoneName = SPINE_NAME_PREFIX + "${uniqueTestName}"
 
         NetworkZone networkZone = client.instantiate(NetworkZone)
             .setType(NetworkZoneType.IP)

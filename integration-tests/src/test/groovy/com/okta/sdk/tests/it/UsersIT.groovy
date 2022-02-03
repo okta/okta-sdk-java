@@ -23,6 +23,7 @@ import com.okta.sdk.resource.authorization.server.PasswordPolicyRuleAction
 import com.okta.sdk.resource.authorization.server.PolicyAccess
 import com.okta.sdk.resource.authorization.server.PolicyNetworkCondition
 import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection
+import com.okta.sdk.resource.authorization.server.PolicyRuleType
 import com.okta.sdk.resource.common.UserType
 import com.okta.sdk.resource.group.*
 import com.okta.sdk.resource.user.ChangePasswordRequest
@@ -168,7 +169,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def email = "john-activate=${uniqueTestName}@example.com"
 
         // 1. Create a User Type
-        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = UNDERSCORE_NAME_PREFIX + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
@@ -339,6 +340,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
         PasswordPolicyRule policyRule = client.createPolicyRule(client.instantiate(PasswordPolicyRule)
+            .setType(PolicyRuleType.PASSWORD)
             .setConditions(client.instantiate(PasswordPolicyRuleConditions)
                 .setNetwork(client.instantiate(PolicyNetworkCondition)
                     .setConnection(PolicyNetworkConnection.ANYWHERE)))

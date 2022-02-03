@@ -46,6 +46,9 @@ abstract class ITSupport implements ClientProvider {
     public static final TEST_SERVER_ALL_SCENARIOS = "okta.testServer.allScenarios"
     public static final IT_OPERATION_DELAY = "okta.it.operationDelay"
 
+    public static final SPINE_NAME_PREFIX = "java-sdk-it-"
+    public static final UNDERSCORE_NAME_PREFIX = "java_sdk_it_"
+
     public static boolean isOIEEnvironment
     private TestServer testServer
 

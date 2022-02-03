@@ -376,24 +376,16 @@ paths:
             schema:
               type: string
               format: binary
-          #          application/x-x509-ca-cert:
-          #            schema:
-          #              oneOf:
-          #                - type: string
-          #                  format: binary
-          #                  x-okta-operationId: publishBinaryCerCert
-          #                - type: string
-          #                  format: base64
-          #                  x-okta-operationId: publishBase64CerCert
-          #          application/pkix-cert:
-          #            schema:
-          #              oneOf:
-          #                - type: string
-          #                  format: binary
-          #                  x-okta-operationId: publishBinaryDerCert
-          #                - type: string
-          #                  format: base64
-          #                  x-okta-operationId: publishBase64DerCert
+          application/x-x509-ca-cert:
+            schema:
+              type: string
+              format: binary
+              x-okta-operationId: publishBinaryCerCert
+          application/pkix-cert:
+            schema:
+              type: string
+              format: binary
+              x-okta-operationId: publishBinaryDerCert
           application/x-pem-file:
             schema:
               type: string
@@ -4805,24 +4797,16 @@ paths:
             schema:
               type: string
               format: binary
-#          application/x-x509-ca-cert:
-#            schema:
-#              oneOf:
-#                - type: string
-#                  format: binary
-#                  x-okta-operationId: publishBinaryCerCertForIdentityProvider
-#                - type: string
-#                  format: base64
-#                  x-okta-operationId: publishBase64CerCertForIdentityProvider
-#          application/pkix-cert:
-#            schema:
-#              oneOf:
-#                - type: string
-#                  format: binary
-#                  x-okta-operationId: publishBinaryDerCertForIdentityProvider
-#                - type: string
-#                  format: base64
-#                  x-okta-operationId: publishBase64DerCertForIdentityProvider
+          application/x-x509-ca-cert:
+            schema:
+              type: string
+              format: binary
+              x-okta-operationId: publishBinaryCerCertForIdentityProvider
+          application/pkix-cert:
+             schema:
+               type: string
+               format: binary
+               x-okta-operationId: publishBinaryDerCertForIdentityProvider
           application/x-pem-file:
             schema:
               type: string

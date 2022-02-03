@@ -25,6 +25,7 @@ import com.okta.sdk.resource.authorization.server.PolicyAccess
 import com.okta.sdk.resource.authorization.server.PolicyType
 import com.okta.sdk.resource.common.Policy
 import com.okta.sdk.resource.authorization.server.LifecycleStatus
+import com.okta.sdk.resource.common.PolicyList
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
 import org.testng.annotations.Test
@@ -36,9 +37,11 @@ class SignOnPoliciesIT implements CrudTestSupport {
 
     @Override
     def create(Client client) {
-        Policy policy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
+        OktaSignOnPolicy policy = client.createPolicy(client.instantiate(OktaSignOnPolicy)
             .setName("policy+" + UUID.randomUUID().toString())
-            .setDescription("IT created Policy - signOn CRUD"))
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setType(PolicyType.OKTA_SIGN_ON)
+            .setDescription("IT created Policy - signOn CRUD")) as OktaSignOnPolicy
 
         assertThat policy.getStatus(), is(LifecycleStatus.ACTIVE)
         return policy
@@ -52,7 +55,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
     @Override
     void update(Client client, def policy) {
         policy.setDescription("IT created Policy - Updated")
-        policy.update()
+        client.updatePolicy(policy, policy.id)
     }
 
     @Override
@@ -96,7 +99,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
             .setDescription("IT created Policy - signOnActionsTest")
             .setType(PolicyType.OKTA_SIGN_ON)
             .setStatus(LifecycleStatus.ACTIVE)
-            .buildAndCreate(client) as OktaSignOnPolicy;
+            .buildAndCreate(client) as OktaSignOnPolicy
 
         registerForCleanup(policy as Deletable)
 
@@ -116,12 +119,12 @@ class SignOnPoliciesIT implements CrudTestSupport {
     @Test
     void activateDeactivateTest() {
 
-        def policy = OktaSignOnPolicyBuilder.instance()
+        OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
                 .setName("policy+" + UUID.randomUUID().toString())
                 .setDescription("IT created Policy - activateDeactivateTest")
                 .setType(PolicyType.OKTA_SIGN_ON)
                 .setStatus(LifecycleStatus.INACTIVE)
-        .buildAndCreate(client)
+        .buildAndCreate(client) as OktaSignOnPolicy
 
         registerForCleanup(policy as Deletable)
 
@@ -129,12 +132,12 @@ class SignOnPoliciesIT implements CrudTestSupport {
 
         // activate
         client.activatePolicy(policy.getId())
-        policy = client.getPolicy(policy.getId())
+        policy = client.getPolicy(policy.getId()) as OktaSignOnPolicy
         assertThat(policy.getStatus(), is(LifecycleStatus.ACTIVE))
 
         // deactivate
         client.deactivatePolicy(policy.getId())
-        policy = client.getPolicy(policy.getId())
+        policy = client.getPolicy(policy.getId()) as OktaSignOnPolicy
         assertThat(policy.getStatus(), is(LifecycleStatus.INACTIVE))
     }
 
@@ -152,10 +155,10 @@ class SignOnPoliciesIT implements CrudTestSupport {
 
     @Test
     void listPoliciesWithParams() {
-        def resource = create(client)
+        OktaSignOnPolicy resource = create(client)
         registerForCleanup(resource as Deletable)
 
-        def policies = client.listPolicies(PolicyType.OKTA_SIGN_ON.toString())
+        PolicyList policies = client.listPolicies(PolicyType.OKTA_SIGN_ON.toString())
         assertThat policies, not(empty())
         policies.stream()
                 .limit(5)

@@ -17,7 +17,17 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.Deletable
+import com.okta.sdk.resource.PasswordPolicy
 import com.okta.sdk.resource.ResourceException
+import com.okta.sdk.resource.application.Application
+import com.okta.sdk.resource.authorization.server.AuthorizationServer
+import com.okta.sdk.resource.common.Policy
+import com.okta.sdk.resource.event.hook.EventHook
+import com.okta.sdk.resource.group.Group
+import com.okta.sdk.resource.group.GroupRule
+import com.okta.sdk.resource.group.User
+import com.okta.sdk.resource.identity.provider.IdentityProvider
+import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.tests.it.util.ClientProvider
 import org.testng.Assert
 import org.testng.annotations.Test
@@ -90,11 +100,45 @@ trait CrudTestSupport implements ClientProvider {
 
     // delete
     void delete(Client client, def resource) {
-        if (resource._links.get("deactivate") != null) {
-            client.http().post(resource._links.get("deactivate").get("href"))
+        if (resource._links != null && resource._links.get("deactivate") != null) {
+            //client.http().post(resource._links.get("deactivate").get("href"))
+            if (resource instanceof Application)
+                client.deactivateApplication(resource.getId())
+            if (resource instanceof User)
+                client.deactivateOrDeleteUser(resource.getId())
+            if (resource instanceof GroupRule)
+                client.deactivateGroupRule(resource.getId())
+            if (resource instanceof AuthorizationServer)
+                client.deactivateAuthorizationServer(resource.getId())
+            if (resource instanceof EventHook)
+                client.deactivateEventHook(resource.getId())
+            if (resource instanceof InlineHook)
+                client.deactivateInlineHook(resource.getId())
+            if (resource instanceof IdentityProvider)
+                client.deactivateIdentityProvider(resource.getId())
+//            if (resource instanceof Policy)
+//                client.deactivatePolicy(resource.getId())
         }
 
-        client.delete(resource._links.get("delete").get("href"), resource)
+        //client.delete(resource._links.get("delete").get("href"), resource)
+        if (resource instanceof Application)
+            client.deleteApplication(resource.getId())
+        if (resource instanceof Group)
+            client.deleteGroup(resource.getId())
+        if (resource instanceof User)
+            client.deactivateOrDeleteUser(resource.getId())
+        if (resource instanceof GroupRule)
+            client.deleteGroupRule(resource.getId())
+        if (resource instanceof AuthorizationServer)
+            client.deleteAuthorizationServer(resource.getId())
+        if (resource instanceof EventHook)
+            client.deleteEventHook(resource.getId())
+        if (resource instanceof InlineHook)
+            client.deleteInlineHook(resource.getId())
+        if (resource instanceof IdentityProvider)
+            client.deleteIdentityProvider(resource.getId())
+        if (resource instanceof Policy)
+            client.deletePolicy(resource.getId())
     }
 
     void assertDelete(Client client, def resource) {

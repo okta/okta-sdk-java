@@ -29,6 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
 
 class PasswordPoliciesIT extends ITSupport implements CrudTestSupport  {
+
     @Override
     def create(Client client) {
         Group group = randomGroup()

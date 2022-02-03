@@ -82,7 +82,7 @@ class GroupRulesIT implements CrudTestSupport {
     @Override
     void update(Client client, def rule) {
         rule.setName(rule.name +"-2")
-        client.updateGroupRule(rule, rule.getId())
+        client.updateGroupRule(rule, rule.id)
     }
 
     @Override

@@ -34,9 +34,6 @@ class OktaOrgCleaner {
 
         Client client = Clients.builder().build()
 
-        println("User Types: " + client.listUserTypes())
-        println("# of User Types: " + client.listUserTypes().size())
-
         log.info("Deleting Active Users:")
         client.listUsers().stream()
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
@@ -77,9 +74,16 @@ class OktaOrgCleaner {
                 client.deleteGroupRule(rule.getId())
             }
 
-        log.info("Deleting Policies:")
+        log.info("Deleting Password Policies:")
+        client.listPolicies(PolicyType.PASSWORD.toString()).stream()
+            .filter { it.getName().startsWith("SDK") || it.getName().startsWith(prefix)  }
+            .forEach {
+                client.deletePolicy(it.getId())
+            }
+
+        log.info("Deleting SignOn Policies:")
         client.listPolicies(PolicyType.OKTA_SIGN_ON.toString()).stream()
-            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
+            .filter { it.getName().startsWith("policy+") || it.getName().startsWith(prefix) }
             .forEach {
                 client.deletePolicy(it.getId())
             }
@@ -136,5 +140,13 @@ class OktaOrgCleaner {
             .forEach {
                 client.deleteSmsTemplate(it.getId())
             }
+
+        log.info("Deleting NetworkZones:")
+        client.listNetworkZones().stream()
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                client.deleteNetworkZone(it.getId())
+            }
+
     }
 }
