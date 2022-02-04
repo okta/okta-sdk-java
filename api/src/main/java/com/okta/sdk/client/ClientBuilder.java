@@ -58,13 +58,14 @@ import java.util.Set;
  *     previously discovered values.</li>
  * </ol>
  *
- * <p><b>SECURITY NOTICE:</b> While the {@code okta.client.token} system property may be used to represent your
- * API Key Secret as mentioned above, this is not recommended: process listings on a machine will expose process
- * arguments (like system properties) and expose the secret value to anyone that can read process listings.  As
- * always, secret values should never be exposed to anyone other than the person that owns the API Key.</p>
+ * <p><b>SECURITY NOTICE:</b> While the {@code okta.client.token} system property or environment variable {@code OKTA_CLIENT_TOKEN}
+ * may be used to represent your API Key Secret as mentioned above, this is not recommended: process listings on a machine
+ * will expose process arguments (like system properties) or environment variables, thus exposing the secret value
+ * to anyone that can read process listings.  As always, secret values should never be exposed to anyone other
+ * than the person that owns the API Key.</p>
  *
  * <p>While an API Key ID may be configured anywhere (and be visible by anyone), it is recommended to use a private
- * read-only file or an environment variable to represent API Key secrets.  <b>Never</b> commit secrets to source code
+ * read-only file to represent API Key secrets.  <b>Never</b> commit secrets to source code
  * or version control.</p>
  *
  * <h2>Explicit API Key Configuration</h2>
