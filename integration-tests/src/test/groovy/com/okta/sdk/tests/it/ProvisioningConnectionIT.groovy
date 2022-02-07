@@ -16,9 +16,9 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.application.Application
-import com.okta.sdk.resource.application.BasicApplicationSettings
-import com.okta.sdk.resource.application.BasicApplicationSettingsApplication
 import com.okta.sdk.resource.application.Org2OrgApplication
+import com.okta.sdk.resource.application.Org2OrgApplicationSettings
+import com.okta.sdk.resource.application.Org2OrgApplicationSettingsApp
 import com.okta.sdk.resource.application.ProvisioningConnection
 import com.okta.sdk.resource.application.ProvisioningConnectionAuthScheme
 import com.okta.sdk.resource.application.ProvisioningConnectionProfile
@@ -41,10 +41,11 @@ class ProvisioningConnectionIT extends ITSupport {
         Application application = client.createApplication(
             client.instantiate(Org2OrgApplication)
                 .setLabel("java-sdk-it-" + UUID.randomUUID().toString())
-                .setSettings(client.instantiate(BasicApplicationSettings)
-                    .setApp(client.instantiate(BasicApplicationSettingsApplication)
-                        .setAuthURL("https://example.com/auth.html")
-                        .setUrl("https://example.com/login.html")))
+                .setSettings(client.instantiate(Org2OrgApplicationSettings)
+                    .setApp(client.instantiate(Org2OrgApplicationSettingsApp)
+                        .setAcsUrl("https://example.com/acs.html")
+                        .setAudRestriction("https://example.com/login.html")
+                        .setBaseUrl("https://example.com/home.html")))
         )
         registerForCleanup(application)
         application

@@ -933,10 +933,11 @@ class ApplicationsIT extends ITSupport {
      */
     void testUploadApplicationLogo() {
         Application application = create(client, client.instantiate(Org2OrgApplication)
-            .setSettings(client.instantiate(BasicApplicationSettings)
-                .setApp(client.instantiate(BasicApplicationSettingsApplication)
-                    .setAuthURL("https://example.com/auth.html")
-                    .setUrl("https://example.com/login.html")))
+            .setSettings(client.instantiate(Org2OrgApplicationSettings)
+                .setApp(client.instantiate(Org2OrgApplicationSettingsApp)
+                    .setAcsUrl("https://example.com/acs.html")
+                    .setAudRestriction("https://example.com/login.html")
+                    .setBaseUrl("https://example.com/home.html")))
         )
 
         client.instantiate(Application.class)
