@@ -20,6 +20,7 @@ import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.ResourceException;
+import com.okta.sdk.resource.group.UserStatus;
 import com.okta.sdk.resource.user.UserBuilder;
 
 import com.okta.sdk.resource.group.Group;
@@ -115,10 +116,11 @@ public class Quickstart {
 
             // deactivate and delete user
             if (user != null) {
-                // deactivate first
-                client.deactivateOrDeleteUser(user.getId());
-
-                // then delete
+                if (user.getStatus() != UserStatus.DEPROVISIONED) {
+                    // deactivate
+                    client.deactivateOrDeleteUser(user.getId());
+                }
+                // delete
                 client.deactivateOrDeleteUser(user.getId());
             }
 

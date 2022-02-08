@@ -71,12 +71,13 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
         } else if (isCacheable(result)) {
             cache(result.getResourceClass(), result.getData(), result.getUri());
         } else {
-            if (request.getUri().getAbsolutePath().contains("/lifecycle/deactivate")) {
-                String absolutePath = request.getUri().getAbsolutePath().replace("/lifecycle/deactivate", "");
+            String absolutePath = request.getUri().getAbsolutePath();
+            if (absolutePath.endsWith("/lifecycle/deactivate")) {
+                absolutePath = absolutePath.replace("/lifecycle/deactivate", "");
                 String key = getCacheKey(absolutePath);
                 uncache(key, VoidResource.class);
-            } else if (request.getUri().getAbsolutePath().contains("/lifecycle/activate")) {
-                String absolutePath = request.getUri().getAbsolutePath().replace("/lifecycle/activate", "");
+            } else if (absolutePath.endsWith("/lifecycle/activate")) {
+                absolutePath = absolutePath.replace("/lifecycle/activate", "");
                 String key = getCacheKey(absolutePath);
                 uncache(key, VoidResource.class);
             } else if (request.getParentUri() != null) {

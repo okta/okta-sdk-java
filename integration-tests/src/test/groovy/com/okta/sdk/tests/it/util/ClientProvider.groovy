@@ -28,7 +28,6 @@ import com.okta.sdk.resource.common.UserType
 import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.resource.group.*
 import com.okta.sdk.resource.identity.provider.IdentityProvider
-import com.okta.sdk.resource.inline.hook.InlineHook
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.slf4j.Logger
@@ -75,7 +74,7 @@ trait ClientProvider implements IHookable {
         }
 
         Client client = Clients.builder().build()
-        //client.dataStore.requestExecutor.numRetries = 10
+        client.dataStore.requestExecutor.numRetries = 10
         return client
     }
 
@@ -141,6 +140,11 @@ trait ClientProvider implements IHookable {
     void deleteUser(String email, Client client) {
         Util.ignoring(ResourceException) {
             User user = client.getUser(email)
+            if (user.status != UserStatus.DEPROVISIONED) {
+                // deactivate
+                client.deactivateOrDeleteUser(user.getId())
+            }
+            // delete
             client.deactivateOrDeleteUser(user.getId())
         }
     }
@@ -203,16 +207,6 @@ trait ClientProvider implements IHookable {
                     if (deletable instanceof UserType) {
                         getClient().deleteUserType(deletable.getId())
                     }
-//                    if (deletable instanceof User ||
-//                        deletable instanceof Application ||
-//                        deletable instanceof AuthorizationServer ||
-//                        deletable instanceof EventHook ||
-//                        deletable instanceof InlineHook ||
-//                        deletable instanceof GroupRule ||
-//                        deletable instanceof IdentityProvider) {
-//                        deletable.deactivate()
-//                    }
-//                    deletable.delete()
                 }
                 catch (Exception e) {
                     log.trace("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run:", e)
