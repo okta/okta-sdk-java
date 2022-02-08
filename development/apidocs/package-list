@@ -72,6 +72,7 @@ com.okta.sdk.resource.policy.rule
 com.okta.sdk.resource.profile.mapping
 com.okta.sdk.resource.role
 com.okta.sdk.resource.session
+com.okta.sdk.resource.subscription
 com.okta.sdk.resource.template
 com.okta.sdk.resource.threat.insight
 com.okta.sdk.resource.trusted.origin
