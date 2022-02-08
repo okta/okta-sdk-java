@@ -925,4 +925,22 @@ class ApplicationsIT extends ITSupport {
         assertThat(customPropertyMap["minLength"], equalTo(1))
         assertThat(customPropertyMap["maxLength"], equalTo(20))
     }
+
+    @Test
+    /**
+     * Currently is no way to check the logo.
+     * Just make sure that no exception was thrown during the upload.
+     */
+    void testUploadApplicationLogo() {
+        Application application = create(client, client.instantiate(Org2OrgApplication)
+            .setSettings(client.instantiate(Org2OrgApplicationSettings)
+                .setApp(client.instantiate(Org2OrgApplicationSettingsApp)
+                    .setAcsUrl("https://example.com/acs.html")
+                    .setAudRestriction("https://example.com/login.html")
+                    .setBaseUrl("https://example.com/home.html")))
+        )
+
+        client.instantiate(Application.class)
+            .uploadApplicationLogo(application.getId(), new File("src/test/resources/okta_logo_favicon.png"))
+    }
 }
