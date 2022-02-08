@@ -201,10 +201,10 @@ class SessionsTest {
         return Date.from(Instant.from(timeFormatter.parse(dateString)))
     }
 
-    private static Map dataFromJsonFile(String resourceFile = '/stubs/sessions.json') {
+    private Map dataFromJsonFile(String resourceFile = '/stubs/sessions.json') {
 
         return new JacksonMapMarshaller().unmarshal(
                 this.getClass().getResource(resourceFile).openStream(),
-                Collections.emptyMap())
+            Collections.emptyMap())
     }
 }

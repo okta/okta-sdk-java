@@ -71,7 +71,6 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
         } else if (isCacheable(result)) {
             cache(result.getResourceClass(), result.getData(), result.getUri());
         } else {
-            //https://sdk-test-tc2.trexcloud.com/api/v1/authorizationServers/aus8ptz5qNaD9l2iQ0w6/lifecycle/deactivate
             if (request.getUri().getAbsolutePath().contains("/lifecycle/deactivate")) {
                 String absolutePath = request.getUri().getAbsolutePath().replace("/lifecycle/deactivate", "");
                 String key = getCacheKey(absolutePath);

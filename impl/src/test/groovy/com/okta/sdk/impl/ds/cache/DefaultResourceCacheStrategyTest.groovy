@@ -87,7 +87,7 @@ class DefaultResourceCacheStrategyTest {
         assertThat cacheManager.getCache("okta").get(resourceUrl), nullValue()
     }
 
-    @Test //TODO: uncomment me
+    @Test
     void testUncacheRPC() {
 
         String baseUrl = "https://okta.example.com/cache-strategy-test"
