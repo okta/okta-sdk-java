@@ -528,8 +528,15 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         User userByLogin = client.getUser(createUser.getProfile().getLogin())
         validateUser(userByLogin, firstName, lastName, email)
 
-        // 3. delete the user
+        // 3. deactivate the user
         client.deactivateOrDeleteUser(user.getId())
+
+        Thread.sleep(getTestOperationDelay())
+
+        // 4. delete the user
+        client.deactivateOrDeleteUser(user.getId())
+
+        Thread.sleep(getTestOperationDelay())
 
         // 4. get user expect 404
         expect (ResourceException) {
@@ -701,28 +708,25 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create group
-        Group group = GroupBuilder.instance()
+        Group createdGroup = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(group as Deletable)
-        validateGroup(group, groupName)
+        registerForCleanup(createdGroup as Deletable)
+        validateGroup(createdGroup, groupName)
 
         // 2. Create a user
-        User createUser = UserBuilder.instance()
+        User createdUser = UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password.toCharArray())
                 .setActive(false)
-                .addGroup(group.getId())
+                .addGroup(createdGroup.getId())
                 .buildAndCreate(client)
-        registerForCleanup(createUser as Deletable)
-        validateUser(createUser, firstName, lastName, email)
+        registerForCleanup(createdUser as Deletable)
+        validateUser(createdUser, firstName, lastName, email)
 
-        List<Group> groups = client.listGroups().stream().collect(Collectors.toList())
-        assertThat groups, allOf(hasSize(2))
-        assertThat groups.get(0).getProfile().name, equalTo("Everyone")
-        assertThat groups.get(1).getId(), equalTo(group.id)
+        assertUserInGroup(client, createdUser, createdGroup)
     }
 
     @Test (groups = "group3")

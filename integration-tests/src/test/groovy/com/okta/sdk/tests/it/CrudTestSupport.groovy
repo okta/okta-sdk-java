@@ -28,6 +28,7 @@ import com.okta.sdk.resource.group.GroupRule
 import com.okta.sdk.resource.group.User
 import com.okta.sdk.resource.identity.provider.IdentityProvider
 import com.okta.sdk.resource.inline.hook.InlineHook
+import com.okta.sdk.resource.policy.PolicyRule
 import com.okta.sdk.tests.it.util.ClientProvider
 import org.testng.Assert
 import org.testng.annotations.Test
@@ -100,12 +101,13 @@ trait CrudTestSupport implements ClientProvider {
 
     // delete
     void delete(Client client, def resource) {
+
         if (resource._links != null && resource._links.get("deactivate") != null) {
             //client.http().post(resource._links.get("deactivate").get("href"))
             if (resource instanceof Application)
                 client.deactivateApplication(resource.getId())
             if (resource instanceof User)
-                client.deactivateOrDeleteUser(resource.getId())
+                client.deactivateUser(resource.getId())
             if (resource instanceof GroupRule)
                 client.deactivateGroupRule(resource.getId())
             if (resource instanceof AuthorizationServer)
@@ -125,8 +127,9 @@ trait CrudTestSupport implements ClientProvider {
             client.deleteApplication(resource.getId())
         if (resource instanceof Group)
             client.deleteGroup(resource.getId())
-        if (resource instanceof User)
+        if (resource instanceof User) {
             client.deactivateOrDeleteUser(resource.getId())
+        }
         if (resource instanceof GroupRule)
             client.deleteGroupRule(resource.getId())
         if (resource instanceof AuthorizationServer)
@@ -139,6 +142,10 @@ trait CrudTestSupport implements ClientProvider {
             client.deleteIdentityProvider(resource.getId())
         if (resource instanceof Policy)
             client.deletePolicy(resource.getId())
+        if (resource instanceof PolicyRule) {
+            def selfHref = resource._links.get("self").get("href")
+            client.delete(selfHref, resource)
+        }
     }
 
     void assertDelete(Client client, def resource) {

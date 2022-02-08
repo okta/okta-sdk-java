@@ -34,7 +34,7 @@ class OktaOrgCleaner {
 
         Client client = Clients.builder().build()
 
-        log.info("Deleting Active Users:")
+        log.info("Deactivating Active Users:")
         client.listUsers().stream()
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
             .forEach {
@@ -44,7 +44,7 @@ class OktaOrgCleaner {
 
         client.listUsers(null, "status eq \"${UserStatus.DEPROVISIONED}\"", null, null, null).stream()
             .forEach {
-                log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
+                log.info("Deleting Deactivated user: ${it.getProfile().getEmail()}")
                 client.deactivateOrDeleteUser(it.getId())
             }
 

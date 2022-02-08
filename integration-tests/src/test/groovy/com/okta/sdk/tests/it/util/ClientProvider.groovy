@@ -24,6 +24,7 @@ import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.authorization.server.AuthorizationServer
+import com.okta.sdk.resource.common.UserType
 import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.resource.group.*
 import com.okta.sdk.resource.identity.provider.IdentityProvider
@@ -175,22 +176,43 @@ trait ClientProvider implements IHookable {
             // delete them in reverse order so dependencies are resolved
             toBeDeleted.reverse().each { deletable ->
                 try {
-                    if (deletable instanceof User) {
-                        getClient().deactivateOrDeleteUser(deletable.getId())
+                    if (deletable instanceof Application) {
+                        getClient().deleteApplication(deletable.getId())
+                    }
+                    if (deletable instanceof AuthorizationServer) {
+                        getClient().deleteAuthorizationServer(deletable.getId())
+                    }
+                    if (deletable instanceof EventHook) {
+                        getClient().deleteEventHook(deletable.getId())
                     }
                     if (deletable instanceof Group) {
-                        getClient().deleteGroup(deletable.getId())
+                        getClient().deleteInlineHook(deletable.getId())
                     }
-                    if (deletable instanceof User ||
-                        deletable instanceof Application ||
-                        deletable instanceof AuthorizationServer ||
-                        deletable instanceof EventHook ||
-                        deletable instanceof InlineHook ||
-                        deletable instanceof GroupRule ||
-                        deletable instanceof IdentityProvider) {
-                        deletable.deactivate()
+                    if (deletable instanceof GroupRule) {
+                        getClient().deleteGroupRule(deletable.getId())
                     }
-                    deletable.delete()
+                    if (deletable instanceof IdentityProvider) {
+                        getClient().deleteIdentityProvider(deletable.getId())
+                    }
+                    if (deletable instanceof User) {
+                        // deactivate first
+                        getClient().deactivateOrDeleteUser(deletable.getId())
+                        // then delete
+                        getClient().deactivateOrDeleteUser(deletable.getId())
+                    }
+                    if (deletable instanceof UserType) {
+                        getClient().deleteUserType(deletable.getId())
+                    }
+//                    if (deletable instanceof User ||
+//                        deletable instanceof Application ||
+//                        deletable instanceof AuthorizationServer ||
+//                        deletable instanceof EventHook ||
+//                        deletable instanceof InlineHook ||
+//                        deletable instanceof GroupRule ||
+//                        deletable instanceof IdentityProvider) {
+//                        deletable.deactivate()
+//                    }
+//                    deletable.delete()
                 }
                 catch (Exception e) {
                     log.trace("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run:", e)

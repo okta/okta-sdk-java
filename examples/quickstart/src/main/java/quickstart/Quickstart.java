@@ -25,7 +25,6 @@ import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.group.Group;
 import com.okta.sdk.resource.group.User;
 import com.okta.sdk.resource.group.UserList;
-import com.okta.sdk.resource.group.UserStatus;
 
 import java.util.UUID;
 
@@ -104,7 +103,7 @@ public class Quickstart {
         }
         catch (ResourceException e) {
 
-            // we can get the user friendly message from the Exception
+            // we can get the user-friendly message from the Exception
             println(e.getMessage());
 
             // and you can get the details too
@@ -114,11 +113,13 @@ public class Quickstart {
         finally {
             // cleanup
 
-            // deactivate (if de-provisioned) and delete user
+            // deactivate and delete user
             if (user != null) {
-                if (user.getStatus() != UserStatus.DEPROVISIONED) {
-                    client.deactivateOrDeleteUser(user.getId());
-                }
+                // deactivate first
+                client.deactivateOrDeleteUser(user.getId());
+
+                // then delete
+                client.deactivateOrDeleteUser(user.getId());
             }
 
             // delete group

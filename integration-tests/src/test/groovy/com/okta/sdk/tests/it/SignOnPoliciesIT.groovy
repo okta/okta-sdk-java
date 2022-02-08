@@ -22,12 +22,14 @@ import com.okta.sdk.resource.OktaSignOnPolicyRule
 import com.okta.sdk.resource.OktaSignOnPolicyRuleActions
 import com.okta.sdk.resource.authorization.server.OktaSignOnPolicyRuleSignonActions
 import com.okta.sdk.resource.authorization.server.PolicyAccess
+import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection
 import com.okta.sdk.resource.authorization.server.PolicyType
 import com.okta.sdk.resource.common.Policy
 import com.okta.sdk.resource.authorization.server.LifecycleStatus
 import com.okta.sdk.resource.common.PolicyList
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
+import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
@@ -104,12 +106,23 @@ class SignOnPoliciesIT implements CrudTestSupport {
         registerForCleanup(policy as Deletable)
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        OktaSignOnPolicyRule policyRule = client.createPolicyRule(client.instantiate(OktaSignOnPolicyRule)
+//        OktaSignOnPolicyRule policyRule = client.createPolicyRule(client.instantiate(OktaSignOnPolicyRule)
+//            .setName(policyRuleName)
+//            .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
+//                .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
+//                    .setAccess(PolicyAccess.DENY)
+//                    .setRequireFactor(false))), policy.getId()) as OktaSignOnPolicyRule
+        OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
-            .setActions(client.instantiate(OktaSignOnPolicyRuleActions)
-                .setSignon(client.instantiate(OktaSignOnPolicyRuleSignonActions)
-                    .setAccess(PolicyAccess.DENY)
-                    .setRequireFactor(false))), policy.getId()) as OktaSignOnPolicyRule
+//            .setAuthType(PolicyRuleAuthContextType.RADIUS)
+            .setNetworkConnection(PolicyNetworkConnection.ANYWHERE)
+            .setMaxSessionIdleMinutes(720)
+            .setMaxSessionLifetimeMinutes(0)
+            .setUsePersistentCookie(false)
+            .setRememberDeviceByDefault(false)
+            .setRequireFactor(false)
+            .setAccess(PolicyAccess.ALLOW)
+            .buildAndCreate(client, policy) as OktaSignOnPolicyRule
         registerForCleanup(policyRule as Deletable)
 
         assertThat(policyRule.getId(), notNullValue())

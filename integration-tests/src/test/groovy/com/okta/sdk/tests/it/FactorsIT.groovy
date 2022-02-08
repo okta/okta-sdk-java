@@ -22,7 +22,6 @@ import com.okta.sdk.resource.group.User
 import com.okta.sdk.resource.user.factor.ActivateFactorRequest
 import com.okta.sdk.resource.CallUserFactor
 import com.okta.sdk.resource.EmailUserFactor
-import com.okta.sdk.resource.EmailUserFactorProfile
 import com.okta.sdk.resource.user.factor.FactorProvider
 import com.okta.sdk.resource.user.factor.FactorStatus
 import com.okta.sdk.resource.user.factor.FactorType
@@ -59,10 +58,14 @@ class FactorsIT extends ITSupport {
         assertThat client.listFactors(user.getId()), emptyIterable()
 
         SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor)
+        smsUserFactor.setProvider(FactorProvider.OKTA)
+        smsUserFactor.setFactorType(FactorType.SMS)
         smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
         client.enrollFactor(smsUserFactor, user.getId())
 
         SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
+        securityQuestionUserFactor.setProvider(FactorProvider.OKTA)
+        securityQuestionUserFactor.setFactorType(FactorType.QUESTION)
         securityQuestionUserFactor.getProfile()
             .setQuestion("disliked_food")
             .setAnswer("pizza")
@@ -88,6 +91,8 @@ class FactorsIT extends ITSupport {
         assertThat client.listFactors(user.getId()), emptyIterable()
 
         SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
+        securityQuestionUserFactor.setProvider(FactorProvider.OKTA)
+        securityQuestionUserFactor.setFactorType(FactorType.QUESTION)
         securityQuestionUserFactor.getProfile()
             .setQuestion("disliked_food")
             .setAnswer("pizza")
@@ -106,6 +111,8 @@ class FactorsIT extends ITSupport {
         assertThat client.listFactors(user.getId()), emptyIterable()
 
         CallUserFactor callUserFactor = client.instantiate(CallUserFactor)
+        callUserFactor.setProvider(FactorProvider.OKTA)
+        callUserFactor.setFactorType(FactorType.CALL)
         callUserFactor.getProfile().setPhoneNumber(smsTestNumber)
 
         assertThat callUserFactor.id, nullValue()
@@ -122,6 +129,8 @@ class FactorsIT extends ITSupport {
         assertThat client.listFactors(user.getId()), emptyIterable()
 
         SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor)
+        smsUserFactor.setProvider(FactorProvider.OKTA)
+        smsUserFactor.setFactorType(FactorType.SMS)
         smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
 
         assertThat smsUserFactor.id, nullValue()
@@ -137,6 +146,9 @@ class FactorsIT extends ITSupport {
         assertThat client.listFactors(user.getId()), emptyIterable()
 
         PushUserFactor pushUserFactor = client.instantiate(PushUserFactor)
+        pushUserFactor.setProvider(FactorProvider.OKTA)
+        pushUserFactor.setFactorType(FactorType.PUSH)
+
         assertThat pushUserFactor.id, nullValue()
         assertThat pushUserFactor, sameInstance(client.enrollFactor(pushUserFactor, user.getId()))
         assertThat pushUserFactor.id, notNullValue()
@@ -162,6 +174,9 @@ class FactorsIT extends ITSupport {
         User user = randomUser()
         assertThat client.listFactors(user.getId()), emptyIterable()
         TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
+        totpUserFactor.setProvider(FactorProvider.OKTA)
+        totpUserFactor.setFactorType(FactorType.TOKEN_SOFTWARE_TOTP)
+
         client.enrollFactor(totpUserFactor, user.getId())
 
         assertThat totpUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
@@ -179,6 +194,8 @@ class FactorsIT extends ITSupport {
         User user = randomUser()
 
         SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
+        securityQuestionUserFactor.setProvider(FactorProvider.OKTA)
+        securityQuestionUserFactor.setFactorType(FactorType.QUESTION)
         securityQuestionUserFactor.getProfile()
             .setQuestion("disliked_food")
             .setAnswer("pizza")
@@ -198,10 +215,9 @@ class FactorsIT extends ITSupport {
         assertThat client.listFactors(user.getId()), emptyIterable()
 
         EmailUserFactor emailUserFactor = client.instantiate(EmailUserFactor)
-            .setFactorType(FactorType.EMAIL)
-            .setProvider(FactorProvider.OKTA)
-            .setProfile(client.instantiate(EmailUserFactorProfile)
-                .setEmail(user.getProfile().getEmail()))
+        emailUserFactor.setFactorType(FactorType.EMAIL)
+        emailUserFactor.setProvider(FactorProvider.OKTA)
+        emailUserFactor.getProfile().setEmail(user.getProfile().getEmail())
 
         assertThat emailUserFactor.id, nullValue()
         // enroll and activate
@@ -238,6 +254,7 @@ class FactorsIT extends ITSupport {
         assertThat client.listFactors(user.getId()), emptyIterable()
         TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
         totpUserFactor.setProvider(FactorProvider.OKTA)
+        totpUserFactor.setFactorType(FactorType.TOKEN_SOFTWARE_TOTP)
         client.enrollFactor(totpUserFactor, user.getId())
         client.deleteFactor(user.getId(), totpUserFactor.getId())
     }

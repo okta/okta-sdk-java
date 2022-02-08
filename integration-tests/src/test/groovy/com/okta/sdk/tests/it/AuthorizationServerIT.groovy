@@ -256,6 +256,8 @@ class AuthorizationServerIT extends ITSupport {
             .setName("Test Policy")
             .setDescription("Test Policy")
             .setPriority(1)
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setSystem(true)
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
@@ -263,7 +265,7 @@ class AuthorizationServerIT extends ITSupport {
                     )
                 )
             ) as AuthorizationServerPolicy
-        AuthorizationServerPolicy createdPolicy = client.createPolicy(authorizationServerPolicy) as AuthorizationServerPolicy
+        AuthorizationServerPolicy createdPolicy = client.createAuthorizationServerPolicy(authorizationServerPolicy, createdAuthorizationServer.getId())
         assertThat(createdPolicy, notNullValue())
 
         AuthorizationServerPolicy retrievedPolicy = client.getAuthorizationServerPolicy(createdAuthorizationServer.getId(), createdPolicy.getId())
@@ -290,6 +292,8 @@ class AuthorizationServerIT extends ITSupport {
             .setName("Test Policy")
             .setDescription("Test Policy")
             .setPriority(1)
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setSystem(true)
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
@@ -327,6 +331,8 @@ class AuthorizationServerIT extends ITSupport {
             .setName("Test Policy")
             .setDescription("Test Policy")
             .setPriority(1)
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setSystem(true)
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
@@ -362,6 +368,8 @@ class AuthorizationServerIT extends ITSupport {
             .setName("Test Policy")
             .setDescription("Test Policy")
             .setPriority(1)
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setSystem(true)
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
@@ -384,7 +392,7 @@ class AuthorizationServerIT extends ITSupport {
         assertThat(activatedPolicy, notNullValue())
         assertThat(activatedPolicy.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
-        client.deletePolicy(activatedPolicy.getId())
+        client.deleteAuthorizationServerPolicy(createdAuthorizationServer.getId(), activatedPolicy.getId())
 
         // delete may not effect immediately in the backend
         sleep(getTestOperationDelay())
@@ -441,6 +449,8 @@ class AuthorizationServerIT extends ITSupport {
             .setName("Test Policy")
             .setDescription("Test Policy")
             .setPriority(1)
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setSystem(true)
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
@@ -466,10 +476,10 @@ class AuthorizationServerIT extends ITSupport {
             .buildAndCreate(client)
         registerForCleanup(createdInlineHook as Deletable)
 
-        AuthorizationServerPolicyRule createdPolicyRule = client.createPolicyRule(
+        AuthorizationServerPolicyRule createdPolicyRule = client.createAuthorizationServerPolicyRule(
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(PolicyRuleType.ACCESS_POLICY)
+                .setType(PolicyRuleType.RESOURCE_ACCESS)
                 .setPriority(1)
                 .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
@@ -490,10 +500,10 @@ class AuthorizationServerIT extends ITSupport {
                                 .setId(createdInlineHook.getId())
                             )
                     )
-                ),createdAuthorizationServer.getId()) as AuthorizationServerPolicyRule
+                ) as AuthorizationServerPolicyRule, createdPolicy.getId(), createdAuthorizationServer.getId())
 
         assertThat(createdPolicyRule, notNullValue())
-        assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.ACCESS_POLICY))
+        assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.RESOURCE_ACCESS))
         assertThat(createdPolicyRule.getPriority(), equalTo(1))
         assertThat(createdPolicyRule.getConditions().getPeople().getGroups().getInclude(), contains("EVERYONE"))
         assertThat(createdPolicyRule.getConditions().getGrantTypes().getInclude(),
@@ -522,6 +532,8 @@ class AuthorizationServerIT extends ITSupport {
             .setName("Test Policy")
             .setDescription("Test Policy")
             .setPriority(1)
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setSystem(true)
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
@@ -540,7 +552,7 @@ class AuthorizationServerIT extends ITSupport {
         AuthorizationServerPolicyRule createdPolicyRule = client.createAuthorizationServerPolicyRule(
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(PolicyRuleType.ACCESS_POLICY)
+                .setType(PolicyRuleType.RESOURCE_ACCESS)
                 .setPriority(1)
                 .setConditions(client.instantiate(PolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
@@ -558,10 +570,10 @@ class AuthorizationServerIT extends ITSupport {
                             .setRefreshTokenWindowMinutes(10080)
                     )
                 ) as AuthorizationServerPolicyRule
-        , createdPolicy.getId(), createdAuthorizationServer.getId())
+        ,createdPolicy.getId(), createdAuthorizationServer.getId())
 
         assertThat(createdPolicyRule, notNullValue())
-        assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.ACCESS_POLICY))
+        assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.RESOURCE_ACCESS))
         assertThat(createdPolicyRule.getPriority(), equalTo(1))
         assertThat(createdPolicyRule.getConditions().getPeople().getGroups().getInclude(), contains("EVERYONE"))
         assertThat(createdPolicyRule.getConditions().getGrantTypes().getInclude(),
@@ -608,7 +620,9 @@ class AuthorizationServerIT extends ITSupport {
             .setType(PolicyType.OAUTH_AUTHORIZATION_POLICY)
             .setName("Test Policy")
             .setDescription("Test Policy")
+            .setSystem(true)
             .setPriority(1)
+            .setStatus(LifecycleStatus.ACTIVE)
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
@@ -628,7 +642,7 @@ class AuthorizationServerIT extends ITSupport {
         AuthorizationServerPolicyRule createdPolicyRule = client.createAuthorizationServerPolicyRule(
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(PolicyRuleType.ACCESS_POLICY)
+                .setType(PolicyRuleType.RESOURCE_ACCESS)
                 .setPriority(1)
                 .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)
@@ -641,14 +655,14 @@ class AuthorizationServerIT extends ITSupport {
         , retrievedPolicy.getId(), createdAuthorizationServer.getId())
 
         assertThat(createdPolicyRule, notNullValue())
-        assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.ACCESS_POLICY))
+        assertThat(createdPolicyRule.getType(), equalTo(PolicyRuleType.RESOURCE_ACCESS))
 
-        client.deletePolicyRule(retrievedPolicy.getId(), createdPolicyRule.getId())
+        client.deleteAuthorizationServerPolicyRule(retrievedPolicy.getId(), createdAuthorizationServer.getId(), createdPolicyRule.getId())
 
         // delete may not effect immediately in the backend
         sleep(getTestOperationDelay())
 
-        assertNotPresent(client.listPolicyRules(retrievedPolicy.getId()), createdPolicyRule)
+        assertNotPresent(client.listAuthorizationServerPolicyRules(retrievedPolicy.getId(), createdAuthorizationServer.getId()), createdPolicyRule)
     }
 
     @Test (groups = "group3")
@@ -668,6 +682,8 @@ class AuthorizationServerIT extends ITSupport {
             .setName("Test Policy")
             .setDescription("Test Policy")
             .setPriority(1)
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setSystem(true)
             .setConditions(client.instantiate(PolicyRuleConditions)
                 .setClients(client.instantiate(ClientPolicyCondition)
                     .setInclude(
@@ -681,7 +697,7 @@ class AuthorizationServerIT extends ITSupport {
         AuthorizationServerPolicyRule createdPolicyRule = client.createAuthorizationServerPolicyRule(
             client.instantiate(AuthorizationServerPolicyRule)
                 .setName(name)
-                .setType(PolicyRuleType.ACCESS_POLICY)
+                .setType(PolicyRuleType.RESOURCE_ACCESS)
                 .setPriority(1)
                 .setConditions(client.instantiate(AuthorizationServerPolicyRuleConditions)
                     .setPeople(client.instantiate(PolicyPeopleCondition)

@@ -28,6 +28,7 @@ import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Collections;
 import com.okta.sdk.resource.CollectionResource;
 import com.okta.sdk.resource.Resource;
+import com.okta.sdk.resource.VoidResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,16 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
         } else if (isCacheable(result)) {
             cache(result.getResourceClass(), result.getData(), result.getUri());
         } else {
-            if (request.getParentUri() != null) {
+            //https://sdk-test-tc2.trexcloud.com/api/v1/authorizationServers/aus8ptz5qNaD9l2iQ0w6/lifecycle/deactivate
+            if (request.getUri().getAbsolutePath().contains("/lifecycle/deactivate")) {
+                String absolutePath = request.getUri().getAbsolutePath().replace("/lifecycle/deactivate", "");
+                String key = getCacheKey(absolutePath);
+                uncache(key, VoidResource.class);
+            } else if (request.getUri().getAbsolutePath().contains("/lifecycle/activate")) {
+                String absolutePath = request.getUri().getAbsolutePath().replace("/lifecycle/activate", "");
+                String key = getCacheKey(absolutePath);
+                uncache(key, VoidResource.class);
+            } else if (request.getParentUri() != null) {
                 logger.debug("Removing parent cache  '{}'", request.getUri().getAbsolutePath());
                 String key = getCacheKey(request.getParentUri().getAbsolutePath());
                 uncache(key, request.getParentResourceClass());
@@ -126,7 +136,8 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
         );
 
         if (isDirectlyCacheable(clazz, cacheValue)) {
-            Cache cache = getCache(clazz);
+            //Cache cache = getCache(clazz);
+            Cache cache = getCache();
             String cacheKey = getCacheKey(href);
             Object previousCacheValue = cache.put(cacheKey, cacheValue);
             logger.debug("Caching object for key '{}', class: '{}', updated {}", cacheKey, clazz, previousCacheValue != null);
@@ -137,7 +148,7 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
     private void uncache(String cacheKey, Class<? extends Resource> resourceType) {
         Assert.hasText(cacheKey, "cacheKey cannot be null or empty.");
         Assert.notNull(resourceType, "resourceType cannot be null.");
-        Cache<String, Map<String, ?>> cache = getCache(resourceType);
+        Cache<String, Map<String, ?>> cache = getCache();
         cache.remove(cacheKey);
         logger.debug("Removing cache for key '{}', class: '{}'", cacheKey, resourceType);
     }
@@ -192,18 +203,19 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
         return hrefResolver.resolveHref(props, clazz) != null;
     }
 
-    private <T> Cache<String, Map<String, ?>> getCache(Class<T> clazz) {
-        return this.cacheResolver.getCache(clazz);
+    private <T> Cache<String, Map<String, ?>> getCache() {
+        return this.cacheResolver.getCache();
     }
 
     private Map<String, ?> getCachedValue(String href, Class<? extends Resource> clazz) {
         Assert.hasText(href, "href argument cannot be null or empty.");
         Assert.notNull(clazz, "Class argument cannot be null.");
-        Cache<String, Map<String, ?>> cache = getCache(clazz);
+        //Cache<String, Map<String, ?>> cache = getCache(clazz);
+        Cache<String, Map<String, ?>> cache = getCache();
 
         Map<String, ?> value = cache.get(href);
         if (value != null) {
-            logger.debug("Cache hit for key      '{}', class: '{}'", href, clazz);
+            logger.debug("Cache hit for key '{}', class: '{}'", href, clazz);
         }
         return value;
     }

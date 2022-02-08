@@ -65,7 +65,7 @@ class DefaultResourceCacheStrategyTest {
 
         // cache value
         cacheStrategy.cache(dataRequest, resourceDataResult)
-        def cachedValue = cacheManager.getCache(StubResource.getName()).get(resourceUrl)
+        def cachedValue = cacheManager.getCache("okta").get(resourceUrl)
         assertThat cachedValue, notNullValue()
         assertThat cachedValue, equalTo(payload)
 
@@ -80,14 +80,14 @@ class DefaultResourceCacheStrategyTest {
         // read should return null because this is a delete request
         assertThat cacheStrategy.readFromCache(deleteDataRequest), nullValue()
         // cache should be unaffected
-        assertThat cacheManager.getCache(StubResource.getName()).get(resourceUrl), equalTo(payload)
+        assertThat cacheManager.getCache("okta").get(resourceUrl), equalTo(payload)
 
         // now cache the delete request
         cacheStrategy.cache(deleteDataRequest, deleteDataResult)
-        assertThat cacheManager.getCache(StubResource.getName()).get(resourceUrl), nullValue()
+        assertThat cacheManager.getCache("okta").get(resourceUrl), nullValue()
     }
 
-    @Test
+    @Test //TODO: uncomment me
     void testUncacheRPC() {
 
         String baseUrl = "https://okta.example.com/cache-strategy-test"
@@ -95,7 +95,7 @@ class DefaultResourceCacheStrategyTest {
 
         Cache cache = mock(Cache)
         CacheManager cacheManager = mock(CacheManager)
-        when(cacheManager.getCache(StubResource.getName())).thenReturn(cache)
+        when(cacheManager.getCache("okta")).thenReturn(cache)
         CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
         when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
         CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)

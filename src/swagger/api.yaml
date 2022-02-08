@@ -13006,9 +13006,11 @@ components:
       enum:
         - SIGN_ON
         - PASSWORD
-        - ACCESS_POLICY
         - IDP_DISCOVERY
         - MFA_ENROLL
+        - RESOURCE_ACCESS
+        - PROFILE_ENROLLMENT
+        - ACCESS_POLICY
     PolicySubject:
       type: object
       properties:
@@ -13036,6 +13038,7 @@ components:
       enum:
         - OAUTH_AUTHORIZATION_POLICY
         - OKTA_SIGN_ON
+        - MFA_ENROLL
         - PASSWORD
         - IDP_DISCOVERY
         - PROFILE_ENROLLMENT

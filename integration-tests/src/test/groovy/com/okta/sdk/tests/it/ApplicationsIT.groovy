@@ -711,7 +711,7 @@ class ApplicationsIT extends ITSupport {
     }
 
     // Quarantining this till OKTA-421154 is fixed
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     void oAuth2ScopeConsentGrantTest() {
         Client client = getClient()
 
