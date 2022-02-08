@@ -53,7 +53,7 @@ class ApplicationsIT extends ITSupport {
 
         // Create a resource
         def resource = create(client, app)
-        registerForCleanup(resource as Deletable)
+        registerForCleanup(resource)
 
         // getting the resource again should result in the same object
         def readResource = read(client, resource.getId())
@@ -74,7 +74,7 @@ class ApplicationsIT extends ITSupport {
 
     def create(Client client, Application app) {
         app.setLabel("java-sdk-it-" + UUID.randomUUID().toString())
-        registerForCleanup(app as Deletable)
+        registerForCleanup(app)
         return client.createApplication(app)
     }
 
@@ -209,7 +209,7 @@ class ApplicationsIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook as Deletable)
+        registerForCleanup(createdInlineHook)
 
         doCrudTest(client.instantiate(SamlApplication)
                         .setSignOnMode(ApplicationSignOnMode.SAML_2_0)
@@ -462,9 +462,9 @@ class ApplicationsIT extends ITSupport {
                         .setRedirectUrl("https://swasecondaryredirecturl.okta.com")
                         .setLoginUrl("https://swaprimaryloginurl.okta.com")))
         client.createApplication(app1)
-        registerForCleanup(app1 as Deletable)
+        registerForCleanup(app1)
         client.createApplication(app2)
-        registerForCleanup(app2 as Deletable)
+        registerForCleanup(app2)
 
         JsonWebKeyList app1Keys = client.listApplicationKeys(app1.getId())
         assertThat(app1Keys.size(), equalTo(1))
@@ -498,7 +498,7 @@ class ApplicationsIT extends ITSupport {
                         .setRedirectUrl("https://swasecondaryredirecturl.okta.com")
                         .setLoginUrl("https://swaprimaryloginurl.okta.com"))))
 
-        registerForCleanup(app as Deletable)
+        registerForCleanup(app)
 
         assertThat(app.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
@@ -530,8 +530,8 @@ class ApplicationsIT extends ITSupport {
                 .setDescription("IT created Group")
                 .buildAndCreate(client)
 
-        registerForCleanup(app as Deletable)
-        registerForCleanup(group as Deletable)
+        registerForCleanup(app)
+        registerForCleanup(group)
 
         ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId())
         assertThat(groupAssignment, notNullValue())
@@ -558,8 +558,8 @@ class ApplicationsIT extends ITSupport {
                 .setDescription("IT created Group")
                 .buildAndCreate(client)
 
-        registerForCleanup(app as Deletable)
-        registerForCleanup(group as Deletable)
+        registerForCleanup(app)
+        registerForCleanup(group)
 
         assertThat(client.listApplicationGroupAssignments(app.getId()).iterator().size(), equalTo(0))
 
@@ -602,7 +602,7 @@ class ApplicationsIT extends ITSupport {
                         .setRedirectUrl("https://swasecondaryredirecturl.okta.com")
                         .setLoginUrl("https://swaprimaryloginurl.okta.com")))
         client.createApplication(app)
-        registerForCleanup(app as Deletable)
+        registerForCleanup(app)
 
         // issue: listApplicationUsers() occasionally throws HTTP 404, Okta E0000007 - Resource not found error.
         // adding a sleep after createApplication() helps resolve the above issue.
@@ -681,7 +681,7 @@ class ApplicationsIT extends ITSupport {
                     .setAutoKeyRotation(true)
                     .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))
         client.createApplication(app)
-        registerForCleanup(app as Deletable)
+        registerForCleanup(app)
 
         assertThat(app.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
@@ -739,7 +739,7 @@ class ApplicationsIT extends ITSupport {
                     .setAutoKeyRotation(true)
                     .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))
         client.createApplication(app)
-        registerForCleanup(app as Deletable)
+        registerForCleanup(app)
 
         assertThat(app.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
@@ -778,7 +778,7 @@ class ApplicationsIT extends ITSupport {
         def dataStore = (DefaultDataStore) client.getDataStore()
         def resource = create(client, app)
         def url = resource.getLinks().get("users")["href"]
-        registerForCleanup(resource as Deletable)
+        registerForCleanup(resource)
 
         // issue: testExecuteWithoutAcceptHeader() occasionally throws HTTP 404, Okta E0000007 - Resource not found error.
         // adding a sleep after create() helps resolve the above issue.
@@ -810,7 +810,7 @@ class ApplicationsIT extends ITSupport {
         def resource = create(client, app)
         def url = resource.getLinks().get("users")["href"]
         def headers = Collections.singletonMap("Accept", Collections.singletonList("application/ion+json"))
-        registerForCleanup(resource as Deletable)
+        registerForCleanup(resource)
 
         Resource response = dataStore.getResource(url as String, Application.class, null, headers)
 
@@ -838,7 +838,7 @@ class ApplicationsIT extends ITSupport {
         def resource = create(client, app)
         def url = resource.getLinks().get("metadata")["href"]
         def headers = Collections.singletonMap("Accept", Collections.singletonList(MediaType.APPLICATION_XML as String))
-        registerForCleanup(resource as Deletable)
+        registerForCleanup(resource)
 
         InputStream response = dataStore.getRawResponse(url as String, null, headers)
 
@@ -869,7 +869,7 @@ class ApplicationsIT extends ITSupport {
                     .setRedirectUrl("https://swasecondaryredirecturl.okta.com")
                     .setLoginUrl("https://swaprimaryloginurl.okta.com")))
         client.createApplication(createdApp)
-        registerForCleanup(createdApp as Deletable)
+        registerForCleanup(createdApp)
 
         def userSchema = client.getApplicationUserSchema(createdApp.getId())
         assertThat(userSchema, notNullValue())
@@ -901,7 +901,7 @@ class ApplicationsIT extends ITSupport {
                     .setRedirectUrl("https://swasecondaryredirecturl.okta.com")
                     .setLoginUrl("https://swaprimaryloginurl.okta.com")))
         client.createApplication(createdApp)
-        registerForCleanup(createdApp as Deletable)
+        registerForCleanup(createdApp)
 
         def userSchema = client.getApplicationUserSchema(createdApp.getId())
         assertThat(userSchema, notNullValue())

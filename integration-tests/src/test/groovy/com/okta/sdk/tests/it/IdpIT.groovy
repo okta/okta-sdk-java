@@ -80,7 +80,7 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.email")
             .setMatchType(PolicySubjectMatchType.USERNAME)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp as Deletable)
+        registerForCleanup(createdIdp)
 
         assertThat(createdIdp, notNullValue())
         assertThat(createdIdp.getId(), notNullValue())
@@ -150,7 +150,7 @@ class IdpIT extends ITSupport {
                     .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate)
                         .setTemplate("idpuser.email"))
                     .setMatchType(PolicySubjectMatchType.USERNAME))), createdIdp.getId())
-        registerForCleanup(updatedIdp as Deletable)
+        registerForCleanup(updatedIdp)
 
         IdentityProvider retrievedUpdatedIdp = client.getIdentityProvider(updatedIdp.getId())
         assertThat(retrievedUpdatedIdp.getId(), equalTo(createdIdp.getId()))
@@ -195,7 +195,7 @@ class IdpIT extends ITSupport {
             .setLastName("Code")
             .setPassword("Password1".toCharArray())
             .buildAndCreate(client)
-        registerForCleanup(createdUser as Deletable)
+        registerForCleanup(createdUser)
 
         // create idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -225,7 +225,7 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.email")
             .setMatchType(PolicySubjectMatchType.USERNAME)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp as Deletable)
+        registerForCleanup(createdIdp)
 
         // list linked idp users
         assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
@@ -266,7 +266,7 @@ class IdpIT extends ITSupport {
             .setLastName("Code")
             .setPassword("Password1".toCharArray())
             .buildAndCreate(client)
-        registerForCleanup(createdUser as Deletable)
+        registerForCleanup(createdUser)
 
         // create Google idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -281,7 +281,7 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.email")
             .setMatchType(PolicySubjectMatchType.USERNAME)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp as Deletable)
+        registerForCleanup(createdIdp)
 
         // list linked idp users
         assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
@@ -320,7 +320,7 @@ class IdpIT extends ITSupport {
             .setLastName("Code")
             .setPassword("Password1".toCharArray())
             .buildAndCreate(client)
-        registerForCleanup(createdUser as Deletable)
+        registerForCleanup(createdUser)
 
         // create Facebook idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -335,7 +335,7 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.email")
             .setMatchType(PolicySubjectMatchType.USERNAME)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp as Deletable)
+        registerForCleanup(createdIdp)
 
         // list linked idp users
         assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
@@ -375,7 +375,7 @@ class IdpIT extends ITSupport {
             .setLastName("Code")
             .setPassword("Password1".toCharArray())
             .buildAndCreate(client)
-        registerForCleanup(createdUser as Deletable)
+        registerForCleanup(createdUser)
 
         // create Microsoft idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -390,7 +390,7 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.userPrincipalName")
             .setMatchType(PolicySubjectMatchType.USERNAME)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp as Deletable)
+        registerForCleanup(createdIdp)
 
         // list linked idp users
         assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
@@ -429,7 +429,7 @@ class IdpIT extends ITSupport {
             .setLastName("Code")
             .setPassword("Password1".toCharArray())
             .buildAndCreate(client)
-        registerForCleanup(createdUser as Deletable)
+        registerForCleanup(createdUser)
 
         // create Linkedin idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -444,7 +444,7 @@ class IdpIT extends ITSupport {
             .setUserName("idpuser.email")
             .setMatchType(PolicySubjectMatchType.EMAIL)
             .buildAndCreate(client)
-        registerForCleanup(createdIdp as Deletable)
+        registerForCleanup(createdIdp)
 
         // list linked idp users
         assertThat(client.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))

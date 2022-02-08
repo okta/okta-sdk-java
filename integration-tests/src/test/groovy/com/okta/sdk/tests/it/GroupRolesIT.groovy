@@ -49,7 +49,7 @@ class GroupRolesIT extends ITSupport {
         Group createdGroup = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup as Deletable)
+        registerForCleanup(createdGroup)
 
         validateGroup(createdGroup, groupName)
 
@@ -87,7 +87,7 @@ class GroupRolesIT extends ITSupport {
         Group createdGroup = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup as Deletable)
+        registerForCleanup(createdGroup)
 
         validateGroup(createdGroup, groupName)
 
@@ -125,8 +125,8 @@ class GroupRolesIT extends ITSupport {
         Group createdGroup2 = GroupBuilder.instance()
             .setName(groupName2)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup1 as Deletable)
-        registerForCleanup(createdGroup2 as Deletable)
+        registerForCleanup(createdGroup1)
+        registerForCleanup(createdGroup2)
 
         validateGroup(createdGroup1, groupName1)
         validateGroup(createdGroup2, groupName2)
@@ -164,9 +164,9 @@ class GroupRolesIT extends ITSupport {
         Group createdGroup3 = GroupBuilder.instance()
             .setName(groupName3)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup1 as Deletable)
-        registerForCleanup(createdGroup2 as Deletable)
-        registerForCleanup(createdGroup3 as Deletable)
+        registerForCleanup(createdGroup1)
+        registerForCleanup(createdGroup2)
+        registerForCleanup(createdGroup3)
 
         validateGroup(createdGroup1, groupName1)
         validateGroup(createdGroup2, groupName2)

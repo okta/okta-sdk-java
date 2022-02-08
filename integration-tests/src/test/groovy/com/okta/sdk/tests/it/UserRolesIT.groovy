@@ -57,7 +57,7 @@ class UserRolesIT extends ITSupport {
             .setPassword(password.toCharArray())
             .setActive(true)
             .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 2. Assign SUPER_ADMIN role
@@ -88,7 +88,7 @@ class UserRolesIT extends ITSupport {
             .setPassword(password.toCharArray())
             .setActive(true)
             .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 2. Create two groups
@@ -101,8 +101,8 @@ class UserRolesIT extends ITSupport {
         Group group2 = GroupBuilder.instance()
             .setName(groupName2)
             .buildAndCreate(client)
-        registerForCleanup(group1 as Deletable)
-        registerForCleanup(group2 as Deletable)
+        registerForCleanup(group1)
+        registerForCleanup(group2)
 
         validateGroup(group1, groupName1)
         validateGroup(group2, groupName2)

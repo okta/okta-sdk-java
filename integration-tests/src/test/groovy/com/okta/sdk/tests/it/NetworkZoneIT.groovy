@@ -77,7 +77,7 @@ class NetworkZoneIT extends ITSupport {
 
         def createdNetworkZone = client.createNetworkZone(networkZone)
         assertThat(createdNetworkZone, notNullValue())
-        registerForCleanup(createdNetworkZone as Deletable)
+        registerForCleanup(createdNetworkZone)
 
         assertThat(createdNetworkZone.getType(), equalTo(NetworkZoneType.IP))
         assertThat(createdNetworkZone.getName(), equalTo(networkZoneName))
@@ -118,7 +118,7 @@ class NetworkZoneIT extends ITSupport {
 
         def createdNetworkZone = client.createNetworkZone(networkZone)
         assertThat(createdNetworkZone, notNullValue())
-        registerForCleanup(createdNetworkZone as Deletable)
+        registerForCleanup(createdNetworkZone)
 
         createdNetworkZone.setGateways(
             networkZone.getGateways().stream()
@@ -169,7 +169,7 @@ class NetworkZoneIT extends ITSupport {
 
         def createdNetworkZone = client.createNetworkZone(networkZone)
         assertThat(createdNetworkZone, notNullValue())
-        registerForCleanup(createdNetworkZone as Deletable)
+        registerForCleanup(createdNetworkZone)
 
         client.deactivateNetworkZone(createdNetworkZone.getId())
 

@@ -42,7 +42,7 @@ class UserTypesIT extends ITSupport {
             .setName(name)
             .setDisplayName(name)
             .setDescription(name + "-test-description"))
-        registerForCleanup(createdUserType as Deletable)
+        registerForCleanup(createdUserType)
 
         assertThat(createdUserType.getId(), notNullValue())
         assertThat(createdUserType.getName(), equalTo(name))
@@ -73,7 +73,7 @@ class UserTypesIT extends ITSupport {
             .setName(name)
             .setDisplayName(name)
             .setDescription(name + "-test-description"))
-        registerForCleanup(createdUserType as Deletable)
+        registerForCleanup(createdUserType)
 
         assertThat(createdUserType.getId(), notNullValue())
 
@@ -90,7 +90,7 @@ class UserTypesIT extends ITSupport {
             .setName(name)
             .setDisplayName(name)
             .setDescription(name + "-test-description"))
-        registerForCleanup(createdUserType as Deletable)
+        registerForCleanup(createdUserType)
 
         assertThat(createdUserType.getId(), notNullValue())
 
@@ -152,7 +152,7 @@ class UserTypesIT extends ITSupport {
             .setName(name)
             .setDisplayName(name)
             .setDescription(name + "-test-description"))
-        registerForCleanup(createdUserType as Deletable)
+        registerForCleanup(createdUserType)
 
         assertThat(createdUserType.getId(), notNullValue())
 
@@ -169,7 +169,7 @@ class UserTypesIT extends ITSupport {
             .setName(name1)
             .setDisplayName(name1)
             .setDescription(name1 + "-test-description"))
-        registerForCleanup(createdUserType1 as Deletable)
+        registerForCleanup(createdUserType1)
 
         assertThat(createdUserType1.getId(), notNullValue())
 
@@ -179,7 +179,7 @@ class UserTypesIT extends ITSupport {
             .setName(name2)
             .setDisplayName(name2)
             .setDescription(name2 + "-test-description"))
-        registerForCleanup(createdUserType2 as Deletable)
+        registerForCleanup(createdUserType2)
 
         assertThat(client.listUserTypes(), notNullValue())
         assertPresent(client.listUserTypes(), createdUserType1)

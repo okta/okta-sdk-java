@@ -54,7 +54,7 @@ class LinkedObjectsIT extends ITSupport {
         LinkedObject linkedObject = client.instantiate(LinkedObject)
             .setPrimary(primary)
             .setAssociated(associated)
-        registerForCleanup(linkedObject as Deletable)
+        registerForCleanup(linkedObject)
 
         LinkedObject createdLinkedObjectDefinition = client.addLinkedObjectDefinition(linkedObject)
 
@@ -90,7 +90,7 @@ class LinkedObjectsIT extends ITSupport {
         LinkedObject linkedObject = client.instantiate(LinkedObject)
             .setPrimary(primary)
             .setAssociated(associated)
-        registerForCleanup(linkedObject as Deletable)
+        registerForCleanup(linkedObject)
 
         client.addLinkedObjectDefinition(linkedObject)
 
@@ -128,7 +128,7 @@ class LinkedObjectsIT extends ITSupport {
         LinkedObject linkedObject = client.instantiate(LinkedObject)
             .setPrimary(primary)
             .setAssociated(associated)
-        registerForCleanup(linkedObject as Deletable)
+        registerForCleanup(linkedObject)
 
         client.addLinkedObjectDefinition(linkedObject)
 
@@ -168,7 +168,7 @@ class LinkedObjectsIT extends ITSupport {
         LinkedObject linkedObject1 = client.instantiate(LinkedObject)
             .setPrimary(primary1)
             .setAssociated(associated1)
-        registerForCleanup(linkedObject1 as Deletable)
+        registerForCleanup(linkedObject1)
 
         LinkedObject createdLinkedObjectDefinition1 = client.addLinkedObjectDefinition(linkedObject1)
 
@@ -192,7 +192,7 @@ class LinkedObjectsIT extends ITSupport {
         LinkedObject linkedObject2 = client.instantiate(LinkedObject)
             .setPrimary(primary2)
             .setAssociated(associated2)
-        registerForCleanup(linkedObject2 as Deletable)
+        registerForCleanup(linkedObject2)
 
         LinkedObject createdLinkedObjectDefinition2 = client.addLinkedObjectDefinition(linkedObject2)
 

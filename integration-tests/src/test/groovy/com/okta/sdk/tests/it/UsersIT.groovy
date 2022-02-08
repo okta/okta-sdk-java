@@ -76,7 +76,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                     customIntegerArray: [1, 2, 3]
                 ])
                 .buildAndCreate(getClient())
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
 
         // check the values after create
         assertThat(user.getProfile().getString("firstName"), equalTo("Joe"))
@@ -134,7 +134,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         return user
     }
 
@@ -175,7 +175,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setName(name)
             .setDisplayName(name)
             .setDescription(name + "_test_description"))
-        registerForCleanup(createdUserType as Deletable)
+        registerForCleanup(createdUserType)
 
         assertThat(createdUserType.getId(), notNullValue())
 
@@ -189,7 +189,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // See https://developer.okta.com/docs/reference/api/user-types/#specify-the-user-type-of-a-new-user
             .setType(createdUserType.getId())
             .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 3. Assert User Type
@@ -220,7 +220,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 2. Activate the user and verify user in list of active users
@@ -247,7 +247,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setLastName(lastName)
                 .setPassword(password.toCharArray())
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         Thread.sleep(getTestOperationDelay())
@@ -271,7 +271,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 2. Assign USER_ADMIN role to the user
@@ -307,7 +307,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 2. Change the user's password
@@ -352,7 +352,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                     .setSelfServiceUnlock(client.instantiate(PasswordPolicyRuleAction)
                         .setAccess(PolicyAccess.DENY)))
             .setName(policyRuleName), policy.getId()) as PasswordPolicyRule
-        registerForCleanup(policyRule as Deletable)
+        registerForCleanup(policyRule)
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -363,7 +363,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setActive(true)
                 .setGroups(group.getId())
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 2. Change the user's password
@@ -399,7 +399,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setPassword(password.toCharArray())
             .setActive(true)
             .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 2. Change the recovery question
@@ -441,7 +441,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         ResetPasswordToken response = client.resetPassword(user.getId(), false)
@@ -465,7 +465,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 2. Expire the user's password
@@ -492,7 +492,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 2. Get the reset password link
@@ -517,7 +517,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
-        registerForCleanup(createUser as Deletable)
+        registerForCleanup(createUser)
         validateUser(createUser, firstName, lastName, email)
 
         // 2. Get the user by user ID
@@ -562,13 +562,13 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         Group group = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(group as Deletable)
+        registerForCleanup(group)
         validateGroup(group, groupName)
 
         // 2. Assign USER_ADMIN role to the user
@@ -593,7 +593,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         Group adminGroup = GroupBuilder.instance()
             .setName(adminGroupName)
             .buildAndCreate(client)
-        registerForCleanup(adminGroup as Deletable)
+        registerForCleanup(adminGroup)
         validateGroup(adminGroup, adminGroupName)
 
         client.addGroupTargetToRole(user.getId(), role.getId(), adminGroup.getId())
@@ -619,7 +619,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         def originalLastUpdated = user.lastUpdated
@@ -651,7 +651,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         // 2. Suspend the user and verify user in list of suspended users
@@ -711,7 +711,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         Group createdGroup = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup as Deletable)
+        registerForCleanup(createdGroup)
         validateGroup(createdGroup, groupName)
 
         // 2. Create a user
@@ -723,7 +723,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setActive(false)
                 .addGroup(createdGroup.getId())
                 .buildAndCreate(client)
-        registerForCleanup(createdUser as Deletable)
+        registerForCleanup(createdUser)
         validateUser(createdUser, firstName, lastName, email)
 
         assertUserInGroup(client, createdUser, createdGroup)
@@ -762,7 +762,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setLastName("Code")
                 .setSha512PasswordHash(hashedPassword, salt, "PREFIX")
                 .buildAndCreate(getClient())
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
 
         assertThat user.getCredentials(), notNullValue()
         assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.IMPORT)
@@ -787,7 +787,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setSecurityQuestion("How many roads must a man walk down?")
             .setSecurityQuestionAnswer("forty two")
             .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         ForgotPasswordResponse response = client.forgotPassword(user.getId(), false)
@@ -813,7 +813,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setSecurityQuestion("How many roads must a man walk down?")
             .setSecurityQuestionAnswer("forty two")
             .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         UserCredentials userCredentials = client.instantiate(UserCredentials)
@@ -848,7 +848,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setLogin(email)
             .setProvider(authenticationProvider)
             .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         assertThat user.getCredentials(), notNullValue()
@@ -861,9 +861,9 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def user1 = create(client)
         def user2 = create(client)
         def user3 = create(client)
-        registerForCleanup(user1 as Deletable)
-        registerForCleanup(user2 as Deletable)
-        registerForCleanup(user3 as Deletable)
+        registerForCleanup(user1)
+        registerForCleanup(user2)
+        registerForCleanup(user3)
 
         String pageSize = "2"
 
@@ -885,7 +885,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     void testListGroupAssignmentsWithExpand() {
         //  Create more than 20 groups
         for (int i = 1; i < 30; i++) {
-            registerForCleanup(new DefaultGroupBuilder().setName("test-group_" + i + "_${uniqueTestName}").buildAndCreate(client) as Deletable)
+            registerForCleanup(new DefaultGroupBuilder().setName("test-group_" + i + "_${uniqueTestName}").buildAndCreate(client))
         }
 
         //  Fetch the GroupAssignment list in two requests

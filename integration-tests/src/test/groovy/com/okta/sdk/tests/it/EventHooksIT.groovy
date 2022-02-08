@@ -50,7 +50,7 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook as Deletable)
+        registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
         assertThat(createdEventHook.getName(), equalTo(name))
@@ -71,7 +71,7 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook as Deletable)
+        registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
 
@@ -96,7 +96,7 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook as Deletable)
+        registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
 
@@ -130,7 +130,7 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook as Deletable)
+        registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
 
@@ -159,7 +159,7 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook as Deletable)
+        registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
 
@@ -178,7 +178,7 @@ class EventHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdEventHook as Deletable)
+        registerForCleanup(createdEventHook)
 
         assertThat(createdEventHook.getId(), notNullValue())
         assertThat(createdEventHook.getStatus(), equalTo(LifecycleStatus.ACTIVE))

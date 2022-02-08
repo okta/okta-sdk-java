@@ -72,7 +72,7 @@ trait CrudTestSupport implements ClientProvider {
 
         // Create a resource
         def resource = create(client)
-        registerForCleanup(resource as Deletable)
+        registerForCleanup(resource)
 
         // search the resource collection looking for the new resource
         Optional optional = getResourceListStream(client)

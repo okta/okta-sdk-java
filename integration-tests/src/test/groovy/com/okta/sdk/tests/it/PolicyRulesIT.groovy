@@ -89,7 +89,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setRequireFactor(false)
             .setStatus(LifecycleStatus.ACTIVE)
         .buildAndCreate(client, policy)
-        registerForCleanup(policyRule as Deletable)
+        registerForCleanup(policyRule)
 
         // policy rule is ACTIVE by default
         assertThat(policyRule.getStatus(), is(LifecycleStatus.ACTIVE))
@@ -128,7 +128,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setPasswordChangeAccess(PolicyAccess.ALLOW)
             .setNetworkConnection(PolicyNetworkConnection.ANYWHERE)
         .buildAndCreate(client, policy) as PasswordPolicyRule
-        registerForCleanup(policyRule as Deletable)
+        registerForCleanup(policyRule)
 
         assertThat policyRule.getName(), is(policyRuleName)
         assertThat policyRule.getActions().getPasswordChange().getAccess(), is(PolicyAccess.ALLOW)
@@ -156,7 +156,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setRequireFactor(false)
             .setAccess(PolicyAccess.ALLOW)
         .buildAndCreate(client, policy) as OktaSignOnPolicyRule
-        registerForCleanup(policyRule as Deletable)
+        registerForCleanup(policyRule)
 
         assertThat policyRule.getActions().getSignon().getAccess(), is(PolicyAccess.ALLOW)
         assertThat policyRule.getActions().getSignon().getRequireFactor(), is(false)
@@ -185,7 +185,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setRequireFactor(false)
             .setAccess(PolicyAccess.ALLOW)
             .buildAndCreate(client, policy) as OktaSignOnPolicyRule
-        registerForCleanup(policyRule as Deletable)
+        registerForCleanup(policyRule)
 
         assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextType.RADIUS)
         assertThat policyRule.getConditions().getNetwork().getConnection(), is(PolicyNetworkConnection.ANYWHERE)
@@ -210,7 +210,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setFactorPromptMode(OktaSignOnPolicyFactorPromptMode.ALWAYS)
             .setRememberDeviceByDefault(false)
         .buildAndCreate(client, policy) as OktaSignOnPolicyRule
-        registerForCleanup(policyRule as Deletable)
+        registerForCleanup(policyRule)
 
         assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextType.ANY)
         assertThat policyRule.getConditions().getNetwork().getConnection(), is(PolicyNetworkConnection.ANYWHERE)
@@ -241,7 +241,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setAccess(PolicyAccess.DENY)
         .buildAndCreate(client, policy) as OktaSignOnPolicyRule
 
-        registerForCleanup(policyRule as Deletable)
+        registerForCleanup(policyRule)
 
         assertThat policyRule.getType(), is(PolicyRuleType.SIGN_ON)
         assertThat policyRule.getActions().getSignon().getAccess(), is(PolicyAccess.DENY)

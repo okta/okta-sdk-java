@@ -45,7 +45,7 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook as Deletable)
+        registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
         assertThat(createdInlineHook.getName(), equalTo(name))
@@ -66,7 +66,7 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook as Deletable)
+        registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
 
@@ -91,7 +91,7 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook as Deletable)
+        registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
 
@@ -131,7 +131,7 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook as Deletable)
+        registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
 
@@ -157,7 +157,7 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook as Deletable)
+        registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
         assertThat(createdInlineHook.getName(), equalTo(name))
@@ -178,7 +178,7 @@ class InlineHooksIT extends ITSupport {
             .setAuthorizationHeaderValue("Test-Api-Key")
             .addHeader("X-Test-Header", "Test header value")
             .buildAndCreate(client)
-        registerForCleanup(createdInlineHook as Deletable)
+        registerForCleanup(createdInlineHook)
 
         assertThat(createdInlineHook.getId(), notNullValue())
         assertThat(createdInlineHook.getName(), equalTo(name))

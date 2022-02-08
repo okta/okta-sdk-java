@@ -55,7 +55,7 @@ class SmsTemplateIT extends ITSupport {
             .setType(SmsTemplateType.SMS_VERIFY_CODE)
             .setTemplate("\${org.name}: your verification code is \${code}")
             .setTranslations(smsTemplateTranslations))
-        registerForCleanup(smsTemplate as Deletable)
+        registerForCleanup(smsTemplate)
 
         assertThat(smsTemplate.getId(), notNullValue())
 

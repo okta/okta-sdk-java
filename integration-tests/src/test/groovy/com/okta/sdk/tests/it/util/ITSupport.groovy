@@ -121,7 +121,7 @@ abstract class ITSupport implements ClientProvider {
                 .setPassword("Password1".toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
 
         return user
     }
@@ -132,7 +132,7 @@ abstract class ITSupport implements ClientProvider {
             .setName(name)
             .setDescription(name)
             .buildAndCreate(getClient())
-        registerForCleanup(group as Deletable)
+        registerForCleanup(group)
 
         return group
     }
@@ -148,7 +148,7 @@ abstract class ITSupport implements ClientProvider {
             .addGroup(groupId)
         .buildAndCreate(client) as PasswordPolicy
 
-        registerForCleanup(policy as Deletable)
+        registerForCleanup(policy)
 
         return policy
     }
@@ -162,7 +162,7 @@ abstract class ITSupport implements ClientProvider {
         .setType(PolicyType.OKTA_SIGN_ON)
         .buildAndCreate(client) as OktaSignOnPolicy
 
-        registerForCleanup(policy as Deletable)
+        registerForCleanup(policy)
 
         return policy
     }

@@ -72,7 +72,7 @@ class ThreatInsightConfigurationIT extends ITSupport {
         def createdNetworkZone = getClient().createNetworkZone(networkZone)
         assertThat(createdNetworkZone, notNullValue())
         assertThat(createdNetworkZone.getId(), notNullValue())
-        registerForCleanup(createdNetworkZone as Deletable)
+        registerForCleanup(createdNetworkZone)
 
         ThreatInsightConfiguration currentConfiguration = getClient().getCurrentConfiguration()
 

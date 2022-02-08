@@ -52,7 +52,7 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
             .setLoginRedirectUrl("https://www.myapp.com")
             .setErrorRedirectUrl("https://www.myapp.com/error")
             .buildAndCreate(client)
-        registerForCleanup(app as Deletable)
+        registerForCleanup(app)
 
         return (OpenIdConnectApplication) app
     }
@@ -79,7 +79,7 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
             .setJwks(Arrays.asList(createdKey))
             .buildAndCreate(client)
-        registerForCleanup(app as Deletable)
+        registerForCleanup(app)
 
         assertThat(app, instanceOf(OpenIdConnectApplication))
 

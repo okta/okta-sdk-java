@@ -20,14 +20,19 @@ import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.impl.cache.DisabledCacheManager
-import com.okta.sdk.resource.Deletable
+import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.authorization.server.AuthorizationServer
+import com.okta.sdk.resource.common.Policy
 import com.okta.sdk.resource.common.UserType
 import com.okta.sdk.resource.event.hook.EventHook
 import com.okta.sdk.resource.group.*
 import com.okta.sdk.resource.identity.provider.IdentityProvider
+import com.okta.sdk.resource.inline.hook.InlineHook
+import com.okta.sdk.resource.linked.object.LinkedObject
+import com.okta.sdk.resource.network.zone.NetworkZone
+import com.okta.sdk.resource.template.SmsTemplate
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.slf4j.Logger
@@ -48,7 +53,7 @@ trait ClientProvider implements IHookable {
 
     private ThreadLocal<Client> threadLocal = new ThreadLocal<>()
     private ThreadLocal<String> testName = new ThreadLocal<>()
-    private List<Deletable> toBeDeleted = []
+    private List<Resource> toBeDeleted = []
 
     Client getClient(String scenarioId = null) {
         Client client = threadLocal.get()
@@ -133,7 +138,7 @@ trait ClientProvider implements IHookable {
      * Registers a Deletable to be cleaned up after the test is run.
      * @param deletable Resource to be deleted.
      */
-    void registerForCleanup(Deletable deletable) {
+    void registerForCleanup(Resource deletable) {
         toBeDeleted.add(deletable)
     }
 
@@ -177,35 +182,52 @@ trait ClientProvider implements IHookable {
     @AfterMethod (groups = ["group1", "group2", "group3"])
     void clean() {
         if (!isRunningWithTestServer()) {
+            Client client = getClient()
+
             // delete them in reverse order so dependencies are resolved
-            toBeDeleted.reverse().each { deletable ->
+            toBeDeleted.reverse().each { resource ->
                 try {
-                    if (deletable instanceof Application) {
-                        getClient().deleteApplication(deletable.getId())
+                    if (resource instanceof Application) {
+                        client.deleteApplication(resource.getId())
                     }
-                    if (deletable instanceof AuthorizationServer) {
-                        getClient().deleteAuthorizationServer(deletable.getId())
+                    if (resource instanceof AuthorizationServer) {
+                        client.deleteAuthorizationServer(resource.getId())
                     }
-                    if (deletable instanceof EventHook) {
-                        getClient().deleteEventHook(deletable.getId())
+                    if (resource instanceof EventHook) {
+                        client.deleteEventHook(resource.getId())
                     }
-                    if (deletable instanceof Group) {
-                        getClient().deleteInlineHook(deletable.getId())
+                    if (resource instanceof Group) {
+                        client.deleteGroup(resource.getId())
                     }
-                    if (deletable instanceof GroupRule) {
-                        getClient().deleteGroupRule(deletable.getId())
+                    if (resource instanceof GroupRule) {
+                        client.deleteGroupRule(resource.getId())
                     }
-                    if (deletable instanceof IdentityProvider) {
-                        getClient().deleteIdentityProvider(deletable.getId())
+                    if (resource instanceof IdentityProvider) {
+                        client.deleteIdentityProvider(resource.getId())
                     }
-                    if (deletable instanceof User) {
+                    if (resource instanceof InlineHook) {
+                        client.deleteInlineHook(resource.getId())
+                    }
+                    if (resource instanceof LinkedObject) {
+                        client.deleteLinkedObjectDefinition(resource.getPrimary().getName())
+                    }
+                    if (resource instanceof NetworkZone) {
+                        client.deleteNetworkZone(resource.getId())
+                    }
+                    if (resource instanceof Policy) {
+                        client.deletePolicy(resource.getId())
+                    }
+                    if (resource instanceof SmsTemplate) {
+                        client.deleteSmsTemplate(resource.getId())
+                    }
+                    if (resource instanceof User) {
                         // deactivate first
-                        getClient().deactivateOrDeleteUser(deletable.getId())
+                        client.deactivateOrDeleteUser(resource.getId())
                         // then delete
-                        getClient().deactivateOrDeleteUser(deletable.getId())
+                        client.deactivateOrDeleteUser(resource.getId())
                     }
-                    if (deletable instanceof UserType) {
-                        getClient().deleteUserType(deletable.getId())
+                    if (resource instanceof UserType) {
+                        client.deleteUserType(resource.getId())
                     }
                 }
                 catch (Exception e) {

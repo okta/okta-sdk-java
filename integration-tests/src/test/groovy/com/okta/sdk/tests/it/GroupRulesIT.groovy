@@ -69,7 +69,7 @@ class GroupRulesIT implements CrudTestSupport {
         rule.getActions().getAssignUserToGroups().setGroupIds(Collections.singletonList(group.getId()))
 
         rule = client.createGroupRule(rule)
-        registerForCleanup(rule as Deletable)
+        registerForCleanup(rule)
 
         return rule
     }
@@ -114,10 +114,10 @@ class GroupRulesIT implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(true)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        registerForCleanup(group as Deletable)
+        registerForCleanup(group)
 
         // 2. Create a group rule and verify rule executes
         GroupRule rule = GroupRuleBuilder.instance()
@@ -127,7 +127,7 @@ class GroupRulesIT implements CrudTestSupport {
             .setGroupRuleExpressionValue("user.lastName==\"${user.getProfile().lastName}\"".toString())
             .setAssignUserToGroups(Collections.singletonList(group.getId()))
             .buildAndCreate(client)
-        registerForCleanup(rule as Deletable)
+        registerForCleanup(rule)
         client.activateGroupRule(rule.getId())
 
         GroupRule readRule = client.getGroupRule(rule.getId())

@@ -78,7 +78,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         Group createdGroup = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(createdGroup as Deletable)
+        registerForCleanup(createdGroup)
 
         validateGroup(createdGroup, groupName)
 
@@ -96,7 +96,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         Group group = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(group as Deletable)
+        registerForCleanup(group)
         validateGroup(group, groupName)
 
         // 2. Search the group by name
@@ -113,7 +113,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         Group group = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(group as Deletable)
+        registerForCleanup(group)
         validateGroup(group, groupName)
 
         // 2. Search the group by search parameter
@@ -132,7 +132,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         Group group = GroupBuilder.instance()
                 .setName(groupName)
                 .buildAndCreate(client)
-        registerForCleanup(group as Deletable)
+        registerForCleanup(group)
         validateGroup(group, groupName)
 
         // 2. Update the group name and description
@@ -160,7 +160,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
                 .setPassword(password.toCharArray())
                 .setActive(false)
                 .buildAndCreate(client)
-        registerForCleanup(user as Deletable)
+        registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
         String groupName = "Group-Member API Test Group ${uniqueTestName}"
@@ -168,7 +168,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         Group group = GroupBuilder.instance()
                 .setName(groupName)
                 .buildAndCreate(client)
-        registerForCleanup(group as Deletable)
+        registerForCleanup(group)
         validateGroup(group, groupName)
 
         // 2. Add user to the group and validate user present in group

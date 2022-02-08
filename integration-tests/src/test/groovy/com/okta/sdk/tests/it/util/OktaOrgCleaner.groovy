@@ -50,7 +50,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting Applications:")
         client.listApplications().stream()
-            .filter { it.getLabel().startsWith(prefix) && it.getLabel().matches(".*-${uuidRegex}.*") }
+            .filter { (it.getLabel().startsWith("app-java-sdk") || it.getLabel().startsWith(prefix)) && it.getLabel().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getLabel()}")
                 client.deactivateApplication(it.getId())
@@ -59,7 +59,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting Groups:")
         client.listGroups().stream()
-            .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*") }
+            .filter { it.getProfile().getName().startsWith(prefix) }
             .forEach {
                 log.info("\t ${it.getProfile().getName()}")
                 client.deleteGroup(it.getId())
