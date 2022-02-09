@@ -52,6 +52,7 @@ import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.CollectionResource;
+import com.okta.sdk.resource.FileResource;
 import com.okta.sdk.resource.Resource;
 import com.okta.sdk.resource.ResourceException;
 import com.okta.sdk.resource.VoidResource;
@@ -326,6 +327,10 @@ public class DefaultDataStore implements InternalDataStore {
             long length = 0;
             if (resource instanceof VoidResource) {
                 body = new ByteArrayInputStream(new byte[0]);
+            } else if(resource instanceof FileResource) {
+                body = new ByteArrayInputStream(new byte[0]);
+                httpHeaders.add("x-fileLocation", ((FileResource)resource).getLocation());
+                httpHeaders.add("x-fileFormDataName", ((FileResource)resource).getFormDataName());
             } else {
                 ByteArrayOutputStream bodyOut = new ByteArrayOutputStream();
                 mapMarshaller.marshal(bodyOut, req.getData());
@@ -343,6 +348,7 @@ public class DefaultDataStore implements InternalDataStore {
                 // Okta response with 200 for deactivate requests (i.e. /api/v1/apps/<id>/lifecycle/deactivate)
                 if (response.getHttpStatus() == 202
                         || response.getHttpStatus() == 200
+                        || response.getHttpStatus() == 201
                         || response.getHttpStatus() == 204) {
                     //202 means that the request has been accepted for processing, but the processing has not been completed. Therefore we do not have a response setBody.
                     responseBody = java.util.Collections.emptyMap();

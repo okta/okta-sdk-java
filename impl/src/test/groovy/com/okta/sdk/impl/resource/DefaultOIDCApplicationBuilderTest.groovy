@@ -53,6 +53,7 @@ class DefaultOIDCApplicationBuilderTest {
             .setName("oidc_client")
             .setLabel("test_app")
             .addRedirectUris("http://www.google.com")
+            .setPostLogoutRedirectUris(Collections.singletonList("http://www.example.com/logout"))
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
@@ -75,6 +76,7 @@ class DefaultOIDCApplicationBuilderTest {
         verify(applicationVisibilityHide).setWeb(false)
         verify(applicationVisibilityHide).setIOS(true)
         verify(openIdConnectApplicationSettingsClient).setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
+        verify(openIdConnectApplicationSettingsClient).setPostLogoutRedirectUris(Collections.singletonList("http://www.example.com/logout"))
     }
 
     @Test

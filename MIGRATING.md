@@ -2,6 +2,421 @@
  
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
+## Migrating from 7.x.x to 8.0.0
+
+Version 8.0.0 of this SDK introduces few breaking changes from previous versions.
+
+### Package `com.okta.sdk.resource.brand.Theme`
+
+Below methods will now take `file` object as additional param. This was missing from earlier release (bug) and this release fixes it.
+- `updateBrandThemeBackgroundImage` 
+- `updateBrandThemeFavicon`
+- `uploadBrandThemeLogo`
+
+### Package `com.okta.sdk.resource.org.OrgSetting`
+- `updateOrgLogo` will now take `file` object as a parameter. This was missing from earlier release (bug) and this release fixes it. 
+
+## Migrating from 6.x.x to 7.0.0
+
+### Package `com.okta.sdk.client.Client`
+
+Below methods have been added.
+- `Brand getBrand(String brandId)`
+- `ThemeResponse getBrandTheme(String brandId, String themeId)`
+- `BrandList listBrands()`
+- `ThemeResponseList listBrandThemes(String brandId)`
+
+Below methods have been moved to `com.okta.sdk.resource.org.OrgSetting`.
+- `getOktaCommunicationSettings()`
+- `getOrgContactTypes()`
+- `getOrgContactUser(String contactType)`
+- `getOrgOktaSupportSettings()`
+- `getOrgPreferences()`
+
+### Package `com.okta.sdk.resource.user.User`
+
+- `assignRole(AssignRoleRequest request, String disableNotifications)` changed signature to 
+  `assignRole(AssignRoleRequest request, Boolean disableNotifications)`
+
+### Package `com.okta.sdk.resource.policy`
+
+New Interfaces have been introduced.
+- `com.okta.sdk.resource.policy.VerificationMethod`
+- `com.okta.sdk.resource.policy.UserTypeCondition`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicyRuleProfileAttribute`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicyRuleActivationRequirement`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicyRuleActions`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicyRuleAction`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicyRule`
+- `com.okta.sdk.resource.policy.ProfileEnrollmentPolicy`
+- `com.okta.sdk.resource.policy.PreRegistrationInlineHook`
+- `com.okta.sdk.resource.policy.PossessionConstraint`
+- `com.okta.sdk.resource.policy.KnowledgeConstraint`
+- `com.okta.sdk.resource.policy.DeviceAccessPolicyRuleCondition`
+- `com.okta.sdk.resource.policy.AccessPolicyRuleCustomCondition`
+- `com.okta.sdk.resource.policy.AccessPolicyRuleConditions`
+- `com.okta.sdk.resource.policy.AccessPolicyRuleApplicationSignOn`
+- `com.okta.sdk.resource.policy.AccessPolicyRuleActions`
+- `com.okta.sdk.resource.policy.AccessPolicyRule`
+- `com.okta.sdk.resource.policy.AccessPolicyConstraints`
+- `com.okta.sdk.resource.policy.AccessPolicyConstraint`
+- `com.okta.sdk.resource.policy.AccessPolicy`
+
+### Package `com.okta.sdk.resource.identity.provider.IdentityProviderBuilders`
+
+Identity Provider of type String can be constructed with the new method introduced.
+- `ofType(java.lang.String)`
+
+### Package `com.okta.sdk.resource.identity.provider.IdentityProvider`
+
+- `setType(com.okta.sdk.resource.identity.provider.IdentityProvider$TypeEnum)` has changed signature to 
+  `setType(String identityProvider)`.
+- `getType()` would now return `String` instead of `com.okta.sdk.resource.identity.provider.IdentityProvider$TypeEnum` type.
+
+### Package `com.okta.sdk.resource.brand`
+
+New models related to Theme and Brands API have been introduced.
+- `Theme`
+- `Brand`
+- `BrandList`
+- `ThemeResponse`
+- `ImageUploadResponse`
+- `SignInPageTouchPointVariant`
+- `ErrorPageTouchPointVariant`
+- `EndUserDashboardTouchPointVariant`
+
+### Package `com.okta.sdk.resource.authenticator`
+
+New Interfaces have been introduced.
+- `ChannelBinding`
+- `Compliance`
+- `AuthenticatorProviderConfigurationUserNamePlate`
+- `AuthenticatorProviderConfiguration`
+- `AuthenticatorProvider`
+
+New methods have been added to `Authenticator` interface.
+- `AuthenticatorProvider getProvider()`
+- `setProvider(AuthenticatorProvider authenticationProvider)`
+- `Authenticator update`
+
+### Package `com.okta.sdk.resource.application`
+
+New methods have been added to `SwaApplicationSettingsApplication` interface.
+- `String getCheckbox`
+- `String getRedirectUrl`
+- `SwaApplicationSettingsApplication setCheckbox(String checkBox)`
+- `SwaApplicationSettingsApplication setRedirectUrl(String redirectUrl)`
+
+New method have been added to `OIDCApplicationBuilder` interface.
+- `OIDCApplicationBuilder setPostLogoutRedirectUris(List uris)`
+
+New methods have been added to `ApplicationCredentialsUsernameTemplate` interface.
+- `String getPushStatus()`
+- `ApplicationCredentialsUsernameTemplate setPushStatus(String pushStatus)`
+
+## Migrating from 5.x.x to 6.0.0
+
+Version 6.0.0 of this SDK introduces a number of breaking changes from previous versions.
+In addition to many new classes/interfaces, some existing classes/interfaces are no longer backward compatible due to method renaming and signature changes.
+
+### Package `com.okta.sdk.client.Client`
+
+Below methods have been added.
+- `Authenticator getAuthenticator(String authenticatorId)`
+- `GroupSchema getGroupSchema()`
+- `OrgOktaCommunicationSetting getOktaCommunicationSettings()`
+- `OrgContactTypeObjList getOrgContactTypes()`
+- `OrgContactUser getOrgContactUser(String contactType)`
+- `OrgOktaSupportSettingsObj getOrgOktaSupportSettings()`
+- `OrgPreferences getOrgPreferences()`
+- `OrgSetting getOrgSettings()`
+- `AuthenticatorList listAuthenticators()`
+- `GroupSchema updateGroupSchema()`
+- `GroupSchema updateGroupSchema(GroupSchema body)`
+
+Below method has undergone a signature change.
+- `DomainList listDomains()` signature changed to `DomainListResponse listDomains()`
+
+### Package `com.okta.sdk.resource.application.ApplicationVisibility`
+
+Below methods have been added.
+- `Boolean getAutoLaunch()`
+- `ApplicationVisibility setAutoLaunch(Boolean autoLaunch)`
+
+### Package `com.okta.sdk.resource.authenticator.AllowedForEnum`
+
+This is a newly created enum with fields listed below.
+- `ANY("ANY")`
+- `NONE("NONE")`
+- `RECOVERY("RECOVERY")`
+- `SSO("SSO")`
+
+### Package `com.okta.sdk.resource.authenticator.Authenticator`
+
+This is a newly created interface with methods listed below.
+
+- `Authenticator activate()`
+- `Authenticator deactivate()`
+- `Date getCreated()`
+- `String getId()`
+- `String getKey()`
+- `Date getLastUpdated()`
+- `Map<String, Object> getLinks()`
+- `String getName()`
+- `AuthenticatorSettings getSettings()`
+- `AuthenticatorStatus getStatus()`
+- `AuthenticatorType getType()`
+- `Authenticator setKey(String key)`
+- `Authenticator setName(String name)`
+- `Authenticator setSettings(AuthenticatorSettings settings)`
+- `Authenticator setStatus(AuthenticatorStatus status)`
+- `Authenticator setType(AuthenticatorType type)`
+
+### Package `com.okta.sdk.resource.authenticator.AuthenticatorSettings`
+
+This is a newly created interface with methods listed below.
+
+- `AllowedForEnum getAllowedFor()`
+- `Integer getTokenLifetimeInMinutes()`
+- `AuthenticatorSettings setAllowedFor(AllowedForEnum allowedFor)`
+- `AuthenticatorSettings setTokenLifetimeInMinutes(Integer tokenLifetimeInMinutes)`
+
+### Package `com.okta.sdk.resource.authenticator.AuthenticatorStatus`
+
+This is a newly created enum with fields listed below.
+- `ACTIVE("ACTIVE")`
+- `INACTIVE("INACTIVE")`
+
+### Package `com.okta.sdk.resource.authenticator.AuthenticatorType`
+
+This is a newly created enum with fields listed below.
+- `APP("APP")`
+- `EMAIL("EMAIL")`
+- `PASSWORD("PASSWORD")`
+- `PHONE("PHONE")`
+- `SECURITY_KEY("SECURITY_KEY")`
+- `SECURITY_QUESTION("SECURITY_QUESTION")`
+
+### Package `com.okta.sdk.resource.domain.DomainListResponse`
+
+This is a newly created interface with methods listed below.
+
+- `DomainList getDomains()`
+- `DomainListResponse setDomains(DomainList domains)`
+
+### Package `com.okta.sdk.resource.group.schema.GroupSchema`
+
+This is a newly created interface with methods listed below.
+
+- `String getCreated()`
+- `GroupSchemaDefinitions getDefinitions()`
+- `String getDescription()`
+- `String getId()`
+- `String getLastUpdated()`
+- `Map<String, Object> getLinks()`
+- `String getName()`
+- `UserSchemaProperties getProperties()`
+- `String getSchema()`
+- `String getTitle()`
+- `String getType()`
+- `GroupSchema setDefinitions(GroupSchemaDefinitions definitions)`
+- `GroupSchema setDescription(String description)`
+- `GroupSchema setTitle(String title)`
+
+### Package `com.okta.sdk.resource.group.schema.GroupSchemaAttribute`
+
+This is a newly created interface with methods listed below.
+
+- `String getDescription()`
+- `List<String> getEnum()`
+- `String getExternalName()`
+- `String getExternalNamespace()`
+- `UserSchemaAttributeItems getItems()`
+- `UserSchemaAttributeMaster getMaster()`
+- `Integer getMaxLength()`
+- `Integer getMinLength()`
+- `String getMutability()`
+- `List<UserSchemaAttributeEnum> getOneOf()`
+- `List<UserSchemaAttributePermission> getPermissions()`
+- `Boolean getRequired()`
+- `UserSchemaAttributeScope getScope()`
+- `String getTitle()`
+- `UserSchemaAttributeType getType()`
+- `UserSchemaAttributeUnion getUnion()`
+- `String getUnique()`
+- `GroupSchemaAttribute setDescription(String description)`
+- `GroupSchemaAttribute setEnum(List<String> _enum)`
+- `GroupSchemaAttribute setExternalName(String externalName)`
+- `GroupSchemaAttribute setExternalNamespace(String externalNamespace)`
+- `GroupSchemaAttribute setItems(UserSchemaAttributeItems items)`
+- `GroupSchemaAttribute setMaster(UserSchemaAttributeMaster master)`
+- `GroupSchemaAttribute setMaxLength(Integer maxLength)`
+- `GroupSchemaAttribute setMinLength(Integer minLength)`
+- `GroupSchemaAttribute setMutability(String mutability)`
+- `GroupSchemaAttribute setOneOf(List<UserSchemaAttributeEnum> oneOf)`
+- `GroupSchemaAttribute setPermissions(List<UserSchemaAttributePermission> permissions)`
+- `GroupSchemaAttribute setRequired(Boolean required)`
+- `GroupSchemaAttribute setScope(UserSchemaAttributeScope scope)`
+- `GroupSchemaAttribute setTitle(String title)`
+- `GroupSchemaAttribute setType(UserSchemaAttributeType type)`
+- `GroupSchemaAttribute setUnion(UserSchemaAttributeUnion union)`
+- `GroupSchemaAttribute setUnique(String unique)`
+
+### Package `com.okta.sdk.resource.group.schema.GroupSchemaBase`
+
+This is a newly created interface with methods listed below.
+
+- `String getId()`
+- `GroupSchemaBaseProperties getProperties()`
+- `List<String> getRequired()`
+- `String getType()`
+- `GroupSchemaBase setProperties(GroupSchemaBaseProperties properties)`
+- `GroupSchemaBase setRequired(List<String> required)`
+- `GroupSchemaBase setType(String type)`
+
+### Package `com.okta.sdk.resource.group.schema.GroupSchemaBaseProperties`
+
+This is a newly created interface with methods listed below.
+
+- `GroupSchemaAttribute getDescription()`
+- `GroupSchemaAttribute getName()`
+- `GroupSchemaBaseProperties setDescription(GroupSchemaAttribute description)`
+- `GroupSchemaBaseProperties setName(GroupSchemaAttribute name)`
+
+### Package `com.okta.sdk.resource.group.schema.GroupSchemaCustom`
+
+This is a newly created interface with methods listed below.
+
+- `String getId()`
+- `Map<String, GroupSchemaAttribute> getProperties()`
+- `List<String> getRequired()`
+- `String getType()`
+- `GroupSchemaCustom setProperties(Map<String, GroupSchemaAttribute> properties)`
+- `GroupSchemaCustom setRequired(List<String> required)`
+- `GroupSchemaCustom setType(String type)`
+
+### Package `com.okta.sdk.resource.group.schema.GroupSchemaDefinitions`
+
+This is a newly created interface with methods listed below.
+
+- `GroupSchemaBase getBase()`
+- `GroupSchemaCustom getCustom()`
+- `GroupSchemaDefinitions setBase(GroupSchemaBase base)`
+- `GroupSchemaDefinitions setCustom(GroupSchemaCustom custom)`
+
+### Package `com.okta.sdk.resource.identity.provider.IdentityProvider$IssuerModeEnum`
+
+Below enum value has been changed.
+- `CUSTOM_URL_DOMAIN("CUSTOM_URL_DOMAIN")` changed to `CUSTOM_URL("CUSTOM_URL")`
+
+### Package `com.okta.sdk.resource.identity.provider.SocialAuthToken`
+
+Below methods have undergone a signature change.
+- `TokenTypeEnum getTokenType()` signature changed to `String getTokenType()`
+- `SocialAuthToken setTokenType(TokenTypeEnum tokenType)` signature changed to `SocialAuthToken setTokenType(String tokenType)`
+
+### Package `com.okta.sdk.resource.identity.provider.SocialAuthToken`
+
+The Enum `com.okta.sdk.resource.identity.provider.SocialAuthToken$TokenTypeEnum` has been removed.
+
+### Package `com.okta.sdk.resource.org.OrgContactType`
+
+This is a newly created enum with fields listed below.
+- `BILLING("BILLING")`
+- `TECHNICAL("TECHNICAL")`
+
+### Package `com.okta.sdk.resource.org.OrgContactTypeObj`
+
+This is a newly created interface with methods listed below.
+
+- `OrgContactType getContactType()`
+- `OrgContactTypeObj setContactType(OrgContactType contactType)`
+
+### Package `com.okta.sdk.resource.org.OrgOktaCommunicationSetting`
+
+This is a newly created interface with methods listed below.
+
+- `Boolean getOptOutEmailUsers()`
+- `OrgOktaCommunicationSetting optInUsersToOktaCommunicationEmails()`
+- `OrgOktaCommunicationSetting optOutUsersFromOktaCommunicationEmails()`
+
+### Package `com.okta.sdk.resource.org.OrgOktaSupportSetting`
+
+This is a newly created enum with fields listed below.
+- `DISABLED("DISABLED")`
+- `ENABLED("ENABLED")`
+
+### Package `com.okta.sdk.resource.org.OrgOktaSupportSettingsObj`
+
+This is a newly created interface with methods listed below.
+
+- `OrgOktaSupportSettingsObj extendOktaSupport()`
+- `Date getExpiration()`
+- `OrgOktaSupportSetting getSupport()`
+- `OrgOktaSupportSettingsObj grantOktaSupport()`
+- `OrgOktaSupportSettingsObj revokeOktaSupport()`
+
+### Package `com.okta.sdk.resource.org.OrgPreferences`
+
+This is a newly created interface with methods listed below.
+
+- `Boolean getShowEndUserFooter()`
+- `OrgPreferences hideEndUserFooter()`
+- `OrgPreferences showEndUserFooter()`
+
+### Package `com.okta.sdk.resource.org.OrgSetting`
+
+This is a newly created interface with methods listed below.
+
+- `String getAddress1()`
+- `String getAddress2()`
+- `String getCity()`
+- `String getCompanyName()`
+- `String getCountry()`
+- `Date getCreated()`
+- `String getEndUserSupportHelpURL()`
+- `Date getExpiresAt()`
+- `String getId()`
+- `Date getLastUpdated()`
+- `String getPhoneNumber()`
+- `String getPostalCode()`
+- `String getState()`
+- `String getStatus()`
+- `String getSubdomain()`
+- `String getSupportPhoneNumber()`
+- `String getWebsite()`
+- `OrgSetting partialUpdate()`
+- `OrgSetting setAddress1(String address1)`
+- `OrgSetting setAddress2(String address2)`
+- `OrgSetting setCity(String city)`
+- `OrgSetting setCompanyName(String companyName)`
+- `OrgSetting setCountry(String country)`
+- `OrgSetting setEndUserSupportHelpURL(String endUserSupportHelpURL)`
+- `OrgSetting setPhoneNumber(String phoneNumber)`
+- `OrgSetting setPostalCode(String postalCode)`
+- `OrgSetting setState(String state)`
+- `OrgSetting setSupportPhoneNumber(String supportPhoneNumber)`
+- `OrgSetting setWebsite(String website)`
+- `OrgSetting update()`
+
+### Package `com.okta.sdk.resource.org.UserIdString`
+
+This is a newly created interface with methods listed below.
+
+- `String getUserId()`
+- `UserIdString setUserId(String userId)`
+
+### Package `com.okta.sdk.resource.role.RoleType`
+
+Below enum value has been changed.
+- `GROUP_MEMBERSHIP_ADMIN("GROUP_MEMBERSHIP_ADMIN")`
+
+### Package `com.okta.sdk.resource.user.User`
+
+This is a newly created interface with methods listed below.
+
+- `Role getRole(String roleId)`
+
 ## Migrating from 4.x.x to 5.0.0
 
 Version 5.0.0 of this SDK introduces a number of breaking changes from previous versions.

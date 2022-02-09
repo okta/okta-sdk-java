@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@okta/openapi": "2.10.0"
+  }
+}

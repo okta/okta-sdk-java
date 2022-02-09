@@ -36,7 +36,6 @@ import com.okta.sdk.resource.user.factor.UserFactor
 import com.okta.sdk.resource.user.factor.UserFactorList
 import com.okta.sdk.resource.user.factor.VerifyFactorRequest
 import com.okta.sdk.resource.user.factor.VerifyUserFactorResponse
-import com.okta.sdk.resource.user.factor.VerifyUserFactorResult
 import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.it.util.ITSupport
 import org.jboss.aerogear.security.otp.Totp
@@ -55,8 +54,7 @@ class FactorsIT extends ITSupport {
 
         Client client = getClient()
         User user = randomUser()
-
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor)
         smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
@@ -70,13 +68,16 @@ class FactorsIT extends ITSupport {
 
         UserFactorList factorsList = user.listFactors()
         List<UserFactor> factorsArrayList = Lists.newArrayList(factorsList)
-        assertThat factorsArrayList, allOf(hasSize(2), containsInAnyOrder(
+        assertThat factorsArrayList, hasItems(
             allOf(
                 instanceOf(SmsUserFactor),
-                hasProperty("id", is(smsUserFactor.getId()))),
+                hasProperty("id", is(smsUserFactor.getId()))
+            ),
             allOf(
                 instanceOf(SecurityQuestionUserFactor),
-                hasProperty("id", is(securityQuestionUserFactor.getId())))))
+                hasProperty("id", is(securityQuestionUserFactor.getId()))
+            )
+        )
     }
 
     @NonOIEEnvironmentOnly
@@ -84,8 +85,7 @@ class FactorsIT extends ITSupport {
     void testSecurityQuestionFactorCreation() {
         Client client = getClient()
         User user = randomUser()
-
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
         securityQuestionUserFactor.getProfile()
@@ -102,8 +102,7 @@ class FactorsIT extends ITSupport {
     void testCallFactorCreation() {
         Client client = getClient()
         User user = randomUser()
-
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         CallUserFactor callUserFactor = client.instantiate(CallUserFactor)
         callUserFactor.getProfile().setPhoneNumber(smsTestNumber)
@@ -118,8 +117,7 @@ class FactorsIT extends ITSupport {
     void testSmsFactorCreation() {
         Client client = getClient()
         User user = randomUser()
-
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         SmsUserFactor smsUserFactor = client.instantiate(SmsUserFactor)
         smsUserFactor.getProfile().setPhoneNumber(smsTestNumber)
@@ -134,7 +132,7 @@ class FactorsIT extends ITSupport {
     void testPushFactorCreation() {
         Client client = getClient()
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         PushUserFactor pushUserFactor = client.instantiate(PushUserFactor)
         assertThat pushUserFactor.id, nullValue()
@@ -160,7 +158,8 @@ class FactorsIT extends ITSupport {
     @Test (groups = "group2")
     void activateTotpFactor() {
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
+
         TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
         user.enrollFactor(totpUserFactor)
 
@@ -193,6 +192,22 @@ class FactorsIT extends ITSupport {
 
     @NonOIEEnvironmentOnly
     @Test (groups = "group2")
+    void verifyQuestionFactor_withoutBody() {
+        User user = randomUser()
+
+        SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
+        securityQuestionUserFactor.getProfile()
+            .setQuestion("disliked_food")
+            .setAnswer("pizza")
+        user.enrollFactor(securityQuestionUserFactor)
+
+        VerifyFactorRequest request = client.instantiate(VerifyFactorRequest).setAnswer("pizza")
+        VerifyUserFactorResponse response = securityQuestionUserFactor.setVerify(request).verify()
+        assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
+    }
+
+    @NonOIEEnvironmentOnly
+    @Test (groups = "group2")
     void testEmailUserFactor() {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
@@ -219,7 +234,7 @@ class FactorsIT extends ITSupport {
     @Test (groups = "group2")
     void testGoogleTotpUserFactorCreation() {
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
 
         TokenUserFactor tokenUserFactor = client.instantiate(TokenUserFactor)
             .setFactorType(FactorType.TOKEN_SOFTWARE_TOTP)
@@ -236,10 +251,23 @@ class FactorsIT extends ITSupport {
     void deleteFactorTest() {
 
         User user = randomUser()
-        assertThat user.listFactors(), emptyIterable()
+        assertListFactors(user)
         TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
         totpUserFactor.setProvider(FactorProvider.OKTA)
         user.enrollFactor(totpUserFactor)
         totpUserFactor.delete()
+    }
+
+    void assertListFactors(User user) {
+        if(!isOIEEnvironment) {
+            assertThat user.listFactors(), emptyIterable()
+        } else {
+            assertThat user.listFactors(), hasItem(
+                allOf(
+                    instanceOf(EmailUserFactor),
+                    hasProperty("id", is(notNullValue()))
+                )
+            )
+        }
     }
 }
