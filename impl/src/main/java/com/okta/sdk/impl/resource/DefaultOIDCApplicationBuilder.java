@@ -43,6 +43,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     private List<OAuthGrantType> grantTypes = new ArrayList<>();
     private String logoUri;
     private String policyUri;
+    private List<String> postLogoutRedirectUris = new ArrayList<>();
     private List<String> redirectUris = new ArrayList<>();
     private List<OAuthResponseType> responseTypes = new ArrayList<>();
     private String tosUri;
@@ -91,6 +92,12 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     @Override
     public OIDCApplicationBuilder setPolicyUri(String policyUri) {
         this.policyUri = policyUri;
+        return this;
+    }
+
+    @Override
+    public OIDCApplicationBuilder setPostLogoutRedirectUris(List<String> postLogoutRedirectUris) {
+        this.postLogoutRedirectUris = postLogoutRedirectUris;
         return this;
     }
 
@@ -206,6 +213,9 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
 
         if (Strings.hasText(tosUri))
             openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setTosUri(tosUri));
+
+        if (Objects.nonNull(postLogoutRedirectUris) && !postLogoutRedirectUris.isEmpty())
+            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setPostLogoutRedirectUris(postLogoutRedirectUris));
 
         if (Objects.nonNull(redirectUris))
             openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setRedirectUris(redirectUris));

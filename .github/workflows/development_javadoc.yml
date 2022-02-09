@@ -1,0 +1,30 @@
+name: Build Development Javadoc
+
+on:
+  push:
+    branches:
+     - 'master'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 8
+          distribution: adopt-openj9
+          cache: maven
+
+      - name: Build Javadoc for Development version
+        run: mvn -s src/ci/settings.xml -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn install -DskipITs javadoc:aggregate com.okta:okta-doclist-maven-plugin:generate jxr:aggregate -Ppub-docs -Pci
+
+      - name: Deploy Development Version of Javadoc to Github Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/gh-pages
+          keep_files: true

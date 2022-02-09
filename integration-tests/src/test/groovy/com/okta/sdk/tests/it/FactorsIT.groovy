@@ -36,6 +36,7 @@ import com.okta.sdk.resource.user.factor.UserFactorList
 import com.okta.sdk.resource.user.factor.VerifyFactorRequest
 import com.okta.sdk.resource.VerifyUserFactorResponse
 import com.okta.sdk.resource.VerifyUserFactorResult
+
 import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.it.util.ITSupport
 import org.jboss.aerogear.security.otp.Totp
@@ -73,13 +74,16 @@ class FactorsIT extends ITSupport {
 
         UserFactorList factorsList = client.listFactors(user.getId())
         List<UserFactor> factorsArrayList = Lists.newArrayList(factorsList)
-        assertThat factorsArrayList, allOf(hasSize(2), containsInAnyOrder(
+        assertThat factorsArrayList, hasItems(
             allOf(
                 instanceOf(SmsUserFactor),
-                hasProperty("id", is(smsUserFactor.getId()))),
+                hasProperty("id", is(smsUserFactor.getId()))
+            ),
             allOf(
                 instanceOf(SecurityQuestionUserFactor),
-                hasProperty("id", is(securityQuestionUserFactor.getId())))))
+                hasProperty("id", is(securityQuestionUserFactor.getId()))
+            )
+        )
     }
 
     @NonOIEEnvironmentOnly
@@ -143,6 +147,7 @@ class FactorsIT extends ITSupport {
     void testPushFactorCreation() {
         Client client = getClient()
         User user = randomUser()
+
         assertThat client.listFactors(user.getId()), emptyIterable()
 
         PushUserFactor pushUserFactor = client.instantiate(PushUserFactor)
@@ -172,7 +177,9 @@ class FactorsIT extends ITSupport {
     @Test (groups = "group2")
     void activateTotpFactor() {
         User user = randomUser()
+
         assertThat client.listFactors(user.getId()), emptyIterable()
+
         TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
         totpUserFactor.setProvider(FactorProvider.OKTA)
         totpUserFactor.setFactorType(FactorType.TOKEN_SOFTWARE_TOTP)
@@ -210,6 +217,22 @@ class FactorsIT extends ITSupport {
 
     @NonOIEEnvironmentOnly
     @Test (groups = "group2")
+    void verifyQuestionFactor_withoutBody() {
+        User user = randomUser()
+
+        SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
+        securityQuestionUserFactor.getProfile()
+            .setQuestion("disliked_food")
+            .setAnswer("pizza")
+        user.enrollFactor(securityQuestionUserFactor)
+
+        VerifyFactorRequest request = client.instantiate(VerifyFactorRequest).setAnswer("pizza")
+        VerifyUserFactorResponse response = securityQuestionUserFactor.setVerify(request).verify()
+        assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
+    }
+
+    @NonOIEEnvironmentOnly
+    @Test (groups = "group2")
     void testEmailUserFactor() {
         User user = randomUser()
         assertThat client.listFactors(user.getId()), emptyIterable()
@@ -235,6 +258,7 @@ class FactorsIT extends ITSupport {
     @Test (groups = "group2")
     void testGoogleTotpUserFactorCreation() {
         User user = randomUser()
+
         assertThat client.listFactors(user.getId()), emptyIterable()
 
         TokenUserFactor tokenUserFactor = client.instantiate(TokenUserFactor)
@@ -251,11 +275,26 @@ class FactorsIT extends ITSupport {
     @Test (groups = "group2")
     void deleteFactorTest() {
         User user = randomUser()
+
         assertThat client.listFactors(user.getId()), emptyIterable()
+
         TotpUserFactor totpUserFactor = client.instantiate(TotpUserFactor)
         totpUserFactor.setProvider(FactorProvider.OKTA)
         totpUserFactor.setFactorType(FactorType.TOKEN_SOFTWARE_TOTP)
         client.enrollFactor(totpUserFactor, user.getId())
         client.deleteFactor(user.getId(), totpUserFactor.getId())
+    }
+
+    void assertListFactors(User user) {
+        if(!isOIEEnvironment) {
+            assertThat user.listFactors(), emptyIterable()
+        } else {
+            assertThat user.listFactors(), hasItem(
+                allOf(
+                    instanceOf(EmailUserFactor),
+                    hasProperty("id", is(notNullValue()))
+                )
+            )
+        }
     }
 }

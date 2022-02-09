@@ -31,7 +31,12 @@ import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.*
+import static org.hamcrest.Matchers.hasSize
+import static org.hamcrest.Matchers.instanceOf
+import static org.hamcrest.Matchers.is
+import static org.hamcrest.Matchers.matchesPattern
+import static org.hamcrest.Matchers.notNullValue
+import static org.hamcrest.Matchers.nullValue
 
 class PolicyRulesIT extends ITSupport implements CrudTestSupport {
 
@@ -166,8 +171,10 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextType.ANY)
     }
 
-    @Test (groups = "group2")
-    @NonOIEEnvironmentOnly
+    // We do not support RADIUS rules in the Okta SoP anymore.
+    // “Authenticates via RADIUS” has been deprecated for a long time and we have removed it completely in OIE.
+    // https://oktainc.atlassian.net/browse/OKTA-431665?focusedCommentId=2166278
+    @Test (groups = "group2", enabled = false)
     void createOktaSignOnRadiusPolicyRule() {
 
         def group = randomGroup()
@@ -248,5 +255,32 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         assertThat policyRule.getActions().getSignon().getRequireFactor(), is(false)
         assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextType.ANY)
         assertThat policyRule.getConditions().getNetwork().getConnection(), is(PolicyNetworkConnection.ANYWHERE)
+    }
+
+    @Test
+    void testActivate(){
+        def group = randomGroup()
+        def policy = randomSignOnPolicy(group.getId())
+
+        def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
+        def policyRule = SignOnPolicyRuleBuilder.instance()
+            .setName(policyRuleName)
+            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
+            .setRequireFactor(false)
+            .setStatus(PolicyRule.StatusEnum.INACTIVE)
+            .buildAndCreate(client, policy)
+        registerForCleanup(policyRule)
+
+        // policy rule is ACTIVE by default
+        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.ACTIVE))
+
+        // deactivate
+        policyRule.deactivate()
+        policyRule = policy.getPolicyRule(policyRule.getId())
+        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.INACTIVE))
+
+        policyRule.activate()
+        policyRule = policy.getPolicyRule(policyRule.getId())
+        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.ACTIVE))
     }
 }

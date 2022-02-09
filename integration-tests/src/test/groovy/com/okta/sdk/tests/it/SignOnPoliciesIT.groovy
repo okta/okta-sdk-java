@@ -93,6 +93,139 @@ class SignOnPoliciesIT implements CrudTestSupport {
         assertThat policy.getConditions().getPeople().getGroups().getExclude(), nullValue()
     }
 
+    // disable running them in bacon
+    @Test (groups = "bacon")
+    void createProfileEnrollmentPolicy() {
+
+        Policy profileEnrollmentPolicy = client.createPolicy(client.instantiate(ProfileEnrollmentPolicy)
+            .setName("policy+" + UUID.randomUUID().toString())
+            .setType(PolicyType.PROFILE_ENROLLMENT)
+            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setDescription("IT created Policy - createProfileEnrollmentPolicy"))
+        registerForCleanup(profileEnrollmentPolicy)
+
+        assertThat profileEnrollmentPolicy, notNullValue()
+        assertThat profileEnrollmentPolicy.getName(), notNullValue()
+        assertThat profileEnrollmentPolicy.getType(), is(PolicyType.PROFILE_ENROLLMENT)
+        assertThat profileEnrollmentPolicy.getStatus(), is(Policy.StatusEnum.ACTIVE)
+    }
+
+    // disable running them in bacon
+    @Test (groups = "bacon")
+    void createAccessPolicyRule() {
+
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
+        Application oidcApp = OIDCApplicationBuilder.instance()
+            .setName(name)
+            .setLabel(name)
+            .addRedirectUris("http://www.example.com")
+            .setPostLogoutRedirectUris(Collections.singletonList("http://www.example.com/logout"))
+            .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
+            .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
+            .setApplicationType(OpenIdConnectApplicationType.NATIVE)
+            .setClientId(UUID.randomUUID().toString())
+            .setClientSecret(UUID.randomUUID().toString())
+            .setAutoKeyRotation(true)
+            .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
+            .setIOS(false)
+            .setWeb(true)
+            .setLoginRedirectUrl("http://www.myapp.com")
+            .setErrorRedirectUrl("http://www.myapp.com/error")
+            .buildAndCreate(client)
+        registerForCleanup(oidcApp)
+
+        assertThat(oidcApp, notNullValue())
+        assertThat(oidcApp.getLinks(), notNullValue())
+        assertThat(oidcApp.getLinks().get("accessPolicy"), notNullValue())
+
+        // accessPolicy:[href:https://example.com/api/v1/policies/rst412ay22NkOdJJr0g7]
+        String accessPolicyId = oidcApp.getLinks().get("accessPolicy").toString().replaceAll("]", "").tokenize("/")[-1]
+
+        Policy accessPolicy = client.getPolicy(accessPolicyId)
+        assertThat(accessPolicy, notNullValue())
+
+        AccessPolicyRule accessPolicyRule = client.instantiate(AccessPolicyRule)
+            .setName(name)
+            .setActions(client.instantiate(AccessPolicyRuleActions)
+               .setAppSignOn(client.instantiate(AccessPolicyRuleApplicationSignOn)
+                  .setAccess("DENY")
+                  .setVerificationMethod(client.instantiate(VerificationMethod)
+                     .setType("ASSURANCE")
+                     .setFactorMode("1FA")
+                     .setReauthenticateIn("PT43800H"))))
+
+        PolicyRule createdAccessPolicyRule = accessPolicy.createRule(accessPolicyRule)
+        registerForCleanup(createdAccessPolicyRule)
+
+        assertThat(createdAccessPolicyRule, notNullValue())
+        assertThat(createdAccessPolicyRule.getName(), is(name))
+
+        AccessPolicyRuleActions accessPolicyRuleActions = createdAccessPolicyRule.getActions() as AccessPolicyRuleActions
+
+        assertThat(accessPolicyRuleActions.getAppSignOn().getAccess(), is("DENY"))
+        assertThat(accessPolicyRuleActions.getAppSignOn().getVerificationMethod().getType(), is("ASSURANCE"))
+        assertThat(accessPolicyRuleActions.getAppSignOn().getVerificationMethod().getFactorMode(), is("1FA"))
+        assertThat(accessPolicyRuleActions.getAppSignOn().getVerificationMethod().getReauthenticateIn(), is("PT43800H"))
+    }
+
+    // disable running them in bacon
+    @Test (groups = "bacon")
+    void createProfileEnrollmentPolicyRule() {
+
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
+        Policy profileEnrollmentPolicy = client.instantiate(Policy)
+            .setName(name)
+            .setType(PolicyType.PROFILE_ENROLLMENT)
+            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setDescription("IT created Policy - createProfileEnrollmentPolicyRule")
+
+        Policy createdProfileEnrollmentPolicy = client.createPolicy(profileEnrollmentPolicy)
+        assertThat(createdProfileEnrollmentPolicy, notNullValue())
+
+        PolicyRuleList defaultPolicyRuleList = createdProfileEnrollmentPolicy.listPolicyRules()
+        assertThat(defaultPolicyRuleList.size(), greaterThanOrEqualTo(1))
+
+        PolicyRule defaultPolicyRule = defaultPolicyRuleList.first()
+
+        ProfileEnrollmentPolicyRuleProfileAttribute policyRuleProfileAttribute =
+            client.instantiate(ProfileEnrollmentPolicyRuleProfileAttribute)
+                .setName("email")
+                .setLabel("Email")
+                .setRequired(true)
+
+        ProfileEnrollmentPolicyRuleActions profileEnrollmentPolicyRuleActions =
+            defaultPolicyRule.getActions() as ProfileEnrollmentPolicyRuleActions
+        profileEnrollmentPolicyRuleActions.getProfileEnrollment().setAccess("ALLOW")
+        profileEnrollmentPolicyRuleActions.getProfileEnrollment().setPreRegistrationInlineHooks(null)
+        profileEnrollmentPolicyRuleActions.getProfileEnrollment().setUnknownUserAction("DENY")
+        profileEnrollmentPolicyRuleActions.getProfileEnrollment().setTargetGroupIds(null)
+        profileEnrollmentPolicyRuleActions.getProfileEnrollment().setProfileAttributes([policyRuleProfileAttribute])
+        profileEnrollmentPolicyRuleActions.getProfileEnrollment().setActivationRequirements(
+            client.instantiate(ProfileEnrollmentPolicyRuleActivationRequirement)
+                .setEmailVerification(true))
+
+        defaultPolicyRule.setActions(profileEnrollmentPolicyRuleActions)
+
+        PolicyRule updatePolicyRule = defaultPolicyRule.update()
+        assertThat(updatePolicyRule, notNullValue())
+        assertThat(updatePolicyRule.getName(), is(defaultPolicyRule.getName()))
+        ProfileEnrollmentPolicyRuleActions updateProfileEnrollmentPolicyRuleActions =
+            updatePolicyRule.getActions() as ProfileEnrollmentPolicyRuleActions
+        assertThat(updateProfileEnrollmentPolicyRuleActions, notNullValue())
+        assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment(), notNullValue())
+        assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getAccess(), is("ALLOW"))
+        assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getPreRegistrationInlineHooks(), nullValue())
+        assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getUnknownUserAction(), is("DENY"))
+        assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getTargetGroupIds(), nullValue())
+        assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getActivationRequirements().getEmailVerification(), is(true))
+        assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getProfileAttributes(), hasSize(1))
+        assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getProfileAttributes().first().getName(), is("email"))
+        assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getProfileAttributes().first().getLabel(), is("Email"))
+        assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getProfileAttributes().first().getRequired(), is(true))
+    }
+
     @Test
     void signOnActionsTest() {
 
