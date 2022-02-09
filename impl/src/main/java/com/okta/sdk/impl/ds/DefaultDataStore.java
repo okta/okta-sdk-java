@@ -348,6 +348,7 @@ public class DefaultDataStore implements InternalDataStore {
                 // Okta response with 200 for deactivate requests (i.e. /api/v1/apps/<id>/lifecycle/deactivate)
                 if (response.getHttpStatus() == 202
                         || response.getHttpStatus() == 200
+                        || response.getHttpStatus() == 201
                         || response.getHttpStatus() == 204) {
                     //202 means that the request has been accepted for processing, but the processing has not been completed. Therefore we do not have a response setBody.
                     responseBody = java.util.Collections.emptyMap();
