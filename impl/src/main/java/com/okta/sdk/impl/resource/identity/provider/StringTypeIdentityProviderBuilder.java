@@ -17,19 +17,9 @@ package com.okta.sdk.impl.resource.identity.provider;
 
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.identity.provider.IdentityProvider;
-import com.okta.sdk.resource.identity.provider.IdentityProviderCredentials;
-import com.okta.sdk.resource.identity.provider.IdentityProviderCredentialsClient;
-import com.okta.sdk.resource.identity.provider.Protocol;
-import com.okta.sdk.resource.identity.provider.Provisioning;
-import com.okta.sdk.resource.identity.provider.ProvisioningConditions;
-import com.okta.sdk.resource.identity.provider.ProvisioningDeprovisionedCondition;
-import com.okta.sdk.resource.identity.provider.ProvisioningGroups;
-import com.okta.sdk.resource.identity.provider.ProvisioningSuspendedCondition;
-import com.okta.sdk.resource.policy.IdentityProviderPolicy;
-import com.okta.sdk.resource.policy.PolicyAccountLink;
-import com.okta.sdk.resource.policy.PolicySubject;
-import com.okta.sdk.resource.policy.PolicyUserNameTemplate;
+
+import com.okta.sdk.resource.identity.provider.*;
+import com.okta.sdk.resource.policy.*;
 
 public class StringTypeIdentityProviderBuilder extends DefaultIdentityProviderBuilder {
 
@@ -48,7 +38,7 @@ public class StringTypeIdentityProviderBuilder extends DefaultIdentityProviderBu
             .setType(type)
             .setName(name)
             .setProtocol(client.instantiate(Protocol.class)
-                .setType(Protocol.TypeEnum.OAUTH2)
+                .setType(ProtocolType.OAUTH2)
                 .setScopes(scopes)
                 .setCredentials(client.instantiate(IdentityProviderCredentials.class)
                     .setClient(client.instantiate(IdentityProviderCredentialsClient.class)
@@ -56,18 +46,18 @@ public class StringTypeIdentityProviderBuilder extends DefaultIdentityProviderBu
                         .setClientSecret(clientSecret))))
             .setPolicy(client.instantiate(IdentityProviderPolicy.class)
                 .setProvisioning(client.instantiate(Provisioning.class)
-                    .setAction(Provisioning.ActionEnum.AUTO)
+                    .setAction(ProvisioningAction.AUTO)
                     .setProfileMaster(isProfileMaster)
                     .setGroups(client.instantiate(ProvisioningGroups.class)
-                        .setAction(ProvisioningGroups.ActionEnum.NONE))
+                        .setAction(ProvisioningGroupsAction.NONE))
                     .setConditions(client.instantiate(ProvisioningConditions.class)
                         .setDeprovisioned(client.instantiate(ProvisioningDeprovisionedCondition.class)
-                            .setAction(ProvisioningDeprovisionedCondition.ActionEnum.NONE))
+                            .setAction(ProvisioningDeprovisionedAction.NONE))
                         .setSuspended(client.instantiate(ProvisioningSuspendedCondition.class)
-                            .setAction(ProvisioningSuspendedCondition.ActionEnum.NONE))))
+                            .setAction(ProvisioningSuspendedAction.NONE))))
                 .setAccountLink(client.instantiate(PolicyAccountLink.class)
                     .setFilter(null)
-                    .setAction(PolicyAccountLink.ActionEnum.AUTO))
+                    .setAction(PolicyAccountLinkAction.AUTO))
                 .setSubject(client.instantiate(PolicySubject.class)
                     .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate.class)
                         .setTemplate(userName))

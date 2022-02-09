@@ -61,7 +61,7 @@ This project includes:
   Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Mozilla Rhino under Mozilla Public License, Version 2.0
   msg-simple under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
-  OkHttp under Apache 2.0
+  okhttp under The Apache Software License, Version 2.0
   Okio under The Apache Software License, Version 2.0
   Okta Commons :: Config Check under The Apache License, Version 2.0
   Okta Commons :: HTTP :: API under The Apache License, Version 2.0
