@@ -23,6 +23,7 @@ import com.okta.sdk.impl.cache.DisabledCacheManager
 import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.Application
+import com.okta.sdk.resource.application.ApplicationLifecycleStatus
 import com.okta.sdk.resource.authorization.server.AuthorizationServer
 import com.okta.sdk.resource.common.Policy
 import com.okta.sdk.resource.common.UserType
@@ -135,11 +136,11 @@ trait ClientProvider implements IHookable {
     }
 
     /**
-     * Registers a Deletable to be cleaned up after the test is run.
-     * @param deletable Resource to be deleted.
+     * Registers a Resource to be cleaned up after the test is run.
+     * @param resource Resource to be deleted.
      */
-    void registerForCleanup(Resource deletable) {
-        toBeDeleted.add(deletable)
+    void registerForCleanup(Resource resource) {
+        toBeDeleted.add(resource)
     }
 
     void deleteUser(String email, Client client) {
@@ -188,6 +189,9 @@ trait ClientProvider implements IHookable {
             toBeDeleted.reverse().each { resource ->
                 try {
                     if (resource instanceof Application) {
+                        if (resource.getStatus() != ApplicationLifecycleStatus.INACTIVE) {
+                            client.deactivateApplication(resource.getId())
+                        }
                         client.deleteApplication(resource.getId())
                     }
                     if (resource instanceof AuthorizationServer) {

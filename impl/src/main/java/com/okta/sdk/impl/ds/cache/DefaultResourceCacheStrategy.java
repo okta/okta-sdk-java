@@ -136,8 +136,7 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
         );
 
         if (isDirectlyCacheable(clazz, cacheValue)) {
-            //Cache cache = getCache(clazz);
-            Cache cache = getCache();
+            Cache<String, Map<String, ?>> cache = getCache();
             String cacheKey = getCacheKey(href);
             Object previousCacheValue = cache.put(cacheKey, cacheValue);
             logger.debug("Caching object for key '{}', class: '{}', updated {}", cacheKey, clazz, previousCacheValue != null);
@@ -210,7 +209,6 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
     private Map<String, ?> getCachedValue(String href, Class<? extends Resource> clazz) {
         Assert.hasText(href, "href argument cannot be null or empty.");
         Assert.notNull(clazz, "Class argument cannot be null.");
-        //Cache<String, Map<String, ?>> cache = getCache(clazz);
         Cache<String, Map<String, ?>> cache = getCache();
 
         Map<String, ?> value = cache.get(href);

@@ -19,7 +19,6 @@ package com.okta.sdk.impl.ds.cache;
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
-import com.okta.sdk.impl.ds.CacheRegionNameResolver;
 
 import java.util.Map;
 
@@ -27,9 +26,8 @@ public class DefaultCacheResolver implements CacheResolver {
 
     private final CacheManager cacheManager;
 
-    public DefaultCacheResolver(CacheManager cacheManager, CacheRegionNameResolver cacheRegionNameResolver) {
+    public DefaultCacheResolver(CacheManager cacheManager) {
         Assert.notNull(cacheManager, "cacheManager cannot be null.");
-        Assert.notNull(cacheRegionNameResolver, "cacheRegionNameResolver cannot be null.");
         this.cacheManager = cacheManager;
     }
 

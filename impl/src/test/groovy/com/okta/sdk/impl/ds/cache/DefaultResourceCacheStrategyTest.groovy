@@ -18,7 +18,6 @@ package com.okta.sdk.impl.ds.cache
 import com.okta.sdk.cache.Cache
 import com.okta.sdk.cache.CacheManager
 import com.okta.sdk.impl.cache.DefaultCacheManager
-import com.okta.sdk.impl.ds.CacheRegionNameResolver
 import com.okta.sdk.impl.ds.DefaultResourceDataRequest
 import com.okta.sdk.impl.ds.DefaultResourceDataResult
 import com.okta.sdk.impl.ds.ResourceAction
@@ -49,9 +48,7 @@ class DefaultResourceCacheStrategyTest {
         String resourceUrl = "${baseUrl}/cache-me"
 
         CacheManager cacheManager = new DefaultCacheManager()
-        CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
-        when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
-        CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
+        CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager)
 
         ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
 
@@ -96,9 +93,7 @@ class DefaultResourceCacheStrategyTest {
         Cache cache = mock(Cache)
         CacheManager cacheManager = mock(CacheManager)
         when(cacheManager.getCache("okta")).thenReturn(cache)
-        CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
-        when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
-        CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
+        CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager)
 
         ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
 
@@ -127,9 +122,7 @@ class DefaultResourceCacheStrategyTest {
         String resourceUrl = "${baseUrl}/cache-me"
 
         CacheManager cacheManager = mock(CacheManager)
-        CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
-        when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
-        CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
+        CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager)
 
         ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
 
@@ -145,7 +138,7 @@ class DefaultResourceCacheStrategyTest {
         verifyNoMoreInteractions(cacheManager)
     }
 
-    def createCacheableResourceData(String href) {
+    static def createCacheableResourceData(String href) {
         return [
             booleanPropKey: true,
             enumPropKey: StubEnum.VALUE_1,
@@ -159,7 +152,7 @@ class DefaultResourceCacheStrategyTest {
         ]
     }
 
-    def createNonResourceData() {
+    static def createNonResourceData() {
         return [
             booleanPropKey: true,
             enumPropKey: StubEnum.VALUE_1,
