@@ -701,19 +701,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
        return codegenModel;
     }
 
-    private String getParentModelRef(Schema model) {
-        if (model.getExtensions() != null && model.getExtensions().get("x-okta-parent") != null) {
-            return (String) model.getExtensions().get("x-okta-parent");
-        } else if (model instanceof ComposedSchema) {
-            // Assumes first entry is the parent $ref
-            ComposedSchema composed = (ComposedSchema) model;
-            if (composed.getAllOf() != null && !composed.getAllOf().isEmpty()) {
-                return composed.getAllOf().get(0).get$ref();
-            }
-        }
-        return null;
-    }
-
     private List<CodegenOperation> sortOperations(Collection<CodegenOperation> operations) {
 
         return operations.stream()
