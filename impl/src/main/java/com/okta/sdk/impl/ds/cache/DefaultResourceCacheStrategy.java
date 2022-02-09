@@ -72,6 +72,8 @@ public class DefaultResourceCacheStrategy implements ResourceCacheStrategy {
             cache(result.getResourceClass(), result.getData(), result.getUri());
         } else {
             String absolutePath = request.getUri().getAbsolutePath();
+            // mutated resources on lifecycle deactivate and activate paths need to be evicted
+            // from cache using the below code segment.
             if (absolutePath.endsWith("/lifecycle/deactivate")) {
                 absolutePath = absolutePath.replace("/lifecycle/deactivate", "");
                 String key = getCacheKey(absolutePath);

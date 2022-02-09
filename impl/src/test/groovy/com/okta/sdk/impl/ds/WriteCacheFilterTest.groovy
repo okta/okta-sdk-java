@@ -185,7 +185,6 @@ class WriteCacheFilterTest {
         def initialGetResult = cacheFilter.filter(getDataRequest, filterChain)
         // validate initial cache of the get
         assertThat initialGetResult, sameInstance(getResourceDataResult)
-        //def getCachedItem = cacheResolver.getCache(StubResource).get(resourceUrl)
         def getCachedItem = cacheResolver.getCache().get(resourceUrl)
         assertThat getCachedItem, notNullValue()
         assertThat getCachedItem, equalTo(initialGetPayload)
@@ -194,7 +193,6 @@ class WriteCacheFilterTest {
         def deleteResult = cacheFilter.filter(deleteDataRequest, filterChain)
         // validate the cached item has been removed
         assertThat deleteResult, sameInstance(deleteResourceDataResult)
-        //def deletedCachedItem = cacheResolver.getCache(StubResource).get(resourceUrl)
         def deletedCachedItem = cacheResolver.getCache().get(resourceUrl)
         assertThat deletedCachedItem, nullValue()
     }
