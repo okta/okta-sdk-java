@@ -225,9 +225,11 @@ trait ClientProvider implements IHookable {
                         client.deleteSmsTemplate(resource.getId())
                     }
                     if (resource instanceof User) {
-                        // deactivate first
-                        client.deactivateOrDeleteUser(resource.getId())
-                        // then delete
+                        if (resource.getStatus() != UserStatus.DEPROVISIONED) {
+                            // deactivate
+                            client.deactivateOrDeleteUser(resource.getId())
+                        }
+                        // delete
                         client.deactivateOrDeleteUser(resource.getId())
                     }
                     if (resource instanceof UserType) {
