@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.Deletable
+
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.AssignRoleRequest

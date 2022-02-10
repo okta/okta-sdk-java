@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.authorization.server.LifecycleStatus
 import com.okta.sdk.resource.event.hook.EventHook

@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.Deletable
+
 import com.okta.sdk.resource.schema.UserSchema
 import com.okta.sdk.resource.common.UserType
 import com.okta.sdk.tests.it.util.ITSupport

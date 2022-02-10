@@ -823,7 +823,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setQuestion('How many roads must a man walk down?')
                 .setAnswer('forty two'))
 
-        UserCredentials response = client.forgotPasswordSetNewPassword(user.getId(), userCredentials, false)
+        UserCredentials response = client.forgotPasswordSetNewPassword(userCredentials, user.getId(),false)
         assertThat response.get("recovery_question")["question"], equalTo("How many roads must a man walk down?")
         assertThat response.get("provider")["type"], equalTo("OKTA")
         assertThat response.get("provider")["name"], equalTo("OKTA")

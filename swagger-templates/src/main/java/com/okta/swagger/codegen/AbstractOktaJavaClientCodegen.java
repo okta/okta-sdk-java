@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.samskivert.mustache.Mustache;
 
 import io.swagger.codegen.v3.CodegenModel;
+import io.swagger.codegen.v3.CodegenObject;
 import io.swagger.codegen.v3.CodegenOperation;
 import io.swagger.codegen.v3.CodegenParameter;
 import io.swagger.codegen.v3.CodegenProperty;
@@ -510,6 +511,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                                 cgParamAllList.addAll(cgOperation.bodyParams);
                                 cgParamAllList.addAll(cgOperation.queryParams);
                                 cgParamAllList.addAll(cgOperation.headerParams);
+
+                                if (cgOperation.formParams.stream().anyMatch(CodegenObject::getIsFile)) {
+                                    cgOperation.vendorExtensions.put("fileUpload", true);
+                                    cgOperation.vendorExtensions.put("fileFormDataName", cgOperation.formParams.get(0).paramName);
+                                    cgParamAllList.addAll(cgOperation.formParams);
+                                }
 
                                 cgOperation.vendorExtensions.put("allParams", cgParamAllList);
                                 cgOperation.vendorExtensions.put("fromModelPathParams", cgParamModelList);

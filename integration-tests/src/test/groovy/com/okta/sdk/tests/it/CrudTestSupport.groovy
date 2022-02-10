@@ -16,8 +16,6 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.Deletable
-import com.okta.sdk.resource.PasswordPolicy
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.application.Application
 import com.okta.sdk.resource.authorization.server.AuthorizationServer

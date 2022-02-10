@@ -1,18 +1,3 @@
-#
-# Copyright 2020-Present Okta, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 openapi: 3.0.2
 info:
   title: Okta API
@@ -25,7 +10,7 @@ info:
   license:
     name: Apache-2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 2.9.2
+  version: 2.10.0
   x-logo:
     url: logo.svg
     backgroundColor: transparent
@@ -71,6 +56,7 @@ tags:
   - name: OrgSetting
   - name: Policy
   - name: Session
+  - name: Subscription
   - name: Template
   - name: ThreatInsight
   - name: TrustedOrigin
@@ -237,6 +223,113 @@ paths:
         '200':
           description: Success
           content: {}
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.apps.manage
+      tags:
+        - Application
+  /api/v1/apps/{appId}/connections/default:
+    get:
+      summary: Fetches the default Provisioning Connection for an application.
+      description: Get default Provisioning Connection for application
+      operationId: getDefaultProvisioningConnectionForApplication
+      parameters:
+        - in: path
+          name: appId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvisioningConnection'
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.apps.read
+      tags:
+        - Application
+    post:
+      summary: Sets the default Provisioning Connection for an application.
+      description: Set default Provisioning Connection for application
+      operationId: setDefaultProvisioningConnectionForApplication
+      parameters:
+        - in: path
+          name: appId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: activate
+          schema:
+            type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvisioningConnectionRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvisioningConnection'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.apps.manage
+      tags:
+        - Application
+  /api/v1/apps/{appId}/connections/default/lifecycle/activate:
+    post:
+      summary: Activate default Provisioning Connection for application
+      description: Activates the default Provisioning Connection for an application.
+      operationId: activateDefaultProvisioningConnectionForApplication
+      parameters:
+        - in: path
+          name: appId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.apps.manage
+      tags:
+        - Application
+  /api/v1/apps/{appId}/connections/default/lifecycle/deactivate:
+    post:
+      summary: Deactivate default Provisioning Connection for application
+      description: Deactivates the default Provisioning Connection for an application.
+      operationId: deactivateDefaultProvisioningConnectionForApplication
+      parameters:
+        - in: path
+          name: appId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
       security:
         - api_token: []
         - oauth2:
@@ -516,6 +609,101 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonWebKey'
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.apps.manage
+      tags:
+        - Application
+  /api/v1/apps/{appId}/features:
+    get:
+      summary: Fetches the Feature objects for an application.
+      description: List Features for application
+      operationId: listFeaturesForApplication
+      parameters:
+        - in: path
+          name: appId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ApplicationFeature'
+                type: array
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.apps.read
+      tags:
+        - Application
+  /api/v1/apps/{appId}/features/{name}:
+    get:
+      summary: Fetches a Feature object for an application.
+      description: Fetches a Feature object for an application.
+      operationId: getFeatureForApplication
+      parameters:
+        - in: path
+          name: appId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationFeature'
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.apps.read
+      tags:
+        - Application
+    put:
+      summary: Updates a Feature object for an application.
+      description: Updates a Feature object for an application.
+      operationId: updateFeatureForApplication
+      parameters:
+        - in: path
+          name: appId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CapabilitiesObject'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationFeature'
+        '404':
+          description: Not Found
       security:
         - api_token: []
         - oauth2:
@@ -813,6 +1001,41 @@ paths:
             - okta.apps.manage
       tags:
         - Application
+#  /api/v1/apps/{appId}/logo:
+#    post:
+#      summary: The file must be in PNG, JPG, or GIF format, and less than 1 MB in size. For best results use landscape orientation, a transparent background, and a minimum size of 420px by 120px to prevent upscaling.
+#      description: Update the logo for an application.
+#      operationId: uploadApplicationLogo
+#      parameters:
+#        - in: path
+#          name: appId
+#          required: true
+#          schema:
+#            type: string
+#      requestBody:
+#        content:
+#          multipart/form-data:
+#            schema:
+#              type: object
+#              properties:
+#                file:
+#                  type: string
+#                  format: binary
+#              required:
+#                - file
+#      responses:
+#        '201':
+#          description: Created
+#        '400':
+#          description: Bad Request
+#        '404':
+#          description: Not Found
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.apps.manage
+#      tags:
+#        - Application
   /api/v1/apps/{appId}/tokens:
     get:
       summary: Lists OAuth 2.0 Tokens for Application
@@ -2461,6 +2684,338 @@ paths:
             - okta.brands.manage
       tags:
         - Brand
+#  /api/v1/brands/{brandId}/templates/email:
+#    parameters:
+#      - $ref: '#/components/parameters/pathBrandId'
+#    get:
+#      summary: List Email Templates
+#      description: Lists all email templates.
+#      operationId: listEmailTemplates
+#      parameters:
+#        - $ref: '#/components/parameters/queryAfter'
+#        - $ref: '#/components/parameters/queryLimit'
+#      responses:
+#        '200':
+#          description: Successfully returned the list of email templates.
+#          content:
+#            application/json:
+#              schema:
+#                type: array
+#                items:
+#                  $ref: '#/components/schemas/EmailTemplate'
+#              examples:
+#                List email templates response:
+#                  $ref: '#/components/examples/ListEmailTemplateResponse'
+#          headers:
+#            Link:
+#              schema:
+#                type: string
+#              description: The pagination header containing links to the current and next page of results. See [Pagination](https://developer.okta.com/docs/reference/core-okta-api/#pagination) for more information.
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.read
+#      tags:
+#        - Brand
+#  /api/v1/brands/{brandId}/templates/email/{templateName}:
+#    parameters:
+#      - $ref: '#/components/parameters/pathBrandId'
+#      - $ref: '#/components/parameters/pathTemplateName'
+#    get:
+#      summary: Get Email Template
+#      description: Gets the details of an email template by name.
+#      operationId: getEmailTemplate
+#      responses:
+#        '200':
+#          description: Successfully retrieved the email template.
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/EmailTemplate'
+#              examples:
+#                Get email template response:
+#                  $ref: '#/components/examples/GetEmailTemplateResponse'
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.read
+#      tags:
+#        - Brand
+#  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations:
+#    parameters:
+#      - $ref: '#/components/parameters/pathBrandId'
+#      - $ref: '#/components/parameters/pathTemplateName'
+#    get:
+#      summary: List Email Customizations
+#      description: Lists all customizations of an email template.
+#      operationId: listEmailCustomizations
+#      parameters:
+#        - $ref: '#/components/parameters/queryAfter'
+#        - $ref: '#/components/parameters/queryLimit'
+#      responses:
+#        '200':
+#          description: Successfully retrieved all email customizations for the specified email template.
+#          content:
+#            application/json:
+#              schema:
+#                type: array
+#                items:
+#                  $ref: '#/components/schemas/EmailCustomization'
+#              examples:
+#                List Email customizations response:
+#                  $ref: '#/components/examples/ListEmailCustomizationResponse'
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.read
+#      tags:
+#        - Brand
+#    post:
+#      summary: Create Email Customization
+#      description: Creates a new email customization.
+#      operationId: createEmailCustomization
+#      x-codegen-request-body-name: instance
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/EmailCustomization'
+#            examples:
+#              Create email customization request:
+#                $ref: '#/components/examples/CreateUpdateEmailCustomizationRequest'
+#      responses:
+#        '201':
+#          description: Successfully created the email customization.
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/EmailCustomization'
+#              examples:
+#                Create email customization response:
+#                  $ref: '#/components/examples/CreateUpdateEmailCustomizationResponse'
+#        '409':
+#          description: Could not create the email customization because it conflicts with an existing email customization.
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Error'
+#              examples:
+#                Default email customization already exists:
+#                  $ref: '#/components/examples/ErrorEmailCustomizationDefaultAlreadyExists'
+#                Email customization already exists for the specified language:
+#                  $ref: '#/components/examples/ErrorEmailCustomizationLanguageAlreadyExists'
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.manage
+#      tags:
+#        - Brand
+#    delete:
+#      summary: Delete All Email Customizations
+#      description: Deletes all customizations for an email template.
+#      operationId: deleteAllCustomizations
+#      responses:
+#        '204':
+#          description: Successfully deleted all customizations for the email template.
+#          content: {}
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.manage
+#      tags:
+#        - Brand
+#  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations/{customizationId}:
+#    parameters:
+#      - $ref: '#/components/parameters/pathBrandId'
+#      - $ref: '#/components/parameters/pathTemplateName'
+#      - $ref: '#/components/parameters/pathCustomizationId'
+#    get:
+#      summary: Get Email Customization
+#      description: Gets an email customization by its unique identifier.
+#      operationId: getEmailCustomization
+#      responses:
+#        '200':
+#          description: Successfully retrieved the email customization.
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/EmailCustomization'
+#              examples:
+#                Get email customization response:
+#                  $ref: '#/components/examples/EmailCustomizationResponse'
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.read
+#      tags:
+#        - Brand
+#    put:
+#      summary: Update Email Customization
+#      description: Updates an existing email customization using the property values provided.
+#      operationId: updateEmailCustomization
+#      x-codegen-request-body-name: instance
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/EmailCustomization'
+#            examples:
+#              Update email customization request:
+#                $ref: '#/components/examples/CreateUpdateEmailCustomizationRequest'
+#        description: Request
+#      responses:
+#        '200':
+#          description: Successfully updated the email customization.
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/EmailCustomization'
+#              examples:
+#                Update email customization response:
+#                  $ref: '#/components/examples/CreateUpdateEmailCustomizationResponse'
+#        '409':
+#          description: Could not update the email customization because the update would cause a conflict with an existing email customization.
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Error'
+#              examples:
+#                Default email customization already exists:
+#                  $ref: '#/components/examples/ErrorEmailCustomizationDefaultAlreadyExists'
+#                Email customization already exists for the specified language:
+#                  $ref: '#/components/examples/ErrorEmailCustomizationLanguageAlreadyExists'
+#                Cannot set the default email customization's isDefault to false:
+#                  $ref: '#/components/examples/ErrorEmailCustomizationCannotClearDefault'
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.manage
+#      tags:
+#        - Brand
+#    delete:
+#      summary: Delete Email Customization
+#      description: Deletes an email customization by its unique identifier.
+#      operationId: deleteEmailCustomization
+#      responses:
+#        '204':
+#          description: Successfully deleted the email customization.
+#          content: {}
+#        '409':
+#          description: Could not delete the email customization deleted because it is the default email customization.
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Error'
+#              examples:
+#                Cannot delete default email customization:
+#                  $ref: '#/components/examples/ErrorEmailCustomizationCannotDeleteDefault'
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.manage
+#      tags:
+#        - Brand
+#  /api/v1/brands/{brandId}/templates/email/{templateName}/customizations/{customizationId}/preview:
+#    parameters:
+#      - $ref: '#/components/parameters/pathBrandId'
+#      - $ref: '#/components/parameters/pathTemplateName'
+#      - $ref: '#/components/parameters/pathCustomizationId'
+#    get:
+#      summary: Preview Email Customization
+#      description: Generates a preview of an email customization. All variable references (e.g., `${user.profile.firstName}`) are populated using the current user's context.
+#      operationId: getCustomizationPreview
+#      responses:
+#        '200':
+#          description: Successfully generated a preview of the email customization.
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/EmailPreview'
+#              examples:
+#                Preview email customization response:
+#                  $ref: '#/components/examples/PreviewEmailCustomizationResponse'
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.read
+#      tags:
+#        - Brand
+#  /api/v1/brands/{brandId}/templates/email/{templateName}/default-content:
+#    parameters:
+#      - $ref: '#/components/parameters/pathBrandId'
+#      - $ref: '#/components/parameters/pathTemplateName'
+#    get:
+#      summary: Get Email Template Default Content
+#      description: Gets an email template's default content.
+#      operationId: getEmailDefaultContent
+#      parameters:
+#        - $ref: '#/components/parameters/queryLanguage'
+#      responses:
+#        '200':
+#          description: Successfully retrieved the email template's default content.
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/EmailDefaultContent'
+#              examples:
+#                Get email template default content response:
+#                  $ref: '#/components/examples/EmailTemplateDefaultContentResponse'
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.read
+#      tags:
+#        - Brand
+#  /api/v1/brands/{brandId}/templates/email/{templateName}/default-content/preview:
+#    parameters:
+#      - $ref: '#/components/parameters/pathBrandId'
+#      - $ref: '#/components/parameters/pathTemplateName'
+#    get:
+#      summary: Preview Email Template Default Content
+#      description: Generates a preview of an email template's default content. All variable references (e.g., `${user.profile.firstName}`) are populated using the current user's context.
+#      operationId: getEmailDefaultPreview
+#      parameters:
+#        - $ref: '#/components/parameters/queryLanguage'
+#      responses:
+#        '200':
+#          description: Successfully generated a preview of the email template's default content.
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/EmailPreview'
+#              examples:
+#                Preview email template default content response:
+#                  $ref: '#/components/examples/PreviewEmailTemplateDefaultContentResponse'
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.read
+#      tags:
+#        - Brand
+#  /api/v1/brands/{brandId}/templates/email/{templateName}/test:
+#    parameters:
+#      - $ref: '#/components/parameters/pathBrandId'
+#      - $ref: '#/components/parameters/pathTemplateName'
+#    post:
+#      summary: Send Test Email
+#      description: |-
+#        Sends a test email to the current user’s primary and secondary email addresses. The email content is selected based on the following priority:
+#        1. The email customization for the language specified in the `language` query parameter.
+#        2. The email template's default customization.
+#        3. The email template’s default content, translated to the current user's language.
+#      operationId: sendTestEmail
+#      parameters:
+#        - $ref: '#/components/parameters/queryLanguage'
+#      responses:
+#        '204':
+#          description: Successfully sent a test email.
+#          content: {}
+#      security:
+#        - api_token: []
+#        - oauth2:
+#            - okta.templates.read
+#      tags:
+#        - Brand
   /api/v1/brands/{brandId}/themes:
     parameters:
       - in: path
@@ -2761,7 +3316,6 @@ paths:
       summary: List CAPTCHA instances
       description: Enumerates CAPTCHA instances in your organization with pagination. A subset of CAPTCHA instances can be returned that match a supported filter expression or query.
       operationId: listCaptchaInstances
-      parameters: []
       responses:
         '200':
           description: OK
@@ -2771,35 +3325,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CAPTCHAInstance'
-              examples:
-                Get all CAPTCHA instances:
-                  value:
-                    - id: abcd1234
-                      name: myHCaptcha
-                      siteKey: xxxxxxxxxxx
-                      type: HCAPTCHA
-                      _link:
-                        self:
-                          href: https://your-subdomain.okta.com/api/v1/captchas/abcd1234
-                          hints:
-                            allow:
-                              - GET
-                              - POST
-                              - PUT
-                              - DELETE
-                    - id: abcd4567
-                      name: myReCaptcha
-                      siteKey: yyyyyyyyyyyyyyy
-                      type: RECAPTCHA_V2
-                      _link:
-                        self:
-                          href: https://your-subdomain.okta.com/api/v1/captchas/abcd4567
-                          hints:
-                            allow:
-                              - GET
-                              - POST
-                              - PUT
-                              - DELETE
       security:
         - api_token: []
         - oauth2:
@@ -2808,7 +3333,7 @@ paths:
         - CAPTCHA
     post:
       summary: Create new CAPTCHA instance
-      description: Adds a new CAPTCHA instance to your organization. In current release, we only allow one CAPTCHA instance per org.
+      description: Adds a new CAPTCHA instance to your organization. In the current release, we only allow one CAPTCHA instance per org.
       operationId: createCaptchaInstance
       x-codegen-request-body-name: instance
       requestBody:
@@ -2817,12 +3342,11 @@ paths:
             schema:
               $ref: '#/components/schemas/CAPTCHAInstance'
             examples:
-              example-1:
-                value:
-                  name: myHCaptcha
-                  secretKey: xxxxxxxxxxx
-                  siteKey: xxxxxxxxxxx
-                  type: HCAPTCHA
+              HCaptcha:
+                $ref: '#/components/examples/CAPTCHAInstanceRequestHCaptcha'
+              ReCaptcha:
+                $ref: '#/components/examples/CAPTCHAInstanceRequestReCaptcha'
+        required: true
       responses:
         '201':
           description: Created
@@ -2831,21 +3355,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/CAPTCHAInstance'
               examples:
-                example-1:
-                  value:
-                    id: abcd1234
-                    name: myHCaptcha
-                    siteKey: xxxxxxxxxxx
-                    type: HCAPTCHA
-                    _link:
-                      self:
-                        href: https://your-subdomain.okta.com/api/v1/captchas/abcd1234
-                        hints:
-                          allow:
-                            - GET
-                            - POST
-                            - PUT
-                            - DELETE
+                HCaptcha:
+                  $ref: '#/components/examples/CAPTCHAInstanceResponseHCaptcha'
+                ReCaptcha:
+                  $ref: '#/components/examples/CAPTCHAInstanceResponseReCaptcha'
         '403':
           description: Forbidden
           content:
@@ -2853,13 +3366,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                There's already a CAPTCHA instance:
-                  value:
-                    errorCode: E0000165
-                    errorSummary: CAPTCHA count limit reached. At most one CAPTCHA instance is allowed per Org.
-                    errorLink: E0000165
-                    errorId: oaejrB1fWL1S7mc-2KcG-SOtw
-                    errorCauses: []
+                Error Limit of One CAPTCHA instance per org:
+                  $ref: '#/components/examples/ErrorCAPTCHALimitOfOne'
       security:
         - api_token: []
         - oauth2:
@@ -2868,13 +3376,7 @@ paths:
         - CAPTCHA
   /api/v1/captchas/{captchaId}:
     parameters:
-      - schema:
-          type: string
-          example: abcd1234
-        name: captchaId
-        in: path
-        required: true
-        description: id of the CAPTCHA
+      - $ref: '#/components/parameters/pathCaptchaId'
     get:
       summary: Get CAPTCHA Instance
       description: Fetches a CAPTCHA instance by `id`.
@@ -2887,21 +3389,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/CAPTCHAInstance'
               examples:
-                example-1:
-                  value:
-                    id: abcd1234
-                    name: myHCaptcha
-                    siteKey: xxxxxxxxxxx
-                    type: HCAPTCHA
-                    _link:
-                      self:
-                        href: https://your-subdomain.okta.com/api/v1/captchas/abcd1234
-                        hints:
-                          allow:
-                            - GET
-                            - POST
-                            - PUT
-                            - DELETE
+                HCaptcha:
+                  $ref: '#/components/examples/CAPTCHAInstanceResponseHCaptcha'
+                ReCaptcha:
+                  $ref: '#/components/examples/CAPTCHAInstanceResponseReCaptcha'
         '404':
           description: Not Found
           content:
@@ -2909,13 +3400,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                example-1:
-                  value:
-                    errorCode: E0000007
-                    errorSummary: 'Not found: {0}'
-                    errorLink: E0000007
-                    errorId: sampleMlLvGUj_YD5v16vkYWY
-                    errorCauses: []
+                Resource Not Found:
+                  $ref: '#/components/examples/ErrorResourceNotFound'
       security:
         - api_token: []
         - oauth2:
@@ -2933,12 +3419,10 @@ paths:
             schema:
               $ref: '#/components/schemas/CAPTCHAInstance'
             examples:
-              example-1:
-                value:
-                  name: myHCaptcha
-                  siteKey: xxxxxxxxxxx
-                  type: HCAPTCHA
-        description: ''
+              HCaptcha:
+                $ref: '#/components/examples/CAPTCHAInstanceRequestHCaptcha'
+              ReCaptcha:
+                $ref: '#/components/examples/CAPTCHAInstanceRequestReCaptcha'
         required: true
       responses:
         '200':
@@ -2948,27 +3432,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/CAPTCHAInstance'
               examples:
-                example-1:
-                  value:
-                    id: abcd1234
-                    name: myHCaptcha
-                    siteKey: xxxxxxxxxxx
-                    type: HCAPTCHA
-                    _link:
-                      self:
-                        href: https://your-subdomain.okta.com/api/v1/captchas/abcd1234
-                        hints:
-                          allow:
-                            - GET
-                            - POST
-                            - PUT
-                            - DELETE
+                HCaptcha:
+                  $ref: '#/components/examples/CAPTCHAInstanceResponseHCaptcha'
+                ReCaptcha:
+                  $ref: '#/components/examples/CAPTCHAInstanceResponseReCaptcha'
         '400':
           description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              examples:
+                API Validation Failed:
+                  $ref: '#/components/examples/ErrorApiValidationFailed'
         '404':
           description: Not Found
           content:
@@ -2976,13 +3452,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                example-1:
-                  value:
-                    errorCode: E0000007
-                    errorSummary: 'Not found: {0}'
-                    errorLink: E0000007
-                    errorId: sampleMlLvGUj_YD5v16vkYWY
-                    errorCauses: []
+                Resource Not Found:
+                  $ref: '#/components/examples/ErrorResourceNotFound'
       security:
         - api_token: []
         - oauth2:
@@ -2993,14 +3464,6 @@ paths:
       summary: Update CAPTCHA instance
       description: Update a CAPTCHA instance by `id`.
       operationId: updateCaptchaInstance
-      parameters:
-        - schema:
-            type: string
-            example: abcd1234
-          name: captchaId
-          in: path
-          required: true
-          description: id of the CAPTCHA
       x-codegen-request-body-name: instance
       requestBody:
         content:
@@ -3008,13 +3471,10 @@ paths:
             schema:
               $ref: '#/components/schemas/CAPTCHAInstance'
             examples:
-              example-1:
-                value:
-                  name: myHCaptcha
-                  secretKey: xxxxxxxxxxx
-                  siteKey: xxxxxxxxxxx
-                  type: HCAPTCHA
-        description: ''
+              HCaptcha:
+                $ref: '#/components/examples/CAPTCHAInstanceRequestHCaptcha'
+              ReCaptcha:
+                $ref: '#/components/examples/CAPTCHAInstanceRequestReCaptcha'
         required: true
       responses:
         '200':
@@ -3024,21 +3484,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/CAPTCHAInstance'
               examples:
-                example-1:
-                  value:
-                    id: abcd1234
-                    name: myHCaptcha
-                    siteKey: xxxxxxxxxxx
-                    type: HCAPTCHA
-                    _link:
-                      self:
-                        href: https://your-subdomain.okta.com/api/v1/captchas/abcd1234
-                        hints:
-                          allow:
-                            - GET
-                            - POST
-                            - PUT
-                            - DELETE
+                HCaptcha:
+                  $ref: '#/components/examples/CAPTCHAInstanceResponseHCaptcha'
+                ReCaptcha:
+                  $ref: '#/components/examples/CAPTCHAInstanceResponseReCaptcha'
         '400':
           description: Bad Request
           content:
@@ -3046,13 +3495,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                example-1:
-                  value:
-                    errorCode: E0000001
-                    errorSummary: 'Api validation failed: {0}'
-                    errorLink: E0000001
-                    errorId: sampleiCF-8D5rLW6myqiPItW
-                    errorCauses: []
+                API Validation Failed:
+                  $ref: '#/components/examples/ErrorApiValidationFailed'
         '404':
           description: Not Found
           content:
@@ -3060,13 +3504,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                example-1:
-                  value:
-                    errorCode: E0000007
-                    errorSummary: 'Not found: {0}'
-                    errorLink: E0000007
-                    errorId: sampleMlLvGUj_YD5v16vkYWY
-                    errorCauses: []
+                Resource Not Found:
+                  $ref: '#/components/examples/ErrorResourceNotFound'
       security:
         - api_token: []
         - oauth2:
@@ -3075,7 +3514,7 @@ paths:
         - CAPTCHA
     delete:
       summary: Delete CAPTCHA Instance
-      description: Delete a CAPTCHA instance by `id`.
+      description: Delete a CAPTCHA instance by `id`. If the CAPTCHA instance is currently being used in the org, the delete will not be allowed.
       operationId: deleteCaptchaInstance
       responses:
         '204':
@@ -3088,13 +3527,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                OrgWideAssociate:
-                  value:
-                    errorCode: E0000149
-                    errorSummary: Current CAPTCHA is associated with org-wide settings, cannot be removed.
-                    errorLink: E0000149
-                    errorId: samplezsusshPdiTWiITwqBt8
-                    errorCauses: []
+                Cannot remove CAPTCHA in use:
+                  $ref: '#/components/examples/ErrorCAPTCHAOrgWideSetting'
         '404':
           description: Not Found
           content:
@@ -3102,13 +3536,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               examples:
-                example-1:
-                  value:
-                    errorCode: E0000007
-                    errorSummary: 'Not found: {0}'
-                    errorLink: E0000007
-                    errorId: sampleMlLvGUj_YD5v16vkYWY
-                    errorCauses: []
+                Resource Not Found:
+                  $ref: '#/components/examples/ErrorResourceNotFound'
       security:
         - api_token: []
         - oauth2:
@@ -4803,10 +5232,10 @@ paths:
               format: binary
               x-okta-operationId: publishBinaryCerCertForIdentityProvider
           application/pkix-cert:
-             schema:
-               type: string
-               format: binary
-               x-okta-operationId: publishBinaryDerCertForIdentityProvider
+            schema:
+              type: string
+              format: binary
+              x-okta-operationId: publishBinaryDerCertForIdentityProvider
           application/x-pem-file:
             schema:
               type: string
@@ -6005,6 +6434,42 @@ paths:
             - okta.orgs.manage
       tags:
         - OrgSetting
+  /api/v1/org/email/bounces/remove-list:
+    post:
+      summary: Remove Emails from Email Provider Bounce List
+      description: A list of email addresses to be removed from the set of email addresses that are bounced.
+      operationId: bulkRemoveEmailAddressBounces
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BouncesRemoveListObj'
+            examples:
+              example-1:
+                value:
+                  emailAddresses:
+                    - name@company.com
+                    - unknown.email@okta.com
+                    - name@okta@com
+      responses:
+        '200':
+          description: Removes the provided list of emails from the set of email addresses that are bounced so that the provider resumes sending emails to those addresses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BouncesRemoveListResult'
+              examples:
+                example-1:
+                  value:
+                    errors:
+                      - emailAddress: unknown.email@okta.com
+                        reason: This email address does not belong to any user in your organization.
+                      - emailAddress: name@okta@com
+                        reason: Invalid email address. The provided email address failed validation against RFC 3696.
+      security:
+        - api_token: []
+      tags:
+        - OrgSetting
   /api/v1/org/logo:
     post:
       summary: Update org logo
@@ -6599,6 +7064,119 @@ paths:
             - okta.policies.manage
       tags:
         - Policy
+  /api/v1/roles/{roleTypeOrRoleId}/subscriptions:
+    get:
+      summary: List all subscriptions of a Custom Role
+      description: When roleType List all subscriptions of a Role. Else when roleId List subscriptions of a Custom Role
+      operationId: listRoleSubscriptions
+      parameters:
+        - in: path
+          name: roleTypeOrRoleId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Subscription'
+                type: array
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.roles.read
+      tags:
+        - Subscription
+  /api/v1/roles/{roleTypeOrRoleId}/subscriptions/{notificationType}:
+    get:
+      summary: Get subscriptions of a Custom Role with a specific notification type
+      description: When roleType Get subscriptions of a Role with a specific notification type. Else when roleId Get subscription of a Custom Role with a specific notification type.
+      operationId: getRoleSubscriptionByNotificationType
+      parameters:
+        - in: path
+          name: roleTypeOrRoleId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: notificationType
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.roles.read
+      tags:
+        - Subscription
+  /api/v1/roles/{roleTypeOrRoleId}/subscriptions/{notificationType}/subscribe:
+    post:
+      summary: Subscribe a Custom Role to a specific notification type
+      description: When roleType Subscribes a Role to a specific notification type. When you change the subscription status of a Role, it overrides the subscription of any individual user of that Role. Else when roleId Subscribes a Custom Role to a specific notification type. When you change the subscription status of a Custom Role, it overrides the subscription of any individual user of that Custom Role.
+      operationId: subscribeRoleSubscriptionByNotificationType
+      parameters:
+        - in: path
+          name: roleTypeOrRoleId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: notificationType
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.roles.manage
+      tags:
+        - Subscription
+  /api/v1/roles/{roleTypeOrRoleId}/subscriptions/{notificationType}/unsubscribe:
+    post:
+      summary: Unsubscribe a Custom Role from a specific notification type
+      description: When roleType Unsubscribes a Role from a specific notification type. When you change the subscription status of a Role, it overrides the subscription of any individual user of that Role. Else when roleId Unsubscribes a Custom Role from a specific notification type. When you change the subscription status of a Custom Role, it overrides the subscription of any individual user of that Custom Role.
+      operationId: unsubscribeRoleSubscriptionByNotificationType
+      parameters:
+        - in: path
+          name: roleTypeOrRoleId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: notificationType
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.roles.manage
+      tags:
+        - Subscription
   /api/v1/sessions:
     post:
       summary: Create Session with Session Token
@@ -6618,6 +7196,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Session'
+        '400':
+          description: Bad Request
       security:
         - api_token: []
       tags:
@@ -6640,6 +7220,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Session'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
       security:
         - api_token: []
         - oauth2:
@@ -6684,6 +7268,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Session'
+        '404':
+          description: Not Found
       security:
         - api_token: []
         - oauth2:
@@ -7703,6 +8289,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserCredentials'
+        required: true
       responses:
         '200':
           description: Credentials
@@ -8963,6 +9550,119 @@ paths:
             - okta.users.manage
       tags:
         - User
+  /api/v1/users/{userId}/subscriptions:
+    get:
+      summary: List subscriptions of a User
+      description: List subscriptions of a User. Only lists subscriptions for current user. An AccessDeniedException message is sent if requests are made from other users.
+      operationId: listUserSubscriptions
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Subscription'
+                type: array
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.users.read
+      tags:
+        - Subscription
+  /api/v1/users/{userId}/subscriptions/{notificationType}:
+    get:
+      summary: Get the subscription of a User with a specific notification type
+      description: Get the subscriptions of a User with a specific notification type. Only gets subscriptions for current user. An AccessDeniedException message is sent if requests are made from other users.
+      operationId: getUserSubscriptionByNotificationType
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: notificationType
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.users.read
+      tags:
+        - Subscription
+  /api/v1/users/{userId}/subscriptions/{notificationType}/subscribe:
+    post:
+      summary: Subscribe to a specific notification type
+      description: Subscribes a User to a specific notification type. Only the current User can subscribe to a specific notification type. An AccessDeniedException message is sent if requests are made from other users.
+      operationId: subscribeUserSubscriptionByNotificationType
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: notificationType
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.users.manage
+      tags:
+        - Subscription
+  /api/v1/users/{userId}/subscriptions/{notificationType}/unsubscribe:
+    post:
+      summary: Unsubscribe from a specific notification type
+      description: Unsubscribes a User from a specific notification type. Only the current User can unsubscribe from a specific notification type. An AccessDeniedException message is sent if requests are made from other users.
+      operationId: unsubscribeUserSubscriptionByNotificationType
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: notificationType
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+      security:
+        - api_token: []
+        - oauth2:
+            - okta.users.manage
+      tags:
+        - Subscription
   /api/v1/zones:
     get:
       summary: List Network Zones
@@ -9555,6 +10255,22 @@ components:
           type: string
         type:
           type: string
+    ApplicationFeature:
+      type: object
+      properties:
+        _links:
+          additionalProperties:
+            type: object
+          readOnly: true
+          type: object
+        capabilities:
+          $ref: '#/components/schemas/CapabilitiesObject'
+        description:
+          type: string
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/EnabledStatus'
     ApplicationGroupAssignment:
       type: object
       properties:
@@ -9914,11 +10630,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettingsApplication'
         - type: object
-      properties:
-        authURL:
-          type: string
-        url:
-          type: string
+          properties:
+            authURL:
+              type: string
+            url:
+              type: string
     BasicAuthApplication:
       x-okta-defined-as:
         name: template_basic_auth
@@ -9968,6 +10684,27 @@ components:
               type: boolean
             url:
               type: string
+    BouncesRemoveListError:
+      type: object
+      properties:
+        emailAddress:
+          type: string
+        reason:
+          type: string
+    BouncesRemoveListObj:
+      type: object
+      properties:
+        emailAddresses:
+          type: array
+          items:
+            type: string
+    BouncesRemoveListResult:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/BouncesRemoveListError'
     Brand:
       type: object
       properties:
@@ -9989,9 +10726,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/Application'
         - type: object
-      properties:
-        credentials:
-          $ref: '#/components/schemas/SchemeApplicationCredentials'
+          properties:
+            credentials:
+              $ref: '#/components/schemas/SchemeApplicationCredentials'
       discriminator:
         propertyName: name
         mapping:
@@ -10000,22 +10737,6 @@ components:
     CAPTCHAInstance:
       title: CAPTCHAInstance
       description: ''
-      x-examples:
-        example-1:
-          id: abcd1234
-          name: myHCaptcha
-          secretKey: xxxxxxxxxxx
-          siteKey: xxxxxxxxxxx
-          type: HCAPTCHA
-          _link:
-            self:
-              href: https://your-subdomain.okta.com/api/v1/captchas/abcd1234
-              hints:
-                allow:
-                  - GET
-                  - POST
-                  - PUT
-                  - DELETE
       type: object
       properties:
         id:
@@ -10055,6 +10776,27 @@ components:
           type: string
         phoneNumber:
           type: string
+    CapabilitiesCreateObject:
+      type: object
+      properties:
+        lifecycleCreate:
+          $ref: '#/components/schemas/LifecycleCreateSettingObject'
+    CapabilitiesObject:
+      type: object
+      properties:
+        create:
+          $ref: '#/components/schemas/CapabilitiesCreateObject'
+        update:
+          $ref: '#/components/schemas/CapabilitiesUpdateObject'
+    CapabilitiesUpdateObject:
+      type: object
+      properties:
+        lifecycleDeactivate:
+          $ref: '#/components/schemas/LifecycleDeactivateSettingObject'
+        password:
+          $ref: '#/components/schemas/PasswordSettingObject'
+        profile:
+          $ref: '#/components/schemas/ProfileSettingObject'
     CatalogApplication:
       type: object
       properties:
@@ -10098,6 +10840,11 @@ components:
       enum:
         - ACTIVE
         - INACTIVE
+    ChangeEnum:
+      type: string
+      enum:
+        - KEEP_EXISTING
+        - CHANGE
     ChangePasswordRequest:
       type: object
       properties:
@@ -10198,11 +10945,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
-      properties:
-        factorProfileId:
-          type: string
-        profile:
-          $ref: '#/components/schemas/CustomHotpUserFactorProfile'
+          properties:
+            factorProfileId:
+              type: string
+            profile:
+              $ref: '#/components/schemas/CustomHotpUserFactorProfile'
     CustomHotpUserFactorProfile:
       type: object
       properties:
@@ -10374,82 +11121,41 @@ components:
         unit:
           type: string
     EmailContent:
-      title: EmailContent
       required:
         - subject
         - body
-      x-internal: true
       type: object
       properties:
         subject:
           type: string
+          description: The email's subject. May contain [variable references](https://velocity.apache.org/engine/1.7/user-guide.html#references).
         body:
           type: string
-    EmailContentWithSender:
-      allOf:
-        - $ref: '#/components/schemas/EmailContent'
-        - type: object
-          properties:
-            fromAddress:
-              type: string
-            fromName:
-              type: string
-          required:
-            - fromAddress
-            - fromName
-      x-internal: true
+          description: The email's HTML body. May contain [variable references](https://velocity.apache.org/engine/1.7/user-guide.html#references).
     EmailCustomization:
-      title: Email Customization
-      x-examples:
-        - id: oel11u6DqUiMbQkpl0g4
-          language: cs-CZ
-          isDefault: true
-          subject: Welcome to $org.name
-          body: Hello, $user.profile.firstName!
-          created: '2021-11-09T20:38:10.000Z'
-          lastUpdated: '2021-11-11T20:38:10.000Z'
-          _links:
-            self:
-              href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4
-              hints:
-                allow:
-                  - GET
-                  - PUT
-                  - DELETE
-            template:
-              href: /templates/email/email.welcome
-              hints:
-                allow:
-                  - GET
-            preview:
-              href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4/preview
-              hints:
-                allow:
-                  - GET
-      description: A customized email template
       allOf:
         - $ref: '#/components/schemas/EmailContent'
         - type: object
           properties:
-            id:
-              type: string
-              description: ''
-              example: oel11u6DqUiMbQkpl0g4
-              readOnly: true
             language:
-              type: string
-              example: cs-CZ
-              description: unique under each email templage
+              $ref: '#/components/schemas/Language'
             isDefault:
               type: boolean
+              description: Whether this is the default customization for the email template. Each customized email template must have exactly one default customization. Defaults to `true` for the first customization and `false` thereafter.
+            id:
+              type: string
+              readOnly: true
+              description: A unique identifier for this email customization.
             created:
               type: string
               format: date-time
               readOnly: true
+              description: The UTC time at which this email customization was created.
             lastUpdated:
               type: string
               format: date-time
               readOnly: true
+              description: The UTC time at which this email customization was last updated.
             _links:
               type: object
               properties:
@@ -10459,31 +11165,15 @@ components:
                   $ref: '#/components/schemas/HrefObject'
                 preview:
                   $ref: '#/components/schemas/HrefObject'
+                test:
+                  $ref: '#/components/schemas/HrefObject'
               readOnly: true
+              description: Links to resources related to this email customization.
           required:
             - language
-          readOnly: true
     EmailDefaultContent:
-      title: EmailDefaultContent
-      description: The default content for an email template
-      x-examples:
-        - subject: Welcome to Okta!
-          body: '...<tr><td style="color: #5e5e5e; font-size: 22px; line-height: 22px;">${org.name} - Welcome to Okta!</td></tr><tr><td style="padding-top: 24px; vertical-align: bottom;">Hi ${f:escapeHtml(user.firstName)},</td></tr>...'
-          fromAddress: noreply@okta.com
-          fromName: Okta
-          _links:
-            self:
-              href: /templates/email/email.welcome/default-content
-              hints:
-                allow:
-                  - GET
-            template:
-              href: /templates/email/email.welcome
-              hints:
-                allow:
-                  - GET
       allOf:
-        - $ref: '#/components/schemas/EmailContentWithSender'
+        - $ref: '#/components/schemas/EmailContent'
         - type: object
           properties:
             _links:
@@ -10495,81 +11185,59 @@ components:
                   $ref: '#/components/schemas/HrefObject'
                 preview:
                   $ref: '#/components/schemas/HrefObject'
+                test:
+                  $ref: '#/components/schemas/HrefObject'
               readOnly: true
+              description: Links to resources related to this email template's default content.
     EmailPreview:
-      title: EmailPreview
-      x-examples:
-        - subject: Welcome to Okta!
-          body: |
-            <tr>
-            <td style="color:#5e5e5e;font-size:22px;line-height:22px"> henryli-oie - Welcome to Okta! </td>
-            </tr>
-            <tr>
-            <td style="padding-top:24px;vertical-align:bottom"> Hi Henry, </td>
-            </tr>
-          fromAddress: noreply@okta.com
-          fromName: Okta
-          _links:
-            self:
-              href: /templates/email/email.welcome/default-content/preview
-              hints:
-                allow:
-                  - GET
-            contentSource:
-              href: /templates/email/email.welcome/default-content
-              hints:
-                allow:
-                  - GET
-            template:
-              href: /templates/email/email.welcome
-              hints:
-                allow:
-                  - GET
-        - subject: Welcome to MyOrg!
-          body: Hello, Henry Li!
-          fromAddress: noreply@okta.com
-          fromName: MyOrg
-          _links:
-            self:
-              href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4/preview
-              hints:
-                allow:
-                  - GET
-            contentSource:
-              href: /templates/email/email.welcome/customizations/oel11u6DqUiMbQkpl0g4
-              hints:
-                allow:
-                  - GET
-            template:
-              href: /templates/email/email.welcome
-              hints:
-                allow:
-                  - GET
-      description: The preview content of email template based on current user
-      allOf:
-        - $ref: '#/components/schemas/EmailContentWithSender'
-        - type: object
+      type: object
+      properties:
+        subject:
+          type: string
+          readOnly: true
+          description: The email's subject.
+        body:
+          type: string
+          readOnly: true
+          description: The email's HTML body.
+        _links:
+          type: object
           properties:
-            _links:
-              type: object
-              properties:
-                self:
-                  $ref: '#/components/schemas/HrefObject'
-                contentSource:
-                  $ref: '#/components/schemas/HrefObject'
-                template:
-                  $ref: '#/components/schemas/HrefObject'
-              readOnly: true
+            self:
+              $ref: '#/components/schemas/HrefObject'
+            contentSource:
+              $ref: '#/components/schemas/HrefObject'
+            template:
+              $ref: '#/components/schemas/HrefObject'
+            test:
+              $ref: '#/components/schemas/HrefObject'
+          readOnly: true
+          description: Links to resources related to this email preview.
+    EmailTemplate:
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+          description: The name of this email template.
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HrefObject'
+            defaultContent:
+              $ref: '#/components/schemas/HrefObject'
+            customizations:
+              $ref: '#/components/schemas/HrefObject'
+            test:
+              $ref: '#/components/schemas/HrefObject'
+          readOnly: true
+          description: Links to resources related to this email template.
     EmailTemplateTouchPointVariant:
       type: string
       enum:
         - OKTA_DEFAULT
         - FULL_THEME
-    EmailTestResponse:
-      type: object
-      properties:
-        customizationId:
-          type: string
     EmailUserFactor:
       allOf:
         - $ref: '#/components/schemas/UserFactor'
@@ -11479,6 +12147,19 @@ components:
     KnowledgeConstraint:
       allOf:
         - $ref: '#/components/schemas/AccessPolicyConstraint'
+    Language:
+      type: string
+      description: The language specified as an [IETF BCP 47 language tag](https://datatracker.ietf.org/doc/html/rfc5646).
+    LifecycleCreateSettingObject:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/EnabledStatus'
+    LifecycleDeactivateSettingObject:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/EnabledStatus'
     LifecycleExpirationPolicyRuleCondition:
       type: object
       properties:
@@ -11900,6 +12581,21 @@ components:
       enum:
         - POLICY
         - BLOCKLIST
+    NotificationType:
+      type: string
+      enum:
+        - CONNECTOR_AGENT
+        - USER_LOCKED_OUT
+        - APP_IMPORT
+        - LDAP_AGENT
+        - AD_AGENT
+        - OKTA_ANNOUNCEMENT
+        - OKTA_ISSUE
+        - OKTA_UPDATE
+        - IWA_AGENT
+        - USER_DEPROVISION
+        - REPORT_SUSPICIOUS_ACTIVITY
+        - RATELIMIT_NOTIFICATION
     OAuth2Actor:
       type: object
       properties:
@@ -12157,9 +12853,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/ApplicationCredentials'
         - type: object
-      properties:
-        oauthClient:
-          $ref: '#/components/schemas/ApplicationCredentialsOAuthClient'
+          properties:
+            oauthClient:
+              $ref: '#/components/schemas/ApplicationCredentialsOAuthClient'
     OAuthEndpointAuthenticationMethod:
       type: string
       enum:
@@ -12264,14 +12960,14 @@ components:
       allOf:
         - $ref: '#/components/schemas/Application'
         - type: object
-      properties:
-        credentials:
-          $ref: '#/components/schemas/OAuthApplicationCredentials'
-        name:
-          type: string
-          default: oidc_client
-        settings:
-          $ref: '#/components/schemas/OpenIdConnectApplicationSettings'
+          properties:
+            credentials:
+              $ref: '#/components/schemas/OAuthApplicationCredentials'
+            name:
+              type: string
+              default: oidc_client
+            settings:
+              $ref: '#/components/schemas/OpenIdConnectApplicationSettings'
     OpenIdConnectApplicationConsentMethod:
       type: string
       enum:
@@ -12367,6 +13063,36 @@ components:
       enum:
         - rotate
         - static
+    Org2OrgApplication:
+      x-okta-defined-as:
+        name: okta_org2org
+      allOf:
+        - $ref: '#/components/schemas/SamlApplication'
+        - type: object
+          properties:
+            name:
+              type: string
+              default: okta_org2org
+            settings:
+              $ref: '#/components/schemas/Org2OrgApplicationSettings'
+    Org2OrgApplicationSettings:
+      allOf:
+        - $ref: '#/components/schemas/SamlApplicationSettings'
+        - type: object
+          properties:
+            app:
+              $ref: '#/components/schemas/Org2OrgApplicationSettingsApp'
+    Org2OrgApplicationSettingsApp:
+      allOf:
+        - $ref: '#/components/schemas/ApplicationSettingsApplication'
+        - type: object
+          properties:
+            acsUrl:
+              type: string
+            audRestriction:
+              type: string
+            baseUrl:
+              type: string
     OrgContactType:
       type: string
       enum:
@@ -12687,13 +13413,13 @@ components:
       allOf:
         - $ref: '#/components/schemas/PolicyRule'
         - type: object
-      properties:
-        actions:
-          $ref: '#/components/schemas/PasswordPolicyRuleActions'
-        conditions:
-          $ref: '#/components/schemas/PasswordPolicyRuleConditions'
-        name:
-          type: string
+          properties:
+            actions:
+              $ref: '#/components/schemas/PasswordPolicyRuleActions'
+            conditions:
+              $ref: '#/components/schemas/PasswordPolicyRuleConditions'
+            name:
+              type: string
     PasswordPolicyRuleAction:
       type: object
       properties:
@@ -12728,6 +13454,15 @@ components:
           $ref: '#/components/schemas/PasswordPolicyPasswordSettings'
         recovery:
           $ref: '#/components/schemas/PasswordPolicyRecoverySettings'
+    PasswordSettingObject:
+      type: object
+      properties:
+        change:
+          $ref: '#/components/schemas/ChangeEnum'
+        seed:
+          $ref: '#/components/schemas/SeedEnum'
+        status:
+          $ref: '#/components/schemas/EnabledStatus'
     PlatformConditionEvaluatorPlatform:
       type: object
       properties:
@@ -13084,11 +13819,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/PolicyRule'
         - type: object
-      properties:
-        actions:
-          $ref: '#/components/schemas/ProfileEnrollmentPolicyRuleActions'
-        name:
-          type: string
+          properties:
+            actions:
+              $ref: '#/components/schemas/ProfileEnrollmentPolicyRuleActions'
+            name:
+              type: string
     ProfileEnrollmentPolicyRuleAction:
       type: object
       properties:
@@ -13182,6 +13917,11 @@ components:
         type:
           type: string
           readOnly: true
+    ProfileSettingObject:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/EnabledStatus'
     Protocol:
       type: object
       properties:
@@ -13316,6 +14056,41 @@ components:
           $ref: '#/components/schemas/ProvisioningDeprovisionedCondition'
         suspended:
           $ref: '#/components/schemas/ProvisioningSuspendedCondition'
+    ProvisioningConnection:
+      type: object
+      properties:
+        _links:
+          additionalProperties:
+            type: object
+          readOnly: true
+          type: object
+        authScheme:
+          $ref: '#/components/schemas/ProvisioningConnectionAuthScheme'
+        status:
+          $ref: '#/components/schemas/ProvisioningConnectionStatus'
+    ProvisioningConnectionAuthScheme:
+      type: string
+      enum:
+        - TOKEN
+        - UNKNOWN
+    ProvisioningConnectionProfile:
+      type: object
+      properties:
+        authScheme:
+          $ref: '#/components/schemas/ProvisioningConnectionAuthScheme'
+        token:
+          type: string
+    ProvisioningConnectionRequest:
+      type: object
+      properties:
+        profile:
+          $ref: '#/components/schemas/ProvisioningConnectionProfile'
+    ProvisioningConnectionStatus:
+      type: string
+      enum:
+        - DISABLED
+        - ENABLED
+        - UNKNOWN
     ProvisioningDeprovisionedAction:
       type: string
       enum:
@@ -13481,6 +14256,10 @@ components:
           properties:
             settings:
               $ref: '#/components/schemas/SamlApplicationSettings'
+      discriminator:
+        propertyName: name
+        mapping:
+          okta_org2org: '#/components/schemas/Org2OrgApplication'
     SamlApplicationSettings:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettings'
@@ -13575,29 +14354,17 @@ components:
       allOf:
         - $ref: '#/components/schemas/ApplicationCredentials'
         - type: object
-      properties:
-        password:
-          $ref: '#/components/schemas/PasswordCredential'
-        revealPassword:
-          type: boolean
-        scheme:
-          $ref: '#/components/schemas/ApplicationCredentialsScheme'
-        signing:
-          $ref: '#/components/schemas/ApplicationCredentialsSigning'
-        userName:
-          type: string
-    Scope:
-      type: object
-      properties:
-        stringValue:
-          type: string
-        type:
-          $ref: '#/components/schemas/ScopeType'
-    ScopeType:
-      type: string
-      enum:
-        - CORS
-        - REDIRECT
+          properties:
+            password:
+              $ref: '#/components/schemas/PasswordCredential'
+            revealPassword:
+              type: boolean
+            scheme:
+              $ref: '#/components/schemas/ApplicationCredentialsScheme'
+            signing:
+              $ref: '#/components/schemas/ApplicationCredentialsSigning'
+            userName:
+              type: string
     SecurePasswordStoreApplication:
       x-okta-defined-as:
         name: template_sps
@@ -13655,9 +14422,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
-      properties:
-        profile:
-          $ref: '#/components/schemas/SecurityQuestionUserFactorProfile'
+          properties:
+            profile:
+              $ref: '#/components/schemas/SecurityQuestionUserFactorProfile'
     SecurityQuestionUserFactorProfile:
       type: object
       properties:
@@ -13667,6 +14434,11 @@ components:
           type: string
         questionText:
           type: string
+    SeedEnum:
+      type: string
+      enum:
+        - OKTA
+        - RANDOM
     Session:
       type: object
       properties:
@@ -13833,82 +14605,103 @@ components:
           type: array
           items:
             type: string
+    Subscription:
+      type: object
+      properties:
+        _links:
+          additionalProperties:
+            type: object
+          readOnly: true
+          type: object
+        channels:
+          items:
+            type: string
+          type: array
+        notificationType:
+          $ref: '#/components/schemas/NotificationType'
+        status:
+          $ref: '#/components/schemas/SubscriptionStatus'
+    SubscriptionStatus:
+      type: string
+      enum:
+        - subscribed
+        - unsubscribed
     SwaApplication:
       x-okta-defined-as:
         name: template_swa
       allOf:
         - $ref: '#/components/schemas/BrowserPluginApplication'
         - type: object
-      properties:
-        name:
-          type: string
-          default: template_swa
-        settings:
-          $ref: '#/components/schemas/SwaApplicationSettings'
+          properties:
+            name:
+              type: string
+              default: template_swa
+            settings:
+              $ref: '#/components/schemas/SwaApplicationSettings'
     SwaApplicationSettings:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettings'
         - type: object
-      properties:
-        app:
-          $ref: '#/components/schemas/SwaApplicationSettingsApplication'
+          properties:
+            app:
+              $ref: '#/components/schemas/SwaApplicationSettingsApplication'
     SwaApplicationSettingsApplication:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettingsApplication'
         - type: object
-      properties:
-        buttonField:
-          type: string
-        checkbox:
-          type: string
-        loginUrlRegex:
-          type: string
-        passwordField:
-          type: string
-        redirectUrl:
-          type: string
-        url:
-          type: string
-        usernameField:
-          type: string
+          properties:
+            buttonField:
+              type: string
+            checkbox:
+              type: string
+            loginUrlRegex:
+              type: string
+            passwordField:
+              type: string
+            redirectUrl:
+              type: string
+            url:
+              type: string
+            usernameField:
+              type: string
     SwaThreeFieldApplication:
       x-okta-defined-as:
         name: template_swa3field
       allOf:
         - $ref: '#/components/schemas/BrowserPluginApplication'
         - type: object
-      properties:
-        name:
-          type: string
-          default: template_swa3field
-        settings:
-          $ref: '#/components/schemas/SwaThreeFieldApplicationSettings'
+          properties:
+            name:
+              type: string
+              default: template_swa3field
+            settings:
+              $ref: '#/components/schemas/SwaThreeFieldApplicationSettings'
     SwaThreeFieldApplicationSettings:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettings'
         - type: object
-      properties:
-        app:
-          $ref: '#/components/schemas/SwaThreeFieldApplicationSettingsApplication'
+          properties:
+            app:
+              $ref: '#/components/schemas/SwaThreeFieldApplicationSettingsApplication'
     SwaThreeFieldApplicationSettingsApplication:
       allOf:
         - $ref: '#/components/schemas/ApplicationSettingsApplication'
         - type: object
-      properties:
-        buttonSelector:
-          type: string
-        extraFieldSelector:
-          type: string
-        extraFieldValue:
-          type: string
-        loginUrlRegex:
-          type: string
-        passwordSelector:
-          type: string
-        targetURL:
-          type: string
-        userNameSelector:
-          type: string
+          properties:
+            buttonSelector:
+              type: string
+            extraFieldSelector:
+              type: string
+            extraFieldValue:
+              type: string
+            loginUrlRegex:
+              type: string
+            passwordSelector:
+              type: string
+            targetURL:
+              type: string
+            userNameSelector:
+              type: string
     TempPassword:
       type: object
       properties:
@@ -14073,9 +14866,21 @@ components:
         scopes:
           type: array
           items:
-            $ref: '#/components/schemas/Scope'
+            $ref: '#/components/schemas/TrustedOriginScope'
         status:
           type: string
+    TrustedOriginScope:
+      type: object
+      properties:
+        stringValue:
+          type: string
+        type:
+          $ref: '#/components/schemas/TrustedOriginScopeType'
+    TrustedOriginScopeType:
+      type: string
+      enum:
+        - CORS
+        - REDIRECT
     U2fUserFactor:
       allOf:
         - $ref: '#/components/schemas/UserFactor'
@@ -14755,9 +15560,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
-      properties:
-        profile:
-          $ref: '#/components/schemas/WebAuthnUserFactorProfile'
+          properties:
+            profile:
+              $ref: '#/components/schemas/WebAuthnUserFactorProfile'
     WebAuthnUserFactorProfile:
       type: object
       properties:
@@ -14769,9 +15574,9 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
-      properties:
-        profile:
-          $ref: '#/components/schemas/WebUserFactorProfile'
+          properties:
+            profile:
+              $ref: '#/components/schemas/WebUserFactorProfile'
     WebUserFactorProfile:
       type: object
       properties:
@@ -14825,4 +15630,367 @@ components:
               type: boolean
             wReplyURL:
               type: string
-
+  examples:
+    CAPTCHAInstanceRequestHCaptcha:
+      value:
+        name: myHCaptcha
+        secretKey: xxxxxxxxxxx
+        siteKey: xxxxxxxxxxx
+        type: HCAPTCHA
+    CAPTCHAInstanceRequestReCaptcha:
+      value:
+        name: myReCaptcha
+        secretKey: xxxxxxxxxxx
+        siteKey: yyyyyyyyyyyyyyy
+        type: RECAPTCHA_V2
+    CAPTCHAInstanceResponseHCaptcha:
+      value:
+        id: abcd1234
+        name: myHCaptcha
+        siteKey: xxxxxxxxxxx
+        type: HCAPTCHA
+        _link:
+          self:
+            href: https://your-subdomain.okta.com/api/v1/captchas/abcd1234
+            hints:
+              allow:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+    CAPTCHAInstanceResponseReCaptcha:
+      value:
+        id: abcd4567
+        name: myReCaptcha
+        siteKey: yyyyyyyyyyyyyyy
+        type: RECAPTCHA_V2
+        _link:
+          self:
+            href: https://your-subdomain.okta.com/api/v1/captchas/abcd4567
+            hints:
+              allow:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+    CreateUpdateEmailCustomizationRequest:
+      value:
+        language: fr
+        subject: Bienvenue dans ${org.name}!
+        body: <!DOCTYPE html><html><body><p>Bonjour ${user.profile.firstName}. <a href="${activationLink}">Activer le compte</a></p></body></html>
+        isDefault: false
+    CreateUpdateEmailCustomizationResponse:
+      value:
+        language: fr
+        subject: Bienvenue dans ${org.name}!
+        body: <!DOCTYPE html><html><body><p>Bonjour ${user.profile.firstName}. <a href="${activationLink}">Activer le compte</a></p></body></html>
+        isDefault: false
+        id: oel11u6DqUiMbQkpl0g4
+        created: 2021-11-09T20:38:10.000Z
+        lastUpdated: 2021-11-11T20:38:10.000Z
+        _links:
+          self:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/customizations/oel11u6DqUiMbQkpl0g4
+            hints:
+              allow:
+                - GET
+                - PUT
+                - DELETE
+          template:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome
+            hints:
+              allow:
+                - GET
+          preview:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/customizations/oel11u6DqUiMbQkpl0g4/preview
+            hints:
+              allow:
+                - GET
+          test:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/test
+            hints:
+              allow:
+                - POST
+    EmailCustomizationResponse:
+      value:
+        language: en
+        isDefault: true
+        subject: Welcome to ${org.name}!
+        body: <!DOCTYPE html><html><body><p>Hello, ${user.profile.firstName}. Click <a href="${activationLink}">here</a> to activate your account.</body></html>
+        id: oel11u6DqUiMbQkpl0g4
+        created: 2021-11-09T20:38:10.000Z
+        lastUpdated: 2021-11-11T20:38:10.000Z
+        _links:
+          self:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/customizations/oel11u6DqUiMbQkpl0g4
+            hints:
+              allow:
+                - GET
+                - PUT
+                - DELETE
+          template:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome
+            hints:
+              allow:
+                - GET
+          preview:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/customizations/oel11u6DqUiMbQkpl0g4/preview
+            hints:
+              allow:
+                - GET
+          test:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/test
+            hints:
+              allow:
+                - POST
+    EmailTemplateDefaultContentResponse:
+      value:
+        subject: Welcome to ${org.name}!
+        body: <!DOCTYPE html><html><body><p>Hello, ${user.profile.firstName}. Click <a href="${activationLink}">here</a> to activate your account.</body></html>
+        _links:
+          self:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/default-content
+            hints:
+              allow:
+                - GET
+          template:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome
+            hints:
+              allow:
+                - GET
+          preview:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/default-content/preview
+            hints:
+              allow:
+                - GET
+    ErrorApiValidationFailed:
+      value:
+        errorCode: E0000001
+        errorSummary: 'Api validation failed: {0}'
+        errorLink: E0000001
+        errorId: sampleiCF-8D5rLW6myqiPItW
+        errorCauses: []
+    ErrorCAPTCHALimitOfOne:
+      value:
+        errorCode: E0000165
+        errorSummary: CAPTCHA count limit reached. At most one CAPTCHA instance is allowed per Org.
+        errorLink: E0000165
+        errorId: oaejrB1fWL1S7mc-2KcG-SOtw
+        errorCauses: []
+    ErrorCAPTCHAOrgWideSetting:
+      value:
+        errorCode: E0000149
+        errorSummary: Current CAPTCHA is associated with org-wide settings, cannot be removed.
+        errorLink: E0000149
+        errorId: samplezsusshPdiTWiITwqBt8
+        errorCauses: []
+    ErrorEmailCustomizationCannotClearDefault:
+      value:
+        errorCode: E0000185
+        errorSummary: The isDefault parameter of the default email template customization can't be set to false.
+        errorLink: E0000185
+        errorId: oaejrB1fWL1S7mc-2KcG-SOtw
+        errorCauses: []
+    ErrorEmailCustomizationCannotDeleteDefault:
+      value:
+        errorCode: E0000184
+        errorSummary: A default email template customization can't be deleted.
+        errorLink: E0000184
+        errorId: oaeAdRqprFuTyKokyYPbURJkA
+        errorCauses: []
+    ErrorEmailCustomizationDefaultAlreadyExists:
+      value:
+        errorCode: E0000182
+        errorSummary: A default email template customization already exists.
+        errorLink: E0000182
+        errorId: oaeXYwTiMvASsC3O4HCzjFaCA
+        errorCauses: []
+    ErrorEmailCustomizationLanguageAlreadyExists:
+      value:
+        errorCode: E0000183
+        errorSummary: An email template customization for that language already exists.
+        errorLink: E0000183
+        errorId: oaeUcGELffqRay0u1OPdnPypw
+        errorCauses: []
+    ErrorResourceNotFound:
+      value:
+        errorCode: E0000007
+        errorSummary: 'Not found: {0}'
+        errorLink: E0000007
+        errorId: sampleMlLvGUj_YD5v16vkYWY
+        errorCauses: []
+    GetEmailTemplateResponse:
+      value:
+        name: welcome
+        _links:
+          self:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome
+            hints:
+              allow:
+                - GET
+          defaultContent:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/default-content
+            hints:
+              allow:
+                - GET
+          customizations:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/customizations
+            hints:
+              allow:
+                - GET
+                - POST
+                - DELETE
+          test:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/test
+            hints:
+              allow:
+                - POST
+    ListEmailCustomizationResponse:
+      value:
+        - language: en
+          isDefault: true
+          subject: Welcome to ${org.name}!
+          body: <!DOCTYPE html><html><body><p>Hello, ${user.profile.firstName}. Click <a href="${activationLink}">here</a> to activate your account.</body></html>
+          id: oel11u6DqUiMbQkpl0g4
+          created: 2021-11-09T20:38:10.000Z
+          lastUpdated: 2021-11-11T20:38:10.000Z
+          _links:
+            self:
+              href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/customizations/oel11u6DqUiMbQkpl0g4
+              hints:
+                allow:
+                  - GET
+                  - PUT
+                  - DELETE
+            template:
+              href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome
+              hints:
+                allow:
+                  - GET
+            preview:
+              href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/customizations/oel11u6DqUiMbQkpl0g4/preview
+              hints:
+                allow:
+                  - GET
+            test:
+              href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/test
+              hints:
+                allow:
+                  - POST
+    ListEmailTemplateResponse:
+      value:
+        - name: welcome
+          _links:
+            self:
+              href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome
+              hints:
+                allow:
+                  - GET
+            defaultContent:
+              href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/default-content
+              hints:
+                allow:
+                  - GET
+            customizations:
+              href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/customizations
+              hints:
+                allow:
+                  - GET
+                  - POST
+                  - DELETE
+            test:
+              href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/test
+              hints:
+                allow:
+                  - POST
+    PreviewEmailCustomizationResponse:
+      value:
+        subject: Welcome to Okta!
+        body: <!DOCTYPE html><html><body><p>Hello, John. Click <a href="https://${yourOktaDomain}/...">here</a> to activate your account.</body></html>
+        _links:
+          self:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/customizations/oel2kk1zYJBJbeaGo0g4/preview
+            hints:
+              allow:
+                - GET
+          template:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome
+            hints:
+              allow:
+                - GET
+          test:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/test
+            hints:
+              allow:
+                - POST
+    PreviewEmailTemplateDefaultContentResponse:
+      value:
+        subject: Welcome to Okta!
+        body: <!DOCTYPE html><html><body><p>Hello, John. Click <a href="https://${yourOktaDomain}/...">here</a> to activate your account.</body></html>
+        _links:
+          self:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/default-content/preview
+            hints:
+              allow:
+                - GET
+          template:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome
+            hints:
+              allow:
+                - GET
+          defaultContent:
+            href: https://${yourOktaDomain}/api/v1/brands/${brandId}/templates/email/welcome/test/default-content
+            hints:
+              allow:
+                - POST
+  parameters:
+    pathBrandId:
+      name: brandId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the brand.
+    pathCaptchaId:
+      name: captchaId
+      in: path
+      schema:
+        type: string
+        example: abcd1234
+      required: true
+      description: id of the CAPTCHA
+    pathCustomizationId:
+      name: customizationId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the email customization.
+    pathTemplateName:
+      name: templateName
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The name of the email template.
+    queryAfter:
+      name: after
+      in: query
+      schema:
+        type: string
+      description: The cursor to use for pagination. It is an opaque string that specifies your current location in the list and is obtained from the `Link` response header. See [Pagination](https://developer.okta.com/docs/reference/core-okta-api/#pagination) for more information.
+    queryLanguage:
+      name: language
+      schema:
+        $ref: '#/components/schemas/Language'
+      in: query
+      description: The language to use for the email. Defaults to the current user's language if unspecified.
+    queryLimit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+        default: 20
+      description: A limit on the number of objects to return.

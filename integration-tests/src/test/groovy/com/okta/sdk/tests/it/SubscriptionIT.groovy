@@ -15,11 +15,11 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.role.RoleType
-import com.okta.sdk.resource.role.Subscription
-import com.okta.sdk.resource.role.SubscriptionStatus
+import com.okta.sdk.resource.group.RoleType
+import com.okta.sdk.resource.subscription.Subscription
+import com.okta.sdk.resource.subscription.SubscriptionStatus
 import com.okta.sdk.resource.subscription.NotificationType
-import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.group.User
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
@@ -37,7 +37,7 @@ class SubscriptionIT extends ITSupport {
 
     @Test
     void testListRoleSubscriptions() {
-        def subscriptionList = client.instantiate(Subscription).listRoleSubscriptions(RoleType.SUPER_ADMIN.toString())
+        def subscriptionList = client.listRoleSubscriptions(RoleType.SUPER_ADMIN.toString())
         assertThat subscriptionList, notNullValue()
         assertThat subscriptionList.collect(), hasSize(greaterThan(0))
         assertThat subscriptionList[0].getNotificationType(), notNullValue()
@@ -47,8 +47,8 @@ class SubscriptionIT extends ITSupport {
 
     @Test
     void testGetRoleSubscriptionByNotificationType() {
-        def subscription = client.instantiate(Subscription)
-            .getRoleSubscriptionByNotificationType(RoleType.SUPER_ADMIN.toString(), NotificationType.IWA_AGENT.toString())
+        def subscription = client.getRoleSubscriptionByNotificationType(
+            RoleType.SUPER_ADMIN.toString(), NotificationType.IWA_AGENT.toString())
         assertThat subscription, notNullValue()
         assertThat subscription.getNotificationType(), notNullValue()
         assertThat subscription.getChannels(), notNullValue()
@@ -57,10 +57,10 @@ class SubscriptionIT extends ITSupport {
 
     @Test
     void testSubscribeRoleSubscriptionByNotificationType() {
-        client.instantiate(Subscription)
-            .unsubscribeRoleSubscriptionByNotificationType(RoleType.SUPER_ADMIN.toString(), NotificationType.IWA_AGENT.toString())
+        client.unsubscribeRoleSubscriptionByNotificationType(
+            RoleType.SUPER_ADMIN.toString(), NotificationType.IWA_AGENT.toString())
 
-        def unsubscribed = client.instantiate(Subscription).listRoleSubscriptions(RoleType.SUPER_ADMIN.toString())
+        def unsubscribed = client.listRoleSubscriptions(RoleType.SUPER_ADMIN.toString())
             .stream()
             .filter(subscription -> subscription.getNotificationType() == NotificationType.IWA_AGENT)
             .findFirst()
@@ -69,10 +69,9 @@ class SubscriptionIT extends ITSupport {
 
         assertThat(unsubscribed, is(SubscriptionStatus.UNSUBSCRIBED))
 
-        client.instantiate(Subscription)
-            .subscribeRoleSubscriptionByNotificationType(RoleType.SUPER_ADMIN.toString(), NotificationType.IWA_AGENT.toString())
+        client.subscribeRoleSubscriptionByNotificationType(RoleType.SUPER_ADMIN.toString(), NotificationType.IWA_AGENT.toString())
 
-        def subscribed = client.instantiate(Subscription).listRoleSubscriptions(RoleType.SUPER_ADMIN.toString())
+        def subscribed = client.listRoleSubscriptions(RoleType.SUPER_ADMIN.toString())
             .stream()
             .filter(subscription -> subscription.getNotificationType() == NotificationType.IWA_AGENT)
             .findFirst()
@@ -85,7 +84,7 @@ class SubscriptionIT extends ITSupport {
     @Test
     void testListUserSubscriptions() {
         def currentUser = client.http().get("/api/v1/users/me", User.class)
-        def subscriptionList = client.instantiate(Subscription).listUserSubscriptions(currentUser.getId())
+        def subscriptionList = client.listUserSubscriptions(currentUser.getId())
         assertThat subscriptionList, notNullValue()
         assertThat subscriptionList.collect(), hasSize(greaterThan(0))
         assertThat subscriptionList[0].getNotificationType(), notNullValue()
@@ -96,8 +95,8 @@ class SubscriptionIT extends ITSupport {
     @Test
     void testGetUserSubscriptionByNotificationType() {
         def currentUser = client.http().get("/api/v1/users/me", User.class)
-        def subscription = client.instantiate(Subscription)
-            .getUserSubscriptionByNotificationType(currentUser.getId(), NotificationType.IWA_AGENT.toString())
+        def subscription = client.getUserSubscriptionByNotificationType(
+            currentUser.getId(), NotificationType.IWA_AGENT.toString())
         assertThat subscription, notNullValue()
         assertThat subscription.getNotificationType(), notNullValue()
         assertThat subscription.getChannels(), notNullValue()
@@ -107,10 +106,9 @@ class SubscriptionIT extends ITSupport {
     @Test
     void testSubscribeUserSubscriptionByNotificationType() {
         def currentUser = client.http().get("/api/v1/users/me", User.class)
-        client.instantiate(Subscription)
-            .unsubscribeUserSubscriptionByNotificationType(currentUser.getId(), NotificationType.IWA_AGENT.toString())
+        client.unsubscribeUserSubscriptionByNotificationType(currentUser.getId(), NotificationType.IWA_AGENT.toString())
 
-        def unsubscribed = client.instantiate(Subscription).listUserSubscriptions(currentUser.getId())
+        def unsubscribed = client.listUserSubscriptions(currentUser.getId())
             .stream()
             .filter(subscription -> subscription.getNotificationType() == NotificationType.IWA_AGENT)
             .findFirst()
@@ -119,10 +117,9 @@ class SubscriptionIT extends ITSupport {
 
         assertThat(unsubscribed, is(SubscriptionStatus.UNSUBSCRIBED))
 
-        client.instantiate(Subscription)
-            .subscribeUserSubscriptionByNotificationType(currentUser.getId(), NotificationType.IWA_AGENT.toString())
+        client.subscribeUserSubscriptionByNotificationType(currentUser.getId(), NotificationType.IWA_AGENT.toString())
 
-        def subscribed = client.instantiate(Subscription).listUserSubscriptions(currentUser.getId())
+        def subscribed = client.listUserSubscriptions(currentUser.getId())
             .stream()
             .filter(subscription -> subscription.getNotificationType() == NotificationType.IWA_AGENT)
             .findFirst()

@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.Deletable
+
 import com.okta.sdk.resource.template.SmsTemplateTranslations
 import com.okta.sdk.resource.template.SmsTemplate
 import com.okta.sdk.resource.template.SmsTemplateType

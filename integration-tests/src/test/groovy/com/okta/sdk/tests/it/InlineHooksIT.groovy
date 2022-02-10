@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.Deletable
+
 import com.okta.sdk.resource.InlineHookChannelConfigHeaders
 import com.okta.sdk.resource.inline.hook.*
 import com.okta.sdk.tests.it.util.ITSupport

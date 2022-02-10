@@ -16,7 +16,7 @@
 package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.Deletable
+
 import com.okta.sdk.resource.ExtensibleResource
 import com.okta.sdk.resource.OktaSignOnPolicy
 import com.okta.sdk.resource.PasswordPolicy

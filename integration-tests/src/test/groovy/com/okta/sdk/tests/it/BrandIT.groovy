@@ -20,7 +20,7 @@ import com.okta.sdk.resource.brand.BrandList
 import com.okta.sdk.resource.brand.EmailTemplateTouchPointVariant
 import com.okta.sdk.resource.brand.EndUserDashboardTouchPointVariant
 import com.okta.sdk.resource.brand.ErrorPageTouchPointVariant
-import com.okta.sdk.resource.brand.ImageUploadResponse
+import com.okta.sdk.resource.ImageUploadResponse
 import com.okta.sdk.resource.brand.SignInPageTouchPointVariant
 import com.okta.sdk.resource.brand.Theme
 import com.okta.sdk.resource.brand.ThemeResponse
@@ -53,17 +53,19 @@ class BrandIT extends ITSupport {
         brand.setAgreeToCustomPrivacyPolicy(true)
         brand.setCustomPrivacyPolicyUrl("https://custom-privacy-policy@example.com")
         brand.setRemovePoweredByOkta(!removePoweredByOkta)
-        brand.update()
+
+        client.updateBrand(brand, brand.getId())
+
         assertThat(brand.getCustomPrivacyPolicyUrl(), equalTo("https://custom-privacy-policy@example.com"))
         assertThat(brand.getRemovePoweredByOkta(), equalTo(!removePoweredByOkta))
 
         //restore previous values
-        if(!Strings.isNullOrEmpty(customPrivacyPolicyUrl)) {
+        if (!Strings.isNullOrEmpty(customPrivacyPolicyUrl)) {
             brand.setAgreeToCustomPrivacyPolicy(true)
         }
         brand.setCustomPrivacyPolicyUrl(customPrivacyPolicyUrl)
         brand.setRemovePoweredByOkta(removePoweredByOkta)
-        brand.update()
+        client.updateBrand(brand, brand.getId())
 
         assertThat(brand.getCustomPrivacyPolicyUrl(), equalTo(customPrivacyPolicyUrl))
         assertThat(brand.getRemovePoweredByOkta(), equalTo(removePoweredByOkta))
@@ -91,7 +93,7 @@ class BrandIT extends ITSupport {
             .setEndUserDashboardTouchPointVariant(EndUserDashboardTouchPointVariant.FULL_THEME)
             .setErrorPageTouchPointVariant(ErrorPageTouchPointVariant.BACKGROUND_IMAGE)
             .setEmailTemplateTouchPointVariant(EmailTemplateTouchPointVariant.FULL_THEME)
-        ThemeResponse updatedThemeResponse = themeToUpdate.update(brandId, themeId, themeToUpdate)
+        ThemeResponse updatedThemeResponse = client.updateBrandTheme(themeToUpdate, brandId, themeId)
 
         assertThat(updatedThemeResponse, notNullValue())
         assertThat(updatedThemeResponse.getPrimaryColorHex(), equalTo("#1662dd"))
@@ -109,10 +111,11 @@ class BrandIT extends ITSupport {
             .setEndUserDashboardTouchPointVariant(endUserDashboardTPV)
             .setErrorPageTouchPointVariant(errorPageTPV)
             .setEmailTemplateTouchPointVariant(emailTemplateTPV)
-        themeToRestore.update(brandId, themeId, themeToRestore)
+
+        client.updateBrandTheme(themeToRestore, brandId, themeId)
     }
 
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     @Scenario("brand-theme-logo")
     void brandThemeLogoTest() {
 
@@ -120,14 +123,14 @@ class BrandIT extends ITSupport {
         String themeId = getThemeId(brandId)
         File file = new File(pathToImage)
 
-        ImageUploadResponse resp = client.instantiate(Theme).uploadBrandThemeLogo(brandId, themeId, file)
+        ImageUploadResponse resp = client.uploadBrandThemeLogo(brandId, themeId, file)
         assertThat(resp, notNullValue())
         assertThat(resp.getUrl(), notNullValue())
 
-        client.instantiate(Theme).deleteBrandThemeLogo(brandId, themeId)
+        client.deleteBrandThemeLogo(brandId, themeId)
     }
 
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     @Scenario("brand-theme-background-image")
     void brandThemeBackgroundImageTest() {
 
@@ -135,14 +138,14 @@ class BrandIT extends ITSupport {
         String themeId = getThemeId(brandId)
         File file = new File(pathToImage)
 
-        ImageUploadResponse resp = client.instantiate(Theme).updateBrandThemeBackgroundImage(brandId, themeId, file)
+        ImageUploadResponse resp = client.uploadBrandThemeBackgroundImage(brandId, themeId, file)
         assertThat(resp, notNullValue())
         assertThat(resp.getUrl(), notNullValue())
 
-        client.instantiate(Theme).deleteBrandThemeBackgroundImage(brandId, themeId)
+        client.deleteBrandThemeBackgroundImage(brandId, themeId)
     }
 
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     @Scenario("brand-theme-favicon")
     void brandThemeFaviconTest() {
 
@@ -150,11 +153,11 @@ class BrandIT extends ITSupport {
         String themeId = getThemeId(brandId)
         File file = new File(pathToFavicon)
 
-        ImageUploadResponse resp = client.instantiate(Theme).updateBrandThemeFavicon(brandId, themeId, file)
+        ImageUploadResponse resp = client.uploadBrandThemeFavicon(brandId, themeId, file)
         assertThat(resp, notNullValue())
         assertThat(resp.getUrl(), notNullValue())
 
-        client.instantiate(Theme).deleteBrandThemeFavicon(brandId, themeId)
+        client.deleteBrandThemeFavicon(brandId, themeId)
     }
 
     /**

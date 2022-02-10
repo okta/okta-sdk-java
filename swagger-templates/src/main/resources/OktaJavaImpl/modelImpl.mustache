@@ -29,6 +29,7 @@ import com.okta.sdk.impl.resource.user.*;
 import com.okta.sdk.impl.resource.user.factor.*;
 import com.okta.sdk.impl.resource.brand.*;
 import com.okta.sdk.impl.resource.authorization.server.*;
+import com.okta.sdk.resource.brand.*;
 import com.okta.sdk.resource.c.ap.tc.ha.*;
 import com.okta.sdk.impl.resource.BooleanProperty;
 import com.okta.sdk.impl.resource.IntegerProperty;
@@ -42,6 +43,7 @@ import com.okta.sdk.impl.resource.DateProperty;
 import com.okta.sdk.impl.resource.EnumProperty;
 import com.okta.sdk.impl.resource.MapProperty;
 import com.okta.sdk.impl.resource.DefaultVoidResource;
+import com.okta.sdk.impl.resource.DefaultFileResource;
 import com.okta.sdk.resource.VoidResource;
 import com.okta.sdk.resource.Resource;
 {{#vendorExtensions.top-level}}
@@ -137,7 +139,12 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{>apiMethodPut}}
 {{/vendorExtensions.x-is-put-method}}
 {{#vendorExtensions.x-is-post-method}}
+{{#vendorExtensions.fileUpload}}
+{{>apiMethodPostFileResource}}
+{{/vendorExtensions.fileUpload}}
+{{^vendorExtensions.fileUpload}}
 {{>apiMethodPostResource}}
+{{/vendorExtensions.fileUpload}}
 {{/vendorExtensions.x-is-post-method}}
 {{#vendorExtensions.x-is-delete-method}}
 {{>apiMethodDelete}}

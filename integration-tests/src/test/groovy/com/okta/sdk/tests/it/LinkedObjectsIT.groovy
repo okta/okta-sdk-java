@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.Deletable
+
 import com.okta.sdk.resource.linked.object.LinkedObject
 import com.okta.sdk.resource.linked.object.LinkedObjectDetailsType
 import com.okta.sdk.resource.linked.object.LinkedObjectDetails

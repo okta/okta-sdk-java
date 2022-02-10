@@ -16,14 +16,14 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.application.Application
-import com.okta.sdk.resource.application.Org2OrgApplication
-import com.okta.sdk.resource.application.Org2OrgApplicationSettings
-import com.okta.sdk.resource.application.Org2OrgApplicationSettingsApp
-import com.okta.sdk.resource.application.ProvisioningConnection
+import com.okta.sdk.resource.Org2OrgApplication
+import com.okta.sdk.resource.Org2OrgApplicationSettings
+import com.okta.sdk.resource.Org2OrgApplicationSettingsApp
+import com.okta.sdk.resource.ProvisioningConnection
 import com.okta.sdk.resource.application.ProvisioningConnectionAuthScheme
 import com.okta.sdk.resource.application.ProvisioningConnectionProfile
 import com.okta.sdk.resource.application.ProvisioningConnectionRequest
-import com.okta.sdk.resource.application.ProvisioningConnectionStatus
+import com.okta.sdk.resource.ProvisioningConnectionStatus
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
@@ -48,15 +48,14 @@ class ProvisioningConnectionIT extends ITSupport {
                         .setBaseUrl("https://example.com/home.html")))
         )
         registerForCleanup(application)
-        application
+        return application
     }
 
     @Test
     void testGetDefaultProvisioningConnectionForApplication() {
         Application application = createApp()
 
-        ProvisioningConnection provisioningConnection = client.instantiate(ProvisioningConnection)
-            .getDefaultProvisioningConnectionForApplication(application.getId())
+        ProvisioningConnection provisioningConnection = client.getDefaultProvisioningConnectionForApplication(application.getId())
 
         assertThat provisioningConnection, notNullValue()
         assertThat provisioningConnection.getAuthScheme(), is(ProvisioningConnectionAuthScheme.TOKEN)
@@ -71,7 +70,7 @@ class ProvisioningConnectionIT extends ITSupport {
             .setAuthScheme(ProvisioningConnectionAuthScheme.TOKEN)
             .setToken("foo")
         def provisioningRequest = client.instantiate(ProvisioningConnectionRequest).setProfile(profile)
-        def provisioningConnection = profile.setDefaultProvisioningConnectionForApplication(application.getId(), provisioningRequest)
+        def provisioningConnection = client.setDefaultProvisioningConnectionForApplication(provisioningRequest, application.getId())
 
         assertThat provisioningConnection, notNullValue()
         assertThat provisioningConnection.getAuthScheme(), is(ProvisioningConnectionAuthScheme.TOKEN)

@@ -16,11 +16,23 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.Deletable
+import com.okta.sdk.resource.AccessPolicyRule
+import com.okta.sdk.resource.AccessPolicyRuleActions
+import com.okta.sdk.resource.AccessPolicyRuleApplicationSignOn
+import com.okta.sdk.resource.OAuthEndpointAuthenticationMethod
+import com.okta.sdk.resource.OAuthGrantType
+import com.okta.sdk.resource.OAuthResponseType
 import com.okta.sdk.resource.OktaSignOnPolicy
 import com.okta.sdk.resource.OktaSignOnPolicyRule
-import com.okta.sdk.resource.OktaSignOnPolicyRuleActions
-import com.okta.sdk.resource.authorization.server.OktaSignOnPolicyRuleSignonActions
+import com.okta.sdk.resource.OpenIdConnectApplicationType
+import com.okta.sdk.resource.ProfileEnrollmentPolicy
+import com.okta.sdk.resource.ProfileEnrollmentPolicyRuleActions
+import com.okta.sdk.resource.ProfileEnrollmentPolicyRuleActivationRequirement
+import com.okta.sdk.resource.ProfileEnrollmentPolicyRuleProfileAttribute
+import com.okta.sdk.resource.VerificationMethod
+import com.okta.sdk.resource.application.Application
+import com.okta.sdk.resource.application.ApplicationSignOnMode
+import com.okta.sdk.resource.application.OIDCApplicationBuilder
 import com.okta.sdk.resource.authorization.server.PolicyAccess
 import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection
 import com.okta.sdk.resource.authorization.server.PolicyType
@@ -29,6 +41,8 @@ import com.okta.sdk.resource.authorization.server.LifecycleStatus
 import com.okta.sdk.resource.common.PolicyList
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
+import com.okta.sdk.resource.policy.PolicyRule
+import com.okta.sdk.resource.policy.PolicyRuleList
 import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder
 import org.testng.annotations.Test
 
@@ -100,18 +114,18 @@ class SignOnPoliciesIT implements CrudTestSupport {
         Policy profileEnrollmentPolicy = client.createPolicy(client.instantiate(ProfileEnrollmentPolicy)
             .setName("policy+" + UUID.randomUUID().toString())
             .setType(PolicyType.PROFILE_ENROLLMENT)
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .setDescription("IT created Policy - createProfileEnrollmentPolicy"))
         registerForCleanup(profileEnrollmentPolicy)
 
         assertThat profileEnrollmentPolicy, notNullValue()
         assertThat profileEnrollmentPolicy.getName(), notNullValue()
         assertThat profileEnrollmentPolicy.getType(), is(PolicyType.PROFILE_ENROLLMENT)
-        assertThat profileEnrollmentPolicy.getStatus(), is(Policy.StatusEnum.ACTIVE)
+        assertThat profileEnrollmentPolicy.getStatus(), is(LifecycleStatus.ACTIVE)
     }
 
     // disable running them in bacon
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     void createAccessPolicyRule() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -119,19 +133,20 @@ class SignOnPoliciesIT implements CrudTestSupport {
         Application oidcApp = OIDCApplicationBuilder.instance()
             .setName(name)
             .setLabel(name)
-            .addRedirectUris("http://www.example.com")
-            .setPostLogoutRedirectUris(Collections.singletonList("http://www.example.com/logout"))
+            .addRedirectUris("https://www.example.com")
+            .setPostLogoutRedirectUris(Collections.singletonList("https://www.example.com/logout"))
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
             .setClientId(UUID.randomUUID().toString())
             .setClientSecret(UUID.randomUUID().toString())
+            .setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
             .setAutoKeyRotation(true)
             .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
             .setIOS(false)
             .setWeb(true)
-            .setLoginRedirectUrl("http://www.myapp.com")
-            .setErrorRedirectUrl("http://www.myapp.com/error")
+            .setLoginRedirectUrl("https://www.myapp.com")
+            .setErrorRedirectUrl("https://www.myapp.com/error")
             .buildAndCreate(client)
         registerForCleanup(oidcApp)
 
@@ -155,7 +170,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
                      .setFactorMode("1FA")
                      .setReauthenticateIn("PT43800H"))))
 
-        PolicyRule createdAccessPolicyRule = accessPolicy.createRule(accessPolicyRule)
+        PolicyRule createdAccessPolicyRule = client.createPolicyRule(accessPolicyRule, accessPolicyId)
         registerForCleanup(createdAccessPolicyRule)
 
         assertThat(createdAccessPolicyRule, notNullValue())
@@ -170,7 +185,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
     }
 
     // disable running them in bacon
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     void createProfileEnrollmentPolicyRule() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -178,13 +193,13 @@ class SignOnPoliciesIT implements CrudTestSupport {
         Policy profileEnrollmentPolicy = client.instantiate(Policy)
             .setName(name)
             .setType(PolicyType.PROFILE_ENROLLMENT)
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus(LifecycleStatus.ACTIVE)
             .setDescription("IT created Policy - createProfileEnrollmentPolicyRule")
 
         Policy createdProfileEnrollmentPolicy = client.createPolicy(profileEnrollmentPolicy)
         assertThat(createdProfileEnrollmentPolicy, notNullValue())
 
-        PolicyRuleList defaultPolicyRuleList = createdProfileEnrollmentPolicy.listPolicyRules()
+        PolicyRuleList defaultPolicyRuleList = client.listPolicyRules(createdProfileEnrollmentPolicy.getId())
         assertThat(defaultPolicyRuleList.size(), greaterThanOrEqualTo(1))
 
         PolicyRule defaultPolicyRule = defaultPolicyRuleList.first()
@@ -208,11 +223,14 @@ class SignOnPoliciesIT implements CrudTestSupport {
 
         defaultPolicyRule.setActions(profileEnrollmentPolicyRuleActions)
 
-        PolicyRule updatePolicyRule = defaultPolicyRule.update()
+        PolicyRule updatePolicyRule = client.updatePolicyRule(defaultPolicyRule, createdProfileEnrollmentPolicy.getId(), defaultPolicyRule.getId())
+
         assertThat(updatePolicyRule, notNullValue())
         assertThat(updatePolicyRule.getName(), is(defaultPolicyRule.getName()))
+
         ProfileEnrollmentPolicyRuleActions updateProfileEnrollmentPolicyRuleActions =
             updatePolicyRule.getActions() as ProfileEnrollmentPolicyRuleActions
+
         assertThat(updateProfileEnrollmentPolicyRuleActions, notNullValue())
         assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment(), notNullValue())
         assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getAccess(), is("ALLOW"))

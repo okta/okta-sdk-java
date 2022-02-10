@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.Deletable
+
 import com.okta.sdk.resource.NetworkZoneAddress
 import com.okta.sdk.resource.NetworkZoneAddressType
 import com.okta.sdk.resource.network.zone.*
