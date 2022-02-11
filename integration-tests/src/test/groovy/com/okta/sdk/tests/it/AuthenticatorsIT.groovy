@@ -77,13 +77,13 @@ class AuthenticatorsIT extends ITSupport {
 
         // deactivate okta verify authenticator
         Authenticator oktaVerifyAuthenticator = client.getAuthenticator(oktaVerifyAuthenticatorId)
-        Authenticator deactivatedOktaVerifyAuthenticator = oktaVerifyAuthenticator.deactivate()
+        Authenticator deactivatedOktaVerifyAuthenticator = client.deactivateAuthenticator(oktaVerifyAuthenticator.getId())
 
         // check authenticator status
         assertThat(deactivatedOktaVerifyAuthenticator.getStatus(), equalTo(AuthenticatorStatus.INACTIVE))
 
         // activate it back
-        Authenticator activatedOktaVerifyAuthenticator = deactivatedOktaVerifyAuthenticator.activate()
+        Authenticator activatedOktaVerifyAuthenticator = client.activateAuthenticator(deactivatedOktaVerifyAuthenticator.getId())
 
         // check authenticator status
         assertThat(activatedOktaVerifyAuthenticator.getStatus(), equalTo(AuthenticatorStatus.ACTIVE))

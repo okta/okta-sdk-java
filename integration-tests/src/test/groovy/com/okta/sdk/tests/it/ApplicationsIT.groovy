@@ -173,8 +173,8 @@ class ApplicationsIT extends ITSupport {
                                 .setWeb(false)))
                         .setSettings(client.instantiate(AutoLoginApplicationSettings)
                             .setSignOn(client.instantiate(AutoLoginApplicationSettingsSignOn)
-                                .setRedirectUrl("http://swasecondaryredirecturl.okta.com")
-                                .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
+                                .setRedirectUrl("https://swasecondaryredirecturl.okta.com")
+                                .setLoginUrl("https://swaprimaryloginurl.okta.com"))))
     }
 
     @Test (groups = "bacon")
@@ -533,7 +533,7 @@ class ApplicationsIT extends ITSupport {
         registerForCleanup(app)
         registerForCleanup(group)
 
-        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId())
+        ApplicationGroupAssignment groupAssignment = client.createApplicationGroupAssignment(null, app.getId(), group.getId())
         assertThat(groupAssignment, notNullValue())
     }
 
@@ -566,7 +566,7 @@ class ApplicationsIT extends ITSupport {
         ApplicationGroupAssignment aga = client.instantiate(ApplicationGroupAssignment)
                                             .setPriority(2)
 
-        ApplicationGroupAssignment groupAssignment = app.createApplicationGroupAssignment(group.getId())
+        ApplicationGroupAssignment groupAssignment = client.createApplicationGroupAssignment(aga, app.getId(), group.getId())
         assertThat(groupAssignment, notNullValue())
         assertThat(groupAssignment.priority, equalTo(2))
         assertThat(client.listApplicationGroupAssignments(app.getId()).iterator().size(), equalTo(1))
@@ -940,21 +940,23 @@ class ApplicationsIT extends ITSupport {
         assertThat(customPropertyMap["maxLength"], equalTo(20))
     }
 
-    @Test
-    /**
-     * Currently is no way to check the logo.
-     * Just make sure that no exception was thrown during the upload.
-     */
-    void testUploadApplicationLogo() {
-        Application application = create(client, client.instantiate(Org2OrgApplication)
-            .setSettings(client.instantiate(Org2OrgApplicationSettings)
-                .setApp(client.instantiate(Org2OrgApplicationSettingsApp)
-                    .setAcsUrl("https://example.com/acs.html")
-                    .setAudRestriction("https://example.com/login.html")
-                    .setBaseUrl("https://example.com/home.html")))
-        )
+    // see OKTA-469414
 
-        client.instantiate(Application.class)
-            .uploadApplicationLogo(application.getId(), new File("src/test/resources/okta_logo_favicon.png"))
-    }
+//    @Test
+//    /**
+//     * Currently is no way to check the logo.
+//     * Just make sure that no exception was thrown during the upload.
+//     */
+//    void testUploadApplicationLogo() {
+//        Application application = create(client, client.instantiate(Org2OrgApplication)
+//            .setSettings(client.instantiate(Org2OrgApplicationSettings)
+//                .setApp(client.instantiate(Org2OrgApplicationSettingsApp)
+//                    .setAcsUrl("https://example.com/acs.html")
+//                    .setAudRestriction("https://example.com/login.html")
+//                    .setBaseUrl("https://example.com/home.html")))
+//        )
+//
+//        client.instantiate(Application.class)
+//            .uploadApplicationLogo(application.getId(), new File("src/test/resources/okta_logo_favicon.png"))
+//    }
 }

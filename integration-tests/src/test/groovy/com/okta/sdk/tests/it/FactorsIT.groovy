@@ -221,14 +221,17 @@ class FactorsIT extends ITSupport {
         User user = randomUser()
 
         SecurityQuestionUserFactor securityQuestionUserFactor = client.instantiate(SecurityQuestionUserFactor)
+        securityQuestionUserFactor.setFactorType(FactorType.QUESTION)
         securityQuestionUserFactor.getProfile()
             .setQuestion("disliked_food")
             .setAnswer("pizza")
-        user.enrollFactor(securityQuestionUserFactor)
+        client.enrollFactor(securityQuestionUserFactor, user.getId())
 
         VerifyFactorRequest request = client.instantiate(VerifyFactorRequest).setAnswer("pizza")
-        VerifyUserFactorResponse response = securityQuestionUserFactor.setVerify(request).verify()
-        assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
+        VerifyUserFactorResponse response =
+            client.verifyFactor(user.getId(), securityQuestionUserFactor.getId(), request,
+                null, null, null, null, null)
+        assertThat response.getFactorResult(), is(VerifyUserFactorResult.SUCCESS)
     }
 
     @NonOIEEnvironmentOnly
@@ -283,18 +286,5 @@ class FactorsIT extends ITSupport {
         totpUserFactor.setFactorType(FactorType.TOKEN_SOFTWARE_TOTP)
         client.enrollFactor(totpUserFactor, user.getId())
         client.deleteFactor(user.getId(), totpUserFactor.getId())
-    }
-
-    void assertListFactors(User user) {
-        if(!isOIEEnvironment) {
-            assertThat user.listFactors(), emptyIterable()
-        } else {
-            assertThat user.listFactors(), hasItem(
-                allOf(
-                    instanceOf(EmailUserFactor),
-                    hasProperty("id", is(notNullValue()))
-                )
-            )
-        }
     }
 }

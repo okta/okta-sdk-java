@@ -16,27 +16,18 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.*
-import com.okta.sdk.resource.authorization.server.LifecycleStatus
-import com.okta.sdk.resource.authorization.server.OktaSignOnPolicyFactorPromptMode
-import com.okta.sdk.resource.authorization.server.PolicyAccess
-import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection
-import com.okta.sdk.resource.authorization.server.PolicyRuleAuthContextType
-import com.okta.sdk.resource.authorization.server.PolicyRuleType
+import com.okta.sdk.resource.OktaSignOnPolicy
+import com.okta.sdk.resource.OktaSignOnPolicyRule
+import com.okta.sdk.resource.PasswordPolicyRule
+import com.okta.sdk.resource.authorization.server.*
 import com.okta.sdk.resource.common.Policy
 import com.okta.sdk.resource.policy.rule.PasswordPolicyRuleBuilder
 import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder
-import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.hasSize
-import static org.hamcrest.Matchers.instanceOf
-import static org.hamcrest.Matchers.is
-import static org.hamcrest.Matchers.matchesPattern
-import static org.hamcrest.Matchers.notNullValue
-import static org.hamcrest.Matchers.nullValue
+import static org.hamcrest.Matchers.*
 
 class PolicyRulesIT extends ITSupport implements CrudTestSupport {
 
@@ -265,22 +256,22 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         def policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
-            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
+            .setAccess(PolicyAccess.ALLOW)
             .setRequireFactor(false)
-            .setStatus(PolicyRule.StatusEnum.INACTIVE)
+            .setStatus(LifecycleStatus.INACTIVE)
             .buildAndCreate(client, policy)
         registerForCleanup(policyRule)
 
         // policy rule is ACTIVE by default
-        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.ACTIVE))
+        assertThat(policyRule.getStatus(), is(LifecycleStatus.ACTIVE))
 
         // deactivate
-        policyRule.deactivate()
-        policyRule = policy.getPolicyRule(policyRule.getId())
-        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.INACTIVE))
+        client.deactivatePolicyRule(policy.getId(), policyRule.getId())
+        policyRule = client.getPolicyRule(policy.getId(), policyRule.getId())
+        assertThat(policyRule.getStatus(), is(LifecycleStatus.INACTIVE))
 
-        policyRule.activate()
-        policyRule = policy.getPolicyRule(policyRule.getId())
-        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.ACTIVE))
+        client.activatePolicyRule(policy.getId(), policyRule.getId())
+        policyRule = client.getPolicyRule(policy.getId(), policyRule.getId())
+        assertThat(policyRule.getStatus(), is(LifecycleStatus.ACTIVE))
     }
 }

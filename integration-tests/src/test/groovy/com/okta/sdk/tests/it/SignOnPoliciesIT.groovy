@@ -108,7 +108,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
     }
 
     // disable running them in bacon
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     void createProfileEnrollmentPolicy() {
 
         Policy profileEnrollmentPolicy = client.createPolicy(client.instantiate(ProfileEnrollmentPolicy)

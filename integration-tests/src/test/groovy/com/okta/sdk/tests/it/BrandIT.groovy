@@ -115,6 +115,7 @@ class BrandIT extends ITSupport {
         client.updateBrandTheme(themeToRestore, brandId, themeId)
     }
 
+    // disabled due to OKTA-469414
     @Test (groups = "bacon", enabled = false)
     @Scenario("brand-theme-logo")
     void brandThemeLogoTest() {
@@ -130,6 +131,7 @@ class BrandIT extends ITSupport {
         client.deleteBrandThemeLogo(brandId, themeId)
     }
 
+    // disabled due to OKTA-469414
     @Test (groups = "bacon", enabled = false)
     @Scenario("brand-theme-background-image")
     void brandThemeBackgroundImageTest() {
@@ -145,6 +147,7 @@ class BrandIT extends ITSupport {
         client.deleteBrandThemeBackgroundImage(brandId, themeId)
     }
 
+    // disabled due to OKTA-469414
     @Test (groups = "bacon", enabled = false)
     @Scenario("brand-theme-favicon")
     void brandThemeFaviconTest() {
