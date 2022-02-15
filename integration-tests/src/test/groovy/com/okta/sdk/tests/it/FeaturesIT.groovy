@@ -15,13 +15,14 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.feature.Feature
-import com.okta.sdk.resource.feature.FeatureList
+import com.okta.sdk.resource.Feature
+import com.okta.sdk.resource.FeatureList
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+
 /**
  * Tests for {@code /api/v1/features}.
  * @since 2.0.0
@@ -30,6 +31,7 @@ class FeaturesIT extends ITSupport {
 
     @Test (groups = "group2")
     void featureOperationsTest() {
+
         // list features
         FeatureList featureList = client.listFeatures()
         assertThat(featureList, iterableWithSize(greaterThan(0)))

@@ -20,14 +20,14 @@ import com.okta.sdk.client.Client
 import com.okta.sdk.resource.ExtensibleResource
 import com.okta.sdk.resource.OktaSignOnPolicy
 import com.okta.sdk.resource.PasswordPolicy
-import com.okta.sdk.resource.authorization.server.LifecycleStatus
-import com.okta.sdk.resource.authorization.server.PolicyType
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.group.User
-import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
-import com.okta.sdk.resource.policy.PasswordPolicyBuilder
-import com.okta.sdk.resource.user.UserBuilder
+import com.okta.sdk.resource.LifecycleStatus
+import com.okta.sdk.resource.PolicyType
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.builder.GroupBuilder
+import com.okta.sdk.resource.User
+import com.okta.sdk.resource.builder.OktaSignOnPolicyBuilder
+import com.okta.sdk.resource.builder.PasswordPolicyBuilder
+import com.okta.sdk.resource.builder.UserBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
 import com.okta.sdk.tests.Scenario
 import org.slf4j.Logger
@@ -101,13 +101,13 @@ abstract class ITSupport implements ClientProvider {
         if (testDelay == null) {
             try {
                 testDelay = Long.valueOf(System.getenv().getOrDefault("OKTA_IT_OPERATION_DELAY", "0"))
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
                 log.error("Could not parse env variable OKTA_IT_OPERATION_DELAY. Will default to 0!")
                 return 0
             }
         }
 
-        return testDelay == null ? 0 : testDelay;
+        return testDelay == null ? 0 : testDelay
     }
 
     User randomUser() {

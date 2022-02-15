@@ -15,15 +15,15 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.brand.Brand
-import com.okta.sdk.resource.brand.BrandList
-import com.okta.sdk.resource.brand.EmailTemplateTouchPointVariant
-import com.okta.sdk.resource.brand.EndUserDashboardTouchPointVariant
-import com.okta.sdk.resource.brand.ErrorPageTouchPointVariant
+import com.okta.sdk.resource.Brand
+import com.okta.sdk.resource.BrandList
+import com.okta.sdk.resource.EmailTemplateTouchPointVariant
+import com.okta.sdk.resource.EndUserDashboardTouchPointVariant
+import com.okta.sdk.resource.ErrorPageTouchPointVariant
 import com.okta.sdk.resource.ImageUploadResponse
-import com.okta.sdk.resource.brand.SignInPageTouchPointVariant
-import com.okta.sdk.resource.brand.Theme
-import com.okta.sdk.resource.brand.ThemeResponse
+import com.okta.sdk.resource.SignInPageTouchPointVariant
+import com.okta.sdk.resource.Theme
+import com.okta.sdk.resource.ThemeResponse
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test

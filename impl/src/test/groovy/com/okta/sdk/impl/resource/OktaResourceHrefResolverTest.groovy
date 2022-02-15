@@ -15,11 +15,11 @@
  */
 package com.okta.sdk.impl.resource
 
-import com.okta.sdk.resource.application.AppUser
-import com.okta.sdk.resource.application.Application
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupRule
-import com.okta.sdk.resource.group.User
+import com.okta.sdk.resource.AppUser
+import com.okta.sdk.resource.Application
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.GroupRule
+import com.okta.sdk.resource.User
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
@@ -27,8 +27,6 @@ import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.nullValue
 
 class OktaResourceHrefResolverTest {
-
-    final static String BASE_URL = "https://okta.example.com"
 
     @Test
     void missingHrefReturnsNullTest() {

@@ -151,13 +151,17 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     public CodegenModel fromModel(String name, Schema schema, Map<String, Schema> allSchemas) {
         CodegenModel codegenModel = super.fromModel(name, schema, allSchemas);
 
-        if (codegenModel.classname.equals("CAPTCHAInstance")) {
-            addToModelTagMap("CAPTCHAInstanceLink", "c.ap.tc.ha");
-        } else if (codegenModel.classname.equals("HrefObject")) {
-            addToModelTagMap("HrefObjectHints", "c.ap.tc.ha");
-        } else {
-            codegenModel.imports.add(toModelName(codegenModel.classname)); // The 'Default' gets added in the template
-        }
+        //TODO: AK
+//        if (codegenModel.classname.equals("CAPTCHAInstance")) {
+//            addToModelTagMap("CAPTCHAInstanceLink", "c.ap.tc.ha");
+//        } else if (codegenModel.classname.equals("HrefObject")) {
+//            addToModelTagMap("HrefObjectHints", "c.ap.tc.ha");
+//        } else {
+//            codegenModel.imports.add(toModelName(codegenModel.classname)); // The 'Default' gets added in the template
+//        }
+
+        //TODO: AK
+        codegenModel.imports.clear();
 
         Map<String, String> defaultValuesMap = new LinkedHashMap<>();
 

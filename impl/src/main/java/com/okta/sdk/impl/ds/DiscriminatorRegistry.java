@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * A DiscriminatorRegistry allows for the resolution of a specific type, based on the data of the object.
- * For example, the Factors API return a collection of {@link com.okta.sdk.resource.user.factor.UserFactor UserFactor} objects,
+ * For example, the Factors API return a collection of {@link com.okta.sdk.resource.UserFactor UserFactor} objects,
  * The actual type is dependent on a property of the data map 'factorType'.
  *
  * @since 0.8.0

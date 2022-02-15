@@ -15,10 +15,12 @@
  */
 package com.okta.sdk.tests.it
 
-
+import com.okta.sdk.resource.NetworkZone
 import com.okta.sdk.resource.NetworkZoneAddress
 import com.okta.sdk.resource.NetworkZoneAddressType
-import com.okta.sdk.resource.network.zone.*
+import com.okta.sdk.resource.NetworkZoneStatus
+import com.okta.sdk.resource.NetworkZoneType
+import com.okta.sdk.resource.NetworkZoneUsage
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 

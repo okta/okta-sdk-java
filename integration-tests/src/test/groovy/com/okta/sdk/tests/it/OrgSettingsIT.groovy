@@ -15,13 +15,13 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.org.setting.OrgContactType
-import com.okta.sdk.resource.org.setting.OrgContactTypeObj
-import com.okta.sdk.resource.org.setting.OrgContactUser
+import com.okta.sdk.resource.OrgContactType
+import com.okta.sdk.resource.OrgContactTypeObj
+import com.okta.sdk.resource.OrgContactUser
 import com.okta.sdk.resource.OrgOktaSupportSetting
-import com.okta.sdk.resource.org.setting.OrgSetting
-import com.okta.sdk.resource.group.User
-import com.okta.sdk.resource.user.UserBuilder
+import com.okta.sdk.resource.OrgSetting
+import com.okta.sdk.resource.User
+import com.okta.sdk.resource.builder.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test

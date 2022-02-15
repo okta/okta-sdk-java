@@ -30,20 +30,20 @@ import com.okta.sdk.resource.ProfileEnrollmentPolicyRuleActions
 import com.okta.sdk.resource.ProfileEnrollmentPolicyRuleActivationRequirement
 import com.okta.sdk.resource.ProfileEnrollmentPolicyRuleProfileAttribute
 import com.okta.sdk.resource.VerificationMethod
-import com.okta.sdk.resource.application.Application
-import com.okta.sdk.resource.application.ApplicationSignOnMode
-import com.okta.sdk.resource.application.OIDCApplicationBuilder
-import com.okta.sdk.resource.authorization.server.PolicyAccess
-import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection
-import com.okta.sdk.resource.authorization.server.PolicyType
-import com.okta.sdk.resource.common.Policy
-import com.okta.sdk.resource.authorization.server.LifecycleStatus
-import com.okta.sdk.resource.common.PolicyList
-import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
-import com.okta.sdk.resource.policy.PolicyRule
-import com.okta.sdk.resource.policy.PolicyRuleList
-import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder
+import com.okta.sdk.resource.Application
+import com.okta.sdk.resource.ApplicationSignOnMode
+import com.okta.sdk.resource.builder.OIDCApplicationBuilder
+import com.okta.sdk.resource.PolicyAccess
+import com.okta.sdk.resource.PolicyNetworkConnection
+import com.okta.sdk.resource.PolicyType
+import com.okta.sdk.resource.Policy
+import com.okta.sdk.resource.LifecycleStatus
+import com.okta.sdk.resource.PolicyList
+import com.okta.sdk.resource.builder.GroupBuilder
+import com.okta.sdk.resource.builder.OktaSignOnPolicyBuilder
+import com.okta.sdk.resource.PolicyRule
+import com.okta.sdk.resource.PolicyRuleList
+import com.okta.sdk.resource.builder.SignOnPolicyRuleBuilder
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat

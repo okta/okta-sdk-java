@@ -15,14 +15,14 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.application.Application
+import com.okta.sdk.resource.Application
 import com.okta.sdk.resource.Org2OrgApplication
 import com.okta.sdk.resource.Org2OrgApplicationSettings
 import com.okta.sdk.resource.Org2OrgApplicationSettingsApp
 import com.okta.sdk.resource.ProvisioningConnection
-import com.okta.sdk.resource.application.ProvisioningConnectionAuthScheme
-import com.okta.sdk.resource.application.ProvisioningConnectionProfile
-import com.okta.sdk.resource.application.ProvisioningConnectionRequest
+import com.okta.sdk.resource.ProvisioningConnectionAuthScheme
+import com.okta.sdk.resource.ProvisioningConnectionProfile
+import com.okta.sdk.resource.ProvisioningConnectionRequest
 import com.okta.sdk.resource.ProvisioningConnectionStatus
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test

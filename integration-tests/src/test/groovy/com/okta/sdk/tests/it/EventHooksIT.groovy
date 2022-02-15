@@ -16,11 +16,11 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.authorization.server.LifecycleStatus
-import com.okta.sdk.resource.event.hook.EventHook
-import com.okta.sdk.resource.event.hook.EventHookBuilder
-import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthScheme
-import com.okta.sdk.resource.event.hook.EventHookChannelConfigAuthSchemeType
+import com.okta.sdk.resource.LifecycleStatus
+import com.okta.sdk.resource.EventHook
+import com.okta.sdk.resource.builder.EventHookBuilder
+import com.okta.sdk.resource.EventHookChannelConfigAuthScheme
+import com.okta.sdk.resource.EventHookChannelConfigAuthSchemeType
 
 import com.okta.sdk.tests.it.util.ITSupport
 

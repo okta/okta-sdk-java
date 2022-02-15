@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.sdk.impl.ds.InternalDataStore;
-import com.okta.sdk.resource.group.User;
+import com.okta.sdk.resource.User;
 
 import java.util.Map;
 

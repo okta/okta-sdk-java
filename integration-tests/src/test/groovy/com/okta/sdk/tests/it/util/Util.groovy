@@ -18,11 +18,11 @@ package com.okta.sdk.tests.it.util
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.CollectionResource
 import com.okta.sdk.resource.Resource
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupList
-import com.okta.sdk.resource.group.Role
-import com.okta.sdk.resource.group.RoleList
-import com.okta.sdk.resource.group.User
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.GroupList
+import com.okta.sdk.resource.Role
+import com.okta.sdk.resource.RoleList
+import com.okta.sdk.resource.User
 import org.testng.Assert
 
 import java.util.stream.Collectors

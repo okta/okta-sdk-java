@@ -16,9 +16,18 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.*
-import com.okta.sdk.resource.common.*
-import com.okta.sdk.resource.application.*
+import com.okta.sdk.resource.Application
+import com.okta.sdk.resource.ApplicationSignOnMode
+import com.okta.sdk.resource.JsonWebKey
+import com.okta.sdk.resource.OAuthEndpointAuthenticationMethod
+import com.okta.sdk.resource.OAuthGrantType
+import com.okta.sdk.resource.OAuthResponseType
+import com.okta.sdk.resource.OpenIdConnectApplication
+import com.okta.sdk.resource.OpenIdConnectApplicationSettings
+import com.okta.sdk.resource.OpenIdConnectApplicationSettingsClient
+import com.okta.sdk.resource.OpenIdConnectApplicationSettingsClientKeys
+import com.okta.sdk.resource.OpenIdConnectApplicationType
+import com.okta.sdk.resource.builder.OIDCApplicationBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 

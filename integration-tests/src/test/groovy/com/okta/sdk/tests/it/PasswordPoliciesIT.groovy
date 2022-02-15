@@ -16,13 +16,13 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.authorization.server.LifecycleStatus
+import com.okta.sdk.resource.LifecycleStatus
 import com.okta.sdk.resource.PasswordPolicy
-import com.okta.sdk.resource.authorization.server.PasswordPolicyAuthenticationProviderType
-import com.okta.sdk.resource.authorization.server.PolicyType
-import com.okta.sdk.resource.common.Policy
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.policy.PasswordPolicyBuilder
+import com.okta.sdk.resource.PasswordPolicyAuthenticationProviderType
+import com.okta.sdk.resource.PolicyType
+import com.okta.sdk.resource.Policy
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.builder.PasswordPolicyBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 
 import static org.hamcrest.MatcherAssert.assertThat

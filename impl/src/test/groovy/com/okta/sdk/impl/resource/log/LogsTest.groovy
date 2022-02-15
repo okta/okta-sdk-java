@@ -17,8 +17,7 @@ package com.okta.sdk.impl.resource.log
 
 import com.okta.commons.http.Request
 import com.okta.sdk.impl.client.MockClient
-import com.okta.sdk.resource.system.log.*
-import com.okta.sdk.resource.LogIpAddress
+import com.okta.sdk.resource.*
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import org.testng.annotations.BeforeMethod

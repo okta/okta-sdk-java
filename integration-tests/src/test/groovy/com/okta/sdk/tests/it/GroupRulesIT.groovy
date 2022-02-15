@@ -17,17 +17,17 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
 
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.group.GroupRule
-import com.okta.sdk.resource.group.GroupRuleAction
-import com.okta.sdk.resource.group.GroupRuleBuilder
-import com.okta.sdk.resource.group.GroupRuleConditions
-import com.okta.sdk.resource.group.GroupRuleExpression
-import com.okta.sdk.resource.group.GroupRuleGroupAssignment
-import com.okta.sdk.resource.group.GroupRuleStatus
-import com.okta.sdk.resource.group.User
-import com.okta.sdk.resource.user.UserBuilder
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.builder.GroupBuilder
+import com.okta.sdk.resource.GroupRule
+import com.okta.sdk.resource.GroupRuleAction
+import com.okta.sdk.resource.builder.GroupRuleBuilder
+import com.okta.sdk.resource.GroupRuleConditions
+import com.okta.sdk.resource.GroupRuleExpression
+import com.okta.sdk.resource.GroupRuleGroupAssignment
+import com.okta.sdk.resource.GroupRuleStatus
+import com.okta.sdk.resource.User
+import com.okta.sdk.resource.builder.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.testng.annotations.Test

@@ -16,17 +16,18 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.application.Application
-import com.okta.sdk.resource.authorization.server.AuthorizationServer
-import com.okta.sdk.resource.common.Policy
-import com.okta.sdk.resource.event.hook.EventHook
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupRule
-import com.okta.sdk.resource.group.User
-import com.okta.sdk.resource.identity.provider.IdentityProvider
-import com.okta.sdk.resource.inline.hook.InlineHook
-import com.okta.sdk.resource.policy.PolicyRule
+import com.okta.sdk.resource.Application
+import com.okta.sdk.resource.AuthorizationServer
+import com.okta.sdk.resource.Policy
+import com.okta.sdk.resource.EventHook
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.GroupRule
+import com.okta.sdk.resource.User
+import com.okta.sdk.resource.IdentityProvider
+import com.okta.sdk.resource.InlineHook
+import com.okta.sdk.resource.PolicyRule
 import com.okta.sdk.tests.it.util.ClientProvider
 import org.testng.Assert
 import org.testng.annotations.Test
@@ -70,7 +71,7 @@ trait CrudTestSupport implements ClientProvider {
 
         // Create a resource
         def resource = create(client)
-        registerForCleanup(resource)
+        registerForCleanup(resource as Resource)
 
         // search the resource collection looking for the new resource
         Optional optional = getResourceListStream(client)
@@ -101,7 +102,6 @@ trait CrudTestSupport implements ClientProvider {
     void delete(Client client, def resource) {
 
         if (resource._links != null && resource._links.get("deactivate") != null) {
-            //client.http().post(resource._links.get("deactivate").get("href"))
             if (resource instanceof Application)
                 client.deactivateApplication(resource.getId())
             if (resource instanceof User)
@@ -116,11 +116,8 @@ trait CrudTestSupport implements ClientProvider {
                 client.deactivateInlineHook(resource.getId())
             if (resource instanceof IdentityProvider)
                 client.deactivateIdentityProvider(resource.getId())
-//            if (resource instanceof Policy)
-//                client.deactivatePolicy(resource.getId())
         }
 
-        //client.delete(resource._links.get("delete").get("href"), resource)
         if (resource instanceof Application)
             client.deleteApplication(resource.getId())
         if (resource instanceof Group)

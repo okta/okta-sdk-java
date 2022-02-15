@@ -18,22 +18,22 @@ package com.okta.sdk.tests.it
 import com.google.common.collect.Lists
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.group.User
-import com.okta.sdk.resource.user.factor.ActivateFactorRequest
+import com.okta.sdk.resource.User
+import com.okta.sdk.resource.ActivateFactorRequest
 import com.okta.sdk.resource.CallUserFactor
 import com.okta.sdk.resource.EmailUserFactor
-import com.okta.sdk.resource.user.factor.FactorProvider
-import com.okta.sdk.resource.user.factor.FactorStatus
-import com.okta.sdk.resource.user.factor.FactorType
+import com.okta.sdk.resource.FactorProvider
+import com.okta.sdk.resource.FactorStatus
+import com.okta.sdk.resource.FactorType
 import com.okta.sdk.resource.PushUserFactor
 import com.okta.sdk.resource.SecurityQuestionUserFactor
-import com.okta.sdk.resource.user.factor.SecurityQuestionList
+import com.okta.sdk.resource.SecurityQuestionList
 import com.okta.sdk.resource.SmsUserFactor
 import com.okta.sdk.resource.TokenUserFactor
 import com.okta.sdk.resource.TotpUserFactor
-import com.okta.sdk.resource.user.factor.UserFactor
-import com.okta.sdk.resource.user.factor.UserFactorList
-import com.okta.sdk.resource.user.factor.VerifyFactorRequest
+import com.okta.sdk.resource.UserFactor
+import com.okta.sdk.resource.UserFactorList
+import com.okta.sdk.resource.VerifyFactorRequest
 import com.okta.sdk.resource.VerifyUserFactorResponse
 import com.okta.sdk.resource.VerifyUserFactorResult
 

@@ -16,9 +16,8 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.authorization.server.LifecycleStatus
-import com.okta.sdk.resource.common.Policy
-import com.okta.sdk.resource.authorization.server.PolicyType
+import com.okta.sdk.impl.resource.builder.DefaultPolicyBuilder
+import com.okta.sdk.resource.*
 import org.testng.annotations.Test
 
 import static com.okta.sdk.impl.Util.expect

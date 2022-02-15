@@ -16,9 +16,10 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.authorization.server.LifecycleStatus
-import com.okta.sdk.resource.common.Policy
-import com.okta.sdk.resource.policy.PolicyRule
+import com.okta.sdk.impl.resource.builder.DefaultPolicyRuleBuilder
+import com.okta.sdk.resource.LifecycleStatus
+import com.okta.sdk.resource.Policy
+import com.okta.sdk.resource.PolicyRule
 import org.testng.annotations.Test
 
 import static org.mockito.Mockito.*

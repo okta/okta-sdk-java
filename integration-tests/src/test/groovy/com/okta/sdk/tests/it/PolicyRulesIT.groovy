@@ -16,13 +16,18 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
+import com.okta.sdk.resource.LifecycleStatus
 import com.okta.sdk.resource.OktaSignOnPolicy
+import com.okta.sdk.resource.OktaSignOnPolicyFactorPromptMode
 import com.okta.sdk.resource.OktaSignOnPolicyRule
 import com.okta.sdk.resource.PasswordPolicyRule
-import com.okta.sdk.resource.authorization.server.*
-import com.okta.sdk.resource.common.Policy
-import com.okta.sdk.resource.policy.rule.PasswordPolicyRuleBuilder
-import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder
+import com.okta.sdk.resource.Policy
+import com.okta.sdk.resource.PolicyAccess
+import com.okta.sdk.resource.PolicyNetworkConnection
+import com.okta.sdk.resource.PolicyRuleAuthContextType
+import com.okta.sdk.resource.PolicyRuleType
+import com.okta.sdk.resource.builder.PasswordPolicyRuleBuilder
+import com.okta.sdk.resource.builder.SignOnPolicyRuleBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 

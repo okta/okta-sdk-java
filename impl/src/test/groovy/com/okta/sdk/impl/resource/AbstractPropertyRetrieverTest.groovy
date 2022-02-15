@@ -16,7 +16,7 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.impl.ds.InternalDataStore
-import com.okta.sdk.resource.application.ApplicationSignOnMode
+import com.okta.sdk.resource.ApplicationSignOnMode
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 

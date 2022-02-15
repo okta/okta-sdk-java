@@ -27,9 +27,9 @@ import com.okta.sdk.impl.cache.DisabledCacheManager
 import com.okta.sdk.impl.client.DefaultClient
 import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.ds.InternalDataStore
-import com.okta.sdk.impl.resource.feature.DefaultFeature
+import com.okta.sdk.impl.resource.DefaultFeature
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver
-import com.okta.sdk.resource.feature.Feature
+import com.okta.sdk.resource.Feature
 import org.testng.annotations.Test
 
 import static org.mockito.ArgumentMatchers.*

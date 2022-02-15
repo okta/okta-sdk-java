@@ -15,9 +15,9 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.authenticator.Authenticator
-import com.okta.sdk.resource.authenticator.AuthenticatorList
-import com.okta.sdk.resource.authenticator.AuthenticatorStatus
+import com.okta.sdk.resource.Authenticator
+import com.okta.sdk.resource.AuthenticatorList
+import com.okta.sdk.resource.AuthenticatorStatus
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 

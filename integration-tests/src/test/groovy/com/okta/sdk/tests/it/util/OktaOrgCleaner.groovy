@@ -17,9 +17,10 @@ package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
-import com.okta.sdk.resource.authorization.server.PolicyType
-import com.okta.sdk.resource.group.GroupRule
-import com.okta.sdk.resource.group.UserStatus
+import com.okta.sdk.resource.PolicyType
+import com.okta.sdk.resource.GroupRule
+import com.okta.sdk.resource.UserStatus
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

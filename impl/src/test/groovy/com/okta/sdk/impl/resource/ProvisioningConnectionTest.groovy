@@ -27,15 +27,11 @@ import com.okta.sdk.impl.cache.DisabledCacheManager
 import com.okta.sdk.impl.client.DefaultClient
 import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.ds.InternalDataStore
-import com.okta.sdk.impl.resource.application.DefaultApplication
-import com.okta.sdk.impl.resource.application.DefaultProvisioningConnectionProfile
-import com.okta.sdk.impl.resource.application.DefaultProvisioningConnectionRequest
+import com.okta.sdk.impl.resource.DefaultApplication
+import com.okta.sdk.impl.resource.DefaultProvisioningConnectionProfile
+import com.okta.sdk.impl.resource.DefaultProvisioningConnectionRequest
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver
-import com.okta.sdk.resource.ProvisioningConnection
-import com.okta.sdk.resource.ProvisioningConnectionStatus
-import com.okta.sdk.resource.VoidResource
-import com.okta.sdk.resource.application.ProvisioningConnectionAuthScheme
-import com.okta.sdk.resource.application.ProvisioningConnectionProfile
+import com.okta.sdk.resource.*
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
@@ -43,7 +39,6 @@ import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
-
 /**
  * Unit tests of
  * @see ProvisioningConnection

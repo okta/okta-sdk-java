@@ -177,22 +177,30 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
                     List<String> oktaTags = (List<String>) openAPI.getComponents().getSchemas().get(resourceName).getExtensions().get("x-okta-tags");
                     if (oktaTags != null) {
-                        if (resourceName.equals("HrefObject")) { // Hardcode a few cleanups for now
-                            oktaTags.clear();
-                            oktaTags.add("Common");
-                        } else if (oktaTags.size() > 2) { // too commonly shared, just assume common
-                            oktaTags.clear();
-                            oktaTags.add("Common");
-                        } else if (oktaTags.size() == 2) { // have some take precedence
-                            if (oktaTags.contains("Policy")) {
-                                oktaTags.clear();
-                                oktaTags.add("Policy");
-                            } else if (oktaTags.contains("Application")) {
-                                oktaTags.clear();
-                                oktaTags.add("Application");
-                            }
-                        }
+                        oktaTags.clear();
                     }
+                    //TODO: AK
+//                    if (oktaTags != null) {
+//                        if (resourceName.startsWith("User") && oktaTags.size() == 2) {
+//                            oktaTags.clear();
+//                            oktaTags.add("User");
+//                        }
+//                        if (resourceName.equals("HrefObject")) { // Hardcode a few cleanups for now
+//                            oktaTags.clear();
+//                            oktaTags.add("Common");
+//                        } else if (oktaTags.size() > 2) { // too commonly shared, just assume common
+//                            oktaTags.clear();
+//                            oktaTags.add("Common");
+//                        } else if (oktaTags.size() == 2) { // have some take precedence
+//                            if (oktaTags.contains("Policy")) {
+//                                oktaTags.clear();
+//                                oktaTags.add("Policy");
+//                            } else if (oktaTags.contains("Application")) {
+//                                oktaTags.clear();
+//                                oktaTags.add("Application");
+//                            }
+//                        }
+//                    }
                 });
 
         this.topLevelResources = resources;
@@ -341,9 +349,11 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                     // if tags is NOT null, then assume it is an array
                     if (tags instanceof List) {
                         if (!((List) tags).isEmpty()) {
-                            String packageName = tagToPackageName(((List) tags).get(0).toString());
-                            addToModelTagMap(key, packageName);
-                            definition.getExtensions().put("x-okta-package", packageName);
+//                            String packageName = tagToPackageName(((List) tags).get(0).toString());
+                            addToModelTagMap(key, "");
+                            //TODO: AK
+//                            addToModelTagMap(key, packageName);
+//                            definition.getExtensions().put("x-okta-package", packageName);
                         }
                     } else {
                         throw new RuntimeException("Model: " + key + " contains 'x-okta-tags' that is NOT a List.");
@@ -666,22 +676,23 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         if (model.getExtensions() !=null && model.getExtensions().containsKey("x-baseType")) {
             String baseType = (String) model.getExtensions().get("x-baseType");
             codegenModel.vendorExtensions.put("baseType", toModelName(baseType));
-            codegenModel.imports.add(toModelName(baseType));
+            //codegenModel.imports.add(toModelName(baseType)); //TODO AK
         }
 
-        Collection<CodegenOperation> operations = (Collection<CodegenOperation>) codegenModel.vendorExtensions.get("operations");
-        if (operations != null) {
-            operations.forEach(op -> {
-                    if (op.returnType != null) {
-                        codegenModel.imports.add(op.returnType);
-                    }
-                    if (op.allParams != null) {
-                        op.allParams.stream()
-                            .filter(param -> needToImport(param.dataType))
-                            .forEach(param -> codegenModel.imports.add(param.dataType));
-                    }
-            });
-        }
+        //TODO: AK
+//        Collection<CodegenOperation> operations = (Collection<CodegenOperation>) codegenModel.vendorExtensions.get("operations");
+//        if (operations != null) {
+//            operations.forEach(op -> {
+//                    if (op.returnType != null) {
+//                        codegenModel.imports.add(op.returnType);
+//                    }
+//                    if (op.allParams != null) {
+//                        op.allParams.stream()
+//                            .filter(param -> needToImport(param.dataType))
+//                            .forEach(param -> codegenModel.imports.add(param.dataType));
+//                    }
+//            });
+//        }
 
         // Do we need this code? x-okta-parent tag is not present in yaml file anymore
         if(model.getExtensions() != null) {
@@ -737,27 +748,32 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
         List<CodegenOperation> codegenOperations = (List<CodegenOperation>) operations.get("operation");
 
-        // find all the list return values
-        Set<String> importsToAdd = new HashSet<>();
-        codegenOperations.stream()
-                .filter(cgOp -> cgOp.returnType != null)
-                .filter(cgOp -> cgOp.returnType.matches(".+List$"))
-                .forEach(cgOp -> importsToAdd.add(toModelImport(cgOp.returnType)));
+        //TODO: AK
+//        // find all the list return values
+//        Set<String> importsToAdd = new HashSet<>();
+//        codegenOperations.stream()
+//                .filter(cgOp -> cgOp.returnType != null)
+//                .filter(cgOp -> cgOp.returnType.matches(".+List$"))
+//                .forEach(cgOp -> importsToAdd.add(toModelImport(cgOp.returnType)));
+//
+//        // the params might have imports too
+//        codegenOperations.stream()
+//                .filter(cgOp -> cgOp.allParams != null)
+//                .forEach(cgOp -> cgOp.allParams.stream()
+//                        .filter(cgParam -> cgParam.getIsEnum())
+//                        .filter(cgParam -> needToImport(cgParam.dataType))
+//                        .forEach(cgParam -> importsToAdd.add(toModelImport(cgParam.dataType))));
 
-        // the params might have imports too
-        codegenOperations.stream()
-                .filter(cgOp -> cgOp.allParams != null)
-                .forEach(cgOp -> cgOp.allParams.stream()
-                        .filter(cgParam -> cgParam.getIsEnum())
-                        .filter(cgParam -> needToImport(cgParam.dataType))
-                        .forEach(cgParam -> importsToAdd.add(toModelImport(cgParam.dataType))));
+        //TODO: AK
+//        // add each one as an import
+//        importsToAdd.forEach(className -> {
+//            Map<String, String> listImport = new LinkedHashMap<>();
+//            listImport.put("import", className);
+//            imports.add(listImport);
+//        });
 
-        // add each one as an import
-        importsToAdd.forEach(className -> {
-            Map<String, String> listImport = new LinkedHashMap<>();
-            listImport.put("import", className);
-            imports.add(listImport);
-        });
+        //TODO: AK
+        imports.clear();
 
         operations.put("operation", sortOperations(codegenOperations));
         return resultMap;
@@ -780,21 +796,23 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                     .put("x-okta-known-values-class-name", property.getNameInCamelCase() + "Values");
             }
 
-            String datatype = property.datatype;
-            if (datatype != null
-                    && datatype.matches(".+List$")
-                    && needToImport(datatype)) {
-                model.imports.add(datatype);
-            }
+//            String datatype = property.datatype;
+            //TODO: AK
+//            if (datatype != null
+//                    && datatype.matches(".+List$")
+//                    && needToImport(datatype)) {
+//                model.imports.add(datatype);
+//            }
 
             String type = property.complexType;
             if (type == null) {
                 type = property.baseType;
             }
 
-            if (needToImport(type)) {
-                model.imports.add(type);
-            }
+            //TODO: AK
+//            if (needToImport(type)) {
+//                model.imports.add(type);
+//            }
 
             if (model.name.equals("CAPTCHAInstance")) {
                 model.imports.remove("CAPTCHAInstanceLink");
@@ -803,6 +821,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             if (model.name.equals("HrefObject")) {
                 model.imports.remove("HrefObjectHints");
             }
+
+            //TODO: AK
+            model.imports.clear();
 
             // super add these imports, and we don't want that dependency
             model.imports.remove("ApiModelProperty");
@@ -841,21 +862,22 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     public Map<String, Object> postProcessModelsEnum(Map<String, Object> objs) {
         objs = super.postProcessModelsEnum(objs);
         //Needed import for Gson based libraries
-        if (additionalProperties.containsKey("gson")) {
-            List<Map<String, String>> imports = (List<Map<String, String>>)objs.get("imports");
-            List<Object> models = (List<Object>) objs.get("models");
-            for (Object _mo : models) {
-                Map<String, Object> mo = (Map<String, Object>) _mo;
-                CodegenModel cm = (CodegenModel) mo.get("model");
-                // for enum model
-                if (Boolean.TRUE.equals(cm.getIsEnum()) && cm.allowableValues != null) {
-                    cm.imports.add(importMapping.get("SerializedName"));
-                    Map<String, String> item = new HashMap<>();
-                    item.put("import", importMapping.get("SerializedName"));
-                    imports.add(item);
-                }
-            }
-        }
+//        if (additionalProperties.containsKey("gson")) {
+//            List<Map<String, String>> imports = (List<Map<String, String>>)objs.get("imports");
+//            List<Object> models = (List<Object>) objs.get("models");
+//            for (Object _mo : models) {
+//                Map<String, Object> mo = (Map<String, Object>) _mo;
+//                CodegenModel cm = (CodegenModel) mo.get("model");
+                //TODO: AK
+//                // for enum model
+//                if (Boolean.TRUE.equals(cm.getIsEnum()) && cm.allowableValues != null) {
+//                    cm.imports.add(importMapping.get("SerializedName"));
+//                    Map<String, String> item = new HashMap<>();
+//                    item.put("import", importMapping.get("SerializedName"));
+//                    imports.add(item);
+//                }
+//            }
+//        }
         return objs;
     }
 

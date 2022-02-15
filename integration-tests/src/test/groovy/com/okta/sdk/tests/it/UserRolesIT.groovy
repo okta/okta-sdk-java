@@ -15,13 +15,13 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.AssignRoleRequest
-import com.okta.sdk.resource.group.RoleType
-import com.okta.sdk.resource.group.Role
-import com.okta.sdk.resource.group.User
-import com.okta.sdk.resource.user.UserBuilder
+import com.okta.sdk.resource.builder.GroupBuilder
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.AssignRoleRequest
+import com.okta.sdk.resource.RoleType
+import com.okta.sdk.resource.Role
+import com.okta.sdk.resource.User
+import com.okta.sdk.resource.builder.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test

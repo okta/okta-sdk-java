@@ -15,11 +15,11 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.schema.GroupSchema
-import com.okta.sdk.resource.schema.GroupSchemaAttribute
+import com.okta.sdk.resource.GroupSchema
+import com.okta.sdk.resource.GroupSchemaAttribute
 import com.okta.sdk.resource.UserSchemaAttributePermission
-import com.okta.sdk.resource.schema.UserSchemaAttributeScope
-import com.okta.sdk.resource.schema.UserSchemaAttributeType
+import com.okta.sdk.resource.UserSchemaAttributeScope
+import com.okta.sdk.resource.UserSchemaAttributeType
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test

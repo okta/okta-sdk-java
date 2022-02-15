@@ -19,27 +19,14 @@ import com.okta.commons.http.MediaType
 import com.okta.sdk.client.Client
 import com.okta.sdk.impl.ds.DefaultDataStore
 import com.okta.sdk.resource.*
-import com.okta.sdk.resource.common.*
-import com.okta.sdk.resource.application.*
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.inline.hook.InlineHook
-import com.okta.sdk.resource.inline.hook.InlineHookBuilder
-import com.okta.sdk.resource.inline.hook.InlineHookChannelType
-import com.okta.sdk.resource.inline.hook.InlineHookType
-import com.okta.sdk.resource.schema.UserSchema
-import com.okta.sdk.resource.schema.UserSchemaDefinitions
-import com.okta.sdk.resource.schema.UserSchemaPublic
-import com.okta.sdk.resource.group.User
+import com.okta.sdk.resource.builder.InlineHookBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test
 
 import javax.xml.parsers.DocumentBuilderFactory
 
-import static com.okta.sdk.tests.it.util.Util.assertNotPresent
-import static com.okta.sdk.tests.it.util.Util.assertPresent
-import static com.okta.sdk.tests.it.util.Util.expect
+import static com.okta.sdk.tests.it.util.Util.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 

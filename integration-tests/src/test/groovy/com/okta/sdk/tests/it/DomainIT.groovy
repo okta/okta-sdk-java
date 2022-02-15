@@ -16,8 +16,8 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.domain.Domain
-import com.okta.sdk.resource.domain.DomainCertificateSourceType
+import com.okta.sdk.resource.Domain
+import com.okta.sdk.resource.DomainCertificateSourceType
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.Assert
 import org.testng.annotations.Test

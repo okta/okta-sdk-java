@@ -15,12 +15,26 @@
  */
 package com.okta.sdk.tests.it
 
-
+import com.okta.sdk.resource.IdentityProvider
+import com.okta.sdk.resource.IdentityProviderApplicationUser
+import com.okta.sdk.resource.IdentityProviderCredentials
+import com.okta.sdk.resource.IdentityProviderCredentialsClient
+import com.okta.sdk.resource.IdentityProviderPolicy
 import com.okta.sdk.resource.PolicyAccountLink
 import com.okta.sdk.resource.PolicyAccountLinkAction
 import com.okta.sdk.resource.PolicySubject
 import com.okta.sdk.resource.PolicySubjectMatchType
 import com.okta.sdk.resource.PolicyUserNameTemplate
+import com.okta.sdk.resource.Protocol
+import com.okta.sdk.resource.ProtocolAlgorithmType
+import com.okta.sdk.resource.ProtocolAlgorithmTypeSignature
+import com.okta.sdk.resource.ProtocolAlgorithmTypeSignatureScope
+import com.okta.sdk.resource.ProtocolAlgorithms
+import com.okta.sdk.resource.ProtocolEndpoint
+import com.okta.sdk.resource.ProtocolEndpointBinding
+import com.okta.sdk.resource.ProtocolEndpointType
+import com.okta.sdk.resource.ProtocolEndpoints
+import com.okta.sdk.resource.ProtocolType
 import com.okta.sdk.resource.Provisioning
 import com.okta.sdk.resource.ProvisioningAction
 import com.okta.sdk.resource.ProvisioningConditions
@@ -30,11 +44,13 @@ import com.okta.sdk.resource.ProvisioningGroups
 import com.okta.sdk.resource.ProvisioningGroupsAction
 import com.okta.sdk.resource.ProvisioningSuspendedAction
 import com.okta.sdk.resource.ProvisioningSuspendedCondition
-import com.okta.sdk.resource.authorization.server.IssuerMode
-import com.okta.sdk.resource.authorization.server.LifecycleStatus
-import com.okta.sdk.resource.group.User
-import com.okta.sdk.resource.identity.provider.*
-import com.okta.sdk.resource.user.UserBuilder
+import com.okta.sdk.resource.IssuerMode
+import com.okta.sdk.resource.LifecycleStatus
+import com.okta.sdk.resource.SocialAuthTokenList
+import com.okta.sdk.resource.User
+import com.okta.sdk.resource.UserIdentityProviderLinkRequest
+import com.okta.sdk.resource.builder.IdentityProviderBuilders
+import com.okta.sdk.resource.builder.UserBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 

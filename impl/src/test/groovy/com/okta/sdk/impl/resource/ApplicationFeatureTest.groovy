@@ -28,15 +28,15 @@ import com.okta.sdk.impl.client.DefaultClient
 import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.ds.InternalDataStore
 import com.okta.sdk.impl.ds.JacksonMapMarshaller
-import com.okta.sdk.impl.resource.application.DefaultApplication
-import com.okta.sdk.impl.resource.application.DefaultApplicationFeature
-import com.okta.sdk.impl.resource.application.DefaultApplicationFeatureList
-import com.okta.sdk.impl.resource.application.DefaultCapabilitiesObject
+import com.okta.sdk.impl.resource.DefaultApplication
+import com.okta.sdk.impl.resource.DefaultApplicationFeature
+import com.okta.sdk.impl.resource.DefaultApplicationFeatureList
+import com.okta.sdk.impl.resource.DefaultCapabilitiesObject
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver
-import com.okta.sdk.resource.application.ApplicationFeature
-import com.okta.sdk.resource.application.ApplicationFeatureList
-import com.okta.sdk.resource.application.CapabilitiesObject
-import com.okta.sdk.resource.application.EnabledStatus
+import com.okta.sdk.resource.ApplicationFeature
+import com.okta.sdk.resource.ApplicationFeatureList
+import com.okta.sdk.resource.CapabilitiesObject
+import com.okta.sdk.resource.EnabledStatus
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat

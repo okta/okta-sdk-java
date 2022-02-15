@@ -15,11 +15,11 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.group.RoleType
-import com.okta.sdk.resource.subscription.Subscription
-import com.okta.sdk.resource.subscription.SubscriptionStatus
-import com.okta.sdk.resource.subscription.NotificationType
-import com.okta.sdk.resource.group.User
+import com.okta.sdk.resource.RoleType
+import com.okta.sdk.resource.Subscription
+import com.okta.sdk.resource.SubscriptionStatus
+import com.okta.sdk.resource.NotificationType
+import com.okta.sdk.resource.User
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 

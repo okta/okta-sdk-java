@@ -21,23 +21,23 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.ExtensibleResource;
-import com.okta.sdk.resource.application.Application;
-import com.okta.sdk.resource.application.ApplicationList;
+import com.okta.sdk.resource.Application;
+import com.okta.sdk.resource.ApplicationList;
 import com.okta.sdk.resource.SwaApplication;
 import com.okta.sdk.resource.SwaApplicationSettings;
 import com.okta.sdk.resource.SwaApplicationSettingsApplication;
-import com.okta.sdk.resource.group.Group;
-import com.okta.sdk.resource.group.GroupBuilder;
-import com.okta.sdk.resource.group.GroupList;
-import com.okta.sdk.resource.system.log.LogEventList;
-import com.okta.sdk.resource.group.User;
-import com.okta.sdk.resource.user.UserBuilder;
-import com.okta.sdk.resource.group.UserList;
-import com.okta.sdk.resource.user.factor.ActivateFactorRequest;
-import com.okta.sdk.resource.user.factor.UserFactor;
-import com.okta.sdk.resource.user.factor.UserFactorList;
+import com.okta.sdk.resource.Group;
+import com.okta.sdk.resource.builder.GroupBuilder;
+import com.okta.sdk.resource.GroupList;
+import com.okta.sdk.resource.LogEventList;
+import com.okta.sdk.resource.User;
+import com.okta.sdk.resource.builder.UserBuilder;
+import com.okta.sdk.resource.UserList;
+import com.okta.sdk.resource.ActivateFactorRequest;
+import com.okta.sdk.resource.UserFactor;
+import com.okta.sdk.resource.UserFactorList;
 import com.okta.sdk.resource.SmsUserFactor;
-import com.okta.sdk.resource.user.factor.VerifyFactorRequest;
+import com.okta.sdk.resource.VerifyFactorRequest;
 import com.okta.sdk.resource.VerifyUserFactorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +47,7 @@ import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 import static com.okta.sdk.cache.Caches.forResource;
+
 /**
  * Example snippets used for this projects README.md.
  * <p>

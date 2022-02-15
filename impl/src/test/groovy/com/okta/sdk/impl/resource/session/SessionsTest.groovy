@@ -28,6 +28,7 @@ import com.okta.sdk.impl.client.DefaultClient
 import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.ds.InternalDataStore
 import com.okta.sdk.impl.ds.JacksonMapMarshaller
+import com.okta.sdk.impl.resource.DefaultCreateSessionRequest
 import com.okta.sdk.impl.resource.DefaultSession
 import com.okta.sdk.impl.resource.DefaultSessionIdentityProvider
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver

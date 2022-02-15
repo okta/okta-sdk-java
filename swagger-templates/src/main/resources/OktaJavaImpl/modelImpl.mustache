@@ -22,15 +22,8 @@ import com.okta.commons.http.QueryString;
 import com.okta.commons.http.HttpHeaders;
 
 {{! TODO: add these programatically when needed }}
-import com.okta.sdk.impl.resource.common.*;
-import com.okta.sdk.impl.resource.policy.*;
-import com.okta.sdk.impl.resource.application.*;
-import com.okta.sdk.impl.resource.user.*;
-import com.okta.sdk.impl.resource.user.factor.*;
-import com.okta.sdk.impl.resource.brand.*;
-import com.okta.sdk.impl.resource.authorization.server.*;
-import com.okta.sdk.resource.brand.*;
-import com.okta.sdk.resource.c.ap.tc.ha.*;
+import com.okta.sdk.impl.resource.*;
+import com.okta.sdk.resource.*;
 import com.okta.sdk.impl.resource.BooleanProperty;
 import com.okta.sdk.impl.resource.IntegerProperty;
 import com.okta.sdk.impl.resource.DoubleProperty;
@@ -46,9 +39,12 @@ import com.okta.sdk.impl.resource.DefaultVoidResource;
 import com.okta.sdk.impl.resource.DefaultFileResource;
 import com.okta.sdk.resource.VoidResource;
 import com.okta.sdk.resource.Resource;
+import com.okta.sdk.resource.Error;
 {{#vendorExtensions.top-level}}
 import com.okta.sdk.resource.Resource;
 {{/vendorExtensions.top-level}}
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 

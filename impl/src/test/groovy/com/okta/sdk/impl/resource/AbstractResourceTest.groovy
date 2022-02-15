@@ -105,7 +105,7 @@ class AbstractResourceTest {
         assertThat actualMap, equalTo(expectedValues)
     }
 
-    StubResource createSubResource() {
+    static StubResource createSubResource() {
 
         List nestedResourceData = [
                 [nestedStringPropKey: "item0"],
