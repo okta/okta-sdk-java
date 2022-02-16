@@ -15,8 +15,7 @@
  */
 package com.okta.swagger.codegen;
 
-public class OktaJavaClientApiCodegen extends AbstractOktaJavaClientCodegen
-{
+public class OktaJavaClientApiCodegen extends AbstractOktaJavaClientCodegen {
 
     public OktaJavaClientApiCodegen() {
         super("okta_java", "com.okta.sdk.resource");

@@ -36,8 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
-{
+public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen {
+
     private static final String CREATE_NESTED_KEY = "x-oktaInstantiateNested";
 
     private final String overrideModelPackage;
@@ -69,11 +69,11 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             String propertyTypeMethod;
             boolean forceCast = false;
 
-            if(property.getIsListContainer()) {
+            if (property.getIsListContainer()) {
                 if (property.items.baseType.equals("String")) {
                     propertyType = "ListProperty";
                     propertyTypeMethod = "getListProperty";
-                } else if(enumList.contains(property.items.baseType)) {
+                } else if (enumList.contains(property.items.baseType)) {
                     propertyType = "EnumListProperty";
                     propertyTypeMethod = "getEnumListProperty";
                     property.vendorExtensions.put("itemType", property.items.datatypeWithEnum);
@@ -93,7 +93,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
                 property.vendorExtensions.put("itemType", property.datatypeWithEnum);
                 property.vendorExtensions.put("constructorTypeExtra", ", " + property.datatypeWithEnum + ".class");
                 property.vendorExtensions.put("typeClassExtra", Boolean.TRUE);
-            } else if(property.getIsMapContainer() || "Object".equals(property.datatype)) {
+            } else if (property.getIsMapContainer() || "Object".equals(property.datatype)) {
                 propertyType = "MapProperty";
                 propertyTypeMethod = "getMap";
             }
@@ -150,18 +150,6 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     @Override
     public CodegenModel fromModel(String name, Schema schema, Map<String, Schema> allSchemas) {
         CodegenModel codegenModel = super.fromModel(name, schema, allSchemas);
-
-        //TODO: AK
-//        if (codegenModel.classname.equals("CAPTCHAInstance")) {
-//            addToModelTagMap("CAPTCHAInstanceLink", "c.ap.tc.ha");
-//        } else if (codegenModel.classname.equals("HrefObject")) {
-//            addToModelTagMap("HrefObjectHints", "c.ap.tc.ha");
-//        } else {
-//            codegenModel.imports.add(toModelName(codegenModel.classname)); // The 'Default' gets added in the template
-//        }
-
-        //TODO: AK
-        codegenModel.imports.clear();
 
         Map<String, String> defaultValuesMap = new LinkedHashMap<>();
 
@@ -246,9 +234,9 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
     }
 
     @Override
-    protected void addToModelTagMap(String modelName, String packageName) {
-        modelTagMap.put(modelName, packageName);
-        modelTagMap.put("Default" + modelName, packageName); // Also add the 'Default' impl
+    protected void addToModelTagMap(String modelName) {
+        modelTagMap.put(modelName, "");
+        modelTagMap.put("Default" + modelName, ""); // Also add the 'Default' impl
     }
 
     @Override
@@ -300,7 +288,7 @@ public class OktaJavaClientImplCodegen extends AbstractOktaJavaClientCodegen
             String fqn = toModelImport(disc.getParentDefName());
             String fieldName = disc.getFieldName();
             Map<String, String> valueMap = disc.getValueDefMap().entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getValue(), e -> toModelImport(e.getKey())));
+                .collect(Collectors.toMap(Map.Entry::getValue, e -> toModelImport(e.getKey())));
             Map<String, Object> entries = new HashMap<>();
             entries.put("fieldName", fieldName);
             entries.put("values", valueMap);
