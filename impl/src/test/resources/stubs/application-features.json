@@ -1,0 +1,38 @@
+[
+  {
+    "name": "USER_PROVISIONING",
+    "status": "ENABLED",
+    "description": "User provisioning settings from Okta to a downstream application",
+    "capabilities": {
+      "create": {
+        "lifecycleCreate": {
+          "status": "DISABLED"
+        }
+      },
+      "update": {
+        "profile": {
+          "status": "DISABLED"
+        },
+        "lifecycleDeactivate": {
+          "status": "DISABLED"
+        },
+        "password": {
+          "status": "DISABLED",
+          "seed": "RANDOM",
+          "change": "KEEP_EXISTING"
+        }
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "https://foo.oktapreview.com/api/v1/apps/${applicationId}/features/USER_PROVISIONING",
+        "hints": {
+          "allow": [
+            "GET",
+            "PUT"
+          ]
+        }
+      }
+    }
+  }
+]

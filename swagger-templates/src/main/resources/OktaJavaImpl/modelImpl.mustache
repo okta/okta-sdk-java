@@ -22,6 +22,8 @@ import com.okta.commons.http.QueryString;
 import com.okta.commons.http.HttpHeaders;
 
 {{! TODO: add these programatically when needed }}
+import com.okta.sdk.impl.resource.*;
+import com.okta.sdk.resource.*;
 import com.okta.sdk.impl.resource.BooleanProperty;
 import com.okta.sdk.impl.resource.IntegerProperty;
 import com.okta.sdk.impl.resource.DoubleProperty;
@@ -34,11 +36,15 @@ import com.okta.sdk.impl.resource.DateProperty;
 import com.okta.sdk.impl.resource.EnumProperty;
 import com.okta.sdk.impl.resource.MapProperty;
 import com.okta.sdk.impl.resource.DefaultVoidResource;
+import com.okta.sdk.impl.resource.DefaultFileResource;
 import com.okta.sdk.resource.VoidResource;
 import com.okta.sdk.resource.Resource;
+import com.okta.sdk.resource.Error;
 {{#vendorExtensions.top-level}}
 import com.okta.sdk.resource.Resource;
 {{/vendorExtensions.top-level}}
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -129,7 +135,12 @@ public class Default{{classname}} extends {{#parent}}{{.}}{{/parent}}{{^parent}}
 {{>apiMethodPut}}
 {{/vendorExtensions.x-is-put-method}}
 {{#vendorExtensions.x-is-post-method}}
+{{#vendorExtensions.fileUpload}}
+{{>apiMethodPostFileResource}}
+{{/vendorExtensions.fileUpload}}
+{{^vendorExtensions.fileUpload}}
 {{>apiMethodPostResource}}
+{{/vendorExtensions.fileUpload}}
 {{/vendorExtensions.x-is-post-method}}
 {{#vendorExtensions.x-is-delete-method}}
 {{>apiMethodDelete}}

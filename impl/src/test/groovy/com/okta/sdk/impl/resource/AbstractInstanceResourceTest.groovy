@@ -41,7 +41,7 @@ class AbstractInstanceResourceTest {
     @Test
     void testNonMaterializedResourceGetDirtyPropertyDoesNotMaterialize() {
 
-        def props = ['href': 'http://foo.com/test/123']
+        def props = ['href': 'https://foo.com/test/123']
         InternalDataStore ds = mock(InternalDataStore)
 
         TestResource resource = new TestResource(ds, props)
@@ -116,7 +116,7 @@ class AbstractInstanceResourceTest {
 
         assertFalse testResource.containsKey("notinthere")
 
-        assertTrue testResource.trueProperty
+        assertTrue testResource.trueProperty as boolean
 
         assertEquals testResource.getProperty("spanishCharacters"), "El niño está usando Stormpath para su aplicación."
 
@@ -238,7 +238,7 @@ class AbstractInstanceResourceTest {
         assertEquals(TestResource.entrySet().size(), 5)
     }
 
-    private void setValue(Class clazz, Object object, String fieldName, value) {
+    private static void setValue(Class clazz, Object object, String fieldName, value) {
         Field field = clazz.getDeclaredField(fieldName)
         field.setAccessible(true)
         field.set(object, value)
@@ -246,7 +246,7 @@ class AbstractInstanceResourceTest {
 
     class DefaultDataStoreDelegateTo extends DefaultDataStore {
 
-        private TestResource TestResource;
+        private TestResource TestResource
 
         DefaultDataStoreDelegateTo(RequestExecutor requestExecutor, TestResource TestResource) {
             super(requestExecutor, "https://api.stormpath.com/v1", mock(ClientCredentialsResolver))
@@ -254,14 +254,14 @@ class AbstractInstanceResourceTest {
         }
 
         void save(Resource resource) {
-            Map properties = getValue(AbstractResource, TestResource, "properties")
-            Map dirtyProperties = getValue(AbstractResource, TestResource, "dirtyProperties")
-            HashSet deletedPropertyNames = getValue(AbstractResource, TestResource, "deletedPropertyNames")
+            Map properties = getValue(AbstractResource, TestResource, "properties") as HashMap
+            Map dirtyProperties = getValue(AbstractResource, TestResource, "dirtyProperties") as HashMap
+            HashSet deletedPropertyNames = getValue(AbstractResource, TestResource, "deletedPropertyNames") as HashSet
             properties.putAll(dirtyProperties)
             setValue(AbstractResource, TestResource, "properties", properties)
             dirtyProperties.clear()
             setValue(AbstractResource, TestResource, "dirtyProperties", dirtyProperties)
-            deletedPropertyNames.clear();
+            deletedPropertyNames.clear()
             setValue(AbstractResource, TestResource, "deletedPropertyNames", deletedPropertyNames)
         }
 

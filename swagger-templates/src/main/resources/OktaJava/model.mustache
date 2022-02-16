@@ -18,10 +18,6 @@
 {{! this is a hack to get sub package name generations working with swagger }}
 package {{package}}{{#models}}{{#model}}{{#vendorExtensions.x-okta-package}}.{{vendorExtensions.x-okta-package}}{{/vendorExtensions.x-okta-package}}{{/model}}{{/models}};
 
-{{#imports}}
-import {{import}};
-{{/imports}}
-
 {{#models}}
 {{#model}}
 {{#vendorExtensions.x-isResourceList}}{{>modelListResourceInterface}}{{/vendorExtensions.x-isResourceList}}{{^vendorExtensions.x-isResourceList}}

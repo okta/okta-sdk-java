@@ -16,12 +16,13 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.user.CreateUserRequest
-import com.okta.sdk.resource.user.PasswordCredential
-import com.okta.sdk.resource.user.PasswordCredentialHook
-import com.okta.sdk.resource.user.UserCredentials
-import com.okta.sdk.resource.user.UserNextLogin
-import com.okta.sdk.resource.user.UserProfile
+import com.okta.sdk.impl.resource.builder.DefaultUserBuilder
+import com.okta.sdk.resource.CreateUserRequest
+import com.okta.sdk.resource.PasswordCredential
+import com.okta.sdk.resource.PasswordCredentialHook
+import com.okta.sdk.resource.UserCredentials
+import com.okta.sdk.resource.UserNextLogin
+import com.okta.sdk.resource.UserProfile
 import org.mockito.ArgumentCaptor
 import org.testng.annotations.Test
 

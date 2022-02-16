@@ -23,10 +23,8 @@ import com.okta.commons.http.config.Proxy;
 import com.okta.commons.http.QueryString;
 import com.okta.commons.http.HttpHeaders;
 import com.okta.sdk.impl.config.ClientConfiguration;
-import com.okta.sdk.resource.VoidResource;
+import com.okta.sdk.resource.*;
 
-{{#imports}}import {{import}};
-{{/imports}}
 import com.okta.sdk.impl.ds.InternalDataStore;
 import com.okta.sdk.impl.resource.DefaultVoidResource;
 import com.okta.sdk.impl.resource.DefaultInputStreamResource;
@@ -35,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.io.InputStream;
 {{^fullJavaUtil}}
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

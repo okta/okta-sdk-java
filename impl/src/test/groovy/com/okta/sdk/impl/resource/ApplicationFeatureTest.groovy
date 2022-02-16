@@ -15,171 +15,201 @@
  */
 package com.okta.sdk.impl.resource
 
-import com.okta.commons.http.HttpHeaders
-import com.okta.commons.http.HttpMethod
-import com.okta.commons.http.MediaType
-import com.okta.commons.http.Request
 import com.okta.commons.http.RequestExecutor
-import com.okta.commons.http.Response
+import com.okta.commons.http.config.BaseUrlResolver
+import com.okta.sdk.authc.credentials.TokenClientCredentials
+import com.okta.sdk.cache.CacheManager
+import com.okta.sdk.client.AuthenticationScheme
+import com.okta.sdk.client.Client
 import com.okta.sdk.impl.api.ClientCredentialsResolver
-import com.okta.sdk.impl.ds.DefaultDataStore
-import com.okta.sdk.impl.resource.application.DefaultApplication
-import com.okta.sdk.impl.resource.application.DefaultApplicationFeature
-import com.okta.sdk.impl.resource.application.DefaultCapabilitiesObject
-import com.okta.sdk.impl.resource.application.DefaultOrg2OrgApplication
-import com.okta.sdk.impl.util.StringInputStream
-import com.okta.sdk.resource.common.EnabledStatus
-import org.hamcrest.MatcherAssert
-import org.mockito.ArgumentCaptor
+import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
+import com.okta.sdk.impl.cache.DisabledCacheManager
+import com.okta.sdk.impl.client.DefaultClient
+import com.okta.sdk.impl.config.ClientConfiguration
+import com.okta.sdk.impl.ds.InternalDataStore
+import com.okta.sdk.impl.ds.JacksonMapMarshaller
+import com.okta.sdk.impl.resource.DefaultApplication
+import com.okta.sdk.impl.resource.DefaultApplicationFeature
+import com.okta.sdk.impl.resource.DefaultApplicationFeatureList
+import com.okta.sdk.impl.resource.DefaultCapabilitiesObject
+import com.okta.sdk.impl.util.DefaultBaseUrlResolver
+import com.okta.sdk.resource.ApplicationFeature
+import com.okta.sdk.resource.ApplicationFeatureList
+import com.okta.sdk.resource.CapabilitiesObject
+import com.okta.sdk.resource.EnabledStatus
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.is
-import static org.hamcrest.Matchers.notNullValue
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
+import static org.hamcrest.Matchers.*
+import static org.mockito.ArgumentMatchers.any
+import static org.mockito.ArgumentMatchers.eq
+import static org.mockito.Mockito.*
+
 /**
- * Unit tests for {@code /api/v1/apps}.
+ * Unit tests for Application Feature operations.
+ *
  * @since 2.10.0
  */
 class ApplicationFeatureTest {
 
+    private static String MOCK_APP_ID = "101W_juydrDRByB7fUdRyE2JQ"
+    private static String FEATURE_NAME = "USER_PROVISIONING"
+
     @Test
     void testListFeaturesForApplication() {
-        def requestCapture = ArgumentCaptor.forClass(Request)
-        def requestExecutor = mock(RequestExecutor)
-        def apiKeyResolver = mock(ClientCredentialsResolver)
-        def response = mock(Response)
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com", apiKeyResolver)
-        def headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
+        ClientConfiguration clientConfig = new ClientConfiguration()
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
 
-        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
-        when(response.hasBody()).thenReturn(true)
-        def responseBody = '[' +
-            '  {' +
-            '    "name": "USER_PROVISIONING",' +
-            '    "status": "ENABLED",' +
-            '    "description": "User provisioning settings from Okta to a downstream application",' +
-            '    "capabilities": {' +
-            '      "create":{"lifecycleCreate":{"status":"DISABLED"}},' +
-            '      "update":{"profile":{"status":"DISABLED"},"lifecycleDeactivate":{"status":"DISABLED"},"password":{"status":"DISABLED","seed":"RANDOM","change":"KEEP_EXISTING"}}' +
-            '    }' +
-            '  }' +
-            ']'
-        when(response.getBody()).thenReturn(new StringInputStream(responseBody))
-        when(response.getHeaders()).thenReturn(headers)
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
+            protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
+                                                        BaseUrlResolver baseUrlResolver,
+                                                        ClientCredentialsResolver clientCredentialsResolver,
+                                                        CacheManager cacheManager) {
+                Map data = dataFromJsonFile()
+                final InternalDataStore dataStore = mock(InternalDataStore)
+                DefaultApplicationFeatureList appFeatureList = new DefaultApplicationFeatureList(dataStore, data)
+                when(dataStore.getResource("/api/v1/apps/${MOCK_APP_ID}/features",
+                    ApplicationFeatureList, Collections.emptyMap(), Collections.emptyMap())).thenReturn(appFeatureList)
+                return dataStore
+            }
+        }
 
-        def application = new DefaultApplication(defaultDataStore)
-        application.put("id", "app-id")
+        def application = new DefaultApplication(client.dataStore)
+        application.put("id", "${MOCK_APP_ID}")
 
-        def applicationFeatureList = new DefaultApplicationFeature(defaultDataStore)
-            .listFeaturesForApplication(application.getId())
+        def applicationFeatureList = client.listFeaturesForApplication(application.getId())
 
-        def request = requestCapture.getValue()
-        assertThat request.getMethod(), is(HttpMethod.GET)
-        MatcherAssert.assertThat request.getResourceUrl().getPath(), is("/api/v1/apps/app-id/features")
-        assertThat applicationFeatureList, notNullValue()
-        def features = applicationFeatureList.collect()
-        assertThat features.size(), is(1)
-        assertThat features.get(0).getName(), is("USER_PROVISIONING")
-        assertThat features.get(0).getStatus(), is(EnabledStatus.ENABLED)
+        assertThat(applicationFeatureList.properties.internalProperties.get("items"), hasSize(1))
+        assertThat(applicationFeatureList.properties.internalProperties.get("items")[0].get("name"), is(FEATURE_NAME))
+        assertThat(applicationFeatureList.properties.internalProperties.get("items")[0].get("status"), is("ENABLED"))
+
+        verify(client.dataStore)
+            .getResource(
+                (String) eq("/api/v1/apps/${MOCK_APP_ID}/features".toString()),
+                (Class) eq(ApplicationFeatureList.class),
+                eq(Collections.emptyMap()),
+                eq(Collections.emptyMap()))
     }
 
     @Test
     void testGetFeatureForApplication() {
-        def requestCapture = ArgumentCaptor.forClass(Request)
-        def requestExecutor = mock(RequestExecutor)
-        def apiKeyResolver = mock(ClientCredentialsResolver)
-        def response = mock(Response)
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com", apiKeyResolver)
-        def headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
+        ClientConfiguration clientConfig = new ClientConfiguration()
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
 
-        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
-        when(response.hasBody()).thenReturn(true)
-        def responseBody = '{' +
-            '  "name": "USER_PROVISIONING",' +
-            '  "status": "ENABLED",' +
-            '  "description": "User provisioning settings from Okta to a downstream application",' +
-            '  "capabilities": {' +
-            '    "create":{"lifecycleCreate":{"status":"DISABLED"}},' +
-            '    "update":{"profile":{"status":"DISABLED"},"lifecycleDeactivate":{"status":"DISABLED"},"password":{"status":"DISABLED","seed":"RANDOM","change":"KEEP_EXISTING"}}' +
-            '  }' +
-            '}'
-        when(response.getBody()).thenReturn(new StringInputStream(responseBody))
-        when(response.getHeaders()).thenReturn(headers)
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
+            protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
+                                                        BaseUrlResolver baseUrlResolver,
+                                                        ClientCredentialsResolver clientCredentialsResolver,
+                                                        CacheManager cacheManager) {
 
-        def application = new DefaultApplication(defaultDataStore)
-        application.put("id", "app-id")
-        def applicationFeature = application.getFeatureForApplication("USER_PROVISIONING")
+                Map data = dataFromJsonFile()
+                final InternalDataStore dataStore = mock(InternalDataStore)
+                DefaultApplicationFeature appFeature = new DefaultApplicationFeature(dataStore, data.get("items")[0] as HashMap)
+                when(dataStore.getResource("/api/v1/apps/${MOCK_APP_ID}/features/${FEATURE_NAME}",
+                    ApplicationFeature, Collections.emptyMap(), Collections.emptyMap())).thenReturn(appFeature)
+                return dataStore
+            }
+        }
 
-        def request = requestCapture.getValue()
-        assertThat request.getMethod(), is(HttpMethod.GET)
-        MatcherAssert.assertThat request.getResourceUrl().getPath(), is("/api/v1/apps/app-id/features/USER_PROVISIONING")
-        assertThat applicationFeature, notNullValue()
-        assertThat applicationFeature.getName(), is("USER_PROVISIONING")
-        assertThat applicationFeature.getStatus(), is(EnabledStatus.ENABLED)
+        def application = new DefaultApplication(client.dataStore)
+        application.put("id", "${MOCK_APP_ID}")
+        def applicationFeature = client.getFeatureForApplication(application.getId(), FEATURE_NAME)
+
+        assertThat(applicationFeature, notNullValue())
+        assertThat(applicationFeature.getName(), is(FEATURE_NAME))
+        assertThat(applicationFeature.getStatus(), is(EnabledStatus.ENABLED))
+
+        verify(client.dataStore)
+            .getResource(
+                (String) eq("/api/v1/apps/${MOCK_APP_ID}/features/${FEATURE_NAME}".toString()),
+                (Class) eq(ApplicationFeature.class),
+                eq(Collections.emptyMap()),
+                eq(Collections.emptyMap()))
     }
 
     @Test
     void testUpdateFeatureForApplication() {
-        def requestCapture = ArgumentCaptor.forClass(Request)
-        def requestExecutor = mock(RequestExecutor)
-        def apiKeyResolver = mock(ClientCredentialsResolver)
-        def response = mock(Response)
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com", apiKeyResolver)
-        def headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
+        ClientConfiguration clientConfig = new ClientConfiguration()
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
 
-        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
-        when(response.hasBody()).thenReturn(true)
-        def responseBody = '{' +
-            '  "name": "USER_PROVISIONING",' +
-            '  "status": "DISABLED",' +
-            '  "description": "User provisioning settings from Okta to a downstream application",' +
-            '  "capabilities": {' +
-            '    "create":{"lifecycleCreate":{"status":"DISABLED"}},' +
-            '    "update":{"profile":{"status":"DISABLED"},"lifecycleDeactivate":{"status":"DISABLED"},"password":{"status":"DISABLED","seed":"RANDOM","change":"KEEP_EXISTING"}}' +
-            '  }' +
-            '}'
-        when(response.getBody()).thenReturn(new StringInputStream(responseBody))
-        when(response.getHeaders()).thenReturn(headers)
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
+            protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
+                                                        BaseUrlResolver baseUrlResolver,
+                                                        ClientCredentialsResolver clientCredentialsResolver,
+                                                        CacheManager cacheManager) {
 
-        def application = new DefaultApplication(defaultDataStore)
-        application.put("id", "app-id")
-        def applicationFeature = application.updateFeatureForApplication("USER_PROVISIONING", new DefaultCapabilitiesObject(defaultDataStore))
+                Map data = dataFromJsonFile()
+                final InternalDataStore dataStore = mock(InternalDataStore)
+                DefaultApplicationFeature appFeature = new DefaultApplicationFeature(dataStore, data.get("items")[0] as HashMap)
+                when(dataStore.save((String) eq("/api/v1/apps/${MOCK_APP_ID}/features/${FEATURE_NAME}".toString()),
+                    any(CapabilitiesObject), (Class) eq(ApplicationFeature.class), eq(false))).thenReturn(appFeature)
+                return dataStore
+            }
+        }
 
-        def request = requestCapture.getValue()
-        assertThat request.getMethod(), is(HttpMethod.PUT)
-        MatcherAssert.assertThat request.getResourceUrl().getPath(), is("/api/v1/apps/app-id/features/USER_PROVISIONING")
-        assertThat applicationFeature, notNullValue()
-        assertThat applicationFeature.getName(), is("USER_PROVISIONING")
-        assertThat applicationFeature.getStatus(), is(EnabledStatus.DISABLED)
+        def application = new DefaultApplication(client.dataStore)
+        application.put("id", "${MOCK_APP_ID}")
+        def applicationFeature = client.updateFeatureForApplication(
+            new DefaultCapabilitiesObject(client.dataStore), application.getId(), FEATURE_NAME)
+
+        assertThat(applicationFeature, notNullValue())
+        assertThat(applicationFeature.getName(), is(FEATURE_NAME))
+        assertThat(applicationFeature.getStatus(), is(EnabledStatus.ENABLED))
+
+        verify(client.dataStore)
+            .save(
+                (String) eq("/api/v1/apps/${MOCK_APP_ID}/features/${FEATURE_NAME}".toString()),
+                any(CapabilitiesObject),
+                (Class) eq(ApplicationFeature.class),
+                eq(false))
     }
 
+    //OKTA-469414
+/*
     @Test
     void testUploadApplicationLogo(){
-        def requestCapture = ArgumentCaptor.forClass(Request)
-        def requestExecutor = mock(RequestExecutor)
-        def apiKeyResolver = mock(ClientCredentialsResolver)
-        def response = mock(Response)
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com", apiKeyResolver)
-        def headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
+        ClientConfiguration clientConfig = new ClientConfiguration()
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
 
-        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
-        when(response.getHttpStatus()).thenReturn(HttpURLConnection.HTTP_CREATED)
-        when(response.hasBody()).thenReturn(false)
-        when(response.getHeaders()).thenReturn(headers)
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
+            protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
+                                                        BaseUrlResolver baseUrlResolver,
+                                                        ClientCredentialsResolver clientCredentialsResolver,
+                                                        CacheManager cacheManager) {
 
-        def application = new DefaultOrg2OrgApplication(defaultDataStore)
-        application.put("id", "app-id")
+                final InternalDataStore dataStore = mock(InternalDataStore)
+                return dataStore
+            }
+        }
 
-        new DefaultApplication(defaultDataStore).uploadApplicationLogo(application.getId(), new File("src/test/resources/okta_logo_favicon.png"))
+        def application = new DefaultOrg2OrgApplication(client.dataStore)
+        application.put("id", "${MOCK_APP_ID}")
 
-        def request = requestCapture.getValue()
-        assertThat request.getMethod(), is(HttpMethod.POST)
-        MatcherAssert.assertThat request.getResourceUrl().getPath(), is("/api/v1/apps/app-id/logo")
+        client.uploadApplicationLogo(application.getId(), new File("src/test/resources/okta_logo_favicon.png"))
+
+        verify(client.dataStore)
+            .create(
+                (String) eq("/api/v1/apps/${MOCK_APP_ID}/logo".toString()),
+                any(),
+                isNull(),
+                (Class) eq(VoidResource.class),
+                eq(Collections.emptyMap()),
+                eq(Collections.emptyMap()))
+    }
+*/
+
+    private Map dataFromJsonFile(String resourceFile = '/stubs/application-features.json') {
+
+        return new JacksonMapMarshaller().unmarshal(
+            this.getClass().getResource(resourceFile).openStream(),
+            Collections.emptyMap())
     }
 }

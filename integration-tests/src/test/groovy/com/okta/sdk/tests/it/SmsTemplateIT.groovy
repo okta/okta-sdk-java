@@ -15,9 +15,9 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.template.SmsTemplateTranslations
-import com.okta.sdk.resource.template.SmsTemplate
-import com.okta.sdk.resource.template.SmsTemplateType
+import com.okta.sdk.resource.SmsTemplateTranslations
+import com.okta.sdk.resource.SmsTemplate
+import com.okta.sdk.resource.SmsTemplateType
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
@@ -42,7 +42,7 @@ class SmsTemplateIT extends ITSupport {
         smsTemplateTranslations.put("de", "\${org.name}: ihre bestätigungscode ist \${code}")
         smsTemplateTranslations.put("it", "\${org.name}: il codice di verifica è \${code}")
 
-        while(isSmsTemplateAlreadyCreated() && retryCount > 0) {
+        while (isSmsTemplateAlreadyCreated() && retryCount > 0) {
             //Looks like another Travis CI build has created an SMS Template already. Need to wait
             sleep(getTestOperationDelay())
             retryCount--
@@ -72,14 +72,14 @@ class SmsTemplateIT extends ITSupport {
 
         smsTemplate.setTranslations(partialUpdateTranslations)
 
-        smsTemplate.partialUpdate()
+        client.partialUpdateSmsTemplate(smsTemplate, smsTemplate.getId())
         assertThat(smsTemplate.getTranslations().keySet(), hasSize(1))
 
         // partial update again with 2 new translations
         smsTemplate.getTranslations().put("es", "\${org.name}: su código de inscripción es \${code}")
         smsTemplate.getTranslations().put("fr", "\${org.name}: votre code d'inscription est \${code}",)
 
-        smsTemplate.partialUpdate()
+        client.partialUpdateSmsTemplate(smsTemplate, smsTemplate.getId())
         assertThat(smsTemplate.getTranslations().keySet(), hasSize(3))
 
         // full update template
@@ -91,7 +91,7 @@ class SmsTemplateIT extends ITSupport {
         smsTemplate.setTemplate("\${org.name}: Here is your enrollment code: \${code}")
         smsTemplate.setTranslations(fullUpdateTranslations)
 
-        smsTemplate.update()
+        client.updateSmsTemplate(smsTemplate, smsTemplate.getId())
         assertThat(smsTemplate.getName(), is("new-" + templateName))
         assertThat(smsTemplate.getTranslations().keySet(), hasSize(1))
 
@@ -99,7 +99,7 @@ class SmsTemplateIT extends ITSupport {
         assertPresent(client.listSmsTemplates(), smsTemplate)
 
         // delete template
-        smsTemplate.delete()
+        client.deleteSmsTemplate(smsTemplate.getId())
         assertNotPresent(client.listSmsTemplates(), smsTemplate)
     }
 

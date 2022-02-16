@@ -16,18 +16,17 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.common.LifecycleStatus
-import com.okta.sdk.resource.policy.*
+import com.okta.sdk.impl.resource.builder.DefaultSignOnPolicyRuleBuilder
+import com.okta.sdk.resource.*
 import org.testng.annotations.Test
 
 import static com.okta.sdk.impl.Util.expect
-import static org.mockito.ArgumentMatchers.eq
 import static org.mockito.Mockito.*
 
 class DefaultSignOnPolicyRuleBuilderTest {
 
     @Test
-    void basicUsage(){
+    void basicUsage() {
         def client = mock(Client)
         def policy = mock(Policy)
         def signOnPolicyRule = mock(OktaSignOnPolicyRule)
@@ -44,7 +43,7 @@ class DefaultSignOnPolicyRuleBuilderTest {
         when(client.instantiate(OktaSignOnPolicyRule.class)).thenReturn(signOnPolicyRule)
         when(client.instantiate(OktaSignOnPolicyRuleActions.class)).thenReturn(oktaSignOnPolicyRuleActions)
         when(signOnPolicyRule.getActions()).thenReturn(oktaSignOnPolicyRuleActions)
-        when(client.instantiate(PasswordPolicyRuleConditions.class)).thenReturn(oktaSignOnPolicyRuleConditions)
+        when(client.instantiate(PasswordPolicyRuleConditions.class)).thenReturn(oktaSignOnPolicyRuleConditions as PasswordPolicyRuleConditions)
         when(signOnPolicyRule.getConditions()).thenReturn(oktaSignOnPolicyRuleConditions)
         when(client.instantiate(OktaSignOnPolicyRuleSignonActions.class)).thenReturn(oktaSignOnPolicyRuleSignonActions)
         when(client.instantiate(PolicyNetworkCondition.class)).thenReturn(policyNetworkCondition)
@@ -72,7 +71,7 @@ class DefaultSignOnPolicyRuleBuilderTest {
             .setMaxSessionIdleMinutes(5)
             .buildAndCreate(client, policy)
 
-        verify(policy).createRule(eq(signOnPolicyRule))
+        verify(client).createPolicyRule(signOnPolicyRule, policy.getId())
         verify(signOnPolicyRule).setName("name here")
         verify(signOnPolicyRule).setType(PolicyRuleType.SIGN_ON)
         verify(oktaSignOnPolicyRuleSignonActions).setFactorLifetime(1)
@@ -86,7 +85,7 @@ class DefaultSignOnPolicyRuleBuilderTest {
     }
 
     @Test
-    void createWithPasswordType(){
+    void createWithPasswordType() {
         def client = mock(Client)
         def policy = mock(Policy)
         def signOnPolicyRule = mock(OktaSignOnPolicyRule)
@@ -99,6 +98,5 @@ class DefaultSignOnPolicyRuleBuilderTest {
                 .setType(PolicyRuleType.PASSWORD)
             .buildAndCreate(client, policy)
         }
-
     }
 }

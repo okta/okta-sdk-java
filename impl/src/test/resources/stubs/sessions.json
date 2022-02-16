@@ -19,7 +19,7 @@
   "mfaActive": true,
   "_links": {
     "self": {
-      "href": "https://java.oktapreview.com/api/v1/sessions/101W_juydrDRByB7fUdRyE2JQ",
+      "href": "https://foo.oktapreview.com/api/v1/sessions/101W_juydrDRByB7fUdRyE2JQ",
       "hints": {
         "allow": [
           "GET",
@@ -28,7 +28,7 @@
       }
     },
     "refresh": {
-      "href": "https://java.oktapreview.com/api/v1/sessions/101W_juydrDRByB7fUdRyE2JQ/lifecycle/refresh",
+      "href": "https://foo.oktapreview.com/api/v1/sessions/101W_juydrDRByB7fUdRyE2JQ/lifecycle/refresh",
       "hints": {
         "allow": [
           "POST"
@@ -37,7 +37,7 @@
     },
     "user": {
       "name": "Joe Coder",
-      "href": "https://java.oktapreview.com/api/v1/users/00uit00ZK6ELuzPoD0g3",
+      "href": "https://foo.oktapreview.com/api/v1/users/00uit00ZK6ELuzPoD0g3",
       "hints": {
         "allow": [
           "GET"

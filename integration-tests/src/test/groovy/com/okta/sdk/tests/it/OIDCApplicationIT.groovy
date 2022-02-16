@@ -16,7 +16,18 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.application.*
+import com.okta.sdk.resource.Application
+import com.okta.sdk.resource.ApplicationSignOnMode
+import com.okta.sdk.resource.JsonWebKey
+import com.okta.sdk.resource.OAuthEndpointAuthenticationMethod
+import com.okta.sdk.resource.OAuthGrantType
+import com.okta.sdk.resource.OAuthResponseType
+import com.okta.sdk.resource.OpenIdConnectApplication
+import com.okta.sdk.resource.OpenIdConnectApplicationSettings
+import com.okta.sdk.resource.OpenIdConnectApplicationSettingsClient
+import com.okta.sdk.resource.OpenIdConnectApplicationSettingsClientKeys
+import com.okta.sdk.resource.OpenIdConnectApplicationType
+import com.okta.sdk.resource.builder.OIDCApplicationBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
@@ -36,19 +47,19 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
         Application app = OIDCApplicationBuilder.instance()
             .setName(name)
             .setLabel(name)
-            .addRedirectUris("http://www.example.com")
-            .setPostLogoutRedirectUris(Collections.singletonList("http://www.example.com/logout"))
+            .addRedirectUris("https://www.example.com")
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
             .setClientId(UUID.randomUUID().toString())
             .setClientSecret(UUID.randomUUID().toString())
+            .setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
             .setAutoKeyRotation(true)
             .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
             .setIOS(false)
             .setWeb(true)
-            .setLoginRedirectUrl("http://www.myapp.com")
-            .setErrorRedirectUrl("http://www.myapp.com/error")
+            .setLoginRedirectUrl("https://www.myapp.com")
+            .setErrorRedirectUrl("https://www.myapp.com/error")
             .buildAndCreate(client)
         registerForCleanup(app)
 
@@ -71,7 +82,7 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
             .setLabel(name)
             .setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
             .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.PRIVATE_KEY_JWT)
-            .addRedirectUris("http://www.example.com")
+            .addRedirectUris("https://www.example.com")
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
@@ -80,9 +91,13 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(app)
 
         assertThat(app, instanceOf(OpenIdConnectApplication))
-        assertThat(app.getSettings().getOAuthClient().getJwks() , instanceOf(OpenIdConnectApplicationSettingsClientKeys))
 
-        OpenIdConnectApplicationSettingsClientKeys keys = app.getSettings().getOAuthClient().getJwks()
+        OpenIdConnectApplicationSettings openIdConnectApplicationSettings = app.getSettings() as OpenIdConnectApplicationSettings
+        OpenIdConnectApplicationSettingsClient openIdConnectApplicationSettingsClient = openIdConnectApplicationSettings.getOAuthClient()
+
+        assertThat(openIdConnectApplicationSettingsClient.getJwks() , instanceOf(OpenIdConnectApplicationSettingsClientKeys))
+
+        OpenIdConnectApplicationSettingsClientKeys keys = openIdConnectApplicationSettingsClient.getJwks()
         assertThat(keys.getKeys(), hasSize(1))
         assertThat(keys.getKeys().get(0), instanceOf(JsonWebKey))
 
@@ -107,7 +122,7 @@ class OIDCApplicationIT extends ITSupport implements CrudTestSupport {
     void update(Client client, def application) {
         application.setLabel(application.label +"-2")
         application.visibility.hide.iOS = true
-        application.update()
+        client.updateApplication(application, application.id)
     }
 
     @Override

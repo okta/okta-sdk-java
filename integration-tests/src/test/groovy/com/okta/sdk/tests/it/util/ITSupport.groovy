@@ -16,13 +16,18 @@
 package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
+
 import com.okta.sdk.resource.ExtensibleResource
-import com.okta.sdk.resource.common.LifecycleStatus
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.policy.*
-import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserBuilder
+import com.okta.sdk.resource.OktaSignOnPolicy
+import com.okta.sdk.resource.PasswordPolicy
+import com.okta.sdk.resource.LifecycleStatus
+import com.okta.sdk.resource.PolicyType
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.builder.GroupBuilder
+import com.okta.sdk.resource.User
+import com.okta.sdk.resource.builder.OktaSignOnPolicyBuilder
+import com.okta.sdk.resource.builder.PasswordPolicyBuilder
+import com.okta.sdk.resource.builder.UserBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
 import com.okta.sdk.tests.Scenario
 import org.slf4j.Logger
@@ -40,6 +45,9 @@ abstract class ITSupport implements ClientProvider {
     public static final USE_TEST_SERVER = "okta.use.testServer"
     public static final TEST_SERVER_ALL_SCENARIOS = "okta.testServer.allScenarios"
     public static final IT_OPERATION_DELAY = "okta.it.operationDelay"
+
+    public static final SPINE_NAME_PREFIX = "java-sdk-it-"
+    public static final UNDERSCORE_NAME_PREFIX = "java_sdk_it_"
 
     public static boolean isOIEEnvironment
     private TestServer testServer
@@ -87,19 +95,19 @@ abstract class ITSupport implements ClientProvider {
      * - System property 'okta.it.operationDelay'
      * - Env variable 'OKTA_IT_OPERATION_DELAY'
      */
-    long getTestOperationDelay() {
+    static long getTestOperationDelay() {
         Long testDelay = Long.getLong(IT_OPERATION_DELAY)
 
         if (testDelay == null) {
             try {
                 testDelay = Long.valueOf(System.getenv().getOrDefault("OKTA_IT_OPERATION_DELAY", "0"))
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
                 log.error("Could not parse env variable OKTA_IT_OPERATION_DELAY. Will default to 0!")
                 return 0
             }
         }
 
-        return testDelay == null ? 0 : testDelay;
+        return testDelay == null ? 0 : testDelay
     }
 
     User randomUser() {
@@ -138,7 +146,7 @@ abstract class ITSupport implements ClientProvider {
             .setStatus(LifecycleStatus.ACTIVE)
             .setPriority(1)
             .addGroup(groupId)
-        .buildAndCreate(client)
+        .buildAndCreate(client) as PasswordPolicy
 
         registerForCleanup(policy)
 
@@ -152,7 +160,7 @@ abstract class ITSupport implements ClientProvider {
             .setDescription("IT created Policy")
             .setStatus(LifecycleStatus.ACTIVE)
         .setType(PolicyType.OKTA_SIGN_ON)
-        .buildAndCreate(client)
+        .buildAndCreate(client) as OktaSignOnPolicy
 
         registerForCleanup(policy)
 
@@ -163,10 +171,10 @@ abstract class ITSupport implements ClientProvider {
 
         Object pipeline = client.http()
             .get("/.well-known/okta-organization", ExtensibleResource.class)
-            .get("pipeline");
-        if(pipeline != null && pipeline.toString().equals("idx")) {
-            return true;
+            .get("pipeline")
+        if (pipeline != null && pipeline.toString() == "idx") {
+            return true
         }
-        return false;
+        return false
     }
 }

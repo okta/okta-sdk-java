@@ -20,20 +20,27 @@ import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
 import com.okta.sdk.impl.cache.DisabledCacheManager
-import com.okta.sdk.resource.Deletable
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.GroupList
+import com.okta.sdk.resource.GroupRule
+import com.okta.sdk.resource.GroupRuleList
+import com.okta.sdk.resource.GroupRuleStatus
+import com.okta.sdk.resource.InlineHookStatus
+import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.application.Application
-import com.okta.sdk.resource.authorization.server.AuthorizationServer
-import com.okta.sdk.resource.event.hook.EventHook
-import com.okta.sdk.resource.group.GroupList
-import com.okta.sdk.resource.group.GroupRule
-import com.okta.sdk.resource.group.GroupRuleList
-import com.okta.sdk.resource.group.GroupRuleStatus
-import com.okta.sdk.resource.identity.provider.IdentityProvider
-import com.okta.sdk.resource.inline.hook.InlineHook
-import com.okta.sdk.resource.linked.object.LinkedObject
-import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserStatus
+import com.okta.sdk.resource.Application
+import com.okta.sdk.resource.ApplicationLifecycleStatus
+import com.okta.sdk.resource.AuthorizationServer
+import com.okta.sdk.resource.Policy
+import com.okta.sdk.resource.UserStatus
+import com.okta.sdk.resource.UserType
+import com.okta.sdk.resource.EventHook
+import com.okta.sdk.resource.IdentityProvider
+import com.okta.sdk.resource.InlineHook
+import com.okta.sdk.resource.LinkedObject
+import com.okta.sdk.resource.NetworkZone
+import com.okta.sdk.resource.SmsTemplate
+import com.okta.sdk.resource.User
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.slf4j.Logger
@@ -43,7 +50,6 @@ import org.testng.IHookable
 import org.testng.ITestResult
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.Listeners
-
 
 /**
  * Creates a thread local client for a test method to use. The client may be connected to an actual Okta instance or a Test Server.
@@ -55,7 +61,7 @@ trait ClientProvider implements IHookable {
 
     private ThreadLocal<Client> threadLocal = new ThreadLocal<>()
     private ThreadLocal<String> testName = new ThreadLocal<>()
-    private List<Deletable> toBeDeleted = []
+    private List<Resource> toBeDeleted = []
 
     Client getClient(String scenarioId = null) {
         Client client = threadLocal.get()
@@ -137,20 +143,22 @@ trait ClientProvider implements IHookable {
     }
 
     /**
-     * Registers a Deletable to be cleaned up after the test is run.
-     * @param deletable Resource to be deleted.
+     * Registers a Resource to be cleaned up after the test is run.
+     * @param resource Resource to be deleted.
      */
-    void registerForCleanup(Deletable deletable) {
-        toBeDeleted.add(deletable)
+    void registerForCleanup(Resource resource) {
+        toBeDeleted.add(resource)
     }
 
     void deleteUser(String email, Client client) {
         Util.ignoring(ResourceException) {
             User user = client.getUser(email)
             if (user.status != UserStatus.DEPROVISIONED) {
-                user.deactivate()
+                // deactivate
+                client.deactivateOrDeleteUser(user.getId())
             }
-            user.delete()
+            // delete
+            client.deactivateOrDeleteUser(user.getId())
         }
     }
 
@@ -158,8 +166,8 @@ trait ClientProvider implements IHookable {
         Util.ignoring(ResourceException) {
             GroupList groups = client.listGroups(groupName, null, null)
             groups.each {group ->
-                if (groupName.equals(group.profile.name)) {
-                    group.delete()
+                if (groupName == group.profile.name) {
+                    client.deleteGroup(group.getId())
                 }
             }
         }
@@ -169,11 +177,11 @@ trait ClientProvider implements IHookable {
         Util.ignoring(ResourceException) {
             GroupRuleList rules = client.listGroupRules()
             rules.each {rule ->
-                if (ruleName.equals(rule.name)) {
+                if (ruleName == rule.name) {
                     if (rule.status == GroupRuleStatus.ACTIVE) {
-                        rule.deactivate()
+                        client.deactivateGroupRule(rule.getId())
                     }
-                    rule.delete()
+                    client.deleteGroupRule(rule.getId())
                 }
             }
         }
@@ -182,19 +190,61 @@ trait ClientProvider implements IHookable {
     @AfterMethod (groups = ["group1", "group2", "group3"])
     void clean() {
         if (!isRunningWithTestServer()) {
+            Client client = getClient()
+
             // delete them in reverse order so dependencies are resolved
-            toBeDeleted.reverse().each { deletable ->
+            toBeDeleted.reverse().each { resource ->
                 try {
-                    if (deletable instanceof User ||
-                        deletable instanceof Application ||
-                        deletable instanceof AuthorizationServer ||
-                        deletable instanceof EventHook ||
-                        deletable instanceof InlineHook ||
-                        deletable instanceof GroupRule ||
-                        deletable instanceof IdentityProvider) {
-                        deletable.deactivate()
+                    if (resource instanceof Application) {
+                        if (resource.getStatus() != ApplicationLifecycleStatus.INACTIVE) {
+                            client.deactivateApplication(resource.getId())
+                        }
+                        client.deleteApplication(resource.getId())
                     }
-                    deletable.delete()
+                    if (resource instanceof AuthorizationServer) {
+                        client.deleteAuthorizationServer(resource.getId())
+                    }
+                    if (resource instanceof EventHook) {
+                        client.deleteEventHook(resource.getId())
+                    }
+                    if (resource instanceof Group) {
+                        client.deleteGroup(resource.getId())
+                    }
+                    if (resource instanceof GroupRule) {
+                        client.deleteGroupRule(resource.getId())
+                    }
+                    if (resource instanceof IdentityProvider) {
+                        client.deleteIdentityProvider(resource.getId())
+                    }
+                    if (resource instanceof InlineHook) {
+                        if (resource.getStatus() != InlineHookStatus.INACTIVE) {
+                            client.deactivateInlineHook(resource.getId())
+                        }
+                        client.deleteInlineHook(resource.getId())
+                    }
+                    if (resource instanceof LinkedObject) {
+                        client.deleteLinkedObjectDefinition(resource.getPrimary().getName())
+                    }
+                    if (resource instanceof NetworkZone) {
+                        client.deleteNetworkZone(resource.getId())
+                    }
+                    if (resource instanceof Policy) {
+                        client.deletePolicy(resource.getId())
+                    }
+                    if (resource instanceof SmsTemplate) {
+                        client.deleteSmsTemplate(resource.getId())
+                    }
+                    if (resource instanceof User) {
+                        if (resource.getStatus() != UserStatus.DEPROVISIONED) {
+                            // deactivate
+                            client.deactivateOrDeleteUser(resource.getId())
+                        }
+                        // delete
+                        client.deactivateOrDeleteUser(resource.getId())
+                    }
+                    if (resource instanceof UserType) {
+                        client.deleteUserType(resource.getId())
+                    }
                 }
                 catch (Exception e) {
                     log.trace("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run:", e)

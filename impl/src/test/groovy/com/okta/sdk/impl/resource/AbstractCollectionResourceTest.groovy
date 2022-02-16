@@ -16,12 +16,11 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.impl.ds.InternalDataStore
-import org.mockito.Mockito
 import org.testng.annotations.Test
 
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.is
 import static org.mockito.Mockito.*
-import static org.hamcrest.Matchers.*
-import static org.hamcrest.MatcherAssert.*
 
 /**
  * Tests for {@link AbstractCollectionResource}.

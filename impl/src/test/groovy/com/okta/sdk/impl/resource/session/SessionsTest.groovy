@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.impl.resource.session
 
+import com.okta.commons.http.RequestExecutor
+import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.cache.CacheManager
 import com.okta.sdk.client.AuthenticationScheme
@@ -26,24 +28,20 @@ import com.okta.sdk.impl.client.DefaultClient
 import com.okta.sdk.impl.config.ClientConfiguration
 import com.okta.sdk.impl.ds.InternalDataStore
 import com.okta.sdk.impl.ds.JacksonMapMarshaller
-import com.okta.commons.http.RequestExecutor
-import com.okta.sdk.impl.resource.user.DefaultUser
-import com.okta.commons.http.config.BaseUrlResolver
+import com.okta.sdk.impl.resource.DefaultCreateSessionRequest
+import com.okta.sdk.impl.resource.DefaultSession
+import com.okta.sdk.impl.resource.DefaultSessionIdentityProvider
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver
-import com.okta.sdk.resource.Resource
-import com.okta.sdk.resource.session.Session
-import com.okta.sdk.resource.session.SessionAuthenticationMethod
-import com.okta.sdk.resource.session.SessionIdentityProvider
-import com.okta.sdk.resource.session.SessionIdentityProviderType
-import com.okta.sdk.resource.session.SessionStatus
+import com.okta.sdk.resource.*
 import org.testng.annotations.Test
 
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.*
-
+import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.Matchers.notNullValue
+import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
 
 /**
@@ -72,7 +70,7 @@ class SessionsTest {
                 Map data = dataFromJsonFile()
                 final InternalDataStore dataStore = mock(InternalDataStore)
                 DefaultSession session = new DefaultSession(dataStore, dataFromJsonFile())
-                Map idpData = data.get("idp")
+                Map idpData = data.get("idp") as Map
                 def sessionIdp = new DefaultSessionIdentityProvider(dataStore, idpData)
                 when(dataStore.instantiate(SessionIdentityProvider, idpData)).thenReturn(sessionIdp)
                 when(dataStore.create(
@@ -91,8 +89,8 @@ class SessionsTest {
                                                                 .setSessionToken(MOCK_SESSION_ID))
         assertSession(createdSession)
 
-        createdSession.delete()
-        verify(client.dataStore).delete("/api/v1/sessions/${MOCK_SESSION_ID}", (Resource) createdSession, Collections.emptyMap(), Collections.emptyMap())
+        client.endSession(createdSession.getId())
+        verify(client.dataStore).delete("/api/v1/sessions/${MOCK_SESSION_ID}", Collections.emptyMap(), Collections.emptyMap())
     }
 
     @Test
@@ -112,14 +110,14 @@ class SessionsTest {
                 Map data = dataFromJsonFile()
                 final InternalDataStore dataStore = mock(InternalDataStore)
                 DefaultSession session = new DefaultSession(dataStore, data)
-                Map idpData = data.get("idp")
+                Map idpData = data.get("idp") as Map
                 def sessionIdp = new DefaultSessionIdentityProvider(dataStore, idpData)
                 when(dataStore.instantiate(SessionIdentityProvider, idpData)).thenReturn(sessionIdp)
                 when(dataStore.getResource("/api/v1/sessions/${MOCK_SESSION_ID}", Session, Collections.emptyMap(), Collections.emptyMap())).thenReturn(session)
                 when(dataStore.create(
                         (String) eq("/api/v1/sessions/${MOCK_SESSION_ID}/lifecycle/refresh".toString()),
                         any(),
-                        eq(session),
+                        any(),
                         (Class) eq(Session.class),
                         eq(Collections.emptyMap()),
                         eq(Collections.emptyMap())))
@@ -131,12 +129,12 @@ class SessionsTest {
         Session session = client.getSession(MOCK_SESSION_ID)
         assertSession(session)
 
-        assertThat session.refresh(), notNullValue()
+        assertThat client.refreshSession(session.getId()), notNullValue()
         verify(client.dataStore)
             .create(
                 (String) eq("/api/v1/sessions/${MOCK_SESSION_ID}/lifecycle/refresh".toString()),
                 any(),
-                eq(session),
+                eq(null) as Resource,
                 (Class) eq(Session.class),
                 eq(Collections.emptyMap()),
                 eq(Collections.emptyMap()))
@@ -145,13 +143,41 @@ class SessionsTest {
     @Test
     void deleteUserSessions() {
 
-        InternalDataStore dataStore = mock(InternalDataStore)
+        ClientConfiguration clientConfig = new ClientConfiguration()
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
 
-        new DefaultUser(dataStore, [id: "test_user_id"]).clearSessions()
-        verify(dataStore).delete("/api/v1/users/test_user_id/sessions", Collections.emptyMap(),  Collections.emptyMap())
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
+            protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
+                                                        BaseUrlResolver baseUrlResolver,
+                                                        ClientCredentialsResolver clientCredentialsResolver,
+                                                        CacheManager cacheManager) {
+
+                Map data = dataFromJsonFile()
+                final InternalDataStore dataStore = mock(InternalDataStore)
+                DefaultSession session = new DefaultSession(dataStore, data)
+                Map idpData = data.get("idp") as Map
+                def sessionIdp = new DefaultSessionIdentityProvider(dataStore, idpData)
+                when(dataStore.instantiate(SessionIdentityProvider, idpData)).thenReturn(sessionIdp)
+                when(dataStore.getResource("/api/v1/sessions/${MOCK_SESSION_ID}", Session, Collections.emptyMap(), Collections.emptyMap())).thenReturn(session)
+                when(dataStore.create(
+                    (String) eq("/api/v1/sessions/${MOCK_SESSION_ID}/lifecycle/refresh".toString()),
+                    any(),
+                    eq(session) as Resource,
+                    (Class) eq(Session.class),
+                    eq(Collections.emptyMap()),
+                    eq(Collections.emptyMap())))
+                    .thenReturn(session)
+                return dataStore
+            }
+        }
+
+        client.clearUserSessions("test_user_id")
+        verify(client.dataStore).delete("/api/v1/users/test_user_id/sessions", Collections.emptyMap(),  Collections.emptyMap())
     }
 
-    void assertSession(Session session) {
+    private static void assertSession(Session session) {
 
         assertThat session.getId(), equalTo(MOCK_SESSION_ID)
         assertThat session.getLogin(), equalTo("joe.coder@example.com")
@@ -171,7 +197,7 @@ class SessionsTest {
         assertThat session.getIdp().getType(), equalTo(SessionIdentityProviderType.OKTA)
     }
 
-    private Date parseDate(String dateString) {
+    private static Date parseDate(String dateString) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME
         return Date.from(Instant.from(timeFormatter.parse(dateString)))
     }
@@ -180,6 +206,6 @@ class SessionsTest {
 
         return new JacksonMapMarshaller().unmarshal(
                 this.getClass().getResource(resourceFile).openStream(),
-                Collections.emptyMap())
+            Collections.emptyMap())
     }
 }

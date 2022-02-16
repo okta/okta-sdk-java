@@ -15,8 +15,8 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.feature.Feature
-import com.okta.sdk.resource.feature.FeatureList
+import com.okta.sdk.resource.Feature
+import com.okta.sdk.resource.FeatureList
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
@@ -31,12 +31,13 @@ class FeaturesIT extends ITSupport {
 
     @Test (groups = "group2")
     void featureOperationsTest() {
+
         // list features
         FeatureList featureList = client.listFeatures()
         assertThat(featureList, iterableWithSize(greaterThan(0)))
 
         // pick first one from the list
-        Feature feature = featureList.getAt(0)
+        Feature feature = featureList[0]
         assertThat(feature, notNullValue())
 
         // get feature by id

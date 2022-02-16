@@ -13,9 +13,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import com.okta.sdk.resource.ExtensibleResource;
-import com.okta.sdk.resource.Deletable;
 import com.okta.sdk.resource.Saveable;
 {{#vendorExtensions.x-okta-extensible}}import com.okta.sdk.resource.PropertyRetriever;{{/vendorExtensions.x-okta-extensible}}
 {{#models}}{{#model}}
@@ -24,7 +25,7 @@ import com.okta.sdk.resource.Saveable;
  */
 {{>generatedAnnotation}}
 
-public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/parent}}{{#vendorExtensions.x-okta-extensible}}, PropertyRetriever, Map<String, Object>{{/vendorExtensions.x-okta-extensible}}{{#vendorExtensions.deletable}}, Deletable{{/vendorExtensions.deletable}} {
+public interface {{classname}} extends ExtensibleResource{{#parent}}, {{.}}{{/parent}}{{#vendorExtensions.x-okta-extensible}}, PropertyRetriever, Map<String, Object>{{/vendorExtensions.x-okta-extensible}} {
 
 {{#vars}}
     {{#vendorExtensions.extraAnnotation}}

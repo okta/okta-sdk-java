@@ -16,27 +16,23 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.*
-import com.okta.sdk.resource.authorization.server.LifecycleStatus
-import com.okta.sdk.resource.authorization.server.OktaSignOnPolicyFactorPromptMode
-import com.okta.sdk.resource.authorization.server.PolicyAccess
-import com.okta.sdk.resource.authorization.server.PolicyNetworkConnection
-import com.okta.sdk.resource.authorization.server.PolicyRuleAuthContextType
-import com.okta.sdk.resource.authorization.server.PolicyRuleType
-import com.okta.sdk.resource.common.Policy
-import com.okta.sdk.resource.policy.rule.PasswordPolicyRuleBuilder
-import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder
-import com.okta.sdk.tests.NonOIEEnvironmentOnly
+import com.okta.sdk.resource.LifecycleStatus
+import com.okta.sdk.resource.OktaSignOnPolicy
+import com.okta.sdk.resource.OktaSignOnPolicyFactorPromptMode
+import com.okta.sdk.resource.OktaSignOnPolicyRule
+import com.okta.sdk.resource.PasswordPolicyRule
+import com.okta.sdk.resource.Policy
+import com.okta.sdk.resource.PolicyAccess
+import com.okta.sdk.resource.PolicyNetworkConnection
+import com.okta.sdk.resource.PolicyRuleAuthContextType
+import com.okta.sdk.resource.PolicyRuleType
+import com.okta.sdk.resource.builder.PasswordPolicyRuleBuilder
+import com.okta.sdk.resource.builder.SignOnPolicyRuleBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.hasSize
-import static org.hamcrest.Matchers.instanceOf
-import static org.hamcrest.Matchers.is
-import static org.hamcrest.Matchers.matchesPattern
-import static org.hamcrest.Matchers.notNullValue
-import static org.hamcrest.Matchers.nullValue
+import static org.hamcrest.Matchers.*
 
 class PolicyRulesIT extends ITSupport implements CrudTestSupport {
 
@@ -53,7 +49,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setName(policyRuleName)
             .setAccess(PolicyAccess.ALLOW)
             .setRequireFactor(false)
-        .buildAndCreate(client, crudTestPolicy);
+        .buildAndCreate(client, crudTestPolicy) as OktaSignOnPolicyRule
 
         assertThat(policyRule.getStatus(), is(LifecycleStatus.ACTIVE))
 
@@ -62,13 +58,13 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
 
     @Override
     def read(Client client, String id) {
-        return crudTestPolicy.getPolicyRule(id)
+        return client.getPolicyRule(crudTestPolicy.getId(), id)
     }
 
     @Override
     void update(Client client, def policyRule) {
         policyRule.setName(policyRule.name +"-2")
-        policyRule.update()
+        client.updatePolicyRule(policyRule, crudTestPolicy.getId(), policyRule.id)
     }
 
     @Override
@@ -78,7 +74,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
 
     @Override
     Iterator getResourceCollectionIterator(Client client) {
-        return crudTestPolicy.listPolicyRules().iterator()
+        return client.listPolicyRules(crudTestPolicy.getId()).iterator()
     }
 
     @Test (groups = "group2")
@@ -88,20 +84,21 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policy = randomSignOnPolicy(group.getId())
 
         def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
-        OktaSignOnPolicyRule policyRule = SignOnPolicyRuleBuilder.instance()
+        def policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
             .setAccess(PolicyAccess.ALLOW)
             .setRequireFactor(false)
-            .setStatus(LifecycleStatus.INACTIVE)
-        .buildAndCreate(client, policy);
+            .setStatus(LifecycleStatus.ACTIVE)
+        .buildAndCreate(client, policy)
         registerForCleanup(policyRule)
 
         // policy rule is ACTIVE by default
         assertThat(policyRule.getStatus(), is(LifecycleStatus.ACTIVE))
 
         // deactivate
-        policyRule.deactivate()
-        policyRule = policy.getPolicyRule(policyRule.getId())
+        client.deactivatePolicyRule(policy.getId(), policyRule.getId())
+
+        policyRule = client.getPolicyRule(policy.getId(), policyRule.getId())
         assertThat(policyRule.getStatus(), is(LifecycleStatus.INACTIVE))
     }
 
@@ -110,7 +107,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def group = randomGroup()
         def policy = randomSignOnPolicy(group.getId())
 
-        policy.listPolicyRules().forEach({policyItem ->
+        client.listPolicyRules(policy.getId()).forEach({policyItem ->
             assertThat(policyItem, notNullValue())
             assertThat(policyItem.getId(), notNullValue())
             assertThat(policyItem, instanceOf(Policy.class))
@@ -131,7 +128,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setSelfServicePasswordResetAccess(PolicyAccess.ALLOW)
             .setPasswordChangeAccess(PolicyAccess.ALLOW)
             .setNetworkConnection(PolicyNetworkConnection.ANYWHERE)
-        .buildAndCreate(client, policy)
+        .buildAndCreate(client, policy) as PasswordPolicyRule
         registerForCleanup(policyRule)
 
         assertThat policyRule.getName(), is(policyRuleName)
@@ -159,7 +156,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setRememberDeviceByDefault(false)
             .setRequireFactor(false)
             .setAccess(PolicyAccess.ALLOW)
-        .buildAndCreate(client, policy)
+        .buildAndCreate(client, policy) as OktaSignOnPolicyRule
         registerForCleanup(policyRule)
 
         assertThat policyRule.getActions().getSignon().getAccess(), is(PolicyAccess.ALLOW)
@@ -190,8 +187,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setRememberDeviceByDefault(false)
             .setRequireFactor(false)
             .setAccess(PolicyAccess.ALLOW)
-            .buildAndCreate(client, policy)
-
+            .buildAndCreate(client, policy) as OktaSignOnPolicyRule
         registerForCleanup(policyRule)
 
         assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextType.RADIUS)
@@ -216,7 +212,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setRequireFactor(true)
             .setFactorPromptMode(OktaSignOnPolicyFactorPromptMode.ALWAYS)
             .setRememberDeviceByDefault(false)
-        .buildAndCreate(client, policy)
+        .buildAndCreate(client, policy) as OktaSignOnPolicyRule
         registerForCleanup(policyRule)
 
         assertThat policyRule.getConditions().getAuthContext().getAuthType(), is(PolicyRuleAuthContextType.ANY)
@@ -246,7 +242,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
             .setNetworkConnection(PolicyNetworkConnection.ANYWHERE)
             .setRequireFactor(false)
             .setAccess(PolicyAccess.DENY)
-        .buildAndCreate(client, policy)
+        .buildAndCreate(client, policy) as OktaSignOnPolicyRule
 
         registerForCleanup(policyRule)
 
@@ -265,22 +261,22 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         def policyRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
         def policyRule = SignOnPolicyRuleBuilder.instance()
             .setName(policyRuleName)
-            .setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
+            .setAccess(PolicyAccess.ALLOW)
             .setRequireFactor(false)
-            .setStatus(PolicyRule.StatusEnum.INACTIVE)
+            .setStatus(LifecycleStatus.INACTIVE)
             .buildAndCreate(client, policy)
         registerForCleanup(policyRule)
 
         // policy rule is ACTIVE by default
-        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.ACTIVE))
+        assertThat(policyRule.getStatus(), is(LifecycleStatus.ACTIVE))
 
         // deactivate
-        policyRule.deactivate()
-        policyRule = policy.getPolicyRule(policyRule.getId())
-        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.INACTIVE))
+        client.deactivatePolicyRule(policy.getId(), policyRule.getId())
+        policyRule = client.getPolicyRule(policy.getId(), policyRule.getId())
+        assertThat(policyRule.getStatus(), is(LifecycleStatus.INACTIVE))
 
-        policyRule.activate()
-        policyRule = policy.getPolicyRule(policyRule.getId())
-        assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.ACTIVE))
+        client.activatePolicyRule(policy.getId(), policyRule.getId())
+        policyRule = client.getPolicyRule(policy.getId(), policyRule.getId())
+        assertThat(policyRule.getStatus(), is(LifecycleStatus.ACTIVE))
     }
 }
