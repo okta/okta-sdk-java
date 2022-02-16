@@ -16,39 +16,40 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.impl.resource.DefaultGroupBuilder
+import com.okta.sdk.impl.resource.builder.DefaultGroupBuilder
+import com.okta.sdk.resource.ApplicationGroupAssignment
+import com.okta.sdk.resource.AssignRoleRequest
+import com.okta.sdk.resource.AuthenticationProvider
+import com.okta.sdk.resource.AuthenticationProviderType
 import com.okta.sdk.resource.ExtensibleResource
+import com.okta.sdk.resource.ForgotPasswordResponse
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.PasswordCredential
+import com.okta.sdk.resource.PasswordPolicyPasswordSettings
+import com.okta.sdk.resource.PasswordPolicyPasswordSettingsAge
+import com.okta.sdk.resource.PasswordPolicyRule
+import com.okta.sdk.resource.PasswordPolicyRuleAction
+import com.okta.sdk.resource.PasswordPolicyRuleActions
+import com.okta.sdk.resource.PasswordPolicyRuleConditions
+import com.okta.sdk.resource.PasswordPolicySettings
+import com.okta.sdk.resource.PolicyAccess
+import com.okta.sdk.resource.PolicyNetworkCondition
+import com.okta.sdk.resource.PolicyNetworkConnection
+import com.okta.sdk.resource.PolicyRuleType
+import com.okta.sdk.resource.RecoveryQuestionCredential
+import com.okta.sdk.resource.ResetPasswordToken
 import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.application.ApplicationGroupAssignment
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettings
-import com.okta.sdk.resource.policy.PasswordPolicyPasswordSettingsAge
-import com.okta.sdk.resource.policy.PasswordPolicyRule
-import com.okta.sdk.resource.policy.PasswordPolicyRuleAction
-import com.okta.sdk.resource.policy.PasswordPolicyRuleActions
-import com.okta.sdk.resource.policy.PasswordPolicyRuleConditions
-import com.okta.sdk.resource.policy.PasswordPolicySettings
-import com.okta.sdk.resource.policy.PolicyAccess
-import com.okta.sdk.resource.policy.PolicyNetworkCondition
-import com.okta.sdk.resource.policy.PolicyNetworkConnection
-import com.okta.sdk.resource.user.AssignRoleRequest
-import com.okta.sdk.resource.user.AuthenticationProvider
-import com.okta.sdk.resource.user.AuthenticationProviderType
-import com.okta.sdk.resource.user.ChangePasswordRequest
-import com.okta.sdk.resource.user.ForgotPasswordResponse
-import com.okta.sdk.resource.user.PasswordCredential
-import com.okta.sdk.resource.user.RecoveryQuestionCredential
-import com.okta.sdk.resource.user.ResetPasswordToken
-import com.okta.sdk.resource.user.Role
-import com.okta.sdk.resource.user.RoleType
-import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserBuilder
-import com.okta.sdk.resource.user.UserCredentials
-import com.okta.sdk.resource.user.UserList
-import com.okta.sdk.resource.user.UserStatus
-import com.okta.sdk.resource.user.type.UserType
+import com.okta.sdk.resource.Role
+import com.okta.sdk.resource.RoleType
+import com.okta.sdk.resource.UserStatus
+import com.okta.sdk.resource.UserType
+import com.okta.sdk.resource.ChangePasswordRequest
+import com.okta.sdk.resource.User
+import com.okta.sdk.resource.builder.GroupBuilder
+import com.okta.sdk.resource.builder.UserBuilder
+import com.okta.sdk.resource.UserCredentials
+import com.okta.sdk.resource.UserList
 import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
@@ -57,17 +58,12 @@ import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils
 
-import java.time.Duration
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
+import java.time.Duration
 import java.util.stream.Collectors
 
-import static com.okta.sdk.tests.it.util.Util.assertGroupTargetPresent
-import static com.okta.sdk.tests.it.util.Util.assertNotPresent
-import static com.okta.sdk.tests.it.util.Util.assertPresent
-import static com.okta.sdk.tests.it.util.Util.expect
-import static com.okta.sdk.tests.it.util.Util.validateGroup
-import static com.okta.sdk.tests.it.util.Util.validateUser
+import static com.okta.sdk.tests.it.util.Util.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
@@ -120,7 +116,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                         customStringArray: user.getProfile().getStringList("customStringArray"),
                         customNumberArray: user.getProfile().getNumberList("customNumberArray"),
                         customIntegerArray: user.getProfile().getIntegerList("customIntegerArray")])
-        user.update()
+        client.updateUser(user, user.getId())
 
         // same check as before
         assertThat(user.getProfile().getNumber("customNumber"), equalTo(1.5d))
@@ -137,7 +133,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         user.getProfile().remove("customStringArray")
         user.getProfile().remove("customNumberArray")
         user.getProfile().remove("customIntegerArray")
-        user.update()
+        client.updateUser(user, user.getId())
 
         // everything should be null
         assertThat(user.getProfile().getNumber("customNumber"), nullValue())
@@ -172,7 +168,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
     @Override
     void update(Client client, def user) {
         user.getProfile().lastName = "Coder"
-        user.update()
+        client.updateUser(user, user.id)
     }
 
     @Override
@@ -195,7 +191,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def email = "john-activate=${uniqueTestName}@example.com"
 
         // 1. Create a User Type
-        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = UNDERSCORE_NAME_PREFIX + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
@@ -250,7 +246,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Activate the user and verify user in list of active users
-        user.activate(false)
+        client.activateUser(user.getId(), false)
 
         // fix flakiness seen in PDV tests
         Thread.sleep(getTestOperationDelay())
@@ -304,19 +300,16 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
         assignRoleRequest.setType(RoleType.USER_ADMIN)
 
-        Role role = user.assignRole(assignRoleRequest)
+        Role role = client.assignRoleToUser(assignRoleRequest, user.getId())
 
         // 3. List roles for the user and verify added role
-        assertPresent(user.listAssignedRoles(), role)
+        assertPresent(client.listAssignedRolesForUser(user.getId()), role)
 
-        // 4. Verify added role
-        assertThat(user.getRole(role.getId()).getId(), equalTo(role.getId()))
+        // 4. Remove role for the user
+        client.removeRoleFromUser(user.getId(), role.getId())
 
-        // 5. Remove role for the user
-        user.removeRole(role.getId())
-
-        // 6. List roles for user and verify role was removed
-        assertNotPresent(user.listAssignedRoles(), role)
+        // 5. List roles for user and verify role was removed
+        assertNotPresent(client.listAssignedRolesForUser(user.getId()), role)
     }
 
     @Test (groups = "group2")
@@ -340,9 +333,9 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Change the user's password
-        UserCredentials credentials = user.changePassword(client.instantiate(ChangePasswordRequest)
+        UserCredentials credentials = client.changePassword(client.instantiate(ChangePasswordRequest)
             .setOldPassword(client.instantiate(PasswordCredential).setValue('Passw0rd!2@3#'.toCharArray()))
-            .setNewPassword(client.instantiate(PasswordCredential).setValue('!2@3#Passw0rd'.toCharArray())), true)
+            .setNewPassword(client.instantiate(PasswordCredential).setValue('!2@3#Passw0rd'.toCharArray())), user.getId())
         assertThat credentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
@@ -365,10 +358,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setPassword(client.instantiate(PasswordPolicyPasswordSettings)
                 .setAge(client.instantiate(PasswordPolicyPasswordSettingsAge)
                     .setMinAgeMinutes(Duration.ofDays(2L).toMinutes() as int))))
-            .update()
+        client.updatePolicy(policy, policy.getId())
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
-        PasswordPolicyRule policyRule = policy.createRule(client.instantiate(PasswordPolicyRule)
+        PasswordPolicyRule policyRule = client.createPolicyRule(client.instantiate(PasswordPolicyRule)
+            .setType(PolicyRuleType.PASSWORD)
             .setConditions(client.instantiate(PasswordPolicyRuleConditions)
                 .setNetwork(client.instantiate(PolicyNetworkCondition)
                     .setConnection(PolicyNetworkConnection.ANYWHERE)))
@@ -379,7 +373,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                         .setAccess(PolicyAccess.ALLOW))
                     .setSelfServiceUnlock(client.instantiate(PasswordPolicyRuleAction)
                         .setAccess(PolicyAccess.DENY)))
-            .setName(policyRuleName))
+            .setName(policyRuleName), policy.getId()) as PasswordPolicyRule
         registerForCleanup(policyRule)
 
         // 1. Create a user
@@ -399,10 +393,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
             .setOldPassword(client.instantiate(PasswordCredential).setValue('Passw0rd!2@3#'.toCharArray()))
             .setNewPassword(client.instantiate(PasswordCredential).setValue('!2@3#Passw0rd'.toCharArray()))
 
-        // would throw a HTTP 403
-        def exception = expect ResourceException, {user.changePassword(request, true)}
+        def exception = expect ResourceException, {client.changePassword(request, user.getId(),true)}
+        assertThat exception.getMessage(), containsString("E0000014") // Update of credentials failed.
 
-        def credentials = user.changePassword(request, false)
+        def credentials = client.changePassword(request, user.getId())
         assertThat credentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
@@ -431,12 +425,12 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Change the recovery question
-        UserCredentials userCredentials = user.changeRecoveryQuestion(client.instantiate(UserCredentials)
+        UserCredentials userCredentials = client.changeRecoveryQuestion(client.instantiate(UserCredentials)
             .setPassword(client.instantiate(PasswordCredential)
                 .setValue('Passw0rd!2@3#'.toCharArray()))
             .setRecoveryQuestion(client.instantiate(RecoveryQuestionCredential)
                 .setQuestion('How many roads must a man walk down?')
-                .setAnswer('forty two')))
+                .setAnswer('forty two')), user.getId())
 
         assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
         assertThat userCredentials.getRecoveryQuestion().question, equalTo('How many roads must a man walk down?')
@@ -446,7 +440,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         userCredentials.getRecoveryQuestion().answer = 'forty two'
 
         // below would throw HTTP 403 exception
-        user.changeRecoveryQuestion(userCredentials)
+        client.changeRecoveryQuestion(userCredentials, user.getId())
 
         // 4. make the test recording happy, and call a get on the user
         // TODO: fix har file
@@ -472,7 +466,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        ResetPasswordToken response = user.resetPassword(false)
+        ResetPasswordToken response = client.resetPassword(user.getId(), false)
         assertThat response.getResetPasswordUrl(), containsString("/reset_password/")
     }
 
@@ -497,7 +491,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Expire the user's password
-        User updatedUser = user.expirePassword()
+        User updatedUser = client.expirePassword(user.getId())
         assertThat updatedUser, notNullValue()
         assertThat updatedUser.getStatus(), is(UserStatus.PASSWORD_EXPIRED)
     }
@@ -524,7 +518,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Get the reset password link
-        ResetPasswordToken token = user.resetPassword(false)
+        ResetPasswordToken token = client.resetPassword(user.getId(), false)
         assertThat token.getResetPasswordUrl(), notNullValue()
     }
 
@@ -556,12 +550,18 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         User userByLogin = client.getUser(createUser.getProfile().getLogin())
         validateUser(userByLogin, firstName, lastName, email)
 
-        // 3. delete the user
-        user.deactivate()
-        user.delete()
+        // 3. deactivate the user
+        client.deactivateOrDeleteUser(user.getId())
+
+        Thread.sleep(getTestOperationDelay())
+
+        // 4. delete the user
+        client.deactivateOrDeleteUser(user.getId())
+
+        Thread.sleep(getTestOperationDelay())
 
         // 4. get user expect 404
-        expect(ResourceException) {
+        expect (ResourceException) {
             client.getUser(email)
         }
     }
@@ -597,13 +597,13 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         AssignRoleRequest assignRoleRequest = client.instantiate(AssignRoleRequest)
         assignRoleRequest.setType(RoleType.USER_ADMIN)
 
-        Role role = user.assignRole(assignRoleRequest)
+        Role role = client.assignRoleToUser(assignRoleRequest, user.getId())
 
         // 3. Add Group Target to User Admin Role
-        user.addGroupTarget(role.getId(), group.getId())
+        client.addGroupTargetToRole(user.getId(), role.getId(), group.getId())
 
         // 4. List Group Targets for Role
-        assertGroupTargetPresent(user, group, role)
+        assertGroupTargetPresent(client, user, group, role)
 
         // 5. Remove Group Target from Admin User Role and verify removed
         // Note: Don’t remove the last group target from a role assignment, as this causes an exception.
@@ -618,10 +618,10 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(adminGroup)
         validateGroup(adminGroup, adminGroupName)
 
-        user.addGroupTarget(role.getId(), adminGroup.getId())
-        user.removeGroupTarget(role.getId(), adminGroup.getId())
+        client.addGroupTargetToRole(user.getId(), role.getId(), adminGroup.getId())
+        client.removeGroupTargetFromRole(user.getId(), role.getId(), adminGroup.getId())
 
-        assertGroupTargetPresent(user, group, role)
+        assertGroupTargetPresent(client, user, group, role)
     }
 
     @Test (groups = "group2")
@@ -650,7 +650,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // Need to wait 1 second here as that is the minimum time resolution of the 'lastUpdated' field
         sleep(1000)
         user.getProfile().put("nickName", "Batman")
-        user.update()
+        client.updateUser(user, user.getId())
         assertThat(user.lastUpdated, greaterThan(originalLastUpdated))
         User updatedUser = client.getUser(user.getId())
         assertThat(updatedUser.getProfile().get("nickName"), equalTo("Batman"))
@@ -677,7 +677,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Suspend the user and verify user in list of suspended users
-        user.suspend()
+        client.suspendUser(user.getId())
 
         // fix flakiness seen in PDV tests
         Thread.sleep(getTestOperationDelay())
@@ -685,7 +685,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         assertPresent(client.listUsers(null, 'status eq \"SUSPENDED\"', null, null, null), user)
 
         // 3. Unsuspend the user and verify user in list of active users
-        user.unsuspend()
+        client.unsuspendUser(user.getId())
         assertPresent(client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null), user)
     }
 
@@ -730,28 +730,25 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         def email = "john-${uniqueTestName}@example.com"
 
         // 1. Create group
-        Group group = GroupBuilder.instance()
+        Group createdGroup = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(client)
-        registerForCleanup(group)
-        validateGroup(group, groupName)
+        registerForCleanup(createdGroup)
+        validateGroup(createdGroup, groupName)
 
         // 2. Create a user
-        User createUser = UserBuilder.instance()
+        User createdUser = UserBuilder.instance()
                 .setEmail(email)
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setPassword(password.toCharArray())
                 .setActive(false)
-                .addGroup(group.getId())
+                .addGroup(createdGroup.getId())
                 .buildAndCreate(client)
-        registerForCleanup(createUser)
-        validateUser(createUser, firstName, lastName, email)
+        registerForCleanup(createdUser)
+        validateUser(createdUser, firstName, lastName, email)
 
-        List<Group> groups = createUser.listGroups().stream().collect(Collectors.toList())
-        assertThat groups, allOf(hasSize(2))
-        assertThat groups.get(0).getProfile().name, equalTo("Everyone")
-        assertThat groups.get(1).getId(), equalTo(group.id)
+        assertUserInGroup(client, createdUser, createdGroup)
     }
 
     @Test (groups = "group3")
@@ -815,7 +812,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        ForgotPasswordResponse response = user.forgotPasswordGenerateOneTimeToken(false)
+        ForgotPasswordResponse response = client.forgotPassword(user.getId(), false)
         assertThat response.getResetPasswordUrl(), containsString("/signin/reset-password/")
     }
 
@@ -848,7 +845,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
                 .setQuestion('How many roads must a man walk down?')
                 .setAnswer('forty two'))
 
-        UserCredentials response = user.forgotPasswordSetNewPassword(userCredentials, false)
+        UserCredentials response = client.forgotPasswordSetNewPassword(userCredentials, user.getId(),false)
         assertThat response.get("recovery_question")["question"], equalTo("How many roads must a man walk down?")
         assertThat response.get("provider")["type"], equalTo("OKTA")
         assertThat response.get("provider")["name"], equalTo("OKTA")
@@ -915,8 +912,9 @@ class UsersIT extends ITSupport implements CrudTestSupport {
 
         //  Fetch the GroupAssignment list in two requests
         def expandParameter = "group"
-        List<ApplicationGroupAssignment> groupAssignments = client.listApplications().first()
-            .listGroupAssignments(null, expandParameter)
+        def appId = client.listApplications().first().getId()
+        List<ApplicationGroupAssignment> groupAssignments = client
+            .listApplicationGroupAssignments(appId, null, expandParameter)
             .stream()
             .collect(Collectors.toList())
 
@@ -962,7 +960,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         return addProperty
     }
 
-    private String hashPassword(String password, String salt) {
+    private static String hashPassword(String password, String salt) {
         def messageDigest = MessageDigest.getInstance("SHA-512")
         messageDigest.update(salt.getBytes(StandardCharsets.UTF_8))
         def bytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8))

@@ -36,7 +36,6 @@ import static org.hamcrest.Matchers.*
 import static org.mockito.Mockito.*
 import static org.testng.Assert.fail
 
-
 /**
  * Reflection based tests for basic getter and setter methods on generated code.  These tests provide very basic
  * coverage and do NOT test anything specific.

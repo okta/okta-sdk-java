@@ -22,6 +22,6 @@ import java.util.Map;
 
 public interface CacheResolver {
 
-    Cache<String, Map<String, ?>> getCache(Class clazz);
+    Cache<String, Map<String, ?>> getCache();
 
 }

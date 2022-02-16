@@ -16,7 +16,8 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.application.*
+import com.okta.sdk.impl.resource.builder.DefaultApplicationBuilder
+import com.okta.sdk.resource.*
 import org.testng.annotations.Test
 
 import static com.okta.sdk.impl.Util.expect
@@ -42,8 +43,8 @@ class DefaultApplicationBuilderTest {
 
         new DefaultApplicationBuilder()
             .setLabel("test_app")
-            .setLoginRedirectUrl("http://www.myApp.com")
-            .setErrorRedirectUrl("http://www.myApp.com/error")
+            .setLoginRedirectUrl("https://www.myApp.com")
+            .setErrorRedirectUrl("https://www.myApp.com/error")
             .setSelfService(false)
             .setSignOnMode(ApplicationSignOnMode.AUTO_LOGIN)
             .setIOS(false)
@@ -54,8 +55,8 @@ class DefaultApplicationBuilderTest {
         verify(application).setLabel("test_app")
         verify(application).setSignOnMode(ApplicationSignOnMode.AUTO_LOGIN)
         verify(applicationAccessibility).setSelfService(false)
-        verify(applicationAccessibility).setErrorRedirectUrl("http://www.myApp.com/error")
-        verify(applicationAccessibility).setLoginRedirectUrl("http://www.myApp.com")
+        verify(applicationAccessibility).setErrorRedirectUrl("https://www.myApp.com/error")
+        verify(applicationAccessibility).setLoginRedirectUrl("https://www.myApp.com")
         verify(applicationVisibilityHide).setWeb(true)
         verify(applicationVisibilityHide).setIOS(false)
     }
@@ -68,7 +69,7 @@ class DefaultApplicationBuilderTest {
         def applicationVisibilityHide = mock(ApplicationVisibilityHide)
         def applicationVisibility = mock(ApplicationVisibility)
 
-        when(client.instantiate(Application.class)).thenReturn(application);
+        when(client.instantiate(Application.class)).thenReturn(application)
         when(client.instantiate(ApplicationAccessibility.class)).thenReturn(applicationAccessibility)
         when(client.instantiate(ApplicationVisibilityHide.class)).thenReturn(applicationVisibilityHide)
         when(application.getAccessibility()).thenReturn(applicationAccessibility)
@@ -78,8 +79,8 @@ class DefaultApplicationBuilderTest {
         expect IllegalArgumentException, {
             new DefaultApplicationBuilder()
                 .setLabel("test_app")
-                .setLoginRedirectUrl("http://www.myApp.com")
-                .setErrorRedirectUrl("http://www.myApp.com/error")
+                .setLoginRedirectUrl("https://www.myApp.com")
+                .setErrorRedirectUrl("https://www.myApp.com/error")
                 .setSelfService(false)
                 .setSignOnMode(ApplicationSignOnMode.SDK_UNKNOWN)
                 .setIOS(false)

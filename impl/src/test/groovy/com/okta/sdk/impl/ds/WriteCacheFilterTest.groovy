@@ -15,23 +15,20 @@
  */
 package com.okta.sdk.impl.ds
 
-import com.okta.sdk.cache.CacheManager
-import com.okta.sdk.impl.cache.DefaultCacheManager
-import com.okta.sdk.impl.ds.cache.CacheResolver
-import com.okta.sdk.impl.ds.cache.DefaultCacheResolver
-import com.okta.sdk.impl.ds.cache.DefaultResourceCacheStrategy
-import com.okta.sdk.impl.ds.cache.ResourceCacheStrategy
-import com.okta.sdk.impl.ds.cache.WriteCacheFilter
 import com.okta.commons.http.QueryString
+import com.okta.sdk.impl.cache.DefaultCacheManager
+import com.okta.sdk.impl.ds.cache.*
 import com.okta.sdk.impl.http.support.DefaultCanonicalUri
 import com.okta.sdk.impl.resource.HalResourceHrefResolver
 import com.okta.sdk.impl.resource.StubEnum
 import com.okta.sdk.impl.resource.StubResource
 import org.testng.annotations.Test
 
-import static org.mockito.Mockito.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import static org.mockito.ArgumentMatchers.any
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
 
 class WriteCacheFilterTest {
 
@@ -41,10 +38,7 @@ class WriteCacheFilterTest {
         String baseUrl = "https://okta.example.com/cache-test"
         String resourceUrl = "${baseUrl}/cache-me"
 
-        CacheManager cacheManager = new DefaultCacheManager()
-        CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
-        when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
-        CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
+        CacheResolver cacheResolver = new DefaultCacheResolver(new DefaultCacheManager())
 
         ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
         WriteCacheFilter cacheFilter = new WriteCacheFilter(cacheStrategy)
@@ -69,7 +63,7 @@ class WriteCacheFilterTest {
         def result = cacheFilter.filter(dataRequest, filterChain)
 
         assertThat result, sameInstance(resourceDataResult)
-        def cachedItem = cacheResolver.getCache(StubResource).get(resourceUrl)
+        def cachedItem = cacheResolver.getCache().get(resourceUrl)
         assertThat cachedItem, notNullValue()
         assertThat cachedItem, equalTo(payload)
     }
@@ -80,10 +74,7 @@ class WriteCacheFilterTest {
         String baseUrl = "https://okta.example.com/cache-test"
         String resourceUrl = "${baseUrl}/cache-me"
 
-        CacheManager cacheManager = new DefaultCacheManager()
-        CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
-        when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
-        CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
+        CacheResolver cacheResolver = new DefaultCacheResolver(new DefaultCacheManager())
 
         ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
         WriteCacheFilter cacheFilter = new WriteCacheFilter(cacheStrategy)
@@ -139,7 +130,7 @@ class WriteCacheFilterTest {
         def initialGetResult = cacheFilter.filter(getDataRequest, filterChain)
         // validate initial cache of the get
         assertThat initialGetResult, sameInstance(getResourceDataResult)
-        def getCachedItem = cacheResolver.getCache(StubResource).get(resourceUrl)
+        def getCachedItem = cacheResolver.getCache().get(resourceUrl)
         assertThat getCachedItem, notNullValue()
         assertThat getCachedItem, equalTo(initialGetPayload)
 
@@ -147,7 +138,7 @@ class WriteCacheFilterTest {
         def updateResult = cacheFilter.filter(updateDataRequest, filterChain)
         // validate the updated cache
         assertThat updateResult, sameInstance(updateResourceDataResult)
-        def updatedCachedItem = cacheResolver.getCache(StubResource).get(resourceUrl)
+        def updatedCachedItem = cacheResolver.getCache().get(resourceUrl)
         assertThat updatedCachedItem, notNullValue()
         assertThat updatedCachedItem, equalTo(updatePayloadResponse)
     }
@@ -158,10 +149,7 @@ class WriteCacheFilterTest {
         String baseUrl = "https://okta.example.com/cache-test"
         String resourceUrl = "${baseUrl}/cache-me"
 
-        CacheManager cacheManager = new DefaultCacheManager()
-        CacheRegionNameResolver cacheRegionNameResolver = mock(CacheRegionNameResolver)
-        when(cacheRegionNameResolver.getCacheRegionName(StubResource)).thenReturn(StubResource.getName())
-        CacheResolver cacheResolver = new DefaultCacheResolver(cacheManager, cacheRegionNameResolver)
+        CacheResolver cacheResolver = new DefaultCacheResolver(new DefaultCacheManager())
 
         ResourceCacheStrategy cacheStrategy = new DefaultResourceCacheStrategy(new HalResourceHrefResolver(), cacheResolver)
         WriteCacheFilter cacheFilter = new WriteCacheFilter(cacheStrategy)
@@ -197,7 +185,7 @@ class WriteCacheFilterTest {
         def initialGetResult = cacheFilter.filter(getDataRequest, filterChain)
         // validate initial cache of the get
         assertThat initialGetResult, sameInstance(getResourceDataResult)
-        def getCachedItem = cacheResolver.getCache(StubResource).get(resourceUrl)
+        def getCachedItem = cacheResolver.getCache().get(resourceUrl)
         assertThat getCachedItem, notNullValue()
         assertThat getCachedItem, equalTo(initialGetPayload)
 
@@ -205,7 +193,7 @@ class WriteCacheFilterTest {
         def deleteResult = cacheFilter.filter(deleteDataRequest, filterChain)
         // validate the cached item has been removed
         assertThat deleteResult, sameInstance(deleteResourceDataResult)
-        def deletedCachedItem = cacheResolver.getCache(StubResource).get(resourceUrl)
+        def deletedCachedItem = cacheResolver.getCache().get(resourceUrl)
         assertThat deletedCachedItem, nullValue()
     }
 }

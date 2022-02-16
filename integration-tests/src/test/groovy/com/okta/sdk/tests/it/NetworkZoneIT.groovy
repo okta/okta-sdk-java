@@ -15,7 +15,12 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.network.zone.*
+import com.okta.sdk.resource.NetworkZone
+import com.okta.sdk.resource.NetworkZoneAddress
+import com.okta.sdk.resource.NetworkZoneAddressType
+import com.okta.sdk.resource.NetworkZoneStatus
+import com.okta.sdk.resource.NetworkZoneType
+import com.okta.sdk.resource.NetworkZoneUsage
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 
@@ -33,7 +38,7 @@ class NetworkZoneIT extends ITSupport {
     @Test (groups = "group2")
     void listNetworkZonesTest() {
 
-        getClient().listNetworkZones()
+        client.listNetworkZones()
             .forEach({ networkZone ->
                 assertThat(networkZone.getId(), notNullValue())
                 assertThat(networkZone.getName(), notNullValue())
@@ -49,30 +54,30 @@ class NetworkZoneIT extends ITSupport {
     @Test (groups = "group2")
     void createAndDeleteNetworkZoneTest() {
 
-        String networkZoneName = "network-zone-it-${uniqueTestName}"
+        String networkZoneName = SPINE_NAME_PREFIX + "${uniqueTestName}"
 
-        NetworkZone networkZone = getClient().instantiate(NetworkZone)
+        NetworkZone networkZone = client.instantiate(NetworkZone)
             .setType(NetworkZoneType.IP)
             .setName(networkZoneName)
             .setStatus(NetworkZoneStatus.ACTIVE)
             .setGateways(Arrays.asList(
-                getClient().instantiate(NetworkZoneAddress)
+                client.instantiate(NetworkZoneAddress)
                     .setType(NetworkZoneAddressType.CIDR)
                     .setValue("1.2.3.4/24"),
-                getClient().instantiate(NetworkZoneAddress)
+                client.instantiate(NetworkZoneAddress)
                     .setType(NetworkZoneAddressType.CIDR)
                     .setValue("2.3.4.5/24")
             ))
             .setProxies(Arrays.asList(
-                getClient().instantiate(NetworkZoneAddress)
+                client.instantiate(NetworkZoneAddress)
                     .setType(NetworkZoneAddressType.CIDR)
                     .setValue("2.2.3.4/24"),
-                getClient().instantiate(NetworkZoneAddress)
+                client.instantiate(NetworkZoneAddress)
                     .setType(NetworkZoneAddressType.CIDR)
                     .setValue("3.3.4.5/24")
             ))
 
-        def createdNetworkZone = getClient().createNetworkZone(networkZone)
+        def createdNetworkZone = client.createNetworkZone(networkZone)
         assertThat(createdNetworkZone, notNullValue())
         registerForCleanup(createdNetworkZone)
 
@@ -81,65 +86,65 @@ class NetworkZoneIT extends ITSupport {
         assertThat(createdNetworkZone.getStatus(), equalTo(NetworkZoneStatus.ACTIVE))
         assertThat(createdNetworkZone.getGateways(), iterableWithSize(networkZone.getGateways().size()))
         assertThat(createdNetworkZone.getProxies(), iterableWithSize(networkZone.getProxies().size()))
-        assertPresent(getClient().listNetworkZones(), createdNetworkZone)
+        assertPresent(client.listNetworkZones(), createdNetworkZone)
 
-        createdNetworkZone.delete()
-        assertNotPresent(getClient().listNetworkZones(), createdNetworkZone)
+        client.deleteNetworkZone(createdNetworkZone.getId())
+        assertNotPresent(client.listNetworkZones(), createdNetworkZone)
     }
 
     @Test (groups = "group2")
     void updateNetworkZoneTest() {
 
-        String networkZoneName = "network-zone-it-${uniqueTestName}"
+        String networkZoneName = SPINE_NAME_PREFIX + "${uniqueTestName}"
 
-        NetworkZone networkZone = getClient().instantiate(NetworkZone)
+        NetworkZone networkZone = client.instantiate(NetworkZone)
             .setType(NetworkZoneType.IP)
             .setName(networkZoneName)
             .setStatus(NetworkZoneStatus.ACTIVE)
             .setGateways(Arrays.asList(
-                getClient().instantiate(NetworkZoneAddress)
+                client.instantiate(NetworkZoneAddress)
                     .setType(NetworkZoneAddressType.CIDR)
                     .setValue("1.2.3.4/24"),
-                getClient().instantiate(NetworkZoneAddress)
+                client.instantiate(NetworkZoneAddress)
                     .setType(NetworkZoneAddressType.CIDR)
                     .setValue("2.3.4.5/24")
             ))
             .setProxies(Arrays.asList(
-                getClient().instantiate(NetworkZoneAddress)
+                client.instantiate(NetworkZoneAddress)
                     .setType(NetworkZoneAddressType.CIDR)
                     .setValue("2.2.3.4/24"),
-                getClient().instantiate(NetworkZoneAddress)
+                client.instantiate(NetworkZoneAddress)
                     .setType(NetworkZoneAddressType.CIDR)
                     .setValue("3.3.4.5/24")
             ))
 
-        def createdNetworkZone = getClient().createNetworkZone(networkZone)
+        def createdNetworkZone = client.createNetworkZone(networkZone)
         assertThat(createdNetworkZone, notNullValue())
         registerForCleanup(createdNetworkZone)
 
         createdNetworkZone.setGateways(
             networkZone.getGateways().stream()
-                .filter({ x -> x.getValue().equals("2.3.4.5/24") })
+                .filter({ x -> (x.getValue() == "2.3.4.5/24") })
                 .collect().asList()
         )
         createdNetworkZone.setProxies(
             networkZone.getProxies().stream()
-                .filter({ x -> x.getValue().equals("3.3.4.5/24") })
+                .filter({ x -> (x.getValue() == "3.3.4.5/24") })
                 .collect().asList()
         )
-        createdNetworkZone.update()
+        client.updateNetworkZone(createdNetworkZone, createdNetworkZone.getId())
 
-        def updatedNetworkZone = getClient().getNetworkZone(createdNetworkZone.getId())
+        def updatedNetworkZone = client.getNetworkZone(createdNetworkZone.getId())
         assertThat(updatedNetworkZone, notNullValue())
         assertThat(updatedNetworkZone.getId(), equalTo(createdNetworkZone.getId()))
         assertThat(updatedNetworkZone.getGateways(), iterableWithSize(1))
         assertThat(
-            updatedNetworkZone.getGateways().find { nz -> nz.getValue().equals("2.3.4.5/24") }
+            updatedNetworkZone.getGateways().find { nz -> (nz.getValue() == "2.3.4.5/24") }
             , notNullValue()
         )
         assertThat(updatedNetworkZone.getProxies(), iterableWithSize(1))
         assertThat(
-            updatedNetworkZone.getProxies().find { nz -> nz.getValue().equals("3.3.4.5/24") }
+            updatedNetworkZone.getProxies().find { nz -> (nz.getValue() == "3.3.4.5/24") }
             , notNullValue()
         )
     }
@@ -147,34 +152,34 @@ class NetworkZoneIT extends ITSupport {
     @Test (groups = "group2")
     void activateDeactivateNetworkZoneTest() {
 
-        String networkZoneName = "network-zone-it-${uniqueTestName}"
+        String networkZoneName = SPINE_NAME_PREFIX + "${uniqueTestName}"
 
-        NetworkZone networkZone = getClient().instantiate(NetworkZone)
+        NetworkZone networkZone = client.instantiate(NetworkZone)
             .setType(NetworkZoneType.IP)
             .setName(networkZoneName)
             .setStatus(NetworkZoneStatus.ACTIVE)
             .setGateways(Arrays.asList(
-                getClient().instantiate(NetworkZoneAddress)
+                client.instantiate(NetworkZoneAddress)
                     .setType(NetworkZoneAddressType.CIDR)
                     .setValue("1.2.3.4/24")
             ))
             .setProxies(Arrays.asList(
-                getClient().instantiate(NetworkZoneAddress)
+                client.instantiate(NetworkZoneAddress)
                     .setType(NetworkZoneAddressType.CIDR)
                     .setValue("2.2.3.4/24")
             ))
 
-        def createdNetworkZone = getClient().createNetworkZone(networkZone)
+        def createdNetworkZone = client.createNetworkZone(networkZone)
         assertThat(createdNetworkZone, notNullValue())
         registerForCleanup(createdNetworkZone)
 
-        createdNetworkZone.deactivate()
+        client.deactivateNetworkZone(createdNetworkZone.getId())
 
-        def deactivatedNetworkZone = getClient().getNetworkZone(createdNetworkZone.getId())
+        def deactivatedNetworkZone = client.getNetworkZone(createdNetworkZone.getId())
         assertThat(deactivatedNetworkZone.getStatus(), equalTo(NetworkZoneStatus.INACTIVE))
 
-        deactivatedNetworkZone.activate()
-        def activatedNetworkZone = getClient().getNetworkZone(deactivatedNetworkZone.getId())
+        client.activateNetworkZone(deactivatedNetworkZone.getId())
+        def activatedNetworkZone = client.getNetworkZone(deactivatedNetworkZone.getId())
         assertThat(activatedNetworkZone.getStatus(), equalTo(NetworkZoneStatus.ACTIVE))
     }
 }

@@ -17,29 +17,28 @@ package com.okta.swagger.codegen;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.samskivert.mustache.Mustache;
-
+import io.swagger.codegen.v3.CodegenConstants;
 import io.swagger.codegen.v3.CodegenModel;
 import io.swagger.codegen.v3.CodegenOperation;
 import io.swagger.codegen.v3.CodegenParameter;
 import io.swagger.codegen.v3.CodegenProperty;
 import io.swagger.codegen.v3.CodegenType;
-import io.swagger.codegen.v3.CodegenConstants;
 import io.swagger.codegen.v3.generators.java.AbstractJavaCodegen;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.BinarySchema;
+import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,35 +47,26 @@ import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.yaml.snakeyaml.Yaml;
-
 public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen {
-
-    private final String codeGenName;
-    private static final String NON_OPTIONAL_PRAMS = "nonOptionalParams";
-    private static final String X_CODEGEN_REQUEST_BODY_NAME = "x-codegen-request-body-name";
-    private static final String X_OKTA_REQUEST_BODY_NAME = "x-okta-request-body-name";
 
     @SuppressWarnings("hiding")
     private final Logger log = LoggerFactory.getLogger(AbstractOktaJavaClientCodegen.class);
+
+    private static final String NON_OPTIONAL_PRAMS = "nonOptionalParams";
+    private static final String X_CODEGEN_REQUEST_BODY_NAME = "x-codegen-request-body-name";
 
     protected Map<String, String> modelTagMap = new HashMap<>();
     protected Set<String> enumList = new HashSet<>();
@@ -84,6 +74,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     protected Map<String, String> reverseDiscriminatorMap = new HashMap<>();
     protected Set<String> topLevelResources = new HashSet<>();
     protected Map<String, Object> rawSwaggerConfig;
+    private final String codeGenName;
 
     public AbstractOktaJavaClientCodegen(String codeGenName, String modelPackage) {
         super();
@@ -112,7 +103,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         buildModelTagMap(openAPI);
         removeListAfterAndLimit(openAPI);
         moveOperationsToSingleClient(openAPI);
-        handleOktaLinkedOperations(openAPI);
         buildDiscriminationMap(openAPI);
         buildGraalVMReflectionConfig(openAPI);
     }
@@ -144,9 +134,10 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                         .filter(entry -> entry.getValue().getContent().get("application/json") != null)
                         .forEach(entry -> {
                             Schema schema = entry.getValue().getContent().get("application/json").getSchema();
-                            if (schema != null && schema instanceof ArraySchema) {
+                            if (schema instanceof ArraySchema) {
                                 String ref = ((ArraySchema) schema).getItems().get$ref();
-                                resources.add(refToSimpleName(ref));
+                                String requestType = refToSimpleName(ref);
+                                resources.add(requestType);
                             }
                         });
                 });
@@ -156,7 +147,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         openAPI.getComponents().getSchemas().forEach((name, model) -> {
             String parent = getParentModelRef(model);
             if (parent != null) {
-                parent = parent.replaceAll(".*/", "");
+                parent = refToSimpleName(parent);
 
                 if (resources.contains(parent)) {
                     resources.add(name);
@@ -166,10 +157,12 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
         // mark each model with a 'top-level' vendorExtension
         resources.stream()
-                .map(resourceName -> openAPI.getComponents().getSchemas().get(resourceName))
-                .forEach(model -> {
-                    model.getExtensions().put("top-level", true);
-                });
+            .forEach(resourceName -> {
+                if (openAPI.getComponents().getSchemas().get(resourceName).getExtensions() == null) {
+                    openAPI.getComponents().getSchemas().get(resourceName).setExtensions(new HashMap<>());
+                }
+                openAPI.getComponents().getSchemas().get(resourceName).getExtensions().put("top-level", true);
+            });
 
         this.topLevelResources = resources;
     }
@@ -245,13 +238,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     protected void preprocessRequestBodyName(OpenAPI openAPI) {
         Map<String, Object> allPaths = castToMap(rawSwaggerConfig.get("paths"));
-        if(allPaths != null) {
+
+        if (allPaths != null) {
             allPaths.forEach((pathName, value) -> {
                 Map<String, Object> pathItem = castToMap(value);
-                if(pathItem != null) {
+                if (pathItem != null) {
                     Map<String, Object> postOperation = castToMap(pathItem.get("post"));
-                    if(postOperation != null && postOperation.containsKey(X_OKTA_REQUEST_BODY_NAME)) {
-                        String requestBodyName = postOperation.get(X_OKTA_REQUEST_BODY_NAME).toString();
+                    if (postOperation != null && postOperation.containsKey(X_CODEGEN_REQUEST_BODY_NAME)) {
+                        String requestBodyName = postOperation.get(X_CODEGEN_REQUEST_BODY_NAME).toString();
                         if(requestBodyName != null) {
                             RequestBody requestBody = openAPI.getPaths().get(pathName)
                                 .getPost().getRequestBody();
@@ -261,13 +255,14 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                             requestBody.getExtensions().put(X_CODEGEN_REQUEST_BODY_NAME, requestBodyName);
                         }
                     }
+
                     Map<String, Object> putOperation = castToMap(pathItem.get("put"));
-                    if(putOperation != null && putOperation.containsKey(X_OKTA_REQUEST_BODY_NAME)) {
-                        String requestBodyName = putOperation.get(X_OKTA_REQUEST_BODY_NAME).toString();
-                        if(requestBodyName != null) {
+                    if (putOperation != null && putOperation.containsKey(X_CODEGEN_REQUEST_BODY_NAME)) {
+                        String requestBodyName = putOperation.get(X_CODEGEN_REQUEST_BODY_NAME).toString();
+                        if (requestBodyName != null) {
                             RequestBody requestBody = openAPI.getPaths().get(pathName)
                                 .getPut().getRequestBody();
-                            if(requestBody.getExtensions() == null) {
+                            if (requestBody.getExtensions() == null) {
                                 requestBody.setExtensions(new HashMap<>());
                             }
                             requestBody.getExtensions().put(X_CODEGEN_REQUEST_BODY_NAME, requestBodyName);
@@ -287,9 +282,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                     // if tags is NOT null, then assume it is an array
                     if (tags instanceof List) {
                         if (!((List) tags).isEmpty()) {
-                            String packageName = tagToPackageName(((List) tags).get(0).toString());
-                            addToModelTagMap(key, packageName);
-                            definition.getExtensions().put("x-okta-package", packageName);
+                            addToModelTagMap(key);
                         }
                     } else {
                         throw new RuntimeException("Model: " + key + " contains 'x-okta-tags' that is NOT a List.");
@@ -299,12 +292,9 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         });
     }
 
-    protected void addToModelTagMap(String modelName, String packageName) {
-        modelTagMap.put(modelName, packageName);
-    }
-
-    protected String tagToPackageName(String tag) {
-        return tag.replaceAll("(.)(\\p{Upper})", "$1.$2").toLowerCase(Locale.ENGLISH);
+    protected void addToModelTagMap(String modelName) {
+        // always tag to root package
+        modelTagMap.put(modelName, "");
     }
 
     public void removeListAfterAndLimit(OpenAPI openAPI) {
@@ -319,207 +309,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                     );
                 });
         });
-    }
-
-    private void handleOktaLinkedOperations(OpenAPI openAPI) {
-        // we want to move any operations defined by the 'x-okta-operations'
-        // or 'x-okta-crud' vendor extension to the model
-        Map<String, Schema> schemaMap = openAPI.getComponents().getSchemas().entrySet().stream()
-            .filter(e -> e.getValue().getExtensions() != null)
-            .filter(e -> e.getValue().getExtensions().containsKey("x-okta-operations")
-                || e.getValue().getExtensions().containsKey("x-okta-crud"))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-        schemaMap.forEach((k, schema) -> {
-            List<HashMap> operationsList = new ArrayList<>();
-
-            Stream.of(schema.getExtensions().get("x-okta-operations"),
-                    schema.getExtensions().get("x-okta-crud"))
-                .filter(Objects::nonNull)
-                .forEach(obj -> {
-                    if (obj instanceof List) {
-                        operationsList.addAll((List) obj);
-                    }
-                });
-
-            Map<String, CodegenOperation> operationMap = new HashMap<>();
-
-            operationsList.forEach(operationNode -> {
-                String operationId = operationNode.get("operationId").toString();
-
-                // find the swagger path operation
-                openAPI.getPaths().forEach((pathName, path) -> {
-
-                    Map<String, Operation> allMethods = new HashMap<>();
-                    allMethods.put("GET", path.getGet());
-                    allMethods.put("POST", path.getPost());
-                    allMethods.put("PUT", path.getPut());
-                    allMethods.put("DELETE", path.getDelete());
-
-                    Optional<Map.Entry<String, Operation>> operationEntry =
-                        allMethods.entrySet().stream()
-                            .filter(entry -> entry.getValue() != null)
-                            .filter(entry -> entry.getValue().getOperationId() != null
-                                && entry.getValue().getOperationId().equals(operationId))
-                            .findFirst();
-
-                        if (operationEntry.isPresent()) {
-                            String httpMethod = operationEntry.get().getKey();
-                            Operation operation = operationEntry.get().getValue();
-
-                            CodegenOperation cgOperation = fromOperation(
-                                pathName,
-                                httpMethod,
-                                operation,
-                                openAPI.getComponents().getSchemas(),
-                                openAPI);
-
-                            boolean canLinkMethod = true;
-
-                            Object aliasNode = operationNode.get("alias");
-                            String alias = null;
-                            if (aliasNode != null) {
-                                alias = aliasNode.toString();
-                                cgOperation.vendorExtensions.put("alias", alias);
-
-                                if ("update".equals(alias)) {
-                                    schema.getExtensions().put("saveable", true);
-                                } else if ("delete".equals(alias)) {
-                                    schema.getExtensions().put("deletable", true);
-                                    cgOperation.vendorExtensions.put("selfDelete", true);
-                                } else if ("read".equals(alias) || "create".equals(alias)) {
-                                    canLinkMethod = false;
-                                }
-                            }
-
-                            // we do NOT link read or create methods, those need to be on the parent object
-                            if (canLinkMethod) {
-
-                                // now any params that match the models we need to use the model value directly
-                                // for example if the path contained {id} we would call getId() instead
-
-                                Map<String, String> argMap = createArgMap(operationNode);
-
-                                List<CodegenParameter> cgOtherPathParamList = new ArrayList<>();
-                                List<CodegenParameter> cgParamAllList = new ArrayList<>();
-                                List<CodegenParameter> cgParamModelList = new ArrayList<>();
-
-                                cgOperation.pathParams.forEach(param -> {
-
-                                    if (argMap.containsKey(param.paramName)) {
-
-                                        String paramName = argMap.get(param.paramName);
-                                        cgParamModelList.add(param);
-
-                                        if (schema.getProperties() != null) {
-                                            CodegenProperty cgProperty = fromProperty(paramName, (Schema)schema.getProperties().get(paramName));
-                                            if (cgProperty == null && cgOperation.operationId.equals("deleteLinkedObjectDefinition")) {
-                                                cgProperty = new CodegenProperty();
-                                                cgProperty.getter = "getPrimary().getName";
-                                            }
-                                            param.vendorExtensions.put("fromModel", cgProperty);
-                                        } else {
-                                            System.err.println("Model '" + schema.getTitle() + "' has no properties");
-                                        }
-
-                                    } else {
-                                        cgOtherPathParamList.add(param);
-                                    }
-                                });
-
-                                // remove the body param if the body is the object itself
-                                for (Iterator<CodegenParameter> iter = cgOperation.bodyParams.iterator(); iter.hasNext(); ) {
-                                    CodegenParameter bodyParam = iter.next();
-                                    if (argMap.containsKey(bodyParam.paramName)) {
-                                        cgOperation.vendorExtensions.put("bodyIsSelf", true);
-                                        iter.remove();
-                                    }
-                                }
-
-                                // do not add the parent path params to the list (they will be parsed from the href)
-                                SortedSet<String> pathParents = parentPathParams(operationNode);
-                                cgOtherPathParamList.forEach(param -> {
-                                    if (!pathParents.contains(param.paramName)) {
-                                        cgParamAllList.add(param);
-                                    }
-                                });
-
-                                //do not implement interface Deletable when delete method has some arguments
-                                if (alias.equals("delete") && cgParamAllList.size() > 0) {
-                                    schema.getExtensions().put("deletable", false);
-                                }
-
-                                if (!pathParents.isEmpty()) {
-                                    cgOperation.vendorExtensions.put("hasPathParents", true);
-                                    cgOperation.vendorExtensions.put("pathParents", pathParents);
-                                }
-
-                                cgParamAllList.addAll(cgOperation.bodyParams);
-                                cgParamAllList.addAll(cgOperation.queryParams);
-                                cgParamAllList.addAll(cgOperation.headerParams);
-
-                                cgOperation.vendorExtensions.put("allParams", cgParamAllList);
-                                cgOperation.vendorExtensions.put("fromModelPathParams", cgParamModelList);
-
-                                addOptionalExtensionAndBackwardCompatibleArgs(cgOperation, cgParamAllList);
-
-                                operationMap.put(cgOperation.operationId, cgOperation);
-
-                                // mark the operation as moved, so we do NOT add it to the client
-                                operation.getExtensions().put("moved", true);
-                            }
-                        }
-                });
-            });
-
-            schema.getExtensions().put("operations", operationMap.values());
-        });
-    }
-
-    private Map<String, String> createArgMap(HashMap hashMap) {
-
-        Map<String, String> argMap = new LinkedHashMap<>();
-        List argNodeList = (List) hashMap.get("arguments");
-
-        if (argNodeList != null) {
-            for (Iterator argNodeIter = argNodeList.iterator(); argNodeIter.hasNext(); ) {
-                HashMap argNode = (HashMap) argNodeIter.next();
-
-                if (argNode.containsKey("src")) {
-                    String src = argNode.get("src").toString();
-                    String dest = argNode.get("dest").toString();
-                    if (src != null) {
-                        argMap.put(dest, src); // reverse lookup
-                    }
-                }
-
-                if (argNode.containsKey("self")) {
-                    String dest = argNode.get("dest").toString();
-                    argMap.put(dest, "this");
-                }
-            }
-        }
-        return argMap;
-    }
-
-    private SortedSet<String> parentPathParams(HashMap hashMap) {
-
-        SortedSet<String> result = new TreeSet<>();
-        List argNodeList = (List) hashMap.get("arguments");
-
-        if (argNodeList != null) {
-            for (Iterator argNodeIter = argNodeList.iterator(); argNodeIter.hasNext(); ) {
-                HashMap argNode = (HashMap) argNodeIter.next();
-                if (argNode.containsKey("parentSrc")) {
-                    String src = argNode.get("parentSrc").toString();
-                    String dest = argNode.get("dest").toString();
-                    if (src != null) {
-                        result.add(dest);
-                    }
-                }
-            }
-        }
-        return result;
     }
 
     private void moveOperationsToSingleClient(OpenAPI openAPI) {
@@ -599,64 +388,24 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     @Override
     public CodegenModel fromModel(String name, Schema model, Map<String, Schema> allDefinitions) {
-       CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
+        CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
         // super add these imports, and we don't want that dependency
         codegenModel.imports.remove("ApiModel");
 
-        if (model.getExtensions() !=null && model.getExtensions().containsKey("x-baseType")) {
+        if (model.getExtensions() != null && model.getExtensions().containsKey("x-baseType")) {
             String baseType = (String) model.getExtensions().get("x-baseType");
             codegenModel.vendorExtensions.put("baseType", toModelName(baseType));
-            codegenModel.imports.add(toModelName(baseType));
         }
 
-        Collection<CodegenOperation> operations = (Collection<CodegenOperation>) codegenModel.vendorExtensions.get("operations");
-        if (operations != null) {
-            operations.forEach(op -> {
-                    if (op.returnType != null) {
-                        codegenModel.imports.add(op.returnType);
-                    }
-                    if (op.allParams != null) {
-                        op.allParams.stream()
-                            .filter(param -> needToImport(param.dataType))
-                            .forEach(param -> codegenModel.imports.add(param.dataType));
-                    }
-            });
+        if (codegenModel.parent != null) {
+            // handle correctly model inheritance described as
+            // allOf:
+            // - $ref:
+            codegenModel.parent = toApiName(codegenModel.parent);
+            codegenModel.getVendorExtensions().remove("top-level");
         }
 
-        if(model.getExtensions() != null) {
-            String parent = (String) model.getExtensions().get("x-okta-parent");
-            if (StringUtils.isNotEmpty(parent)) {
-                codegenModel.parent = toApiName(parent.substring(parent.lastIndexOf("/")));
-
-                // figure out the resourceClass if this model has a parent
-                String discriminatorRoot = getRootDiscriminator(name);
-                if (discriminatorRoot != null) {
-                    model.getExtensions().put("discriminatorRoot", discriminatorRoot);
-                }
-
-            } else if(codegenModel.parent != null) {
-                // handle correctly model inheritance described as
-                // allOf:
-                // - $ref:
-                codegenModel.parent = toApiName(codegenModel.parent);
-                codegenModel.getVendorExtensions().remove("top-level");
-            }
-        }
-
-       return codegenModel;
-    }
-
-    private String getParentModelRef(Schema model) {
-        if (model.getExtensions() != null && model.getExtensions().get("x-okta-parent") != null) {
-            return (String) model.getExtensions().get("x-okta-parent");
-        } else if (model instanceof ComposedSchema) {
-            // Assumes first entry is the parent $ref
-            ComposedSchema composed = (ComposedSchema) model;
-            if (composed.getAllOf() != null && !composed.getAllOf().isEmpty()) {
-                return composed.getAllOf().get(0).get$ref();
-            }
-        }
-        return null;
+        return codegenModel;
     }
 
     private List<CodegenOperation> sortOperations(Collection<CodegenOperation> operations) {
@@ -667,57 +416,21 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 .collect(Collectors.toList());
     }
 
-    private String getRootDiscriminator(String name) {
-        String result = reverseDiscriminatorMap.get(name);
-
-        if (result != null) {
-            String parentResult = getRootDiscriminator(result);
-            if (parentResult != null) {
-                result = parentResult;
-            }
-        }
-        return result;
-    }
-
     @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
 
         Map<String, Object> resultMap = super.postProcessOperations(objs);
 
-        List<Map<String, String>> imports = (List<Map<String, String>>) objs.get("imports");
         Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
         List<CodegenOperation> codegenOperations = (List<CodegenOperation>) operations.get("operation");
-
-        // find all the list return values
-        Set<String> importsToAdd = new HashSet<>();
-        codegenOperations.stream()
-                .filter(cgOp -> cgOp.returnType != null)
-                .filter(cgOp -> cgOp.returnType.matches(".+List$"))
-                .forEach(cgOp -> importsToAdd.add(toModelImport(cgOp.returnType)));
-
-        // the params might have imports too
-        codegenOperations.stream()
-                .filter(cgOp -> cgOp.allParams != null)
-                .forEach(cgOp -> cgOp.allParams.stream()
-                        .filter(cgParam -> cgParam.getIsEnum())
-                        .filter(cgParam -> needToImport(cgParam.dataType))
-                        .forEach(cgParam -> importsToAdd.add(toModelImport(cgParam.dataType))));
-
-        // add each one as an import
-        importsToAdd.forEach(className -> {
-            Map<String, String> listImport = new LinkedHashMap<>();
-            listImport.put("import", className);
-            imports.add(listImport);
-        });
-
         operations.put("operation", sortOperations(codegenOperations));
         return resultMap;
     }
 
-
     @Override
     public void postProcessModelProperty(CodegenModel model, CodegenProperty property) {
         super.postProcessModelProperty(model, property);
+
         if(!BooleanUtils.toBoolean(model.getIsEnum())) {
 
             //Do not use JsonWebKeyList because it's based on Map<K,V> but API require a simple List<JsonWebKey>
@@ -729,22 +442,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 property.getVendorExtensions().put("x-okta-known-values-exists", true);
                 property.getVendorExtensions()
                     .put("x-okta-known-values-class-name", property.getNameInCamelCase() + "Values");
-            }
-
-            String datatype = property.datatype;
-            if (datatype != null
-                    && datatype.matches(".+List$")
-                    && needToImport(datatype)) {
-                model.imports.add(datatype);
-            }
-
-            String type = property.complexType;
-            if (type == null) {
-                type = property.baseType;
-            }
-
-            if (needToImport(type)) {
-                model.imports.add(type);
             }
 
             // super add these imports, and we don't want that dependency
@@ -772,7 +469,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
             Mustache.Compiler compiler = Mustache.compiler().withLoader((name) -> {
                 if (optionalClassnameTemplate != null) {
-                    return new InputStreamReader(getClass().getResourceAsStream(templateResource), StandardCharsets.UTF_8);
+                    return new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream(templateResource)), StandardCharsets.UTF_8);
                 }
                 return new StringReader("");
             });
@@ -783,6 +480,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
     @Override
     public Map<String, Object> postProcessModelsEnum(Map<String, Object> objs) {
         objs = super.postProcessModelsEnum(objs);
+
         //Needed import for Gson based libraries
         if (additionalProperties.containsKey("gson")) {
             List<Map<String, String>> imports = (List<Map<String, String>>)objs.get("imports");
@@ -793,7 +491,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
                 // for enum model
                 if (Boolean.TRUE.equals(cm.getIsEnum()) && cm.allowableValues != null) {
                     cm.imports.add(importMapping.get("SerializedName"));
-                    Map<String, String> item = new HashMap<String, String>();
+                    Map<String, String> item = new HashMap<>();
                     item.put("import", importMapping.get("SerializedName"));
                     imports.add(item);
                 }
@@ -815,9 +513,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
             openAPI);
 
         // Deep copy for vendorExtensions Map
-        Map<String, Object> vendorExtensions = new LinkedHashMap<>();
-        co.vendorExtensions.forEach(vendorExtensions::put);
-        co.vendorExtensions = vendorExtensions;
+        co.vendorExtensions = new LinkedHashMap<>(co.vendorExtensions);
 
         // mark the operation as having optional params, so we can take advantage of it in the template
         addOptionalExtensionAndBackwardCompatibleArgs(co, co.allParams);
@@ -1055,8 +751,22 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         return super.getTypeDeclaration(propertySchema);
     }
 
+    private String getParentModelRef(Schema model) {
+        if (model.getExtensions() != null && model.getExtensions().get("x-okta-parent") != null) {
+            return (String) model.getExtensions().get("x-okta-parent");
+        } else if (model instanceof ComposedSchema) {
+            // Assumes first entry is the parent $ref
+            ComposedSchema composed = (ComposedSchema) model;
+            if (composed.getAllOf() != null && !composed.getAllOf().isEmpty()) {
+                return composed.getAllOf().get(0).get$ref();
+            }
+        }
+        return null;
+    }
+
+    @Override
     protected void fixUpParentAndInterfaces(CodegenModel codegenModel, Map<String, CodegenModel> allModels) {
-        //Override parental method. Doing nothing here.
+        //Override parent method. Doing nothing here.
     }
 
     private Map<String, Object> castToMap(Object object) {

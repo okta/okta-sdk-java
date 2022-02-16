@@ -16,17 +16,18 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.group.GroupRule
-import com.okta.sdk.resource.group.GroupRuleAction
-import com.okta.sdk.resource.group.GroupRuleBuilder
-import com.okta.sdk.resource.group.GroupRuleConditions
-import com.okta.sdk.resource.group.GroupRuleExpression
-import com.okta.sdk.resource.group.GroupRuleGroupAssignment
-import com.okta.sdk.resource.group.GroupRuleStatus
-import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserBuilder
+
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.builder.GroupBuilder
+import com.okta.sdk.resource.GroupRule
+import com.okta.sdk.resource.GroupRuleAction
+import com.okta.sdk.resource.builder.GroupRuleBuilder
+import com.okta.sdk.resource.GroupRuleConditions
+import com.okta.sdk.resource.GroupRuleExpression
+import com.okta.sdk.resource.GroupRuleGroupAssignment
+import com.okta.sdk.resource.GroupRuleStatus
+import com.okta.sdk.resource.User
+import com.okta.sdk.resource.builder.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.testng.annotations.Test
@@ -81,7 +82,7 @@ class GroupRulesIT implements CrudTestSupport {
     @Override
     void update(Client client, def rule) {
         rule.setName(rule.name +"-2")
-        rule.update()
+        client.updateGroupRule(rule, rule.id)
     }
 
     @Override
@@ -103,7 +104,6 @@ class GroupRulesIT implements CrudTestSupport {
         def firstName = 'John'
         def lastName = 'With-Group-Rule'
         def email = "john-${uniqueTestName}@example.com"
-        def groupName = "java-sdk-it-" + UUID.randomUUID().toString()
         def groupRuleName = "java-sdk-it-" + UUID.randomUUID().toString()
 
         // 1. Create a user and a group
@@ -128,7 +128,7 @@ class GroupRulesIT implements CrudTestSupport {
             .setAssignUserToGroups(Collections.singletonList(group.getId()))
             .buildAndCreate(client)
         registerForCleanup(rule)
-        rule.activate()
+        client.activateGroupRule(rule.getId())
 
         GroupRule readRule = client.getGroupRule(rule.getId())
         assertThat readRule.getStatus(), equalTo(GroupRuleStatus.ACTIVE)
@@ -137,18 +137,18 @@ class GroupRulesIT implements CrudTestSupport {
         assertPresent(client.listGroupRules(), rule)
 
         // 4. Deactivate the rule and update it
-        rule.deactivate()
+        client.deactivateGroupRule(rule.getId())
 
         rule.name = ("updated-" + groupRuleName).subSequence(0, 50) //Trim the name to 50 chars (server limit)
         rule.getConditions().getExpression().value = 'user.lastName==\"incorrect\"'
-        rule.update()
-        rule.activate()
+        client.updateGroupRule(rule, rule.getId())
+        client.activateGroupRule(rule.getId())
 
         readRule = client.getGroupRule(rule.getId())
         assertThat readRule.getStatus(), equalTo(GroupRuleStatus.ACTIVE)
 
         // 5. delete rule
-        rule.deactivate()
-        rule.delete()
+        client.deactivateGroupRule(rule.getId())
+        client.deleteGroupRule(rule.getId())
     }
 }

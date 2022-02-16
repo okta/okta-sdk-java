@@ -15,34 +15,30 @@
  */
 package com.okta.sdk.impl.resource
 
-import com.okta.commons.http.HttpHeaders
-import com.okta.commons.http.HttpMethod
-import com.okta.commons.http.MediaType
-import com.okta.commons.http.Request
 import com.okta.commons.http.RequestExecutor
-import com.okta.commons.http.Response
+import com.okta.commons.http.config.BaseUrlResolver
+import com.okta.sdk.authc.credentials.TokenClientCredentials
+import com.okta.sdk.cache.CacheManager
+import com.okta.sdk.client.AuthenticationScheme
+import com.okta.sdk.client.Client
 import com.okta.sdk.impl.api.ClientCredentialsResolver
-import com.okta.sdk.impl.ds.DefaultDataStore
-import com.okta.sdk.impl.resource.application.DefaultApplication
-import com.okta.sdk.impl.resource.application.DefaultProvisioningConnection
-import com.okta.sdk.impl.resource.application.DefaultProvisioningConnectionProfile
-import com.okta.sdk.impl.resource.application.DefaultProvisioningConnectionRequest
-import com.okta.sdk.impl.util.StringInputStream
-import com.okta.sdk.resource.application.ProvisioningConnection
-import com.okta.sdk.resource.application.ProvisioningConnectionAuthScheme
-import com.okta.sdk.resource.application.ProvisioningConnectionProfile
-import com.okta.sdk.resource.application.ProvisioningConnectionStatus
-import org.mockito.ArgumentCaptor
+import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
+import com.okta.sdk.impl.cache.DisabledCacheManager
+import com.okta.sdk.impl.client.DefaultClient
+import com.okta.sdk.impl.config.ClientConfiguration
+import com.okta.sdk.impl.ds.InternalDataStore
+import com.okta.sdk.impl.resource.DefaultApplication
+import com.okta.sdk.impl.resource.DefaultProvisioningConnectionProfile
+import com.okta.sdk.impl.resource.DefaultProvisioningConnectionRequest
+import com.okta.sdk.impl.util.DefaultBaseUrlResolver
+import com.okta.sdk.resource.*
 import org.testng.annotations.Test
-
-import java.util.stream.Collectors
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-
+import static org.mockito.ArgumentMatchers.*
+import static org.mockito.Mockito.*
 /**
  * Unit tests of
  * @see ProvisioningConnection
@@ -50,112 +46,162 @@ import static org.mockito.Mockito.when
  */
 class ProvisioningConnectionTest {
 
+    private static String MOCK_APP_ID = "101W_juydrDRByB7fUdRyE2JQ"
+
     @Test
     void testGetDefaultProvisioningConnectionForApplication() {
-        def requestCapture = ArgumentCaptor.forClass(Request)
-        def requestExecutor = mock(RequestExecutor)
-        def apiKeyResolver = mock(ClientCredentialsResolver)
-        def response = mock(Response)
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com", apiKeyResolver)
-        def headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
+        ClientConfiguration clientConfig = new ClientConfiguration()
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
 
-        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
-        when(response.hasBody()).thenReturn(true)
-        when(response.getBody()).thenReturn(new StringInputStream('{"authScheme": "UNKNOWN","status": "UNKNOWN"}'))
-        when(response.getHeaders()).thenReturn(headers)
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
+            protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
+                                                        BaseUrlResolver baseUrlResolver,
+                                                        ClientCredentialsResolver clientCredentialsResolver,
+                                                        CacheManager cacheManager) {
 
-        def application = new DefaultApplication(defaultDataStore)
-        application.put("id", "app-id")
+                final InternalDataStore dataStore = mock(InternalDataStore)
+                def provConnData = [authScheme:"UNKNOWN", status: "UNKNOWN"] as HashMap
+                def provisioningConnection = new DefaultProvisioningConnection(dataStore, provConnData)
+                when(dataStore.getResource("/api/v1/apps/${MOCK_APP_ID}/connections/default",
+                    ProvisioningConnection, Collections.emptyMap(), Collections.emptyMap())).thenReturn(provisioningConnection)
+                return dataStore
+            }
+        }
 
-        def provisioningConnection = new DefaultProvisioningConnection(defaultDataStore)
-            .getDefaultProvisioningConnectionForApplication(application.getId())
+        def application = new DefaultApplication(client.dataStore)
+        application.put("id", "${MOCK_APP_ID}")
 
-        def request = requestCapture.getValue()
-        assertThat request.getMethod(), is(HttpMethod.GET)
-        assertThat request.getResourceUrl().getPath(), is("/api/v1/apps/app-id/connections/default")
-        assertThat provisioningConnection, notNullValue()
+        def provisioningConnection = client.getDefaultProvisioningConnectionForApplication(application.getId())
+
+        assertThat(provisioningConnection, notNullValue())
         assertThat provisioningConnection.getAuthScheme(), is(ProvisioningConnectionAuthScheme.UNKNOWN)
         assertThat provisioningConnection.getStatus(), is(ProvisioningConnectionStatus.UNKNOWN)
+
+        verify(client.dataStore)
+            .getResource(
+                (String) eq("/api/v1/apps/${MOCK_APP_ID}/connections/default".toString()),
+                (Class) eq(ProvisioningConnection.class),
+                eq(Collections.emptyMap()),
+                eq(Collections.emptyMap()))
     }
 
     @Test
     void testSetDefaultProvisioningConnectionForApplication() {
-        def requestCapture = ArgumentCaptor.forClass(Request)
-        def requestExecutor = mock(RequestExecutor)
-        def apiKeyResolver = mock(ClientCredentialsResolver)
-        def response = mock(Response)
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com", apiKeyResolver)
-        def headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
+        ClientConfiguration clientConfig = new ClientConfiguration()
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
 
-        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
-        when(response.hasBody()).thenReturn(true)
-        when(response.getBody()).thenReturn(new StringInputStream('{"authScheme": "TOKEN","status": "ENABLED"}'))
-        when(response.getHeaders()).thenReturn(headers)
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
+            protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
+                                                        BaseUrlResolver baseUrlResolver,
+                                                        ClientCredentialsResolver clientCredentialsResolver,
+                                                        CacheManager cacheManager) {
 
-        def application = new DefaultApplication(defaultDataStore)
-        application.put("id", "app-id")
-        def profile = new DefaultProvisioningConnectionProfile(defaultDataStore)
+                final InternalDataStore dataStore = mock(InternalDataStore)
+                def provConnData = [authScheme:"TOKEN", status: "ENABLED"] as HashMap
+                def provisioningConnection = new DefaultProvisioningConnection(dataStore, provConnData)
+                when(dataStore.create(
+                    (String) eq("/api/v1/apps/${MOCK_APP_ID}/connections/default".toString()),
+                    any(),
+                    isNull(),
+                    (Class) eq(ProvisioningConnection.class),
+                    eq([activate: true] as HashMap),
+                    eq(Collections.emptyMap())))
+                    .thenReturn(provisioningConnection)
+                return dataStore
+            }
+        }
+
+        def application = new DefaultApplication(client.dataStore)
+        application.put("id", "${MOCK_APP_ID}")
+        def profile = new DefaultProvisioningConnectionProfile(client.dataStore)
             .setAuthScheme(ProvisioningConnectionAuthScheme.TOKEN)
             .setToken("foo")
-        def provisioningRequest = new DefaultProvisioningConnectionRequest(defaultDataStore).setProfile(profile)
+        def provisioningRequest = new DefaultProvisioningConnectionRequest(client.dataStore).setProfile(profile)
 
-        def provisioningConnection = profile
-            .setDefaultProvisioningConnectionForApplication(application.getId(), provisioningRequest, true)
+        def provisioningConnection = client
+            .setDefaultProvisioningConnectionForApplication(provisioningRequest, application.getId(),true)
 
-        def request = requestCapture.getValue()
-        def requestBody = new BufferedReader(new InputStreamReader(request.getBody())).lines().collect(Collectors.joining())
-        assertThat request.getMethod(), is(HttpMethod.POST)
-        assertThat request.getResourceUrl().getPath(), is("/api/v1/apps/app-id/connections/default")
-        assertThat requestBody, is('{"profile":{"authScheme":"TOKEN","token":"foo"}}')
         assertThat provisioningConnection, notNullValue()
         assertThat provisioningConnection.getAuthScheme(), is(ProvisioningConnectionAuthScheme.TOKEN)
         assertThat provisioningConnection.getStatus(), is(ProvisioningConnectionStatus.ENABLED)
-    }
 
+        verify(client.dataStore)
+            .create(
+                (String) eq("/api/v1/apps/${MOCK_APP_ID}/connections/default".toString()),
+                any(),
+                isNull(),
+                (Class) eq(ProvisioningConnection.class),
+                eq([activate: true] as HashMap),
+                eq(Collections.emptyMap()))
+    }
 
     @Test
     void testActivateDefaultProvisioningConnectionForApplication() {
-        def requestCapture = ArgumentCaptor.forClass(Request)
-        def requestExecutor = mock(RequestExecutor)
-        def apiKeyResolver = mock(ClientCredentialsResolver)
-        def response = mock(Response)
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com", apiKeyResolver)
-        def headers = new HttpHeaders()
+        ClientConfiguration clientConfig = new ClientConfiguration()
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
 
-        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
-        when(response.hasBody()).thenReturn(false)
-        when(response.getHeaders()).thenReturn(headers)
-        when(response.getHttpStatus()).thenReturn(HttpURLConnection.HTTP_NO_CONTENT)
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
+            protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
+                                                        BaseUrlResolver baseUrlResolver,
+                                                        ClientCredentialsResolver clientCredentialsResolver,
+                                                        CacheManager cacheManager) {
 
-        def application = new DefaultApplication(defaultDataStore)
-        application.put("id", "app-id")
+                final InternalDataStore dataStore = mock(InternalDataStore)
+                return dataStore
+            }
+        }
 
-        new DefaultProvisioningConnection(defaultDataStore).activateDefaultProvisioningConnectionForApplication(application.getId())
+        def application = new DefaultApplication(client.dataStore)
+        application.put("id", "${MOCK_APP_ID}")
 
-        assertThat requestCapture.getValue().getResourceUrl().getPath(), is("/api/v1/apps/app-id/connections/default/lifecycle/activate")
+        client.activateDefaultProvisioningConnectionForApplication(application.getId())
+
+        verify(client.dataStore)
+            .create(
+                (String) eq("/api/v1/apps/${MOCK_APP_ID}/connections/default/lifecycle/activate".toString()),
+                any(),
+                isNull(),
+                (Class) eq(VoidResource.class),
+                eq(Collections.emptyMap()),
+                eq(Collections.emptyMap()))
     }
 
     @Test
     void testDeactivateDefaultProvisioningConnectionForApplication() {
-        def requestCapture = ArgumentCaptor.forClass(Request)
-        def requestExecutor = mock(RequestExecutor)
-        def apiKeyResolver = mock(ClientCredentialsResolver)
-        def response = mock(Response)
-        def defaultDataStore = new DefaultDataStore(requestExecutor, "https://api.okta.com", apiKeyResolver)
-        def headers = new HttpHeaders()
+        ClientConfiguration clientConfig = new ClientConfiguration()
+        clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver("https://example.com"))
+        clientConfig.setAuthenticationScheme(AuthenticationScheme.SSWS)
+        clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(new TokenClientCredentials("foobar")))
 
-        when(requestExecutor.executeRequest(requestCapture.capture())).thenReturn(response)
-        when(response.hasBody()).thenReturn(false)
-        when(response.getHeaders()).thenReturn(headers)
-        when(response.getHttpStatus()).thenReturn(HttpURLConnection.HTTP_NO_CONTENT)
+        Client client = new DefaultClient(clientConfig, new DisabledCacheManager()) {
+            protected InternalDataStore createDataStore(RequestExecutor requestExecutor,
+                                                        BaseUrlResolver baseUrlResolver,
+                                                        ClientCredentialsResolver clientCredentialsResolver,
+                                                        CacheManager cacheManager) {
 
-        def application = new DefaultApplication(defaultDataStore)
-        application.put("id", "app-id")
+                final InternalDataStore dataStore = mock(InternalDataStore)
+                return dataStore
+            }
+        }
 
-        new DefaultProvisioningConnection(defaultDataStore).deactivateDefaultProvisioningConnectionForApplication(application.getId())
+        def application = new DefaultApplication(client.dataStore)
+        application.put("id", "${MOCK_APP_ID}")
 
-        assertThat requestCapture.getValue().getResourceUrl().getPath(), is("/api/v1/apps/app-id/connections/default/lifecycle/deactivate")
+        client.deactivateDefaultProvisioningConnectionForApplication(application.getId())
+
+        verify(client.dataStore)
+            .create(
+                (String) eq("/api/v1/apps/${MOCK_APP_ID}/connections/default/lifecycle/deactivate".toString()),
+                any(),
+                isNull(),
+                (Class) eq(VoidResource.class),
+                eq(Collections.emptyMap()),
+                eq(Collections.emptyMap()))
     }
 }

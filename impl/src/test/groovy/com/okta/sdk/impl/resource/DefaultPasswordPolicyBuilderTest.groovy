@@ -16,8 +16,8 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.common.LifecycleStatus
-import com.okta.sdk.resource.policy.*
+import com.okta.sdk.impl.resource.builder.DefaultPasswordPolicyBuilder
+import com.okta.sdk.resource.*
 import org.testng.annotations.Test
 
 import static com.okta.sdk.impl.Util.expect
@@ -143,7 +143,7 @@ class DefaultPasswordPolicyBuilderTest {
         def passwordPolicy = mock(PasswordPolicy)
         when(client.instantiate(Policy.class)).thenReturn(policy)
         when(client.instantiate(PasswordPolicy.class)).thenReturn(passwordPolicy)
-        List groupList = new ArrayList(Arrays.asList("dsfjhgsjhg"));
+        List groupList = new ArrayList(Arrays.asList("dsfjhgsjhg"))
         expect IllegalArgumentException, {
             new DefaultPasswordPolicyBuilder()
                 .setName("Test Password Policy")

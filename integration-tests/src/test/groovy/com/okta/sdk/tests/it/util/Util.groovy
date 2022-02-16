@@ -15,23 +15,21 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.okta.sdk.client.Client
 import com.okta.sdk.resource.CollectionResource
 import com.okta.sdk.resource.Resource
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupList
-import com.okta.sdk.resource.linked.object.LinkedObject
-import com.okta.sdk.resource.user.Role
-import com.okta.sdk.resource.user.RoleList
-import com.okta.sdk.resource.user.User
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.GroupList
+import com.okta.sdk.resource.Role
+import com.okta.sdk.resource.RoleList
+import com.okta.sdk.resource.User
 import org.testng.Assert
 
 import java.util.stream.Collectors
 import java.util.stream.StreamSupport
 
-import static org.hamcrest.MatcherAssert.*
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
-import static org.hamcrest.Matchers.hasSize
-import static org.hamcrest.Matchers.notNullValue
 
 class Util {
 
@@ -48,17 +46,17 @@ class Util {
         assertThat(user, equalTo(expectedUser))
     }
 
-    static void  validateGroup(Group group, Group expectedGroup) {
+    static void validateGroup(Group group, Group expectedGroup) {
         validateGroup(group, expectedGroup.profile.name)
     }
 
-    static void  validateGroup(Group group, String groupName) {
+    static void validateGroup(Group group, String groupName) {
 
         assertThat(group.profile.name, equalTo(groupName))
         assertThat(group.type, equalTo("OKTA_GROUP"))
     }
 
-    static void  validateGroup(Group group, String groupName, String description) {
+    static void validateGroup(Group group, String groupName, String description) {
 
         validateGroup(group, groupName)
         assertThat(group.profile.description, equalTo(description))
@@ -129,8 +127,8 @@ class Util {
         assertThat(resourcesFound, hasSize(1))
     }
 
-    static void assertGroupTargetPresent(User user, Group group, Role role) {
-        def groupTargets = user.listGroupTargets(role.id)
+    static void assertGroupTargetPresent(Client client, User user, Group group, Role role) {
+        def groupTargets = client.listGroupTargetsForRole(user.getId(), role.getId())
 
         assertThat "GroupTarget Present not found in User role",
                 StreamSupport.stream(groupTargets.spliterator(), false)
@@ -138,18 +136,18 @@ class Util {
                     .findFirst().isPresent()
     }
 
-    static void assertUserInGroup(User user, Group group) {
-        assertThat "User was not found in group.", StreamSupport.stream(group.listUsers().spliterator(), false)
+    static void assertUserInGroup(Client client, User user, Group group) {
+        assertThat "User was not found in group.", StreamSupport.stream(client.listGroupUsers(group.getId()).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()
     }
 
-    static void assertUserInGroup(User user, Group group, int times, long delayInMilliseconds, boolean present=true) {
+    static void assertUserInGroup(Client client, User user, Group group, int times, long delayInMilliseconds, boolean present=true) {
         for (int ii=0; ii<times; ii++) {
 
             sleep(delayInMilliseconds)
 
-            if (present == StreamSupport.stream(group.listUsers().spliterator(), false)
+            if (present == StreamSupport.stream(client.listGroupUsers(group.getId()).spliterator(), false)
                     .filter{ listUser -> listUser.id == user.id}
                     .findFirst().isPresent()) {
                 return
@@ -160,18 +158,18 @@ class Util {
         if (!present) Assert.fail("User found in group")
     }
 
-    static void assertUserNotInGroup(User user, Group group) {
-        assertThat "User was found in group.", !StreamSupport.stream(group.listUsers().spliterator(), false)
+    static void assertUserNotInGroup(Client client, User user, Group group) {
+        assertThat "User was found in group.", !StreamSupport.stream(client.listGroupUsers(group.getId()).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()
     }
 
-    static void assertUserNotInGroup(User user, Group group, int times, long delayInMilliseconds, boolean present=true) {
+    static void assertUserNotInGroup(Client client, User user, Group group, int times, long delayInMilliseconds, boolean present=true) {
         for (int ii=0; ii<times; ii++) {
 
             sleep(delayInMilliseconds)
 
-            if (present == !StreamSupport.stream(group.listUsers().spliterator(), false)
+            if (present == !StreamSupport.stream(client.listGroupUsers(group.getId()).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()) {
                 return

@@ -15,17 +15,21 @@
  */
 package com.okta.sdk.tests.it
 
-
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.common.LifecycleStatus
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.policy.*
+import com.okta.sdk.resource.LifecycleStatus
+import com.okta.sdk.resource.PasswordPolicy
+import com.okta.sdk.resource.PasswordPolicyAuthenticationProviderType
+import com.okta.sdk.resource.PolicyType
+import com.okta.sdk.resource.Policy
+import com.okta.sdk.resource.Group
+import com.okta.sdk.resource.builder.PasswordPolicyBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
 
 class PasswordPoliciesIT extends ITSupport implements CrudTestSupport  {
+
     @Override
     def create(Client client) {
         Group group = randomGroup()
@@ -53,9 +57,8 @@ class PasswordPoliciesIT extends ITSupport implements CrudTestSupport  {
                                     .setPriority(1)
                                     .setDescription("Dummy policy for sdk test")
                                     .setName("SDK policy "+ UUID.randomUUID().toString())
-                                    .buildAndCreate(client) ;
-        return (PasswordPolicy) passwordPolicy;
-
+                                    .buildAndCreate(client)
+        return (PasswordPolicy) passwordPolicy
     }
 
     @Override
@@ -72,8 +75,7 @@ class PasswordPoliciesIT extends ITSupport implements CrudTestSupport  {
     void update(Client client, def policy) {
         policy.setDescription("Dummy policy for sdk test - Updated")
         policy.settings.password.lockout.maxAttempts = 5
-        policy.update()
-
+        client.updatePolicy(policy, policy.id)
     }
 
     @Override

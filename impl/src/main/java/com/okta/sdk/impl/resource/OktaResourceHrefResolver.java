@@ -17,11 +17,11 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Collections;
 import com.okta.sdk.resource.Resource;
-import com.okta.sdk.resource.application.AppUser;
-import com.okta.sdk.resource.application.Application;
-import com.okta.sdk.resource.group.Group;
-import com.okta.sdk.resource.group.GroupRule;
-import com.okta.sdk.resource.user.Role;
+import com.okta.sdk.resource.AppUser;
+import com.okta.sdk.resource.Application;
+import com.okta.sdk.resource.Group;
+import com.okta.sdk.resource.GroupRule;
+import com.okta.sdk.resource.Role;
 
 import java.util.Map;
 

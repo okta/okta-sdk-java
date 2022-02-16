@@ -18,14 +18,14 @@ package quickstart;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.client.Clients;
-import com.okta.sdk.resource.group.GroupBuilder;
+import com.okta.sdk.resource.builder.GroupBuilder;
 import com.okta.sdk.resource.ResourceException;
-import com.okta.sdk.resource.user.UserBuilder;
+import com.okta.sdk.resource.UserStatus;
+import com.okta.sdk.resource.builder.UserBuilder;
 
-import com.okta.sdk.resource.group.Group;
-import com.okta.sdk.resource.user.User;
-import com.okta.sdk.resource.user.UserList;
-import com.okta.sdk.resource.user.UserStatus;
+import com.okta.sdk.resource.Group;
+import com.okta.sdk.resource.User;
+import com.okta.sdk.resource.UserList;
 
 import java.util.UUID;
 
@@ -44,7 +44,7 @@ public class Quickstart {
         final char[] password = {'P','a','s','s','w','o','r','d','1'};
 
         ClientBuilder builder;
-        Client client;
+        Client client = null;
         Group group = null;
         User user = null;
 
@@ -77,7 +77,7 @@ public class Quickstart {
                 .buildAndCreate(client);
 
             // add user to the newly created group
-            user.addToGroup(group.getId());
+            client.addUserToGroup(group.getId(), user.getId());
 
             String userId = user.getId();
             println("User created with ID: " + userId);
@@ -104,7 +104,7 @@ public class Quickstart {
         }
         catch (ResourceException e) {
 
-            // we can get the user friendly message from the Exception
+            // we can get the user-friendly message from the Exception
             println(e.getMessage());
 
             // and you can get the details too
@@ -114,17 +114,19 @@ public class Quickstart {
         finally {
             // cleanup
 
-            // deactivate (if de-provisioned) and delete user
+            // deactivate and delete user
             if (user != null) {
                 if (user.getStatus() != UserStatus.DEPROVISIONED) {
-                    user.deactivate();
+                    // deactivate
+                    client.deactivateOrDeleteUser(user.getId());
                 }
-                user.delete();
+                // delete
+                client.deactivateOrDeleteUser(user.getId());
             }
 
             // delete group
             if (group != null) {
-                group.delete();
+                client.deleteGroup(group.getId());
             }
         }
     }

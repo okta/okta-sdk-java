@@ -16,7 +16,8 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.application.*
+import com.okta.sdk.impl.resource.builder.DefaultOIDCApplicationBuilder
+import com.okta.sdk.resource.*
 import org.testng.annotations.Test
 
 import static com.okta.sdk.impl.Util.expect
@@ -37,7 +38,7 @@ class DefaultOIDCApplicationBuilderTest {
         def openIdConnectApplicationSettings = mock(OpenIdConnectApplicationSettings)
         def oAuthApplicationCredentials = mock(OAuthApplicationCredentials)
 
-        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application);
+        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application)
         when(client.instantiate(ApplicationAccessibility.class)).thenReturn(applicationAccessibility)
         when(client.instantiate(ApplicationVisibilityHide.class)).thenReturn(applicationVisibilityHide)
         when(application.getAccessibility()).thenReturn(applicationAccessibility)
@@ -52,8 +53,8 @@ class DefaultOIDCApplicationBuilderTest {
         new DefaultOIDCApplicationBuilder()
             .setName("oidc_client")
             .setLabel("test_app")
-            .addRedirectUris("http://www.google.com")
-            .setPostLogoutRedirectUris(Collections.singletonList("http://www.example.com/logout"))
+            .addRedirectUris("https://www.google.com")
+            .setPostLogoutRedirectUris(Collections.singletonList("https://www.example.com/logout"))
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
@@ -63,20 +64,20 @@ class DefaultOIDCApplicationBuilderTest {
             .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
             .setIOS(true)
             .setWeb(false)
-            .setLoginRedirectUrl("http://www.myApp.com")
-            .setErrorRedirectUrl("http://www.myApp.com/errror")
+            .setLoginRedirectUrl("https://www.myApp.com")
+            .setErrorRedirectUrl("https://www.myApp.com/errror")
             .setSelfService(false)
-            .buildAndCreate(client);
+            .buildAndCreate(client)
 
         verify(client).createApplication(eq(application))
         verify(application).setLabel("test_app")
         verify(applicationAccessibility).setSelfService(false)
-        verify(applicationAccessibility).setErrorRedirectUrl("http://www.myApp.com/errror")
-        verify(applicationAccessibility).setLoginRedirectUrl("http://www.myApp.com")
+        verify(applicationAccessibility).setErrorRedirectUrl("https://www.myApp.com/errror")
+        verify(applicationAccessibility).setLoginRedirectUrl("https://www.myApp.com")
         verify(applicationVisibilityHide).setWeb(false)
         verify(applicationVisibilityHide).setIOS(true)
         verify(openIdConnectApplicationSettingsClient).setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
-        verify(openIdConnectApplicationSettingsClient).setPostLogoutRedirectUris(Collections.singletonList("http://www.example.com/logout"))
+        verify(openIdConnectApplicationSettingsClient).setPostLogoutRedirectUris(Collections.singletonList("https://www.example.com/logout"))
     }
 
     @Test
@@ -92,7 +93,7 @@ class DefaultOIDCApplicationBuilderTest {
         def openIdConnectApplicationSettings = mock(OpenIdConnectApplicationSettings)
         def oAuthApplicationCredentials = mock(OAuthApplicationCredentials)
 
-        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application);
+        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application)
         when(client.instantiate(ApplicationAccessibility.class)).thenReturn(applicationAccessibility)
         when(client.instantiate(ApplicationVisibilityHide.class)).thenReturn(applicationVisibilityHide)
         when(application.getAccessibility()).thenReturn(applicationAccessibility)
@@ -107,7 +108,7 @@ class DefaultOIDCApplicationBuilderTest {
             new DefaultOIDCApplicationBuilder()
                 .setName("oidc_client")
                 .setLabel("test_app")
-                .addRedirectUris("http://www.google.com")
+                .addRedirectUris("https://www.google.com")
                 .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
                 .setApplicationType(OpenIdConnectApplicationType.NATIVE)
                 .setClientId("dummy_id")
@@ -116,10 +117,10 @@ class DefaultOIDCApplicationBuilderTest {
                 .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
                 .setIOS(true)
                 .setWeb(false)
-                .setLoginRedirectUrl("http://www.myApp.com")
-                .setErrorRedirectUrl("http://www.myApp.com/errror")
+                .setLoginRedirectUrl("https://www.myApp.com")
+                .setErrorRedirectUrl("https://www.myApp.com/errror")
                 .setSelfService(false)
-                .buildAndCreate(client);
+                .buildAndCreate(client)
         }
 
     }
@@ -137,7 +138,7 @@ class DefaultOIDCApplicationBuilderTest {
         def openIdConnectApplicationSettings = mock(OpenIdConnectApplicationSettings)
         def oAuthApplicationCredentials = mock(OAuthApplicationCredentials)
 
-        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application);
+        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application)
         when(client.instantiate(ApplicationAccessibility.class)).thenReturn(applicationAccessibility)
         when(client.instantiate(ApplicationVisibilityHide.class)).thenReturn(applicationVisibilityHide)
         when(application.getAccessibility()).thenReturn(applicationAccessibility)
@@ -152,7 +153,7 @@ class DefaultOIDCApplicationBuilderTest {
             new DefaultOIDCApplicationBuilder()
                 .setName("oidc_client")
                 .setLabel("test_app")
-                .addRedirectUris("http://www.google.com")
+                .addRedirectUris("https://www.google.com")
                 .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
                 .setApplicationType(OpenIdConnectApplicationType.NATIVE)
                 .setClientId("dummy_id")
@@ -161,10 +162,10 @@ class DefaultOIDCApplicationBuilderTest {
                 .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
                 .setIOS(true)
                 .setWeb(false)
-                .setLoginRedirectUrl("http://www.myApp.com")
-                .setErrorRedirectUrl("http://www.myApp.com/errror")
+                .setLoginRedirectUrl("https://www.myApp.com")
+                .setErrorRedirectUrl("https://www.myApp.com/errror")
                 .setSelfService(false)
-                .buildAndCreate(client);
+                .buildAndCreate(client)
         }
 
     }
@@ -182,7 +183,7 @@ class DefaultOIDCApplicationBuilderTest {
         def openIdConnectApplicationSettings = mock(OpenIdConnectApplicationSettings)
         def oAuthApplicationCredentials = mock(OAuthApplicationCredentials)
 
-        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application);
+        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application)
         when(client.instantiate(ApplicationAccessibility.class)).thenReturn(applicationAccessibility)
         when(client.instantiate(ApplicationVisibilityHide.class)).thenReturn(applicationVisibilityHide)
         when(application.getAccessibility()).thenReturn(applicationAccessibility)
@@ -197,7 +198,7 @@ class DefaultOIDCApplicationBuilderTest {
             new DefaultOIDCApplicationBuilder()
                 .setName("oidc_client")
                 .setLabel("test_app")
-                .addRedirectUris("http://www.google.com")
+                .addRedirectUris("https://www.google.com")
                 .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
                 .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
                 .setClientId("dummy_id")
@@ -206,10 +207,10 @@ class DefaultOIDCApplicationBuilderTest {
                 .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
                 .setIOS(true)
                 .setWeb(false)
-                .setLoginRedirectUrl("http://www.myApp.com")
-                .setErrorRedirectUrl("http://www.myApp.com/errror")
+                .setLoginRedirectUrl("https://www.myApp.com")
+                .setErrorRedirectUrl("https://www.myApp.com/errror")
                 .setSelfService(false)
-                .buildAndCreate(client);
+                .buildAndCreate(client)
         }
 
     }
@@ -232,7 +233,7 @@ class DefaultOIDCApplicationBuilderTest {
         jsonWebKey.setE("e_value")
         jsonWebKey.setN("n_value")
 
-        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application);
+        when(client.instantiate(OpenIdConnectApplication.class)).thenReturn(application)
         when(client.instantiate(ApplicationVisibilityHide.class)).thenReturn(applicationVisibilityHide)
         when(client.instantiate(OpenIdConnectApplicationSettingsClient.class))thenReturn(openIdConnectApplicationSettingsClient)
         when(client.instantiate(ApplicationCredentialsOAuthClient.class))thenReturn(applicationCredentialsOAuthClient)
@@ -246,7 +247,7 @@ class DefaultOIDCApplicationBuilderTest {
             .setLabel("test_app")
             .setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
             .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.PRIVATE_KEY_JWT)
-            .addRedirectUris("http://www.example.com")
+            .addRedirectUris("https://www.example.com")
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
@@ -257,7 +258,7 @@ class DefaultOIDCApplicationBuilderTest {
         verify(application).setLabel("test_app")
         verify(application).setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT)
         verify(applicationCredentialsOAuthClient).setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.PRIVATE_KEY_JWT)
-        verify(openIdConnectApplicationSettingsClient).setRedirectUris(Arrays.asList("http://www.example.com"))
+        verify(openIdConnectApplicationSettingsClient).setRedirectUris(Arrays.asList("https://www.example.com"))
         verify(openIdConnectApplicationSettingsClient).setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
         verify(openIdConnectApplicationSettingsClient).setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
         verify(openIdConnectApplicationSettingsClient).setApplicationType(OpenIdConnectApplicationType.NATIVE)

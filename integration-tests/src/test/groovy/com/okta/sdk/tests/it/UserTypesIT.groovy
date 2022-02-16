@@ -15,8 +15,8 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.schema.UserSchema
-import com.okta.sdk.resource.user.type.UserType
+import com.okta.sdk.resource.UserSchema
+import com.okta.sdk.resource.UserType
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
 import wiremock.org.apache.commons.lang3.RandomStringUtils
@@ -35,12 +35,12 @@ class UserTypesIT extends ITSupport {
 
     @Test (groups = "group2")
     void createUserTypeTest() {
-        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = UNDERSCORE_NAME_PREFIX + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
             .setDisplayName(name)
-            .setDescription(name + "_test_description"))
+            .setDescription(name + "-test-description"))
         registerForCleanup(createdUserType)
 
         assertThat(createdUserType.getId(), notNullValue())
@@ -66,12 +66,12 @@ class UserTypesIT extends ITSupport {
 
     @Test (groups = "group2")
     void getUserTypeTest() {
-        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = UNDERSCORE_NAME_PREFIX + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
             .setDisplayName(name)
-            .setDescription(name + "_test_description"))
+            .setDescription(name + "-test-description"))
         registerForCleanup(createdUserType)
 
         assertThat(createdUserType.getId(), notNullValue())
@@ -83,22 +83,23 @@ class UserTypesIT extends ITSupport {
 
     @Test (groups = "group2")
     void updateUserTypeTest() {
-        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = UNDERSCORE_NAME_PREFIX + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
             .setDisplayName(name)
-            .setDescription(name + "_test_description"))
+            .setDescription(name + "-test-description"))
         registerForCleanup(createdUserType)
 
         assertThat(createdUserType.getId(), notNullValue())
 
-        createdUserType.setDisplayName(name + "_updated").setDescription(name + "_test_description_updated")
-            .update()
+        createdUserType = createdUserType.setDisplayName(name + "_updated").setDescription(name + "-test-description-updated")
+
+        client.updateUserType(createdUserType, createdUserType.getId())
 
         assertThat(createdUserType.getId(), notNullValue())
         assertThat(createdUserType.getDisplayName(), equalTo(name + "_updated"))
-        assertThat(createdUserType.getDescription(), equalTo(name + "_test_description_updated"))
+        assertThat(createdUserType.getDescription(), equalTo(name + "-test-description-updated"))
 
         def schemaId = getSchemaIdForUserType(createdUserType)
         assertThat(schemaId, notNullValue())
@@ -144,29 +145,29 @@ class UserTypesIT extends ITSupport {
 
     @Test (groups = "group2")
     void deleteUserTypeTest() {
-        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = UNDERSCORE_NAME_PREFIX + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType = client.createUserType(client.instantiate(UserType)
             .setName(name)
             .setDisplayName(name)
-            .setDescription(name + "_test_description"))
+            .setDescription(name + "-test-description"))
         registerForCleanup(createdUserType)
 
         assertThat(createdUserType.getId(), notNullValue())
 
-        createdUserType.delete()
+        client.deleteUserType(createdUserType.getId())
 
         assertNotPresent(client.listUserTypes(), createdUserType)
     }
 
     @Test (groups = "group2")
     void listAllUserTypesTest() {
-        String name1 = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
+        String name1 = UNDERSCORE_NAME_PREFIX + RandomStringUtils.randomAlphanumeric(15)
 
         UserType createdUserType1 = client.createUserType(client.instantiate(UserType)
             .setName(name1)
             .setDisplayName(name1)
-            .setDescription(name1 + "_test_description"))
+            .setDescription(name1 + "-test-description"))
         registerForCleanup(createdUserType1)
 
         assertThat(createdUserType1.getId(), notNullValue())
@@ -176,7 +177,7 @@ class UserTypesIT extends ITSupport {
         UserType createdUserType2 = client.createUserType(client.instantiate(UserType)
             .setName(name2)
             .setDisplayName(name2)
-            .setDescription(name2 + "_test_description"))
+            .setDescription(name2 + "-test-description"))
         registerForCleanup(createdUserType2)
 
         assertThat(client.listUserTypes(), notNullValue())
@@ -184,7 +185,7 @@ class UserTypesIT extends ITSupport {
         assertPresent(client.listUserTypes(), createdUserType2)
     }
 
-    String getSchemaIdForUserType(UserType userType) {
+    static String getSchemaIdForUserType(UserType userType) {
         def schema = userType.getLinks().get("schema")
         assertThat(schema, notNullValue())
         assertThat(schema instanceof LinkedHashMap, equalTo(true))
@@ -198,7 +199,7 @@ class UserTypesIT extends ITSupport {
         return schemaId
     }
 
-    String getTypeIdFromUserSchema(UserSchema userSchema) {
+    static String getTypeIdFromUserSchema(UserSchema userSchema) {
 
         def type = userSchema.getLinks().get("type")
         assertThat(type, notNullValue())
@@ -212,6 +213,4 @@ class UserTypesIT extends ITSupport {
 
         return typeId
     }
-
-
 }

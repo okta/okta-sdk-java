@@ -16,8 +16,8 @@
 package com.okta.sdk.impl.resource
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.resource.common.LifecycleStatus
-import com.okta.sdk.resource.policy.*
+import com.okta.sdk.impl.resource.builder.DefaultOktaSignOnPolicyBuilder
+import com.okta.sdk.resource.*
 import org.testng.annotations.Test
 
 import static com.okta.sdk.impl.Util.expect
@@ -49,7 +49,7 @@ class DefaultOktaSignOnPolicyBuilderTest {
             .setStatus(LifecycleStatus.ACTIVE)
             .setType(PolicyType.OKTA_SIGN_ON)
             .addGroup("abcdef123456")
-            .buildAndCreate(client);
+            .buildAndCreate(client)
 
         verify(client).createPolicy(eq(oktaSignOnPolicy), eq(true))
         verify(oktaSignOnPolicy).setName("dummy_policy")

@@ -16,11 +16,10 @@
 {{>licenseInfo}}
 package {{package}};
 
-{{#imports}}import {{import}};
-{{/imports}}
-
+import com.okta.sdk.resource.*;
 import com.okta.sdk.ds.DataStore;
 import java.io.InputStream;
+import java.util.Date;
 
 {{#operations}}
 /**
