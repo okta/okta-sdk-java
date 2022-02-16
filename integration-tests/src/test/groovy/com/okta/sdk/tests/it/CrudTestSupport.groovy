@@ -122,9 +122,8 @@ trait CrudTestSupport implements ClientProvider {
             client.deleteApplication(resource.getId())
         if (resource instanceof Group)
             client.deleteGroup(resource.getId())
-        if (resource instanceof User) {
+        if (resource instanceof User)
             client.deactivateOrDeleteUser(resource.getId())
-        }
         if (resource instanceof GroupRule)
             client.deleteGroupRule(resource.getId())
         if (resource instanceof AuthorizationServer)

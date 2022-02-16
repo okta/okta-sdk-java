@@ -25,6 +25,7 @@ import com.okta.sdk.resource.GroupList
 import com.okta.sdk.resource.GroupRule
 import com.okta.sdk.resource.GroupRuleList
 import com.okta.sdk.resource.GroupRuleStatus
+import com.okta.sdk.resource.InlineHookStatus
 import com.okta.sdk.resource.Resource
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.Application
@@ -216,6 +217,9 @@ trait ClientProvider implements IHookable {
                         client.deleteIdentityProvider(resource.getId())
                     }
                     if (resource instanceof InlineHook) {
+                        if (resource.getStatus() != InlineHookStatus.INACTIVE) {
+                            client.deactivateInlineHook(resource.getId())
+                        }
                         client.deleteInlineHook(resource.getId())
                     }
                     if (resource instanceof LinkedObject) {
