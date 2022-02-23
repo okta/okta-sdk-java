@@ -39,6 +39,13 @@
         <cve>CVE-2021-29428</cve>
     </suppress>
 
+    <!-- build time dependency -->
+    <suppress>
+        <notes><![CDATA[ file name: swagger-codegen-generators-1.0.32.jar ]]></notes>
+        <cve>CVE-2017-1000207</cve>
+        <cve>CVE-2017-1000208</cve>
+    </suppress>
+
     <!-- this project does not use the offending method com.google.common.io.Files.createTempDir -->
     <suppress>
         <notes><![CDATA[ file name: guava-27.0.1-jre.jar ]]></notes>
