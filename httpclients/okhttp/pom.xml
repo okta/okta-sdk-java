@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
-        <version>8.0.1-SNAPSHOT</version>
+        <version>9.0.0-beta-SNAPSHOT</version>
         <relativePath>../..</relativePath>
     </parent>
 
