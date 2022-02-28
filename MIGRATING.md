@@ -2,6 +2,17 @@
  
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
+## Migrating from 8.x.x to 9.0.0-beta
+
+Version 9.0.0 contains models generated out of the v3 spec of Open API for Okta.
+
+Below are the changes that comes with this v3 spec code regeneration:
+- All resources have been grouped in a common root package `com.okta.sdk.resource`.
+- All operations have moved to the `com.okta.sdk.client.Client` object. This means that, all
+  API operations including CRUD operations will have to be invoked on the `Client` object.
+
+Note that 9.0.0 is still in beta status and will evolve to a stable release soon.
+
 ## Migrating from 7.x.x to 8.0.0
 
 Version 8.0.0 of this SDK introduces few breaking changes from previous versions.
