@@ -22,6 +22,7 @@ com.okta.sdk.impl.resource.authenticator
 com.okta.sdk.impl.resource.authorization.server
 com.okta.sdk.impl.resource.authorization.server.policy
 com.okta.sdk.impl.resource.brand
+com.okta.sdk.impl.resource.brands
 com.okta.sdk.impl.resource.domain
 com.okta.sdk.impl.resource.event.hook
 com.okta.sdk.impl.resource.feature
@@ -53,6 +54,7 @@ com.okta.sdk.resource.authenticator
 com.okta.sdk.resource.authorization.server
 com.okta.sdk.resource.authorization.server.policy
 com.okta.sdk.resource.brand
+com.okta.sdk.resource.brands
 com.okta.sdk.resource.common
 com.okta.sdk.resource.domain
 com.okta.sdk.resource.event.hook
