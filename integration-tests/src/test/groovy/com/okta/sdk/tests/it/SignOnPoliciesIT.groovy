@@ -26,6 +26,7 @@ import com.okta.sdk.resource.application.OpenIdConnectApplicationType
 import com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.*
+import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
@@ -271,6 +272,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
     }
 
     @Test
+    @NonOIEEnvironmentOnly
     void expandTest() {
         def resource = create(client)
         registerForCleanup(resource)
@@ -283,6 +285,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
     }
 
     @Test
+    @NonOIEEnvironmentOnly
     void listPoliciesWithParams() {
         def resource = create(client)
         registerForCleanup(resource)
