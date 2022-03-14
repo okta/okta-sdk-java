@@ -23,6 +23,7 @@ import com.okta.sdk.impl.io.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,8 +48,8 @@ public class YAMLPropertiesSource implements PropertiesSource {
             // check to see if file exists
             if (in != null) { // if we have a yaml file.
                 if (Classes.isAvailable("org.yaml.snakeyaml.Yaml")) {
-                    Yaml yaml = new Yaml();
-                    Map config = yaml.loadAs(in, Map.class);
+                    Yaml yaml = new Yaml(new SafeConstructor());
+                    Map config = yaml.load(in);
                     return getFlattenedMap(config);
                 } else {
                     log.warn("YAML not found in classpath, add 'org.yaml.snakeyaml' to support YAML configuration");
