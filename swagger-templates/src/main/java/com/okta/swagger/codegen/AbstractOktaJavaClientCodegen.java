@@ -122,7 +122,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         }
 
         try (Reader reader = new InputStreamReader(new FileInputStream(apiFile), StandardCharsets.UTF_8.toString())) {
-            rawSwaggerConfig = new Yaml(new SafeConstructor()).load(inputSpec);
+            rawSwaggerConfig = new Yaml(new SafeConstructor()).load(reader);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to parse apiFile: "+ apiFile, e);
         }
