@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <title>DefaultCacheManagerBuilder xref</title>
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
@@ -62,7 +62,7 @@
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>          Assert.isInstanceOf(DefaultCacheConfigurationBuilder.<strong class="jxr_keyword">class</strong>, builder,
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>                  <span class="jxr_string">"This implementation only accepts "</span> + DefaultCacheConfigurationBuilder.<strong class="jxr_keyword">class</strong>.getName() + <span class="jxr_string">" instances."</span>);
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>          <a name="DefaultCacheConfigurationBuil<a name="DefaultCacheConfigurationBuilder" href="../../../../../com/okta/sdk/impl/cache/DefaultCacheConfigurationBuilder.html#DefaultCacheConfigurationBuilder">DefaultCacheConfigurationBuilder</a>ta/sdk/impl/cache/DefaultCacheConfigurationBuilder.html#DefaultCacheConfigurationBuilder">DefaultCacheConfigurationBuilder</a> b = (<a name="DefaultCacheConfigurationBuilder" href="../../../../../com/okta/sdk/impl/cache/DefaultCacheConfigurationBuilder.html#DefaultCacheConfigurationBuilder">DefaultCacheConfigurationBuilder</a>) builder;
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>          <a name="DefaultCacheConfigurationBuilder" href="../../../../../com/okta/sdk/impl/cache/DefaultCacheConfigurationBuilder.html#DefaultCacheConfigurationBuilder">DefaultCacheConfigurationBuilder</a> b = (<a name="DefaultCacheConfigurationBuilder" href="../../../../../com/okta/sdk/impl/cache/DefaultCacheConfigurationBuilder.html#DefaultCacheConfigurationBuilder">DefaultCacheConfigurationBuilder</a>) builder;
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">this</strong>.configs.add(b.build());
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  
@@ -71,7 +71,7 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      @Override
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">public</strong> <a name="CacheManager" href="../../../../../com/okta/sdk/cache/CacheManager.html#CacheManager">CacheManager</a> build() {
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <a name="DefaultCacheManager" href="../../../../../com/okta/sdk/impl/ca<a name="DefaultCacheManager" href="../../../../../com/okta/sdk/impl/cache/DefaultCacheManager.html#DefaultCacheManager">DefaultCacheManager</a>ager.html#DefaultCacheManager">DefaultCacheManager</a> manager = <strong class="jxr_keyword">new</strong> <a name="DefaultCacheManager" href="../../../../../com/okta/sdk/impl/cache/DefaultCacheManager.html#DefaultCacheManager">DefaultCacheManager</a>();
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <a name="DefaultCacheManager" href="../../../../../com/okta/sdk/impl/cache/DefaultCacheManager.html#DefaultCacheManager">DefaultCacheManager</a> manager = <strong class="jxr_keyword">new</strong> <a name="DefaultCacheManager" href="../../../../../com/okta/sdk/impl/cache/DefaultCacheManager.html#DefaultCacheManager">DefaultCacheManager</a>();
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>          <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.defaultTimeToLive != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>              manager.setDefaultTimeToLive(<strong class="jxr_keyword">this</strong>.defaultTimeToLive);

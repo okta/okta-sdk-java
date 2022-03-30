@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <title>AccessTokenRetrieverServiceImpl xref</title>
 <link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
@@ -109,7 +109,7 @@
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>                 .addQueryParameter(<span class="jxr_string">"scope"</span>, scope)
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>                 .post(TOKEN_URI, ExtensibleResource.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L103" href="#L103">103</a> 
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>             <a name="OAuth2AccessToken" href="../../../../../com/okta/sdk/impl/oauth2/OAuth<a name="OAuth2AccessToken" href="../../../../../com/okta/sdk/impl/oauth2/OAuth2AccessToken.html#OAuth2AccessToken">OAuth2AccessToken</a>#OAuth2AccessToken">OAuth2AccessToken</a> oAuth2AccessToken = <strong class="jxr_keyword">new</strong> <a name="OAuth2AccessToken" href="../../../../../com/okta/sdk/impl/oauth2/OAuth2AccessToken.html#OAuth2AccessToken">OAuth2AccessToken</a>();
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>             <a name="OAuth2AccessToken" href="../../../../../com/okta/sdk/impl/oauth2/OAuth2AccessToken.html#OAuth2AccessToken">OAuth2AccessToken</a> oAuth2AccessToken = <strong class="jxr_keyword">new</strong> <a name="OAuth2AccessToken" href="../../../../../com/okta/sdk/impl/oauth2/OAuth2AccessToken.html#OAuth2AccessToken">OAuth2AccessToken</a>();
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>             oAuth2AccessToken.setTokenType(accessTokenResponse.getString(OAuth2AccessToken.TOKEN_TYPE_KEY));
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>             oAuth2AccessToken.setExpiresIn(accessTokenResponse.getInteger(OAuth2AccessToken.EXPIRES_IN_KEY));
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>             oAuth2AccessToken.setAccessToken(accessTokenResponse.getString(OAuth2AccessToken.ACCESS_TOKEN_KEY));
@@ -121,7 +121,7 @@
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>             <strong class="jxr_keyword">return</strong> oAuth2AccessToken;
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>         } <strong class="jxr_keyword">catch</strong> (<a name="ResourceException" href="../../../../../com/okta/sdk/resource/ResourceException.html#ResourceException">ResourceException</a> e) {
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>             <em class="jxr_comment">//TODO: clean up the ugly casting and refactor code around it.</em>
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>             <a name="DefaultError" href="<a name="DefaultError" href="../../../../../com/okta/sdk/impl/error/DefaultError.html#DefaultError">DefaultError</a>../com/okta/sdk/impl/error/DefaultError.html#DefaultError">DefaultError</a> defaultError = (<a name="DefaultError" href="../../../../../com/okta/sdk/impl/error/DefaultError.html#DefaultError">DefaultError</a>) e.getError();
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>             <a name="DefaultError" href="../../../../../com/okta/sdk/impl/error/DefaultError.html#DefaultError">DefaultError</a> defaultError = (<a name="DefaultError" href="../../../../../com/okta/sdk/impl/error/DefaultError.html#DefaultError">DefaultError</a>) e.getError();
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>             String errorMessage = defaultError.getString(OAuth2AccessToken.ERROR_KEY);
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>             String errorDescription = defaultError.getString(OAuth2AccessToken.ERROR_DESCRIPTION);
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>             defaultError.setMessage(errorMessage + <span class="jxr_string">" - "</span> + errorDescription);
@@ -237,8 +237,8 @@
 <a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">     * @param apiClientConfiguration supplied in the client configuration.</em>
 <a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_javadoccomment">     * @return ClientConfiguration to be used by token retrieval client.</em>
 <a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <a name="ClientConfiguration" href="../../../..<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a>pl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> constructTokenClientConfig(<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> apiClientConfiguration) {
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>         <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfig<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a>Configuration">ClientConfiguration</a> tokenClientConfiguration = <strong class="jxr_keyword">new</strong> <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a>();
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> constructTokenClientConfig(<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> apiClientConfiguration) {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>         <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> tokenClientConfiguration = <strong class="jxr_keyword">new</strong> <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a>();
 <a class="jxr_linenumber" name="L234" href="#L234">234</a> 
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>         tokenClientConfiguration.setClientCredentialsResolver(
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>             <strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(() -&gt; Optional.empty()));
