@@ -52,7 +52,7 @@ public interface CacheConfigurationBuilder {
      * If this value is not configured, it is assumed that the Cache's entries could potentially live indefinitely.
      * Note however that entries can still be expunged due to other conditions (e.g. memory constraints, Time to
      * Idle setting, etc).
-     * <h1>Usage</h1>
+     * <h4>Usage</h4>
      * <pre>
      *     ...withTimeToLive(30, TimeUnit.MINUTES)...
      *     ...withTimeToLive(1, TimeUnit.HOURS)...
@@ -74,7 +74,7 @@ public interface CacheConfigurationBuilder {
      * If this value is not configured, it is assumed that the Cache's entries could potentially live indefinitely.
      * Note however that entries can still be expunged due to other conditions (e.g. memory constraints, Time to
      * Live setting, etc).
-     * <h1>Usage</h1>
+     * <h4>Usage</h4>
      * <pre>
      *     ...withTimeToIdle(30, TimeUnit.MINUTES)...
      *     ...withTimeToIdle(1, TimeUnit.HOURS)...

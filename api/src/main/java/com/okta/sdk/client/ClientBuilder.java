@@ -34,7 +34,7 @@ import java.util.Set;
  * Proxy and Cache configuration.  Understanding caching is extremely important when creating a Client instance, so
  * please ensure you read the <em>Caching</em> section below.</p>
  *
- * <h1>Usage</h1>
+ * <h2>Usage</h2>
  *
  * <p>The simplest usage is to just call the {@link #build() build()} method, for example:</p>
  *
@@ -79,7 +79,7 @@ import java.util.Set;
  * Client client = {@link Clients Clients}.builder().setClientCredentials(clientCredentials).build();
  * </pre>
  *
- * <h1>Caching</h1>
+ * <h2>Caching</h2>
  *
  * <p>By default, a simple production-grade in-memory {@code CacheManager} will be enabled when the Client instance is
  * created.  This {@code CacheManager} implementation has the following characteristics:</p>
@@ -178,7 +178,7 @@ import java.util.Set;
  * ).build();
  * </pre>
  *
- * <h1>Single Instance</h1>
+ * <h2>Single Instance</h2>
  *
  * <p>Finally, it should be noted that, after building a {@code client} instance, that same instance should be used
  * everywhere in your application. Creating multiple client instances in a single application could have
@@ -246,7 +246,7 @@ public interface ClientBuilder {
      * Sets the {@link CacheManager} that should be used to cache Okta REST resources, reducing round-trips to the
      * Okta API server and enhancing application performance.
      *
-     * <h1>Single JVM Applications</h1>
+     * <h4>Single JVM Applications</h4>
      *
      * <p>If your application runs on a single JVM-based applications, the
      * {@link com.okta.sdk.cache.CacheManagerBuilder CacheManagerBuilder} should be sufficient for your needs. You
@@ -276,7 +276,7 @@ public interface ClientBuilder {
      * <p><em>The above TTL and TTI times are just examples showing API usage - the times themselves are not
      * recommendations.  Choose TTL and TTI times based on your application requirements.</em></p>
      *
-     * <h1>Multi-JVM / Clustered Applications</h1>
+     * <h4>Multi-JVM / Clustered Applications</h4>
      *
      * <p>The default {@code CacheManager} instances returned by the
      * {@link com.okta.sdk.cache.CacheManagerBuilder CacheManagerBuilder} might not be sufficient for a

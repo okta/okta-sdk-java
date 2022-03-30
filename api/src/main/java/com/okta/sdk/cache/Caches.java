@@ -30,7 +30,7 @@ import com.okta.sdk.resource.Resource;
  * <p>See the {@link CacheManagerBuilder} JavaDoc for more information the effects of caching in
  * single-jvm vs distributed-jvm applications.</p>
  *
- * <h1>Usage Example</h1>
+ * <h2>Usage Example</h2>
  *
  * <pre>
  * import static com.okta.sdk.cache.Caches.*;
