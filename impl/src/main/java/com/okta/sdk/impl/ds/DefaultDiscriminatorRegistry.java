@@ -70,6 +70,7 @@ public class DefaultDiscriminatorRegistry implements DiscriminatorRegistry {
             this.values = values;
         }
 
+        @SuppressWarnings({"PMD.UnusedPrivateMethod"})
         private <P> Class<P> resolve(Class<P> clazz, Map data) {
 
             if (data.containsKey(key)) {
