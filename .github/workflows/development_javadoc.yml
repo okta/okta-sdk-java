@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Java JDK
         uses: actions/setup-java@v2
         with:
           java-version: 8
-          distribution: adopt-openj9
+          distribution: zulu
           cache: maven
 
       - name: Build Javadoc for Development version
