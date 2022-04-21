@@ -246,12 +246,14 @@ class SignOnPoliciesIT implements CrudTestSupport {
         registerForCleanup(oidcApp)
 
         Policy policy1 = client.instantiate(Policy)
-            .setName(name)
+            .setName(name + "-1")
             .setType(PolicyType.ACCESS_POLICY)
             .setStatus(Policy.StatusEnum.ACTIVE)
             .setDescription("IT created Policy - applyPolicyToApplicationTest")
 
         Policy createdPolicy1 = client.createPolicy(policy1)
+        registerForCleanup(createdPolicy1)
+
         assertThat(createdPolicy1, notNullValue())
 
         Policy policy2 = client.instantiate(Policy)
@@ -261,6 +263,8 @@ class SignOnPoliciesIT implements CrudTestSupport {
             .setDescription("IT created Policy - applyPolicyToApplicationTest")
 
         Policy createdPolicy2 = client.createPolicy(policy2)
+        registerForCleanup(createdPolicy2)
+
         assertThat(createdPolicy2, notNullValue())
 
         // update app policy to createdPolicy1
@@ -269,7 +273,9 @@ class SignOnPoliciesIT implements CrudTestSupport {
         Application updatedApp = client.getApplication(oidcApp.getId())
         assertThat(updatedApp, notNullValue())
 
-        //TODO - verify if the updatedApp has the policy (createdPolicy1) applied
+        // assert if the app access policy resource id matches createdPolicy1 resource id
+        String policyResourceId = extractAccessPolicyResourceIdFromApplication(updatedApp)
+        assertThat(policyResourceId, equalTo(createdPolicy1.getId()))
 
         // Now, update app policy to createdPolicy2
         oidcApp.updateApplicationPolicy(createdPolicy2.getId())
@@ -277,7 +283,9 @@ class SignOnPoliciesIT implements CrudTestSupport {
         updatedApp = client.getApplication(oidcApp.getId())
         assertThat(updatedApp, notNullValue())
 
-        //TODO - verify if the updatedApp has the policy (createdPolicy2) applied
+        // assert if the app app policy resource id matches createdPolicy2 resource id
+        policyResourceId = extractAccessPolicyResourceIdFromApplication(updatedApp)
+        assertThat(policyResourceId, equalTo(createdPolicy2.getId()))
     }
 
     @Test
@@ -376,5 +384,15 @@ class SignOnPoliciesIT implements CrudTestSupport {
 
     static void assertRulesExpanded(AuthorizationServerPolicy policy) {
         assertThat policy.getEmbedded(), allOf(notNullValue(), hasKey("rules"))
+    }
+
+    static String extractAccessPolicyResourceIdFromApplication(Application application) {
+        assertThat(application, notNullValue())
+        assertThat(application.getLinks(), notNullValue())
+        assertThat(application.getLinks().get("accessPolicy"), notNullValue())
+        String accessPolicyHref = application.getLinks().get("accessPolicy").toString()
+        String accessPolicyResourceId = accessPolicyHref.substring(accessPolicyHref.lastIndexOf("/") + 1)
+            .replaceAll("]", "")
+        return accessPolicyResourceId;
     }
 }
