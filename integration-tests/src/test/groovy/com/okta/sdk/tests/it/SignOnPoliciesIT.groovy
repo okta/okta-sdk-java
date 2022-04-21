@@ -221,6 +221,65 @@ class SignOnPoliciesIT implements CrudTestSupport {
         assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getProfileAttributes().first().getRequired(), is(true))
     }
 
+    @Test (groups = "bacon")
+    void applyPolicyToApplicationTest() {
+
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+
+        Application oidcApp = OIDCApplicationBuilder.instance()
+            .setName(name)
+            .setLabel(name)
+            .addRedirectUris("https://www.example.com")
+            .setPostLogoutRedirectUris(Collections.singletonList("https://www.example.com/logout"))
+            .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
+            .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
+            .setApplicationType(OpenIdConnectApplicationType.WEB)
+            .setClientId(UUID.randomUUID().toString())
+            .setClientSecret(UUID.randomUUID().toString())
+            .setAutoKeyRotation(true)
+            .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_BASIC)
+            .setIOS(false)
+            .setWeb(true)
+            .setLoginRedirectUrl("https://www.myapp.com")
+            .setErrorRedirectUrl("https://www.myapp.com/error")
+            .buildAndCreate(client)
+        registerForCleanup(oidcApp)
+
+        Policy policy1 = client.instantiate(Policy)
+            .setName(name)
+            .setType(PolicyType.ACCESS_POLICY)
+            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setDescription("IT created Policy - applyPolicyToApplicationTest")
+
+        Policy createdPolicy1 = client.createPolicy(policy1)
+        assertThat(createdPolicy1, notNullValue())
+
+        Policy policy2 = client.instantiate(Policy)
+            .setName(name + "-2")
+            .setType(PolicyType.ACCESS_POLICY)
+            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setDescription("IT created Policy - applyPolicyToApplicationTest")
+
+        Policy createdPolicy2 = client.createPolicy(policy2)
+        assertThat(createdPolicy2, notNullValue())
+
+        // update app policy to createdPolicy1
+        oidcApp.updateApplicationPolicy(createdPolicy1.getId())
+
+        Application updatedApp = client.getApplication(oidcApp.getId())
+        assertThat(updatedApp, notNullValue())
+
+        //TODO - verify if the updatedApp has the policy (createdPolicy1) applied
+
+        // Now, update app policy to createdPolicy2
+        oidcApp.updateApplicationPolicy(createdPolicy2.getId())
+
+        updatedApp = client.getApplication(oidcApp.getId())
+        assertThat(updatedApp, notNullValue())
+
+        //TODO - verify if the updatedApp has the policy (createdPolicy2) applied
+    }
+
     @Test
     void signOnActionsTest() {
 

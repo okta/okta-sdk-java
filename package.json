@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@okta/openapi": "2.11.2"
+    "@okta/openapi": "2.12.0"
   }
 }
