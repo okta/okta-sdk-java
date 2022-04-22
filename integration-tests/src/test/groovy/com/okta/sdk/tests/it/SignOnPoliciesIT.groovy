@@ -393,6 +393,6 @@ class SignOnPoliciesIT implements CrudTestSupport {
         String accessPolicyHref = application.getLinks().get("accessPolicy").toString()
         String accessPolicyResourceId = accessPolicyHref.substring(accessPolicyHref.lastIndexOf("/") + 1)
             .replaceAll("]", "")
-        return accessPolicyResourceId;
+        return accessPolicyResourceId
     }
 }
