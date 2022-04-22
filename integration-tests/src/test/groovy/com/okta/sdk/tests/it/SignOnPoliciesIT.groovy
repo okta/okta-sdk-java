@@ -391,8 +391,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
         assertThat(application.getLinks(), notNullValue())
         assertThat(application.getLinks().get("accessPolicy"), notNullValue())
         String accessPolicyHref = application.getLinks().get("accessPolicy").toString()
-        String accessPolicyResourceId = accessPolicyHref.substring(accessPolicyHref.lastIndexOf("/") + 1)
-            .replaceAll("]", "")
+        String accessPolicyResourceId = accessPolicyHref.substring(accessPolicyHref.lastIndexOf("/") + 1).replaceAll("]", "")
         return accessPolicyResourceId
     }
 }
