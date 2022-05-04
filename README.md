@@ -515,7 +515,7 @@ Each one of the configuration values written in 'dot' notation to be used as a J
 * `okta.client.token`
 * and so on
 
-## Connection Retry / Rate Limiting
+## Connection Retry
 
 By default, this SDK will retry requests that return with response code `503`, `504`, `429`, or socket/connection exceptions.
 
