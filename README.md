@@ -517,7 +517,7 @@ Each one of the configuration values written in 'dot' notation to be used as a J
 
 ## Connection Retry
 
-By default, this SDK will retry requests that return with response code `503`, `504`, `429`, or socket/connection exceptions.
+By default, this SDK will **retry** requests that return with response code `503`, `504`, `429`(caused by the rate limiting), or socket/connection exceptions.
 
 Default configuration tells SDK to retry requests up to 4 times without time limitation:
 ```properties
