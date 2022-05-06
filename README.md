@@ -143,6 +143,8 @@ Okta allows you to interact with Okta APIs using scoped OAuth 2.0 access tokens.
 
 This SDK supports this feature only for service-to-service applications. Check out [our guides](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/overview/) to learn more about how to register a new service application using a private and public key pair.
 
+Check out [our guide](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/main/#generate-the-jwk-using-the-admin-console) to learn how to generate a JWK and convert the same to PEM format which would be used as PrivateKey in `Client` creation.
+
 When using this approach, you won't need an API Token because the SDK will request an access token for you. In order to use OAuth 2.0, construct a client instance by passing the following parameters:
 
 [//]: # (method: createOAuth2Client)
