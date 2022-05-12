@@ -20,6 +20,14 @@ import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.policy.*;
 import com.okta.sdk.resource.policy.rule.SignOnPolicyRuleBuilder;
+import org.openapitools.client.model.OktaSignOnPolicyFactorPromptMode;
+import org.openapitools.client.model.OktaSignOnPolicyRule;
+import org.openapitools.client.model.OktaSignOnPolicyRuleSignonActions;
+import org.openapitools.client.model.Policy;
+import org.openapitools.client.model.PolicyNetworkCondition;
+import org.openapitools.client.model.PolicyNetworkConnection;
+import org.openapitools.client.model.PolicyRuleAuthContextCondition;
+import org.openapitools.client.model.PolicyRuleAuthContextType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +40,7 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
     private List<String> userIds = new ArrayList<>();
     private OktaSignOnPolicyRuleSignonActions.AccessEnum access;
     private Integer factorLifetime;
-    private OktaSignOnPolicyRuleSignonActions.FactorPromptModeEnum factorPromptMode;
+    private OktaSignOnPolicyFactorPromptMode factorPromptMode;
     private Boolean rememberDeviceByDefault;
     private Boolean requireFactor;
     private Integer maxSessionIdleMinutes;
@@ -96,13 +104,13 @@ public class DefaultSignOnPolicyRuleBuilder extends DefaultPolicyRuleBuilder<Sig
     }
 
     @Override
-    public SignOnPolicyRuleBuilder setAuthType(PolicyRuleAuthContextCondition.AuthTypeEnum authType) {
+    public SignOnPolicyRuleBuilder setAuthType(PolicyRuleAuthContextType authType) {
         this.authType = authType;
         return this;
     }
 
     @Override
-    public SignOnPolicyRuleBuilder setNetworkConnection(PolicyNetworkCondition.ConnectionEnum connection) {
+    public SignOnPolicyRuleBuilder setNetworkConnection(PolicyNetworkConnection connection) {
         this.connection = connection;
         return this;
     }
