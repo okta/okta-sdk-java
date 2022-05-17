@@ -12,6 +12,7 @@ jobs:
   jdk8:
     docker:
       - image: cimg/openjdk:8.0.322
+      - image: cimg/node:18.1.0
     environment:
         JVM_OPTS: -Xmx3200m
     steps: *build_steps
@@ -19,6 +20,7 @@ jobs:
   jdk11:
     docker:
       - image: cimg/openjdk:11.0.13
+      - image: cimg/node:18.1.0
     environment:
         JVM_OPTS: -Xmx3200m
     steps: *build_steps
@@ -26,7 +28,8 @@ jobs:
   jdk17:
     docker:
       - image: cimg/openjdk:17.0.3
-    environment:
+      - image: cimg/node:18.1.0
+environment:
         JVM_OPTS: -Xmx3200m
     steps: *build_steps
 
