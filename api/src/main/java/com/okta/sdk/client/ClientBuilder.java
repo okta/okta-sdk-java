@@ -28,7 +28,7 @@ import java.util.Set;
 
 /**
  * A <a href="http://en.wikipedia.org/wiki/Builder_pattern">Builder design pattern</a> used to
- * construct {@link com.okta.sdk.client.Client} instances.
+ * construct client instances.
  *
  * <p>The {@code ClientBuilder} is used to construct Client instances with Okta credentials,
  * Proxy and Cache configuration.  Understanding caching is extremely important when creating a Client instance, so
@@ -36,10 +36,10 @@ import java.util.Set;
  *
  * <h1>Usage</h1>
  *
- * <p>The simplest usage is to just call the {@link #build() build()} method, for example:</p>
+ * <p>The simplest usage is to just call the build() method, for example:</p>
  *
  * <pre>
- * Client client = {@link Clients Clients}.builder().{@link #build() build()};
+ * Client client = {@link Clients Clients}.builder().build()};
  * </pre>
  *
  * <p>This will:</p>
@@ -442,10 +442,10 @@ public interface ClientBuilder {
      */
     ClientBuilder setRequestExecutorFactory(RequestExecutorFactory requestExecutorFactory);
 
-    /**
-     * Constructs a new {@link Client} instance based on the ClientBuilder's current configuration state.
-     *
-     * @return a new {@link Client} instance based on the ClientBuilder's current configuration state.
-     */
-    Client build();
+//    /**
+//     * Constructs a new {@link Client} instance based on the ClientBuilder's current configuration state.
+//     *
+//     * @return a new {@link Client} instance based on the ClientBuilder's current configuration state.
+//     */
+//    Client build();
 }

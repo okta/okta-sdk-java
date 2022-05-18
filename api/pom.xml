@@ -139,6 +139,7 @@
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                             </configOptions>
+                            <templateDirectory>src/main/resources/custom_templates</templateDirectory>
                         </configuration>
                     </execution>
                 </executions>
