@@ -17,7 +17,6 @@ package quickstart;
 
 import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
-import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.ResourceException;
 import com.okta.sdk.resource.user.UserBuilder;

@@ -16,7 +16,7 @@
 package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Client
-import com.okta.sdk.client.Clients
+
 import com.okta.sdk.resource.ResourceException
 import com.okta.sdk.resource.group.rule.GroupRule
 import com.okta.sdk.resource.policy.PolicyType

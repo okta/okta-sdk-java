@@ -18,7 +18,7 @@ package com.okta.sdk.impl.oauth2
 import com.nimbusds.jose.jwk.RSAKey
 import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.client.AuthorizationMode
-import com.okta.sdk.client.Clients
+
 import com.okta.sdk.ds.RequestBuilder
 import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver

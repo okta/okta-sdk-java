@@ -19,7 +19,6 @@ import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Client;
-import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.ExtensibleResource;
 import com.okta.sdk.resource.application.Application;
 import com.okta.sdk.resource.application.ApplicationList;

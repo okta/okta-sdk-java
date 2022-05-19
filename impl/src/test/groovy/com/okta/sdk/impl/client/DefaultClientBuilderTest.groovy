@@ -25,7 +25,7 @@ import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.AuthorizationMode
 import com.okta.sdk.client.Client
 import com.okta.sdk.client.ClientBuilder
-import com.okta.sdk.client.Clients
+
 import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.io.DefaultResourceFactory
 import com.okta.sdk.impl.io.Resource

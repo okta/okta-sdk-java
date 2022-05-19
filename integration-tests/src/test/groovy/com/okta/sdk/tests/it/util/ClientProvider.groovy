@@ -18,7 +18,7 @@ package com.okta.sdk.tests.it.util
 import com.okta.commons.lang.Strings
 import com.okta.sdk.authc.credentials.TokenClientCredentials
 import com.okta.sdk.client.Client
-import com.okta.sdk.client.Clients
+
 import com.okta.sdk.impl.cache.DisabledCacheManager
 import com.okta.sdk.resource.Deletable
 import com.okta.sdk.resource.ResourceException
@@ -31,7 +31,6 @@ import com.okta.sdk.resource.group.rule.GroupRuleList
 import com.okta.sdk.resource.group.rule.GroupRuleStatus
 import com.okta.sdk.resource.identity.provider.IdentityProvider
 import com.okta.sdk.resource.inline.hook.InlineHook
-import com.okta.sdk.resource.linked.object.LinkedObject
 import com.okta.sdk.resource.user.User
 import com.okta.sdk.resource.user.UserStatus
 import com.okta.sdk.tests.Scenario

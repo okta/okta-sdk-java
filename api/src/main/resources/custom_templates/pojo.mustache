@@ -316,7 +316,7 @@ public boolean equals(Object o) {
 
     public static class CustomTypeAdapterFactory implements com.google.gson.TypeAdapterFactory {
     @Override
-    public <T> TypeAdapter<T> create(com.google.gson.Gson gson, com.google.gson.reflect.TypeToken<T> typeToken) {
+    public <T> com.google.gson.TypeAdapter<T> create(com.google.gson.Gson gson, com.google.gson.reflect.TypeToken<T> typeToken) {
     //TODO: implement me!
     return null;
     }
