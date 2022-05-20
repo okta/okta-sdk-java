@@ -38,7 +38,6 @@ This project includes:
   Jackson-core under The Apache Software License, Version 2.0
   jackson-databind under The Apache Software License, Version 2.0
   Jackson-dataformat-YAML under The Apache Software License, Version 2.0
-  Jackson-JAXRS-JSON under The Apache Software License, Version 2.0
   Jackson-JAXRS: base under The Apache Software License, Version 2.0
   Jackson-JAXRS: JSON under The Apache Software License, Version 2.0
   Jakarta XML Binding API under Eclipse Distribution License - v 1.0
