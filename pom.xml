@@ -47,14 +47,14 @@
 
 
     <modules>
-        <module>swagger-templates</module>
+<!--        <module>swagger-templates</module>-->
         <module>api</module>
-        <module>impl</module>
-        <module>httpclients/httpclient</module>
-        <module>httpclients/okhttp</module>
+<!--        <module>impl</module>-->
+<!--        <module>httpclients/httpclient</module>-->
+<!--        <module>httpclients/okhttp</module>-->
         <module>integration-tests</module>
-        <module>examples</module>
-        <module>coverage</module>
+<!--        <module>examples</module>-->
+<!--        <module>coverage</module>-->
     </modules>
 
     <dependencyManagement>
