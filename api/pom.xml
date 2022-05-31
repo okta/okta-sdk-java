@@ -171,6 +171,8 @@
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                             </configOptions>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiTests>false</generateApiTests>
                             <templateDirectory>src/main/resources/custom_templates</templateDirectory>
                             <library>resttemplate</library>
                         </configuration>

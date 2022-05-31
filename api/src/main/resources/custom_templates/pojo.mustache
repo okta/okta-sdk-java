@@ -14,7 +14,7 @@
         @JsonTypeName("{{name}}")
     {{/isClassnameSanitized}}
 {{/jackson}}
-{{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
+{{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{>xmlAnnotation}}
 {{#vendorExtensions.x-class-extra-annotation}}
     {{{vendorExtensions.x-class-extra-annotation}}}
 {{/vendorExtensions.x-class-extra-annotation}}
