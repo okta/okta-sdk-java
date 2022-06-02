@@ -109,14 +109,6 @@ abstract class ITSupport implements ClientProvider {
         ApiClient client = getClient()
 
         def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
-//        User user = UserBuilder.instance()
-//                .setEmail(email)
-//                .setFirstName("Joe")
-//                .setLastName("Code")
-//                .setPassword("Password1".toCharArray())
-//                .setActive(true)
-//                .buildAndCreate(client)
-//        registerForCleanup(user)
 
         CreateUserRequest createUserRequest = new CreateUserRequest();
         UserProfile userProfile = new UserProfile()
@@ -129,8 +121,6 @@ abstract class ITSupport implements ClientProvider {
         createUserRequest.setProfile(userProfile)
         UserApi userApi = new UserApi(client)
         User createdUser = userApi.createUser(createUserRequest, true, null, null)
-        registerForCleanup(createdUser)
-
         return createdUser
     }
 
