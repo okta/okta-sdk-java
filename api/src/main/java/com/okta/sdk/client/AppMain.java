@@ -63,33 +63,14 @@ public class AppMain {
 
     public static void main(String... args) {
 
-        ApiClient apiClient = buildApiClient();
+        ApiClient apiClient = buildApiClient(args[0], args[1]);
 
-        testDriveAppsApi(apiClient);
+        //testDriveAppsApi(apiClient);
         //testDriveUsersApi(apiClient);
-        //testDriveIdpApi(apiClient);
+        testDriveIdpApi(apiClient);
     }
 
     private static void testDriveAppsApi(ApiClient apiClient) {
-
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        MultiValueMap<String, String> cookieParams = new LinkedMultiValueMap();
-//        ResponseEntity<String> responseEntity = apiClient.invokeAPI("/api/v1/apps",
-//            HttpMethod.GET,
-//            Collections.emptyMap(),
-//            null,
-//            null,
-//            httpHeaders,
-//            cookieParams,
-//            null,
-//            null,
-//            null,
-//            new String[]{"api_token"},
-//            new ParameterizedTypeReference<String>() {
-//            }
-//        );
-//
-//        System.out.println("\n==> Response:\n" + responseEntity.getBody());
 
         ApplicationApi applicationApi = new ApplicationApi(apiClient);
         BookmarkApplication bookmarkApplication = new BookmarkApplication();
@@ -273,21 +254,21 @@ public class AppMain {
         identityProviderPolicy.setSubject(policySubject);
         identityProvider.setPolicy(identityProviderPolicy);
 
-        IdentityProvider createdIdentityProvider = identityProviderApi.createIdentityProvider(identityProvider);
-        System.out.println("== CREATED IDENTITY PROVIDER ==\n" + createdIdentityProvider);
+        IdentityProvider createdIdp = identityProviderApi.createIdentityProvider(identityProvider);
+        System.out.println("== CREATED IDENTITY PROVIDER ==\n" + createdIdp);
 
-        assert createdIdentityProvider != null;
-        assert createdIdentityProvider.getId() != null;
-        System.out.println("== CREATED IDENTITY PROVIDER ID == " + createdIdentityProvider.getId());
+        assert createdIdp != null;
+        assert createdIdp.getId() != null;
+        System.out.println("== CREATED IDENTITY PROVIDER ID == " + createdIdp.getId());
 
-        System.out.println("== DEACTIVATING IDENTITY PROVIDER ID == " + createdIdentityProvider.getId());
-        identityProviderApi.deactivateIdentityProvider(createdIdentityProvider.getId());
+        System.out.println("== DEACTIVATING IDENTITY PROVIDER ID == " + createdIdp.getId());
+        identityProviderApi.deactivateIdentityProvider(createdIdp.getId());
 
-        System.out.println("== DELETING IDENTITY PROVIDER ID == " + createdIdentityProvider.getId());
-        identityProviderApi.deleteIdentityProvider(createdIdentityProvider.getId());
+        System.out.println("== DELETING IDENTITY PROVIDER ID == " + createdIdp.getId());
+        identityProviderApi.deleteIdentityProvider(createdIdp.getId());
     }
 
-    private static ApiClient buildApiClient() {
+    private static ApiClient buildApiClient(String orgBaseUrl, String apiKey) {
 
         RestTemplate restTemplate = new RestTemplate();
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
@@ -298,8 +279,8 @@ public class AppMain {
             MediaType.parseMediaType("application/pkix-cert")));
         restTemplate.getMessageConverters().add(converter);
         ApiClient apiClient = new ApiClient(restTemplate);
-        apiClient.setBasePath("https://sample.com");
-        apiClient.setApiKey("*********************");
+        apiClient.setBasePath(orgBaseUrl);
+        apiClient.setApiKey(apiKey);
         apiClient.setApiKeyPrefix("SSWS");
         return apiClient;
     }

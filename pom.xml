@@ -25,7 +25,7 @@
 
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-root</artifactId>
-    <version>8.2.2-SNAPSHOT</version>
+    <version>10.0.0-beta-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Okta Java SDK</name>
@@ -37,21 +37,19 @@
         <jackson.version>2.13.3</jackson.version>
         <snakeyaml.version>1.30</snakeyaml.version>
         <bouncycastle.version>1.70</bouncycastle.version>
-        <jjwt.version>0.11.1</jjwt.version>
-        <okta.sdk.previousVersion>8.1.0</okta.sdk.previousVersion>
+        <jjwt.version>0.11.5</jjwt.version>
+        <okta.sdk.previousVersion>8.2.1</okta.sdk.previousVersion>
         <okta.commons.version>1.3.0</okta.commons.version>
+        <!-- true - fetch spec from npm; false - skips the fetch and uses the local copy (in PROJECT_ROOT/src/swagger/api.yaml) -->
+        <npm.exec.skip>false</npm.exec.skip>
 
         <github.slug>okta/okta-sdk-java</github.slug>
-        <npm.exec.skip>false</npm.exec.skip> <!-- Set it to `true` to skip openAPI spec regeneration -->
     </properties>
 
 
     <modules>
-<!--        <module>swagger-templates</module>-->
         <module>api</module>
 <!--        <module>impl</module>-->
-<!--        <module>httpclients/httpclient</module>-->
-<!--        <module>httpclients/okhttp</module>-->
         <module>integration-tests</module>
 <!--        <module>examples</module>-->
 <!--        <module>coverage</module>-->
@@ -72,27 +70,12 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-api</artifactId>
-                <version>8.2.2-SNAPSHOT</version>
+                <version>10.0.0-beta-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-impl</artifactId>
-                <version>8.2.2-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.okta.sdk</groupId>
-                <artifactId>okta-api-swagger-templates</artifactId>
-                <version>8.2.2-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.okta.sdk</groupId>
-                <artifactId>okta-sdk-httpclient</artifactId>
-                <version>8.2.2-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.okta.sdk</groupId>
-                <artifactId>okta-sdk-okhttp</artifactId>
-                <version>8.2.2-SNAPSHOT</version>
+                <version>10.0.0-beta-SNAPSHOT</version>
             </dependency>
 
             <!-- Other Okta Projects -->
@@ -106,21 +89,7 @@
                 <artifactId>okta-commons-lang</artifactId>
                 <version>${okta.commons.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.okta.commons</groupId>
-                <artifactId>okta-http-api</artifactId>
-                <version>${okta.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.okta.commons</groupId>
-                <artifactId>okta-http-httpclient</artifactId>
-                <version>${okta.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.okta.commons</groupId>
-                <artifactId>okta-http-okhttp</artifactId>
-                <version>${okta.commons.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>javax.annotation</groupId>
                 <artifactId>javax.annotation-api</artifactId>
@@ -131,14 +100,14 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-integration-tests</artifactId>
-                <version>8.2.2-SNAPSHOT</version>
+                <version>10.0.0-beta-SNAPSHOT</version>
             </dependency>
 
             <!-- Examples -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-examples-quickstart</artifactId>
-                <version>8.2.2-SNAPSHOT</version>
+                <version>10.0.0-beta-SNAPSHOT</version>
             </dependency>
 
             <!-- Logging -->
@@ -311,11 +280,9 @@
                     <configuration>
                         <trimStackTrace>false</trimStackTrace>
                         <reuseForks>true</reuseForks>
-
-<!--                         <forkCount>2C</forkCount>
+                        <!--<forkCount>2C</forkCount>
                         <parallel>classes</parallel>
-                        <threadCount>5</threadCount> -->
-
+                        <threadCount>5</threadCount>-->
                     </configuration>
                 </plugin>
                 <plugin>
@@ -367,29 +334,29 @@
 <!--                        </dependency>-->
 <!--                    </dependencies>-->
 <!--                </plugin>-->
-                <plugin>
-                    <groupId>org.openapitools</groupId>
-                    <artifactId>openapi-generator-maven-plugin</artifactId>
-                    <version>6.0.0-beta</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>generate</goal>
-                            </goals>
-                            <configuration>
-                                <inputSpec>${project.basedir}/../src/swagger/api.yaml</inputSpec>
-                                <generatorName>java</generatorName>
-                                <configOptions>
-                                    <sourceFolder>src/gen/java/main</sourceFolder>
-                                </configOptions>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
+<!--                <plugin>-->
+<!--                    <groupId>org.openapitools</groupId>-->
+<!--                    <artifactId>openapi-generator-maven-plugin</artifactId>-->
+<!--                    <version>6.0.0-beta</version>-->
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <goals>-->
+<!--                                <goal>generate</goal>-->
+<!--                            </goals>-->
+<!--                            <configuration>-->
+<!--                                <inputSpec>${project.basedir}/../src/swagger/api.yaml</inputSpec>-->
+<!--                                <generatorName>java</generatorName>-->
+<!--                                <configOptions>-->
+<!--                                    <sourceFolder>src/gen/java/main</sourceFolder>-->
+<!--                                </configOptions>-->
+<!--                            </configuration>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
+<!--                </plugin>-->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.10.0</version>
+                    <version>2.11.0</version>
                     <configuration>
                         <generateBackupPoms>false</generateBackupPoms>
                     </configuration>

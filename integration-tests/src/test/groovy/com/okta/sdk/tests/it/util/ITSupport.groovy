@@ -15,17 +15,21 @@
  */
 package com.okta.sdk.tests.it.util
 
-import com.okta.sdk.client.Client
-import com.okta.sdk.resource.ExtensibleResource
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.policy.*
-import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
 import com.okta.sdk.tests.Scenario
+import org.openapitools.client.ApiClient
+import org.openapitools.client.api.UserApi
+import org.openapitools.client.model.CreateUserRequest
+import org.openapitools.client.model.User
+import org.openapitools.client.model.UserProfile
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.util.LinkedMultiValueMap
 import org.testng.ITestContext
 import org.testng.annotations.AfterSuite
 import org.testng.annotations.BeforeSuite
@@ -98,74 +102,101 @@ abstract class ITSupport implements ClientProvider {
             }
         }
 
-        return testDelay == null ? 0 : testDelay;
+        return testDelay == null ? 0 : testDelay
     }
 
     User randomUser() {
-        Client client = getClient()
+        ApiClient client = getClient()
 
         def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
-        User user = UserBuilder.instance()
-                .setEmail(email)
-                .setFirstName("Joe")
-                .setLastName("Code")
-                .setPassword("Password1".toCharArray())
-                .setActive(true)
-                .buildAndCreate(client)
-        registerForCleanup(user)
+//        User user = UserBuilder.instance()
+//                .setEmail(email)
+//                .setFirstName("Joe")
+//                .setLastName("Code")
+//                .setPassword("Password1".toCharArray())
+//                .setActive(true)
+//                .buildAndCreate(client)
+//        registerForCleanup(user)
 
-        return user
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        UserProfile userProfile = new UserProfile()
+        userProfile.setFirstName("Joe")
+        userProfile.setLastName("Coder")
+        userProfile.setEmail(email)
+        userProfile.setMobilePhone("1234567890")
+        userProfile.setLogin(userProfile.getEmail())
+
+        createUserRequest.setProfile(userProfile)
+        UserApi userApi = new UserApi(client)
+        User createdUser = userApi.createUser(createUserRequest, true, null, null)
+        registerForCleanup(createdUser)
+
+        return createdUser
     }
 
-    Group randomGroup(String name = "java-sdk-it-${UUID.randomUUID().toString()}") {
-
-        Group group = GroupBuilder.instance()
-            .setName(name)
-            .setDescription(name)
-            .buildAndCreate(getClient())
-        registerForCleanup(group)
-
-        return group
-    }
-
-    PasswordPolicy randomPasswordPolicy(String groupId) {
-
-        PasswordPolicy policy = PasswordPolicyBuilder.instance()
-            .setName("java-sdk-it-" + UUID.randomUUID().toString())
-            .setStatus(Policy.StatusEnum.ACTIVE)
-            .setDescription("IT created Policy")
-            .setStatus(Policy.StatusEnum.ACTIVE)
-            .setPriority(1)
-            .addGroup(groupId)
-        .buildAndCreate(client)
-
-        registerForCleanup(policy)
-
-        return policy
-    }
-
-    OktaSignOnPolicy randomSignOnPolicy(String groupId) {
-
-        OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
-            .setName("java-sdk-it-" + UUID.randomUUID().toString())
-            .setDescription("IT created Policy")
-            .setStatus(Policy.StatusEnum.ACTIVE)
-        .setType(PolicyType.OKTA_SIGN_ON)
-        .buildAndCreate(client)
-
-        registerForCleanup(policy)
-
-        return policy
-    }
+//    Group randomGroup(String name = "java-sdk-it-${UUID.randomUUID().toString()}") {
+//
+//        Group group = GroupBuilder.instance()
+//            .setName(name)
+//            .setDescription(name)
+//            .buildAndCreate(getClient())
+//        registerForCleanup(group)
+//
+//        return group
+//    }
+//
+//    PasswordPolicy randomPasswordPolicy(String groupId) {
+//
+//        PasswordPolicy policy = PasswordPolicyBuilder.instance()
+//            .setName("java-sdk-it-" + UUID.randomUUID().toString())
+//            .setStatus(Policy.StatusEnum.ACTIVE)
+//            .setDescription("IT created Policy")
+//            .setStatus(Policy.StatusEnum.ACTIVE)
+//            .setPriority(1)
+//            .addGroup(groupId)
+//        .buildAndCreate(client)
+//
+//        registerForCleanup(policy)
+//
+//        return policy
+//    }
+//
+//    OktaSignOnPolicy randomSignOnPolicy(String groupId) {
+//
+//        OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
+//            .setName("java-sdk-it-" + UUID.randomUUID().toString())
+//            .setDescription("IT created Policy")
+//            .setStatus(Policy.StatusEnum.ACTIVE)
+//        .setType(PolicyType.OKTA_SIGN_ON)
+//        .buildAndCreate(client)
+//
+//        registerForCleanup(policy)
+//
+//        return policy
+//    }
 
     boolean isOIEEnvironment() {
 
-        Object pipeline = client.http()
-            .get("/.well-known/okta-organization", ExtensibleResource.class)
-            .get("pipeline");
-        if(pipeline != null && pipeline.toString().equals("idx")) {
-            return true;
+        ResponseEntity<Map<String, Object>> responseEntity = getClient().invokeAPI("/.well-known/okta-organization",
+            HttpMethod.GET,
+            Collections.emptyMap(),
+            null,
+            null,
+            new HttpHeaders(),
+            new LinkedMultiValueMap<String, String>(),
+            null,
+            Collections.singletonList(MediaType.APPLICATION_JSON),
+            null,
+            new String[]{"api_token"},
+            new ParameterizedTypeReference<Map<String, Object>>() {})
+
+        if (responseEntity != null && responseEntity.getBody() != null) {
+            String pipeline = responseEntity.getBody().get("pipeline")
+            if (Objects.equals(pipeline, "idx")) {
+                return true
+            }
         }
-        return false;
+
+        return false
     }
 }

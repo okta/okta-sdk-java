@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests;
 
-//import com.okta.sdk.tests.it.util.ITSupport;
+import com.okta.sdk.tests.it.util.ITSupport;
 import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener;
 import org.testng.ITestResult;

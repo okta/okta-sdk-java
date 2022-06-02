@@ -15,39 +15,13 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.commons.http.MediaType
-import com.okta.sdk.client.Client
-import com.okta.sdk.impl.ds.DefaultDataStore
-import com.okta.sdk.resource.Resource
-import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.application.*
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.inline.hook.InlineHook
-import com.okta.sdk.resource.inline.hook.InlineHookBuilder
-import com.okta.sdk.resource.inline.hook.InlineHookChannel
-import com.okta.sdk.resource.inline.hook.InlineHookType
-import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.schema.UserSchema
-import com.okta.sdk.resource.user.schema.UserSchemaDefinitions
-import com.okta.sdk.resource.user.schema.UserSchemaPublic
 import com.okta.sdk.tests.it.util.ITSupport
 import org.openapitools.client.ApiClient
-import org.openapitools.client.api.ApplicationApi
 import org.openapitools.client.model.Application
-import org.openapitools.client.model.OpenIdConnectApplication
+import org.openapitools.client.model.User
 import org.springframework.http.HttpMethod
 import org.springframework.web.client.RestTemplate
-import org.testng.Assert
 import org.testng.annotations.Test
-
-import javax.xml.parsers.DocumentBuilderFactory
-
-import static com.okta.sdk.tests.it.util.Util.assertNotPresent
-import static com.okta.sdk.tests.it.util.Util.assertPresent
-import static com.okta.sdk.tests.it.util.Util.expect
-import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.*
 
 /**
  * Tests for {@code /api/v1/apps}.
@@ -56,24 +30,26 @@ import static org.hamcrest.Matchers.*
 class ApplicationsIT extends ITSupport {
 
     @Test
-    void doCrudTest(Application app) {
+    void doCrudTest() {
 
-        RestTemplate restTemplate = new RestTemplate()
-        ApiClient apiClient = new ApiClient(restTemplate)
+//        RestTemplate restTemplate = new RestTemplate()
+//        ApiClient apiClient = new ApiClient(restTemplate)
+//
+//        apiClient.invokeAPI("https://java-sdk.oktapreview.com/api/v1/apps",
+//            HttpMethod.GET,
+//            null,
+//            null,
+//            null,
+//            null,
+//            null,
+//            null,
+//            null,
+//            null,
+//            null,
+//            null
+//        )
 
-        apiClient.invokeAPI("https://java-sdk.oktapreview.com/api/v1/apps",
-            HttpMethod.GET,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        )
-
+        User user = randomUser()
+        println(user)
     }
 }

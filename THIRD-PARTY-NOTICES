@@ -26,7 +26,6 @@ This project includes:
   JavaBeans Activation Framework API jar under EDL 1.0
   JsonNullable Jackson module under Apache License, Version 2.0
   Okta Commons :: Config Check under The Apache License, Version 2.0
-  Okta Commons :: HTTP :: API under The Apache License, Version 2.0
   Okta Commons :: Lang under The Apache License, Version 2.0
   SLF4J API Module under MIT License
   Spring AOP under Apache License, Version 2.0
