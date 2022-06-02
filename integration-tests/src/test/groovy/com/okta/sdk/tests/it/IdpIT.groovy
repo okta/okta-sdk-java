@@ -147,7 +147,7 @@ class IdpIT extends ITSupport {
         String newName = "java-sdk-it-" + UUID.randomUUID().toString()
 
         IdentityProvider newIdp = new IdentityProvider()
-        newIdp.setName(name)
+        newIdp.setName(newName)
         newIdp.setType("OIDC")
         newIdp.setIssuerMode(IssuerMode.ORG_URL)
         protocol = new Protocol()
@@ -242,8 +242,7 @@ class IdpIT extends ITSupport {
 
         IdentityProvider updatedIdp = identityProviderApi.updateIdentityProvider(createdIdp.getId(), newIdp)
 
-        registerForCleanup(updatedIdp)
-
+        // retrieve
         IdentityProvider retrievedUpdatedIdp = identityProviderApi.getIdentityProvider(updatedIdp.getId())
 
         assertThat(retrievedUpdatedIdp.getId(), equalTo(createdIdp.getId()))

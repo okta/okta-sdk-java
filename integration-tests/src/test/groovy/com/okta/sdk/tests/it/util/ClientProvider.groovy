@@ -20,6 +20,7 @@ import com.okta.sdk.resource.Deletable
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.openapitools.client.ApiClient
+import org.openapitools.client.api.IdentityProviderApi
 import org.openapitools.client.api.UserApi
 import org.openapitools.client.model.Application
 import org.openapitools.client.model.AuthorizationServer
@@ -27,6 +28,7 @@ import org.openapitools.client.model.EventHook
 import org.openapitools.client.model.GroupRule
 import org.openapitools.client.model.IdentityProvider
 import org.openapitools.client.model.InlineHook
+import org.openapitools.client.model.LifecycleStatus
 import org.openapitools.client.model.User
 import org.openapitools.client.model.UserStatus
 import org.slf4j.Logger
@@ -155,7 +157,8 @@ trait ClientProvider implements IHookable {
     }
 
     void deleteUser(String email, ApiClient client) {
-        log.info("Deleting user: {}", email)
+        log.info("Deleting User: {}", email)
+
         UserApi userApi = new UserApi(client)
         User user = userApi.getUser(email)
         if (user.status != UserStatus.DEPROVISIONED) {
@@ -164,6 +167,22 @@ trait ClientProvider implements IHookable {
         }
         // delete
         userApi.deactivateOrDeleteUser(user.id, false)
+    }
+
+    void deleteIdp(IdentityProvider idp, ApiClient client) {
+        log.info("Deleting IdP: {} {}", idp.getId(), idp.getName())
+
+        IdentityProviderApi idpApi = new IdentityProviderApi(client)
+        IdentityProvider idpToDelete = idpApi.getIdentityProvider(idp.getId())
+        if (idpToDelete != null) {
+            if (idpToDelete.getStatus() == LifecycleStatus.ACTIVE) {
+                // deactivate
+                idpApi.deactivateIdentityProvider(idpToDelete.getId())
+            }
+
+            // delete
+            idpApi.deleteIdentityProvider(idpToDelete.getId())
+        }
     }
 
 //    void deleteGroup(String groupName, Client client) {
@@ -200,6 +219,10 @@ trait ClientProvider implements IHookable {
                     if (deletable instanceof User) {
                         User tobeDeletedUser = (User) deletable
                         deleteUser(tobeDeletedUser.getProfile().getEmail(), getClient())
+                    }
+                    else if (deletable instanceof IdentityProvider) {
+                        IdentityProvider tobeDeletedIdp = (IdentityProvider) deletable
+                        deleteIdp(tobeDeletedIdp, getClient())
                     }
                 }
                 catch (Exception e) {
