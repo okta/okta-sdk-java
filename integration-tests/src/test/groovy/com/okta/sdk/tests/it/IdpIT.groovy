@@ -565,8 +565,7 @@ class IdpIT extends ITSupport {
         identityProviderApi.deleteIdentityProvider(createdIdp.getId())
     }
 
-    // Remove this groups tag after OKTA-329987 is resolved (Adding this tag disables the test in bacon PDV)
-    @Test (groups = "bacon")
+    @Test (groups = "group2")
     void microsoftIdpTest() {
 
         // create user
