@@ -16,38 +16,17 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.tests.it.util.ITSupport
-import org.openapitools.client.ApiClient
-import org.openapitools.client.model.Application
 import org.openapitools.client.model.User
-import org.springframework.http.HttpMethod
-import org.springframework.web.client.RestTemplate
 import org.testng.annotations.Test
 
 /**
- * Tests for {@code /api/v1/apps}.
- * @since 0.9.0
+ * Tests for {@code /api/v1/users}.
+ * @since 0.5.0
  */
-class ApplicationsIT extends ITSupport {
+class UsersIT extends ITSupport {
 
     @Test
     void doCrudTest() {
-
-//        RestTemplate restTemplate = new RestTemplate()
-//        ApiClient apiClient = new ApiClient(restTemplate)
-//
-//        apiClient.invokeAPI("https://java-sdk.oktapreview.com/api/v1/apps",
-//            HttpMethod.GET,
-//            null,
-//            null,
-//            null,
-//            null,
-//            null,
-//            null,
-//            null,
-//            null,
-//            null,
-//            null
-//        )
 
         User user = randomUser()
         println(user)
