@@ -110,15 +110,16 @@ abstract class ITSupport implements ClientProvider {
 
         def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
 
-        CreateUserRequest createUserRequest = new CreateUserRequest();
         UserProfile userProfile = new UserProfile()
-        userProfile.setFirstName("Joe")
-        userProfile.setLastName("Coder")
-        userProfile.setEmail(email)
-        userProfile.setMobilePhone("1234567890")
-        userProfile.setLogin(userProfile.getEmail())
+            .firstName("Joe")
+            .lastName("Coder")
+            .email(email)
+            .mobilePhone("1234567890")
+            .login(email)
 
-        createUserRequest.setProfile(userProfile)
+        CreateUserRequest createUserRequest = new CreateUserRequest()
+            .profile(userProfile)
+
         UserApi userApi = new UserApi(client)
         User createdUser = userApi.createUser(createUserRequest, true, null, null)
         return createdUser

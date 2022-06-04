@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.okta.commons.lang.Strings
 import com.okta.sdk.resource.Deletable
 import com.okta.sdk.tests.Scenario
@@ -31,10 +33,15 @@ import org.openapitools.client.model.InlineHook
 import org.openapitools.client.model.LifecycleStatus
 import org.openapitools.client.model.User
 import org.openapitools.client.model.UserStatus
+import org.openapitools.jackson.nullable.JsonNullableModule
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
+import org.springframework.http.client.BufferingClientHttpRequestFactory
+import org.springframework.http.converter.HttpMessageConverter
+import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter
 import org.springframework.web.client.RestTemplate
 import org.testng.IHookCallBack
 import org.testng.IHookable
@@ -83,19 +90,34 @@ trait ClientProvider implements IHookable {
 
         String orgUrl = System.getenv("OKTA_CLIENT_ORGURL")
         String apiKey = System.getenv("OKTA_CLIENT_TOKEN")
-        RestTemplate restTemplate = new RestTemplate()
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter()
-        converter.setSupportedMediaTypes(Arrays.asList(
-            MediaType.APPLICATION_OCTET_STREAM,
-            MediaType.parseMediaType("application/x-pem-file"),
-            MediaType.parseMediaType("application/x-x509-ca-cert"),
-            MediaType.parseMediaType("application/pkix-cert")))
-        restTemplate.getMessageConverters().add(converter)
-        ApiClient apiClient = new ApiClient(restTemplate)
+
+        ApiClient apiClient = new ApiClient(buildRestTemplate())
         apiClient.setBasePath(orgUrl)
         apiClient.setApiKey(apiKey)
         apiClient.setApiKeyPrefix("SSWS")
+
         return apiClient
+    }
+
+    private RestTemplate buildRestTemplate() {
+
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>()
+        ObjectMapper objectMapper = new ObjectMapper()
+        messageConverters.add(new MappingJackson2HttpMessageConverter(objectMapper))
+
+        RestTemplate restTemplate = new RestTemplate(messageConverters)
+
+        for (HttpMessageConverter converter : restTemplate.getMessageConverters()) {
+            if (converter instanceof AbstractJackson2HttpMessageConverter) {
+                ObjectMapper mapper = ((AbstractJackson2HttpMessageConverter) converter).getObjectMapper()
+                mapper.registerModule(new JavaTimeModule())
+                mapper.registerModule(new JsonNullableModule())
+            }
+        }
+
+        // This allows us to read the response more than once - Necessary for debugging.
+        restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()))
+        return restTemplate
     }
 
     @Override
