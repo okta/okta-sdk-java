@@ -15,8 +15,10 @@
  */
 package com.okta.sdk.tests.it
 
+import com.google.common.net.HttpHeaders
 import com.okta.sdk.tests.it.util.ITSupport
 import org.openapitools.client.api.ApplicationApi
+import org.openapitools.client.api.InlineHookApi
 import org.openapitools.client.model.*
 import org.testng.annotations.Test
 
@@ -107,7 +109,7 @@ class AppsIT extends ITSupport {
         ApplicationApi applicationApi = new ApplicationApi(getClient())
 
         OpenIdConnectApplication openIdConnectApplication = new OpenIdConnectApplication()
-        openIdConnectApplication.label("crap crap")
+        openIdConnectApplication.label("Sample OIDC App")
         openIdConnectApplication.name("oidc_client")
         OpenIdConnectApplicationSettingsClient openIdConnectApplicationSettingsClient =
             new OpenIdConnectApplicationSettingsClient()
@@ -166,6 +168,119 @@ class AppsIT extends ITSupport {
         assertThat(retrievedApp.getName(), equalTo(updatedApp.getName()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.OPENID_CONNECT))
+        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+    }
+
+    @Test
+    void samlAppTest() {
+
+        ApplicationApi applicationApi = new ApplicationApi(getClient())
+
+        String name = "java-sdk-it-" + UUID.randomUUID().toString()
+        String version = "1.0.0"
+
+        InlineHookChannelConfigAuthScheme inlineHookChannelConfigAuthScheme = new InlineHookChannelConfigAuthScheme()
+        inlineHookChannelConfigAuthScheme.type("HEADER")
+        inlineHookChannelConfigAuthScheme.key(HttpHeaders.AUTHORIZATION)
+        inlineHookChannelConfigAuthScheme.value("Test-Api-Key")
+
+        InlineHookChannelConfigHeaders inlineHookChannelConfigHeaders = new InlineHookChannelConfigHeaders()
+        inlineHookChannelConfigHeaders.key("X-Test-Header")
+            .value("Test header value")
+
+        List<InlineHookChannelConfigHeaders> headers = new ArrayList<InlineHookChannelConfigHeaders>()
+        headers.add(inlineHookChannelConfigHeaders)
+
+        InlineHookChannelConfig inlineHookChannelConfig = new InlineHookChannelConfig()
+            .uri("https://www.example.com/inlineHooks")
+            .headers(headers)
+            .authScheme(inlineHookChannelConfigAuthScheme)
+
+        InlineHookChannel inlineHookChannel = new InlineHookChannel()
+        inlineHookChannel.type(InlineHookChannelType.HTTP)
+        inlineHookChannel.version(version)
+        inlineHookChannel.setConfig(inlineHookChannelConfig)
+
+        InlineHookApi inlineHookApi = new InlineHookApi(getClient())
+        InlineHook inlineHook = new InlineHook()
+        inlineHook.name(name)
+        inlineHook.type(InlineHookType.SAML_TOKENS_TRANSFORM)
+        inlineHook.version(version)
+        inlineHook.channel(inlineHookChannel)
+
+        InlineHook createdInlineHook = inlineHookApi.createInlineHook(inlineHook)
+
+        SamlApplication samlApplication = new SamlApplication()
+        samlApplication.label("Sample Saml App")
+
+        ApplicationVisibility applicationVisibility = new ApplicationVisibility()
+        applicationVisibility.autoSubmitToolbar(false)
+        ApplicationVisibilityHide applicationVisibilityHide = new ApplicationVisibilityHide()
+        applicationVisibilityHide.iOS(false)
+            .web(false)
+        applicationVisibility.hide(applicationVisibilityHide)
+
+        SamlAttributeStatement samlAttributeStatement = new SamlAttributeStatement()
+        samlAttributeStatement.type("EXPRESSION")
+            .name("Attribute")
+            .namespace("urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified")
+            .values(["Value"])
+
+        List<SamlAttributeStatement> samlAttributeStatementList = new ArrayList<>()
+        samlAttributeStatementList.add(samlAttributeStatement)
+
+        SamlApplicationSettings samlApplicationSettings = new SamlApplicationSettings()
+        SamlApplicationSettingsSignOn samlApplicationSettingsSignOn = new SamlApplicationSettingsSignOn()
+        samlApplicationSettingsSignOn.defaultRelayState("")
+            .ssoAcsUrl("http://testorgone.okta")
+            .idpIssuer('https://www.okta.com/${org.externalKey}')
+            .audience("asdqwe123")
+            .recipient("http://testorgone.okta")
+            .destination("http://testorgone.okta")
+            .subjectNameIdTemplate('${user.userName}')
+            .subjectNameIdFormat("urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified")
+            .responseSigned(true)
+            .assertionSigned(true)
+            .signatureAlgorithm("RSA_SHA256")
+            .digestAlgorithm("SHA256")
+            .honorForceAuthn(true)
+            .authnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport")
+            .spIssuer(null)
+            .requestCompressed(false)
+            .attributeStatements(samlAttributeStatementList)
+
+        SignOnInlineHook signOnInlineHook = new SignOnInlineHook()
+        signOnInlineHook.id(createdInlineHook.getId())
+
+        samlApplicationSettings.signOn(samlApplicationSettingsSignOn)
+        samlApplication.visibility(applicationVisibility)
+        samlApplication.settings(samlApplicationSettings)
+        samlApplication.signOnMode(ApplicationSignOnMode.SAML_2_0)
+
+        // create
+        Application createdApp = applicationApi.createApplication(samlApplication, true, null)
+        registerForCleanup(createdApp)
+
+        assertThat(createdApp, notNullValue())
+        assertThat(createdApp.getId(), notNullValue())
+        assertThat(createdApp.getLabel(), equalTo(samlApplication.getLabel()))
+        assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.SAML_2_0))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+
+        // update
+        Application toBeUpdatedApp = samlApplication.label("updated-" + samlApplication.getLabel())
+        Application updatedApp = applicationApi.updateApplication(createdApp.getId(), toBeUpdatedApp)
+
+        assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
+
+        // retrieve
+        Application retrievedApp = applicationApi.getApplication(createdApp.getId(), null)
+
+        assertThat(retrievedApp, notNullValue())
+        assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
+        assertThat(retrievedApp.getName(), equalTo(updatedApp.getName()))
+        assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
+        assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.SAML_2_0))
         assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 }
