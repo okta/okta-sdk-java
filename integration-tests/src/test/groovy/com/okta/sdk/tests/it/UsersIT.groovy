@@ -29,6 +29,6 @@ class UsersIT extends ITSupport {
     void doCrudTest() {
 
         User user = randomUser()
-        println(user)
+        //println(user)
     }
 }

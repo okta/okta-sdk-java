@@ -15,21 +15,20 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.okta.commons.lang.Strings
-import com.okta.sdk.resource.Deletable
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.openapitools.client.ApiClient
+import org.openapitools.client.api.ApplicationApi
 import org.openapitools.client.api.IdentityProviderApi
 import org.openapitools.client.api.UserApi
 import org.openapitools.client.model.Application
-import org.openapitools.client.model.AuthorizationServer
-import org.openapitools.client.model.EventHook
-import org.openapitools.client.model.GroupRule
+import org.openapitools.client.model.ApplicationLifecycleStatus
 import org.openapitools.client.model.IdentityProvider
-import org.openapitools.client.model.InlineHook
 import org.openapitools.client.model.LifecycleStatus
 import org.openapitools.client.model.User
 import org.openapitools.client.model.UserStatus
@@ -41,7 +40,6 @@ import org.springframework.http.client.BufferingClientHttpRequestFactory
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
-import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter
 import org.springframework.web.client.RestTemplate
 import org.testng.IHookCallBack
 import org.testng.IHookable
@@ -101,22 +99,26 @@ trait ClientProvider implements IHookable {
 
     private RestTemplate buildRestTemplate() {
 
-        List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>()
         ObjectMapper objectMapper = new ObjectMapper()
-        messageConverters.add(new MappingJackson2HttpMessageConverter(objectMapper))
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
+        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(objectMapper)
+        ObjectMapper mapper = messageConverter.getObjectMapper()
+        messageConverter.setSupportedMediaTypes(Arrays.asList(
+            MediaType.APPLICATION_JSON,
+            MediaType.parseMediaType("application/x-pem-file"),
+            MediaType.parseMediaType("application/x-x509-ca-cert"),
+            MediaType.parseMediaType("application/pkix-cert")))
+        mapper.registerModule(new JavaTimeModule())
+        mapper.registerModule(new JsonNullableModule())
+
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>()
+        messageConverters.add(messageConverter)
 
         RestTemplate restTemplate = new RestTemplate(messageConverters)
-
-        for (HttpMessageConverter converter : restTemplate.getMessageConverters()) {
-            if (converter instanceof AbstractJackson2HttpMessageConverter) {
-                ObjectMapper mapper = ((AbstractJackson2HttpMessageConverter) converter).getObjectMapper()
-                mapper.registerModule(new JavaTimeModule())
-                mapper.registerModule(new JsonNullableModule())
-            }
-        }
-
-        // This allows us to read the response more than once - Necessary for debugging.
         restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()))
+
         return restTemplate
     }
 
@@ -178,12 +180,25 @@ trait ClientProvider implements IHookable {
         toBeDeleted.add(deletable)
     }
 
-    void deleteUser(String email, ApiClient client) {
-        log.info("Deleting User: {}", email)
+    void deleteApp(Application app, ApiClient client) {
+        log.info("Deleting App: {} {}", app.getId(), app.getName())
+
+        ApplicationApi applicationApi = new ApplicationApi(client)
+
+        if (app.getStatus() == ApplicationLifecycleStatus.ACTIVE) {
+            // deactivate
+            applicationApi.deactivateApplication(app.getId())
+        }
+        // delete
+        applicationApi.deleteApplication(app.getId())
+    }
+
+    void deleteUser(User user, ApiClient client) {
+        log.info("Deleting User: {}", user.getProfile().getEmail())
 
         UserApi userApi = new UserApi(client)
-        User user = userApi.getUser(email)
-        if (user.status != UserStatus.DEPROVISIONED) {
+
+        if (user.getStatus() != UserStatus.DEPROVISIONED) {
             // deactivate
             userApi.deactivateUser(user.id, false)
         }
@@ -195,16 +210,14 @@ trait ClientProvider implements IHookable {
         log.info("Deleting IdP: {} {}", idp.getId(), idp.getName())
 
         IdentityProviderApi idpApi = new IdentityProviderApi(client)
-        IdentityProvider idpToDelete = idpApi.getIdentityProvider(idp.getId())
-        if (idpToDelete != null) {
-            if (idpToDelete.getStatus() == LifecycleStatus.ACTIVE) {
-                // deactivate
-                idpApi.deactivateIdentityProvider(idpToDelete.getId())
-            }
 
-            // delete
-            idpApi.deleteIdentityProvider(idpToDelete.getId())
+        if (idp.getStatus() == LifecycleStatus.ACTIVE) {
+            // deactivate
+            idpApi.deactivateIdentityProvider(idp.getId())
         }
+
+        // delete
+        idpApi.deleteIdentityProvider(idp.getId())
     }
 
 //    void deleteGroup(String groupName, Client client) {
@@ -240,7 +253,11 @@ trait ClientProvider implements IHookable {
                 try {
                     if (deletable instanceof User) {
                         User tobeDeletedUser = (User) deletable
-                        deleteUser(tobeDeletedUser.getProfile().getEmail(), getClient())
+                        deleteUser(tobeDeletedUser, getClient())
+                    }
+                    else if (deletable instanceof Application) {
+                        Application tobeDeletedApp = (Application) deletable
+                        deleteApp(tobeDeletedApp, getClient())
                     }
                     else if (deletable instanceof IdentityProvider) {
                         IdentityProvider tobeDeletedIdp = (IdentityProvider) deletable
