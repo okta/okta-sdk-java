@@ -199,7 +199,7 @@ class AppsIT extends ITSupport {
         InlineHookChannel inlineHookChannel = new InlineHookChannel()
         inlineHookChannel.type(InlineHookChannelType.HTTP)
         inlineHookChannel.version(version)
-        inlineHookChannel.setConfig(inlineHookChannelConfig)
+        inlineHookChannel.config(inlineHookChannelConfig)
 
         InlineHookApi inlineHookApi = new InlineHookApi(getClient())
         InlineHook inlineHook = new InlineHook()
