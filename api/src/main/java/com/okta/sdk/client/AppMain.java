@@ -1,5 +1,9 @@
 package com.okta.sdk.client;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.api.ApplicationApi;
 import org.openapitools.client.api.IdentityProviderApi;
@@ -46,7 +50,11 @@ import org.openapitools.client.model.ProvisioningSuspendedAction;
 import org.openapitools.client.model.ProvisioningSuspendedCondition;
 import org.openapitools.client.model.User;
 import org.openapitools.client.model.UserProfile;
+import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -65,9 +73,9 @@ public class AppMain {
 
         ApiClient apiClient = buildApiClient(args[0], args[1]);
 
-        //testDriveAppsApi(apiClient);
+        testDriveAppsApi(apiClient);
         //testDriveUsersApi(apiClient);
-        testDriveIdpApi(apiClient);
+        //testDriveIdpApi(apiClient);
     }
 
     private static void testDriveAppsApi(ApiClient apiClient) {
@@ -84,7 +92,7 @@ public class AppMain {
         bookmarkApplicationSettingsApplication.setRequestIntegration(false);
         bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
         bookmarkApplication.setSettings(bookmarkApplicationSettings);
-        Application createdApp = applicationApi.createApplication(bookmarkApplication, false, "java-sdk-oasv3");
+        Application createdApp = applicationApi.createApplication(bookmarkApplication, true, "java-sdk-oasv3");
         assert createdApp != null;
         System.out.println("== CREATED APP ==\n" + createdApp);
 
@@ -117,10 +125,15 @@ public class AppMain {
         assert csr != null;
         System.out.println("== CREATED CSR ==\n" + csr);
 
+/*
         // publish csr
         JsonWebKey jsonWebKey = applicationApi.publishCsrFromApplication(createdApp.getId(), createdApp.getId(), new File("/Users/arvindkrishnakumar/Downloads/csr.pem"));
         assert jsonWebKey != null;
         System.out.println("== JSON WEB KEY ==\n" + jsonWebKey);
+*/
+
+        System.out.println("== DEACTIVATING APP ID == " + createdApp.getId());
+        applicationApi.deactivateApplication(createdApp.getId());
 
         System.out.println("== DELETING APP ID == " + createdApp.getId());
         applicationApi.deleteApplication(createdApp.getId());
@@ -270,19 +283,48 @@ public class AppMain {
 
     private static ApiClient buildApiClient(String orgBaseUrl, String apiKey) {
 
-        RestTemplate restTemplate = new RestTemplate();
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setSupportedMediaTypes(Arrays.asList(
-            MediaType.APPLICATION_OCTET_STREAM,
-            MediaType.parseMediaType("application/x-pem-file"),
-            MediaType.parseMediaType("application/x-x509-ca-cert"),
-            MediaType.parseMediaType("application/pkix-cert")));
-        restTemplate.getMessageConverters().add(converter);
-        ApiClient apiClient = new ApiClient(restTemplate);
+//        RestTemplate restTemplate = new RestTemplate();
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+//        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter(objectMapper);
+//        converter.setSupportedMediaTypes(Arrays.asList(
+//            MediaType.APPLICATION_OCTET_STREAM,
+//            MediaType.parseMediaType("application/x-pem-file"),
+//            MediaType.parseMediaType("application/x-x509-ca-cert"),
+//            MediaType.parseMediaType("application/pkix-cert")));
+//
+//        restTemplate.getMessageConverters().add(converter);
+        ApiClient apiClient = new ApiClient(buildRestTemplate());
         apiClient.setBasePath(orgBaseUrl);
         apiClient.setApiKey(apiKey);
         apiClient.setApiKeyPrefix("SSWS");
         return apiClient;
+    }
+
+    private static RestTemplate buildRestTemplate() {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(objectMapper);
+        ObjectMapper mapper = messageConverter.getObjectMapper();
+        messageConverter.setSupportedMediaTypes(Arrays.asList(
+            MediaType.APPLICATION_JSON,
+            MediaType.parseMediaType("application/x-pem-file"),
+            MediaType.parseMediaType("application/x-x509-ca-cert"),
+            MediaType.parseMediaType("application/pkix-cert")));
+        mapper.registerModule(new JavaTimeModule());
+        mapper.registerModule(new JsonNullableModule());
+
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+        messageConverters.add(messageConverter);
+
+        RestTemplate restTemplate = new RestTemplate(messageConverters);
+
+        // This allows us to read the response more than once - Necessary for debugging.
+        restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
+        return restTemplate;
     }
 
     private static void sleep(Duration duration) {
