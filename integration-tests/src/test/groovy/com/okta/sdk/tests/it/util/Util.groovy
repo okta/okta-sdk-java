@@ -15,36 +15,45 @@
  */
 package com.okta.sdk.tests.it.util
 
+import org.openapitools.client.model.Group
+import org.openapitools.client.model.GroupType
+import org.openapitools.client.model.User
+import org.testng.Assert
+
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.Matchers.notNullValue
+
 class Util {
 
-//    static void validateUser(User user, String firstName, String lastName, String email, String login=email) {
-//
-//        assertThat(user.profile, notNullValue())
-//        assertThat(user.profile.firstName, equalTo(firstName))
-//        assertThat(user.profile.lastName, equalTo(lastName))
-//        assertThat(user.profile.email, equalTo(email))
-//        assertThat(user.profile.login, equalTo(login))
-//    }
-//
-//    static void validateUser(User user, User expectedUser) {
-//        assertThat(user, equalTo(expectedUser))
-//    }
-//
-//    static void  validateGroup(Group group, Group expectedGroup) {
-//        validateGroup(group, expectedGroup.profile.name)
-//    }
-//
-//    static void  validateGroup(Group group, String groupName) {
-//
-//        assertThat(group.profile.name, equalTo(groupName))
-//        assertThat(group.type, equalTo("OKTA_GROUP"))
-//    }
-//
-//    static void  validateGroup(Group group, String groupName, String description) {
-//
-//        validateGroup(group, groupName)
-//        assertThat(group.profile.description, equalTo(description))
-//    }
+    static void validateUser(User user, String firstName, String lastName, String email, String login=email) {
+
+        assertThat(user.profile, notNullValue())
+        assertThat(user.profile.firstName, equalTo(firstName))
+        assertThat(user.profile.lastName, equalTo(lastName))
+        assertThat(user.profile.email, equalTo(email))
+        assertThat(user.profile.login, equalTo(login))
+    }
+
+    static void validateUser(User user, User expectedUser) {
+        assertThat(user, equalTo(expectedUser))
+    }
+
+    static void  validateGroup(Group group, Group expectedGroup) {
+        validateGroup(group, expectedGroup.profile.name)
+    }
+
+    static void  validateGroup(Group group, String groupName) {
+
+        assertThat(group.profile.name, equalTo(groupName))
+        assertThat(group.type, equalTo(GroupType.OKTA_GROUP))
+    }
+
+    static void  validateGroup(Group group, String groupName, String description) {
+
+        validateGroup(group, groupName)
+        assertThat(group.profile.description, equalTo(description))
+    }
 //
 //    static void assertGroupPresent(GroupList results, Group expectedGroup) {
 //
@@ -174,15 +183,15 @@ class Util {
 //        }
 //    }
 //
-//    static <T extends Throwable> T expect(Class<T> catchMe, Closure closure) {
-//        try {
-//            closure.call()
-//            Assert.fail("Expected ${catchMe.getName()} to be thrown.")
-//        } catch(e) {
-//            if (!e.class.isAssignableFrom(catchMe)) {
-//                throw e
-//            }
-//            return e
-//        }
-//    }
+    static <T extends Throwable> T expect(Class<T> catchMe, Closure closure) {
+        try {
+            closure.call()
+            Assert.fail("Expected ${catchMe.getName()} to be thrown.")
+        } catch(e) {
+            if (!e.class.isAssignableFrom(catchMe)) {
+                throw e
+            }
+            return e
+        }
+    }
 }

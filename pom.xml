@@ -49,7 +49,7 @@
 
     <modules>
         <module>api</module>
-<!--        <module>impl</module>-->
+        <module>impl</module>
         <module>integration-tests</module>
 <!--        <module>examples</module>-->
 <!--        <module>coverage</module>-->

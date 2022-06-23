@@ -15,11 +15,24 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
+import com.okta.sdk.resource.policy.PasswordPolicyBuilder
+import com.okta.sdk.resource.policy.PolicyBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
 import com.okta.sdk.tests.Scenario
 import org.openapitools.client.ApiClient
+import org.openapitools.client.api.GroupApi
+import org.openapitools.client.api.PolicyApi
 import org.openapitools.client.api.UserApi
 import org.openapitools.client.model.CreateUserRequest
+import org.openapitools.client.model.Group
+import org.openapitools.client.model.LifecycleStatus
+import org.openapitools.client.model.OktaSignOnPolicy
+import org.openapitools.client.model.PasswordPolicy
+import org.openapitools.client.model.Policy
+import org.openapitools.client.model.PolicyType
+import org.openapitools.client.model.PolicyUserStatus
 import org.openapitools.client.model.User
 import org.openapitools.client.model.UserProfile
 import org.slf4j.Logger
@@ -106,7 +119,6 @@ abstract class ITSupport implements ClientProvider {
     }
 
     User randomUser() {
-        ApiClient client = getClient()
 
         def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
 
@@ -120,51 +132,69 @@ abstract class ITSupport implements ClientProvider {
         CreateUserRequest createUserRequest = new CreateUserRequest()
             .profile(userProfile)
 
-        UserApi userApi = new UserApi(client)
+        UserApi userApi = new UserApi(getClient())
         User createdUser = userApi.createUser(createUserRequest, true, null, null)
         return createdUser
     }
 
-//    Group randomGroup(String name = "java-sdk-it-${UUID.randomUUID().toString()}") {
-//
-//        Group group = GroupBuilder.instance()
-//            .setName(name)
-//            .setDescription(name)
-//            .buildAndCreate(getClient())
-//        registerForCleanup(group)
-//
-//        return group
-//    }
-//
-//    PasswordPolicy randomPasswordPolicy(String groupId) {
-//
-//        PasswordPolicy policy = PasswordPolicyBuilder.instance()
-//            .setName("java-sdk-it-" + UUID.randomUUID().toString())
-//            .setStatus(Policy.StatusEnum.ACTIVE)
-//            .setDescription("IT created Policy")
-//            .setStatus(Policy.StatusEnum.ACTIVE)
-//            .setPriority(1)
-//            .addGroup(groupId)
-//        .buildAndCreate(client)
-//
-//        registerForCleanup(policy)
-//
-//        return policy
-//    }
-//
-//    OktaSignOnPolicy randomSignOnPolicy(String groupId) {
-//
-//        OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
-//            .setName("java-sdk-it-" + UUID.randomUUID().toString())
-//            .setDescription("IT created Policy")
-//            .setStatus(Policy.StatusEnum.ACTIVE)
-//        .setType(PolicyType.OKTA_SIGN_ON)
-//        .buildAndCreate(client)
-//
-//        registerForCleanup(policy)
-//
-//        return policy
-//    }
+    Group randomGroup(String name = "java-sdk-it-${UUID.randomUUID().toString()}") {
+
+        GroupApi groupApi = new GroupApi(getClient())
+
+        Group group = GroupBuilder.instance()
+            .setName(name)
+            .setDescription(name)
+            .buildAndCreate(groupApi)
+        registerForCleanup(group)
+
+        return group
+    }
+
+    PasswordPolicy randomPasswordPolicy(String groupId) {
+
+        PolicyApi policyApi = new PolicyApi(getClient())
+
+        PasswordPolicy policy = PasswordPolicyBuilder.instance()
+            .setName("java-sdk-it-" + UUID.randomUUID().toString())
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setDescription("IT created Policy")
+            .setPriority(1)
+            .addGroup(groupId)
+            .buildAndCreate(policyApi)
+        registerForCleanup(policy)
+
+        return policy
+    }
+
+    Policy randomPolicy() {
+
+        PolicyApi policyApi = new PolicyApi(getClient())
+
+        Policy policy = PolicyBuilder.instance()
+            .setName("java-sdk-it-" + UUID.randomUUID().toString())
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setDescription("IT created Policy")
+            .setPriority(1)
+            .buildAndCreate(policyApi)
+        registerForCleanup(policy)
+
+        return policy
+    }
+
+    OktaSignOnPolicy randomSignOnPolicy(String groupId) {
+
+        PolicyApi policyApi = new PolicyApi(getClient())
+
+        OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
+            .setName("java-sdk-it-" + UUID.randomUUID().toString())
+            .setDescription("IT created Policy")
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setType(PolicyType.OKTA_SIGN_ON)
+            .buildAndCreate(policyApi)
+        registerForCleanup(policy)
+
+        return policy
+    }
 
     boolean isOIEEnvironment() {
 
@@ -178,7 +208,7 @@ abstract class ITSupport implements ClientProvider {
             null,
             Collections.singletonList(MediaType.APPLICATION_JSON),
             null,
-            new String[]{"api_token"},
+            new String[]{"API Token"},
             new ParameterizedTypeReference<Map<String, Object>>() {})
 
         if (responseEntity != null && responseEntity.getBody() != null) {

@@ -53,7 +53,6 @@ class AppsIT extends ITSupport {
 
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
-        assertThat(createdApp.getName(), equalTo(basicAuthApplication.getName()))
         assertThat(createdApp.getLabel(), equalTo(basicAuthApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BASIC_AUTH))
         assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
@@ -81,7 +80,6 @@ class AppsIT extends ITSupport {
 
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
-        assertThat(createdApp.getName(), equalTo(bookmarkApplication.getName()))
         assertThat(createdApp.getLabel(), equalTo(bookmarkApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BOOKMARK))
         assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
@@ -97,9 +95,51 @@ class AppsIT extends ITSupport {
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
-        assertThat(retrievedApp.getName(), equalTo(updatedApp.getName()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BOOKMARK))
+        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+    }
+
+    @Test
+    void browserPluginAppTest() {
+
+        ApplicationApi applicationApi = new ApplicationApi(getClient())
+
+        SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication()
+        swaApplicationSettingsApplication.buttonField("btn-login")
+            .passwordField("txtbox-password")
+            .usernameField("txtbox-username")
+            .url("https://example.com/login.html")
+        SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings()
+        swaApplicationSettings.app(swaApplicationSettingsApplication)
+        BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication()
+        browserPluginApplication.name("template_swa")
+        browserPluginApplication.label("Sample Plugin App")
+        browserPluginApplication.settings(swaApplicationSettings)
+
+        // create
+        Application createdApp = applicationApi.createApplication(browserPluginApplication, true, null)
+        registerForCleanup(createdApp)
+
+        assertThat(createdApp, notNullValue())
+        assertThat(createdApp.getId(), notNullValue())
+        assertThat(createdApp.getLabel(), equalTo(browserPluginApplication.getLabel()))
+        assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BROWSER_PLUGIN))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+
+        // update
+        Application toBeUpdatedApp = browserPluginApplication.label("updated-" + browserPluginApplication.getLabel())
+        Application updatedApp = applicationApi.updateApplication(createdApp.getId(), toBeUpdatedApp)
+
+        assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
+
+        // retrieve
+        Application retrievedApp = applicationApi.getApplication(createdApp.getId(), null)
+
+        assertThat(retrievedApp, notNullValue())
+        assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
+        assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
+        assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BROWSER_PLUGIN))
         assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
@@ -149,7 +189,6 @@ class AppsIT extends ITSupport {
 
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
-        assertThat(createdApp.getName(), equalTo(openIdConnectApplication.getName()))
         assertThat(createdApp.getLabel(), equalTo(openIdConnectApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.OPENID_CONNECT))
         assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
@@ -165,7 +204,6 @@ class AppsIT extends ITSupport {
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
-        assertThat(retrievedApp.getName(), equalTo(updatedApp.getName()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.OPENID_CONNECT))
         assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
@@ -209,6 +247,7 @@ class AppsIT extends ITSupport {
         inlineHook.channel(inlineHookChannel)
 
         InlineHook createdInlineHook = inlineHookApi.createInlineHook(inlineHook)
+        registerForCleanup(createdInlineHook)
 
         SamlApplication samlApplication = new SamlApplication()
         samlApplication.label("Sample Saml App")
@@ -278,9 +317,39 @@ class AppsIT extends ITSupport {
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
-        assertThat(retrievedApp.getName(), equalTo(updatedApp.getName()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.SAML_2_0))
         assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+    }
+
+    //TODO: fix me
+    @Test
+    void testUploadApplicationLogo() {
+        /**
+         * Currently is no way to check the logo.
+         * Just make sure that no exception was thrown during the upload.
+         */
+        ApplicationApi applicationApi = new ApplicationApi(getClient())
+
+        SamlApplication org2OrgApplication = new SamlApplication()
+        org2OrgApplication.name("okta_org2org")
+            .label("Sample Okta Org2Org App")
+            .signOnMode(ApplicationSignOnMode.SAML_2_0)
+
+        SamlApplicationSettingsApplication samlApplicationSettingsApplication = new SamlApplicationSettingsApplication()
+        samlApplicationSettingsApplication.setAcsUrl("https://example.com/acs.html")
+        samlApplicationSettingsApplication.setAudRestriction("https://example.com/login.html")
+        samlApplicationSettingsApplication.setBaseUrl("https://example.com/home.html")
+        SamlApplicationSettings samlApplicationSettings = new SamlApplicationSettings()
+        samlApplicationSettings.app(samlApplicationSettingsApplication)
+        org2OrgApplication.settings(samlApplicationSettings)
+
+        Application createdApp = applicationApi.createApplication(org2OrgApplication, true, null)
+        registerForCleanup(createdApp)
+
+//        File file = new File("/Users/arvindkrishnakumar/Downloads/okta_logo_favicon.png")
+//        println("Uploading logo file " + file.getName() + " of size: " + file.size())
+//
+//        applicationApi.uploadApplicationLogo(createdApp.getId(), file)
     }
 }

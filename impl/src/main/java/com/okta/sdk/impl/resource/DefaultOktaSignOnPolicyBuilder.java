@@ -17,8 +17,14 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.policy.*;
+import org.openapitools.client.api.PolicyApi;
+import org.openapitools.client.model.GroupCondition;
+import org.openapitools.client.model.OktaSignOnPolicy;
+import org.openapitools.client.model.OktaSignOnPolicyConditions;
+import org.openapitools.client.model.PolicyPeopleCondition;
+import org.openapitools.client.model.PolicyType;
+import org.openapitools.client.model.UserCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,12 +60,12 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
     }
 
     @Override
-    public OktaSignOnPolicy buildAndCreate(Client client) {
-        return (OktaSignOnPolicy) client.createPolicy(build(client), isActive);
+    public OktaSignOnPolicy buildAndCreate(PolicyApi client) {
+        return (OktaSignOnPolicy) client.createPolicy(build(), isActive);
     }
 
-    private OktaSignOnPolicy build(Client client){
-        OktaSignOnPolicy policy = client.instantiate(OktaSignOnPolicy.class);
+    private OktaSignOnPolicy build() {
+        OktaSignOnPolicy policy = new OktaSignOnPolicy();
 
         if (Strings.hasText(name)) policy.setName(name);
         if (Strings.hasText(description)) policy.setDescription(description);
@@ -74,16 +80,24 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
         if (Objects.nonNull(status))
             policy.setStatus(status);
 
-        policy.setConditions(client.instantiate(OktaSignOnPolicyConditions.class));
+        policy.setConditions( new OktaSignOnPolicyConditions());
         OktaSignOnPolicyConditions oktaSignOnPolicyConditions = policy.getConditions();
 
-        if (!Collections.isEmpty(groupIds))
-            oktaSignOnPolicyConditions.setPeople(client.instantiate(PolicyPeopleCondition.class)
-                .setGroups(client.instantiate(GroupCondition.class).setInclude(groupIds)));
+        if (!Collections.isEmpty(groupIds)) {
+            GroupCondition groupCondition = new GroupCondition();
+            groupCondition.setInclude(groupIds);
+            PolicyPeopleCondition policyPeopleCondition = new PolicyPeopleCondition();
+            policyPeopleCondition.setGroups(groupCondition);
+            oktaSignOnPolicyConditions.setPeople(policyPeopleCondition);
+        }
 
-        if (!Collections.isEmpty(userIds))
-            oktaSignOnPolicyConditions.setPeople(client.instantiate(PolicyPeopleCondition.class)
-                .setUsers(client.instantiate(UserCondition.class).setInclude(userIds)));
+        if (!Collections.isEmpty(userIds)) {
+            UserCondition userCondition = new UserCondition();
+            userCondition.setInclude(userIds);
+            PolicyPeopleCondition policyPeopleCondition = new PolicyPeopleCondition();
+            policyPeopleCondition.setUsers(userCondition);
+            oktaSignOnPolicyConditions.setPeople(policyPeopleCondition);
+        }
 
         return policy;
     }

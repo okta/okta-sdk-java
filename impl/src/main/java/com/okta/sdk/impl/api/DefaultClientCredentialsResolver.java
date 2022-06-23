@@ -31,9 +31,9 @@ public class DefaultClientCredentialsResolver implements ClientCredentialsResolv
         this.clientCredentials = clientCredentials;
     }
 
-    public DefaultClientCredentialsResolver(final ClientConfiguration clientConfiguration) {
-        this(new TokenClientCredentials(clientConfiguration.getApiToken()));
-    }
+//    public DefaultClientCredentialsResolver(final ClientConfiguration clientConfiguration) {
+//        this(new TokenClientCredentials(clientConfiguration.getApiToken()));
+//    }
 
     @Override
     public ClientCredentials getClientCredentials() {

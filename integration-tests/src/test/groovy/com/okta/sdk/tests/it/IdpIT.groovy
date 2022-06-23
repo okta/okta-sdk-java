@@ -38,7 +38,7 @@ class IdpIT extends ITSupport {
         IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
-        idp.setType("OIDC")
+        idp.setType(IdentityProviderType.OIDC)
         idp.setIssuerMode(IssuerMode.ORG_URL)
         Protocol protocol = new Protocol()
 
@@ -145,7 +145,7 @@ class IdpIT extends ITSupport {
 
         IdentityProvider newIdp = new IdentityProvider()
         newIdp.setName(newName)
-        newIdp.setType("OIDC")
+        newIdp.setType(IdentityProviderType.OIDC)
         newIdp.setIssuerMode(IssuerMode.ORG_URL)
         protocol = new Protocol()
 
@@ -276,7 +276,7 @@ class IdpIT extends ITSupport {
         IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
-        idp.setType("OIDC")
+        idp.setType(IdentityProviderType.OIDC)
         idp.setIssuerMode(IssuerMode.ORG_URL)
         Protocol protocol = new Protocol()
 
@@ -410,7 +410,7 @@ class IdpIT extends ITSupport {
         IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
-        idp.setType("GOOGLE")
+        idp.setType(IdentityProviderType.GOOGLE)
         Protocol protocol = new Protocol()
 
         List<String> scopes = Arrays.asList("openid", "profile", "email")
@@ -494,7 +494,7 @@ class IdpIT extends ITSupport {
         IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
-        idp.setType("FACEBOOK")
+        idp.setType(IdentityProviderType.FACEBOOK)
         Protocol protocol = new Protocol()
 
         List<String> scopes = Arrays.asList("public_profile", "email")
@@ -578,7 +578,7 @@ class IdpIT extends ITSupport {
         IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
-        idp.setType("MICROSOFT")
+        idp.setType(IdentityProviderType.MICROSOFT)
         Protocol protocol = new Protocol()
 
         List<String> scopes = Arrays.asList("openid", "email", "profile", "https://graph.microsoft.com/User.Read")
@@ -662,7 +662,7 @@ class IdpIT extends ITSupport {
         IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
-        idp.setType("LINKEDIN")
+        idp.setType(IdentityProviderType.LINKEDIN)
         Protocol protocol = new Protocol()
 
         List<String> scopes = Arrays.asList("r_basicprofile", "r_emailaddress")

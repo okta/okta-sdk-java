@@ -18,25 +18,34 @@ package com.okta.sdk.tests.it.util
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.okta.commons.lang.Strings
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import org.openapitools.client.ApiClient
 import org.openapitools.client.api.ApplicationApi
+import org.openapitools.client.api.GroupApi
 import org.openapitools.client.api.IdentityProviderApi
+import org.openapitools.client.api.InlineHookApi
 import org.openapitools.client.api.UserApi
+import org.openapitools.client.api.UserTypeApi
 import org.openapitools.client.model.Application
 import org.openapitools.client.model.ApplicationLifecycleStatus
+import org.openapitools.client.model.Group
 import org.openapitools.client.model.IdentityProvider
+import org.openapitools.client.model.InlineHook
+import org.openapitools.client.model.InlineHookStatus
 import org.openapitools.client.model.LifecycleStatus
 import org.openapitools.client.model.User
 import org.openapitools.client.model.UserStatus
+import org.openapitools.client.model.UserType
 import org.openapitools.jackson.nullable.JsonNullableModule
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.http.client.BufferingClientHttpRequestFactory
+import org.springframework.http.converter.FormHttpMessageConverter
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -93,6 +102,7 @@ trait ClientProvider implements IHookable {
         apiClient.setBasePath(orgUrl)
         apiClient.setApiKey(apiKey)
         apiClient.setApiKeyPrefix("SSWS")
+        apiClient.setDebugging(true)
 
         return apiClient
     }
@@ -101,12 +111,14 @@ trait ClientProvider implements IHookable {
 
         ObjectMapper objectMapper = new ObjectMapper()
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
         MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(objectMapper)
         ObjectMapper mapper = messageConverter.getObjectMapper()
         messageConverter.setSupportedMediaTypes(Arrays.asList(
             MediaType.APPLICATION_JSON,
+            MediaType.MULTIPART_FORM_DATA,
             MediaType.parseMediaType("application/x-pem-file"),
             MediaType.parseMediaType("application/x-x509-ca-cert"),
             MediaType.parseMediaType("application/pkix-cert")))
@@ -115,6 +127,7 @@ trait ClientProvider implements IHookable {
 
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>()
         messageConverters.add(messageConverter)
+        messageConverters.add(new FormHttpMessageConverter())
 
         RestTemplate restTemplate = new RestTemplate(messageConverters)
         restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()))
@@ -181,7 +194,7 @@ trait ClientProvider implements IHookable {
     }
 
     void deleteApp(Application app, ApiClient client) {
-        log.info("Deleting App: {} {}", app.getId(), app.getName())
+        log.info("Deleting App: {}", app.getId())
 
         ApplicationApi applicationApi = new ApplicationApi(client)
 
@@ -206,6 +219,20 @@ trait ClientProvider implements IHookable {
         userApi.deactivateOrDeleteUser(user.id, false)
     }
 
+    void deleteUserType(UserType userType, ApiClient client) {
+        log.info("Deleting UserType: {}", userType.getId())
+
+        UserTypeApi userTypeApi= new UserTypeApi(client)
+        userTypeApi.deleteUserType(userType.getId())
+    }
+
+    void deleteGroup(Group group, ApiClient client) {
+        log.info("Deleting Group: {}", group.getId())
+
+        GroupApi groupApi = new GroupApi(client)
+        groupApi.deleteGroup(group.getId())
+    }
+
     void deleteIdp(IdentityProvider idp, ApiClient client) {
         log.info("Deleting IdP: {} {}", idp.getId(), idp.getName())
 
@@ -218,6 +245,32 @@ trait ClientProvider implements IHookable {
 
         // delete
         idpApi.deleteIdentityProvider(idp.getId())
+    }
+
+    void deleteInlineHook(InlineHook inlineHook, ApiClient client) {
+        log.info("Deleting InlineHook: {}", inlineHook.getId())
+
+        InlineHookApi inlineHookApi = new InlineHookApi(client)
+        if (inlineHook.getStatus() == InlineHookStatus.ACTIVE) {
+            // deactivate
+            inlineHookApi.deactivateInlineHook(inlineHook.getId())
+        }
+
+        // delete
+        inlineHookApi.deleteInlineHook(inlineHook.getId())
+    }
+
+    void deletePolicyRule(InlineHook inlineHook, ApiClient client) {
+        log.info("Deleting InlineHook: {}", inlineHook.getId())
+
+        InlineHookApi inlineHookApi = new InlineHookApi(client)
+        if (inlineHook.getStatus() == InlineHookStatus.ACTIVE) {
+            // deactivate
+            inlineHookApi.deactivateInlineHook(inlineHook.getId())
+        }
+
+        // delete
+        inlineHookApi.deleteInlineHook(inlineHook.getId())
     }
 
 //    void deleteGroup(String groupName, Client client) {
@@ -255,6 +308,14 @@ trait ClientProvider implements IHookable {
                         User tobeDeletedUser = (User) deletable
                         deleteUser(tobeDeletedUser, getClient())
                     }
+                    else if (deletable instanceof UserType) {
+                        UserType tobeDeletedUserType = (UserType) deletable
+                        deleteUserType(tobeDeletedUserType, getClient())
+                    }
+                    else if (deletable instanceof Group) {
+                        Group tobeDeletedGroup = (Group) deletable
+                        deleteGroup(tobeDeletedGroup, getClient())
+                    }
                     else if (deletable instanceof Application) {
                         Application tobeDeletedApp = (Application) deletable
                         deleteApp(tobeDeletedApp, getClient())
@@ -262,6 +323,10 @@ trait ClientProvider implements IHookable {
                     else if (deletable instanceof IdentityProvider) {
                         IdentityProvider tobeDeletedIdp = (IdentityProvider) deletable
                         deleteIdp(tobeDeletedIdp, getClient())
+                    }
+                    else if (deletable instanceof InlineHook) {
+                        InlineHook tobeDeletedInlineHook = (InlineHook) deletable
+                        deleteInlineHook(tobeDeletedInlineHook, getClient())
                     }
                 }
                 catch (Exception e) {

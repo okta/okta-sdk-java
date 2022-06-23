@@ -15,11 +15,11 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.sdk.client.Client;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.group.GroupBuilder;
-import com.okta.sdk.resource.group.Group;
-import com.okta.sdk.resource.group.GroupProfile;
+import org.openapitools.client.api.GroupApi;
+import org.openapitools.client.model.Group;
+import org.openapitools.client.model.GroupProfile;
 
 public class DefaultGroupBuilder implements GroupBuilder {
 
@@ -39,12 +39,13 @@ public class DefaultGroupBuilder implements GroupBuilder {
     }
 
     @Override
-    public Group buildAndCreate(Client client) {
+    public Group buildAndCreate(GroupApi client) {
 
-        Group group = client.instantiate(Group.class);
-        group.setProfile(client.instantiate(GroupProfile.class));
-        group.getProfile().setName(name);
-        if (Strings.hasText(description)) group.getProfile().setDescription(description);
+        Group group = new Group();
+        GroupProfile groupProfile = new GroupProfile();
+        groupProfile.setName(name);
+        if (Strings.hasText(description)) groupProfile.setDescription(description);
+        group.setProfile(groupProfile);
 
         return client.createGroup(group);
     }

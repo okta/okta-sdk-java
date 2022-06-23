@@ -15,9 +15,34 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.impl.resource.DefaultGroupBuilder
+import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.user.UserBuilder
+import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
-import org.openapitools.client.model.User
+import org.apache.commons.lang3.RandomStringUtils
+import org.openapitools.client.api.ApplicationApi
+import org.openapitools.client.api.GroupApi
+import org.openapitools.client.api.PolicyApi
+import org.openapitools.client.api.UserApi
+import org.openapitools.client.api.UserTypeApi
+import org.openapitools.client.model.*
+import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.util.MultiValueMap
+import org.springframework.web.client.HttpClientErrorException
 import org.testng.annotations.Test
+
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
+import java.util.stream.Collectors
+
+import static com.okta.sdk.tests.it.util.Util.*
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.*
 
 /**
  * Tests for {@code /api/v1/users}.
@@ -29,6 +54,863 @@ class UsersIT extends ITSupport {
     void doCrudTest() {
 
         User user = randomUser()
-        //println(user)
+        registerForCleanup(user)
+        assertThat(user.getStatus(), equalTo(UserStatus.PROVISIONED))
+
+        UserApi userApi = new UserApi(getClient())
+
+        // deactivate
+        userApi.deactivateOrDeleteUser(user.getId(), false)
+
+        User retrievedUser = userApi.getUser(user.getId())
+        assertThat(retrievedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
+
+        // delete
+        userApi.deactivateOrDeleteUser(user.getId(), false)
+    }
+
+    @Test (groups = "group2")
+    @Scenario("create-user-with-user-type")
+    void createUserWithUserTypeTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Activate'
+        def email = "john-activate=${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+        UserTypeApi userTypeApi = new UserTypeApi(getClient())
+
+        // 1. Create a User Type
+        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
+
+        UserType userType = new UserType()
+            .name(name)
+            .displayName(name)
+            .description(name + "_test_description")
+        UserType createdUserType = userTypeApi.createUserType(userType)
+        registerForCleanup(createdUserType)
+
+        assertThat(createdUserType.getId(), notNullValue())
+
+        // 2. Create a user with the User Type
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+        // See https://developer.okta.com/docs/reference/api/user-types/#specify-the-user-type-of-a-new-user
+            .setType(createdUserType.getId())
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 3. Assert User Type
+        assertThat(user.getType().getId(), equalTo(createdUserType.getId()))
+
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestOperationDelay())
+
+        // 4.Verify user in list of active users
+        List<User> users = userApi.listUsers(null, null, null, 'status eq \"ACTIVE\"', null, null, null)
+        assertThat(users, hasSize(greaterThan(0)))
+        //assertPresent(users, user)
+    }
+
+    @Test (groups = "group2")
+    @Scenario("user-activate")
+    void userActivateTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Activate'
+        def email = "john-activate=${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(false)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Activate the user and verify user in list of active users
+        userApi.activateUser(user.getId(), false)
+
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestOperationDelay())
+
+        List<User> users = userApi.listUsers(null, null, null, 'status eq \"ACTIVE\"', null, null, null)
+        assertThat(users, hasSize(greaterThan(0)))
+        //assertPresent(users, user)
+    }
+
+    @Test (groups = "group2")
+    @Scenario("user-with-special-character")
+    void userWithSpecialCharacterTest() {
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'hashtag'
+        def email = "john-${uniqueTestName}#@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        Thread.sleep(getTestOperationDelay())
+
+        User retrievedUser = userApi.getUser(email)
+        assertThat(retrievedUser, equalTo(user))
+    }
+
+    @Test (groups = "group2")
+    @Scenario("user-role-assign")
+    void roleAssignTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Role'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Assign USER_ADMIN role to the user
+        AssignRoleRequest assignRoleRequest = new AssignRoleRequest()
+        assignRoleRequest.setType(RoleType.USER_ADMIN)
+
+        Role role = userApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
+
+        // 3. List roles for the user and verify added role
+        List<Role> roles = userApi.listAssignedRolesForUser(user.getId(), null)
+        Optional<Role> match = roles.stream().filter(r -> r.getId() == role.getId()).findAny()
+        assertThat(match.isPresent(), is(true))
+
+        // 4. Verify added role
+        assertThat(userApi.getUserRole(user.getId(), role.getId()).getId(), equalTo(role.getId()))
+
+        // 5. Remove role for the user
+        userApi.removeRoleFromUser(user.getId(), role.getId())
+
+        // 6. List roles for user and verify role was removed
+        roles = userApi.listAssignedRolesForUser(user.getId(), null)
+        match = roles.stream().filter(r -> r.getId() != role.getId()).findAny()
+        assertThat(match.isPresent(), is(false))
+    }
+
+    @Test (groups = "group2")
+    @Scenario("user-change-password")
+    void changePasswordTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Change-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Change the user's password
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest()
+        PasswordCredential passwordCredentialOld = new PasswordCredential()
+        passwordCredentialOld.setValue("Passw0rd!2@3#")
+        changePasswordRequest.setOldPassword(passwordCredentialOld)
+        PasswordCredential passwordCredentialNew = new PasswordCredential()
+        passwordCredentialNew.setValue("!2@3#Passw0rd")
+        changePasswordRequest.setNewPassword(passwordCredentialNew)
+
+        UserCredentials userCredentials = userApi.changePassword(user.getId(), changePasswordRequest, true)
+        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
+
+        // 3. make the test recording happy, and call a get on the user
+        // TODO: fix har file
+        userApi.getUser(user.getId())
+    }
+
+    // TODO: enable it after fixing the inheritance issue
+    @Test(expectedExceptions = HttpClientErrorException, groups = "group2", enabled = false)
+    void changeStrictPasswordTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Change-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+        GroupApi groupApi = new GroupApi(getClient())
+        PolicyApi policyApi = new PolicyApi(getClient())
+
+        String name = "java-sdk-it-${UUID.randomUUID().toString()}"
+
+        Group group = new Group()
+        GroupProfile groupProfile = new GroupProfile()
+        groupProfile.setName(name)
+        groupProfile.setDescription(name)
+        group.setProfile(groupProfile)
+        Group createdGroup = groupApi.createGroup(group)
+        registerForCleanup(createdGroup)
+
+        assertThat createdGroup, notNullValue()
+        assertThat createdGroup.getId(), notNullValue()
+
+        Policy policy = randomPasswordPolicy(createdGroup.getId())
+        PasswordPolicyPasswordSettingsAge passwordPolicyPasswordSettingsAge = new PasswordPolicyPasswordSettingsAge()
+        passwordPolicyPasswordSettingsAge.setMinAgeMinutes(java.time.Duration.ofDays(2L).toMinutes() as int)
+
+        PasswordPolicyPasswordSettings passwordPolicyPasswordSettings = new PasswordPolicyPasswordSettings()
+        passwordPolicyPasswordSettings.setAge(passwordPolicyPasswordSettingsAge)
+
+        PasswordPolicySettings passwordPolicySettings = new PasswordPolicySettings()
+        passwordPolicySettings.setPassword(passwordPolicyPasswordSettings)
+
+        policy.setSettings(passwordPolicySettings)
+
+        policy = policyApi.updatePolicy(policy.getId(), policy)
+
+        def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
+
+        PolicyNetworkCondition policyNetworkCondition = new PolicyNetworkCondition()
+        policyNetworkCondition.setConnection(PolicyNetworkConnection.ANYWHERE)
+
+        PasswordPolicyRuleConditions passwordPolicyRuleConditions = new PasswordPolicyRuleConditions()
+        passwordPolicyRuleConditions.setNetwork(policyNetworkCondition)
+
+        PasswordPolicyRuleAction passwordPolicyRuleActionAllow = new PasswordPolicyRuleAction()
+        passwordPolicyRuleActionAllow.access(PolicyAccess.ALLOW)
+
+        PasswordPolicyRuleAction passwordPolicyRuleActionDeny = new PasswordPolicyRuleAction()
+        passwordPolicyRuleActionDeny.access(PolicyAccess.DENY)
+
+        PasswordPolicyRuleActions passwordPolicyRuleActions = new PasswordPolicyRuleActions()
+        passwordPolicyRuleActions.setPasswordChange(passwordPolicyRuleActionAllow)
+        passwordPolicyRuleActions.setSelfServicePasswordReset(passwordPolicyRuleActionAllow)
+        passwordPolicyRuleActions.setSelfServiceUnlock(passwordPolicyRuleActionDeny)
+
+        PasswordPolicyRule passwordPolicyRule = new PasswordPolicyRule()
+        passwordPolicyRule.setConditions(passwordPolicyRuleConditions)
+        passwordPolicyRule.setActions(passwordPolicyRuleActions)
+        passwordPolicyRule.setName(policyRuleName)
+
+        PolicyRule policyRule = policyApi.createPolicyRule(policy.getId(), passwordPolicyRule)
+        registerForCleanup(policyRule)
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .setGroups(createdGroup.getId())
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Change the user's password
+        PasswordCredential passwordCredentialOld = new PasswordCredential()
+            .value("Passw0rd!2@3#")
+        PasswordCredential passwordCredentialNew = new PasswordCredential()
+            .value("!2@3#Passw0rd")
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest()
+            .oldPassword(passwordCredentialOld)
+            .newPassword(passwordCredentialNew)
+
+        // would throw a HTTP 403
+        userApi.changePassword(user.getId(), changePasswordRequest, true)
+
+        UserCredentials userCredentials = userApi.changePassword(user.getId(), changePasswordRequest, false)
+        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
+
+        // 3. make the test recording happy, and call a get on the user
+        // TODO: fix har file
+        userApi.getUser(user.getId())
+    }
+
+    @Test(expectedExceptions = HttpClientErrorException, groups = "group2")
+    @Scenario("user-change-recovery-question")
+    void changeRecoveryQuestionTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Change-Recovery-Question'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user with password & recovery question
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Change the recovery question
+        RecoveryQuestionCredential recoveryQuestionCredential = new RecoveryQuestionCredential()
+        recoveryQuestionCredential.setQuestion("How many roads must a man walk down?")
+        recoveryQuestionCredential.setAnswer("forty two")
+
+        PasswordCredential passwordCredential = new PasswordCredential()
+        passwordCredential.setValue("Passw0rd!2@3#")
+
+        UserCredentials userCredentials = new UserCredentials()
+        userCredentials.setPassword(passwordCredential)
+        userCredentials.setRecoveryQuestion(recoveryQuestionCredential)
+
+        userCredentials = userApi.changeRecoveryQuestion(user.getId(), userCredentials)
+
+        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
+        assertThat userCredentials.getRecoveryQuestion().question, equalTo('How many roads must a man walk down?')
+
+        // 3. Update the user password through updated recovery question
+        userCredentials.getPassword().value = '!2@3#Passw0rd'.toCharArray()
+        userCredentials.getRecoveryQuestion().answer = 'forty two'
+
+        // below would throw HTTP 403 exception
+        userApi.changeRecoveryQuestion(user.getId(), userCredentials)
+
+        // 4. make the test recording happy, and call a get on the user
+        // TODO: fix har file
+        userApi.getUser(user.getId())
+    }
+
+    @Test (groups = "bacon")
+    void forgotPasswordTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Forgot-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        ResetPasswordToken response = userApi.resetPassword(user.getId(), false)
+        assertThat response.getResetPasswordUrl(), containsString("/reset_password/")
+    }
+
+    @Test (groups = "group2")
+    @Scenario("user-expire-password")
+    void expirePasswordTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Expire-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Expire the user's password
+        User updatedUser = userApi.expirePassword(user.getId())
+        assertThat updatedUser, notNullValue()
+        assertThat updatedUser.getStatus(), is(UserStatus.PASSWORD_EXPIRED)
+    }
+
+    @Test (groups = "group2")
+    @Scenario("user-get-reset-password-url")
+    void resetPasswordUrlTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Get-Reset-Password-URL'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Get the reset password link
+        ResetPasswordToken token = userApi.resetPassword(user.getId(), false)
+        assertThat token.getResetPasswordUrl(), notNullValue()
+    }
+
+    @Test(expectedExceptions = HttpClientErrorException, groups = "group2")
+    @Scenario("user-get")
+    void getUserTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Get-User'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user
+        User createdUser = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(false)
+            .buildAndCreate(userApi)
+        registerForCleanup(createdUser)
+        validateUser(createdUser, firstName, lastName, email)
+
+        // 2. Get the user by user ID
+        User user = userApi.getUser(createdUser.getId())
+        validateUser(user, firstName, lastName, email)
+
+        // 3. Get the user by user login
+        User userByLogin = userApi.getUser(createdUser.getProfile().getLogin())
+        validateUser(userByLogin, firstName, lastName, email)
+
+        // 3. deactivate and delete the user
+        userApi.deactivateOrDeleteUser(user.getId(), false)
+        userApi.deactivateOrDeleteUser(user.getId(), false)
+
+        // 4. get user expect 404
+        userApi.getUser(email)
+    }
+
+    @Test (groups = "group2")
+    @Scenario("user-group-target-role")
+    void groupTargetRoleTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Group-Target'
+        def email = "john-${uniqueTestName}@example.com"
+        def groupName = "Group-Target Test Group ${uniqueTestName}"
+
+        UserApi userApi = new UserApi(getClient())
+        GroupApi groupApi = new GroupApi(getClient())
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(false)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        Group group = GroupBuilder.instance()
+            .setName(groupName)
+            .buildAndCreate(groupApi)
+        registerForCleanup(group)
+        validateGroup(group, groupName)
+
+        // 2. Assign USER_ADMIN role to the user
+        AssignRoleRequest assignRoleRequest = new AssignRoleRequest()
+        assignRoleRequest.setType(RoleType.USER_ADMIN)
+
+        Role role = userApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
+
+        // 3. Add Group Target to User Admin Role
+        userApi.addGroupTargetToRole(user.getId(), role.getId(), group.getId())
+
+        // 4. List Group Targets for Role
+        List<Group> groupTargets = userApi.listGroupTargetsForRole(user.getId(), role.getId(), null, null)
+        Optional<Group> match = groupTargets.stream().filter(g -> g.getProfile().getName() == group.getProfile().getName()).findAny()
+        assertThat(match.isPresent(), is(true))
+
+        // 5. Remove Group Target from Admin User Role and verify removed
+        // Note: Don’t remove the last group target from a role assignment, as this causes an exception.
+        // To get around this, create a new group and add this group target to user admin role
+
+        def adminGroupName = "Group-Target User Admin Test Group ${uniqueTestName}"
+
+        Group adminGroup = GroupBuilder.instance()
+            .setName(adminGroupName)
+            .buildAndCreate(groupApi)
+        registerForCleanup(adminGroup)
+        validateGroup(adminGroup, adminGroupName)
+
+        userApi.addGroupTargetToRole(user.getId(), role.getId(), adminGroup.getId())
+        userApi.removeGroupTargetFromRole(user.getId(), role.getId(), adminGroup.getId())
+
+        groupTargets = userApi.listGroupTargetsForRole(user.getId(), role.getId(), null, null)
+        match = groupTargets.stream().filter(g -> g.getProfile().getName() == group.getProfile().getName()).findAny()
+        assertThat(match.isPresent(), is(true))
+    }
+
+    @Test (groups = "group2")
+    @Scenario("user-profile-update")
+    void userProfileUpdate() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Profile-Update'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(false)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        def originalLastUpdated = user.lastUpdated
+
+        // 2. Update the user profile and verify that profile was updated
+        // Need to wait 1 second here as that is the minimum time resolution of the 'lastUpdated' field
+        sleep(1000)
+
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest()
+        UserProfile userProfile = new UserProfile()
+        userProfile.setNickName("Batman")
+        updateUserRequest.setProfile(userProfile)
+
+        userApi.partialUpdateUser(user.getId(), updateUserRequest, true)
+
+        User updatedUser = userApi.getUser(user.getId())
+
+        assertThat(updatedUser.lastUpdated, greaterThan(originalLastUpdated))
+        assertThat(updatedUser.getProfile().getProperties().get("nickName"), equalTo("Batman"))
+    }
+
+    @Test (groups = "group2")
+    @Scenario("user-suspend")
+    void userSuspendTest() {
+
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Suspend'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        // 2. Suspend the user and verify user in list of suspended users
+        userApi.suspendUser(user.getId())
+
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestOperationDelay())
+
+        List<User> users = userApi.listUsers(null, null, null, 'status eq \"SUSPENDED\"',null, null, null)
+        Optional<User> match = users.stream().filter(u -> u.getId() == user.getId()).findAny()
+        assertThat(match.isPresent(), is(true))
+
+        // 3. Unsuspend the user and verify user in list of active users
+        userApi.unsuspendUser(user.getId())
+
+        users = userApi.listUsers(null, null, null, 'status eq \"ACTIVE\"',null, null, null)
+        match = users.stream().filter(u -> u.getId() == user.getId()).findAny()
+        assertThat(match.isPresent(), is(true))
+    }
+
+    @Test(expectedExceptions = HttpClientErrorException, groups = "group2")
+    void getUserInvalidUserId() {
+        UserApi userApi = new UserApi(getClient())
+        def userId = "invalid-user-id-${uniqueTestName}@example.com"
+        userApi.getUser(userId)
+    }
+
+    @Test (groups = "group2")
+    void createUserWithGroups() {
+
+        def groupName = "Group-to-Assign-${uniqueTestName}"
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Create-User-With-Group'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+        GroupApi groupApi = new GroupApi(getClient())
+
+        // 1. Create group
+        Group group = GroupBuilder.instance()
+            .setName(groupName)
+            .buildAndCreate(groupApi)
+        registerForCleanup(group)
+        validateGroup(group, groupName)
+
+        // 2. Create a user
+        User createUser = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(false)
+            .addGroup(group.getId())
+            .buildAndCreate(userApi)
+        registerForCleanup(createUser)
+        validateUser(createUser, firstName, lastName, email)
+
+        List<Group> groups = userApi.listUserGroups(createUser.getId()).stream().collect(Collectors.toList())
+        assertThat groups, allOf(hasSize(2))
+        assertThat groups.get(0).getProfile().name, equalTo("Everyone")
+        assertThat groups.get(1).getId(), equalTo(group.id)
+    }
+
+//    @Test (groups = "group3")
+//    void setUserPasswordWithoutReset() {
+//
+//        def user = randomUser()
+//        def userId = user.getId()
+//
+//        Resource userPasswordRequest = client.instantiate(ExtensibleResource)
+//        userPasswordRequest.put("credentials", client.instantiate(ExtensibleResource)
+//            .put("password", client.instantiate(ExtensibleResource)
+//                .put("value", "aPassword1!".toCharArray())))
+//
+//        Resource result = client.getDataStore().http()
+//            .setBody(userPasswordRequest)
+//            .addQueryParameter("key1", "value1")
+//            .addQueryParameter("key2", "value2")
+//            .post("/api/v1/users/"+ userId, User.class)
+//
+//        assertThat(result, instanceOf(User))
+//    }
+
+    @Test (groups = "group3")
+    void importUserWithSha512Password() {
+
+        def salt = "aSalt"
+        def hashedPassword = hashPassword("aPassword", salt)
+        def email = "joe.coder+${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName("Joe")
+            .setLastName("Code")
+            .setSha512PasswordHash(hashedPassword, salt, "PREFIX")
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+
+        assertThat user.getCredentials(), notNullValue()
+        assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.IMPORT)
+    }
+
+    @Test (groups = "group3")
+    @Scenario("user-forgot-password-set-new-password")
+    void forgotPasswordSetNewPasswordTest() {
+
+        def password = 'OldPassw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Forgot-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .setActive(true)
+            .setSecurityQuestion("How many roads must a man walk down?")
+            .setSecurityQuestionAnswer("forty two")
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        PasswordCredential passwordCredential = new PasswordCredential()
+        passwordCredential.setValue("NewPassw0rd!2@3#")
+
+        RecoveryQuestionCredential recoveryQuestionCredential = new RecoveryQuestionCredential()
+        recoveryQuestionCredential.setQuestion("How many roads must a man walk down?")
+        recoveryQuestionCredential.setAnswer("forty two")
+
+        UserCredentials userCredentials = new UserCredentials()
+        userCredentials.setPassword(passwordCredential)
+        userCredentials.setRecoveryQuestion(recoveryQuestionCredential)
+
+        userCredentials = userApi.forgotPasswordSetNewPassword(user.getId(), userCredentials, false)
+        assertThat userCredentials.getRecoveryQuestion().getQuestion(), equalTo("How many roads must a man walk down?")
+        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
+        assertThat userCredentials.getProvider().getName(), equalTo(AuthenticationProviderType.OKTA.name())
+    }
+
+    @Test (groups = "group3")
+    void userWithAuthenticationProviderTest() {
+
+        def firstName = 'John'
+        def lastName = 'Forgot-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        AuthenticationProvider authenticationProvider = new AuthenticationProvider()
+        authenticationProvider.setName(AuthenticationProviderType.FEDERATION.name())
+        authenticationProvider.setType(AuthenticationProviderType.FEDERATION)
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setLogin(email)
+            .setProvider(authenticationProvider)
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        assertThat user.getCredentials(), notNullValue()
+        assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.FEDERATION)
+        assertThat user.getCredentials().getProvider().getName(), equalTo(AuthenticationProviderType.FEDERATION.name())
+    }
+
+    @Test (groups = "group3")
+    void testGetNextPageUrl() {
+        def user1 = randomUser()
+        def user2 = randomUser()
+        def user3 = randomUser()
+        registerForCleanup(user1)
+        registerForCleanup(user2)
+        registerForCleanup(user3)
+
+        String pageSize = "2"
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>()
+        map.put("limit", Arrays.asList(pageSize))
+
+        ResponseEntity<List<User>> responseEntity = getClient().invokeAPI("/api/v1/users",
+            org.springframework.http.HttpMethod.GET,
+            Collections.emptyMap(),
+            map,
+            null,
+            new HttpHeaders(),
+            new LinkedMultiValueMap<String, String>(),
+            null,
+            Collections.singletonList(MediaType.APPLICATION_JSON),
+            null,
+            new String[]{"API Token"},
+            new ParameterizedTypeReference<List<User>>() {})
+
+        List<User> userListFirstPage = responseEntity.getBody()
+        assertThat userListFirstPage, notNullValue()
+        assertThat userListFirstPage.size(), equalTo(2)
+
+        //TODO: Implement pagination
+//        responseEntity = getClient().invokeAPI("/api/v1/users",
+//            org.springframework.http.HttpMethod.GET,
+//            Collections.emptyMap(),
+//            map,
+//            null,
+//            new HttpHeaders(),
+//            new LinkedMultiValueMap<String, String>(),
+//            null,
+//            Collections.singletonList(MediaType.APPLICATION_JSON),
+//            null,
+//            new String[]{"API Token"},
+//            new ParameterizedTypeReference<List<User>>() {})
+//
+//        List<User> userListSecondPage = responseEntity.getBody()
+//        assertThat userListSecondPage, notNullValue()
+//        assertThat userListSecondPage.size(), equalTo(2)
+    }
+
+    @Test (groups = "group3")
+    void testListGroupAssignmentsWithExpand() {
+        GroupApi groupApi = new GroupApi(getClient())
+
+        //  Create more than 20 groups
+        for (int i = 1; i < 30; i++) {
+            registerForCleanup(new DefaultGroupBuilder().setName("test-group_" + i + "_${uniqueTestName}").buildAndCreate(groupApi))
+        }
+
+        ApplicationApi applicationApi = new ApplicationApi(getClient())
+
+        //  Fetch the GroupAssignment list in two requests
+        def expandParameter = "group"
+        List<Application> applicationList =
+            applicationApi.listApplications(null, null, null, null, null, null)
+        Application application = applicationList.first()
+        List<ApplicationGroupAssignment> groupAssignments =
+            applicationApi.listApplicationGroupAssignments(application.getId(), null, null, null, expandParameter)
+
+        //  Make sure both pages (all resources) contain an expand parameter
+        for (ApplicationGroupAssignment groupAssignment : groupAssignments) {
+            def embedded = groupAssignment.getEmbedded()
+            assertThat(embedded, notNullValue())
+            assertThat(embedded.get(expandParameter), notNullValue())
+            assertThat(embedded.get(expandParameter).get("type"), notNullValue())
+            assertThat(embedded.get(expandParameter).get("profile"), notNullValue())
+        }
+    }
+
+    private static String hashPassword(String password, String salt) {
+        def messageDigest = MessageDigest.getInstance("SHA-512")
+        messageDigest.update(salt.getBytes(StandardCharsets.UTF_8))
+        def bytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8))
+        return Base64.getEncoder().encodeToString(bytes)
     }
 }

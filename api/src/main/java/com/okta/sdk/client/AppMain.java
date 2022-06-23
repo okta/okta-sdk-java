@@ -22,8 +22,8 @@ import org.openapitools.client.model.IdentityProvider;
 import org.openapitools.client.model.IdentityProviderCredentials;
 import org.openapitools.client.model.IdentityProviderCredentialsClient;
 import org.openapitools.client.model.IdentityProviderPolicy;
+import org.openapitools.client.model.IdentityProviderType;
 import org.openapitools.client.model.IssuerMode;
-import org.openapitools.client.model.JsonWebKey;
 import org.openapitools.client.model.PolicyAccountLink;
 import org.openapitools.client.model.PolicyAccountLinkAction;
 import org.openapitools.client.model.PolicySubject;
@@ -51,19 +51,23 @@ import org.openapitools.client.model.ProvisioningSuspendedCondition;
 import org.openapitools.client.model.User;
 import org.openapitools.client.model.UserProfile;
 import org.openapitools.jackson.nullable.JsonNullableModule;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -73,9 +77,36 @@ public class AppMain {
 
         ApiClient apiClient = buildApiClient(args[0], args[1]);
 
-        testDriveAppsApi(apiClient);
+        //testDriveAppsApi(apiClient);
         //testDriveUsersApi(apiClient);
         //testDriveIdpApi(apiClient);
+
+        BookmarkApplication bookmarkApplication = new BookmarkApplication();
+        bookmarkApplication.setName("bookmark");
+        bookmarkApplication.setLabel("Sample Bookmark App");
+        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
+        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
+        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
+            new BookmarkApplicationSettingsApplication();
+        bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
+        bookmarkApplicationSettingsApplication.setRequestIntegration(false);
+        bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
+        bookmarkApplication.setSettings(bookmarkApplicationSettings);
+
+        ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
+            HttpMethod.POST,
+            Collections.emptyMap(),
+            null,
+            bookmarkApplication,
+            new HttpHeaders(),
+            new LinkedMultiValueMap<>(),
+            null,
+            Collections.singletonList(MediaType.APPLICATION_JSON),
+            MediaType.APPLICATION_JSON,
+            new String[]{"API Token"},
+            new ParameterizedTypeReference<BookmarkApplication>() {});
+
+        responseEntity.getBody();
     }
 
     private static void testDriveAppsApi(ApiClient apiClient) {
@@ -175,7 +206,7 @@ public class AppMain {
         IdentityProvider identityProvider = new IdentityProvider();
         String name = "java-sdk-oasv3-" + UUID.randomUUID();
         identityProvider.setName(name);
-        identityProvider.setType("OIDC");
+        identityProvider.setType(IdentityProviderType.OIDC);
         identityProvider.setIssuerMode(IssuerMode.ORG_URL);
         Protocol protocol = new Protocol();
 
