@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.okta.sdk.resource.common.PagedList;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.api.ApplicationApi;
 import org.openapitools.client.api.IdentityProviderApi;
@@ -51,15 +52,10 @@ import org.openapitools.client.model.ProvisioningSuspendedCondition;
 import org.openapitools.client.model.User;
 import org.openapitools.client.model.UserProfile;
 import org.openapitools.jackson.nullable.JsonNullableModule;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
@@ -67,7 +63,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -78,35 +73,35 @@ public class AppMain {
         ApiClient apiClient = buildApiClient(args[0], args[1]);
 
         //testDriveAppsApi(apiClient);
-        //testDriveUsersApi(apiClient);
+        testDriveUsersApi(apiClient);
         //testDriveIdpApi(apiClient);
 
-        BookmarkApplication bookmarkApplication = new BookmarkApplication();
-        bookmarkApplication.setName("bookmark");
-        bookmarkApplication.setLabel("Sample Bookmark App");
-        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
-        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
-        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
-            new BookmarkApplicationSettingsApplication();
-        bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
-        bookmarkApplicationSettingsApplication.setRequestIntegration(false);
-        bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
-        bookmarkApplication.setSettings(bookmarkApplicationSettings);
-
-        ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
-            HttpMethod.POST,
-            Collections.emptyMap(),
-            null,
-            bookmarkApplication,
-            new HttpHeaders(),
-            new LinkedMultiValueMap<>(),
-            null,
-            Collections.singletonList(MediaType.APPLICATION_JSON),
-            MediaType.APPLICATION_JSON,
-            new String[]{"API Token"},
-            new ParameterizedTypeReference<BookmarkApplication>() {});
-
-        responseEntity.getBody();
+//        BookmarkApplication bookmarkApplication = new BookmarkApplication();
+//        bookmarkApplication.setName("bookmark");
+//        bookmarkApplication.setLabel("Sample Bookmark App");
+//        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
+//        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
+//        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
+//            new BookmarkApplicationSettingsApplication();
+//        bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
+//        bookmarkApplicationSettingsApplication.setRequestIntegration(false);
+//        bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
+//        bookmarkApplication.setSettings(bookmarkApplicationSettings);
+//
+//        ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
+//            HttpMethod.POST,
+//            Collections.emptyMap(),
+//            null,
+//            bookmarkApplication,
+//            new HttpHeaders(),
+//            new LinkedMultiValueMap<>(),
+//            null,
+//            Collections.singletonList(MediaType.APPLICATION_JSON),
+//            MediaType.APPLICATION_JSON,
+//            new String[]{"API Token"},
+//            new ParameterizedTypeReference<BookmarkApplication>() {});
+//
+//        responseEntity.getBody();
     }
 
     private static void testDriveAppsApi(ApiClient apiClient) {
@@ -198,6 +193,9 @@ public class AppMain {
 
         System.out.println("== DELETING USER ID == " + createdUser.getId());
         userApi.deactivateOrDeleteUser(createdUser.getId(), false);
+
+        PagedList usersPagedList = userApi.listUsersWithPaginationInfo(null, null, 52, null, null, null, null);
+        System.out.println("== PAGINATED USERS LIST == " + usersPagedList);
     }
 
     private static void testDriveIdpApi(ApiClient apiClient) {

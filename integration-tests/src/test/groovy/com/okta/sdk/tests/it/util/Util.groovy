@@ -20,8 +20,12 @@ import org.openapitools.client.model.GroupType
 import org.openapitools.client.model.User
 import org.testng.Assert
 
+import java.util.stream.Collectors
+import java.util.stream.StreamSupport
+
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.notNullValue
 
 class Util {
@@ -39,18 +43,16 @@ class Util {
         assertThat(user, equalTo(expectedUser))
     }
 
-    static void  validateGroup(Group group, Group expectedGroup) {
+    static void validateGroup(Group group, Group expectedGroup) {
         validateGroup(group, expectedGroup.profile.name)
     }
 
-    static void  validateGroup(Group group, String groupName) {
-
+    static void validateGroup(Group group, String groupName) {
         assertThat(group.profile.name, equalTo(groupName))
         assertThat(group.type, equalTo(GroupType.OKTA_GROUP))
     }
 
-    static void  validateGroup(Group group, String groupName, String description) {
-
+    static void validateGroup(Group group, String groupName, String description) {
         validateGroup(group, groupName)
         assertThat(group.profile.description, equalTo(description))
     }
@@ -91,6 +93,16 @@ class Util {
 //        assertThat(rolesFound, hasSize(0))
 //    }
 //
+
+    static void assertUserPresent(List<User> users, User expectedUser) {
+
+        List<User> usersFound = StreamSupport.stream(users.spliterator(), false)
+                .filter { user -> user.id == expectedUser.id }
+                .collect(Collectors.toList())
+
+        assertThat(usersFound, hasSize(1))
+    }
+
 //    static <T extends Resource, C extends CollectionResource<T>> void assertPresent(C results, T expected) {
 //
 //        List<T> resourcesFound = StreamSupport.stream(results.spliterator(), false)

@@ -16,6 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
+import com.okta.sdk.resource.common.PagedList
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
@@ -147,8 +148,8 @@ class UsersIT extends ITSupport {
         Thread.sleep(getTestOperationDelay())
 
         List<User> users = userApi.listUsers(null, null, null, 'status eq \"ACTIVE\"', null, null, null)
-        assertThat(users, hasSize(greaterThan(0)))
-        //assertPresent(users, user)
+
+        assertUserPresent(users, user)
     }
 
     @Test (groups = "group2")
@@ -829,7 +830,7 @@ class UsersIT extends ITSupport {
     }
 
     @Test (groups = "group3")
-    void testGetNextPageUrl() {
+    void testPagination() {
         def user1 = randomUser()
         def user2 = randomUser()
         def user3 = randomUser()
@@ -837,45 +838,29 @@ class UsersIT extends ITSupport {
         registerForCleanup(user2)
         registerForCleanup(user3)
 
-        String pageSize = "2"
+        UserApi userApi = new UserApi(getClient())
 
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>()
-        map.put("limit", Arrays.asList(pageSize))
+        // limit
+        int pageSize = 2
 
-        ResponseEntity<List<User>> responseEntity = getClient().invokeAPI("/api/v1/users",
-            org.springframework.http.HttpMethod.GET,
-            Collections.emptyMap(),
-            map,
-            null,
-            new HttpHeaders(),
-            new LinkedMultiValueMap<String, String>(),
-            null,
-            Collections.singletonList(MediaType.APPLICATION_JSON),
-            null,
-            new String[]{"API Token"},
-            new ParameterizedTypeReference<List<User>>() {})
+        PagedList usersPagedListOne = userApi.listUsersWithPaginationInfo(null, null, pageSize, null, null, null, null)
 
-        List<User> userListFirstPage = responseEntity.getBody()
-        assertThat userListFirstPage, notNullValue()
-        assertThat userListFirstPage.size(), equalTo(2)
+        assertThat usersPagedListOne, notNullValue()
+        assertThat usersPagedListOne.items().size(), is(2)
+        assertThat usersPagedListOne.self, notNullValue()
+        assertThat usersPagedListOne.nextPage, notNullValue()
 
-        //TODO: Implement pagination
-//        responseEntity = getClient().invokeAPI("/api/v1/users",
-//            org.springframework.http.HttpMethod.GET,
-//            Collections.emptyMap(),
-//            map,
-//            null,
-//            new HttpHeaders(),
-//            new LinkedMultiValueMap<String, String>(),
-//            null,
-//            Collections.singletonList(MediaType.APPLICATION_JSON),
-//            null,
-//            new String[]{"API Token"},
-//            new ParameterizedTypeReference<List<User>>() {})
-//
-//        List<User> userListSecondPage = responseEntity.getBody()
-//        assertThat userListSecondPage, notNullValue()
-//        assertThat userListSecondPage.size(), equalTo(2)
+        // e.g. https://example.okta.com/api/v1/users?after=000u3pfv9v4SQXvpBB0g7&limit=2
+        String nextPageUrl = usersPagedListOne.nextPage
+        String after = splitQuery(new URL(nextPageUrl)).get("after")
+
+        assertThat after, notNullValue()
+
+        PagedList usersPagedListTwo = userApi.listUsersWithPaginationInfo(after, null, pageSize, null, null, null, null)
+
+        assertThat usersPagedListTwo, notNullValue()
+        assertThat usersPagedListTwo.items().size(), is(greaterThanOrEqualTo(1))
+        assertThat usersPagedListTwo.self, equalTo(usersPagedListOne.nextPage)
     }
 
     @Test (groups = "group3")
@@ -912,5 +897,22 @@ class UsersIT extends ITSupport {
         messageDigest.update(salt.getBytes(StandardCharsets.UTF_8))
         def bytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8))
         return Base64.getEncoder().encodeToString(bytes)
+    }
+
+    /**
+     * Split a URL with query strings into name value pairs.
+     * @param url
+     * @return map of query string name value pairs
+     * @throws UnsupportedEncodingException
+     */
+    private static Map<String, String> splitQuery(URL url) throws UnsupportedEncodingException {
+        Map<String, String> query_pairs = new LinkedHashMap<String, String>()
+        String query = url.getQuery()
+        String[] pairs = query.split("&")
+        for (String pair : pairs) {
+            int index = pair.indexOf("=")
+            query_pairs.put(URLDecoder.decode(pair.substring(0, index), "UTF-8"), URLDecoder.decode(pair.substring(index + 1), "UTF-8"))
+        }
+        return query_pairs
     }
 }
