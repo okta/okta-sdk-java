@@ -32,7 +32,6 @@ import org.openapitools.client.api.UserApi;
 import org.openapitools.client.api.UserFactorApi;
 import org.openapitools.client.model.ActivateFactorRequest;
 import org.openapitools.client.model.Application;
-import org.openapitools.client.model.ApplicationSignOnMode;
 import org.openapitools.client.model.BookmarkApplication;
 import org.openapitools.client.model.BookmarkApplicationSettings;
 import org.openapitools.client.model.BookmarkApplicationSettingsApplication;
@@ -258,7 +257,7 @@ public class ReadmeSnippets {
         BookmarkApplication bookmarkApplication = new BookmarkApplication();
         bookmarkApplication.setName("bookmark");
         bookmarkApplication.setLabel("Sample Bookmark App");
-        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
+        bookmarkApplication.setSignOnMode("BOOKMARK");
         BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
         BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
             new BookmarkApplicationSettingsApplication();

@@ -45,7 +45,7 @@ class UsersIT extends ITSupport {
 
         User user = randomUser()
         registerForCleanup(user)
-        assertThat(user.getStatus(), equalTo(UserStatus.PROVISIONED))
+        assertThat(user.getStatus(), equalTo("PROVISIONED"))
 
         UserApi userApi = new UserApi(getClient())
 
@@ -53,7 +53,7 @@ class UsersIT extends ITSupport {
         userApi.deactivateOrDeleteUser(user.getId(), false)
 
         User retrievedUser = userApi.getUser(user.getId())
-        assertThat(retrievedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
+        assertThat(retrievedUser.getStatus(), equalTo("DEPROVISIONED"))
 
         // delete
         userApi.deactivateOrDeleteUser(user.getId(), false)
@@ -190,7 +190,7 @@ class UsersIT extends ITSupport {
 
         // 2. Assign USER_ADMIN role to the user
         AssignRoleRequest assignRoleRequest = new AssignRoleRequest()
-        assignRoleRequest.setType(RoleType.USER_ADMIN)
+        assignRoleRequest.setType("USER_ADMIN")
 
         Role role = userApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
 
@@ -243,7 +243,7 @@ class UsersIT extends ITSupport {
         changePasswordRequest.setNewPassword(passwordCredentialNew)
 
         UserCredentials userCredentials = userApi.changePassword(user.getId(), changePasswordRequest, true)
-        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
+        assertThat userCredentials.getProvider().getType(), equalTo("OKTA")
 
         // 3. make the test recording happy, and call a get on the user
         // TODO: fix har file
@@ -293,16 +293,16 @@ class UsersIT extends ITSupport {
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
 
         PolicyNetworkCondition policyNetworkCondition = new PolicyNetworkCondition()
-        policyNetworkCondition.setConnection(PolicyNetworkConnection.ANYWHERE)
+        policyNetworkCondition.setConnection("ANYWHERE")
 
         PasswordPolicyRuleConditions passwordPolicyRuleConditions = new PasswordPolicyRuleConditions()
         passwordPolicyRuleConditions.setNetwork(policyNetworkCondition)
 
         PasswordPolicyRuleAction passwordPolicyRuleActionAllow = new PasswordPolicyRuleAction()
-        passwordPolicyRuleActionAllow.access(PolicyAccess.ALLOW)
+        passwordPolicyRuleActionAllow.access("ALLOW")
 
         PasswordPolicyRuleAction passwordPolicyRuleActionDeny = new PasswordPolicyRuleAction()
-        passwordPolicyRuleActionDeny.access(PolicyAccess.DENY)
+        passwordPolicyRuleActionDeny.access("DENY")
 
         PasswordPolicyRuleActions passwordPolicyRuleActions = new PasswordPolicyRuleActions()
         passwordPolicyRuleActions.setPasswordChange(passwordPolicyRuleActionAllow)
@@ -342,7 +342,7 @@ class UsersIT extends ITSupport {
         userApi.changePassword(user.getId(), changePasswordRequest, true)
 
         UserCredentials userCredentials = userApi.changePassword(user.getId(), changePasswordRequest, false)
-        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
+        assertThat userCredentials.getProvider().getType(), equalTo("OKTA")
 
         // 3. make the test recording happy, and call a get on the user
         // TODO: fix har file
@@ -385,7 +385,7 @@ class UsersIT extends ITSupport {
 
         userCredentials = userApi.changeRecoveryQuestion(user.getId(), userCredentials)
 
-        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
+        assertThat userCredentials.getProvider().getType(), equalTo("OKTA")
         assertThat userCredentials.getRecoveryQuestion().question, equalTo('How many roads must a man walk down?')
 
         // 3. Update the user password through updated recovery question
@@ -450,7 +450,7 @@ class UsersIT extends ITSupport {
         // 2. Expire the user's password
         User updatedUser = userApi.expirePassword(user.getId())
         assertThat updatedUser, notNullValue()
-        assertThat updatedUser.getStatus(), is(UserStatus.PASSWORD_EXPIRED)
+        assertThat updatedUser.getStatus(), is("PASSWORD_EXPIRED")
     }
 
     @Test (groups = "group2")
@@ -550,7 +550,7 @@ class UsersIT extends ITSupport {
 
         // 2. Assign USER_ADMIN role to the user
         AssignRoleRequest assignRoleRequest = new AssignRoleRequest()
-        assignRoleRequest.setType(RoleType.USER_ADMIN)
+        assignRoleRequest.setType("USER_ADMIN")
 
         Role role = userApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
 
@@ -745,7 +745,7 @@ class UsersIT extends ITSupport {
         registerForCleanup(user)
 
         assertThat user.getCredentials(), notNullValue()
-        assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.IMPORT)
+        assertThat user.getCredentials().getProvider().getType(), is("IMPORT")
     }
 
     @Test (groups = "group3")
@@ -785,8 +785,8 @@ class UsersIT extends ITSupport {
 
         userCredentials = userApi.forgotPasswordSetNewPassword(user.getId(), userCredentials, false)
         assertThat userCredentials.getRecoveryQuestion().getQuestion(), equalTo("How many roads must a man walk down?")
-        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
-        assertThat userCredentials.getProvider().getName(), equalTo(AuthenticationProviderType.OKTA.name())
+        assertThat userCredentials.getProvider().getType(), equalTo("OKTA")
+        assertThat userCredentials.getProvider().getName(), equalTo("OKTA")
     }
 
     @Test (groups = "group3")
@@ -799,8 +799,8 @@ class UsersIT extends ITSupport {
         UserApi userApi = new UserApi(getClient())
 
         AuthenticationProvider authenticationProvider = new AuthenticationProvider()
-        authenticationProvider.setName(AuthenticationProviderType.FEDERATION.name())
-        authenticationProvider.setType(AuthenticationProviderType.FEDERATION)
+        authenticationProvider.setName("FEDERATION")
+        authenticationProvider.setType("FEDERATION")
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -814,8 +814,8 @@ class UsersIT extends ITSupport {
         validateUser(user, firstName, lastName, email)
 
         assertThat user.getCredentials(), notNullValue()
-        assertThat user.getCredentials().getProvider().getType(), is(AuthenticationProviderType.FEDERATION)
-        assertThat user.getCredentials().getProvider().getName(), equalTo(AuthenticationProviderType.FEDERATION.name())
+        assertThat user.getCredentials().getProvider().getType(), is("FEDERATION")
+        assertThat user.getCredentials().getProvider().getName(), equalTo("FEDERATION")
     }
 
     @Test (groups = "group3")

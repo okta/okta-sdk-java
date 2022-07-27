@@ -26,11 +26,9 @@ import org.openapitools.client.api.PolicyApi
 import org.openapitools.client.api.UserApi
 import org.openapitools.client.model.CreateUserRequest
 import org.openapitools.client.model.Group
-import org.openapitools.client.model.LifecycleStatus
 import org.openapitools.client.model.OktaSignOnPolicy
 import org.openapitools.client.model.PasswordPolicy
 import org.openapitools.client.model.Policy
-import org.openapitools.client.model.PolicyType
 import org.openapitools.client.model.User
 import org.openapitools.client.model.UserProfile
 import org.slf4j.Logger
@@ -169,7 +167,7 @@ abstract class ITSupport implements ClientProvider {
 
         PasswordPolicy policy = PasswordPolicyBuilder.instance()
             .setName("java-sdk-it-" + UUID.randomUUID().toString())
-            .setStatus(LifecycleStatus.ACTIVE)
+            .setStatus("ACTIVE")
             .setDescription("IT created Policy")
             .setPriority(1)
             .addGroup(groupId)
@@ -185,7 +183,7 @@ abstract class ITSupport implements ClientProvider {
 
         Policy policy = PolicyBuilder.instance()
             .setName("java-sdk-it-" + UUID.randomUUID().toString())
-            .setStatus(LifecycleStatus.ACTIVE)
+            .setStatus("ACTIVE")
             .setDescription("IT created Policy")
             .setPriority(1)
             .buildAndCreate(policyApi)
@@ -201,8 +199,8 @@ abstract class ITSupport implements ClientProvider {
         OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
             .setName("java-sdk-it-" + UUID.randomUUID().toString())
             .setDescription("IT created Policy")
-            .setStatus(LifecycleStatus.ACTIVE)
-            .setType(PolicyType.OKTA_SIGN_ON)
+            .setStatus("ACTIVE")
+            .setType("OKTA_SIGN_ON")
             .buildAndCreate(policyApi)
         registerForCleanup(policy)
 
@@ -221,7 +219,7 @@ abstract class ITSupport implements ClientProvider {
             null,
             Collections.singletonList(MediaType.APPLICATION_JSON),
             null,
-            new String[]{"API Token"},
+            new String[]{ "API_Token" },
             new ParameterizedTypeReference<Map<String, Object>>() {})
 
         if (responseEntity != null && responseEntity.getBody() != null) {

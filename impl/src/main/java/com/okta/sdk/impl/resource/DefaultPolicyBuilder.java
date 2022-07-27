@@ -18,9 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.policy.PolicyBuilder;
 import org.openapitools.client.api.PolicyApi;
-import org.openapitools.client.model.LifecycleStatus;
 import org.openapitools.client.model.Policy;
-import org.openapitools.client.model.PolicyType;
 
 import java.util.Objects;
 
@@ -28,13 +26,13 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
 
     protected String name;
     protected String description;
-    protected PolicyType policyType;
+    protected String policyType;
     protected Integer priority;
-    protected LifecycleStatus status;
+    protected String status;
     protected Boolean isActive = true;
 
     DefaultPolicyBuilder(){
-        this.status = LifecycleStatus.ACTIVE;
+        this.status = "ACTIVE";
     }
 
     @Override
@@ -50,7 +48,7 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     }
 
     @Override
-    public T setType(PolicyType policyType) {
+    public T setType(String policyType) {
         this.policyType = policyType;
         return self();
     }
@@ -62,9 +60,9 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     }
 
     @Override
-    public T setStatus(LifecycleStatus status) {
+    public T setStatus(String status) {
         this.status = status;
-        this.isActive = LifecycleStatus.ACTIVE.equals(status);
+        this.isActive = "ACTIVE".equals(status);
         return self();
     }
 

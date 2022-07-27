@@ -39,7 +39,7 @@ class AppsIT extends ITSupport {
         BasicAuthApplication basicAuthApplication = new BasicAuthApplication()
         basicAuthApplication.name("template_basic_auth")
             .label("Sample Basic Auth App")
-            .signOnMode(ApplicationSignOnMode.BASIC_AUTH)
+            .signOnMode("BASIC_AUTH")
         BasicApplicationSettingsApplication basicApplicationSettingsApplication =
             new BasicApplicationSettingsApplication()
         basicApplicationSettingsApplication.url("https://example.com/login.html")
@@ -55,8 +55,8 @@ class AppsIT extends ITSupport {
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(basicAuthApplication.getLabel()))
-        assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BASIC_AUTH))
-        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+        assertThat(createdApp.getSignOnMode(), equalTo("BASIC_AUTH"))
+        assertThat(createdApp.getStatus(), equalTo("ACTIVE"))
     }
 
     @Test
@@ -66,7 +66,7 @@ class AppsIT extends ITSupport {
         BookmarkApplication bookmarkApplication = new BookmarkApplication()
         bookmarkApplication.name("bookmark")
             .label("Sample Bookmark App")
-            .signOnMode(ApplicationSignOnMode.BOOKMARK)
+            .signOnMode("BOOKMARK")
         BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
             new BookmarkApplicationSettingsApplication()
         bookmarkApplicationSettingsApplication.url("https://example.com/bookmark.htm")
@@ -83,11 +83,11 @@ class AppsIT extends ITSupport {
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(bookmarkApplication.getLabel()))
-        assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BOOKMARK))
-        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+        assertThat(createdApp.getSignOnMode(), equalTo("BOOKMARK"))
+        assertThat(createdApp.getStatus(), equalTo("ACTIVE"))
 
         // update
-        BookmarkApplication toBeUpdatedApp = bookmarkApplication.label("updated-" + bookmarkApplication.getLabel())
+        Application toBeUpdatedApp = bookmarkApplication.label("updated-" + bookmarkApplication.getLabel())
         BookmarkApplication updatedApp = applicationApi.updateApplication(BookmarkApplication.class, createdApp.getId(), toBeUpdatedApp)
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
@@ -98,8 +98,8 @@ class AppsIT extends ITSupport {
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
-        assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BOOKMARK))
-        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+        assertThat(retrievedApp.getSignOnMode(), equalTo("BOOKMARK"))
+        assertThat(retrievedApp.getStatus(), equalTo("ACTIVE"))
     }
 
     @Test
@@ -127,11 +127,11 @@ class AppsIT extends ITSupport {
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(browserPluginApplication.getLabel()))
-        assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BROWSER_PLUGIN))
-        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+        assertThat(createdApp.getSignOnMode(), equalTo("BROWSER_PLUGIN"))
+        assertThat(createdApp.getStatus(), equalTo("ACTIVE"))
 
         // update
-        BrowserPluginApplication toBeUpdatedApp = browserPluginApplication.label("updated-" + browserPluginApplication.getLabel())
+        Application toBeUpdatedApp = browserPluginApplication.label("updated-" + browserPluginApplication.getLabel())
         BrowserPluginApplication updatedApp = applicationApi.updateApplication(BrowserPluginApplication.class, createdApp.getId(), toBeUpdatedApp)
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
@@ -142,8 +142,8 @@ class AppsIT extends ITSupport {
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
-        assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BROWSER_PLUGIN))
-        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+        assertThat(retrievedApp.getSignOnMode(), equalTo("BROWSER_PLUGIN"))
+        assertThat(retrievedApp.getStatus(), equalTo("ACTIVE"))
     }
 
     @Test
@@ -156,19 +156,16 @@ class AppsIT extends ITSupport {
         openIdConnectApplication.name("oidc_client")
         OpenIdConnectApplicationSettingsClient openIdConnectApplicationSettingsClient =
             new OpenIdConnectApplicationSettingsClient()
-        openIdConnectApplicationSettingsClient.applicationType(OpenIdConnectApplicationType.WEB)
-        openIdConnectApplicationSettingsClient.consentMethod(OpenIdConnectApplicationConsentMethod.REQUIRED)
+        openIdConnectApplicationSettingsClient.applicationType("web")
+        openIdConnectApplicationSettingsClient.consentMethod("REQUIRED")
         openIdConnectApplicationSettingsClient.clientUri("https://example.com/client")
         openIdConnectApplicationSettingsClient.logoUri("https://example.com/assets/images/logo-new.png")
         openIdConnectApplicationSettingsClient.redirectUris(["https://example.com/oauth2/callback",
                                                                 "myapp://callback"])
-        openIdConnectApplicationSettingsClient.responseTypes([OAuthResponseType.TOKEN,
-                                                                 OAuthResponseType.ID_TOKEN,
-                                                                 OAuthResponseType.CODE])
-        openIdConnectApplicationSettingsClient.issuerMode(OpenIdConnectApplicationIssuerMode.ORG_URL)
-        openIdConnectApplicationSettingsClient.grantTypes([OAuthGrantType.IMPLICIT,
-                                                              OAuthGrantType.AUTHORIZATION_CODE])
-        openIdConnectApplicationSettingsClient.applicationType(OpenIdConnectApplicationType.NATIVE)
+        openIdConnectApplicationSettingsClient.responseTypes(["token", "id_token", "code"])
+        openIdConnectApplicationSettingsClient.issuerMode("ORG_URL")
+        openIdConnectApplicationSettingsClient.grantTypes(["implicit", "authorization_code"])
+        openIdConnectApplicationSettingsClient.applicationType("native")
         openIdConnectApplicationSettingsClient.tosUri("https://example.com/client/tos")
         openIdConnectApplicationSettingsClient.policyUri("https://example.com/client/policy")
         OpenIdConnectApplicationSettings openIdConnectApplicationSettings =
@@ -179,12 +176,12 @@ class AppsIT extends ITSupport {
         ApplicationCredentialsOAuthClient applicationCredentialsOAuthClient = new ApplicationCredentialsOAuthClient()
         applicationCredentialsOAuthClient.clientId(UUID.randomUUID().toString())
         applicationCredentialsOAuthClient.autoKeyRotation(true)
-        applicationCredentialsOAuthClient.tokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_BASIC)
+        applicationCredentialsOAuthClient.tokenEndpointAuthMethod("client_secret_basic")
         OAuthApplicationCredentials oAuthApplicationCredentials =
             new OAuthApplicationCredentials()
         oAuthApplicationCredentials.oauthClient(applicationCredentialsOAuthClient)
         openIdConnectApplication.credentials(oAuthApplicationCredentials)
-        openIdConnectApplication.signOnMode(ApplicationSignOnMode.OPENID_CONNECT)
+        openIdConnectApplication.signOnMode("OPENID_CONNECT")
 
         // create
         OpenIdConnectApplication createdApp =
@@ -194,8 +191,8 @@ class AppsIT extends ITSupport {
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(openIdConnectApplication.getLabel()))
-        assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.OPENID_CONNECT))
-        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+        assertThat(createdApp.getSignOnMode(), equalTo("OPENID_CONNECT"))
+        assertThat(createdApp.getStatus(), equalTo("ACTIVE"))
 
         // update
         Application toBeUpdatedApp = openIdConnectApplication.label("updated-" + openIdConnectApplication.getLabel())
@@ -209,8 +206,8 @@ class AppsIT extends ITSupport {
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
-        assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.OPENID_CONNECT))
-        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+        assertThat(retrievedApp.getSignOnMode(), equalTo("OPENID_CONNECT"))
+        assertThat(retrievedApp.getStatus(), equalTo("ACTIVE"))
     }
 
     @Test
@@ -239,14 +236,14 @@ class AppsIT extends ITSupport {
             .authScheme(inlineHookChannelConfigAuthScheme)
 
         InlineHookChannel inlineHookChannel = new InlineHookChannel()
-        inlineHookChannel.type(InlineHookChannelType.HTTP)
+        inlineHookChannel.type("HTTP")
         inlineHookChannel.version(version)
         inlineHookChannel.config(inlineHookChannelConfig)
 
         InlineHookApi inlineHookApi = new InlineHookApi(getClient())
         InlineHook inlineHook = new InlineHook()
         inlineHook.name(name)
-        inlineHook.type(InlineHookType.SAML_TOKENS_TRANSFORM)
+        inlineHook.type("com.okta.saml.tokens.transform")
         inlineHook.version(version)
         inlineHook.channel(inlineHookChannel)
 
@@ -298,7 +295,7 @@ class AppsIT extends ITSupport {
         samlApplicationSettings.signOn(samlApplicationSettingsSignOn)
         samlApplication.visibility(applicationVisibility)
         samlApplication.settings(samlApplicationSettings)
-        samlApplication.signOnMode(ApplicationSignOnMode.SAML_2_0)
+        samlApplication.signOnMode("SAML_2_0")
 
         // create
         SamlApplication createdApp = applicationApi.createApplication(SamlApplication.class, samlApplication, true, null)
@@ -307,8 +304,8 @@ class AppsIT extends ITSupport {
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(samlApplication.getLabel()))
-        assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.SAML_2_0))
-        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+        assertThat(createdApp.getSignOnMode(), equalTo("SAML_2_0"))
+        assertThat(createdApp.getStatus(), equalTo("ACTIVE"))
 
         // update
         Application toBeUpdatedApp = samlApplication.label("updated-" + samlApplication.getLabel())
@@ -322,8 +319,8 @@ class AppsIT extends ITSupport {
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
-        assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.SAML_2_0))
-        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+        assertThat(retrievedApp.getSignOnMode(), equalTo("SAML_2_0"))
+        assertThat(retrievedApp.getStatus(), equalTo("ACTIVE"))
     }
 
     //TODO: fix me
@@ -338,7 +335,7 @@ class AppsIT extends ITSupport {
         SamlApplication org2OrgApplication = new SamlApplication()
         org2OrgApplication.name("okta_org2org")
             .label("Sample Okta Org2Org App")
-            .signOnMode(ApplicationSignOnMode.SAML_2_0)
+            .signOnMode("SAML_2_0")
 
         SamlApplicationSettingsApplication samlApplicationSettingsApplication = new SamlApplicationSettingsApplication()
         samlApplicationSettingsApplication.setAcsUrl("https://example.com/acs.html")

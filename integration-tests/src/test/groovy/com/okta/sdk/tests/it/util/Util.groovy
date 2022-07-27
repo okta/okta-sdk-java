@@ -16,7 +16,6 @@
 package com.okta.sdk.tests.it.util
 
 import org.openapitools.client.model.Group
-import org.openapitools.client.model.GroupType
 import org.openapitools.client.model.User
 import org.testng.Assert
 
@@ -49,7 +48,7 @@ class Util {
 
     static void validateGroup(Group group, String groupName) {
         assertThat(group.profile.name, equalTo(groupName))
-        assertThat(group.type, equalTo(GroupType.OKTA_GROUP))
+        assertThat(group.type, equalTo("OKTA_GROUP"))
     }
 
     static void validateGroup(Group group, String groupName, String description) {

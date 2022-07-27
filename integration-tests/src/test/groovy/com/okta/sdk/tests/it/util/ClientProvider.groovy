@@ -56,19 +56,6 @@ trait ClientProvider implements IHookable {
 
     private ApiClient buildClient() {
 
-//        String testServerBaseUrl = System.getProperty(TestServer.TEST_SERVER_BASE_URL)
-//        if (isRunningWithTestServer() && scenarioId != null) {
-//            return Clients.builder()
-//                    .setOrgUrl(testServerBaseUrl + scenarioId)
-//                    .setClientCredentials(new TokenClientCredentials("00ICU812"))
-//                    .setCacheManager(new DisabledCacheManager()) // disable cache when using mock server
-//                    .build()
-//        }
-//
-//        ApiClient client = Clients.builder().build()
-//        client.dataStore.requestExecutor.numRetries = 10
-//        return client
-
         ApiClient apiClient = Clients.builder().build()
         //apiClient.setDebugging(true)
         return apiClient
@@ -137,7 +124,7 @@ trait ClientProvider implements IHookable {
 
         ApplicationApi applicationApi = new ApplicationApi(client)
 
-        if (app.getStatus() == ApplicationLifecycleStatus.ACTIVE) {
+        if (app.getStatus() == "ACTIVE") {
             // deactivate
             applicationApi.deactivateApplication(app.getId())
         }
@@ -150,7 +137,7 @@ trait ClientProvider implements IHookable {
 
         UserApi userApi = new UserApi(client)
 
-        if (user.getStatus() != UserStatus.DEPROVISIONED) {
+        if (user.getStatus() != "DEPROVISIONED") {
             // deactivate
             userApi.deactivateUser(user.id, false)
         }
@@ -177,7 +164,7 @@ trait ClientProvider implements IHookable {
 
         IdentityProviderApi idpApi = new IdentityProviderApi(client)
 
-        if (idp.getStatus() == LifecycleStatus.ACTIVE) {
+        if (idp.getStatus() == "ACTIVE") {
             // deactivate
             idpApi.deactivateIdentityProvider(idp.getId())
         }
@@ -190,7 +177,7 @@ trait ClientProvider implements IHookable {
         log.info("Deleting InlineHook: {}", inlineHook.getId())
 
         InlineHookApi inlineHookApi = new InlineHookApi(client)
-        if (inlineHook.getStatus() == InlineHookStatus.ACTIVE) {
+        if (inlineHook.getStatus() == "ACTIVE") {
             // deactivate
             inlineHookApi.deactivateInlineHook(inlineHook.getId())
         }
@@ -203,7 +190,7 @@ trait ClientProvider implements IHookable {
         log.info("Deleting InlineHook: {}", inlineHook.getId())
 
         InlineHookApi inlineHookApi = new InlineHookApi(client)
-        if (inlineHook.getStatus() == InlineHookStatus.ACTIVE) {
+        if (inlineHook.getStatus() == "ACTIVE") {
             // deactivate
             inlineHookApi.deactivateInlineHook(inlineHook.getId())
         }
@@ -212,31 +199,6 @@ trait ClientProvider implements IHookable {
         inlineHookApi.deleteInlineHook(inlineHook.getId())
     }
 
-//    void deleteGroup(String groupName, Client client) {
-//        Util.ignoring(ResourceException) {
-//            GroupList groups = client.listGroups(groupName, null, null)
-//            groups.each {group ->
-//                if (groupName.equals(group.profile.name)) {
-//                    group.delete()
-//                }
-//            }
-//        }
-//    }
-//
-//    void deleteRule(String ruleName, Client client) {
-//        Util.ignoring(ResourceException) {
-//            GroupRuleList rules = client.listGroupRules()
-//            rules.each {rule ->
-//                if (ruleName.equals(rule.name)) {
-//                    if (rule.status == GroupRuleStatus.ACTIVE) {
-//                        rule.deactivate()
-//                    }
-//                    rule.delete()
-//                }
-//            }
-//        }
-//    }
-//
     @AfterMethod (groups = ["group1", "group2", "group3"])
     void clean() {
         if (!isRunningWithTestServer()) {

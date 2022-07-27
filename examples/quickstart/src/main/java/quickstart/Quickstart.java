@@ -26,9 +26,9 @@ import org.openapitools.client.api.GroupApi;
 
 import org.openapitools.client.model.Group;
 import org.openapitools.client.model.User;
-import org.openapitools.client.model.UserStatus;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -111,7 +111,7 @@ public class Quickstart {
 
             // deactivate (if de-provisioned) and delete user
             if (user != null) {
-                if (user.getStatus() != UserStatus.DEPROVISIONED) {
+                if (!Objects.equals(user.getStatus(), "DEPROVISIONED")) {
                     userApi.deactivateOrDeleteUser(user.getId(), false);
                 }
                 userApi.deactivateOrDeleteUser(user.getId(), false);
