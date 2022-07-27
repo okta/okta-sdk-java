@@ -70,7 +70,7 @@ trait ClientProvider implements IHookable {
 //        return client
 
         ApiClient apiClient = Clients.builder().build()
-        apiClient.setDebugging(true)
+        //apiClient.setDebugging(true)
         return apiClient
     }
 

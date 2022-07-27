@@ -21,7 +21,6 @@ import com.okta.sdk.resource.policy.PasswordPolicyBuilder
 import com.okta.sdk.resource.policy.PolicyBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
 import com.okta.sdk.tests.Scenario
-import org.openapitools.client.ApiClient
 import org.openapitools.client.api.GroupApi
 import org.openapitools.client.api.PolicyApi
 import org.openapitools.client.api.UserApi
@@ -32,7 +31,6 @@ import org.openapitools.client.model.OktaSignOnPolicy
 import org.openapitools.client.model.PasswordPolicy
 import org.openapitools.client.model.Policy
 import org.openapitools.client.model.PolicyType
-import org.openapitools.client.model.PolicyUserStatus
 import org.openapitools.client.model.User
 import org.openapitools.client.model.UserProfile
 import org.slf4j.Logger
@@ -44,9 +42,14 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.util.LinkedMultiValueMap
 import org.testng.ITestContext
+import org.testng.ITestResult
+import org.testng.annotations.AfterMethod
 import org.testng.annotations.AfterSuite
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.BeforeSuite
 import org.testng.annotations.Listeners
+
+import java.lang.reflect.Method
 
 @Listeners(value = ConditionalSkipTestAnalyzer.class)
 abstract class ITSupport implements ClientProvider {
@@ -86,6 +89,16 @@ abstract class ITSupport implements ClientProvider {
         isOIEEnvironment = isOIEEnvironment()
     }
 
+    @BeforeMethod
+    void log(Method method) {
+        log.info("Running " + method.getProperties().get("clazz").name + " - " + method.getName())
+    }
+
+    @AfterMethod
+    void afterMethod(ITestResult result) {
+        log.info("Finished " + result.getInstanceName() + " - " + result.getName())
+    }
+
     @AfterSuite()
     void stop() {
         if (testServer != null) {
@@ -103,7 +116,7 @@ abstract class ITSupport implements ClientProvider {
      * - System property 'okta.it.operationDelay'
      * - Env variable 'OKTA_IT_OPERATION_DELAY'
      */
-    long getTestOperationDelay() {
+    static long getTestOperationDelay() {
         Long testDelay = Long.getLong(IT_OPERATION_DELAY)
 
         if (testDelay == null) {
