@@ -46,13 +46,12 @@
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
 
-
     <modules>
         <module>api</module>
         <module>impl</module>
         <module>integration-tests</module>
         <module>examples</module>
-<!--        <module>coverage</module>-->
+        <module>coverage</module>
     </modules>
 
     <dependencyManagement>
@@ -285,7 +284,7 @@
                     <configuration>
                         <excludeRoots>
                             <!-- exclude the generated code from PMD, Findbugs will still run -->
-                            <excludeRoot>${project.build.directory}/generated-sources/swagger-codegen</excludeRoot>
+                            <excludeRoot>${project.build.directory}/generated-sources/openapi</excludeRoot>
                         </excludeRoots>
                         <excludes>
                             <!-- lang contains a few files copied from other projects -->
@@ -309,44 +308,6 @@
                         </excludes>
                     </configuration>
                 </plugin>
-<!--                <plugin>-->
-<!--                    <groupId>org.zalando.maven.plugins</groupId>-->
-<!--                    <artifactId>swagger-codegen-maven-plugin</artifactId>-->
-<!--                    <version>0.5.0-beta-1</version>-->
-<!--                    <configuration>-->
-<!--                        &lt;!&ndash; This is relative to a direct sub module &ndash;&gt;-->
-<!--                        <apiFile>${project.basedir}/../src/swagger/api.yaml</apiFile>-->
-<!--                        <additionalProperties>-->
-<!--                            <apiFile>${project.basedir}/../src/swagger/api.yaml</apiFile>-->
-<!--                        </additionalProperties>-->
-<!--                    </configuration>-->
-<!--                    <dependencies>-->
-<!--                        <dependency>-->
-<!--                            <groupId>com.okta.sdk</groupId>-->
-<!--                            <artifactId>okta-api-swagger-templates</artifactId>-->
-<!--                            <version>8.2.2-SNAPSHOT</version>-->
-<!--                        </dependency>-->
-<!--                    </dependencies>-->
-<!--                </plugin>-->
-<!--                <plugin>-->
-<!--                    <groupId>org.openapitools</groupId>-->
-<!--                    <artifactId>openapi-generator-maven-plugin</artifactId>-->
-<!--                    <version>6.0.0-beta</version>-->
-<!--                    <executions>-->
-<!--                        <execution>-->
-<!--                            <goals>-->
-<!--                                <goal>generate</goal>-->
-<!--                            </goals>-->
-<!--                            <configuration>-->
-<!--                                <inputSpec>${project.basedir}/../src/swagger/api.yaml</inputSpec>-->
-<!--                                <generatorName>java</generatorName>-->
-<!--                                <configOptions>-->
-<!--                                    <sourceFolder>src/gen/java/main</sourceFolder>-->
-<!--                                </configOptions>-->
-<!--                            </configuration>-->
-<!--                        </execution>-->
-<!--                    </executions>-->
-<!--                </plugin>-->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
@@ -370,7 +331,7 @@
                         </oldVersion>
                         <parameter>
                             <onlyModified>true</onlyModified>
-                            <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
+                            <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications>
                             <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
                             <postAnalysisScript>${root.dir}/src/japicmp/postAnalysisScript.groovy</postAnalysisScript>
                         </parameter>

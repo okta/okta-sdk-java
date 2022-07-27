@@ -613,7 +613,6 @@ class UsersIT extends ITSupport {
         UpdateUserRequest updateUserRequest = new UpdateUserRequest()
         UserProfile userProfile = new UserProfile()
         userProfile.setNickName("Batman")
-        userProfile.getProperties().put()
         updateUserRequest.setProfile(userProfile)
 
         userApi.partialUpdateUser(user.getId(), updateUserRequest, true)

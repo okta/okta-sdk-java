@@ -14,20 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.error.authc;
+package com.okta.sdk.impl.api;
 
-import com.okta.sdk.error.Error;
-import com.okta.sdk.resource.ResourceException;
+
+import com.okta.sdk.authc.credentials.ClientCredentials;
 
 /**
- * A sub-class of {@link ResourceException} representing an attempt to login using incorrect credentials.
- *
  * @since 0.5.0
  */
-public class IncorrectCredentialsException extends ResourceException {
+public interface ClientCredentialsResolver {
 
-    public IncorrectCredentialsException(Error error) {
-        super(error);
-    }
+    ClientCredentials getClientCredentials();
 
 }

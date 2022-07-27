@@ -15,62 +15,57 @@
  */
 package quickstart;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
-import com.okta.sdk.cache.Caches;
-import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
-
 import org.openapitools.client.ApiClient;
+import org.openapitools.client.api.ApplicationApi;
+import org.openapitools.client.api.GroupApi;
+import org.openapitools.client.api.SystemLogApi;
+import org.openapitools.client.api.UserApi;
+import org.openapitools.client.api.UserFactorApi;
+import org.openapitools.client.model.ActivateFactorRequest;
 import org.openapitools.client.model.Application;
 import org.openapitools.client.model.ApplicationSignOnMode;
 import org.openapitools.client.model.BookmarkApplication;
 import org.openapitools.client.model.BookmarkApplicationSettings;
 import org.openapitools.client.model.BookmarkApplicationSettingsApplication;
 import org.openapitools.client.model.BrowserPluginApplication;
-import org.openapitools.client.model.SwaApplicationSettings;
-import org.openapitools.client.model.SwaApplicationSettingsApplication;
 import org.openapitools.client.model.Group;
 import org.openapitools.client.model.LogEvent;
-import org.openapitools.client.model.UserProfile;
+import org.openapitools.client.model.SmsUserFactor;
+import org.openapitools.client.model.SwaApplicationSettings;
+import org.openapitools.client.model.SwaApplicationSettingsApplication;
 import org.openapitools.client.model.UpdateUserRequest;
-import org.openapitools.client.model.ActivateFactorRequest;
 import org.openapitools.client.model.User;
 import org.openapitools.client.model.UserFactor;
-import org.openapitools.client.model.SmsUserFactor;
+import org.openapitools.client.model.UserProfile;
 import org.openapitools.client.model.VerifyFactorRequest;
 import org.openapitools.client.model.VerifyUserFactorResponse;
 import org.openapitools.jackson.nullable.JsonNullableModule;
-
-import org.openapitools.client.api.*;
-
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.BufferingClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Example snippets used for this projects README.md.
@@ -89,21 +84,6 @@ public class ReadmeSnippets {
         ApiClient client = Clients.builder()
             .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
             .setClientCredentials(new TokenClientCredentials("{apiToken}"))
-            .build();
-    }
-
-    private void createOAuth2Client() {
-        ApiClient client = Clients.builder()
-            .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
-            .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-            .setClientId("{clientId}")
-            .setKid("{kid}") // key id (optional)
-            .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
-            .setPrivateKey("/path/to/yourPrivateKey.pem")
-            // (or) .setPrivateKey("full PEM payload")
-            // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
-            // (or) .setPrivateKey(inputStream)
-            // (or) .setPrivateKey(privateKey)
             .build();
     }
 
@@ -167,8 +147,9 @@ public class ReadmeSnippets {
 
     private void customAttributes() {
         UserProfile userProfile = new UserProfile();
-        userProfile.getProperties().put("customPropertyKey", "a value");
-        userProfile.getProperties().get("customPropertyKey");
+        //TODO: add custom profile fields
+//        userProfile.getProperties().put("customPropertyKey", "a value");
+//        userProfile.getProperties().get("customPropertyKey");
     }
 
     private void deleteUser() {

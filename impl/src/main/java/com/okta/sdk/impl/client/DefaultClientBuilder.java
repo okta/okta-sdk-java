@@ -23,16 +23,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.commons.configcheck.ConfigurationValidator;
 import com.okta.commons.http.config.Proxy;
 import com.okta.commons.lang.Assert;
-import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.authc.credentials.ClientCredentials;
-import com.okta.sdk.cache.CacheConfigurationBuilder;
-import com.okta.sdk.cache.CacheManager;
-import com.okta.sdk.cache.CacheManagerBuilder;
-import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.ClientBuilder;
+import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
 import com.okta.sdk.impl.config.OptionalPropertiesSource;
@@ -50,8 +46,6 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.openapitools.client.ApiClient;
 import org.openapitools.jackson.nullable.JsonNullableModule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -77,7 +71,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -100,15 +93,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class DefaultClientBuilder implements ClientBuilder {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
-
     private static final String ENVVARS_TOKEN   = "envvars";
     private static final String SYSPROPS_TOKEN  = "sysprops";
     private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
 
-    private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
 
@@ -157,40 +147,8 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setApiToken(props.get(DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME));
         }
 
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME))) {
-            clientConfig.setCacheManagerEnabled(Boolean.valueOf(props.get(DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME)));
-        }
-
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME))) {
-            clientConfig.setCacheManagerTtl(Long.parseLong(props.get(DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME)));
-        }
-
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME))) {
-            clientConfig.setCacheManagerTti(Long.parseLong(props.get(DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME)));
-        }
-
-        for (String prop : props.keySet()) {
-            boolean isPrefix = prop.length() == DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME.length();
-            if (!isPrefix && prop.startsWith(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME)) {
-                // get class from prop name
-                String cacheClass = prop.substring(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME.length() + 1, prop.length() - 4);
-                String cacheTti = props.get(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME + "." + cacheClass + ".tti");
-                String cacheTtl = props.get(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME + "." + cacheClass + ".ttl");
-                CacheConfigurationBuilder cacheBuilder = Caches.forResource(Classes.forName(cacheClass));
-                if (Strings.hasText(cacheTti)) {
-                    cacheBuilder.withTimeToIdle(Long.parseLong(cacheTti), TimeUnit.SECONDS);
-                }
-                if (Strings.hasText(cacheTtl)) {
-                    cacheBuilder.withTimeToLive(Long.parseLong(cacheTtl), TimeUnit.SECONDS);
-                }
-                if (!clientConfig.getCacheManagerCaches().containsKey(cacheClass)) {
-                    clientConfig.getCacheManagerCaches().put(cacheClass, cacheBuilder);
-                }
-            }
-        }
-
         if (Strings.hasText(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME))) {
-            allowNonHttpsForTesting = Boolean.valueOf(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME));
+            allowNonHttpsForTesting = Boolean.parseBoolean(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME))) {
@@ -268,12 +226,6 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
-    public ClientBuilder setCacheManager(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
-        return this;
-    }
-
-    @Override
     public ClientBuilder setConnectionTimeout(int timeout) {
         Assert.isTrue(timeout >= 0, "Timeout cannot be a negative number.");
         this.clientConfig.setConnectionTimeout(timeout);
@@ -307,9 +259,16 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
+        if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
+        } else if (this.clientConfig.getClientCredentialsResolver() == null) {
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
+        }
+
         ApiClient apiClient = new ApiClient(buildRestTemplate());
         apiClient.setBasePath(this.clientConfig.getBaseUrl());
-        apiClient.setApiKey(this.clientConfig.getApiToken());
+        apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
+        // for now (beta release) we support only SSWS, OAuth2 support to be added soon
         apiClient.setApiKeyPrefix("SSWS");
         return apiClient;
     }

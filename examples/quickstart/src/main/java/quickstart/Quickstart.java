@@ -50,8 +50,8 @@ public class Quickstart {
         Group group = null;
         User user = null;
 
-        UserApi userApi = new UserApi(client);
-        GroupApi groupApi = new GroupApi(client);
+        UserApi userApi = null;
+        GroupApi groupApi = null;
 
         try {
             // Instantiate a builder for your Client. If needed, settings like Proxy and Caching can be defined here.
@@ -60,6 +60,9 @@ public class Quickstart {
             // No need to define anything else; build the Client instance. The ClientCredential information will be automatically found
             // in pre-defined locations: i.e. ~/.okta/okta.yaml
             client = builder.build();
+
+            userApi = new UserApi(client);
+            groupApi = new GroupApi(client);
 
             // Create a group
             group = GroupBuilder.instance()
@@ -77,7 +80,7 @@ public class Quickstart {
                 .setPassword(password)
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
-                .putProfileProperty("division", "Seven") // key/value pairs predefined in the user profile schema
+                //.putProfileProperty("division", "Seven") // key/value pairs predefined in the user profile schema //TODO: fix me
                 .setActive(true)
                 .addGroup(group.getId()) // add user to the newly created group
                 .buildAndCreate(userApi);
@@ -95,7 +98,7 @@ public class Quickstart {
             List<User> users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"", null, null, null);
 
             // get the first user in the collection
-            println("First user in collection: " + users.stream().findFirst().getProfile().getEmail());
+            println("First user in collection: " + users.stream().findFirst().get().getProfile().getEmail());
         }
         catch (Exception e) {
 
