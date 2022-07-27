@@ -8,6 +8,7 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
+    - run: pip install npm
     - run: ./mvnw clean install -Pci
     - run:
         when: on_fail
@@ -15,15 +16,6 @@ aliases:
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*dump*
-
-jobs:
-  test:
-    executor: node/default
-    steps:
-      - checkout
-      - node/install-packages
-      - run:
-          command: npm run test
       
   jdk8:
     docker:
