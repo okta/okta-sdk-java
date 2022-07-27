@@ -48,7 +48,8 @@ class AppsIT extends ITSupport {
         basicApplicationSettings.app(basicApplicationSettingsApplication)
         basicAuthApplication.settings(basicApplicationSettings)
 
-        Application createdApp = applicationApi.createApplication(basicAuthApplication, true, null)
+        BasicAuthApplication createdApp =
+            applicationApi.createApplication(BasicAuthApplication.class, basicAuthApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -75,7 +76,8 @@ class AppsIT extends ITSupport {
         bookmarkApplication.settings(bookmarkApplicationSettings)
 
         // create
-        Application createdApp = applicationApi.createApplication(bookmarkApplication, true, null)
+        BookmarkApplication createdApp =
+            applicationApi.createApplication(BookmarkApplication.class, bookmarkApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -85,8 +87,8 @@ class AppsIT extends ITSupport {
         assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // update
-        Application toBeUpdatedApp = bookmarkApplication.label("updated-" + bookmarkApplication.getLabel())
-        Application updatedApp = applicationApi.updateApplication(createdApp.getId(), toBeUpdatedApp)
+        BookmarkApplication toBeUpdatedApp = bookmarkApplication.label("updated-" + bookmarkApplication.getLabel())
+        BookmarkApplication updatedApp = applicationApi.updateApplication(BookmarkApplication.class, createdApp.getId(), toBeUpdatedApp)
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -118,7 +120,8 @@ class AppsIT extends ITSupport {
         browserPluginApplication.settings(swaApplicationSettings)
 
         // create
-        Application createdApp = applicationApi.createApplication(browserPluginApplication, true, null)
+        BrowserPluginApplication createdApp =
+            applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -128,8 +131,8 @@ class AppsIT extends ITSupport {
         assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // update
-        Application toBeUpdatedApp = browserPluginApplication.label("updated-" + browserPluginApplication.getLabel())
-        Application updatedApp = applicationApi.updateApplication(createdApp.getId(), toBeUpdatedApp)
+        BrowserPluginApplication toBeUpdatedApp = browserPluginApplication.label("updated-" + browserPluginApplication.getLabel())
+        BrowserPluginApplication updatedApp = applicationApi.updateApplication(BrowserPluginApplication.class, createdApp.getId(), toBeUpdatedApp)
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -184,7 +187,8 @@ class AppsIT extends ITSupport {
         openIdConnectApplication.signOnMode(ApplicationSignOnMode.OPENID_CONNECT)
 
         // create
-        Application createdApp = applicationApi.createApplication(openIdConnectApplication, true, null)
+        OpenIdConnectApplication createdApp =
+            applicationApi.createApplication(OpenIdConnectApplication.class, openIdConnectApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -195,7 +199,7 @@ class AppsIT extends ITSupport {
 
         // update
         Application toBeUpdatedApp = openIdConnectApplication.label("updated-" + openIdConnectApplication.getLabel())
-        Application updatedApp = applicationApi.updateApplication(createdApp.getId(), toBeUpdatedApp)
+        OpenIdConnectApplication updatedApp = applicationApi.updateApplication(OpenIdConnectApplication.class, createdApp.getId(), toBeUpdatedApp)
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -297,7 +301,7 @@ class AppsIT extends ITSupport {
         samlApplication.signOnMode(ApplicationSignOnMode.SAML_2_0)
 
         // create
-        Application createdApp = applicationApi.createApplication(samlApplication, true, null)
+        SamlApplication createdApp = applicationApi.createApplication(SamlApplication.class, samlApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -308,7 +312,7 @@ class AppsIT extends ITSupport {
 
         // update
         Application toBeUpdatedApp = samlApplication.label("updated-" + samlApplication.getLabel())
-        Application updatedApp = applicationApi.updateApplication(createdApp.getId(), toBeUpdatedApp)
+        SamlApplication updatedApp = applicationApi.updateApplication(SamlApplication.class, createdApp.getId(), toBeUpdatedApp)
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -344,7 +348,7 @@ class AppsIT extends ITSupport {
         samlApplicationSettings.app(samlApplicationSettingsApplication)
         org2OrgApplication.settings(samlApplicationSettings)
 
-        Application createdApp = applicationApi.createApplication(org2OrgApplication, true, null)
+        SamlApplication createdApp = applicationApi.createApplication(SamlApplication.class, org2OrgApplication, true, null)
         registerForCleanup(createdApp)
 
 //        File file = new File("/Users/arvindkrishnakumar/Downloads/okta_logo_favicon.png")

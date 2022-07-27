@@ -22,18 +22,8 @@ import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.apache.commons.lang3.RandomStringUtils
-import org.openapitools.client.api.ApplicationApi
-import org.openapitools.client.api.GroupApi
-import org.openapitools.client.api.PolicyApi
-import org.openapitools.client.api.UserApi
-import org.openapitools.client.api.UserTypeApi
+import org.openapitools.client.api.*
 import org.openapitools.client.model.*
-import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.util.MultiValueMap
 import org.springframework.web.client.HttpClientErrorException
 import org.testng.annotations.Test
 
@@ -44,7 +34,6 @@ import java.util.stream.Collectors
 import static com.okta.sdk.tests.it.util.Util.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
-
 /**
  * Tests for {@code /api/v1/users}.
  * @since 0.5.0
@@ -624,6 +613,7 @@ class UsersIT extends ITSupport {
         UpdateUserRequest updateUserRequest = new UpdateUserRequest()
         UserProfile userProfile = new UserProfile()
         userProfile.setNickName("Batman")
+        userProfile.getProperties().put()
         updateUserRequest.setProfile(userProfile)
 
         userApi.partialUpdateUser(user.getId(), updateUserRequest, true)

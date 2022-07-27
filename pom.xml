@@ -51,7 +51,7 @@
         <module>api</module>
         <module>impl</module>
         <module>integration-tests</module>
-<!--        <module>examples</module>-->
+        <module>examples</module>
 <!--        <module>coverage</module>-->
     </modules>
 
@@ -87,6 +87,11 @@
             <dependency>
                 <groupId>com.okta.commons</groupId>
                 <artifactId>okta-commons-lang</artifactId>
+                <version>${okta.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.okta.commons</groupId>
+                <artifactId>okta-http-api</artifactId>
                 <version>${okta.commons.version}</version>
             </dependency>
 

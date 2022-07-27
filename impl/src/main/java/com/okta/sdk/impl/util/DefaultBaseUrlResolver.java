@@ -14,16 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.impl.api;
+package com.okta.sdk.impl.util;
 
-
-import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.commons.http.config.BaseUrlResolver;
 
 /**
  * @since 0.5.0
  */
-public interface ClientCredentialsResolver {
+public class DefaultBaseUrlResolver implements BaseUrlResolver {
 
-    ClientCredentials getClientCredentials();
+    private final String baseUrl;
 
+    public DefaultBaseUrlResolver(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    @Override
+    public String getBaseUrl() {
+        return baseUrl;
+    }
 }

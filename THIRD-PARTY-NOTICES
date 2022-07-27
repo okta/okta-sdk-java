@@ -74,6 +74,7 @@ This project includes:
   Mozilla Rhino under Mozilla Public License, Version 2.0
   msg-simple under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   Okta Commons :: Config Check under The Apache License, Version 2.0
+  Okta Commons :: HTTP :: API under The Apache License, Version 2.0
   Okta Commons :: Lang under The Apache License, Version 2.0
   openapi-generator (core library) under Apache License 2.0
   openapi-generator-core under Apache License 2.0

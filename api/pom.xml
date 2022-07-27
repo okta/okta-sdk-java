@@ -51,6 +51,10 @@
         </dependency>
         <dependency>
             <groupId>com.okta.commons</groupId>
+            <artifactId>okta-http-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.okta.commons</groupId>
             <artifactId>okta-commons-lang</artifactId>
         </dependency>
         <dependency>

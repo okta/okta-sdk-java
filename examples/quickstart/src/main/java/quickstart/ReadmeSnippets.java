@@ -18,34 +18,60 @@ package quickstart;
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthorizationMode;
-import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.ExtensibleResource;
-import com.okta.sdk.resource.application.Application;
-import com.okta.sdk.resource.application.ApplicationList;
-import com.okta.sdk.resource.application.SwaApplication;
-import com.okta.sdk.resource.application.SwaApplicationSettings;
-import com.okta.sdk.resource.application.SwaApplicationSettingsApplication;
-import com.okta.sdk.resource.group.Group;
+import com.okta.sdk.client.Clients;
+import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
-import com.okta.sdk.resource.group.GroupList;
-import com.okta.sdk.resource.log.LogEventList;
-import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserBuilder;
-import com.okta.sdk.resource.user.UserList;
-import com.okta.sdk.resource.user.factor.ActivateFactorRequest;
-import com.okta.sdk.resource.user.factor.UserFactor;
-import com.okta.sdk.resource.user.factor.UserFactorList;
-import com.okta.sdk.resource.user.factor.SmsUserFactor;
-import com.okta.sdk.resource.user.factor.VerifyFactorRequest;
-import com.okta.sdk.resource.user.factor.VerifyUserFactorResponse;
+
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.model.Application;
+import org.openapitools.client.model.ApplicationSignOnMode;
+import org.openapitools.client.model.BookmarkApplication;
+import org.openapitools.client.model.BookmarkApplicationSettings;
+import org.openapitools.client.model.BookmarkApplicationSettingsApplication;
+import org.openapitools.client.model.BrowserPluginApplication;
+import org.openapitools.client.model.SwaApplicationSettings;
+import org.openapitools.client.model.SwaApplicationSettingsApplication;
+import org.openapitools.client.model.Group;
+import org.openapitools.client.model.LogEvent;
+import org.openapitools.client.model.UserProfile;
+import org.openapitools.client.model.UpdateUserRequest;
+import org.openapitools.client.model.ActivateFactorRequest;
+import org.openapitools.client.model.User;
+import org.openapitools.client.model.UserFactor;
+import org.openapitools.client.model.SmsUserFactor;
+import org.openapitools.client.model.VerifyFactorRequest;
+import org.openapitools.client.model.VerifyUserFactorResponse;
+import org.openapitools.jackson.nullable.JsonNullableModule;
+
+import org.openapitools.client.api.*;
+
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.okta.sdk.cache.Caches.forResource;
 /**
  * Example snippets used for this projects README.md.
  * <p>
@@ -56,22 +82,18 @@ public class ReadmeSnippets {
 
     private static final Logger log = LoggerFactory.getLogger(ReadmeSnippets.class);
 
-    private final Client client = Clients.builder().build();
+    private final ApiClient client = Clients.builder().build();
     private final User user = null;
 
     private void createClient() {
-        Client client = Clients.builder()
+        ApiClient client = Clients.builder()
             .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
             .setClientCredentials(new TokenClientCredentials("{apiToken}"))
             .build();
     }
 
-    private void isClientReady() {
-        boolean isClientReadyStatus = client.isReady(client::listApplications);
-    }
-
     private void createOAuth2Client() {
-        Client client = Clients.builder()
+        ApiClient client = Clients.builder()
             .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
             .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
             .setClientId("{clientId}")
@@ -86,168 +108,256 @@ public class ReadmeSnippets {
     }
 
     private void getUser() {
-        User user = client.getUser("a-user-id");
+        UserApi userApi = new UserApi(client);
+
+        User user = userApi.getUser("userId");
     }
 
     private void listAllUsers() {
-        UserList users = client.listUsers();
+        UserApi userApi = new UserApi(client);
+        List<User> users = userApi.listUsers(null, null, 5, null, null, null, null);
 
         // stream
-        client.listUsers().stream()
+        users.stream()
             .forEach(user -> {
               // do something
             });
     }
 
     private void userSearch() {
+        UserApi userApi = new UserApi(client);
         // search by email
-        UserList users = client.listUsers("jcoder@example.com", null, null, null, null);
+        List<User> users = userApi.listUsers(null, null, 5, null, "jcoder@example.com", null, null);
 
         // filter parameter
-        users = client.listUsers(null, "status eq \"ACTIVE\"", null, null, null);
+        users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
     }
 
     private void createUser() {
+        UserApi userApi = new UserApi(client);
+
         User user = UserBuilder.instance()
             .setEmail("joe.coder@example.com")
             .setFirstName("Joe")
             .setLastName("Code")
-            .buildAndCreate(client);
+            .buildAndCreate(userApi);
     }
 
     private void createUserWithGroups() {
+        UserApi userApi = new UserApi(client);
+
         User user = UserBuilder.instance()
             .setEmail("joe.coder@example.com")
             .setFirstName("Joe")
             .setLastName("Code")
-            .setGroups(new HashSet<>(Arrays.asList("group-id-1", "group-id-2")))
-            .buildAndCreate(client);
+            .setGroups(Arrays.asList("groupId-1", "groupId-2"))
+            .buildAndCreate(userApi);
     }
 
     private void updateUser() {
-        user.getProfile().setFirstName("new-first-name");
-        user.update();
+        UserApi userApi = new UserApi(client);
+
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+        UserProfile userProfile = new UserProfile();
+        userProfile.setNickName("Batman");
+        updateUserRequest.setProfile(userProfile);
+
+        userApi.partialUpdateUser(user.getId(), updateUserRequest, true);
     }
 
     private void customAttributes() {
-        user.getProfile().put("customPropertyKey", "a value");
-        user.getProfile().get("customPropertyKey");
+        UserProfile userProfile = new UserProfile();
+        userProfile.getProperties().put("customPropertyKey", "a value");
+        userProfile.getProperties().get("customPropertyKey");
     }
 
     private void deleteUser() {
-        user.deactivate();
-        user.delete();
+        UserApi userApi = new UserApi(client);
+
+        // deactivate first
+        userApi.deactivateOrDeleteUser(user.getId(), false);
+        // then delete
+        userApi.deactivateOrDeleteUser(user.getId(), false);
     }
 
     private void listUsersGroup() {
-        GroupList groups = user.listGroups();
+        GroupApi groupApi = new GroupApi(client);
+        List<Group> groups = groupApi.listGroups(null, null, null, 10, null);
     }
 
     private void createGroup() {
+        GroupApi groupApi = new GroupApi(client);
+
         Group group = GroupBuilder.instance()
             .setName("a-group-name")
             .setDescription("Example Group")
-            .buildAndCreate(client);
-    }
-
-    private void addUserToGroup() {
-        user.addToGroup("groupId");
+            .buildAndCreate(groupApi);
     }
 
     private void listUserFactors() {
-        UserFactorList factors = user.listFactors();
+        UserFactorApi userFactorApi = new UserFactorApi(client);
+
+        List<UserFactor> userFactors = userFactorApi.listFactors("userId");
     }
 
     private void enrollUserInFactor() {
-        SmsUserFactor smsFactor = client.instantiate(SmsUserFactor.class);
+        UserFactorApi userFactorApi = new UserFactorApi(client);
+
+        SmsUserFactor smsFactor = new SmsUserFactor();
         smsFactor.getProfile().setPhoneNumber("555 867 5309");
-        user.enrollFactor(smsFactor);
+
+        UserFactor userFactor = userFactorApi.enrollFactor("userId", smsFactor, true, "templateId", 30, true);
     }
 
     private void activateFactor() {
-        UserFactor factor = user.getFactor("factorId");
-        ActivateFactorRequest activateFactorRequest = client.instantiate(ActivateFactorRequest.class);
+        UserFactorApi userFactorApi = new UserFactorApi(client);
+
+        UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+        ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
         activateFactorRequest.setPassCode("123456");
-        factor.activate(activateFactorRequest);
+
+        UserFactor activatedUserFactor = userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
     }
 
     private void verifyFactor() {
-        UserFactor factor = user.getFactor("factorId");
-        VerifyFactorRequest verifyFactorRequest = client.instantiate(VerifyFactorRequest.class);
+        UserFactorApi userFactorApi = new UserFactorApi(client);
+
+        UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+        VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
         verifyFactorRequest.setPassCode("123456");
-        VerifyUserFactorResponse verifyUserFactorResponse = factor.setVerify(verifyFactorRequest).verify();
+
+        VerifyUserFactorResponse verifyUserFactorResponse =
+            userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
     }
 
     private void listApplication() {
-        ApplicationList applications = client.listApplications();
+        ApplicationApi applicationApi = new ApplicationApi(client);
+
+        List<Application> applications = applicationApi.listApplications(null, null, 10, null, null, true);
     }
 
     private void getApplication() {
-        Application app = client.getApplication("appId");
+        ApplicationApi applicationApi = new ApplicationApi(client);
+
+        Application app = applicationApi.getApplication("appId", null);
     }
 
     private void createSwaApplication() {
-        SwaApplication swaApp = client.instantiate(SwaApplication.class)
-            .setSettings(client.instantiate(SwaApplicationSettings.class)
-            .setApp(client.instantiate(SwaApplicationSettingsApplication.class)
-              .setButtonField("btn-login")
-              .setPasswordField("txtbox-password")
-              .setUsernameField("txtbox-username")
-              .setUrl("https://example.com/login.html")));
+        ApplicationApi applicationApi = new ApplicationApi(client);
+
+        SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
+        swaApplicationSettingsApplication.buttonField("btn-login")
+            .passwordField("txtbox-password")
+            .usernameField("txtbox-username")
+            .url("https://example.com/login.html");
+        SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings();
+        swaApplicationSettings.app(swaApplicationSettingsApplication);
+        BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication();
+        browserPluginApplication.name("template_swa");
+        browserPluginApplication.label("Sample Plugin App");
+        browserPluginApplication.settings(swaApplicationSettings);
+
+        // create
+        BrowserPluginApplication createdApp =
+            applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null);
     }
 
     private void listSysLogs() {
-        // page through all log events
-        LogEventList logEvents = client.getLogs();
+        SystemLogApi systemLogApi = new SystemLogApi(client);
 
-        // or use a filter (start date, end date, filter, or query, sort order) all options are nullable
-        logEvents = client.getLogs(null, null, null, "interestingURI.com", "ASCENDING");
+        // use a filter (start date, end date, filter, or query, sort order) all options are nullable
+        List<LogEvent> logEvents = systemLogApi.getLogs(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
     }
 
     private void callAnotherEndpoint() {
-        // Create an IdP, see: https://developer.okta.com/docs/api/resources/idps#add-identity-provider
-        ExtensibleResource resource = client.instantiate(ExtensibleResource.class);
-        ExtensibleResource protocolNode = client.instantiate(ExtensibleResource.class);
-        protocolNode.put("type", "OAUTH");
-        resource.put("protocol", protocolNode);
 
-        ExtensibleResource result = client.http()
-            .setBody(resource)
-            .post("/api/v1/idps", ExtensibleResource.class);
+        ApiClient apiClient = buildApiClient("orgBaseUrl", "apiKey");
+
+        // Create a BookmarkApplication
+        BookmarkApplication bookmarkApplication = new BookmarkApplication();
+        bookmarkApplication.setName("bookmark");
+        bookmarkApplication.setLabel("Sample Bookmark App");
+        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
+        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
+        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
+            new BookmarkApplicationSettingsApplication();
+        bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
+        bookmarkApplicationSettingsApplication.setRequestIntegration(false);
+        bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
+        bookmarkApplication.setSettings(bookmarkApplicationSettings);
+
+        ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
+            HttpMethod.POST,
+            Collections.emptyMap(),
+            null,
+            bookmarkApplication,
+            new HttpHeaders(),
+            new LinkedMultiValueMap<>(),
+            null,
+            Collections.singletonList(MediaType.APPLICATION_JSON),
+            MediaType.APPLICATION_JSON,
+            new String[]{"API Token"},
+            new ParameterizedTypeReference<BookmarkApplication>() {});
+
+        BookmarkApplication createdApp = responseEntity.getBody();
     }
 
     private void paging() {
-        // get the list of users
-        UserList users = client.listUsers();
 
-        // get the first user in the collection
-        log.info("First user in collection: {}", users.iterator().next().getProfile().getEmail());
+        UserApi userApi = new UserApi(client);
 
-        // or loop through all of them (paging is automatic)
-        for (User tmpUser : users) {
+        // limit
+        int pageSize = 2;
+
+        PagedList<User> usersPagedListOne = userApi.listUsersWithPaginationInfo(null, null, pageSize, null, null, null, null);
+
+        // e.g. https://example.okta.com/api/v1/users?after=000u3pfv9v4SQXvpBB0g7&limit=2
+        String nextPageUrl = usersPagedListOne.getNextPage();
+
+        // replace 'after' with actual cursor from the nextPageUrl
+        PagedList<User> usersPagedListTwo = userApi.listUsersWithPaginationInfo("after", null, pageSize, null, null, null, null);
+
+        // loop through all of them (paging is automatic)
+        for (User tmpUser : usersPagedListOne.getItems()) {
             log.info("User: {}", tmpUser.getProfile().getEmail());
         }
 
-        // or via a stream
-        users.stream().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
+        // or stream
+        usersPagedListOne.getItems().stream().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
     }
 
-    private void complexCaching() {
-         Caches.newCacheManager()
-             .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
-             .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
-             .withCache(forResource(User.class) //User-specific cache settings
-                 .withTimeToLive(1, TimeUnit.HOURS)
-                 .withTimeToIdle(30, TimeUnit.MINUTES))
-             .withCache(forResource(Group.class) //Group-specific cache settings
-                 .withTimeToLive(2, TimeUnit.HOURS))
-             //... etc ...
-             .build(); //build the CacheManager
+    private static ApiClient buildApiClient(String orgBaseUrl, String apiKey) {
+
+        ApiClient apiClient = new ApiClient(buildRestTemplate());
+        apiClient.setBasePath(orgBaseUrl);
+        apiClient.setApiKey(apiKey);
+        apiClient.setApiKeyPrefix("SSWS");
+        return apiClient;
     }
 
-    private void disableCaching() {
-        Client client = Clients.builder()
-            .setCacheManager(Caches.newDisabledCacheManager())
-            .build();
+    private static RestTemplate buildRestTemplate() {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(objectMapper);
+        ObjectMapper mapper = messageConverter.getObjectMapper();
+        messageConverter.setSupportedMediaTypes(Arrays.asList(
+            MediaType.APPLICATION_JSON,
+            MediaType.parseMediaType("application/x-pem-file"),
+            MediaType.parseMediaType("application/x-x509-ca-cert"),
+            MediaType.parseMediaType("application/pkix-cert")));
+        mapper.registerModule(new JavaTimeModule());
+        mapper.registerModule(new JsonNullableModule());
+
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+        messageConverters.add(messageConverter);
+
+        RestTemplate restTemplate = new RestTemplate(messageConverters);
+
+        // This allows us to read the response more than once - Necessary for debugging.
+        restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
+        return restTemplate;
     }
 }

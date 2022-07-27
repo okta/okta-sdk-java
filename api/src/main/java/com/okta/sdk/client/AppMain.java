@@ -52,10 +52,15 @@ import org.openapitools.client.model.ProvisioningSuspendedCondition;
 import org.openapitools.client.model.User;
 import org.openapitools.client.model.UserProfile;
 import org.openapitools.jackson.nullable.JsonNullableModule;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
@@ -72,8 +77,8 @@ public class AppMain {
 
         ApiClient apiClient = buildApiClient(args[0], args[1]);
 
-        //testDriveAppsApi(apiClient);
-        testDriveUsersApi(apiClient);
+        testDriveAppsApi(apiClient);
+        //testDriveUsersApi(apiClient);
         //testDriveIdpApi(apiClient);
 
 //        BookmarkApplication bookmarkApplication = new BookmarkApplication();
@@ -118,7 +123,8 @@ public class AppMain {
         bookmarkApplicationSettingsApplication.setRequestIntegration(false);
         bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
         bookmarkApplication.setSettings(bookmarkApplicationSettings);
-        Application createdApp = applicationApi.createApplication(bookmarkApplication, true, "java-sdk-oasv3");
+
+        BookmarkApplication createdApp = applicationApi.createApplication(BookmarkApplication.class, bookmarkApplication, true, "java-sdk-oasv3");
         assert createdApp != null;
         System.out.println("== CREATED APP ==\n" + createdApp);
 
@@ -312,17 +318,6 @@ public class AppMain {
 
     private static ApiClient buildApiClient(String orgBaseUrl, String apiKey) {
 
-//        RestTemplate restTemplate = new RestTemplate();
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-//        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter(objectMapper);
-//        converter.setSupportedMediaTypes(Arrays.asList(
-//            MediaType.APPLICATION_OCTET_STREAM,
-//            MediaType.parseMediaType("application/x-pem-file"),
-//            MediaType.parseMediaType("application/x-x509-ca-cert"),
-//            MediaType.parseMediaType("application/pkix-cert")));
-//
-//        restTemplate.getMessageConverters().add(converter);
         ApiClient apiClient = new ApiClient(buildRestTemplate());
         apiClient.setBasePath(orgBaseUrl);
         apiClient.setApiKey(apiKey);

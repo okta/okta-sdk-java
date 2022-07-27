@@ -848,7 +848,11 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                                 for (Entry<String, List<String>> entry : headers.entrySet()) {
                                                     builder.append(entry.getKey()).append("=[");
                                                     for (String value : entry.getValue()) {
+                                                    if (entry.getKey().equals("Authorization")) {
+                                                    builder.append("*****").append(",");
+                                                    } else {
                                                     builder.append(value).append(",");
+                                                    }
                                                     }
                                                     builder.setLength(builder.length() - 1); // Get rid of trailing comma
                                                     builder.append("],");
