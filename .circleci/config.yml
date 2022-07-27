@@ -21,11 +21,9 @@ jobs:
     executor: node/default
     steps:
       - checkout
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
-      - run: sudo npm install -g npm@latest
-      - run: npm run test
+      - node/install-packages
+      - run:
+          command: npm run test
       
   jdk8:
     docker:
