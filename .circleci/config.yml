@@ -1,11 +1,13 @@
 version: 2.1
 
+orbs:
+  node: circleci/node@5.0.2
+
 aliases:
 
   - &build_steps
     - checkout
     - run: java -version
-    - run: npm install
     - run: ./mvnw clean install -Pci
     - run:
         when: on_fail
