@@ -94,6 +94,10 @@ public class ErrorHandler implements ResponseErrorHandler {
             }
         };
 
+        if (statusCode == 429) {
+            // retry 429
+            throw new RetryableException(error);
+        }
         throw new ResourceException(error);
     }
 }
