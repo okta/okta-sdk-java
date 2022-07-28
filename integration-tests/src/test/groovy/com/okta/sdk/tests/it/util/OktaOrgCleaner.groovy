@@ -144,7 +144,7 @@ class OktaOrgCleaner {
 
         log.info("Deleting UserTypes:")
         userTypeApi.listUserTypes().stream()
-            .filter { it.getName().startsWith("java_sdk_it_") && !it.getDefault() }
+            .filter { it.getName().startsWith(prefix.replaceAll("-","_")) && !it.getDefault() }
             .forEach {
                 log.info("\t ${it.getName()}")
                 userTypeApi.deleteUserType(it.getId())

@@ -181,7 +181,7 @@ trait ClientProvider implements IHookable {
     }
 
     void deleteIdp(String id, ApiClient client) {
-        log.info("Deleting IdP: {} {}", id)
+        log.info("Deleting IdP: {}", id)
         IdentityProviderApi idpApi = new IdentityProviderApi(client)
         IdentityProvider idpToDelete = idpApi.getIdentityProvider(id)
 

@@ -69,7 +69,7 @@ class UsersIT extends ITSupport {
         UserTypeApi userTypeApi = new UserTypeApi(getClient())
 
         // 1. Create a User Type
-        String name = "java_sdk_user_type_" + RandomStringUtils.randomAlphanumeric(15)
+        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
         UserType userType = new UserType()
             .name(name)
