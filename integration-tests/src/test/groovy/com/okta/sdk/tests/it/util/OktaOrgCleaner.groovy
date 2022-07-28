@@ -28,7 +28,6 @@ import org.openapitools.client.api.PolicyApi
 import org.openapitools.client.api.TemplateApi
 import org.openapitools.client.api.UserApi
 import org.openapitools.client.api.UserTypeApi
-import org.openapitools.client.model.EventHook
 import org.openapitools.client.model.GroupRule
 
 import org.slf4j.Logger
@@ -68,7 +67,7 @@ class OktaOrgCleaner {
         ApplicationApi applicationApi = new ApplicationApi(client)
 
         log.info("Deleting Applications:")
-        applicationApi.listApplications(null, null, 1000, null, null, true).stream()
+        applicationApi.listApplications(null, null, 100, null, null, true).stream()
             .filter { it.getLabel().startsWith(prefix) && it.getLabel().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getLabel()}")
@@ -79,7 +78,7 @@ class OktaOrgCleaner {
         GroupApi groupApi = new GroupApi(client)
 
         log.info("Deleting Groups:")
-        groupApi.listGroups(null, null, null, 1000, null).stream()
+        groupApi.listGroups(null, null, null, 100, null).stream()
             .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getProfile().getName()}")
@@ -104,6 +103,7 @@ class OktaOrgCleaner {
         policyApi.listPolicies("OKTA_SIGN_ON", null, null).stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
+                log.info("\t ${it.getName()}")
                 policyApi.deactivatePolicy(it.getId())
                 policyApi.deletePolicy(it.getId())
             }
@@ -114,6 +114,7 @@ class OktaOrgCleaner {
         linkedObjectApi.listLinkedObjectDefinitions().stream()
             .filter { it.getPrimary().getName().startsWith("java_sdk_it_") }
             .forEach {
+                log.info("\t ${it.getPrimary().getName()}")
                 linkedObjectApi.deleteLinkedObjectDefinition(it.getPrimary().getName())
             }
 
@@ -123,6 +124,7 @@ class OktaOrgCleaner {
         inlineHookApi.listInlineHooks(null).stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
+                log.info("\t ${it.getName()}")
                 inlineHookApi.deactivateInlineHook(it.getId())
                 inlineHookApi.deleteInlineHook(it.getId())
             }
@@ -133,6 +135,7 @@ class OktaOrgCleaner {
         eventHookApi.listEventHooks().stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
+                log.info("\t ${it.getName()}")
                 eventHookApi.deactivateEventHook(it.getId())
                 eventHookApi.deleteEventHook(it.getId())
             }
@@ -143,15 +146,17 @@ class OktaOrgCleaner {
         userTypeApi.listUserTypes().stream()
             .filter { it.getName().startsWith("java_sdk_it_") && !it.getDefault() }
             .forEach {
+                log.info("\t ${it.getName()}")
                 userTypeApi.deleteUserType(it.getId())
             }
 
         AuthorizationServerApi authorizationServerApi = new AuthorizationServerApi(client)
 
         log.info("Deleting AuthorizationServers:")
-        authorizationServerApi.listAuthorizationServers(null, "1000", null).stream()
+        authorizationServerApi.listAuthorizationServers(null, "100", null).stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
+                log.info("\t ${it.getName()}")
                 authorizationServerApi.deactivateAuthorizationServer(it.getId())
                 authorizationServerApi.deleteAuthorizationServer(it.getId())
             }
@@ -159,9 +164,10 @@ class OktaOrgCleaner {
         IdentityProviderApi identityProviderApi = new IdentityProviderApi(client)
 
         log.info("Deleting IdentityProviders:")
-        identityProviderApi.listIdentityProviders(null, null, 1000, null).stream()
+        identityProviderApi.listIdentityProviders(null, null, 100, null).stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
+                log.info("\t ${it.getName()}")
                 identityProviderApi.deactivateIdentityProvider(it.getId())
                 identityProviderApi.deleteIdentityProvider(it.getId())
             }
@@ -172,6 +178,7 @@ class OktaOrgCleaner {
         templateApi.listSmsTemplates(null).stream()
             .filter { it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
+                log.info("\t ${it.getName()}")
                 templateApi.deleteSmsTemplate(it.getId())
             }
     }
