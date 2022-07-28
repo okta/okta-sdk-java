@@ -82,17 +82,17 @@ trait ClientProvider implements IHookable {
 
             if (!isRunningWithTestServer() && testResources != null) {
                 // delete any users that may collide with the test that is about to run
-                testResources.users().each { email ->
-                    deleteUser(email, client)
+                testResources.users().each { id ->
+                    deleteUser(id, client)
                 }
 
-//                testResources.groups().each { groupName ->
-//                    deleteGroup(groupName, client)
-//                }
-//
-//                testResources.rules().each { ruleName ->
-//                    deleteRule(ruleName, client)
-//                }
+                testResources.groups().each { id ->
+                    deleteGroup(id, client)
+                }
+
+                testResources.rules().each { id ->
+                    deleteGroupRule(id, client)
+                }
             }
             // run the tests
             callBack.runTestMethod(testResult)
@@ -119,84 +119,95 @@ trait ClientProvider implements IHookable {
         toBeDeleted.add(deletable)
     }
 
-    void deleteApp(Application app, ApiClient client) {
-        log.info("Deleting App: {}", app.getId())
+    void deleteApp(String id, ApiClient client) {
+        log.info("Deleting App: {}", id)
 
         ApplicationApi applicationApi = new ApplicationApi(client)
+        Application appToDelete = applicationApi.getApplication(id, null)
 
-        if (app.getStatus() == "ACTIVE") {
-            // deactivate
-            applicationApi.deactivateApplication(app.getId())
+        if (appToDelete != null) {
+            if (appToDelete.getStatus() == "ACTIVE") {
+                // deactivate
+                applicationApi.deactivateApplication(appToDelete.getId())
+            }
+            // delete
+            applicationApi.deleteApplication(appToDelete.getId())
         }
-        // delete
-        applicationApi.deleteApplication(app.getId())
     }
 
-    void deleteUser(User user, ApiClient client) {
-        log.info("Deleting User: {}", user.getProfile().getEmail())
-
+    void deleteUser(String id, ApiClient client) {
+        log.info("Deleting User: {}", id)
         UserApi userApi = new UserApi(client)
+        User userToDelete = userApi.getUser(id)
 
-        if (user.getStatus() != "DEPROVISIONED") {
-            // deactivate
-            userApi.deactivateUser(user.id, false)
+        if (userToDelete != null) {
+            if (userToDelete.getStatus() != "DEPROVISIONED") {
+                // deactivate
+                userApi.deactivateUser(userToDelete.getId(), false)
+            }
+            // delete
+            userApi.deactivateOrDeleteUser(userToDelete.getId(), false)
         }
-        // delete
-        userApi.deactivateOrDeleteUser(user.id, false)
     }
 
-    void deleteUserType(UserType userType, ApiClient client) {
-        log.info("Deleting UserType: {}", userType.getId())
-
+    void deleteUserType(String id, ApiClient client) {
+        log.info("Deleting UserType: {}", id)
         UserTypeApi userTypeApi= new UserTypeApi(client)
-        userTypeApi.deleteUserType(userType.getId())
+        UserType userTypeToDelete = userTypeApi.getUserType(id)
+
+        if (userTypeToDelete != null) {
+            userTypeApi.deleteUserType(userTypeToDelete.getId())
+        }
     }
 
-    void deleteGroup(Group group, ApiClient client) {
-        log.info("Deleting Group: {}", group.getId())
-
+    void deleteGroup(String id, ApiClient client) {
+        log.info("Deleting Group: {}", id)
         GroupApi groupApi = new GroupApi(client)
-        groupApi.deleteGroup(group.getId())
+        Group groupToDelete = groupApi.getGroup(id)
+
+        if (groupToDelete != null) {
+            groupApi.deleteGroup(groupToDelete.getId())
+        }
     }
 
-    void deleteIdp(IdentityProvider idp, ApiClient client) {
-        log.info("Deleting IdP: {} {}", idp.getId(), idp.getName())
+    void deleteGroupRule(String id, ApiClient client) {
+        log.info("Deleting GroupRule: {}", id)
+        GroupApi groupApi = new GroupApi(client)
+        GroupRule groupRuleToDelete = groupApi.getGroupRule(id, null)
 
+        if (groupRuleToDelete != null) {
+            groupApi.deleteGroup(groupRuleToDelete.getId())
+        }
+    }
+
+    void deleteIdp(String id, ApiClient client) {
+        log.info("Deleting IdP: {} {}", id)
         IdentityProviderApi idpApi = new IdentityProviderApi(client)
+        IdentityProvider idpToDelete = idpApi.getIdentityProvider(id)
 
-        if (idp.getStatus() == "ACTIVE") {
-            // deactivate
-            idpApi.deactivateIdentityProvider(idp.getId())
+        if (idpToDelete != null) {
+            if (idpToDelete.getStatus() == "ACTIVE") {
+                // deactivate
+                idpApi.deactivateIdentityProvider(idpToDelete.getId())
+            }
+            // delete
+            idpApi.deleteIdentityProvider(idpToDelete.getId())
         }
-
-        // delete
-        idpApi.deleteIdentityProvider(idp.getId())
     }
 
-    void deleteInlineHook(InlineHook inlineHook, ApiClient client) {
-        log.info("Deleting InlineHook: {}", inlineHook.getId())
-
+    void deleteInlineHook(String id, ApiClient client) {
+        log.info("Deleting InlineHook: {}", id)
         InlineHookApi inlineHookApi = new InlineHookApi(client)
-        if (inlineHook.getStatus() == "ACTIVE") {
-            // deactivate
-            inlineHookApi.deactivateInlineHook(inlineHook.getId())
+        InlineHook inlineHookToDelete = inlineHookApi.getInlineHook(id)
+
+        if (inlineHookToDelete != null) {
+            if (inlineHookToDelete.getStatus() == "ACTIVE") {
+                // deactivate
+                inlineHookApi.deactivateInlineHook(inlineHookToDelete.getId())
+            }
+            // delete
+            inlineHookApi.deleteInlineHook(inlineHookToDelete.getId())
         }
-
-        // delete
-        inlineHookApi.deleteInlineHook(inlineHook.getId())
-    }
-
-    void deletePolicyRule(InlineHook inlineHook, ApiClient client) {
-        log.info("Deleting InlineHook: {}", inlineHook.getId())
-
-        InlineHookApi inlineHookApi = new InlineHookApi(client)
-        if (inlineHook.getStatus() == "ACTIVE") {
-            // deactivate
-            inlineHookApi.deactivateInlineHook(inlineHook.getId())
-        }
-
-        // delete
-        inlineHookApi.deleteInlineHook(inlineHook.getId())
     }
 
     @AfterMethod (groups = ["group1", "group2", "group3"])
@@ -207,27 +218,31 @@ trait ClientProvider implements IHookable {
                 try {
                     if (deletable instanceof User) {
                         User tobeDeletedUser = (User) deletable
-                        deleteUser(tobeDeletedUser, getClient())
+                        deleteUser(tobeDeletedUser.getId(), getClient())
                     }
                     else if (deletable instanceof UserType) {
                         UserType tobeDeletedUserType = (UserType) deletable
-                        deleteUserType(tobeDeletedUserType, getClient())
+                        deleteUserType(tobeDeletedUserType.getId(), getClient())
                     }
                     else if (deletable instanceof Group) {
                         Group tobeDeletedGroup = (Group) deletable
-                        deleteGroup(tobeDeletedGroup, getClient())
+                        deleteGroup(tobeDeletedGroup.getId(), getClient())
+                    }
+                    else if (deletable instanceof GroupRule) {
+                        GroupRule tobeDeletedGroupRule = (GroupRule) deletable
+                        deleteGroupRule(tobeDeletedGroupRule.getId(), getClient())
                     }
                     else if (deletable instanceof Application) {
                         Application tobeDeletedApp = (Application) deletable
-                        deleteApp(tobeDeletedApp, getClient())
+                        deleteApp(tobeDeletedApp.getId(), getClient())
                     }
                     else if (deletable instanceof IdentityProvider) {
                         IdentityProvider tobeDeletedIdp = (IdentityProvider) deletable
-                        deleteIdp(tobeDeletedIdp, getClient())
+                        deleteIdp(tobeDeletedIdp.getId(), getClient())
                     }
                     else if (deletable instanceof InlineHook) {
                         InlineHook tobeDeletedInlineHook = (InlineHook) deletable
-                        deleteInlineHook(tobeDeletedInlineHook, getClient())
+                        deleteInlineHook(tobeDeletedInlineHook.getId(), getClient())
                     }
                 }
                 catch (Exception e) {

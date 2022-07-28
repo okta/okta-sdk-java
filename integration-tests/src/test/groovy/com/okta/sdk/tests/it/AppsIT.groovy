@@ -32,13 +32,15 @@ import static org.hamcrest.Matchers.notNullValue
  */
 class AppsIT extends ITSupport {
 
+    String prefix = "java-sdk-it-"
+
     @Test
     void basicAuthAppTest() {
 
         ApplicationApi applicationApi = new ApplicationApi(getClient())
         BasicAuthApplication basicAuthApplication = new BasicAuthApplication()
         basicAuthApplication.name("template_basic_auth")
-            .label("Sample Basic Auth App")
+            .label(prefix + UUID.randomUUID().toString())
             .signOnMode("BASIC_AUTH")
         BasicApplicationSettingsApplication basicApplicationSettingsApplication =
             new BasicApplicationSettingsApplication()
@@ -65,7 +67,7 @@ class AppsIT extends ITSupport {
         ApplicationApi applicationApi = new ApplicationApi(getClient())
         BookmarkApplication bookmarkApplication = new BookmarkApplication()
         bookmarkApplication.name("bookmark")
-            .label("Sample Bookmark App")
+            .label(prefix + UUID.randomUUID().toString())
             .signOnMode("BOOKMARK")
         BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
             new BookmarkApplicationSettingsApplication()
@@ -116,7 +118,7 @@ class AppsIT extends ITSupport {
         swaApplicationSettings.app(swaApplicationSettingsApplication)
         BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication()
         browserPluginApplication.name("template_swa")
-        browserPluginApplication.label("Sample Plugin App")
+        browserPluginApplication.label(prefix + UUID.randomUUID().toString())
         browserPluginApplication.settings(swaApplicationSettings)
 
         // create
@@ -152,7 +154,7 @@ class AppsIT extends ITSupport {
         ApplicationApi applicationApi = new ApplicationApi(getClient())
 
         OpenIdConnectApplication openIdConnectApplication = new OpenIdConnectApplication()
-        openIdConnectApplication.label("Sample OIDC App")
+        openIdConnectApplication.label(prefix + UUID.randomUUID().toString())
         openIdConnectApplication.name("oidc_client")
         OpenIdConnectApplicationSettingsClient openIdConnectApplicationSettingsClient =
             new OpenIdConnectApplicationSettingsClient()
@@ -251,7 +253,7 @@ class AppsIT extends ITSupport {
         registerForCleanup(createdInlineHook)
 
         SamlApplication samlApplication = new SamlApplication()
-        samlApplication.label("Sample Saml App")
+        samlApplication.label(prefix + UUID.randomUUID().toString())
 
         ApplicationVisibility applicationVisibility = new ApplicationVisibility()
         applicationVisibility.autoSubmitToolbar(false)
@@ -334,7 +336,7 @@ class AppsIT extends ITSupport {
 
         SamlApplication org2OrgApplication = new SamlApplication()
         org2OrgApplication.name("okta_org2org")
-            .label("Sample Okta Org2Org App")
+            .label(prefix + UUID.randomUUID().toString())
             .signOnMode("SAML_2_0")
 
         SamlApplicationSettingsApplication samlApplicationSettingsApplication = new SamlApplicationSettingsApplication()
@@ -348,7 +350,7 @@ class AppsIT extends ITSupport {
         SamlApplication createdApp = applicationApi.createApplication(SamlApplication.class, org2OrgApplication, true, null)
         registerForCleanup(createdApp)
 
-//        File file = new File("/Users/arvindkrishnakumar/Downloads/okta_logo_favicon.png")
+//        File file = new File("/tmp/okta_logo_favicon.png")
 //        println("Uploading logo file " + file.getName() + " of size: " + file.size())
 //
 //        applicationApi.uploadApplicationLogo(createdApp.getId(), file)

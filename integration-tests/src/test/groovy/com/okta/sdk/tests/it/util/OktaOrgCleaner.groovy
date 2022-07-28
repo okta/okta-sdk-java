@@ -15,6 +15,21 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.okta.sdk.client.Clients
+import org.openapitools.client.ApiClient
+import org.openapitools.client.api.ApplicationApi
+import org.openapitools.client.api.AuthorizationServerApi
+import org.openapitools.client.api.EventHookApi
+import org.openapitools.client.api.GroupApi
+import org.openapitools.client.api.IdentityProviderApi
+import org.openapitools.client.api.InlineHookApi
+import org.openapitools.client.api.LinkedObjectApi
+import org.openapitools.client.api.PolicyApi
+import org.openapitools.client.api.TemplateApi
+import org.openapitools.client.api.UserApi
+import org.openapitools.client.api.UserTypeApi
+import org.openapitools.client.model.EventHook
+import org.openapitools.client.model.GroupRule
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -25,114 +40,139 @@ class OktaOrgCleaner {
 
     static void main(String[] args) {
 
-//        String prefix = "java-sdk-it-"
-//        String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
-//
-//        Client client = Clients.builder().build()
-//
-//        log.info("Deleting Active Users:")
-//        client.listUsers().stream()
-//            .filter { it.getProfile().getEmail().endsWith("@example.com") }
-//            .forEach {
-//                log.info("\t ${it.getProfile().getEmail()}")
-//                it.deactivate()
-//                it.delete()
-//            }
-//
-//        client.listUsers(null, "status eq \"${UserStatus.DEPROVISIONED}\"", null, null, null).stream()
-//            .forEach {
-//                log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
-//                it.delete()
-//            }
-//
-//        log.info("Deleting Applications:")
-//        client.listApplications().stream()
-//            .filter { it.getLabel().startsWith(prefix) && it.getLabel().matches(".*-${uuidRegex}.*") }
-//            .forEach {
-//                log.info("\t ${it.getLabel()}")
-//                it.deactivate()
-//                it.delete()
-//            }
-//
-//        log.info("Deleting Groups:")
-//        client.listGroups().stream()
-//            .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*") }
-//            .forEach {
-//                log.info("\t ${it.getProfile().getName()}")
-//                it.delete()
-//            }
-//
-//        log.info("Deleting Group Rules:")
-//        client.listGroupRules().stream()
-//            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
-//            .forEach {
-//                GroupRule rule = it
-//                log.info("\t ${rule.getName()}")
-//                Util.ignoring(ResourceException) {
-//                    rule.deactivate()
-//                }
-//                rule.delete()
-//            }
-//
-//        log.info("Deleting Policies:")
-//        client.listPolicies(PolicyType.OKTA_SIGN_ON.toString()).stream()
-//            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
-//            .forEach {
-//                it.delete()
-//            }
-//
-//        log.info("Deleting LinkedObjectDefinitions:")
-//        client.listLinkedObjectDefinitions().stream()
-//            .filter { it.getPrimary().getName().startsWith("java_sdk_it_") }
-//            .forEach {
-//                it.setName(it.getPrimary().getName())
-//                it.delete()
-//            }
-//
-//        log.info("Deleting InlineHooks:")
-//        client.listInlineHooks().stream()
-//            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
-//            .forEach {
-//                it.deactivate()
-//                it.delete()
-//            }
-//
-//        log.info("Deleting EventHooks:")
-//        client.listEventHooks().stream()
-//            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
-//            .forEach {
-//                it.deactivate()
-//                it.delete()
-//            }
-//
-//        log.info("Deleting UserTypes:")
-//        client.listUserTypes().stream()
-//            .filter { it.getName().startsWith("java_sdk_it_") && !it.getDefault() }
-//            .forEach {
-//                it.delete()
-//            }
-//
-//        log.info("Deleting AuthorizationServers:")
-//        client.listAuthorizationServers().stream()
-//            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
-//            .forEach {
-//                it.deactivate()
-//                it.delete()
-//            }
-//
-//        log.info("Deleting IdentityProviders:")
-//        client.listIdentityProviders().stream()
-//            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
-//            .forEach {
-//                it.deactivate()
-//                it.delete()
-//            }
-//
-//        log.info("Deleting SmsTemplates:")
-//        client.listSmsTemplates().stream()
-//            .filter { it.getName().matches(".*-${uuidRegex}.*") }
-//            .forEach {
-//                it.delete()
-//            }
+        String prefix = "java-sdk-it-"
+        String uuidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+
+        ApiClient client = Clients.builder().build()
+
+        UserApi userApi = new UserApi(client)
+
+        log.info("Deleting Active Users:")
+        userApi.listUsers(null, null, null, 'status eq \"ACTIVE\"', null, null, null)
+            .stream()
+            .filter { it.getProfile().getEmail().endsWith("@example.com") }
+            .forEach {
+                log.info("\t ${it.getProfile().getEmail()}")
+                // deactivate
+                userApi.deactivateOrDeleteUser(it.getId(), false)
+                // delete
+                userApi.deactivateOrDeleteUser(it.getId(), false)
+            }
+
+        userApi.listUsers(null, null, null, 'status eq \"DEPROVISIONED\"', null, null, null)
+            .forEach {
+                log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
+                userApi.deactivateOrDeleteUser(it.getId(), false)
+            }
+
+        ApplicationApi applicationApi = new ApplicationApi(client)
+
+        log.info("Deleting Applications:")
+        applicationApi.listApplications(null, null, 1000, null, null, true).stream()
+            .filter { it.getLabel().startsWith(prefix) && it.getLabel().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                log.info("\t ${it.getLabel()}")
+                applicationApi.deactivateApplication(it.getId())
+                applicationApi.deleteApplication(it.getId())
+            }
+
+        GroupApi groupApi = new GroupApi(client)
+
+        log.info("Deleting Groups:")
+        groupApi.listGroups(null, null, null, 1000, null).stream()
+            .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                log.info("\t ${it.getProfile().getName()}")
+                groupApi.deleteGroup(it.getId())
+            }
+
+        log.info("Deleting Group Rules:")
+        groupApi.listGroupRules(1000, null, null, null).stream()
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                GroupRule rule = it
+                log.info("\t ${rule.getName()}")
+                Util.ignoring(ResourceException) {
+                    groupApi.deactivateGroupRule(rule.getId())
+                }
+                groupApi.deleteGroupRule(rule.getId(), false)
+            }
+
+        PolicyApi policyApi = new PolicyApi(client)
+
+        log.info("Deleting Policies:")
+        policyApi.listPolicies("OKTA_SIGN_ON", null, null).stream()
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                policyApi.deactivatePolicy(it.getId())
+                policyApi.deletePolicy(it.getId())
+            }
+
+        LinkedObjectApi linkedObjectApi = new LinkedObjectApi(client)
+
+        log.info("Deleting LinkedObjectDefinitions:")
+        linkedObjectApi.listLinkedObjectDefinitions().stream()
+            .filter { it.getPrimary().getName().startsWith("java_sdk_it_") }
+            .forEach {
+                linkedObjectApi.deleteLinkedObjectDefinition(it.getPrimary().getName())
+            }
+
+        InlineHookApi inlineHookApi = new InlineHookApi(client)
+
+        log.info("Deleting InlineHooks:")
+        inlineHookApi.listInlineHooks(null).stream()
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                inlineHookApi.deactivateInlineHook(it.getId())
+                inlineHookApi.deleteInlineHook(it.getId())
+            }
+
+        EventHookApi eventHookApi = new EventHookApi(client)
+
+        log.info("Deleting EventHooks:")
+        eventHookApi.listEventHooks().stream()
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                eventHookApi.deactivateEventHook(it.getId())
+                eventHookApi.deleteEventHook(it.getId())
+            }
+
+        UserTypeApi userTypeApi = new UserTypeApi(client)
+
+        log.info("Deleting UserTypes:")
+        userTypeApi.listUserTypes().stream()
+            .filter { it.getName().startsWith("java_sdk_it_") && !it.getDefault() }
+            .forEach {
+                userTypeApi.deleteUserType(it.getId())
+            }
+
+        AuthorizationServerApi authorizationServerApi = new AuthorizationServerApi(client)
+
+        log.info("Deleting AuthorizationServers:")
+        authorizationServerApi.listAuthorizationServers(null, "1000", null).stream()
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                authorizationServerApi.deactivateAuthorizationServer(it.getId())
+                authorizationServerApi.deleteAuthorizationServer(it.getId())
+            }
+
+        IdentityProviderApi identityProviderApi = new IdentityProviderApi(client)
+
+        log.info("Deleting IdentityProviders:")
+        identityProviderApi.listIdentityProviders(null, null, 1000, null).stream()
+            .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                identityProviderApi.deactivateIdentityProvider(it.getId())
+                identityProviderApi.deleteIdentityProvider(it.getId())
+            }
+
+        TemplateApi templateApi = new TemplateApi(client)
+
+        log.info("Deleting SmsTemplates:")
+        templateApi.listSmsTemplates(null).stream()
+            .filter { it.getName().matches(".*-${uuidRegex}.*") }
+            .forEach {
+                templateApi.deleteSmsTemplate(it.getId())
+            }
     }
 }

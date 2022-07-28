@@ -31,7 +31,7 @@ import java.util.Set;
  * Proxy and Cache configuration.  Understanding caching is extremely important when creating a Client instance, so
  * please ensure you read the <em>Caching</em> section below.</p>
  *
- * <h1>Usage</h1>
+ * Usage:
  *
  * <p>The simplest usage is to just call the {@link #build() build()} method, for example:</p>
  *

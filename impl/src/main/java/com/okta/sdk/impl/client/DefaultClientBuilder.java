@@ -28,6 +28,7 @@ import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.ClientBuilder;
+import com.okta.sdk.error.ErrorHandler;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
@@ -293,6 +294,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         messageConverters.add(messageConverter);
 
         RestTemplate restTemplate = new RestTemplate(messageConverters);
+        restTemplate.setErrorHandler(new ErrorHandler());
 
         // allows us to read the response more than once - necessary for debugging
         restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));

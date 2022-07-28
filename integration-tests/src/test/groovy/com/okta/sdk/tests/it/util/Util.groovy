@@ -183,17 +183,17 @@ class Util {
 //        if (present) Assert.fail("User not found in group")
 //        if (!present) Assert.fail("User found in group")
 //    }
-//
-//    static def ignoring = { Class<? extends Throwable> catchMe, Closure callMe ->
-//        try {
-//            callMe.call()
-//        } catch(e) {
-//            if (!e.class.isAssignableFrom(catchMe)) {
-//                throw e
-//            }
-//        }
-//    }
-//
+
+    static def ignoring = { Class<? extends Throwable> catchMe, Closure callMe ->
+        try {
+            callMe.call()
+        } catch(e) {
+            if (!e.class.isAssignableFrom(catchMe)) {
+                throw e
+            }
+        }
+    }
+
     static <T extends Throwable> T expect(Class<T> catchMe, Closure closure) {
         try {
             closure.call()

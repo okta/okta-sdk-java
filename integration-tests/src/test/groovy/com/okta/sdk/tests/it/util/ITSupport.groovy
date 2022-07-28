@@ -89,7 +89,7 @@ abstract class ITSupport implements ClientProvider {
 
     @BeforeMethod
     void log(Method method) {
-        log.info("Running " + method.getProperties().get("clazz").name + " - " + method.getName())
+        log.info("Running" + " - " + method.getName())
     }
 
     @AfterMethod

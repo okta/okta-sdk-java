@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.error.ResourceException
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
 import com.okta.sdk.resource.common.PagedList
 import com.okta.sdk.resource.group.GroupBuilder
@@ -24,7 +25,6 @@ import com.okta.sdk.tests.it.util.ITSupport
 import org.apache.commons.lang3.RandomStringUtils
 import org.openapitools.client.api.*
 import org.openapitools.client.model.*
-import org.springframework.web.client.HttpClientErrorException
 import org.testng.annotations.Test
 
 import java.nio.charset.StandardCharsets
@@ -50,13 +50,10 @@ class UsersIT extends ITSupport {
         UserApi userApi = new UserApi(getClient())
 
         // deactivate
-        userApi.deactivateOrDeleteUser(user.getId(), false)
+        userApi.deactivateUser(user.getId(), false)
 
         User retrievedUser = userApi.getUser(user.getId())
         assertThat(retrievedUser.getStatus(), equalTo("DEPROVISIONED"))
-
-        // delete
-        userApi.deactivateOrDeleteUser(user.getId(), false)
     }
 
     @Test (groups = "group2")
@@ -251,7 +248,7 @@ class UsersIT extends ITSupport {
     }
 
     // TODO: enable it after fixing the inheritance issue
-    @Test(expectedExceptions = HttpClientErrorException, groups = "group2", enabled = false)
+    @Test(expectedExceptions = ResourceException, groups = "group2", enabled = false)
     void changeStrictPasswordTest() {
 
         def password = 'Passw0rd!2@3#'
@@ -349,7 +346,7 @@ class UsersIT extends ITSupport {
         userApi.getUser(user.getId())
     }
 
-    @Test(expectedExceptions = HttpClientErrorException, groups = "group2")
+    @Test(expectedExceptions = ResourceException, groups = "group2")
     @Scenario("user-change-recovery-question")
     void changeRecoveryQuestionTest() {
 
@@ -480,7 +477,7 @@ class UsersIT extends ITSupport {
         assertThat token.getResetPasswordUrl(), notNullValue()
     }
 
-    @Test(expectedExceptions = HttpClientErrorException, groups = "group2")
+    @Test (groups = "group2")
     @Scenario("user-get")
     void getUserTest() {
 
@@ -515,7 +512,9 @@ class UsersIT extends ITSupport {
         userApi.deactivateOrDeleteUser(user.getId(), false)
 
         // 4. get user expect 404
-        userApi.getUser(email)
+        expect(ResourceException) {
+            userApi.getUser(email)
+        }
     }
 
     @Test (groups = "group2")
@@ -663,11 +662,13 @@ class UsersIT extends ITSupport {
         assertThat(match.isPresent(), is(true))
     }
 
-    @Test(expectedExceptions = HttpClientErrorException, groups = "group2")
+    @Test(groups = "group2")
     void getUserInvalidUserId() {
-        UserApi userApi = new UserApi(getClient())
         def userId = "invalid-user-id-${uniqueTestName}@example.com"
-        userApi.getUser(userId)
+        UserApi userApi = new UserApi(getClient())
+        expect(ResourceException) {
+            userApi.getUser(userId)
+        }
     }
 
     @Test (groups = "group2")
