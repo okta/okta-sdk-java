@@ -139,6 +139,12 @@ this.retryTemplate = buildRetryTemplate();
 init();
 }
 
+public ApiClient(RestTemplate restTemplate) {
+this.restTemplate = restTemplate;
+this.retryTemplate = buildRetryTemplate();
+init();
+}
+
 @Autowired
 public ApiClient(RestTemplate restTemplate, RetryTemplate retryTemplate) {
 this.restTemplate = restTemplate;
