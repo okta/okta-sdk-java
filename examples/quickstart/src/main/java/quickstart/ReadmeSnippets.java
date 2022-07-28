@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.client.Clients;
+import com.okta.sdk.error.RetryableException;
 import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
@@ -58,6 +59,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.retry.backoff.FixedBackOffPolicy;
+import org.springframework.retry.policy.SimpleRetryPolicy;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -309,6 +313,7 @@ public class ReadmeSnippets {
     private static ApiClient buildApiClient(String orgBaseUrl, String apiKey) {
 
         ApiClient apiClient = new ApiClient(buildRestTemplate());
+        // (or) ApiClient apiClient = new ApiClient(buildRestTemplate(), buildRetryTemplate());
         apiClient.setBasePath(orgBaseUrl);
         apiClient.setApiKey(apiKey);
         apiClient.setApiKeyPrefix("SSWS");
@@ -339,5 +344,19 @@ public class ReadmeSnippets {
         // This allows us to read the response more than once - Necessary for debugging.
         restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
         return restTemplate;
+    }
+
+    private RetryTemplate buildRetryTemplate() {
+        // 5 retry attempts - retry only on RetryableException with FixedBackOffPolicy
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5,
+            Collections.singletonMap(RetryableException.class, true));
+
+        FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
+
+        RetryTemplate retryTemplate = new RetryTemplate();
+        retryTemplate.setRetryPolicy(retryPolicy);
+        retryTemplate.setBackOffPolicy(backOffPolicy);
+
+        return retryTemplate;
     }
 }
