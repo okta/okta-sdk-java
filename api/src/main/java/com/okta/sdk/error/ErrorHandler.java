@@ -16,6 +16,7 @@
 package com.okta.sdk.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JacksonException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
@@ -49,6 +50,11 @@ public class ErrorHandler implements ResponseErrorHandler {
 
         final int statusCode = httpResponse.getRawStatusCode();
         final String message = new String(FileCopyUtils.copyToByteArray(httpResponse.getBody()));
+
+        if (!isValid(message)) {
+            throw new ResourceException(new NonJsonError(message));
+        }
+
         final Map<String, Object> errorMap = mapper.readValue(message, Map.class);
 
         Error error = new Error() {
@@ -99,5 +105,20 @@ public class ErrorHandler implements ResponseErrorHandler {
             throw new RetryableException(error);
         }
         throw new ResourceException(error);
+    }
+
+    /**
+     * Backend might return a non JSON error message (HTML), so check if error message is a valid JSON.
+     *
+     * @param json error message
+     * @return true if json is valid, false otherwise
+     */
+    boolean isValid(String json) {
+        try {
+            mapper.readTree(json);
+        } catch (JacksonException e) {
+            return false;
+        }
+        return true;
     }
 }

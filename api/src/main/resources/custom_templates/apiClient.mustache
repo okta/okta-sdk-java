@@ -743,7 +743,7 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
 
                             RequestEntity<Object> requestEntity = requestBuilder.body(selectBody(body, formParams, contentType));
 
-                            ResponseEntity<T> responseEntity = retryTemplate.execute(context ->restTemplate.exchange(requestEntity, returnType));
+                            ResponseEntity<T> responseEntity = retryTemplate.execute(context -> restTemplate.exchange(requestEntity, returnType));
 
                                     if (responseEntity.getStatusCode().is2xxSuccessful()) {
                                     return responseEntity;
