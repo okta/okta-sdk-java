@@ -16,10 +16,6 @@
  */
 package com.okta.sdk.impl.client;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.commons.configcheck.ConfigurationValidator;
 import com.okta.commons.http.config.Proxy;
 import com.okta.commons.lang.Assert;
@@ -44,6 +40,16 @@ import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
+
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.ProxyAuthenticationStrategy;
+
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.openapitools.client.ApiClient;
@@ -56,6 +62,11 @@ import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -276,6 +287,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
         // for now (beta release) we support only SSWS, OAuth2 support to be added soon
         apiClient.setApiKeyPrefix("SSWS");
+
         return apiClient;
     }
 
@@ -300,15 +312,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         RestTemplate restTemplate = new RestTemplate(messageConverters);
         restTemplate.setErrorHandler(new ErrorHandler());
-
-        HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-        httpRequestFactory.setConnectionRequestTimeout(clientConfig.getConnectionTimeout() * 1000);
-        httpRequestFactory.setConnectTimeout(clientConfig.getConnectionTimeout() * 1000);
-        httpRequestFactory.setReadTimeout(clientConfig.getConnectionTimeout() * 1000);
-
-        // allows us to read the response more than once - necessary for debugging
-        //restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
-        restTemplate.setRequestFactory(httpRequestFactory);
+        restTemplate.setRequestFactory(requestFactory(clientConfig));
 
         return restTemplate;
     }
@@ -324,6 +328,32 @@ public class DefaultClientBuilder implements ClientBuilder {
         retryTemplate.setBackOffPolicy(backOffPolicy);
 
         return retryTemplate;
+    }
+
+    private HttpComponentsClientHttpRequestFactory requestFactory(ClientConfiguration clientConfig) {
+        final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+
+        if (clientConfig.getProxy() != null) {
+            clientBuilder.useSystemProperties();
+            clientBuilder.setProxy(new HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
+            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
+            UsernamePasswordCredentials usernamePasswordCredentials =
+                new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword());
+            credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
+            clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+            clientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
+        }
+
+        final CloseableHttpClient client = clientBuilder.build();
+
+        final HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        clientHttpRequestFactory.setHttpClient(client);
+        clientHttpRequestFactory.setConnectionRequestTimeout(clientConfig.getConnectionTimeout() * 1000);
+        clientHttpRequestFactory.setConnectTimeout(clientConfig.getConnectionTimeout() * 1000);
+        clientHttpRequestFactory.setReadTimeout(clientConfig.getConnectionTimeout() * 1000);
+
+        return clientHttpRequestFactory;
     }
 
     @Override

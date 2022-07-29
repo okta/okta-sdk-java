@@ -44,6 +44,8 @@ class OktaOrgCleaner {
 
         ApiClient client = Clients.builder().build()
 
+        log.info("Cleaning Okta Org: {}", client.getBasePath())
+
         UserApi userApi = new UserApi(client)
 
         log.info("Deleting Active Users:")
