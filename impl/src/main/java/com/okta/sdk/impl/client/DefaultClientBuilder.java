@@ -282,8 +282,10 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
         }
 
-        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig), retryTemplate(this.clientConfig));
+        ApiClient apiClient = new ApiClient();
         apiClient.setBasePath(this.clientConfig.getBaseUrl());
+        apiClient.setRestTemplate(restTemplate(this.clientConfig));
+        apiClient.setRetryTemplate(retryTemplate(this.clientConfig));
         apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
         // for beta release, we support only SSWS, OAuth2 support planned to be added in later release
         apiClient.setApiKeyPrefix("SSWS");

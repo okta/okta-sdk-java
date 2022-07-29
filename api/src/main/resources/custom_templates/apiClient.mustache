@@ -133,23 +133,8 @@ private Map<String, Authentication> authentications;
 private DateFormat dateFormat;
 
 public ApiClient() {
-this.restTemplate = buildRestTemplate();
-this.retryTemplate = buildRetryTemplate();
 init();
 }
-
-public ApiClient(RestTemplate restTemplate) {
-this.restTemplate = restTemplate;
-this.retryTemplate = buildRetryTemplate();
-init();
-}
-
-public ApiClient(RestTemplate restTemplate, RetryTemplate retryTemplate) {
-this.restTemplate = restTemplate;
-this.retryTemplate = retryTemplate;
-init();
-}
-
 
 protected void init() {
 // Use RFC3339 format for date and datetime.
@@ -174,6 +159,9 @@ authentications = new HashMap<String, Authentication>();{{#authMethods}}{{#isBas
     authentications.put("{{name}}", new OAuth());{{/isOAuth}}{{/authMethods}}
 // Prevent the authentications from being modified.
 authentications = Collections.unmodifiableMap(authentications);
+
+restTemplate = buildRestTemplate();
+retryTemplate = buildRetryTemplate();
 }
 
 /**
@@ -194,6 +182,22 @@ return basePath;
 public ApiClient setBasePath(String basePath) {
 this.basePath = basePath;
 return this;
+}
+
+public RestTemplate getRestTemplate() {
+return restTemplate;
+}
+
+public void setRestTemplate(RestTemplate restTemplate) {
+this.restTemplate = restTemplate;
+}
+
+public RetryTemplate getRetryTemplate() {
+return retryTemplate;
+}
+
+public void setRetryTemplate(RetryTemplate retryTemplate) {
+this.retryTemplate = retryTemplate;
 }
 
 /**
