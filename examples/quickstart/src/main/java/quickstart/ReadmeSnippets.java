@@ -15,13 +15,8 @@
  */
 package quickstart;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.client.Clients;
-import com.okta.sdk.error.RetryableException;
 import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
@@ -48,7 +43,6 @@ import org.openapitools.client.model.UserFactor;
 import org.openapitools.client.model.UserProfile;
 import org.openapitools.client.model.VerifyFactorRequest;
 import org.openapitools.client.model.VerifyUserFactorResponse;
-import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -56,16 +50,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.BufferingClientHttpRequestFactory;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.retry.backoff.FixedBackOffPolicy;
-import org.springframework.retry.policy.SimpleRetryPolicy;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -312,51 +298,14 @@ public class ReadmeSnippets {
 
     private static ApiClient buildApiClient(String orgBaseUrl, String apiKey) {
 
-        ApiClient apiClient = new ApiClient(buildRestTemplate());
-        // (or) ApiClient apiClient = new ApiClient(buildRestTemplate(), buildRetryTemplate());
+        ApiClient apiClient = new ApiClient();
+        // set your custom rest template and retry template,
+        // not setting it would use the default templates
+        //apiClient.setRestTemplate();
+        //apiClient.setRetryTemplate(retryTemplate(this.clientConfig));
         apiClient.setBasePath(orgBaseUrl);
         apiClient.setApiKey(apiKey);
         apiClient.setApiKeyPrefix("SSWS");
         return apiClient;
-    }
-
-    private static RestTemplate buildRestTemplate() {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(objectMapper);
-        ObjectMapper mapper = messageConverter.getObjectMapper();
-        messageConverter.setSupportedMediaTypes(Arrays.asList(
-            MediaType.APPLICATION_JSON,
-            MediaType.parseMediaType("application/x-pem-file"),
-            MediaType.parseMediaType("application/x-x509-ca-cert"),
-            MediaType.parseMediaType("application/pkix-cert")));
-        mapper.registerModule(new JavaTimeModule());
-        mapper.registerModule(new JsonNullableModule());
-
-        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-        messageConverters.add(messageConverter);
-
-        RestTemplate restTemplate = new RestTemplate(messageConverters);
-
-        // This allows us to read the response more than once - Necessary for debugging.
-        restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
-        return restTemplate;
-    }
-
-    private RetryTemplate buildRetryTemplate() {
-        // 5 retry attempts - retry only on RetryableException with FixedBackOffPolicy
-        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5,
-            Collections.singletonMap(RetryableException.class, true));
-
-        FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
-
-        RetryTemplate retryTemplate = new RetryTemplate();
-        retryTemplate.setRetryPolicy(retryPolicy);
-        retryTemplate.setBackOffPolicy(backOffPolicy);
-
-        return retryTemplate;
     }
 }
