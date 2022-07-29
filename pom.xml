@@ -171,7 +171,7 @@
             <dependency>
                 <groupId>com.google.auto.service</groupId>
                 <artifactId>auto-service</artifactId>
-                <version>1.0-rc6</version>
+                <version>1.0.1</version>
                 <optional>true</optional>
             </dependency>
 
@@ -347,6 +347,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
+                    <version>7.1.1</version>
                     <configuration>
                         <!-- no js is used in this project -->
                         <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>

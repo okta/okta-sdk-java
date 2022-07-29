@@ -19,8 +19,9 @@
   -->
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
 
+    <!-- False Positive - See https://github.com/jeremylong/DependencyCheck/issues/4558 -->
     <suppress>
-        <notes><![CDATA[ file name: spring-aop-5.3.20.jar]]></notes>
+        <notes><![CDATA[ file name: spring-core-5.3.20.jar]]></notes>
         <cve>CVE-2016-1000027</cve>
     </suppress>
 

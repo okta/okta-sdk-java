@@ -329,13 +329,7 @@ public boolean equals(Object o) {
     return o.toString().replace("\n", "\n    ");
     }
 
-    public static class CustomTypeAdapterFactory implements com.google.gson.TypeAdapterFactory {
-    @Override
-    public <T> com.google.gson.TypeAdapter<T> create(com.google.gson.Gson gson, com.google.gson.reflect.TypeToken<T> typeToken) {
-    //TODO: implement me!
-    return null;
-    }
-    }
+
 {{#parcelableModel}}
 
         public void writeToParcel(Parcel out, int flags) {
