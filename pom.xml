@@ -40,9 +40,6 @@
         <jjwt.version>0.11.5</jjwt.version>
         <okta.sdk.previousVersion>8.2.1</okta.sdk.previousVersion>
         <okta.commons.version>1.3.0</okta.commons.version>
-        <!-- true - fetch spec from npm; false - skips the fetch and uses the local copy (in PROJECT_ROOT/src/swagger/api.yaml) -->
-        <npm.exec.skip>false</npm.exec.skip>
-
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
 
@@ -219,42 +216,6 @@
     <build>
         <pluginManagement>
             <plugins>
-<!--                <plugin>-->
-<!--                    <groupId>org.codehaus.mojo</groupId>-->
-<!--                    <artifactId>exec-maven-plugin</artifactId>-->
-<!--                    <version>1.6.0</version>-->
-<!--                    <executions>-->
-<!--                        <execution>-->
-<!--                            <id>npm install (initialize)</id>-->
-<!--                            <goals>-->
-<!--                                <goal>exec</goal>-->
-<!--                            </goals>-->
-<!--                            <phase>generate-sources</phase>-->
-<!--                            <configuration>-->
-<!--                                <skip>${npm.exec.skip}</skip>-->
-<!--                                <executable>npm</executable>-->
-<!--                                <arguments>-->
-<!--                                    <argument>install</argument>-->
-<!--                                </arguments>-->
-<!--                            </configuration>-->
-<!--                        </execution>-->
-<!--                        <execution>-->
-<!--                            <id>copy to swagger</id>-->
-<!--                            <goals>-->
-<!--                                <goal>exec</goal>-->
-<!--                            </goals>-->
-<!--                            <phase>generate-sources</phase>-->
-<!--                            <configuration>-->
-<!--                                <skip>${npm.exec.skip}</skip>-->
-<!--                                <executable>sh</executable>-->
-<!--                                <arguments>-->
-<!--                                    <argument>-c</argument>-->
-<!--                                    <argument>mkdir -p ${project.basedir}/../src/swagger &amp;&amp; cp ${project.basedir}/../node_modules/@okta/openapi/dist/spec.yaml ${project.basedir}/../src/swagger/api.yaml</argument>-->
-<!--                                </arguments>-->
-<!--                            </configuration>-->
-<!--                        </execution>-->
-<!--                    </executions>-->
-<!--                </plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>

@@ -136,6 +136,11 @@ public ApiClient() {
 init();
 }
 
+public ApiClient(RestTemplate restTemplate) {
+this.restTemplate = restTemplate;
+init();
+}
+
 protected void init() {
 // Use RFC3339 format for date and datetime.
 // See http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14
@@ -160,7 +165,9 @@ authentications = new HashMap<String, Authentication>();{{#authMethods}}{{#isBas
 // Prevent the authentications from being modified.
 authentications = Collections.unmodifiableMap(authentications);
 
+if (restTemplate == null) {
 restTemplate = buildRestTemplate();
+}
 retryTemplate = buildRetryTemplate();
 }
 
@@ -182,22 +189,6 @@ return basePath;
 public ApiClient setBasePath(String basePath) {
 this.basePath = basePath;
 return this;
-}
-
-public RestTemplate getRestTemplate() {
-return restTemplate;
-}
-
-public void setRestTemplate(RestTemplate restTemplate) {
-this.restTemplate = restTemplate;
-}
-
-public RetryTemplate getRetryTemplate() {
-return retryTemplate;
-}
-
-public void setRetryTemplate(RetryTemplate retryTemplate) {
-this.retryTemplate = retryTemplate;
 }
 
 /**
