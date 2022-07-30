@@ -29,6 +29,7 @@ import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.error.ErrorHandler;
+import com.okta.sdk.error.RetryableException;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
@@ -59,6 +60,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.retry.backoff.FixedBackOffPolicy;
+import org.springframework.retry.policy.SimpleRetryPolicy;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -75,6 +79,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -274,7 +279,7 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
         }
 
-        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig));
+        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig), retryTemplate(this.clientConfig));
         apiClient.setBasePath(this.clientConfig.getBaseUrl());
         apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
         // for beta release, we support only SSWS, OAuth2 support planned to be added in later release
@@ -309,18 +314,18 @@ public class DefaultClientBuilder implements ClientBuilder {
         return restTemplate;
     }
 
-//    private RetryTemplate retryTemplate(ClientConfiguration clientConfig) {
-//        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(clientConfig.getRetryMaxAttempts(),
-//            Collections.singletonMap(RetryableException.class, true));
-//
-//        FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
-//
-//        RetryTemplate retryTemplate = new RetryTemplate();
-//        retryTemplate.setRetryPolicy(retryPolicy);
-//        retryTemplate.setBackOffPolicy(backOffPolicy);
-//
-//        return retryTemplate;
-//    }
+    private RetryTemplate retryTemplate(ClientConfiguration clientConfig) {
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(clientConfig.getRetryMaxAttempts(),
+            Collections.singletonMap(RetryableException.class, true));
+
+        FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
+
+        RetryTemplate retryTemplate = new RetryTemplate();
+        retryTemplate.setRetryPolicy(retryPolicy);
+        retryTemplate.setBackOffPolicy(backOffPolicy);
+
+        return retryTemplate;
+    }
 
     private HttpComponentsClientHttpRequestFactory requestFactory(ClientConfiguration clientConfig) {
         final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
