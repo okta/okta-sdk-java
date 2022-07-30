@@ -143,6 +143,12 @@ this.restTemplate = restTemplate;
 init();
 }
 
+public ApiClient(RestTemplate restTemplate, RetryTemplate retryTemplate) {
+this.restTemplate = restTemplate;
+this.retryTemplate = retryTemplate;
+init();
+}
+
 protected void init() {
 // Use RFC3339 format for date and datetime.
 // See http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14
@@ -829,6 +835,7 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                                 RetryTemplate retryTemplate = new RetryTemplate();
                                                 retryTemplate.setRetryPolicy(retryPolicy);
                                                 retryTemplate.setBackOffPolicy(backOffPolicy);
+                                                retryTemplate.setThrowLastExceptionOnExhausted(true);
                                                 return retryTemplate;
                                                 }
 
