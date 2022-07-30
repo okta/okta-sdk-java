@@ -50,10 +50,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.retry.policy.SimpleRetryPolicy;
 {{#openApiNullable}}
     import org.openapitools.jackson.nullable.JsonNullableModule;
 {{/openApiNullable}}
-
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -85,6 +85,8 @@ import java.util.stream.Collectors;
 {{/jsr310}}
 
 import com.okta.commons.lang.ApplicationInfo;
+import com.okta.sdk.error.RetryableException;
+import org.springframework.retry.backoff.FixedBackOffPolicy;
 
 import {{invokerPackage}}.auth.Authentication;
 {{#hasHttpBasicMethods}}
@@ -819,7 +821,15 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                                 }
 
                                                 protected RetryTemplate buildRetryTemplate() {
-                                                return new RetryTemplate();
+                                                SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5, //TODO - get this from client config
+                                                Collections.singletonMap(RetryableException.class, true));
+
+                                                FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
+
+                                                RetryTemplate retryTemplate = new RetryTemplate();
+                                                retryTemplate.setRetryPolicy(retryPolicy);
+                                                retryTemplate.setBackOffPolicy(backOffPolicy);
+                                                return retryTemplate;
                                                 }
 
                                                 /**
