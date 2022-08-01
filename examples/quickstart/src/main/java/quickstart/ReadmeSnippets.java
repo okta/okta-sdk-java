@@ -134,13 +134,6 @@ public class ReadmeSnippets {
         userApi.partialUpdateUser(user.getId(), updateUserRequest, true);
     }
 
-    private void customAttributes() {
-        UserProfile userProfile = new UserProfile();
-        //TODO: add custom profile fields
-//        userProfile.getProperties().put("customPropertyKey", "a value");
-//        userProfile.getProperties().get("customPropertyKey");
-    }
-
     private void deleteUser() {
         UserApi userApi = new UserApi(client);
 

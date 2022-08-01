@@ -830,7 +830,6 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                                 protected RetryTemplate buildRetryTemplate() {
                                                 Map<Class<? extends Throwable>, Boolean> retryableExceptions = new HashMap<>();
                                                 retryableExceptions.put(RetryableException.class, Boolean.TRUE);
-                                                retryableExceptions.put(ResourceException.class, Boolean.TRUE); //TODO: remove this
 
                                                 SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5, retryableExceptions); //TODO - get this from client config
                                                 FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();

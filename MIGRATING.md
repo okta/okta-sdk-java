@@ -2,6 +2,69 @@
  
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
+## Migrating from 8.x.x to 10.x.x
+
+In previous versions we use an Open API v2 specification for the management APIs, and an Okta custom client generator to generate the SDK components. 
+A new version of the Open API specification v3 has been released, and new well-known open source generators are now available to automatically generate code from this specification.
+
+This revision will embrace the Open Source [openapi-generator](https://github.com/OpenAPITools/openapi-generator) to auto generate the code from Okta's reference specification (v3) of the Management APIs.
+
+### Okta client vs API clients
+
+In older version, you would instantiate a global `Client` and access the Okta resources using the Management APIs. 
+Now, each API area (such as Users, Groups, Applications etc.)  would have its own specific client, so you will only instantiate those clients you are interested in:
+
+_Earlier:_
+
+```java
+Client client = Clients.builder()
+    .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
+    .setClientCredentials(new TokenClientCredentials("{apiToken}"))
+    .build();
+
+User user = client.getUser("a-user-id");
+
+Application app = client.getApplication("appId");
+```
+
+_Now:_
+
+```java
+ApiClient client = Clients.builder()
+    .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
+    .setClientCredentials(new TokenClientCredentials("{apiToken}"))
+    .build();
+
+UserApi userApi = new UserApi(client);
+User user = userApi.getUser("userId");
+
+ApplicationApi applicationApi = new ApplicationApi(client);
+Application app = applicationApi.getApplication("appId", null);
+```
+
+### Enums
+
+In this initial Beta version, enums are *NOT* supported (they are now Strings). This is because if in the future the API adds a new value for that enum the SDK will fail in runtime until a new version is released with the latest changes.
+We will continue iterating this feature in order to provide the best experience possible.
+
+### Feature Parity
+
+In this first Beta version we ported some existing features from the previous revisions:
+
+* Inline configuration, configuration via environment variables, system properties or YAML files.
+* Manual Pagination for collections.
+* Default retry strategy for HTTP 429 response error code.
+* Proxy support.
+
+#### Coming Soon
+
+In the future releases we will provide support the following features:
+
+* OAuth for Okta.
+* Ability to provide your own retry strategy for HTTP 429 response error code.
+* Support custom profile attributes for User.
+* Caching.
+
 ## Migrating from 7.x.x to 8.0.0
 
 Version 8.0.0 of this SDK introduces few breaking changes from previous versions.
