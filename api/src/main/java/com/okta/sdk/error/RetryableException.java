@@ -1,5 +1,6 @@
 /*
- * Copyright 2017 Okta
+ * Copyright 2014 Stormpath, Inc.
+ * Modifications Copyright 2018 Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.resource.group;
+package com.okta.sdk.error;
 
-import com.okta.commons.lang.Classes;
-import org.openapitools.client.api.GroupApi;
-import org.openapitools.client.model.Group;
+public class RetryableException extends ResourceException {
 
-public interface GroupBuilder {
-
-    static GroupBuilder instance() {
-        return Classes.newInstance("com.okta.sdk.impl.resource.DefaultGroupBuilder");
+    public RetryableException(Error error) {
+        super(error);
     }
-
-    GroupBuilder setName(String name);
-
-    GroupBuilder setDescription(String description);
-
-    Group buildAndCreate(GroupApi client);
 }

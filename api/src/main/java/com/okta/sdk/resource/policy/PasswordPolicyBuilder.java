@@ -16,6 +16,7 @@
 package com.okta.sdk.resource.policy;
 
 import com.okta.commons.lang.Classes;
+import org.openapitools.client.model.PasswordPolicyRecoveryFactorSettings;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +28,7 @@ public interface PasswordPolicyBuilder extends PolicyBuilder<PasswordPolicyBuild
         return Classes.newInstance("com.okta.sdk.impl.resource.DefaultPasswordPolicyBuilder");
     }
 
-    PasswordPolicyBuilder setAuthProvider(PasswordPolicyAuthenticationProviderCondition.ProviderEnum provider);
+    PasswordPolicyBuilder setAuthProvider(String provider);
 
     default PasswordPolicyBuilder setGroups(String... groupIds) {
         return setGroups(Arrays.stream(groupIds).collect(Collectors.toList()));
@@ -75,11 +76,11 @@ public interface PasswordPolicyBuilder extends PolicyBuilder<PasswordPolicyBuild
 
     PasswordPolicyBuilder setShowLockoutFailures(Boolean showLockoutFailures);
 
-    PasswordPolicyBuilder setPasswordRecoveryOktaCall(PasswordPolicyRecoveryFactorSettings.StatusEnum pwdRecoveryOktaCall);
+    PasswordPolicyBuilder setPasswordRecoveryOktaCall(PasswordPolicyRecoveryFactorSettings pwdRecoveryOktaCall);
 
-    PasswordPolicyBuilder setPasswordRecoveryOktaSMS(PasswordPolicyRecoveryFactorSettings.StatusEnum pwdRecoveryOktaSMS);
+    PasswordPolicyBuilder setPasswordRecoveryOktaSMS(PasswordPolicyRecoveryFactorSettings pwdRecoveryOktaSMS);
 
-    PasswordPolicyBuilder setPasswordPolicyRecoveryEmailStatus(PasswordPolicyRecoveryFactorSettings.StatusEnum status);
+    PasswordPolicyBuilder setPasswordPolicyRecoveryEmailStatus(PasswordPolicyRecoveryFactorSettings status);
 
     PasswordPolicyBuilder setPasswordRecoveryTokenLifeMinutes(Integer pwdRecoveryTokenLifeMinutes);
 }

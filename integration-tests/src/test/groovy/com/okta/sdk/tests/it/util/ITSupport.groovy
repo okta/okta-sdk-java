@@ -15,21 +15,39 @@
  */
 package com.okta.sdk.tests.it.util
 
-import com.okta.sdk.client.Client
-import com.okta.sdk.resource.ExtensibleResource
-import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
-import com.okta.sdk.resource.policy.*
-import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserBuilder
+import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
+import com.okta.sdk.resource.policy.PasswordPolicyBuilder
+import com.okta.sdk.resource.policy.PolicyBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
 import com.okta.sdk.tests.Scenario
+import org.openapitools.client.api.GroupApi
+import org.openapitools.client.api.PolicyApi
+import org.openapitools.client.api.UserApi
+import org.openapitools.client.model.CreateUserRequest
+import org.openapitools.client.model.Group
+import org.openapitools.client.model.OktaSignOnPolicy
+import org.openapitools.client.model.PasswordPolicy
+import org.openapitools.client.model.Policy
+import org.openapitools.client.model.User
+import org.openapitools.client.model.UserProfile
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.util.LinkedMultiValueMap
 import org.testng.ITestContext
+import org.testng.ITestResult
+import org.testng.annotations.AfterMethod
 import org.testng.annotations.AfterSuite
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.BeforeSuite
 import org.testng.annotations.Listeners
+
+import java.lang.reflect.Method
 
 @Listeners(value = ConditionalSkipTestAnalyzer.class)
 abstract class ITSupport implements ClientProvider {
@@ -69,6 +87,16 @@ abstract class ITSupport implements ClientProvider {
         isOIEEnvironment = isOIEEnvironment()
     }
 
+    @BeforeMethod
+    void log(Method method) {
+        log.info("Running" + " - " + method.getName() + " on " + getClient().getBasePath())
+    }
+
+    @AfterMethod
+    void afterMethod(ITestResult result) {
+        log.info("Finished " + result.getInstanceName() + " - " + result.getName())
+    }
+
     @AfterSuite()
     void stop() {
         if (testServer != null) {
@@ -86,7 +114,7 @@ abstract class ITSupport implements ClientProvider {
      * - System property 'okta.it.operationDelay'
      * - Env variable 'OKTA_IT_OPERATION_DELAY'
      */
-    long getTestOperationDelay() {
+    static long getTestOperationDelay() {
         Long testDelay = Long.getLong(IT_OPERATION_DELAY)
 
         if (testDelay == null) {
@@ -98,31 +126,36 @@ abstract class ITSupport implements ClientProvider {
             }
         }
 
-        return testDelay == null ? 0 : testDelay;
+        return testDelay == null ? 0 : testDelay
     }
 
     User randomUser() {
-        Client client = getClient()
 
         def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
-        User user = UserBuilder.instance()
-                .setEmail(email)
-                .setFirstName("Joe")
-                .setLastName("Code")
-                .setPassword("Password1".toCharArray())
-                .setActive(true)
-                .buildAndCreate(client)
-        registerForCleanup(user)
 
-        return user
+        UserProfile userProfile = new UserProfile()
+            .firstName("Joe")
+            .lastName("Coder")
+            .email(email)
+            .mobilePhone("1234567890")
+            .login(email)
+
+        CreateUserRequest createUserRequest = new CreateUserRequest()
+            .profile(userProfile)
+
+        UserApi userApi = new UserApi(getClient())
+        User createdUser = userApi.createUser(createUserRequest, true, null, null)
+        return createdUser
     }
 
     Group randomGroup(String name = "java-sdk-it-${UUID.randomUUID().toString()}") {
 
+        GroupApi groupApi = new GroupApi(getClient())
+
         Group group = GroupBuilder.instance()
             .setName(name)
             .setDescription(name)
-            .buildAndCreate(getClient())
+            .buildAndCreate(groupApi)
         registerForCleanup(group)
 
         return group
@@ -130,15 +163,30 @@ abstract class ITSupport implements ClientProvider {
 
     PasswordPolicy randomPasswordPolicy(String groupId) {
 
+        PolicyApi policyApi = new PolicyApi(getClient())
+
         PasswordPolicy policy = PasswordPolicyBuilder.instance()
             .setName("java-sdk-it-" + UUID.randomUUID().toString())
-            .setStatus(Policy.StatusEnum.ACTIVE)
+            .setStatus("ACTIVE")
             .setDescription("IT created Policy")
-            .setStatus(Policy.StatusEnum.ACTIVE)
             .setPriority(1)
             .addGroup(groupId)
-        .buildAndCreate(client)
+            .buildAndCreate(policyApi)
+        registerForCleanup(policy)
 
+        return policy
+    }
+
+    Policy randomPolicy() {
+
+        PolicyApi policyApi = new PolicyApi(getClient())
+
+        Policy policy = PolicyBuilder.instance()
+            .setName("java-sdk-it-" + UUID.randomUUID().toString())
+            .setStatus("ACTIVE")
+            .setDescription("IT created Policy")
+            .setPriority(1)
+            .buildAndCreate(policyApi)
         registerForCleanup(policy)
 
         return policy
@@ -146,13 +194,14 @@ abstract class ITSupport implements ClientProvider {
 
     OktaSignOnPolicy randomSignOnPolicy(String groupId) {
 
+        PolicyApi policyApi = new PolicyApi(getClient())
+
         OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
             .setName("java-sdk-it-" + UUID.randomUUID().toString())
             .setDescription("IT created Policy")
-            .setStatus(Policy.StatusEnum.ACTIVE)
-        .setType(PolicyType.OKTA_SIGN_ON)
-        .buildAndCreate(client)
-
+            .setStatus("ACTIVE")
+            .setType("OKTA_SIGN_ON")
+            .buildAndCreate(policyApi)
         registerForCleanup(policy)
 
         return policy
@@ -160,12 +209,26 @@ abstract class ITSupport implements ClientProvider {
 
     boolean isOIEEnvironment() {
 
-        Object pipeline = client.http()
-            .get("/.well-known/okta-organization", ExtensibleResource.class)
-            .get("pipeline");
-        if(pipeline != null && pipeline.toString().equals("idx")) {
-            return true;
+        ResponseEntity<Map<String, Object>> responseEntity = getClient().invokeAPI("/.well-known/okta-organization",
+            HttpMethod.GET,
+            Collections.emptyMap(),
+            null,
+            null,
+            new HttpHeaders(),
+            new LinkedMultiValueMap<String, String>(),
+            null,
+            Collections.singletonList(MediaType.APPLICATION_JSON),
+            null,
+            new String[]{ "API_Token" },
+            new ParameterizedTypeReference<Map<String, Object>>() {})
+
+        if (responseEntity != null && responseEntity.getBody() != null) {
+            String pipeline = responseEntity.getBody().get("pipeline")
+            if (Objects.equals(pipeline, "idx")) {
+                return true
+            }
         }
-        return false;
+
+        return false
     }
 }

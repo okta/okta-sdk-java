@@ -16,8 +16,8 @@
 package com.okta.sdk.resource.policy;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.client.Client;
-
+import org.openapitools.client.api.PolicyApi;
+import org.openapitools.client.model.Policy;
 
 public interface PolicyBuilder<T extends PolicyBuilder> {
 
@@ -29,12 +29,11 @@ public interface PolicyBuilder<T extends PolicyBuilder> {
 
     T setDescription(String description);
 
-    T setType(PolicyType policyType);
+    T setType(String policyType);
 
     T setPriority(Integer priority);
 
-    T setStatus(Policy.StatusEnum status);
+    T setStatus(String status);
 
-    Policy buildAndCreate(Client client);
-
+    Policy buildAndCreate(PolicyApi client);
 }

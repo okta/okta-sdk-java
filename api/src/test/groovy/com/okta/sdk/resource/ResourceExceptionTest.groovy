@@ -17,6 +17,7 @@
 package com.okta.sdk.resource
 
 import com.okta.sdk.error.ErrorCause
+import com.okta.sdk.error.ResourceException
 import org.testng.annotations.Test
 
 import static org.testng.Assert.assertEquals
@@ -67,6 +68,4 @@ class ResourceExceptionTest {
         assertEquals ex.message, 'HTTP 400, Okta I2000 (foo)'
         assertEquals ex.id, null
     }
-
-
 }

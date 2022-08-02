@@ -16,23 +16,19 @@
  */
 package com.okta.sdk.impl.client;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.commons.configcheck.ConfigurationValidator;
-import com.okta.commons.http.RequestExecutorFactory;
-import com.okta.commons.http.config.BaseUrlResolver;
+import com.okta.commons.http.config.Proxy;
 import com.okta.commons.lang.Assert;
-import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.authc.credentials.ClientCredentials;
-import com.okta.sdk.cache.CacheConfigurationBuilder;
-import com.okta.sdk.cache.CacheManager;
-import com.okta.sdk.cache.CacheManagerBuilder;
-import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
-import com.okta.sdk.client.Client;
 import com.okta.sdk.client.ClientBuilder;
-import com.okta.commons.http.config.Proxy;
-import com.okta.sdk.impl.api.ClientCredentialsResolver;
+import com.okta.sdk.error.ErrorHandler;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
@@ -41,33 +37,49 @@ import com.okta.sdk.impl.config.PropertiesSource;
 import com.okta.sdk.impl.config.ResourcePropertiesSource;
 import com.okta.sdk.impl.config.SystemPropertiesSource;
 import com.okta.sdk.impl.config.YAMLPropertiesSource;
-import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
-import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
-import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
-import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.openapitools.client.ApiClient;
+import org.openapitools.jackson.nullable.JsonNullableModule;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.PrivateKey;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -90,24 +102,16 @@ import java.util.stream.Collectors;
  */
 public class DefaultClientBuilder implements ClientBuilder {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
-
     private static final String ENVVARS_TOKEN   = "envvars";
     private static final String SYSPROPS_TOKEN  = "sysprops";
     private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
 
-    private static final String OKTA_REQUEST_EXECUTOR_PREFIX = "okta.client.requestExecutor.";
-
-    private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
-    private RequestExecutorFactory requestExecutorFactory;
-
-    private AccessTokenRetrieverService accessTokenRetrieverService;
 
     public DefaultClientBuilder() {
         this(new DefaultResourceFactory());
@@ -152,40 +156,8 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setApiToken(props.get(DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME));
         }
 
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME))) {
-            clientConfig.setCacheManagerEnabled(Boolean.valueOf(props.get(DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME)));
-        }
-
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME))) {
-            clientConfig.setCacheManagerTtl(Long.parseLong(props.get(DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME)));
-        }
-
-        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME))) {
-            clientConfig.setCacheManagerTti(Long.parseLong(props.get(DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME)));
-        }
-
-        for (String prop : props.keySet()) {
-            boolean isPrefix = prop.length() == DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME.length();
-            if (!isPrefix && prop.startsWith(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME)) {
-                // get class from prop name
-                String cacheClass = prop.substring(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME.length() + 1, prop.length() - 4);
-                String cacheTti = props.get(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME + "." + cacheClass + ".tti");
-                String cacheTtl = props.get(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME + "." + cacheClass + ".ttl");
-                CacheConfigurationBuilder cacheBuilder = Caches.forResource(Classes.forName(cacheClass));
-                if (Strings.hasText(cacheTti)) {
-                    cacheBuilder.withTimeToIdle(Long.parseLong(cacheTti), TimeUnit.SECONDS);
-                }
-                if (Strings.hasText(cacheTtl)) {
-                    cacheBuilder.withTimeToLive(Long.parseLong(cacheTtl), TimeUnit.SECONDS);
-                }
-                if (!clientConfig.getCacheManagerCaches().containsKey(cacheClass)) {
-                    clientConfig.getCacheManagerCaches().put(cacheClass, cacheBuilder);
-                }
-            }
-        }
-
         if (Strings.hasText(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME))) {
-            allowNonHttpsForTesting = Boolean.valueOf(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME));
+            allowNonHttpsForTesting = Boolean.parseBoolean(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME))) {
@@ -248,27 +220,6 @@ public class DefaultClientBuilder implements ClientBuilder {
         if (Strings.hasText(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME))) {
             clientConfig.setRetryMaxAttempts(Integer.parseInt(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME)));
         }
-
-        clientConfig.setRequestExecutorParams(
-            props
-                .entrySet().stream()
-                .filter(x -> x.getKey().toLowerCase().startsWith(OKTA_REQUEST_EXECUTOR_PREFIX.toLowerCase()))
-                .collect(
-                    Collectors.toMap(
-                        k -> {
-                            //get property key, cut 'okta.client.requestExecutor.' and make it camelCase
-                            String camelCaseString = Arrays.stream(k.getKey()
-                                .substring(OKTA_REQUEST_EXECUTOR_PREFIX.length())
-                                .split("\\."))
-                                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1))
-                                .collect(Collectors.joining(""));
-                                return camelCaseString.substring(0, 1).toLowerCase() + camelCaseString.substring(1);
-                        },
-                        v -> v.getValue(),
-                        (oldValue, newValue) -> newValue
-                    )
-                )
-        );
     }
 
     @Override
@@ -280,12 +231,6 @@ public class DefaultClientBuilder implements ClientBuilder {
         clientConfig.setProxyPort(proxy.getPort());
         clientConfig.setProxyUsername(proxy.getUsername());
         clientConfig.setProxyPassword(proxy.getPassword());
-        return this;
-    }
-
-    @Override
-    public ClientBuilder setCacheManager(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
         return this;
     }
 
@@ -303,24 +248,6 @@ public class DefaultClientBuilder implements ClientBuilder {
         return this;
     }
 
-    public ClientBuilder setRequestAuthenticatorFactory(RequestAuthenticatorFactory factory) {
-        Assert.notNull(factory, "factory argument cannot be null");
-        this.clientConfig.setRequestAuthenticatorFactory(factory);
-        return this;
-    }
-
-    public ClientBuilder setClientCredentialsResolver(ClientCredentialsResolver clientCredentialsResolver) {
-        Assert.notNull(clientCredentialsResolver, "clientCredentialsResolver must not be null.");
-        this.clientConfig.setClientCredentialsResolver(clientCredentialsResolver);
-        return this;
-    }
-
-    public ClientBuilder setBaseUrlResolver(BaseUrlResolver baseUrlResolver) {
-        Assert.notNull(baseUrlResolver, "baseUrlResolver must not be null");
-        this.clientConfig.setBaseUrlResolver(baseUrlResolver);
-        return this;
-    }
-
     @Override
     public ClientBuilder setRetryMaxElapsed(int maxElapsed) {
         this.clientConfig.setRetryMaxElapsed(maxElapsed);
@@ -334,81 +261,78 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
-    public ClientBuilder setRequestExecutorFactory(RequestExecutorFactory requestExecutorFactory) {
-        this.requestExecutorFactory = requestExecutorFactory;
-        return this;
-    }
-
-    @Override
-    public Client build() {
-        if (!this.clientConfig.isCacheManagerEnabled()) {
-            log.debug("CacheManager disabled. Defaulting to DisabledCacheManager");
-            this.cacheManager = Caches.newDisabledCacheManager();
-        } else if (this.cacheManager == null) {
-            log.debug("No CacheManager configured. Defaulting to in-memory CacheManager with default TTL and TTI of five minutes.");
-
-            CacheManagerBuilder cacheManagerBuilder = Caches.newCacheManager()
-                    .withDefaultTimeToIdle(this.clientConfig.getCacheManagerTti(), TimeUnit.SECONDS)
-                    .withDefaultTimeToLive(this.clientConfig.getCacheManagerTtl(), TimeUnit.SECONDS);
-            if (this.clientConfig.getCacheManagerCaches().size() > 0) {
-                for (CacheConfigurationBuilder builder : this.clientConfig.getCacheManagerCaches().values()) {
-                    cacheManagerBuilder.withCache(builder);
-                }
-            }
-
-            this.cacheManager = cacheManagerBuilder.build();
-        }
+    public ApiClient build() {
 
         if (this.clientConfig.getBaseUrlResolver() == null) {
-            ConfigurationValidator.assertOrgUrl(this.clientConfig.getBaseUrl(), allowNonHttpsForTesting);
+            ConfigurationValidator.validateOrgUrl(this.clientConfig.getBaseUrl(), allowNonHttpsForTesting);
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
-        if (!isOAuth2Flow()) {
-            if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
-                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
-            } else if (this.clientConfig.getClientCredentialsResolver() == null) {
-                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
-            }
-        } else {
-            this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
-
-            validateOAuth2ClientConfig(this.clientConfig);
-
-            accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig);
-
-            OAuth2ClientCredentials oAuth2ClientCredentials =
-                new OAuth2ClientCredentials(accessTokenRetrieverService);
-
-            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
+        if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
+        } else if (this.clientConfig.getClientCredentialsResolver() == null) {
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
         }
 
-        return requestExecutorFactory == null
-            ? new DefaultClient(clientConfig, cacheManager)
-            : new DefaultClient(clientConfig, cacheManager, requestExecutorFactory.create(clientConfig));
+        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig));
+        apiClient.setBasePath(this.clientConfig.getBaseUrl());
+        apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
+        // for beta release, we support only SSWS, OAuth2 support planned to be added in later release
+        apiClient.setApiKeyPrefix("SSWS");
+
+        return apiClient;
     }
 
-    /**
-     * @since 1.6.0
-     */
-    private void validateOAuth2ClientConfig(ClientConfiguration clientConfiguration) {
-        Assert.notNull(clientConfiguration.getClientId(), "clientId cannot be null");
-        Assert.isTrue(clientConfiguration.getScopes() != null && !clientConfiguration.getScopes().isEmpty(),
-            "At least one scope is required");
-        String privateKey = clientConfiguration.getPrivateKey();
-        Assert.hasText(privateKey, "privateKey cannot be null (either PEM file path (or) full PEM content must be supplied)");
+    private RestTemplate restTemplate(ClientConfiguration clientConfig) {
 
-        if (!ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
-            // privateKey is a file path, check if the file exists
-            Path privateKeyPemFilePath;
-            try {
-                privateKeyPemFilePath = Paths.get(privateKey);
-            } catch (InvalidPathException ipe) {
-                throw new IllegalArgumentException("Invalid privateKey file path", ipe);
-            }
-            boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, LinkOption.NOFOLLOW_LINKS);
-            Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(objectMapper);
+        ObjectMapper mapper = messageConverter.getObjectMapper();
+        messageConverter.setSupportedMediaTypes(Arrays.asList(
+            MediaType.APPLICATION_JSON,
+            MediaType.parseMediaType("application/x-pem-file"),
+            MediaType.parseMediaType("application/x-x509-ca-cert"),
+            MediaType.parseMediaType("application/pkix-cert")));
+        mapper.registerModule(new JavaTimeModule());
+        mapper.registerModule(new JsonNullableModule());
+
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+        messageConverters.add(messageConverter);
+
+        RestTemplate restTemplate = new RestTemplate(messageConverters);
+        restTemplate.setErrorHandler(new ErrorHandler());
+        restTemplate.setRequestFactory(requestFactory(clientConfig));
+
+        return restTemplate;
+    }
+
+    private HttpComponentsClientHttpRequestFactory requestFactory(ClientConfiguration clientConfig) {
+        final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+
+        if (clientConfig.getProxy() != null) {
+            clientBuilder.useSystemProperties();
+            clientBuilder.setProxy(new HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
+            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
+            UsernamePasswordCredentials usernamePasswordCredentials =
+                new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword());
+            credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
+            clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+            clientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
         }
+
+        final CloseableHttpClient httpClient = clientBuilder.build();
+
+        final HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        clientHttpRequestFactory.setHttpClient(httpClient);
+        clientHttpRequestFactory.setConnectionRequestTimeout(clientConfig.getConnectionTimeout() * 1000);
+        clientHttpRequestFactory.setConnectTimeout(clientConfig.getConnectionTimeout() * 1000);
+        clientHttpRequestFactory.setReadTimeout(clientConfig.getConnectionTimeout() * 1000);
+
+        return clientHttpRequestFactory;
     }
 
     @Override
@@ -525,10 +449,6 @@ public class DefaultClientBuilder implements ClientBuilder {
         Assert.notNull(kid, "kid cannot be null.");
         this.clientConfig.setKid(kid);
         return this;
-    }
-
-    boolean isOAuth2Flow() {
-        return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
     }
 
     public ClientConfiguration getClientConfiguration() {

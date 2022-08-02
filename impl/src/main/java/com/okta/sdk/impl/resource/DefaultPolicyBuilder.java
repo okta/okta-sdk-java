@@ -16,25 +16,23 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.policy.Policy;
 import com.okta.sdk.resource.policy.PolicyBuilder;
-import com.okta.sdk.resource.policy.PolicyType;
+import org.openapitools.client.api.PolicyApi;
+import org.openapitools.client.model.Policy;
 
 import java.util.Objects;
-
 
 public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuilder<T> {
 
     protected String name;
     protected String description;
-    protected PolicyType policyType;
+    protected String policyType;
     protected Integer priority;
-    protected Policy.StatusEnum status;
+    protected String status;
     protected Boolean isActive = true;
 
     DefaultPolicyBuilder(){
-        this.status = Policy.StatusEnum.ACTIVE;
+        this.status = "ACTIVE";
     }
 
     @Override
@@ -50,7 +48,7 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     }
 
     @Override
-    public T setType(PolicyType policyType) {
+    public T setType(String policyType) {
         this.policyType = policyType;
         return self();
     }
@@ -62,12 +60,9 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     }
 
     @Override
-    public T setStatus(Policy.StatusEnum status) {
+    public T setStatus(String status) {
         this.status = status;
-        if (Policy.StatusEnum.ACTIVE.equals(status))
-            this.isActive = true;
-        else
-            this.isActive = false;
+        this.isActive = "ACTIVE".equals(status);
         return self();
     }
 
@@ -77,12 +72,12 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     }
 
     @Override
-    public Policy buildAndCreate(Client client) {
-        return client.createPolicy(build(client), isActive);
+    public Policy buildAndCreate(PolicyApi client) {
+        return client.createPolicy(build(), isActive);
     }
 
-    private Policy build(Client client) {
-        Policy policy = client.instantiate(Policy.class);
+    private Policy build() {
+        Policy policy = new Policy();
 
         if (Strings.hasText(name)) policy.setName(name);
         if (Strings.hasText(description)) policy.setDescription(description);

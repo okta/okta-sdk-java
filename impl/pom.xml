@@ -21,13 +21,13 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
-        <version>8.2.2-SNAPSHOT</version>
+        <version>10.0.0-beta-SNAPSHOT</version>
     </parent>
 
     <artifactId>okta-sdk-impl</artifactId>
     <name>Okta Java SDK :: Impl</name>
     <description>
-        The Okta Java SDK core implemenation .jar is used at runtime to support API invocations.  This
+        The Okta Java SDK core implementation .jar is used at runtime to support API invocations.  This
         implementation jar should be a runtime dependency only and should NOT be depended on at compile time by
         your code.  The implementations within this jar can change at any time without warning - use it with runtime
         scope only.
@@ -39,17 +39,13 @@
             <groupId>com.okta.sdk</groupId>
             <artifactId>okta-sdk-api</artifactId>
         </dependency>
+         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.okta.commons</groupId>
             <artifactId>okta-config-check</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.okta.commons</groupId>
-            <artifactId>okta-http-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -151,38 +147,38 @@
         </resources>
 
         <plugins>
-            <plugin>
-                <groupId>org.zalando.maven.plugins</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>swagger-codegen-impl</id>
-                        <goals>
-                            <goal>codegen</goal>
-                        </goals>
-                        <configuration>
-                            <language>okta_java_impl</language>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.build.directory}/generated-sources/swagger-codegen</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.zalando.maven.plugins</groupId>-->
+<!--                <artifactId>swagger-codegen-maven-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>swagger-codegen-impl</id>-->
+<!--                        <goals>-->
+<!--                            <goal>codegen</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <language>okta_java_impl</language>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>build-helper-maven-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>generate-sources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>add-source</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <sources>-->
+<!--                                <source>${project.build.directory}/generated-sources/swagger-codegen</source>-->
+<!--                            </sources>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

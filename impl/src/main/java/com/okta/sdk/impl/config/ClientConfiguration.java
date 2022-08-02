@@ -16,20 +16,14 @@
  */
 package com.okta.sdk.impl.config;
 
-import com.okta.commons.http.authc.RequestAuthenticator;
 import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.http.config.HttpClientConfiguration;
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
-import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory;
-import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -45,11 +39,6 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     private String apiToken;
     private ClientCredentialsResolver clientCredentialsResolver;
-    private boolean cacheManagerEnabled;
-    private long cacheManagerTtl;
-    private long cacheManagerTti;
-    private Map<String, CacheConfigurationBuilder> cacheManagerCaches = new LinkedHashMap<>();
-    private RequestAuthenticatorFactory requestAuthenticatorFactory = new DefaultRequestAuthenticatorFactory();
     private AuthenticationScheme authenticationScheme;
     private BaseUrlResolver baseUrlResolver;
     private AuthorizationMode authorizationMode;
@@ -80,14 +69,6 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     public void setAuthenticationScheme(AuthenticationScheme authenticationScheme) {
         this.authenticationScheme = authenticationScheme;
-    }
-
-    public RequestAuthenticatorFactory getRequestAuthenticatorFactory() {
-        return requestAuthenticatorFactory;
-    }
-
-    public void setRequestAuthenticatorFactory(RequestAuthenticatorFactory requestAuthenticatorFactory) {
-        this.requestAuthenticatorFactory = requestAuthenticatorFactory;
     }
 
     public BaseUrlResolver getBaseUrlResolver() {
@@ -130,71 +111,12 @@ public class ClientConfiguration extends HttpClientConfiguration {
         this.privateKey = privateKey;
     }
 
-    public boolean isCacheManagerEnabled() {
-        return cacheManagerEnabled;
-    }
-
-    public void setCacheManagerEnabled(boolean cacheManagerEnabled) {
-        this.cacheManagerEnabled = cacheManagerEnabled;
-    }
-
-    public Map<String, CacheConfigurationBuilder> getCacheManagerCaches() {
-        return cacheManagerCaches;
-    }
-
-    public void setCacheManagerCaches(Map<String, CacheConfigurationBuilder> cacheManagerCaches) {
-        this.cacheManagerCaches = cacheManagerCaches;
-    }
-
     public String getKid() {
         return kid;
     }
 
     public void setKid(String kid) {
         this.kid = kid;
-    }
-
-    /**
-     * Time to idle for cache manager in seconds
-     * @return seconds until time to idle expires
-     */
-    public long getCacheManagerTti() {
-        return cacheManagerTti;
-    }
-
-    /**
-     * The cache manager's time to idle in seconds
-     * @param cacheManagerTti the time to idle in seconds
-     */
-    public void setCacheManagerTti(long cacheManagerTti) {
-        this.cacheManagerTti = cacheManagerTti;
-    }
-
-    /**
-     * Time to live for cache manager in seconds
-     * @return seconds until time to live expires
-     */
-    public long getCacheManagerTtl() {
-        return cacheManagerTtl;
-    }
-
-    /**
-     * The cache manager's time to live in seconds
-     * @param cacheManagerTtl the time to live in seconds
-     */
-    public void setCacheManagerTtl(long cacheManagerTtl) {
-        this.cacheManagerTtl = cacheManagerTtl;
-    }
-
-    @Override
-    public RequestAuthenticator getRequestAuthenticator() {
-        RequestAuthenticator requestAuthenticator = super.getRequestAuthenticator();
-
-        if (requestAuthenticator == null) {
-            requestAuthenticator = requestAuthenticatorFactory.create(authenticationScheme, this.getClientCredentialsResolver().getClientCredentials());
-        }
-
-        return requestAuthenticator;
     }
 
     @Override
@@ -210,14 +132,11 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     @Override
     public String toString() {
-        return "ClientConfiguration {cacheManagerTtl=" + cacheManagerTtl +
-            ", cacheManagerTti=" + cacheManagerTti +
-            ", cacheManagerCaches=" + cacheManagerCaches +
-            ", baseUrl='" + getBaseUrl() + '\'' +
+        return "ClientConfiguration { baseUrl='" + getBaseUrl() + '\'' +
             ", authorizationMode=" + getAuthorizationMode() +
             ", clientId=" + getClientId() +
             ", scopes=" + getScopes() +
-            ", privateKey=" + ((getPrivateKey() != null) ? "xxxxx" : null) +
+            ", privateKey=" + ((getPrivateKey() != null) ? "*****" : null) +
             ", connectionTimeout=" + getConnectionTimeout() +
             ", requestAuthenticator=" + getRequestAuthenticator() +
             ", retryMaxElapsed=" + getRetryMaxElapsed() +
@@ -225,5 +144,4 @@ public class ClientConfiguration extends HttpClientConfiguration {
             ", proxy=" + getProxy() +
             " }";
     }
-
 }

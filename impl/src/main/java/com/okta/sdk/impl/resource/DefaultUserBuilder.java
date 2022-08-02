@@ -15,27 +15,26 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.sdk.client.Client;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.resource.user.AuthenticationProvider;
-import com.okta.sdk.resource.user.PasswordCredentialHook;
-import com.okta.sdk.resource.user.RecoveryQuestionCredential;
 import com.okta.sdk.resource.user.UserBuilder;
-import com.okta.sdk.resource.user.PasswordCredential;
-import com.okta.sdk.resource.user.User;
-import com.okta.sdk.resource.user.UserCredentials;
-import com.okta.sdk.resource.user.UserNextLogin;
-import com.okta.sdk.resource.user.UserProfile;
-import com.okta.sdk.resource.user.type.UserType;
-import com.okta.sdk.resource.user.CreateUserRequest;
+import org.openapitools.client.api.UserApi;
+import org.openapitools.client.model.AuthenticationProvider;
+import org.openapitools.client.model.CreateUserRequest;
+import org.openapitools.client.model.PasswordCredential;
+import org.openapitools.client.model.PasswordCredentialHash;
+import org.openapitools.client.model.PasswordCredentialHook;
+import org.openapitools.client.model.RecoveryQuestionCredential;
+import org.openapitools.client.model.User;
+import org.openapitools.client.model.UserCredentials;
+import org.openapitools.client.model.UserProfile;
+import org.openapitools.client.model.UserType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class DefaultUserBuilder implements UserBuilder {
 
@@ -52,12 +51,10 @@ public class DefaultUserBuilder implements UserBuilder {
     private AuthenticationProvider provider;
     private UserType userType;
     private String userTypeId;
-    private UserNextLogin nextLogin;
-    private Set<String> groupIds = new HashSet<>();
+    private String nextLogin;
+    private List<String> groupIds = new ArrayList<>();
     private Map<String, Object> passwordHashProperties;
     private String passwordHookImportType;
-
-    private Map<String, Object> customProfileAttributes = new LinkedHashMap<>();
 
     public UserBuilder setPassword(char[] password) {
         this.password = Arrays.copyOf(password, password.length);
@@ -135,24 +132,7 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
-    public UserBuilder setProfileProperties(Map<String, Object> profileProperties) {
-
-        this.customProfileAttributes.clear();
-        return putAllProfileProperties(profileProperties);
-    }
-
-    public UserBuilder putAllProfileProperties(Map<String, Object> profileProperties) {
-
-        this.customProfileAttributes.putAll(profileProperties);
-        return this;
-    }
-
-    public UserBuilder putProfileProperty(String key, Object value) {
-        this.customProfileAttributes.put(key, value);
-        return this;
-    }
-
-    public UserBuilder setGroups(Set<String> groupIds) {
+    public UserBuilder setGroups(List<String> groupIds) {
         this.groupIds = groupIds;
         return this;
     }
@@ -163,15 +143,15 @@ public class DefaultUserBuilder implements UserBuilder {
     }
 
     @Override
-    public UserBuilder setNextLogin(UserNextLogin nextLogin) {
+    public UserBuilder setNextLogin(String nextLogin) {
         this.nextLogin = nextLogin;
         return this;
     }
 
-    private CreateUserRequest build(Client client) {
+    private CreateUserRequest build() {
 
-        CreateUserRequest createUserRequest = client.instantiate(CreateUserRequest.class);
-        createUserRequest.setProfile(client.instantiate(UserProfile.class));
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        createUserRequest.setProfile(new UserProfile());
         UserProfile userProfile = createUserRequest.getProfile();
         if (Strings.hasText(firstName)) userProfile.setFirstName(firstName);
         if (Strings.hasText(lastName)) userProfile.setLastName(lastName);
@@ -187,33 +167,29 @@ public class DefaultUserBuilder implements UserBuilder {
         }
 
         if (Strings.hasText(userTypeId)) {
-            createUserRequest.setType(client.instantiate(UserType.class).setId(userTypeId));
+            UserType userType = new UserType();
+            userType.setId(userTypeId);
+            createUserRequest.setType(userType);
         }
         else if (userType != null) {
             createUserRequest.setType(userType);
         }
 
         if (!Collections.isEmpty(groupIds)) {
-            if (createUserRequest instanceof AbstractResource) {
-                ((AbstractResource) createUserRequest).setProperty("groupIds", groupIds, true);
-            } else {
-                throw new IllegalArgumentException("'User' is not an instance of 'AbstractResource', so 'groupIds' cannot be set. This would only happen if the implementation of 'User' has been customized.");
-            }
+            createUserRequest.setGroupIds(groupIds);
         }
-
-        userProfile.putAll(customProfileAttributes);
 
         // security question
         if (Strings.hasText(securityQuestion)) {
-            RecoveryQuestionCredential question = client.instantiate(RecoveryQuestionCredential.class);
+            RecoveryQuestionCredential question = new RecoveryQuestionCredential();
             question.setQuestion(securityQuestion);
             question.setAnswer(securityQuestionAnswer);
-            createCredentialsIfNeeded(createUserRequest, client).setRecoveryQuestion(question);
+            createCredentialsIfNeeded(createUserRequest).setRecoveryQuestion(question);
         }
 
         // authentication provider
         if (provider != null) {
-            createCredentialsIfNeeded(createUserRequest, client).setProvider(provider);
+            createCredentialsIfNeeded(createUserRequest).setProvider(provider);
         }
 
         // user password
@@ -223,32 +199,39 @@ public class DefaultUserBuilder implements UserBuilder {
                 throw new IllegalArgumentException("Cannot specify both password and password hash, use one or the other.");
             }
 
-            PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
-            createCredentialsIfNeeded(createUserRequest, client).setPassword(passwordCredential.setValue(password));
+            PasswordCredential passwordCredential = new PasswordCredential();
+            passwordCredential.setValue(new String(password));
+            createCredentialsIfNeeded(createUserRequest).setPassword(passwordCredential);
         }
 
         // direct password import
         if (passwordHashProperties != null) {
-            PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
-            passwordCredential.put("hash", passwordHashProperties);
-            createCredentialsIfNeeded(createUserRequest, client).setPassword(passwordCredential);
+            PasswordCredential passwordCredential = new PasswordCredential();
+            PasswordCredentialHash passwordCredentialHash = new PasswordCredentialHash();
+            passwordCredentialHash.setAlgorithm((String) passwordHashProperties.get("algorithm"));
+            passwordCredentialHash.setWorkFactor((Integer) passwordHashProperties.get("workFactor"));
+            passwordCredentialHash.setSalt((String) passwordHashProperties.get("salt"));
+            passwordCredentialHash.setValue((String) passwordHashProperties.get("value"));
+            passwordCredentialHash.setSaltOrder((String) passwordHashProperties.get("saltOrder"));
+            passwordCredential.setHash(passwordCredentialHash);
+            createCredentialsIfNeeded(createUserRequest).setPassword(passwordCredential);
         }
 
         // password hook import
         if (passwordHookImportType != null) {
-            PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
-            PasswordCredentialHook passwordCredentialHook = client.instantiate(PasswordCredentialHook.class);
+            PasswordCredential passwordCredential = new PasswordCredential();
+            PasswordCredentialHook passwordCredentialHook = new PasswordCredentialHook();
             passwordCredentialHook.setType(passwordHookImportType);
             passwordCredential.setHook(passwordCredentialHook);
-            createCredentialsIfNeeded(createUserRequest, client).setPassword(passwordCredential);
+            createCredentialsIfNeeded(createUserRequest).setPassword(passwordCredential);
         }
 
         return createUserRequest;
     }
 
-    private UserCredentials createCredentialsIfNeeded(CreateUserRequest createUserRequest, Client client) {
+    private UserCredentials createCredentialsIfNeeded(CreateUserRequest createUserRequest) {
         if (createUserRequest.getCredentials() == null) {
-            UserCredentials credentials = client.instantiate(UserCredentials.class);
+            UserCredentials credentials = new UserCredentials();
             createUserRequest.setCredentials(credentials);
         }
         return createUserRequest.getCredentials();
@@ -285,7 +268,7 @@ public class DefaultUserBuilder implements UserBuilder {
     }
 
     @Override
-    public User buildAndCreate(Client client) {
-        return client.createUser(build(client), active, provider != null, nextLogin);
+    public User buildAndCreate(UserApi client) {
+        return client.createUser(build(), active, provider != null, nextLogin);
     }
 }

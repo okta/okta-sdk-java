@@ -15,10 +15,20 @@
  */
 package com.okta.sdk.error;
 
+public class ErrorCause {
 
-import com.okta.sdk.resource.Resource;
+    private final String summary;
 
-public interface ErrorCause extends Resource{
+    public ErrorCause(String summary) {
+        this.summary = summary;
+    }
 
-    String getSummary();
+    public String getSummary() {
+        return this.summary;
+    }
+
+    @Override
+    public String toString() {
+        return "ErrorCause { summary='" + getSummary() + " }";
+    }
 }
