@@ -23,11 +23,11 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> com.okta.sdk.impl.resource;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.client.Client;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> com.okta.commons.lang.Strings;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.group.GroupBuilder;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.group.Group;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.group.GroupProfile;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> com.okta.commons.lang.Strings;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.group.GroupBuilder;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.api.GroupApi;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.Group;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.GroupProfile;
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="DefaultGroupBuilder" href="../../../../../com/okta/sdk/impl/resource/DefaultGroupBuilder.html#DefaultGroupBuilder">DefaultGroupBuilder</a> <strong class="jxr_keyword">implements</strong> <a name="GroupBuilder" href="../../../../../com/okta/sdk/resource/group/GroupBuilder.html#GroupBuilder">GroupBuilder</a> {
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  
@@ -47,16 +47,17 @@
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      }
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      @Override
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">public</strong> <a name="Group" href="../../../../../com/okta/sdk/resource/group/Group.html#Group">Group</a> buildAndCreate(<a name="Client" href="../../../../../com/okta/sdk/client/Client.html#Client">Client</a> client) {
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">public</strong> Group buildAndCreate(<a name="GroupApi" href="../../../../../org/openapitools/client/api/GroupApi.html#GroupApi">GroupApi</a> client) {
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>          <a name="Group" href="../../../../../com/okta/sdk/resource/group/Group.html#Group">Group</a> group = client.instantiate(Group.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>          group.setProfile(client.instantiate(GroupProfile.<strong class="jxr_keyword">class</strong>));
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>          group.getProfile().setName(name);
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>          <strong class="jxr_keyword">if</strong> (Strings.hasText(description)) group.getProfile().setDescription(description);
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>          <strong class="jxr_keyword">return</strong> client.createGroup(group);
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      }
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  }
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          Group group = <strong class="jxr_keyword">new</strong> Group();
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          GroupProfile groupProfile = <strong class="jxr_keyword">new</strong> GroupProfile();
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>          groupProfile.setName(name);
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          <strong class="jxr_keyword">if</strong> (Strings.hasText(description)) groupProfile.setDescription(description);
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>          group.setProfile(groupProfile);
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          <strong class="jxr_keyword">return</strong> client.createGroup(group);
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      }
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017&#x2013;2022 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
