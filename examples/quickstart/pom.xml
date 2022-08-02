@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-examples</artifactId>
-        <version>10.0.0-beta-SNAPSHOT</version>
+        <version>10.0.0-beta</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
