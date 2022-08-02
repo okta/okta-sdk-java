@@ -39,7 +39,7 @@ This repository contains the Okta management SDK for Java. This SDK can be used 
 * Manage trusted origins with the [Trusted Origins API](https://developer.okta.com/docs/reference/api/trusted-origins/).
 * Manage user types with the [User Types API](https://developer.okta.com/docs/reference/api/user-types/).
 * Manage custom domains with the [Domains API](https://developer.okta.com/docs/reference/api/domains/).
-* Manage network zones with the [Zones API's endpoints](https://developer.okta.com/docs/reference/api/zones/).
+* Manage network zones with the [Zones API](https://developer.okta.com/docs/reference/api/zones/).
 * Much more!
  
 We also publish these libraries for Java:
@@ -64,8 +64,8 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 6.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-5xx-to-600)) |
 | 7.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-6xx-to-700)) |
 | 8.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-7xx-to-800)) |
-| 9.x.x-beta | :heavy_check_mark: Beta release and it is discontinued [branch](https://github.com/okta/okta-sdk-java/tree/swagger_v3) |
-| 10.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-8xx-to-10xx)) Beta release and it is located in `oasv3` [branch](https://github.com/okta/okta-sdk-java/tree/oasv3) |
+| 9.x.x-beta | :heavy_check_mark: Beta release located in [branch](https://github.com/okta/okta-sdk-java/tree/swagger_v3) - Discontinued |
+| 10.x.x-beta | :heavy_check_mark: Beta release located in `oasv3` [branch](https://github.com/okta/okta-sdk-java/tree/oasv3) ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-8xx-to-10xx)) |
 
 The latest release can always be found on the [releases page][github-releases].
  
