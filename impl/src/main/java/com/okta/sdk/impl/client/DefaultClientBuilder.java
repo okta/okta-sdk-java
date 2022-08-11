@@ -19,6 +19,7 @@ package com.okta.sdk.impl.client;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.commons.configcheck.ConfigurationValidator;
 import com.okta.commons.http.config.Proxy;
@@ -37,6 +38,8 @@ import com.okta.sdk.impl.config.PropertiesSource;
 import com.okta.sdk.impl.config.ResourcePropertiesSource;
 import com.okta.sdk.impl.config.SystemPropertiesSource;
 import com.okta.sdk.impl.config.YAMLPropertiesSource;
+import com.okta.sdk.impl.serializer.UserProfileSerializer;
+import com.okta.sdk.impl.serializer.UserProfileDeserializer;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
@@ -298,6 +301,11 @@ public class DefaultClientBuilder implements ClientBuilder {
             MediaType.parseMediaType("application/pkix-cert")));
         mapper.registerModule(new JavaTimeModule());
         mapper.registerModule(new JsonNullableModule());
+
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(UserProfile.class, new UserProfileSerializer());
+        module.addDeserializer(UserProfile.class, new UserProfileDeserializer());
+        mapper.registerModule(module);
 
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
         messageConverters.add(messageConverter);

@@ -177,6 +177,7 @@
                             <generateApiTests>false</generateApiTests>
                             <templateDirectory>src/main/resources/custom_templates</templateDirectory>
                             <library>resttemplate</library>
+                            <additionalProperties>true</additionalProperties>
                         </configuration>
                     </execution>
                 </executions>
