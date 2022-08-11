@@ -180,7 +180,7 @@ public class UserProfileDeserializer extends StdDeserializer<UserProfile> {
                     break;
 
                 default:
-                    userProfile.putAdditionalPropertiesItem(key, value);
+                    userProfile.getAdditionalProperties().put(key, value);
             }
         }
 

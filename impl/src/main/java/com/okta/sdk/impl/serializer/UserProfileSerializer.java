@@ -135,11 +135,11 @@ public class UserProfileSerializer extends StdSerializer<UserProfile> {
         if (Strings.hasText(userProfile.getZipCode()))
             jgen.writeStringField(UserProfile.JSON_PROPERTY_ZIP_CODE, userProfile.getZipCode());
 
-        Map<String, String> additionalProperties = userProfile.getAdditionalProperties();
+        Map<String, Object> additionalProperties = userProfile.getAdditionalProperties();
 
         if (Objects.nonNull(additionalProperties) && !additionalProperties.isEmpty()) {
-            for (Map.Entry<String, String> entry : additionalProperties.entrySet()) {
-                jgen.writeStringField(entry.getKey(), entry.getValue());
+            for (Map.Entry<String, Object> entry : additionalProperties.entrySet()) {
+                jgen.writeObjectField(entry.getKey(), entry.getValue());
             }
         }
 

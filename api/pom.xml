@@ -160,7 +160,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>6.0.1</version>
+                <version>6.0.1-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <goals>
@@ -171,13 +171,18 @@
                             <generatorName>java</generatorName>
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
+<!--                                <additional-properties>-->
+<!--                                    disallowAdditionalPropertiesIfNotPresent=false-->
+<!--                                </additional-properties>-->
                             </configOptions>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generateModelTests>false</generateModelTests>
                             <generateApiTests>false</generateApiTests>
                             <templateDirectory>src/main/resources/custom_templates</templateDirectory>
                             <library>resttemplate</library>
-                            <additionalProperties>true</additionalProperties>
+                            <additionalProperties>
+                                <additionalProperty>disallowAdditionalPropertiesIfNotPresent=false</additionalProperty>
+                            </additionalProperties>
                         </configuration>
                     </execution>
                 </executions>

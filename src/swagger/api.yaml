@@ -20669,6 +20669,7 @@ components:
           $ref: '#/components/schemas/UserLifecycleAttributePolicyRuleCondition'
     UserProfile:
       type: object
+      additionalProperties: true
       properties:
         city:
           type: string
@@ -20762,10 +20763,6 @@ components:
           type: string
           maxLength: 50
           nullable: true
-        additionalProperties:
-          type: object
-          additionalProperties:
-            type: string
     UserSchema:
       type: object
       properties:
