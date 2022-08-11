@@ -22,7 +22,7 @@ Client client = Clients.builder()
     .setClientCredentials(new TokenClientCredentials("{apiToken}"))
     .build();
 
-User user = client.getUser("a-user-id");
+User user = client.getUser("userId");
 
 Application app = client.getApplication("appId");
 ```

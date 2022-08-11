@@ -16,8 +16,10 @@
 package com.okta.sdk.tests.it
 
 import com.google.common.net.HttpHeaders
+import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.tests.it.util.ITSupport
 import org.openapitools.client.api.ApplicationApi
+import org.openapitools.client.api.GroupApi
 import org.openapitools.client.api.InlineHookApi
 import org.openapitools.client.model.*
 import org.testng.annotations.Test

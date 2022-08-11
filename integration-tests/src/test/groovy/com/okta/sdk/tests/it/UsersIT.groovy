@@ -23,6 +23,7 @@ import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.apache.commons.lang3.RandomStringUtils
+import org.openapitools.client.ApiClient
 import org.openapitools.client.api.*
 import org.openapitools.client.model.*
 import org.testng.annotations.Test
@@ -612,6 +613,9 @@ class UsersIT extends ITSupport {
         UpdateUserRequest updateUserRequest = new UpdateUserRequest()
         UserProfile userProfile = new UserProfile()
         userProfile.setNickName("Batman")
+        // Note: custom profile properties must first be added to user schema via Console UI or Schemas API before
+        // trying something like below.
+        userProfile.putAdditionalPropertiesItem("key1", "val1")
         updateUserRequest.setProfile(userProfile)
 
         userApi.partialUpdateUser(user.getId(), updateUserRequest, true)
@@ -620,6 +624,7 @@ class UsersIT extends ITSupport {
 
         assertThat(updatedUser.lastUpdated, greaterThan(originalLastUpdated))
         assertThat(updatedUser.getProfile().getProperties().get("nickName"), equalTo("Batman"))
+        assertThat(updatedUser.getProfile().getProperties().get("key1"), equalTo("val1"))
     }
 
     @Test (groups = "group2")
