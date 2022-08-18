@@ -1,8 +1,7 @@
 version: 2.1
 
-defaults: &defaults
-  docker:
-    - image: circleci/node:8.9.1
+orbs: 
+  node: circleci/node@5.0.2
     
 aliases:
 
@@ -18,6 +17,16 @@ aliases:
         command: cat integration-tests/target/failsafe-reports/*dump*
 
 jobs:
+  
+  test:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          cache-path: ~/project/node_modules
+          override-ci-command: npm install
+      - run: sudo npm install -g npm@latest
+      - run: npm run test
   
   jdk8:
     docker:
@@ -36,5 +45,6 @@ jobs:
 workflows:
   build_and_test:
     jobs:
+      - test
       - jdk8
       - jdk11
