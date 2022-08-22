@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.*
  */
 class DomainIT extends ITSupport {
 
-    @Test(groups = "group1", enabled = "false")
+    @Test(groups = "group1", enabled = false)
     void customTemplatesCrudTest() {
 
         String domain = "java-sdk-it-${UUID.randomUUID().toString()}.example.com"
