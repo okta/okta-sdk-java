@@ -160,7 +160,7 @@ class UsersIT extends ITSupport {
         Thread.sleep(getTestOperationDelay())
 
         User retrievedUser = userApi.getUser(email)
-        assertThat(retrievedUser, equalTo(user))
+        assertThat(retrievedUser.id, equalTo(user.id))
     }
 
     @Test (groups = "group2")
@@ -612,6 +612,13 @@ class UsersIT extends ITSupport {
         UpdateUserRequest updateUserRequest = new UpdateUserRequest()
         UserProfile userProfile = new UserProfile()
         userProfile.setNickName("Batman")
+
+        // Note: Custom user profile properties can be added with something like below, but
+        // the respective property must first be associated to the User schema.
+        // You can use the Profile Editor in your Org's administrator UI or the Schemas API
+        // to manage schema extensions.
+        //userProfile.getAdditionalProperties().put("key1", "val1")
+
         updateUserRequest.setProfile(userProfile)
 
         userApi.partialUpdateUser(user.getId(), updateUserRequest, true)
@@ -620,6 +627,7 @@ class UsersIT extends ITSupport {
 
         assertThat(updatedUser.lastUpdated, greaterThan(originalLastUpdated))
         assertThat(updatedUser.getProfile().getProperties().get("nickName"), equalTo("Batman"))
+        //assertThat(updatedUser.getProfile().getAdditionalProperties().get("key1"), equalTo("val1"))
     }
 
     @Test (groups = "group2")

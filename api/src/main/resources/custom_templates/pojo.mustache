@@ -33,11 +33,29 @@
 {{#vendorExtensions.x-class-extra-annotation}}
     {{{vendorExtensions.x-class-extra-annotation}}}
 {{/vendorExtensions.x-class-extra-annotation}}
+{{#additionalPropertiesType}}
+public class {{classname}} {{#vendorExtensions.x-implements}}{{#-first}}implements {{{.}}}{{/-first}}{{^-first}}, {{{.}}}{{/-first}}{{#-last}} {{/-last}}{{/vendorExtensions.x-implements}}{
+{{/additionalPropertiesType}}
+{{^additionalPropertiesType}}
 public class {{classname}} {{#parent}}extends {{{.}}} {{/parent}}{{#vendorExtensions.x-implements}}{{#-first}}implements {{{.}}}{{/-first}}{{^-first}}, {{{.}}}{{/-first}}{{#-last}} {{/-last}}{{/vendorExtensions.x-implements}}{
+{{/additionalPropertiesType}}
+
 {{#serializableModel}}
     private static final long serialVersionUID = 1L;
 
 {{/serializableModel}}
+{{#additionalPropertiesType}}
+      public Map<String, Object> additionalProperties = new java.util.LinkedHashMap<>();
+
+      public Map<String, Object> getAdditionalProperties() {
+         return additionalProperties;
+      }
+
+      public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+         this.additionalProperties = additionalProperties;
+      }
+{{/additionalPropertiesType}}
+
 {{#vars}}
     {{#isEnum}}
         {{^isContainer}}
