@@ -122,7 +122,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
             return oAuth2AccessToken;
         } catch (ResourceException e) {
-            //TODO: clean up the ugly casting and refactor code around it.
             Error defaultError = e.getError();
             throw new OAuth2HttpException(defaultError.getMessage(), e, e.getStatus() == 401);
         } catch (Exception e) {

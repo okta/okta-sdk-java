@@ -280,17 +280,15 @@ public class DefaultClientBuilder implements ClientBuilder {
         ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig));
 
         if (!isOAuth2Flow()) {
-
-            apiClient.setBasePath(this.clientConfig.getBaseUrl());
-            apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
-            // for beta release, we support only SSWS, OAuth2 support planned to be added in later release
-            apiClient.setApiKeyPrefix("SSWS");
-
             if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
                 this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
             } else if (this.clientConfig.getClientCredentialsResolver() == null) {
                 this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
             }
+
+            apiClient.setBasePath(this.clientConfig.getBaseUrl());
+            apiClient.setApiKeyPrefix("SSWS");
+            apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
         } else {
             this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
 
