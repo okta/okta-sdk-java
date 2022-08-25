@@ -44,6 +44,9 @@ import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
+import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
+import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
+import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import org.apache.http.HttpHost;
@@ -73,7 +76,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,6 +123,8 @@ public class DefaultClientBuilder implements ClientBuilder {
     private boolean allowNonHttpsForTesting = false;
 
     private ClientConfiguration clientConfig = new ClientConfiguration();
+
+    private AccessTokenRetrieverService accessTokenRetrieverService;
 
     public DefaultClientBuilder() {
         this(new DefaultResourceFactory());
@@ -272,19 +281,55 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
-        if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
-            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
-        } else if (this.clientConfig.getClientCredentialsResolver() == null) {
-            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
+        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig));
+
+        if (!isOAuth2Flow()) {
+            if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
+                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
+            } else if (this.clientConfig.getClientCredentialsResolver() == null) {
+                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
+            }
+
+            apiClient.setBasePath(this.clientConfig.getBaseUrl());
+            apiClient.setApiKeyPrefix("SSWS");
+            apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
+        } else {
+            this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
+
+            validateOAuth2ClientConfig(this.clientConfig);
+
+            accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig, apiClient);
+
+            OAuth2ClientCredentials oAuth2ClientCredentials =
+                new OAuth2ClientCredentials(accessTokenRetrieverService);
+
+            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
         }
 
-        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig));
-        apiClient.setBasePath(this.clientConfig.getBaseUrl());
-        apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
-        // for beta release, we support only SSWS, OAuth2 support planned to be added in later release
-        apiClient.setApiKeyPrefix("SSWS");
-
         return apiClient;
+    }
+
+    /**
+     * @since 1.6.0
+     */
+    private void validateOAuth2ClientConfig(ClientConfiguration clientConfiguration) {
+        Assert.notNull(clientConfiguration.getClientId(), "clientId cannot be null");
+        Assert.isTrue(clientConfiguration.getScopes() != null && !clientConfiguration.getScopes().isEmpty(),
+            "At least one scope is required");
+        String privateKey = clientConfiguration.getPrivateKey();
+        Assert.hasText(privateKey, "privateKey cannot be null (either PEM file path (or) full PEM content must be supplied)");
+
+        if (!ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
+            // privateKey is a file path, check if the file exists
+            Path privateKeyPemFilePath;
+            try {
+                privateKeyPemFilePath = Paths.get(privateKey);
+            } catch (InvalidPathException ipe) {
+                throw new IllegalArgumentException("Invalid privateKey file path", ipe);
+            }
+            boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, LinkOption.NOFOLLOW_LINKS);
+            Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
+        }
     }
 
     private RestTemplate restTemplate(ClientConfiguration clientConfig) {
@@ -458,6 +503,10 @@ public class DefaultClientBuilder implements ClientBuilder {
         Assert.notNull(kid, "kid cannot be null.");
         this.clientConfig.setKid(kid);
         return this;
+    }
+
+    boolean isOAuth2Flow() {
+        return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
     }
 
     public ClientConfiguration getClientConfiguration() {
