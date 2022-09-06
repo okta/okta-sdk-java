@@ -427,64 +427,54 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     @Override
     public ClientBuilder setScopes(Set<String> scopes) {
-        if (isOAuth2Flow()) {
-            Assert.isTrue(scopes != null && !scopes.isEmpty(), "At least one scope is required");
-            this.clientConfig.setScopes(scopes);
-        }
+        Assert.isTrue(scopes != null && !scopes.isEmpty(), "At least one scope is required");
+        this.clientConfig.setScopes(scopes);
         return this;
     }
 
     @Override
     public ClientBuilder setPrivateKey(String privateKey) {
-        if (isOAuth2Flow()) {
-            Assert.notNull(privateKey, "Missing privateKey");
-            this.clientConfig.setPrivateKey(privateKey);
-        }
+        Assert.notNull(privateKey, "Missing privateKey");
+        this.clientConfig.setPrivateKey(privateKey);
         return this;
     }
 
     @Override
     public ClientBuilder setPrivateKey(Path privateKeyPath) {
-        if (isOAuth2Flow()) {
-            Assert.notNull(privateKeyPath, "Missing privateKeyFile");
-            this.clientConfig.setPrivateKey(getFileContent(privateKeyPath));
-        }
+        Assert.notNull(privateKeyPath, "Missing privateKeyPath");
+        this.clientConfig.setPrivateKey(getFileContent(privateKeyPath));
         return this;
     }
 
     @Override
     public ClientBuilder setPrivateKey(InputStream privateKeyStream) {
-        if (isOAuth2Flow()) {
-            Assert.notNull(privateKeyStream, "Missing privateKeyFile");
-            this.clientConfig.setPrivateKey(getFileContent(privateKeyStream));
-        }
+        Assert.notNull(privateKeyStream, "Missing privateKeyStream");
+        this.clientConfig.setPrivateKey(getFileContent(privateKeyStream));
         return this;
     }
 
     @Override
     public ClientBuilder setPrivateKey(PrivateKey privateKey) {
-        if (isOAuth2Flow()) {
-            Assert.notNull(privateKey, "Missing privateKeyFile");
-            String algorithm = privateKey.getAlgorithm();
-            if (algorithm.equals("RSA")) {
-                PrivateKeyInfo privateKeyInfo = PrivateKeyInfo.getInstance(privateKey.getEncoded());
-                try {
-                    ASN1Primitive primitive = privateKeyInfo.parsePrivateKey().toASN1Primitive();
-                    String encodedString = ConfigUtil.RSA_PRIVATE_KEY_HEADER + "\n"
-                        + Base64.getEncoder().encodeToString(primitive.getEncoded()) + "\n"
-                        + ConfigUtil.RSA_PRIVATE_KEY_FOOTER;
-                    this.clientConfig.setPrivateKey(encodedString);
-                } catch (IOException e) {
-                    throw new IllegalArgumentException("Could not parse private key");
-                }
-            } else if(algorithm.equals("EC")) {
-                String encodedString = ConfigUtil.EC_PRIVATE_KEY_HEADER + "\n"
-                    + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
-                    + ConfigUtil.EC_PRIVATE_KEY_FOOTER;
+        Assert.notNull(privateKey, "Missing privateKey");
+        String algorithm = privateKey.getAlgorithm();
+        if (algorithm.equals("RSA")) {
+            PrivateKeyInfo privateKeyInfo = PrivateKeyInfo.getInstance(privateKey.getEncoded());
+            try {
+                ASN1Primitive primitive = privateKeyInfo.parsePrivateKey().toASN1Primitive();
+                String encodedString = ConfigUtil.RSA_PRIVATE_KEY_HEADER + "\n"
+                    + Base64.getEncoder().encodeToString(primitive.getEncoded()) + "\n"
+                    + ConfigUtil.RSA_PRIVATE_KEY_FOOTER;
                 this.clientConfig.setPrivateKey(encodedString);
-            } else {
-                throw new IllegalArgumentException("Supplied privateKey is not an RSA or EC key - " + algorithm);
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Could not parse private key");
             }
+        } else if(algorithm.equals("EC")) {
+            String encodedString = ConfigUtil.EC_PRIVATE_KEY_HEADER + "\n"
+                + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
+                + ConfigUtil.EC_PRIVATE_KEY_FOOTER;
+            this.clientConfig.setPrivateKey(encodedString);
+        } else {
+            throw new IllegalArgumentException("Supplied privateKey is not an RSA or EC key - " + algorithm);
         }
         return this;
     }
