@@ -193,7 +193,7 @@ class ApplicationsIT extends ITSupport {
                                 .setUsernameAttribute("username"))))
     }
 
-    @Test (groups = "group1")
+    @Test (groups = "group1", enabled = false) // OKTA-530437
     void crudSaml20() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
