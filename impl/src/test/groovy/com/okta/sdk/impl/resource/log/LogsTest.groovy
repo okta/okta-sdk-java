@@ -199,4 +199,34 @@ class LogsTest {
         verify(client.mockRequestExecutor).executeRequest(argument.capture())
         assertThat argument.getValue().queryString.until, equalTo("2017-11-30T21:16:00.081Z")
     }
+
+    @Test
+    void testGetLogsWithLimit() {
+
+        Date untilDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:16:00.081Z")))
+
+        // get log events until given date
+        List<LogEvent> logs = client.getLogs(null, untilDate, null, null, 250, null, null).stream().collect(Collectors.toList())
+        assertThat logs, hasSize(100)
+        logs.forEach { assertThat it, instanceOf(LogEvent) }
+
+        ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class)
+        verify(client.mockRequestExecutor).executeRequest(argument.capture())
+        assertThat argument.getValue().queryString.limit, equalTo("250")
+    }
+
+    @Test
+    void testGetLogsWithAfter() {
+
+        Date untilDate = Date.from(Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse("2017-11-30T21:16:00.081Z")))
+
+        // get log events until given date
+        List<LogEvent> logs = client.getLogs(null, untilDate, null, null, null, null, "00ud4tVDDXYVKPXKVLCO").stream().collect(Collectors.toList())
+        assertThat logs, hasSize(100)
+        logs.forEach { assertThat it, instanceOf(LogEvent) }
+
+        ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class)
+        verify(client.mockRequestExecutor).executeRequest(argument.capture())
+        assertThat argument.getValue().queryString.after, equalTo("00ud4tVDDXYVKPXKVLCO")
+    }
 }

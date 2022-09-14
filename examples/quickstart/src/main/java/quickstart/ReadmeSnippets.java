@@ -201,8 +201,8 @@ public class ReadmeSnippets {
         // page through all log events
         LogEventList logEvents = client.getLogs();
 
-        // or use a filter (start date, end date, filter, or query, sort order) all options are nullable
-        logEvents = client.getLogs(null, null, null, "interestingURI.com", "ASCENDING");
+        // or use a filter (start date, end date, filter, or query, limit, sort order, after) all options are nullable
+        logEvents = client.getLogs(null, null, null, "interestingURI.com", null, "ASCENDING", null);
     }
 
     private void callAnotherEndpoint() {
