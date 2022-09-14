@@ -222,7 +222,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         Thread.sleep(getTestOperationDelay())
 
         // 4.Verify user in list of active users
-        UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
+        UserList users = client.listUsers(null, null, null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
     }
 
@@ -252,7 +252,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // fix flakiness seen in PDV tests
         Thread.sleep(getTestOperationDelay())
 
-        UserList users = client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null)
+        UserList users = client.listUsers(null, null, null, 'status eq \"ACTIVE\"', null, null, null)
         assertPresent(users, user)
     }
 
@@ -678,11 +678,11 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         // fix flakiness seen in PDV tests
         Thread.sleep(getTestOperationDelay())
 
-        assertPresent(client.listUsers(null, 'status eq \"SUSPENDED\"', null, null, null), user)
+        assertPresent(client.listUsers(null, null, null, 'status eq \"SUSPENDED\"', null, null, null), user)
 
         // 3. Unsuspend the user and verify user in list of active users
         user.unsuspend()
-        assertPresent(client.listUsers(null, 'status eq \"ACTIVE\"', null, null, null), user)
+        assertPresent(client.listUsers(null, null, null, 'status eq \"ACTIVE\"', null, null, null), user)
     }
 
     @Test (groups = "group2")
@@ -912,7 +912,7 @@ class UsersIT extends ITSupport implements CrudTestSupport {
         //  Fetch the GroupAssignment list in two requests
         def expandParameter = "group"
         List<ApplicationGroupAssignment> groupAssignments = client.listApplications().first()
-            .listGroupAssignments(null, expandParameter)
+            .listGroupAssignments(null, null, null, expandParameter)
             .stream()
             .collect(Collectors.toList())
 

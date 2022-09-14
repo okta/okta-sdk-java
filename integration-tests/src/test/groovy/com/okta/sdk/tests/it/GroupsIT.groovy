@@ -18,6 +18,7 @@ package com.okta.sdk.tests.it
 import com.okta.sdk.client.Client
 import com.okta.sdk.resource.group.Group
 import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.group.GroupList
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
@@ -99,7 +100,7 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         validateGroup(group, groupName)
 
         // 2. Search the group by name
-        assertPresent(client.listGroups(groupName, null, null), group)
+        assertPresent(client.listGroups(groupName, null, null, null, null), group)
     }
 
     @Test (groups = "bacon")
@@ -117,7 +118,28 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
 
         // 2. Search the group by search parameter
         Thread.sleep(getTestOperationDelay())
-        assertPresent(client.listGroups(null, "profile.name eq \"" + groupName + "\"", null), group)
+        assertPresent(client.listGroups(null, "profile.name eq \"" + groupName + "\"", null, null, null), group)
+    }
+
+    @Test
+    void experiment() {
+
+        for (int i = 1; i <= 350; i++) {
+            String groupName = "TestGroup " + i + " ${uniqueTestName}"
+
+            Group group = GroupBuilder.instance()
+                .setName(groupName)
+                .buildAndCreate(client)
+            registerForCleanup(group)
+        }
+
+        Thread.sleep(2000)
+
+        GroupList listGroupsWithQuery = client.listGroups("TestGroup", null, null, null, null)
+        GroupList listGroupsWithSearch = client.listGroups(null, "profile.name sw \"TestGroup\"", null, null, null)
+
+        assertThat(listGroupsWithQuery.stream().count(), equalTo(300L))
+        assertThat(listGroupsWithSearch.stream().count(), equalTo(350L))
     }
 
     @Test (groups = "group2")

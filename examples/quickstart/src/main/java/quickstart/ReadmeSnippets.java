@@ -102,10 +102,10 @@ public class ReadmeSnippets {
 
     private void userSearch() {
         // search by email
-        UserList users = client.listUsers("jcoder@example.com", null, null, null, null);
+        UserList users = client.listUsers("jcoder@example.com", null, null, null, null, null, null);
 
         // filter parameter
-        users = client.listUsers(null, "status eq \"ACTIVE\"", null, null, null);
+        users = client.listUsers(null, null, null, "status eq \"ACTIVE\"", null, null, null);
     }
 
     private void createUser() {

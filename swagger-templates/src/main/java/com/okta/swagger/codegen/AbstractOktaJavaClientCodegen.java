@@ -133,7 +133,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         buildTopLevelResourceList(swagger);
         addListModels(swagger);
         buildModelTagMap(swagger);
-        removeListAfterAndLimit(swagger);
         moveOperationsToSingleClient(swagger);
         handleOktaLinkedOperations(swagger);
         buildDiscriminationMap(swagger);
@@ -297,17 +296,6 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
 
     protected String tagToPackageName(String tag) {
         return tag.replaceAll("(.)(\\p{Upper})", "$1.$2").toLowerCase(Locale.ENGLISH);
-    }
-
-    public void removeListAfterAndLimit(Swagger swagger) {
-        swagger.getPaths().forEach((pathName, path) ->
-           path.getOperations().forEach(operation ->
-               operation.getParameters().removeIf(param ->
-                       !param.getRequired() &&
-                               ("limit".equals(param.getName()) ||
-                                "after".equals(param.getName())))
-           )
-        );
     }
 
     private void addAllIfNotNull(List<ObjectNode> destList, List<ObjectNode> srcList) {
