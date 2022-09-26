@@ -103,7 +103,7 @@ class ApplicationsIT extends ITSupport {
         }
     }
 
-    @Test (groups = "group1")
+    @Test (groups = "bacon")
     void testClientIsReady() {
         assertThat "Expected client to be ready", client.isReady({ -> client.listApplications() })
     }
@@ -780,7 +780,7 @@ class ApplicationsIT extends ITSupport {
         assertThat(response.size(), is(3))
     }
 
-    @Test (groups = "group1")
+    @Test (groups = "bacon")
     void testExecuteAcceptIonPlusJson() {
         def app = client.instantiate(SamlApplication)
             .setVisibility(client.instantiate(ApplicationVisibility))
@@ -872,7 +872,7 @@ class ApplicationsIT extends ITSupport {
         })
     }
 
-    @Test (groups = "group1")
+    @Test (groups = "bacon")
     void updateApplicationUserProfileTest() {
 
         Application createdApp = client.instantiate(AutoLoginApplication)
