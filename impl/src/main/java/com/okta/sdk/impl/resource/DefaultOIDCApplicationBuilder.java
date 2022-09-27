@@ -40,7 +40,8 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     private Boolean autoKeyRotation;
     private OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
     private List<JsonWebKey> jsonWebKeyList = new ArrayList<>();
-
+    private Boolean isImplicitAssignment;
+    private String inlineHookId;
 
     @Override
     public OIDCApplicationBuilder setApplicationType(OpenIdConnectApplicationType applicationType) {
@@ -151,6 +152,18 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
+    public OIDCApplicationBuilder setImplicitAssignment(Boolean isImplicitAssignment) {
+        this.isImplicitAssignment = isImplicitAssignment;
+        return this;
+    }
+
+    @Override
+    public OIDCApplicationBuilder setInlineHookId(String inlineHookId) {
+        this.inlineHookId = inlineHookId;
+        return this;
+    }
+
+    @Override
     public OpenIdConnectApplication buildAndCreate(Client client){ return (OpenIdConnectApplication) client.createApplication(build(client)); }
 
     private Application build(Client client){
@@ -226,6 +239,12 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
             openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setApplicationType(applicationType));
         else
             throw new IllegalArgumentException("Application Type cannot be null, value should be of type OpenIdConnectApplicationType");
+
+        if (Objects.nonNull(isImplicitAssignment))
+            openIdConnectApplicationSettings.setImplicitAssignment(isImplicitAssignment);
+
+        if (Objects.nonNull(inlineHookId))
+            openIdConnectApplicationSettings.setInlineHookId(inlineHookId);
 
         if(jsonWebKeyList.size() > 0) {
             openIdConnectApplicationSettings

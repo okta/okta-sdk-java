@@ -60,4 +60,8 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
     OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod);
 
     OIDCApplicationBuilder setJwks(List<JsonWebKey> jsonWebKeyList);
+
+    OIDCApplicationBuilder setImplicitAssignment(Boolean isImplicitAssignment);
+
+    OIDCApplicationBuilder setInlineHookId(String inlineHookId);
 }
