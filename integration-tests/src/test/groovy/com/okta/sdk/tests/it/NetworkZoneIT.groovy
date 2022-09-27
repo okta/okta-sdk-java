@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.*
  */
 class NetworkZoneIT extends ITSupport {
 
-    @Test (groups = "group2")
+    @Test
     void listNetworkZonesTest() {
 
         getClient().listNetworkZones()
@@ -88,7 +88,7 @@ class NetworkZoneIT extends ITSupport {
         assertNotPresent(getClient().listNetworkZones(), createdNetworkZone)
     }
 
-    @Test (groups = "group2")
+    @Test
     void updateNetworkZoneTest() {
 
         String networkZoneName = "network-zone-it-${uniqueTestName}"

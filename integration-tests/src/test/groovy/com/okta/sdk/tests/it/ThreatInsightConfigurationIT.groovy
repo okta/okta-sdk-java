@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.notNullValue
  */
 class ThreatInsightConfigurationIT extends ITSupport {
 
-    @Test (groups = "group3")
+    @Test
     void getThreatInsightConfigurationTest() {
 
         ThreatInsightConfiguration currentConfiguration = getClient().getCurrentConfiguration()

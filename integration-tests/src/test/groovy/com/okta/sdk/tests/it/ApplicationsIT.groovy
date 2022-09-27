@@ -160,7 +160,7 @@ class ApplicationsIT extends ITSupport {
                                 .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST))))
     }
 
-    @Test (groups = "group1")
+    @Test
     void crudAutoLogin() {
         doCrudTest(client.instantiate(AutoLoginApplication)
                         .setVisibility(client.instantiate(ApplicationVisibility)
@@ -174,7 +174,7 @@ class ApplicationsIT extends ITSupport {
                                 .setLoginUrl("http://swaprimaryloginurl.okta.com"))))
     }
 
-    @Test (groups = "bacon")
+    @Test
     void crudWsFed() {
         doCrudTest(client.instantiate(WsFederationApplication)
                         .setSettings(client.instantiate(WsFederationApplicationSettings)
@@ -193,7 +193,7 @@ class ApplicationsIT extends ITSupport {
                                 .setUsernameAttribute("username"))))
     }
 
-    @Test (groups = "group1", enabled = false) // OKTA-530437
+    @Test
     void crudSaml20() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -244,7 +244,7 @@ class ApplicationsIT extends ITSupport {
                                                 .setValues(["Value"])])))))
     }
 
-    @Test (groups = "group1")
+    @Test
     void crudSecurePasswordStore() {
         doCrudTest(client.instantiate(SecurePasswordStoreApplication)
                         .setSettings(client.instantiate(SecurePasswordStoreApplicationSettings)
@@ -260,7 +260,7 @@ class ApplicationsIT extends ITSupport {
                                 .setOptionalField3Value("finalvalue"))))
     }
 
-    @Test (groups = "group1")
+    @Test
     void crudBrowserPlugin() {
         doCrudTest(client.instantiate(SwaApplication)
                         .setLabel(uniqueTestName)
@@ -273,7 +273,7 @@ class ApplicationsIT extends ITSupport {
 //                                        .setLoginUrlRegex("REGEX_EXPRESSION"))
     }
 
-    @Test (groups = "group1")
+    @Test
     void crudBasicAuth() {
         doCrudTest(client.instantiate(BasicAuthApplication)
                         .setSettings(client.instantiate(BasicApplicationSettings)
@@ -282,7 +282,7 @@ class ApplicationsIT extends ITSupport {
                                 .setUrl("https://example.com/login.html"))))
     }
 
-    @Test (groups = "group1")
+    @Test
     void crudBasicAuth_editUsernameAndPassword() {
         doCrudTest(client.instantiate(BasicAuthApplication)
                         .setCredentials(client.instantiate(SchemeApplicationCredentials)
@@ -293,7 +293,7 @@ class ApplicationsIT extends ITSupport {
                                 .setUrl("https://example.com/login.html"))))
     }
 
-    @Test (groups = "group1")
+    @Test
     void crudBasicAuth_adminSetsCredentials() {
         doCrudTest(client.instantiate(BasicAuthApplication)
                         .setCredentials(client.instantiate(SchemeApplicationCredentials)
@@ -305,7 +305,7 @@ class ApplicationsIT extends ITSupport {
                                 .setUrl("https://example.com/login.html"))))
     }
 
-    @Test (groups = "group1")
+    @Test
     void invalidApplicationCredentialsSchemeTest() {
         expect(IllegalArgumentException, {
             client.instantiate(BasicAuthApplication)
@@ -319,7 +319,7 @@ class ApplicationsIT extends ITSupport {
         })
     }
 
-    @Test (groups = "group1")
+    @Test
     void invalidOAuthEndpointAuthenticationMethodTest() {
         expect(IllegalArgumentException ,{client.instantiate(OpenIdConnectApplication)
             .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
@@ -343,7 +343,7 @@ class ApplicationsIT extends ITSupport {
                     .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.SDK_UNKNOWN)))})
     }
 
-    @Test (groups = "group1")
+    @Test
     void invalidOAuthResponseTypeTest() {
         expect(IllegalArgumentException ,{client.instantiate(OpenIdConnectApplication)
             .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
@@ -368,7 +368,7 @@ class ApplicationsIT extends ITSupport {
                     .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)))})
     }
 
-    @Test (groups = "group1")
+    @Test
     void invalidOAuthGrantTypeTest() {
         expect(IllegalArgumentException, {client.instantiate(OpenIdConnectApplication)
             .setSettings(client.instantiate(OpenIdConnectApplicationSettings)
@@ -394,7 +394,7 @@ class ApplicationsIT extends ITSupport {
         })
     }
 
-    @Test (groups = "group1")
+    @Test
     void invalidOpenIdConnectApplicationTypeTest() {
         expect(IllegalArgumentException ,{
             client.instantiate(OpenIdConnectApplication)
@@ -420,7 +420,7 @@ class ApplicationsIT extends ITSupport {
         })
     }
 
-    @Test (groups = "group1")
+    @Test
     void crudBookmark() {
         doCrudTest(client.instantiate(BookmarkApplication)
                         .setSettings(client.instantiate(BookmarkApplicationSettings)
@@ -646,7 +646,7 @@ class ApplicationsIT extends ITSupport {
         assertThat readAppUser.getCredentials().getUserName(), equalTo("updated-"+user2.getProfile().getEmail())
     }
 
-    @Test (groups = "group1")
+    @Test
     void csrTest() {
         Client client = getClient()
 
@@ -807,7 +807,7 @@ class ApplicationsIT extends ITSupport {
         assertThat(response.size(), is(3))
     }
 
-    @Test (groups = "group1")
+    @Test
     void testGetRawResponse() {
         def app = client.instantiate(SamlApplication)
             .setVisibility(client.instantiate(ApplicationVisibility))

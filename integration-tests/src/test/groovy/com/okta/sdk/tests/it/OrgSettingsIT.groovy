@@ -39,7 +39,7 @@ import static org.hamcrest.Matchers.*
  */
 class OrgSettingsIT extends ITSupport {
 
-    @Test (groups = "group1")
+    @Test (groups = "group3")
     @Scenario("get-partial-update-org-settings")
     void getPartialUpdateOrgSettingsTest() {
 
@@ -106,7 +106,7 @@ class OrgSettingsIT extends ITSupport {
         orgSetting.partialUpdate()
     }
 
-    @Test (groups = "group2")
+    @Test
     @Scenario("get-org-contacts")
     void getOrgContactsTest() {
         def contactTypes = client.getOrgSettings().getContactTypes()
@@ -118,7 +118,7 @@ class OrgSettingsIT extends ITSupport {
         })
     }
 
-    @Test (groups = "group3")
+    @Test
     @Scenario("get-user-of-contact-type-test")
     void getUserOfContactTypeTest() {
         def orgContactUser = client.getOrgSettings().getOrgContactUser(OrgContactType.BILLING.toString())
@@ -152,7 +152,7 @@ class OrgSettingsIT extends ITSupport {
         assertThat(updatedOrgContactUser.getUserId(), equalTo(billingUser.getId()))
     }
 
-    @Test (groups = "group1")
+    @Test
     @Scenario("get-org-preferences-test")
     void getOrgPreferencesTest() {
         def orgPreferences = client.getOrgSettings().orgPreferences()
@@ -176,7 +176,7 @@ class OrgSettingsIT extends ITSupport {
         }
     }
 
-    @Test (groups = "group2")
+    @Test
     @Scenario("get-okta-communication-settings-test")
     void getOktaCommunicationSettingsTest() {
         def commSettings = client.getOrgSettings().communicationSettings()
@@ -200,7 +200,7 @@ class OrgSettingsIT extends ITSupport {
         }
     }
 
-    @Test (groups = "group3")
+    @Test
     @Scenario("get-org-okta-support-settings-test")
     void getOrgOktaSupportSettingsTest() {
         def supportSettings = client.getOrgSettings().getSupportSettings()

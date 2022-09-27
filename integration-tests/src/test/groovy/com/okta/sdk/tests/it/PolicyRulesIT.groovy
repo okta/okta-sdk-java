@@ -81,7 +81,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         return crudTestPolicy.listPolicyRules().iterator()
     }
 
-    @Test (groups = "group2")
+    @Test
     void deactivateTest() {
 
         def group = randomGroup()
@@ -105,7 +105,7 @@ class PolicyRulesIT extends ITSupport implements CrudTestSupport {
         assertThat(policyRule.getStatus(), is(PolicyRule.StatusEnum.INACTIVE))
     }
 
-    @Test (groups = "group2")
+    @Test
     void listPolicyRulesTest() {
         def group = randomGroup()
         def policy = randomSignOnPolicy(group.getId())
