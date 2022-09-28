@@ -1,14 +1,9 @@
 version: 2.1
 
-orbs:
-  node: circleci/node@5.0.2
-  
 aliases:
 
   - &build_steps
     - checkout
-    - node/install-packages:
-          pkg-manager: npm
     - run: java -version
     - run: ./mvnw clean install -Pci
     - run:
@@ -25,7 +20,6 @@ jobs:
       - image: cimg/openjdk:8.0-node
     environment:
         JVM_OPTS: -Xmx3200m
-    executor: node/default # use the default executor defined within the orb
     steps: *build_steps
   
   jdk11:
@@ -33,7 +27,6 @@ jobs:
       - image: cimg/openjdk:11.0-node
     environment:
         JVM_OPTS: -Xmx3200m
-    executor: node/default # use the default executor defined within the orb
     steps: *build_steps
 
 workflows:
