@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.*
  */
 class FeaturesIT extends ITSupport {
 
-    @Test (groups = "group2")
+    @Test
     void featureOperationsTest() {
         // list features
         FeatureList featureList = client.listFeatures()
