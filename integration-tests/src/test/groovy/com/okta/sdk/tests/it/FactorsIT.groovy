@@ -48,7 +48,7 @@ class FactorsIT extends ITSupport {
 
     private String smsTestNumber = "185 635 15491"
 
-    @Test (groups = "group3")
+    @Test
     void factorListTest() {
 
         Client client = getClient()
@@ -142,14 +142,14 @@ class FactorsIT extends ITSupport {
         assertThat securityQuestions, iterableWithSize(greaterThan(1))
     }
 
-    @Test
+    @Test (groups = "group3")
     void testAvailableFactorsNotEmpty() {
         User user = randomUser()
         UserFactorList factors = user.listSupportedFactors()
         assertThat factors, iterableWithSize(greaterThan(1))
     }
 
-    @Test (groups = "group3")
+    @Test
     void activateTotpFactor() {
         User user = randomUser()
         assertListFactors(user)
