@@ -211,7 +211,7 @@ return this;
 
 public void setCacheManager(CacheManager cacheManager) {
 this.cacheManager = cacheManager;
-this.cache = cacheManager.getCache("default");
+this.cache = this.cacheManager.getCache("default");
 }
 
 /**
