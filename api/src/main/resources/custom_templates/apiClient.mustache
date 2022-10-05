@@ -209,9 +209,16 @@ this.basePath = basePath;
 return this;
 }
 
-public void setCacheManager(CacheManager cacheManager) {
+/**
+* Set the cache manager
+*
+* @param cacheManager the cache manager
+* @return ApiClient this client
+*/
+public ApiClient setCacheManager(CacheManager cacheManager) {
 this.cacheManager = cacheManager;
 this.cache = this.cacheManager.getCache("default");
+return this;
 }
 
 /**
