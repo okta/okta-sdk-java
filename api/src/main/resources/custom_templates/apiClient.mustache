@@ -187,7 +187,6 @@ restTemplate = buildRestTemplate();
 }
 retryTemplate = buildRetryTemplate();
 
-cache = cacheManager.getCache("default");
 }
 
 /**
@@ -212,6 +211,7 @@ return this;
 
 public void setCacheManager(CacheManager cacheManager) {
 this.cacheManager = cacheManager;
+this.cache = cacheManager.getCache("default");
 }
 
 /**
