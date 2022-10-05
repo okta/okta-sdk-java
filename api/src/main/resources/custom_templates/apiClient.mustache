@@ -153,11 +153,6 @@ public ApiClient() {
 init();
 }
 
-public ApiClient(RestTemplate restTemplate) {
-this.restTemplate = restTemplate;
-init();
-}
-
 public ApiClient(RestTemplate restTemplate, CacheManager cacheManager) {
 this.restTemplate = restTemplate;
 this.cacheManager = cacheManager;
