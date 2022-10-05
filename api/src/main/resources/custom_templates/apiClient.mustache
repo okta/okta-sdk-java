@@ -158,12 +158,6 @@ this.restTemplate = restTemplate;
 init();
 }
 
-public ApiClient(RestTemplate restTemplate, CacheManager cacheManager) {
-this.restTemplate = restTemplate;
-this.cacheManager = cacheManager;
-init();
-}
-
 protected void init() {
 // Use RFC3339 format for date and datetime.
 // See http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14
@@ -214,6 +208,10 @@ return basePath;
 public ApiClient setBasePath(String basePath) {
 this.basePath = basePath;
 return this;
+}
+
+public setCacheManager(CacheManager cacheManager) {
+this.cacheManager = cacheManager;
 }
 
 /**

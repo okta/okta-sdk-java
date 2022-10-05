@@ -348,7 +348,8 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
-        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig), this.cacheManager);
+        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig));
+        apiClient.setCacheManager(this.cacheManager);
 
         if (!isOAuth2Flow()) {
             if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
