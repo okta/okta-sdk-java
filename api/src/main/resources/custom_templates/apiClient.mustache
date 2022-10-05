@@ -26,6 +26,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.cache.Cache;
+import com.okta.sdk.cache.CacheManager;
 import java.util.LinkedHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -146,6 +147,8 @@ private DateFormat dateFormat;
 
 private Cache<String, ResponseEntity> cache;
 
+private CacheManager cacheManager;
+
 public ApiClient() {
 init();
 }
@@ -155,9 +158,9 @@ this.restTemplate = restTemplate;
 init();
 }
 
-public ApiClient(RestTemplate restTemplate, RetryTemplate retryTemplate) {
+public ApiClient(RestTemplate restTemplate, CacheManager cacheManager) {
 this.restTemplate = restTemplate;
-this.retryTemplate = retryTemplate;
+this.cacheManager = cacheManager;
 init();
 }
 
@@ -190,7 +193,7 @@ restTemplate = buildRestTemplate();
 }
 retryTemplate = buildRetryTemplate();
 
-cache = Classes.newInstance("com.okta.sdk.impl.cache.DefaultCache", "default");
+cache = cacheManager.getCache("default");
 }
 
 /**

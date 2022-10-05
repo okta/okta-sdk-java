@@ -565,6 +565,52 @@ okta.client.requestTimeout = 0
 okta.client.rateLimit.maxRetries = 0
 ```
 
+## Caching
+
+By default, a simple production-grade in-memory CacheManager will be enabled when the Client instance is created. This CacheManager implementation has the following characteristics:
+
+- It assumes a default time-to-live and time-to-idle of 1 hour for all cache entries.
+- It auto-sizes itself based on your application's memory usage. It will not cause OutOfMemoryExceptions.
+
+**The default cache manager is not suitable for an application deployed across multiple JVMs.**
+
+This is because the default implementation is 100% in-memory (in-process) in the current JVM. If more than one JVM is deployed with the same application codebase - for example, a web application deployed on multiple identical hosts for scaling or high availability - each JVM would have it's own in-memory cache.
+
+As a result, if your application that uses an Okta Client instance is deployed across multiple JVMs, you SHOULD ensure that the Client is configured with a CacheManager implementation that uses coherent and clustered/distributed memory.
+
+See the [`ClientBuilder` Javadoc](https://developer.okta.com/okta-sdk-java/apidocs/com/okta/sdk/client/ClientBuilder) for more details on caching.
+
+### Caching for applications deployed on a single JVM
+
+If your application is deployed on a single JVM and you still want to use the default CacheManager implementation, but the default cache configuration does not meet your needs, you can specify a different configuration. For example:
+
+[//]: # (method: complexCaching)
+```java
+Caches.newCacheManager()
+     .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
+     .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
+     .withCache(forResource(User.class) //User-specific cache settings
+         .withTimeToLive(1, TimeUnit.HOURS)
+         .withTimeToIdle(30, TimeUnit.MINUTES))
+     .withCache(forResource(Group.class) //Group-specific cache settings
+         .withTimeToLive(2, TimeUnit.HOURS))
+     //... etc ...
+     .build();
+```
+[//]: # (end: complexCaching)
+
+### Disable Caching
+
+While production applications will usually enable a working CacheManager as described above, you might wish to disable caching entirely. You can do this by configuring a disabled CacheManager instance. For example:
+
+[//]: # (method: disableCaching)
+```java
+Client client = Clients.builder()
+    .setCacheManager(Caches.newDisabledCacheManager())
+    .build();
+```
+[//]: # (end: disableCaching)
+
 ## Building the SDK
 
 In most cases, you won't need to build the SDK from source. If you want to build it yourself, take a look at the [build instructions wiki](https://github.com/okta/okta-sdk-java/wiki/Build-It) (though just cloning the repo and running `mvn install` should get you going).

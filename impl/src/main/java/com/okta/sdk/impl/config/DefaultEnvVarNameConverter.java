@@ -32,6 +32,8 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
 
         // this dependency on ClientBuilder isn't great, in the future we can change the API to ONLY support a one way conversion
         this.envToDotPropMap = buildReverseLookupToMap(
+            ClientBuilder.DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME,
+            ClientBuilder.DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME,
             ClientBuilder.DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME,
             ClientBuilder.DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME,
             ClientBuilder.DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME,
