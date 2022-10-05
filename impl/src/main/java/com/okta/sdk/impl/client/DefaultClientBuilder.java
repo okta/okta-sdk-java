@@ -349,7 +349,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig));
-        apiClient.setCacheManager(this.cacheManager);
+        //apiClient.setCacheManager(this.cacheManager);
 
         if (!isOAuth2Flow()) {
             if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
