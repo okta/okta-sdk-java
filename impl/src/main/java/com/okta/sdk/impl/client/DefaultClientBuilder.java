@@ -24,8 +24,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.commons.configcheck.ConfigurationValidator;
 import com.okta.commons.http.config.Proxy;
 import com.okta.commons.lang.Assert;
+import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.sdk.cache.CacheConfigurationBuilder;
+import com.okta.sdk.cache.CacheManager;
+import com.okta.sdk.cache.CacheManagerBuilder;
+import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.ClientBuilder;
@@ -62,6 +67,8 @@ import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.model.UserProfile;
 import org.openapitools.jackson.nullable.JsonNullableModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -91,6 +98,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -113,12 +121,15 @@ import java.util.Set;
  */
 public class DefaultClientBuilder implements ClientBuilder {
 
+    private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
+
     private static final String ENVVARS_TOKEN   = "envvars";
     private static final String SYSPROPS_TOKEN  = "sysprops";
     private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
 
+    private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
 
@@ -167,6 +178,38 @@ public class DefaultClientBuilder implements ClientBuilder {
         // if != null, allow it to override previously set values
         if (Strings.hasText(props.get(DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME))) {
             clientConfig.setApiToken(props.get(DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME))) {
+            clientConfig.setCacheManagerEnabled(Boolean.parseBoolean(props.get(DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME)));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME))) {
+            clientConfig.setCacheManagerTtl(Long.parseLong(props.get(DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME)));
+        }
+
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME))) {
+            clientConfig.setCacheManagerTti(Long.parseLong(props.get(DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME)));
+        }
+
+        for (String prop : props.keySet()) {
+            boolean isPrefix = prop.length() == DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME.length();
+            if (!isPrefix && prop.startsWith(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME)) {
+                // get class from prop name
+                String cacheClass = prop.substring(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME.length() + 1, prop.length() - 4);
+                String cacheTti = props.get(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME + "." + cacheClass + ".tti");
+                String cacheTtl = props.get(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME + "." + cacheClass + ".ttl");
+                CacheConfigurationBuilder cacheBuilder = Caches.forResource(Classes.forName(cacheClass));
+                if (Strings.hasText(cacheTti)) {
+                    cacheBuilder.withTimeToIdle(Long.parseLong(cacheTti), TimeUnit.SECONDS);
+                }
+                if (Strings.hasText(cacheTtl)) {
+                    cacheBuilder.withTimeToLive(Long.parseLong(cacheTtl), TimeUnit.SECONDS);
+                }
+                if (!clientConfig.getCacheManagerCaches().containsKey(cacheClass)) {
+                    clientConfig.getCacheManagerCaches().put(cacheClass, cacheBuilder);
+                }
+            }
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME))) {
@@ -248,6 +291,12 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     @Override
+    public ClientBuilder setCacheManager(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+        return this;
+    }
+
+    @Override
     public ClientBuilder setConnectionTimeout(int timeout) {
         Assert.isTrue(timeout >= 0, "Timeout cannot be a negative number.");
         this.clientConfig.setConnectionTimeout(timeout);
@@ -276,12 +325,30 @@ public class DefaultClientBuilder implements ClientBuilder {
     @Override
     public ApiClient build() {
 
+        if (!this.clientConfig.isCacheManagerEnabled()) {
+            log.debug("CacheManager disabled. Defaulting to DisabledCacheManager");
+            this.cacheManager = Caches.newDisabledCacheManager();
+        } else if (this.cacheManager == null) {
+            log.debug("No CacheManager configured. Defaulting to in-memory CacheManager with default TTL and TTI of five minutes.");
+
+            CacheManagerBuilder cacheManagerBuilder = Caches.newCacheManager()
+                .withDefaultTimeToIdle(this.clientConfig.getCacheManagerTti(), TimeUnit.SECONDS)
+                .withDefaultTimeToLive(this.clientConfig.getCacheManagerTtl(), TimeUnit.SECONDS);
+            if (this.clientConfig.getCacheManagerCaches().size() > 0) {
+                for (CacheConfigurationBuilder builder : this.clientConfig.getCacheManagerCaches().values()) {
+                    cacheManagerBuilder.withCache(builder);
+                }
+            }
+
+            this.cacheManager = cacheManagerBuilder.build();
+        }
+
         if (this.clientConfig.getBaseUrlResolver() == null) {
             ConfigurationValidator.validateOrgUrl(this.clientConfig.getBaseUrl(), allowNonHttpsForTesting);
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
-        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig));
+        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig), this.cacheManager);
 
         if (!isOAuth2Flow()) {
             if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
@@ -337,24 +404,25 @@ public class DefaultClientBuilder implements ClientBuilder {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(objectMapper);
-        ObjectMapper mapper = messageConverter.getObjectMapper();
-        messageConverter.setSupportedMediaTypes(Arrays.asList(
-            MediaType.APPLICATION_JSON,
-            MediaType.parseMediaType("application/x-pem-file"),
-            MediaType.parseMediaType("application/x-x509-ca-cert"),
-            MediaType.parseMediaType("application/pkix-cert")));
-        mapper.registerModule(new JavaTimeModule());
-        mapper.registerModule(new JsonNullableModule());
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.registerModule(new JsonNullableModule());
 
         SimpleModule module = new SimpleModule();
         module.addSerializer(UserProfile.class, new UserProfileSerializer());
         module.addDeserializer(UserProfile.class, new UserProfileDeserializer());
-        mapper.registerModule(module);
+        objectMapper.registerModule(module);
+
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter =
+            new MappingJackson2HttpMessageConverter(objectMapper);
+
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(
+            MediaType.APPLICATION_JSON,
+            MediaType.parseMediaType("application/x-pem-file"),
+            MediaType.parseMediaType("application/x-x509-ca-cert"),
+            MediaType.parseMediaType("application/pkix-cert")));
 
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-        messageConverters.add(messageConverter);
+        messageConverters.add(mappingJackson2HttpMessageConverter);
 
         RestTemplate restTemplate = new RestTemplate(messageConverters);
         restTemplate.setErrorHandler(new ErrorHandler());
@@ -364,6 +432,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     private HttpComponentsClientHttpRequestFactory requestFactory(ClientConfiguration clientConfig) {
+
         final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 
         if (clientConfig.getProxy() != null) {

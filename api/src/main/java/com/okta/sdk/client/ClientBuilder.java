@@ -18,6 +18,7 @@ package com.okta.sdk.client;
 
 import com.okta.commons.http.config.Proxy;
 import com.okta.sdk.authc.credentials.ClientCredentials;
+import com.okta.sdk.cache.CacheManager;
 import org.openapitools.client.ApiClient;
 
 import java.io.InputStream;
@@ -64,6 +65,10 @@ import java.util.Set;
 public interface ClientBuilder {
 
     String DEFAULT_CLIENT_API_TOKEN_PROPERTY_NAME = "okta.client.token";
+    String DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME = "okta.client.cache.enabled";
+    String DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME = "okta.client.cache.defaultTtl";
+    String DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME = "okta.client.cache.defaultTti";
+    String DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME = "okta.client.cache.caches";
     String DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME = "okta.client.orgUrl";
     String DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME = "okta.client.connectionTimeout";
     String DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME = "okta.client.authenticationScheme";
@@ -103,6 +108,60 @@ public interface ClientBuilder {
      * @return the ClientBuilder instance for method chaining.
      */
     ClientBuilder setProxy(Proxy proxy);
+
+    /**
+     * Sets the {@link CacheManager} that should be used to cache Okta REST resources, reducing round-trips to the
+     * Okta API server and enhancing application performance.
+     *
+     * <b>Single JVM Applications</b>
+     *
+     * <p>If your application runs on a single JVM-based applications, the
+     * {@link com.okta.sdk.cache.CacheManagerBuilder CacheManagerBuilder} should be sufficient for your needs. You
+     * create a {@code CacheManagerBuilder} by using the {@link com.okta.sdk.cache.Caches Caches} utility class,
+     * for example:</p>
+     *
+     * <pre>
+     * import static com.okta.sdk.cache.Caches.*;
+     *
+     * ...
+     *
+     * ApiClient client = Clients.builder()...
+     *     .setCacheManager(
+     *         {@link com.okta.sdk.cache.Caches#newCacheManager() newCacheManager()}
+     *         .withDefaultTimeToLive(1, TimeUnit.DAYS) //general default
+     *         .withDefaultTimeToIdle(2, TimeUnit.HOURS) //general default
+     *         .withCache({@link com.okta.sdk.cache.Caches#forResource(Class) forResource}(User.class) //User-specific cache settings
+     *             .withTimeToLive(1, TimeUnit.HOURS)
+     *             .withTimeToIdle(30, TimeUnit.MINUTES))
+     *         .withCache({@link com.okta.sdk.cache.Caches#forResource(Class) forResource}(Group.class) //Group-specific cache settings
+     *             .withTimeToLive(2, TimeUnit.HOURS))
+     *         .build() //build the CacheManager
+     *     )
+     *     .build(); //build the Client
+     * </pre>
+     *
+     * <p><em>The above TTL and TTI times are just examples showing API usage - the times themselves are not
+     * recommendations.  Choose TTL and TTI times based on your application requirements.</em></p>
+     *
+     * <b>Multi-JVM / Clustered Applications</b>
+     *
+     * <p>The default {@code CacheManager} instances returned by the
+     * {@link com.okta.sdk.cache.CacheManagerBuilder CacheManagerBuilder} might not be sufficient for a
+     * multi-instance application that runs on multiple JVMs and/or hosts/servers, as there could be cache-coherency
+     * problems across the JVMs.  See the {@link com.okta.sdk.cache.CacheManagerBuilder CacheManagerBuilder}
+     * JavaDoc for additional information.</p>
+     *
+     * <p>In these multi-JVM environments, you will likely want to create a simple CacheManager implementation that
+     * wraps your distributed Caching API/product of choice and then plug that implementation in to the Okta SDK
+     * via this method.  Hazelcast is one known cluster-safe caching product, and the Okta SDK has out-of-the-box
+     * support for this as an extension module.  See the top-level class JavaDoc for a Hazelcast configuration
+     * example.</p>
+     *
+     * @param cacheManager the {@link CacheManager} that should be used to cache Okta REST resources, reducing
+     *                     round-trips to the Okta API server and enhancing application performance.
+     * @return the ClientBuilder instance for method chaining
+     */
+    ClientBuilder setCacheManager(CacheManager cacheManager);
 
     /**
      * Overrides the default (very secure)

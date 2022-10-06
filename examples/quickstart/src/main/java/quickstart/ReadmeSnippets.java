@@ -16,6 +16,7 @@
 package quickstart;
 
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
+import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
@@ -55,6 +56,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static com.okta.sdk.cache.Caches.forResource;
 
 /**
  * Example snippets used for this projects README.md.
@@ -287,6 +291,25 @@ public class ReadmeSnippets {
 
         // or stream
         usersPagedListOne.getItems().stream().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
+    }
+
+    private void complexCaching() {
+        Caches.newCacheManager()
+            .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
+            .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
+            .withCache(forResource(User.class) //User-specific cache settings
+                .withTimeToLive(1, TimeUnit.HOURS)
+                .withTimeToIdle(30, TimeUnit.MINUTES))
+            .withCache(forResource(Group.class) //Group-specific cache settings
+                .withTimeToLive(1, TimeUnit.HOURS))
+            //... etc ...
+            .build(); //build the CacheManager
+    }
+
+    private void disableCaching() {
+        ApiClient client = Clients.builder()
+            .setCacheManager(Caches.newDisabledCacheManager())
+            .build();
     }
 
     private static ApiClient buildApiClient(String orgBaseUrl, String apiKey) {

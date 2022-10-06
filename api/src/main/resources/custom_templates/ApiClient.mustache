@@ -19,6 +19,15 @@ package {{invokerPackage}};
     import com.fasterxml.jackson.dataformat.xml.XmlMapper;
     import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 {{/withXml}}
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.okta.commons.lang.Classes;
+import com.okta.sdk.cache.Cache;
+import com.okta.sdk.cache.CacheManager;
+import java.util.LinkedHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -37,11 +46,11 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 {{#withXml}}
     import org.springframework.http.converter.HttpMessageConverter;
-    import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
     import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 {{/withXml}}
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -76,6 +85,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import java.util.stream.Collectors;
@@ -135,18 +145,17 @@ private Map<String, Authentication> authentications;
 
 private DateFormat dateFormat;
 
+private Cache<String, ResponseEntity> cache;
+
+private CacheManager cacheManager;
+
 public ApiClient() {
 init();
 }
 
-public ApiClient(RestTemplate restTemplate) {
+public ApiClient(RestTemplate restTemplate, CacheManager cacheManager) {
 this.restTemplate = restTemplate;
-init();
-}
-
-public ApiClient(RestTemplate restTemplate, RetryTemplate retryTemplate) {
-this.restTemplate = restTemplate;
-this.retryTemplate = retryTemplate;
+this.cacheManager = cacheManager;
 init();
 }
 
@@ -178,6 +187,8 @@ if (restTemplate == null) {
 restTemplate = buildRestTemplate();
 }
 retryTemplate = buildRetryTemplate();
+
+cache = cacheManager.getCache("default");
 }
 
 /**
@@ -745,14 +756,72 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
 
                             RequestEntity<Object> requestEntity = requestBuilder.body(selectBody(body, formParams, contentType));
 
-                            ResponseEntity<T> responseEntity = retryTemplate.execute(context -> restTemplate.exchange(requestEntity, returnType));
+                                String cacheKey = requestEntity.getUrl().toString();
 
-                                    if (responseEntity.getStatusCode().is2xxSuccessful()) {
-                                    return responseEntity;
-                                    } else {
-                                    // The error handler built into the RestTemplate should handle 400 and 500 series errors.
-                                    throw new RestClientException("API returned " + responseEntity.getStatusCode() + " and it wasn't handled by the RestTemplate error handler");
-                                    }
+                                if (Objects.nonNull(requestEntity.getUrl().getQuery())) {
+                                cacheKey = requestEntity.getUrl().toString().split("\\?")[0];
+                                }
+
+                                if (method == HttpMethod.DELETE) {
+                                cache.remove(cacheKey);
+                                }
+
+                                if (method == HttpMethod.GET &&
+                                !returnType.getType().getTypeName().contains("List") &&
+                                !(Objects.nonNull(requestEntity.getUrl().getQuery()) && requestEntity.getUrl().getQuery().contains("expand"))) {
+
+                                ResponseEntity<T> cacheData = cache.get(cacheKey);
+
+                                    if (Objects.isNull(cacheData) || !cacheData.hasBody()) {
+                                    ResponseEntity<T> responseEntity = retryTemplate.execute(context -> restTemplate.exchange(requestEntity, returnType));
+
+                                        if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+
+                                        if (method == HttpMethod.GET && Objects.nonNull(responseEntity.getBody())) {
+
+                                        Map<String, ?> map = objectMapper().convertValue(responseEntity.getBody(), LinkedHashMap.class);
+
+                                        String href = null;
+
+                                        if (Objects.nonNull(map)) {
+                                        Map<String, LinkedHashMap> links = (Map<String, LinkedHashMap>) map.get("_links");
+                                        if (Objects.nonNull(links)) {
+                                        LinkedHashMap<String, String> self = links.get("self");
+                                        if (Objects.nonNull(self)) {
+                                        href = (String) self.get("href");
+                                        }
+                                        }
+                                        }
+
+                                        if (Objects.nonNull(href)) {
+                                        cache.put(href, responseEntity);
+                                        } else {
+                                        cache.put(cacheKey, responseEntity);
+                                        }
+                                        }
+
+                                        return responseEntity;
+                                        } else {
+                                        // The error handler built into the RestTemplate should handle 400 and 500 series errors.
+                                        throw new RestClientException("API returned " + responseEntity.getStatusCode() + " and it wasn't handled by the RestTemplate error handler");
+                                        }
+                                        } else {
+                                        // return data from cache
+                                        return cache.get(cacheKey);
+                                        }
+                                        } else {
+                                        ResponseEntity<T> responseEntity = retryTemplate.execute(context -> restTemplate.exchange(requestEntity, returnType));
+
+                                            if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+                                            if (cache.get(cacheKey) != null) {
+                                            cache.put(cacheKey, responseEntity);
+                                            }
+                                            return responseEntity;
+                                            } else {
+                                            // The error handler built into the RestTemplate should handle 400 and 500 series errors.
+                                            throw new RestClientException("API returned " + responseEntity.getStatusCode() + " and it wasn't handled by the RestTemplate error handler");
+                                            }
+                                            }
                                     }
 
                                     /**
@@ -840,6 +909,16 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                                 retryTemplate.setThrowLastExceptionOnExhausted(true);
                                                 return retryTemplate;
                                                 }
+
+                                                        private ObjectMapper objectMapper() {
+                                                        ObjectMapper objectMapper = new ObjectMapper();
+                                                        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                                                        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                                                        objectMapper.registerModule(new JavaTimeModule());
+                                                        objectMapper.registerModule(new JsonNullableModule());
+
+                                                        return objectMapper;
+                                                        }
 
                                                 /**
                                                 * Update query and header parameters based on authentication settings.
