@@ -25,7 +25,7 @@
 
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-root</artifactId>
-    <version>11.0.0-beta-SNAPSHOT</version>
+    <version>10.0.1-beta-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Okta Java SDK</name>
@@ -66,12 +66,12 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-api</artifactId>
-                <version>11.0.0-beta-SNAPSHOT</version>
+                <version>10.0.1-beta-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-impl</artifactId>
-                <version>11.0.0-beta-SNAPSHOT</version>
+                <version>10.0.1-beta-SNAPSHOT</version>
             </dependency>
 
             <!-- Other Okta Projects -->
@@ -101,14 +101,14 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-integration-tests</artifactId>
-                <version>11.0.0-beta-SNAPSHOT</version>
+                <version>10.0.1-beta-SNAPSHOT</version>
             </dependency>
 
             <!-- Examples -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-examples-quickstart</artifactId>
-                <version>11.0.0-beta-SNAPSHOT</version>
+                <version>10.0.1-beta-SNAPSHOT</version>
             </dependency>
 
             <!-- Logging -->
