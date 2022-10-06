@@ -34,7 +34,7 @@
     <inceptionYear>2017</inceptionYear>
 
     <properties>
-        <swagger-annotations.version>1.5.8</swagger-annotations.version>
+        <swagger-annotations.version>1.6.7</swagger-annotations.version>
         <jackson.version>2.13.4</jackson.version>
         <snakeyaml.version>1.33</snakeyaml.version>
         <bouncycastle.version>1.70</bouncycastle.version>
