@@ -153,8 +153,9 @@ public ApiClient() {
 init();
 }
 
-public ApiClient(RestTemplate restTemplate) {
+public ApiClient(RestTemplate restTemplate, CacheManager cacheManager) {
 this.restTemplate = restTemplate;
+this.cacheManager = cacheManager;
 init();
 }
 
@@ -187,6 +188,7 @@ restTemplate = buildRestTemplate();
 }
 retryTemplate = buildRetryTemplate();
 
+cache = cacheManager.getCache("default");
 }
 
 /**
@@ -206,18 +208,6 @@ return basePath;
 */
 public ApiClient setBasePath(String basePath) {
 this.basePath = basePath;
-return this;
-}
-
-/**
-* Set the cache manager
-*
-* @param cacheManager the cache manager
-* @return ApiClient this client
-*/
-public ApiClient setCacheManager(CacheManager cacheManager) {
-this.cacheManager = cacheManager;
-this.cache = this.cacheManager.getCache("default");
 return this;
 }
 
