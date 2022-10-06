@@ -292,8 +292,8 @@
                         </oldVersion>
                         <parameter>
                             <onlyModified>true</onlyModified>
-                            <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications>
-                            <breakBuildBasedOnSemanticVersioning>false</breakBuildBasedOnSemanticVersioning>
+                            <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications> <!-- TODO: revert to true after GA release (can remain false for beta releases) -->
+                            <breakBuildBasedOnSemanticVersioning>false</breakBuildBasedOnSemanticVersioning> <!-- TODO: revert to true after GA release (can remain false for beta releases) -->
                             <postAnalysisScript>${root.dir}/src/japicmp/postAnalysisScript.groovy</postAnalysisScript>
                         </parameter>
                     </configuration>
