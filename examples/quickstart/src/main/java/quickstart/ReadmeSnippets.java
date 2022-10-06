@@ -301,7 +301,7 @@ public class ReadmeSnippets {
                 .withTimeToLive(1, TimeUnit.HOURS)
                 .withTimeToIdle(30, TimeUnit.MINUTES))
             .withCache(forResource(Group.class) //Group-specific cache settings
-                .withTimeToLive(2, TimeUnit.HOURS))
+                .withTimeToLive(1, TimeUnit.HOURS))
             //... etc ...
             .build(); //build the CacheManager
     }

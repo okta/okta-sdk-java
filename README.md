@@ -587,15 +587,15 @@ If your application is deployed on a single JVM and you still want to use the de
 [//]: # (method: complexCaching)
 ```java
 Caches.newCacheManager()
-     .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
-     .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
-     .withCache(forResource(User.class) //User-specific cache settings
-         .withTimeToLive(1, TimeUnit.HOURS)
-         .withTimeToIdle(30, TimeUnit.MINUTES))
-     .withCache(forResource(Group.class) //Group-specific cache settings
-         .withTimeToLive(2, TimeUnit.HOURS))
-     //... etc ...
-     .build();
+    .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
+    .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
+    .withCache(forResource(User.class) //User-specific cache settings
+        .withTimeToLive(1, TimeUnit.HOURS)
+        .withTimeToIdle(30, TimeUnit.MINUTES))
+    .withCache(forResource(Group.class) //Group-specific cache settings
+        .withTimeToLive(1, TimeUnit.HOURS))
+    //... etc ...
+    .build();
 ```
 [//]: # (end: complexCaching)
 
@@ -605,7 +605,7 @@ While production applications will usually enable a working CacheManager as desc
 
 [//]: # (method: disableCaching)
 ```java
-Client client = Clients.builder()
+ApiClient client = Clients.builder()
     .setCacheManager(Caches.newDisabledCacheManager())
     .build();
 ```
