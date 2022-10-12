@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.tests.it.util
 
+import org.openapitools.client.api.GroupApi
 import org.openapitools.client.model.Group
 import org.openapitools.client.model.User
 import org.testng.Assert
@@ -55,43 +56,24 @@ class Util {
         validateGroup(group, groupName)
         assertThat(group.profile.description, equalTo(description))
     }
-//
-//    static void assertGroupPresent(GroupList results, Group expectedGroup) {
-//
-//        List<Group> groupsFound = StreamSupport.stream(results.spliterator(), false)
-//                .filter {group -> group.id == expectedGroup.id}
-//                .collect(Collectors.toList())
-//
-//        assertThat(groupsFound, hasSize(1))
-//    }
-//
-//    static void assertGroupAbsent(GroupList results, Group expectedGroup) {
-//
-//        List<Group> groupsFound = StreamSupport.stream(results.spliterator(), false)
-//            .filter {group -> group.id == expectedGroup.id}
-//            .collect(Collectors.toList())
-//
-//        assertThat(groupsFound, hasSize(0))
-//    }
-//
-//    static void assertRolePresent(RoleList results, Role expectedRole) {
-//
-//        List<Role> rolesFound = StreamSupport.stream(results.spliterator(), false)
-//            .filter {role -> role.id == expectedRole.id}
-//            .collect(Collectors.toList())
-//
-//        assertThat(rolesFound, hasSize(1))
-//    }
-//
-//    static void assertRoleAbsent(RoleList results, Role expectedRole) {
-//
-//        List<Role> rolesFound = StreamSupport.stream(results.spliterator(), false)
-//            .filter {role -> role.id == expectedRole.id}
-//            .collect(Collectors.toList())
-//
-//        assertThat(rolesFound, hasSize(0))
-//    }
-//
+
+    static void assertGroupPresent(List<Group> results, Group expectedGroup) {
+
+        List<Group> groupsFound = StreamSupport.stream(results.spliterator(), false)
+                .filter {group -> group.id == expectedGroup.id}
+                .collect(Collectors.toList())
+
+        assertThat(groupsFound, hasSize(1))
+    }
+
+    static void assertGroupAbsent(List<Group> results, Group expectedGroup) {
+
+        List<Group> groupsFound = StreamSupport.stream(results.spliterator(), false)
+            .filter {group -> group.id == expectedGroup.id}
+            .collect(Collectors.toList())
+
+        assertThat(groupsFound, hasSize(0))
+    }
 
     static void assertUserPresent(List<User> users, User expectedUser) {
 
@@ -102,87 +84,49 @@ class Util {
         assertThat(usersFound, hasSize(1))
     }
 
-//    static <T extends Resource, C extends CollectionResource<T>> void assertPresent(C results, T expected) {
-//
-//        List<T> resourcesFound = StreamSupport.stream(results.spliterator(), false)
-//                .filter {listItem -> listItem.id == expected.id}
-//                .collect(Collectors.toList())
-//
-//        assertThat(resourcesFound, hasSize(1))
-//    }
-//
-//    static <T extends Resource, C extends CollectionResource<T>> void assertNotPresent(C results, T expected) {
-//
-//        List<T> resourcesFound = StreamSupport.stream(results.spliterator(), false)
-//                .filter {listItem -> listItem.id == expected.id}
-//                .collect(Collectors.toList())
-//
-//        assertThat(resourcesFound, hasSize(0))
-//    }
-//
-//    static <T extends Resource, C extends CollectionResource<T>> void assertLinkedObjectPresent(C results, T expected) {
-//
-//        List<T> resourcesFound = StreamSupport.stream(results.spliterator(), false)
-//                .filter { listItem ->
-//                    ((listItem.primary.name == expected.primary.name) &&
-//                            (listItem.associated.name == expected.associated.name))}
-//                .collect(Collectors.toList())
-//
-//        assertThat(resourcesFound, hasSize(1))
-//    }
-//
-//    static void assertGroupTargetPresent(User user, Group group, Role role) {
-//        def groupTargets = user.listGroupTargets(role.id)
-//
-//        assertThat "GroupTarget Present not found in User role",
-//                StreamSupport.stream(groupTargets.spliterator(), false)
-//                    .filter{ groupTarget -> groupTarget.profile.name == group.profile.name}
-//                    .findFirst().isPresent()
-//    }
-//
-//    static void assertUserInGroup(User user, Group group) {
-//        assertThat "User was not found in group.", StreamSupport.stream(group.listUsers().spliterator(), false)
-//                .filter{ listUser -> listUser.id == user.id}
-//                .findFirst().isPresent()
-//    }
-//
-//    static void assertUserInGroup(User user, Group group, int times, long delayInMilliseconds, boolean present=true) {
-//        for (int ii=0; ii<times; ii++) {
-//
-//            sleep(delayInMilliseconds)
-//
-//            if (present == StreamSupport.stream(group.listUsers().spliterator(), false)
-//                    .filter{ listUser -> listUser.id == user.id}
-//                    .findFirst().isPresent()) {
-//                return
-//            }
-//        }
-//
-//        if (present) Assert.fail("User not found in group")
-//        if (!present) Assert.fail("User found in group")
-//    }
-//
-//    static void assertUserNotInGroup(User user, Group group) {
-//        assertThat "User was found in group.", !StreamSupport.stream(group.listUsers().spliterator(), false)
-//                .filter{ listUser -> listUser.id == user.id}
-//                .findFirst().isPresent()
-//    }
-//
-//    static void assertUserNotInGroup(User user, Group group, int times, long delayInMilliseconds, boolean present=true) {
-//        for (int ii=0; ii<times; ii++) {
-//
-//            sleep(delayInMilliseconds)
-//
-//            if (present == !StreamSupport.stream(group.listUsers().spliterator(), false)
-//                .filter{ listUser -> listUser.id == user.id}
-//                .findFirst().isPresent()) {
-//                return
-//            }
-//        }
-//
-//        if (present) Assert.fail("User not found in group")
-//        if (!present) Assert.fail("User found in group")
-//    }
+    static void assertUserInGroup(User user, Group group, GroupApi groupApi) {
+        assertThat "User was not found in group.", StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
+                .filter{ listUser -> listUser.id == user.id}
+                .findFirst().isPresent()
+    }
+
+    static void assertUserInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds, boolean present=true) {
+        for (int ii=0; ii<times; ii++) {
+
+            sleep(delayInMilliseconds)
+
+            if (present == StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
+                    .filter{ listUser -> listUser.id == user.id}
+                    .findFirst().isPresent()) {
+                return
+            }
+        }
+
+        if (present) Assert.fail("User not found in group")
+        if (!present) Assert.fail("User found in group")
+    }
+
+    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi) {
+        assertThat "User was found in group.", !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
+                .filter{ listUser -> listUser.id == user.id}
+                .findFirst().isPresent()
+    }
+
+    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds, boolean present=true) {
+        for (int ii=0; ii<times; ii++) {
+
+            sleep(delayInMilliseconds)
+
+            if (present == !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
+                .filter{ listUser -> listUser.id == user.id}
+                .findFirst().isPresent()) {
+                return
+            }
+        }
+
+        if (present) Assert.fail("User not found in group")
+        if (!present) Assert.fail("User found in group")
+    }
 
     static def ignoring = { Class<? extends Throwable> catchMe, Closure callMe ->
         try {
