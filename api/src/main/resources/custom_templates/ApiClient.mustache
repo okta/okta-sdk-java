@@ -766,6 +766,15 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                 cache.remove(cacheKey);
                                 }
 
+                                String[] uriSegments = uri.getPath().split("/");
+
+                                if (uriSegments != null && uriSegments.length >= 5) {
+                                String key = getBasePath() + "/" + uriSegments[1] + "/" + uriSegments[2] + "/" + uriSegments[3] + "/" + uriSegments[4];
+                                if (cache.get(key) != null) {
+                                cache.remove(key);
+                                }
+                                }
+
                                 if (method == HttpMethod.GET &&
                                 !returnType.getType().getTypeName().contains("List") &&
                                 !(Objects.nonNull(requestEntity.getUrl().getQuery()) && requestEntity.getUrl().getQuery().contains("expand"))) {

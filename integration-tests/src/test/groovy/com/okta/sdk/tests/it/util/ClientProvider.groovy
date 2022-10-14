@@ -210,6 +210,27 @@ trait ClientProvider implements IHookable {
         }
     }
 
+    void deletePolicy(String id, ApiClient client) {
+        log.info("Deleting Policy: {}", id)
+        PolicyApi policyApi = new PolicyApi(client)
+        Policy policyToDelete = policyApi.getPolicy(id, "false")
+
+        if (policyToDelete != null) {
+            if (policyToDelete.getStatus() == "ACTIVE") {
+                // deactivate
+                policyApi.deactivatePolicy(policyToDelete.getId())
+            }
+            // delete
+            policyApi.deletePolicy(policyToDelete.getId())
+        }
+    }
+
+    void deletePolicyRule(String policyId, String ruleId, ApiClient client) {
+        log.info("Deleting PolicyRule: policyId {}, ruleId: {}", policyId, ruleId)
+        PolicyApi policyApi = new PolicyApi(client)
+        policyApi.deletePolicyRule(policyId, ruleId)
+    }
+
     @AfterMethod (groups = ["group1", "group2", "group3"])
     void clean() {
         if (!isRunningWithTestServer()) {
@@ -243,6 +264,10 @@ trait ClientProvider implements IHookable {
                     else if (deletable instanceof InlineHook) {
                         InlineHook tobeDeletedInlineHook = (InlineHook) deletable
                         deleteInlineHook(tobeDeletedInlineHook.getId(), getClient())
+                    }
+                    else if (deletable instanceof Policy) {
+                        Policy tobeDeletedPolicy = (Policy) deletable
+                        deletePolicy(tobeDeletedPolicy.getId(), getClient())
                     }
                 }
                 catch (Exception e) {
