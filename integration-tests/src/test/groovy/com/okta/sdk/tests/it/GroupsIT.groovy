@@ -92,6 +92,7 @@ class GroupsIT extends ITSupport {
 
         // 2. Search the group by search parameter
         Thread.sleep(getTestOperationDelay())
+
         assertGroupPresent(groupApi.listGroups(null, "profile.name eq \"" + groupName + "\"", null, null, null), group)
     }
 
