@@ -18,62 +18,16 @@ package com.okta.sdk.tests.it
 import com.okta.sdk.resource.application.OIDCApplicationBuilder
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
-import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.NonOIEEnvironmentOnly
-import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.openapitools.client.api.ApplicationApi
 import org.openapitools.client.api.GroupApi
 import org.openapitools.client.api.PolicyApi
-import org.openapitools.client.api.UserApi
-import org.openapitools.client.model.AccessPolicyRule
-import org.openapitools.client.model.AccessPolicyRuleActions
-import org.openapitools.client.model.AccessPolicyRuleApplicationSignOn
-import org.openapitools.client.model.Application
-import org.openapitools.client.model.AuthorizationServerPolicy
-import org.openapitools.client.model.Group
-import org.openapitools.client.model.OktaSignOnPolicyRule
-import org.openapitools.client.model.OktaSignOnPolicyRuleActions
-import org.openapitools.client.model.OktaSignOnPolicyRuleSignonActions
-import org.openapitools.client.model.OpenIdConnectApplication
-import org.openapitools.client.model.OpenIdConnectApplicationSettingsClient
-import org.openapitools.client.model.Policy
-import org.openapitools.client.model.OktaSignOnPolicy
-import org.openapitools.client.model.PolicyRule
-import org.openapitools.client.model.ProfileEnrollmentPolicy
-import org.openapitools.client.model.ProfileEnrollmentPolicyRule
-import org.openapitools.client.model.ProfileEnrollmentPolicyRuleActions
-import org.openapitools.client.model.ProfileEnrollmentPolicyRuleActivationRequirement
-import org.openapitools.client.model.ProfileEnrollmentPolicyRuleProfileAttribute
-import org.openapitools.client.model.VerificationMethod
+import org.openapitools.client.model.*
 import org.testng.annotations.Test
 
-import static com.okta.sdk.tests.it.util.Util.*
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.allOf
-import static org.hamcrest.Matchers.allOf
-import static org.hamcrest.Matchers.anyOf
-import static org.hamcrest.Matchers.anyOf
-import static org.hamcrest.Matchers.empty
-import static org.hamcrest.Matchers.empty
-import static org.hamcrest.Matchers.equalTo
-import static org.hamcrest.Matchers.equalTo
-import static org.hamcrest.Matchers.greaterThanOrEqualTo
-import static org.hamcrest.Matchers.hasKey
-import static org.hamcrest.Matchers.hasKey
-import static org.hamcrest.Matchers.hasKey
-import static org.hamcrest.Matchers.hasKey
-import static org.hamcrest.Matchers.hasSize
-import static org.hamcrest.Matchers.is
-import static org.hamcrest.Matchers.not
-import static org.hamcrest.Matchers.not
-import static org.hamcrest.Matchers.not
-import static org.hamcrest.Matchers.not
-import static org.hamcrest.Matchers.notNullValue
-import static org.hamcrest.Matchers.nullValue
-
+import static org.hamcrest.Matchers.*
 /**
  * Tests for {@code /api/v1/policies}.
  * @since 0.5.0
@@ -315,4 +269,18 @@ class PoliciesIT extends ITSupport {
         assertThat policy.getEmbedded(), allOf(notNullValue(), hasKey("rules"))
     }
 
+    @Test (groups = "group2")
+    void listPolicyRulesTest() {
+
+        Group group = randomGroup()
+        Policy policy = randomSignOnPolicy(group.getId())
+
+        PolicyApi policyApi = new PolicyApi(getClient())
+
+        policyApi.listPolicyRules(policy.getId()).forEach({policyItem ->
+            assertThat(policyItem, notNullValue())
+            assertThat(policyItem.getId(), notNullValue())
+            assertThat(policyItem, instanceOf(Policy.class))
+        })
+    }
 }
