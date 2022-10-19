@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.*
  */
 class GroupSchemaIT extends ITSupport {
 
-    @Test (groups = "group1")
+    @Test
     @Scenario("get-group-schema")
     void getGroupSchemaTest() {
 

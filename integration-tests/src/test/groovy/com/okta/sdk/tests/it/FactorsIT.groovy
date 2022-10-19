@@ -48,7 +48,7 @@ class FactorsIT extends ITSupport {
 
     private String smsTestNumber = "185 635 15491"
 
-    @Test (groups = "group2")
+    @Test
     void factorListTest() {
 
         Client client = getClient()
@@ -79,7 +79,7 @@ class FactorsIT extends ITSupport {
         )
     }
 
-    @Test (groups = "group2")
+    @Test
     void testSecurityQuestionFactorCreation() {
         Client client = getClient()
         User user = randomUser()
@@ -95,7 +95,7 @@ class FactorsIT extends ITSupport {
         assertThat securityQuestionUserFactor.id, notNullValue()
     }
 
-    @Test (groups = "group2")
+    @Test
     void testCallFactorCreation() {
         Client client = getClient()
         User user = randomUser()
@@ -109,7 +109,7 @@ class FactorsIT extends ITSupport {
         assertThat callUserFactor.id, notNullValue()
     }
 
-    @Test (groups = "group2")
+    @Test
     void testSmsFactorCreation() {
         Client client = getClient()
         User user = randomUser()
@@ -123,7 +123,7 @@ class FactorsIT extends ITSupport {
         assertThat smsUserFactor.id, notNullValue()
     }
 
-    @Test (groups = "group2")
+    @Test
     void testPushFactorCreation() {
         Client client = getClient()
         User user = randomUser()
@@ -135,21 +135,21 @@ class FactorsIT extends ITSupport {
         assertThat pushUserFactor.id, notNullValue()
     }
 
-    @Test (groups = "group2")
+    @Test
     void testListSecurityQuestionsNotEmpty() {
         User user = randomUser()
         SecurityQuestionList securityQuestions = user.listSupportedSecurityQuestions()
         assertThat securityQuestions, iterableWithSize(greaterThan(1))
     }
 
-    @Test (groups = "group2")
+    @Test (groups = "group3")
     void testAvailableFactorsNotEmpty() {
         User user = randomUser()
         UserFactorList factors = user.listSupportedFactors()
         assertThat factors, iterableWithSize(greaterThan(1))
     }
 
-    @Test (groups = "group2")
+    @Test
     void activateTotpFactor() {
         User user = randomUser()
         assertListFactors(user)
@@ -167,7 +167,7 @@ class FactorsIT extends ITSupport {
         assertThat factorResult, instanceOf(TotpUserFactor)
     }
 
-    @Test (groups = "group2")
+    @Test
     void verifyQuestionFactor() {
         User user = randomUser()
 
@@ -184,7 +184,7 @@ class FactorsIT extends ITSupport {
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.SUCCESS)
     }
 
-    @Test (groups = "group2")
+    @Test
     void verifyQuestionFactor_withoutBody() {
         User user = randomUser()
 
@@ -200,7 +200,7 @@ class FactorsIT extends ITSupport {
     }
 
     @NonOIEEnvironmentOnly
-    @Test (groups = "group2")
+    @Test (groups = "group3")
     void testEmailUserFactor() {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
@@ -223,7 +223,7 @@ class FactorsIT extends ITSupport {
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.CHALLENGE)
     }
 
-    @Test (groups = "group2")
+    @Test (groups = "group3")
     void testGoogleTotpUserFactorCreation() {
         User user = randomUser()
         assertListFactors(user)
@@ -238,7 +238,7 @@ class FactorsIT extends ITSupport {
         assertThat tokenUserFactor.getStatus(), is(FactorStatus.PENDING_ACTIVATION)
     }
 
-    @Test (groups = "group2")
+    @Test
     void deleteFactorTest() {
 
         User user = randomUser()

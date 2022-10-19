@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.notNullValue
  */
 class UserTypesIT extends ITSupport {
 
-    @Test (groups = "group2")
+    @Test
     void createUserTypeTest() {
         String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
@@ -64,7 +64,7 @@ class UserTypesIT extends ITSupport {
         })
     }
 
-    @Test (groups = "group2")
+    @Test
     void getUserTypeTest() {
         String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
@@ -81,7 +81,7 @@ class UserTypesIT extends ITSupport {
         assertThat(retrievedUserType.getName(), equalTo(createdUserType.getName()))
     }
 
-    @Test (groups = "group2")
+    @Test
     void updateUserTypeTest() {
         String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 

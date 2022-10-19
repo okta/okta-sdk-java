@@ -38,7 +38,7 @@ import static com.okta.sdk.tests.it.util.Util.assertPresent
  */
 class EventHooksIT extends ITSupport {
 
-    @Test (groups = "group3")
+    @Test (groups = "group1")
     void createEventHookTest() {
         String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
@@ -59,7 +59,7 @@ class EventHooksIT extends ITSupport {
         createdEventHook.deactivate()
     }
 
-    @Test (groups = "group3")
+    @Test
     void getEventHookTest() {
         String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
@@ -84,7 +84,7 @@ class EventHooksIT extends ITSupport {
         createdEventHook.deactivate()
     }
 
-    @Test (groups = "group3")
+    @Test
     void updateEventHookTest() {
         String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
@@ -118,7 +118,7 @@ class EventHooksIT extends ITSupport {
         createdEventHook.deactivate()
     }
 
-    @Test (groups = "group3")
+    @Test
     void deleteEventHookTest() {
         String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
@@ -147,7 +147,7 @@ class EventHooksIT extends ITSupport {
         }
     }
 
-    @Test (groups = "group3")
+    @Test (groups = "group1")
     void listAllEventHooksTest() {
         String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
@@ -166,7 +166,7 @@ class EventHooksIT extends ITSupport {
         createdEventHook.deactivate()
     }
 
-    @Test (groups = "group3")
+    @Test
     void activateDeactivateEventHookTest() {
         String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 

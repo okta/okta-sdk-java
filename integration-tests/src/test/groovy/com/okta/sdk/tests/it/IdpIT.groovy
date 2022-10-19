@@ -167,7 +167,7 @@ class IdpIT extends ITSupport {
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 
-    @Test (groups = "group2")
+    @Test
     void oidcIdpUserTest() {
 
         // create user
@@ -292,7 +292,7 @@ class IdpIT extends ITSupport {
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 
-    @Test (groups = "group2")
+    @Test
     void facebookIdpTest() {
 
         // create user
@@ -401,7 +401,7 @@ class IdpIT extends ITSupport {
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 
-    @Test (groups = "group2")
+    @Test
     void linkedInIdpTest() {
 
         // create user
@@ -455,7 +455,7 @@ class IdpIT extends ITSupport {
         assertNotPresent(client.listIdentityProviders(), createdIdp)
     }
 
-    @Test (groups = "group2")
+    @Test
     void idpWithStringTypeTest() {
 
         // create user

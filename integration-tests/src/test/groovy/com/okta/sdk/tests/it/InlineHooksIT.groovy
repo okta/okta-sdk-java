@@ -59,7 +59,7 @@ class InlineHooksIT extends ITSupport {
         createdInlineHook.deactivate()
     }
 
-    @Test (groups = "group2")
+    @Test
     void getInlineHookTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -84,7 +84,7 @@ class InlineHooksIT extends ITSupport {
         createdInlineHook.deactivate()
     }
 
-    @Test (groups = "group2")
+    @Test
     void updateInlineHookTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -124,7 +124,7 @@ class InlineHooksIT extends ITSupport {
         updatedInlineHook.deactivate()
     }
 
-    @Test (groups = "group2")
+    @Test
     void deleteInlineHookTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
@@ -150,7 +150,7 @@ class InlineHooksIT extends ITSupport {
         assertNotPresent(client.listInlineHooks(), createdInlineHook)
     }
 
-    @Test (groups = "group2")
+    @Test
     void listAllInlineHooksTest() {
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
