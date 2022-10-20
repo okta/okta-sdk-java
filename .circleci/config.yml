@@ -5,7 +5,7 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
-    - run: ./mvnw clean install -Pci
+    - run: ./mvnw clean install -Pci | circleci tests split --split-by=timings
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*IT.txt
@@ -18,6 +18,7 @@ jobs:
   jdk8:
     docker:
       - image: cimg/openjdk:8.0-node
+    parallelism: 4
     environment:
         JVM_OPTS: -Xmx3200m
     steps: *build_steps
@@ -25,6 +26,7 @@ jobs:
   jdk11:
     docker:
       - image: cimg/openjdk:11.0-node
+    parallelism: 4
     environment:
         JVM_OPTS: -Xmx3200m
     steps: *build_steps
