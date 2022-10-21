@@ -8,16 +8,17 @@ aliases:
     - run: ./mvnw clean install -Pci
     - run:
         when: on_fail
-        command: cat integration-tests/target/failsafe-reports/*IT.txt
+        command: cat integration-tests/target/failsafe-reports/*IT.txt | circleci tests split --split-by=timings
     - run:
         when: on_fail
-        command: cat integration-tests/target/failsafe-reports/*dump*
-
+        command: cat integration-tests/target/failsafe-reports/*dump* | circleci tests split --split-by=timings
+        
 jobs:
   
   jdk8:
     docker:
       - image: cimg/openjdk:8.0-node
+    parallelism: 5
     environment:
         JVM_OPTS: -Xmx3200m
     steps: *build_steps
@@ -25,6 +26,7 @@ jobs:
   jdk11:
     docker:
       - image: cimg/openjdk:11.0-node
+    parallelism: 5
     environment:
         JVM_OPTS: -Xmx3200m
     steps: *build_steps
