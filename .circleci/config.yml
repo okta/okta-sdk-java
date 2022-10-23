@@ -27,7 +27,6 @@ jobs:
       - image: cimg/openjdk:11.0-node
     environment:
         JVM_OPTS: -Xmx3200m
-    parallelism: 2
     steps: *build_steps
 
 workflows:
