@@ -5,7 +5,6 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
-    - run: mvn clean install
     - run: ./mvnw clean install -Pci
     - run:
         when: on_fail
@@ -21,6 +20,7 @@ jobs:
       - image: cimg/openjdk:8.0-node
     environment:
         JVM_OPTS: -Xmx3200m
+    parallelism: 2
     steps: *build_steps
   
   jdk11:
@@ -28,6 +28,7 @@ jobs:
       - image: cimg/openjdk:11.0-node
     environment:
         JVM_OPTS: -Xmx3200m
+    parallelism: 2
     steps: *build_steps
 
 workflows:
