@@ -5,7 +5,7 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
-    - run: ./mvnw clean install -Pci
+    - run: mvn clean install
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*IT.txt
@@ -20,7 +20,6 @@ jobs:
       - image: cimg/openjdk:8.0-node
     environment:
         JVM_OPTS: -Xmx3200m
-    parallelism: 2
     steps: *build_steps
   
   jdk11:
