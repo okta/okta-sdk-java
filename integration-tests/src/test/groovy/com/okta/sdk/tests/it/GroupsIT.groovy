@@ -24,6 +24,8 @@ import org.openapitools.client.api.UserApi
 import org.openapitools.client.model.Group
 import org.testng.annotations.Test
 
+import java.nio.charset.StandardCharsets
+
 import static com.okta.sdk.tests.it.util.Util.assertGroupPresent
 import static com.okta.sdk.tests.it.util.Util.assertUserInGroup
 import static com.okta.sdk.tests.it.util.Util.assertUserNotInGroup
@@ -75,7 +77,8 @@ class GroupsIT extends ITSupport {
         assertGroupPresent(groupApi.listGroups(groupName, null, null, null, null, null), group)
     }
 
-    @Test (groups = "bacon")
+    // disabled due to an issue in backend infrastructure at the moment
+    @Test (enabled = false, groups = "bacon")
     @Scenario("search-groups-by-search-parameter")
     void searchGroupsBySearchParameterTest() {
 
