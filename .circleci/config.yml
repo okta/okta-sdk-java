@@ -6,6 +6,8 @@ aliases:
     - checkout
     - run: java -version
     - run: mvn clean install
+    - run: ./mvnw clean install -Pci | circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/*IT.groovy" | circleci tests split --split-by=timings
+
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*IT.txt
@@ -20,6 +22,7 @@ jobs:
       - image: cimg/openjdk:8.0-node
     environment:
         JVM_OPTS: -Xmx3200m
+    parallelism: 4
     steps: *build_steps
   
   jdk11:
@@ -27,6 +30,7 @@ jobs:
       - image: cimg/openjdk:11.0-node
     environment:
         JVM_OPTS: -Xmx3200m
+    parallelism: 4
     steps: *build_steps
 
 workflows:
