@@ -55,15 +55,15 @@ class OktaOrgCleaner {
             .forEach {
                 log.info("\t ${it.getProfile().getEmail()}")
                 // deactivate
-                userApi.deactivateOrDeleteUser(it.getId(), false)
+                userApi.deactivateUser(it.getId(),false)
                 // delete
-                userApi.deactivateOrDeleteUser(it.getId(), false)
+                userApi.deleteUser(it.getId(), false)
             }
 
         userApi.listUsers(null, null, null, 'status eq \"DEPROVISIONED\"', null, null, null)
             .forEach {
                 log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
-                userApi.deactivateOrDeleteUser(it.getId(), false)
+                userApi.deleteUser(it.getId(), false)
             }
 
         ApplicationApi applicationApi = new ApplicationApi(client)
@@ -80,7 +80,7 @@ class OktaOrgCleaner {
         GroupApi groupApi = new GroupApi(client)
 
         log.info("Deleting Groups:")
-        groupApi.listGroups(null, null, null, 100, null).stream()
+        groupApi.listGroups(null, null, null, 100, null, null).stream()
             .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getProfile().getName()}")
@@ -155,7 +155,7 @@ class OktaOrgCleaner {
         AuthorizationServerApi authorizationServerApi = new AuthorizationServerApi(client)
 
         log.info("Deleting AuthorizationServers:")
-        authorizationServerApi.listAuthorizationServers(null, "100", null).stream()
+        authorizationServerApi.listAuthorizationServers(null, 100, null).stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getName()}")

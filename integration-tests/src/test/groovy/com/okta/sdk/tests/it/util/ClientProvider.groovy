@@ -126,7 +126,7 @@ trait ClientProvider implements IHookable {
         Application appToDelete = applicationApi.getApplication(id, null)
 
         if (appToDelete != null) {
-            if (appToDelete.getStatus() == "ACTIVE") {
+            if (appToDelete.getStatus() == ApplicationLifecycleStatus.ACTIVE) {
                 // deactivate
                 applicationApi.deactivateApplication(appToDelete.getId())
             }
@@ -141,12 +141,12 @@ trait ClientProvider implements IHookable {
         User userToDelete = userApi.getUser(id)
 
         if (userToDelete != null) {
-            if (userToDelete.getStatus() != "DEPROVISIONED") {
+            if (userToDelete.getStatus() != UserStatus.DEPROVISIONED) {
                 // deactivate
                 userApi.deactivateUser(userToDelete.getId(), false)
             }
             // delete
-            userApi.deactivateOrDeleteUser(userToDelete.getId(), false)
+            userApi.deleteUser(userToDelete.getId(), false)
         }
     }
 
@@ -186,7 +186,7 @@ trait ClientProvider implements IHookable {
         IdentityProvider idpToDelete = idpApi.getIdentityProvider(id)
 
         if (idpToDelete != null) {
-            if (idpToDelete.getStatus() == "ACTIVE") {
+            if (idpToDelete.getStatus() == LifecycleStatus.ACTIVE) {
                 // deactivate
                 idpApi.deactivateIdentityProvider(idpToDelete.getId())
             }
@@ -201,7 +201,7 @@ trait ClientProvider implements IHookable {
         InlineHook inlineHookToDelete = inlineHookApi.getInlineHook(id)
 
         if (inlineHookToDelete != null) {
-            if (inlineHookToDelete.getStatus() == "ACTIVE") {
+            if (inlineHookToDelete.getStatus() == InlineHookStatus.ACTIVE) {
                 // deactivate
                 inlineHookApi.deactivateInlineHook(inlineHookToDelete.getId())
             }
@@ -216,7 +216,7 @@ trait ClientProvider implements IHookable {
         Policy policyToDelete = policyApi.getPolicy(id, "false")
 
         if (policyToDelete != null) {
-            if (policyToDelete.getStatus() == "ACTIVE") {
+            if (policyToDelete.getStatus() == LifecycleStatus.ACTIVE) {
                 // deactivate
                 policyApi.deactivatePolicy(policyToDelete.getId())
             }
