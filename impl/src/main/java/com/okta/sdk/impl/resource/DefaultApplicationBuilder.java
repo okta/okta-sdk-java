@@ -20,6 +20,7 @@ import com.okta.sdk.resource.application.ApplicationBuilder;
 import org.openapitools.client.api.ApplicationApi;
 import org.openapitools.client.model.Application;
 import org.openapitools.client.model.ApplicationAccessibility;
+import org.openapitools.client.model.ApplicationSignOnMode;
 import org.openapitools.client.model.ApplicationVisibility;
 import org.openapitools.client.model.ApplicationVisibilityHide;
 
@@ -32,7 +33,7 @@ public class DefaultApplicationBuilder<T extends ApplicationBuilder> implements 
     protected String errorRedirectUrl;
     protected String loginRedirectUrl;
     protected Boolean selfService;
-    protected String signOnMode;
+    protected ApplicationSignOnMode signOnMode;
     protected Boolean iOS;
     protected Boolean web;
 
@@ -67,11 +68,7 @@ public class DefaultApplicationBuilder<T extends ApplicationBuilder> implements 
     }
 
     @Override
-    public T setSignOnMode(String signOnMode) {
-        if(signOnMode == "SDK_UNKNOWN") {
-            throw new IllegalArgumentException(
-                "The " + signOnMode.getClass().getName() + ".SDK_UNKNOWN can not be used in setter");
-        }
+    public T setSignOnMode(ApplicationSignOnMode signOnMode) {
         this.signOnMode = signOnMode;
         return self();
     }

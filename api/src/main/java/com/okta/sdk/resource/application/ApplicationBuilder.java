@@ -18,6 +18,7 @@ package com.okta.sdk.resource.application;
 import com.okta.commons.lang.Classes;
 import org.openapitools.client.api.ApplicationApi;
 import org.openapitools.client.model.Application;
+import org.openapitools.client.model.ApplicationSignOnMode;
 
 public interface ApplicationBuilder<T extends ApplicationBuilder> {
     static ApplicationBuilder<ApplicationBuilder> instance() {
@@ -34,7 +35,7 @@ public interface ApplicationBuilder<T extends ApplicationBuilder> {
 
     T setSelfService(Boolean selfService);
 
-    T setSignOnMode(String signOnMode);
+    T setSignOnMode(ApplicationSignOnMode signOnMode);
 
     T setIOS(Boolean iOS);
 

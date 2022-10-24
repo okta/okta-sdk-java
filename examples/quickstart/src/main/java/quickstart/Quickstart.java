@@ -26,6 +26,7 @@ import org.openapitools.client.api.GroupApi;
 
 import org.openapitools.client.model.Group;
 import org.openapitools.client.model.User;
+import org.openapitools.client.model.UserStatus;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +42,7 @@ public class Quickstart {
 
     public static void main(String[] args) {
 
-        final String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
+        final String email = "joe.coder+" + UUID.randomUUID() + "@example.com";
         final String groupName = "java-sdk-quickstart-" + UUID.randomUUID().toString();
         final char[] password = {'P','a','s','s','w','o','r','d','1'};
 
@@ -102,7 +103,7 @@ public class Quickstart {
         }
         catch (Exception e) {
 
-            // we can get the user friendly message from the Exception
+            // we can get the user-friendly message from the Exception
             println(e.getMessage());
             throw e;
         }
@@ -111,10 +112,10 @@ public class Quickstart {
 
             // deactivate (if de-provisioned) and delete user
             if (user != null) {
-                if (!Objects.equals(user.getStatus(), "DEPROVISIONED")) {
-                    userApi.deactivateOrDeleteUser(user.getId(), false);
+                if (!Objects.equals(user.getStatus(), UserStatus.DEPROVISIONED)) {
+                    userApi.deactivateUser(user.getId(), false);
                 }
-                userApi.deactivateOrDeleteUser(user.getId(), false);
+                userApi.deleteUser(user.getId(), false);
             }
 
             // delete group

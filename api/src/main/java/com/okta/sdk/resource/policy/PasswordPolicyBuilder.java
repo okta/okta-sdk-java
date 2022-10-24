@@ -16,6 +16,7 @@
 package com.okta.sdk.resource.policy;
 
 import com.okta.commons.lang.Classes;
+import org.openapitools.client.model.PasswordPolicyAuthenticationProviderType;
 import org.openapitools.client.model.PasswordPolicyRecoveryFactorSettings;
 
 import java.util.Arrays;
@@ -28,7 +29,7 @@ public interface PasswordPolicyBuilder extends PolicyBuilder<PasswordPolicyBuild
         return Classes.newInstance("com.okta.sdk.impl.resource.DefaultPasswordPolicyBuilder");
     }
 
-    PasswordPolicyBuilder setAuthProvider(String provider);
+    PasswordPolicyBuilder setAuthProvider(PasswordPolicyAuthenticationProviderType provider);
 
     default PasswordPolicyBuilder setGroups(String... groupIds) {
         return setGroups(Arrays.stream(groupIds).collect(Collectors.toList()));
