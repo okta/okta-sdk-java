@@ -135,7 +135,7 @@ class FactorsIT extends ITSupport {
         assertThat pushUserFactor.id, notNullValue()
     }
 
-    @Test
+    @Test (groups = "group3")
     void testListSecurityQuestionsNotEmpty() {
         User user = randomUser()
         SecurityQuestionList securityQuestions = user.listSupportedSecurityQuestions()
@@ -167,7 +167,7 @@ class FactorsIT extends ITSupport {
         assertThat factorResult, instanceOf(TotpUserFactor)
     }
 
-    @Test
+    @Test (groups = "group3")
     void verifyQuestionFactor() {
         User user = randomUser()
 
@@ -200,7 +200,7 @@ class FactorsIT extends ITSupport {
     }
 
     @NonOIEEnvironmentOnly
-    @Test (groups = "group3")
+    @Test
     void testEmailUserFactor() {
         User user = randomUser()
         assertThat user.listFactors(), emptyIterable()
@@ -223,7 +223,7 @@ class FactorsIT extends ITSupport {
         assertThat response.getFactorResult(), is(VerifyUserFactorResponse.FactorResultEnum.CHALLENGE)
     }
 
-    @Test (groups = "group3")
+    @Test
     void testGoogleTotpUserFactorCreation() {
         User user = randomUser()
         assertListFactors(user)
