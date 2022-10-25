@@ -29,6 +29,7 @@ import org.openapitools.client.api.UserApi;
 import org.openapitools.client.api.UserFactorApi;
 import org.openapitools.client.model.ActivateFactorRequest;
 import org.openapitools.client.model.Application;
+import org.openapitools.client.model.ApplicationSignOnMode;
 import org.openapitools.client.model.BookmarkApplication;
 import org.openapitools.client.model.BookmarkApplicationSettings;
 import org.openapitools.client.model.BookmarkApplicationSettingsApplication;
@@ -135,21 +136,21 @@ public class ReadmeSnippets {
         userProfile.setNickName("Batman");
         updateUserRequest.setProfile(userProfile);
 
-        userApi.partialUpdateUser(user.getId(), updateUserRequest, true);
+        userApi.updateUser(user.getId(), updateUserRequest, true);
     }
 
     private void deleteUser() {
         UserApi userApi = new UserApi(client);
 
         // deactivate first
-        userApi.deactivateOrDeleteUser(user.getId(), false);
+        userApi.deactivateUser(user.getId(), false);
         // then delete
-        userApi.deactivateOrDeleteUser(user.getId(), false);
+        userApi.deleteUser(user.getId(), false);
     }
 
     private void listUsersGroup() {
         GroupApi groupApi = new GroupApi(client);
-        List<Group> groups = groupApi.listGroups(null, null, null, 10, null);
+        List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null);
     }
 
     private void createGroup() {
@@ -233,7 +234,7 @@ public class ReadmeSnippets {
         SystemLogApi systemLogApi = new SystemLogApi(client);
 
         // use a filter (start date, end date, filter, or query, sort order) all options are nullable
-        List<LogEvent> logEvents = systemLogApi.getLogs(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
+        List<LogEvent> logEvents = systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
     }
 
     private void callAnotherEndpoint() {
@@ -244,7 +245,7 @@ public class ReadmeSnippets {
         BookmarkApplication bookmarkApplication = new BookmarkApplication();
         bookmarkApplication.setName("bookmark");
         bookmarkApplication.setLabel("Sample Bookmark App");
-        bookmarkApplication.setSignOnMode("BOOKMARK");
+        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
         BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
         BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
             new BookmarkApplicationSettingsApplication();
@@ -290,7 +291,7 @@ public class ReadmeSnippets {
         }
 
         // or stream
-        usersPagedListOne.getItems().stream().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
+        usersPagedListOne.getItems().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
     }
 
     private void complexCaching() {

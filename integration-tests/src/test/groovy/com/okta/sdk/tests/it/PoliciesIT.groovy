@@ -47,9 +47,9 @@ class PoliciesIT extends ITSupport {
 
         OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
             .setName("policy+" + UUID.randomUUID().toString())
-            .setStatus("ACTIVE")
+            .setStatus(LifecycleStatus.ACTIVE)
             .setDescription("IT created Policy - signOnPolicyWithGroupConditions")
-            .setType("OKTA_SIGN_ON")
+            .setType(PolicyType.OKTA_SIGN_ON)
             .addGroup(group.getId())
             .buildAndCreate(policyApi)
 
@@ -68,8 +68,8 @@ class PoliciesIT extends ITSupport {
 
         ProfileEnrollmentPolicy profileEnrollmentPolicy = new ProfileEnrollmentPolicy()
         profileEnrollmentPolicy.name("policy+" + UUID.randomUUID().toString())
-            .type("PROFILE_ENROLLMENT")
-            .status("ACTIVE")
+            .type(PolicyType.PROFILE_ENROLLMENT)
+            .status(LifecycleStatus.ACTIVE)
             .description("IT created Policy - createProfileEnrollmentPolicy")
 
         Policy createdProfileEnrollmentPolicy =
@@ -79,8 +79,8 @@ class PoliciesIT extends ITSupport {
 
         assertThat createdProfileEnrollmentPolicy, notNullValue()
         assertThat createdProfileEnrollmentPolicy.getName(), notNullValue()
-        assertThat createdProfileEnrollmentPolicy.getType(), equalTo("PROFILE_ENROLLMENT")
-        assertThat createdProfileEnrollmentPolicy.getStatus(), equalTo("ACTIVE")
+        assertThat createdProfileEnrollmentPolicy.getType(), equalTo(PolicyType.PROFILE_ENROLLMENT)
+        assertThat createdProfileEnrollmentPolicy.getStatus(), equalTo(LifecycleStatus.ACTIVE)
     }
 
     // disable running them in bacon
@@ -97,13 +97,13 @@ class PoliciesIT extends ITSupport {
             .setLabel(name)
             .addRedirectUris("http://www.example.com")
             .setPostLogoutRedirectUris(Collections.singletonList("http://www.example.com/logout"))
-            .setResponseTypes(Arrays.asList("token", "code"))
-            .setGrantTypes(Arrays.asList("implicit", "authorization_code"))
-            .setApplicationType("native")
+            .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
+            .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
+            .setApplicationType(OpenIdConnectApplicationType.NATIVE)
             .setClientId(UUID.randomUUID().toString())
             .setClientSecret(UUID.randomUUID().toString())
             .setAutoKeyRotation(true)
-            .setTokenEndpointAuthMethod("none")
+            .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
             .setIOS(false)
             .setWeb(true)
             .setLoginRedirectUrl("http://www.myapp.com")
@@ -113,17 +113,18 @@ class PoliciesIT extends ITSupport {
 
         assertThat(oidcApp, notNullValue())
         assertThat(oidcApp.getLinks(), notNullValue())
-        assertThat(oidcApp.getLinks().get("accessPolicy"), notNullValue())
+        assertThat(oidcApp.getLinks().getAccessPolicy(), notNullValue())
 
         // accessPolicy:[href:https://example.com/api/v1/policies/rst412ay22NkOdJJr0g7]
-        String accessPolicyId = oidcApp.getLinks().get("accessPolicy").toString().replaceAll("]", "").tokenize("/")[-1]
+        String accessPolicyId = oidcApp.getLinks().getAccessPolicy().getHref().replaceAll("]", "").tokenize("/")[-1]
 
         Policy accessPolicy = policyApi.getPolicy(accessPolicyId, null)
         assertThat(accessPolicy, notNullValue())
 
         AccessPolicyRule accessPolicyRule = new AccessPolicyRule()
         accessPolicyRule.name(name)
-        accessPolicyRule.setType("ACCESS_POLICY")
+        accessPolicyRule.setType(PolicyRuleType.ACCESS_POLICY)
+
         AccessPolicyRuleActions accessPolicyRuleActions = new AccessPolicyRuleActions()
         AccessPolicyRuleApplicationSignOn accessPolicyRuleApplicationSignOn = new AccessPolicyRuleApplicationSignOn()
         accessPolicyRuleApplicationSignOn.access("DENY")
@@ -157,8 +158,8 @@ class PoliciesIT extends ITSupport {
         OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
             .setName("policy+" + UUID.randomUUID().toString())
             .setDescription("IT created Policy - signOnActionsTest")
-            .setType("OKTA_SIGN_ON")
-            .setStatus("ACTIVE")
+            .setType(PolicyType.OKTA_SIGN_ON)
+            .setStatus(LifecycleStatus.ACTIVE)
             .buildAndCreate(policyApi)
         registerForCleanup(policy)
 
@@ -166,10 +167,10 @@ class PoliciesIT extends ITSupport {
 
         OktaSignOnPolicyRule oktaSignOnPolicyRule = new OktaSignOnPolicyRule()
         oktaSignOnPolicyRule.name(policyRuleName)
-        oktaSignOnPolicyRule.type("SIGN_ON")
+        oktaSignOnPolicyRule.type(PolicyRuleType.SIGN_ON)
         OktaSignOnPolicyRuleActions oktaSignOnPolicyRuleActions = new OktaSignOnPolicyRuleActions()
         OktaSignOnPolicyRuleSignonActions oktaSignOnPolicyRuleSignonActions = new OktaSignOnPolicyRuleSignonActions()
-        oktaSignOnPolicyRuleSignonActions.setAccess("DENY")
+        oktaSignOnPolicyRuleSignonActions.setAccess(PolicyAccess.DENY)
         oktaSignOnPolicyRuleSignonActions.setRequireFactor(false)
         oktaSignOnPolicyRuleActions.setSignon(oktaSignOnPolicyRuleSignonActions)
         oktaSignOnPolicyRule.actions(oktaSignOnPolicyRuleActions)
@@ -189,26 +190,26 @@ class PoliciesIT extends ITSupport {
         Policy policy = OktaSignOnPolicyBuilder.instance()
             .setName("policy+" + UUID.randomUUID().toString())
             .setDescription("IT created Policy - activateDeactivateTest")
-            .setType("OKTA_SIGN_ON")
-            .setStatus("INACTIVE")
+            .setType(PolicyType.OKTA_SIGN_ON)
+            .setStatus(LifecycleStatus.INACTIVE)
             .buildAndCreate(policyApi)
         registerForCleanup(policy)
 
-        assertThat(policy.getStatus(), is("INACTIVE"))
+        assertThat(policy.getStatus(), is(LifecycleStatus.INACTIVE))
 
         // activate
         policyApi.activatePolicy(policy.getId())
 
         policy = policyApi.getPolicy(policy.getId(), null)
 
-        assertThat(policy.getStatus(), is("ACTIVE"))
+        assertThat(policy.getStatus(),  is(LifecycleStatus.ACTIVE))
 
         // deactivate
         policyApi.deactivatePolicy(policy.getId())
 
         policy = policyApi.getPolicy(policy.getId(), null)
 
-        assertThat(policy.getStatus(), is("INACTIVE"))
+        assertThat(policy.getStatus(), is(LifecycleStatus.INACTIVE))
     }
 
     @Test
@@ -220,8 +221,8 @@ class PoliciesIT extends ITSupport {
         Policy policy = OktaSignOnPolicyBuilder.instance()
             .setName("policy+" + UUID.randomUUID().toString())
             .setDescription("IT created Policy - expandTest")
-            .setType("OKTA_SIGN_ON")
-            .setStatus("INACTIVE")
+            .setType(PolicyType.OKTA_SIGN_ON)
+            .setStatus(LifecycleStatus.INACTIVE)
             .buildAndCreate(policyApi)
         registerForCleanup(policy)
 
@@ -241,19 +242,19 @@ class PoliciesIT extends ITSupport {
         Policy policy = OktaSignOnPolicyBuilder.instance()
             .setName("policy+" + UUID.randomUUID().toString())
             .setDescription("IT created Policy - listPoliciesWithParams")
-            .setType("OKTA_SIGN_ON")
-            .setStatus("INACTIVE")
+            .setType(PolicyType.OKTA_SIGN_ON)
+            .setStatus(LifecycleStatus.INACTIVE)
             .buildAndCreate(policyApi)
         registerForCleanup(policy)
 
-        def policies= policyApi.listPolicies("OKTA_SIGN_ON", "INACTIVE", null)
+        def policies= policyApi.listPolicies(PolicyType.OKTA_SIGN_ON.name(), LifecycleStatus.INACTIVE.name(), null)
 
         assertThat policies, not(empty())
         policies.stream()
             .limit(5)
             .forEach { assertRulesNotExpanded(it) }
 
-        policies = policyApi.listPolicies("OKTA_SIGN_ON", "ACTIVE", "rules")
+        policies = policyApi.listPolicies(PolicyType.OKTA_SIGN_ON.name(), LifecycleStatus.ACTIVE.name(), "rules")
 
         assertThat policies, not(empty())
         policies.stream()

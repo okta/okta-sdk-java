@@ -23,10 +23,12 @@ import org.openapitools.client.model.AuthenticationProvider;
 import org.openapitools.client.model.CreateUserRequest;
 import org.openapitools.client.model.PasswordCredential;
 import org.openapitools.client.model.PasswordCredentialHash;
+import org.openapitools.client.model.PasswordCredentialHashAlgorithm;
 import org.openapitools.client.model.PasswordCredentialHook;
 import org.openapitools.client.model.RecoveryQuestionCredential;
 import org.openapitools.client.model.User;
 import org.openapitools.client.model.UserCredentials;
+import org.openapitools.client.model.UserNextLogin;
 import org.openapitools.client.model.UserProfile;
 import org.openapitools.client.model.UserType;
 
@@ -51,7 +53,7 @@ public class DefaultUserBuilder implements UserBuilder {
     private AuthenticationProvider provider;
     private UserType userType;
     private String userTypeId;
-    private String nextLogin;
+    private UserNextLogin nextLogin;
     private List<String> groupIds = new ArrayList<>();
     private Map<String, Object> passwordHashProperties;
     private String passwordHookImportType;
@@ -143,7 +145,7 @@ public class DefaultUserBuilder implements UserBuilder {
     }
 
     @Override
-    public UserBuilder setNextLogin(String nextLogin) {
+    public UserBuilder setNextLogin(UserNextLogin nextLogin) {
         this.nextLogin = nextLogin;
         return this;
     }
@@ -208,7 +210,7 @@ public class DefaultUserBuilder implements UserBuilder {
         if (passwordHashProperties != null) {
             PasswordCredential passwordCredential = new PasswordCredential();
             PasswordCredentialHash passwordCredentialHash = new PasswordCredentialHash();
-            passwordCredentialHash.setAlgorithm((String) passwordHashProperties.get("algorithm"));
+            passwordCredentialHash.setAlgorithm(PasswordCredentialHashAlgorithm.valueOf(((String) passwordHashProperties.get("algorithm")).replaceAll("-", "_")));
             passwordCredentialHash.setWorkFactor((Integer) passwordHashProperties.get("workFactor"));
             passwordCredentialHash.setSalt((String) passwordHashProperties.get("salt"));
             passwordCredentialHash.setValue((String) passwordHashProperties.get("value"));

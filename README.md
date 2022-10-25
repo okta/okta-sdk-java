@@ -231,7 +231,7 @@ UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 UserProfile userProfile = new UserProfile();
 userProfile.setNickName("Batman");
 updateUserRequest.setProfile(userProfile);
-userApi.partialUpdateUser(user.getId(), updateUserRequest, true);
+userApi.updateUser(user.getId(), updateUserRequest, true);
 ```
 [//]: # (end: updateUser)
  
@@ -242,10 +242,10 @@ userApi.partialUpdateUser(user.getId(), updateUserRequest, true);
 UserApi userApi = new UserApi(client);
 
 // deactivate first
-userApi.deactivateOrDeleteUser(user.getId(), false);
+userApi.deactivateUser(user.getId(), false);
 
 // then delete
-userApi.deactivateOrDeleteUser(user.getId(), false);
+userApi.deleteUser(user.getId(), false);
 ```
 [//]: # (end: deleteUser)
 
@@ -254,7 +254,7 @@ userApi.deactivateOrDeleteUser(user.getId(), false);
 [//]: # (method: listUsersGroup)
 ```java
 GroupApi groupApi = new GroupApi(client);
-List<Group> groups = groupApi.listGroups(null, null, null, 10, null);
+List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null);
 ```
 [//]: # (end: listUsersGroup)
 
@@ -370,7 +370,7 @@ BrowserPluginApplication createdApp =
 SystemLogApi systemLogApi = new SystemLogApi(client);
 
 // use a filter (start date, end date, filter, or query, sort order) all options are nullable
-List<LogEvent> logEvents = systemLogApi.getLogs(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
+List<LogEvent> logEvents = systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
 ```
 [//]: # (end: listSysLogs)
 
@@ -386,7 +386,7 @@ ApiClient apiClient = buildApiClient("orgBaseUrl", "apiKey");
 BookmarkApplication bookmarkApplication = new BookmarkApplication();
 bookmarkApplication.setName("bookmark");
 bookmarkApplication.setLabel("Sample Bookmark App");
-bookmarkApplication.setSignOnMode("BOOKMARK");
+bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
 BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
 BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
     new BookmarkApplicationSettingsApplication();
@@ -438,7 +438,7 @@ for (User tmpUser : usersPagedListOne.getItems()) {
 }
 
 // or stream
-usersPagedListOne.getItems().stream().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
+usersPagedListOne.getItems().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
 ```
 [//]: # (end: paging)
 

@@ -17,6 +17,11 @@ package com.okta.sdk.resource.application;
 
 import com.okta.commons.lang.Classes;
 import org.openapitools.client.model.JsonWebKey;
+import org.openapitools.client.model.OAuthEndpointAuthenticationMethod;
+import org.openapitools.client.model.OAuthGrantType;
+import org.openapitools.client.model.OAuthResponseType;
+import org.openapitools.client.model.OpenIdConnectApplicationConsentMethod;
+import org.openapitools.client.model.OpenIdConnectApplicationType;
 
 import java.util.List;
 
@@ -26,15 +31,15 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
         return Classes.newInstance("com.okta.sdk.impl.resource.DefaultOIDCApplicationBuilder");
     }
 
-    OIDCApplicationBuilder setApplicationType(String applicationType);
+    OIDCApplicationBuilder setApplicationType(OpenIdConnectApplicationType applicationType);
 
     OIDCApplicationBuilder setClientUri(String clientUri);
 
-    OIDCApplicationBuilder setConsentMethod(String consentMethod);
+    OIDCApplicationBuilder setConsentMethod(OpenIdConnectApplicationConsentMethod consentMethod);
 
-    OIDCApplicationBuilder setGrantTypes(List<String> grantTypes);
+    OIDCApplicationBuilder setGrantTypes(List<OAuthGrantType> grantTypes);
 
-    OIDCApplicationBuilder addGrantTypes(String grantType);
+    OIDCApplicationBuilder addGrantTypes(OAuthGrantType grantType);
 
     OIDCApplicationBuilder setLogoUri(String logoUri);
 
@@ -46,9 +51,9 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
 
     OIDCApplicationBuilder addRedirectUris(String redirectUri);
 
-    OIDCApplicationBuilder setResponseTypes(List<String> responseTypes);
+    OIDCApplicationBuilder setResponseTypes(List<OAuthResponseType> responseTypes);
 
-    OIDCApplicationBuilder addResponseTypes(String responseType);
+    OIDCApplicationBuilder addResponseTypes(OAuthResponseType responseType);
 
     OIDCApplicationBuilder setTosUri(String tosUri);
 
@@ -58,7 +63,7 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
 
     OIDCApplicationBuilder setAutoKeyRotation(Boolean autoKeyRotation);
 
-    OIDCApplicationBuilder setTokenEndpointAuthMethod(String tokenEndpointAuthMethod);
+    OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod);
 
     OIDCApplicationBuilder setJwks(List<JsonWebKey> jsonWebKeyList);
 

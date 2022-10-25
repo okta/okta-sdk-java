@@ -23,6 +23,7 @@ import org.openapitools.client.model.GroupCondition;
 import org.openapitools.client.model.OktaSignOnPolicy;
 import org.openapitools.client.model.OktaSignOnPolicyConditions;
 import org.openapitools.client.model.PolicyPeopleCondition;
+import org.openapitools.client.model.PolicyType;
 import org.openapitools.client.model.UserCondition;
 
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
         if (priority != null)
             policy.setPriority(priority);
 
-        if ("OKTA_SIGN_ON".equals(policyType))
+        if (PolicyType.OKTA_SIGN_ON.equals(policyType))
             policy.setType(policyType);
         else
             throw new IllegalArgumentException("PolicyType should be 'OKTA_SIGN_ON', please use PolicyBuilder for other policy types.");

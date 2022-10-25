@@ -20,14 +20,20 @@ import com.okta.sdk.resource.application.OIDCApplicationBuilder;
 import org.openapitools.client.api.ApplicationApi;
 import org.openapitools.client.model.ApplicationAccessibility;
 import org.openapitools.client.model.ApplicationCredentialsOAuthClient;
+import org.openapitools.client.model.ApplicationSignOnMode;
 import org.openapitools.client.model.ApplicationVisibility;
 import org.openapitools.client.model.ApplicationVisibilityHide;
 import org.openapitools.client.model.JsonWebKey;
 import org.openapitools.client.model.OAuthApplicationCredentials;
+import org.openapitools.client.model.OAuthEndpointAuthenticationMethod;
+import org.openapitools.client.model.OAuthGrantType;
+import org.openapitools.client.model.OAuthResponseType;
 import org.openapitools.client.model.OpenIdConnectApplication;
+import org.openapitools.client.model.OpenIdConnectApplicationConsentMethod;
 import org.openapitools.client.model.OpenIdConnectApplicationSettings;
 import org.openapitools.client.model.OpenIdConnectApplicationSettingsClient;
 import org.openapitools.client.model.OpenIdConnectApplicationSettingsClientKeys;
+import org.openapitools.client.model.OpenIdConnectApplicationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,26 +41,26 @@ import java.util.Objects;
 
 public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OIDCApplicationBuilder> implements OIDCApplicationBuilder {
 
-    private String applicationType;
+    private OpenIdConnectApplicationType applicationType;
     private String clientUri;
-    private String consentMethod;
-    private List<String> grantTypes = new ArrayList<>();
+    private OpenIdConnectApplicationConsentMethod consentMethod;
+    private List<OAuthGrantType> grantTypes = new ArrayList<>();
     private String logoUri;
     private String policyUri;
     private List<String> postLogoutRedirectUris = new ArrayList<>();
     private List<String> redirectUris = new ArrayList<>();
-    private List<String> responseTypes = new ArrayList<>();
+    private List<OAuthResponseType> responseTypes = new ArrayList<>();
     private String tosUri;
     private String clientId;
     private String clientSecret;
     private Boolean autoKeyRotation;
-    private String tokenEndpointAuthMethod;
+    private OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
     private List<JsonWebKey> jsonWebKeyList = new ArrayList<>();
     private Boolean isImplicitAssignment;
     private String inlineHookId;
 
     @Override
-    public OIDCApplicationBuilder setApplicationType(String applicationType) {
+    public OIDCApplicationBuilder setApplicationType(OpenIdConnectApplicationType applicationType) {
         this.applicationType = applicationType;
         return this;
     }
@@ -66,19 +72,19 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setConsentMethod(String consentMethod) {
+    public OIDCApplicationBuilder setConsentMethod(OpenIdConnectApplicationConsentMethod consentMethod) {
         this.consentMethod = consentMethod;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder setGrantTypes(List<String> grantTypes) {
+    public OIDCApplicationBuilder setGrantTypes(List<OAuthGrantType> grantTypes) {
         this.grantTypes = grantTypes;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder addGrantTypes(String grantType) {
+    public OIDCApplicationBuilder addGrantTypes(OAuthGrantType grantType) {
         this.grantTypes.add(grantType);
         return this;
     }
@@ -114,13 +120,13 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setResponseTypes(List<String> responseTypes) {
+    public OIDCApplicationBuilder setResponseTypes(List<OAuthResponseType> responseTypes) {
         this.responseTypes = responseTypes;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder addResponseTypes(String responseType) {
+    public OIDCApplicationBuilder addResponseTypes(OAuthResponseType responseType) {
         this.responseTypes.add(responseType);
         return this;
     }
@@ -150,7 +156,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setTokenEndpointAuthMethod(String tokenEndpointAuthMethod) {
+    public OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod) {
         this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
         return this;
     }
@@ -181,7 +187,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
 
         if (Strings.hasText(label)) application.setLabel(label);
 
-        application.setSignOnMode("OPENID_CONNECT");
+        application.setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT);
 
         // Accessibility
         ApplicationAccessibility applicationAccessibility = new ApplicationAccessibility();
@@ -240,7 +246,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         else
             throw new IllegalArgumentException("Response Type cannot be null, value should be of type OAuthResponseType");
 
-        if (Objects.nonNull(grantTypes) && grantTypes.size()>0)
+        if (Objects.nonNull(grantTypes) && grantTypes.size() > 0)
             openIdConnectApplicationSettingsClient.setGrantTypes(grantTypes);
         else
             throw new IllegalArgumentException("Grant Type cannot be null, value should be of type OAuthGrantType");

@@ -19,6 +19,7 @@ import com.okta.commons.lang.Classes;
 import org.openapitools.client.api.UserApi;
 import org.openapitools.client.model.AuthenticationProvider;
 import org.openapitools.client.model.User;
+import org.openapitools.client.model.UserNextLogin;
 import org.openapitools.client.model.UserType;
 
 import java.util.Arrays;
@@ -69,7 +70,7 @@ public interface UserBuilder {
 
     UserBuilder addGroup(String groupId);
 
-    UserBuilder setNextLogin(String nextLogin);
+    UserBuilder setNextLogin(UserNextLogin nextLogin);
 
     UserBuilder setBcryptPasswordHash(String value, String salt, int workFactor);
 

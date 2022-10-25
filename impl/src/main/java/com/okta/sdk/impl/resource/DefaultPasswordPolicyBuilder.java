@@ -24,6 +24,7 @@ import org.openapitools.client.model.PasswordDictionary;
 import org.openapitools.client.model.PasswordDictionaryCommon;
 import org.openapitools.client.model.PasswordPolicy;
 import org.openapitools.client.model.PasswordPolicyAuthenticationProviderCondition;
+import org.openapitools.client.model.PasswordPolicyAuthenticationProviderType;
 import org.openapitools.client.model.PasswordPolicyConditions;
 import org.openapitools.client.model.PasswordPolicyDelegationSettings;
 import org.openapitools.client.model.PasswordPolicyDelegationSettingsOptions;
@@ -39,6 +40,7 @@ import org.openapitools.client.model.PasswordPolicyRecoveryFactors;
 import org.openapitools.client.model.PasswordPolicyRecoverySettings;
 import org.openapitools.client.model.PasswordPolicySettings;
 import org.openapitools.client.model.PolicyPeopleCondition;
+import org.openapitools.client.model.PolicyType;
 import org.openapitools.client.model.UserCondition;
 
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ import java.util.Objects;
 
 public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordPolicyBuilder> implements PasswordPolicyBuilder {
 
-    private String provider;
+    private PasswordPolicyAuthenticationProviderType provider;
     private List<String> groupIds = new ArrayList<>();
     private List<String> userIds = new ArrayList<>();
     private Boolean excludePasswordDictionary;
@@ -71,11 +73,11 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
     private Integer pwdRecoveryTokenLifeMinutes;
 
     public DefaultPasswordPolicyBuilder() {
-        this.policyType = "PASSWORD";
+        this.policyType = PolicyType.PASSWORD;
     }
 
     @Override
-    public PasswordPolicyBuilder setAuthProvider(String provider) {
+    public PasswordPolicyBuilder setAuthProvider(PasswordPolicyAuthenticationProviderType provider) {
         this.provider = provider;
         return this;
     }

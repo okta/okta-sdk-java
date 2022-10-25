@@ -45,7 +45,7 @@ class UsersIT extends ITSupport {
 
         User user = randomUser()
         registerForCleanup(user)
-        assertThat(user.getStatus(), equalTo("PROVISIONED"))
+        assertThat(user.getStatus(), equalTo(UserStatus.PROVISIONED))
 
         UserApi userApi = new UserApi(getClient())
 
@@ -53,7 +53,7 @@ class UsersIT extends ITSupport {
         userApi.deactivateUser(user.getId(), false)
 
         User retrievedUser = userApi.getUser(user.getId())
-        assertThat(retrievedUser.getStatus(), equalTo("DEPROVISIONED"))
+        assertThat(retrievedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
     }
 
     @Test (groups = "group2")
@@ -173,6 +173,8 @@ class UsersIT extends ITSupport {
         def email = "john-${uniqueTestName}@example.com"
 
         UserApi userApi = new UserApi(getClient())
+        RoleApi roleApi = new RoleApi(getClient())
+        RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -187,23 +189,23 @@ class UsersIT extends ITSupport {
 
         // 2. Assign USER_ADMIN role to the user
         AssignRoleRequest assignRoleRequest = new AssignRoleRequest()
-        assignRoleRequest.setType("USER_ADMIN")
+        assignRoleRequest.setType(RoleType.USER_ADMIN)
 
-        Role role = userApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
+        Role role = roleAssignmentApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
 
         // 3. List roles for the user and verify added role
-        List<Role> roles = userApi.listAssignedRolesForUser(user.getId(), null)
+        List<Role> roles = roleAssignmentApi.listAssignedRolesForUser(user.getId(), null)
         Optional<Role> match = roles.stream().filter(r -> r.getId() == role.getId()).findAny()
         assertThat(match.isPresent(), is(true))
 
         // 4. Verify added role
-        assertThat(userApi.getUserRole(user.getId(), role.getId()).getId(), equalTo(role.getId()))
+        assertThat(roleAssignmentApi.getUserAssignedRole(user.getId(), role.getId()).getId(), equalTo(role.getId()))
 
         // 5. Remove role for the user
-        userApi.removeRoleFromUser(user.getId(), role.getId())
+        roleAssignmentApi.unassignRoleFromUser(user.getId(), role.getId())
 
         // 6. List roles for user and verify role was removed
-        roles = userApi.listAssignedRolesForUser(user.getId(), null)
+        roles = roleAssignmentApi.listAssignedRolesForUser(user.getId(), null)
         match = roles.stream().filter(r -> r.getId() != role.getId()).findAny()
         assertThat(match.isPresent(), is(false))
     }
@@ -240,7 +242,7 @@ class UsersIT extends ITSupport {
         changePasswordRequest.setNewPassword(passwordCredentialNew)
 
         UserCredentials userCredentials = userApi.changePassword(user.getId(), changePasswordRequest, true)
-        assertThat userCredentials.getProvider().getType(), equalTo("OKTA")
+        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
         // TODO: fix har file
@@ -290,16 +292,16 @@ class UsersIT extends ITSupport {
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
 
         PolicyNetworkCondition policyNetworkCondition = new PolicyNetworkCondition()
-        policyNetworkCondition.setConnection("ANYWHERE")
+        policyNetworkCondition.setConnection(PolicyNetworkConnection.ANYWHERE)
 
         PasswordPolicyRuleConditions passwordPolicyRuleConditions = new PasswordPolicyRuleConditions()
         passwordPolicyRuleConditions.setNetwork(policyNetworkCondition)
 
         PasswordPolicyRuleAction passwordPolicyRuleActionAllow = new PasswordPolicyRuleAction()
-        passwordPolicyRuleActionAllow.access("ALLOW")
+        passwordPolicyRuleActionAllow.access(PolicyAccess.ALLOW)
 
         PasswordPolicyRuleAction passwordPolicyRuleActionDeny = new PasswordPolicyRuleAction()
-        passwordPolicyRuleActionDeny.access("DENY")
+        passwordPolicyRuleActionDeny.access(PolicyAccess.DENY)
 
         PasswordPolicyRuleActions passwordPolicyRuleActions = new PasswordPolicyRuleActions()
         passwordPolicyRuleActions.setPasswordChange(passwordPolicyRuleActionAllow)
@@ -382,7 +384,7 @@ class UsersIT extends ITSupport {
 
         userCredentials = userApi.changeRecoveryQuestion(user.getId(), userCredentials)
 
-        assertThat userCredentials.getProvider().getType(), equalTo("OKTA")
+        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
         assertThat userCredentials.getRecoveryQuestion().question, equalTo('How many roads must a man walk down?')
 
         // 3. Update the user password through updated recovery question
@@ -447,7 +449,7 @@ class UsersIT extends ITSupport {
         // 2. Expire the user's password
         User updatedUser = userApi.expirePassword(user.getId())
         assertThat updatedUser, notNullValue()
-        assertThat updatedUser.getStatus(), is("PASSWORD_EXPIRED")
+        assertThat updatedUser.getStatus().name(), equalTo("PASSWORD_EXPIRED")
     }
 
     @Test (groups = "group2")
@@ -508,8 +510,8 @@ class UsersIT extends ITSupport {
         validateUser(userByLogin, firstName, lastName, email)
 
         // 3. deactivate and delete the user
-        userApi.deactivateOrDeleteUser(user.getId(), false)
-        userApi.deactivateOrDeleteUser(user.getId(), false)
+        userApi.deactivateUser(user.getId(), false)
+        userApi.deleteUser(user.getId(), false)
 
         // 4. get user expect 404
         expect(ResourceException) {
@@ -529,6 +531,8 @@ class UsersIT extends ITSupport {
 
         UserApi userApi = new UserApi(getClient())
         GroupApi groupApi = new GroupApi(getClient())
+        RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
+        RoleTargetApi roleTargetApi = new RoleTargetApi(getClient())
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -549,15 +553,15 @@ class UsersIT extends ITSupport {
 
         // 2. Assign USER_ADMIN role to the user
         AssignRoleRequest assignRoleRequest = new AssignRoleRequest()
-        assignRoleRequest.setType("USER_ADMIN")
+        assignRoleRequest.setType(RoleType.USER_ADMIN)
 
-        Role role = userApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
+        Role role = roleAssignmentApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
 
         // 3. Add Group Target to User Admin Role
-        userApi.addGroupTargetToRole(user.getId(), role.getId(), group.getId())
+        roleTargetApi.assignGroupTargetToUserRole(user.getId(), role.getId(), group.getId())
 
         // 4. List Group Targets for Role
-        List<Group> groupTargets = userApi.listGroupTargetsForRole(user.getId(), role.getId(), null, null)
+        List<Group> groupTargets = roleTargetApi.listGroupTargetsForRole(user.getId(), role.getId(), null, null)
         Optional<Group> match = groupTargets.stream().filter(g -> g.getProfile().getName() == group.getProfile().getName()).findAny()
         assertThat(match.isPresent(), is(true))
 
@@ -573,10 +577,10 @@ class UsersIT extends ITSupport {
         registerForCleanup(adminGroup)
         validateGroup(adminGroup, adminGroupName)
 
-        userApi.addGroupTargetToRole(user.getId(), role.getId(), adminGroup.getId())
-        userApi.removeGroupTargetFromRole(user.getId(), role.getId(), adminGroup.getId())
+        roleTargetApi.assignGroupTargetToUserRole(user.getId(), role.getId(), adminGroup.getId())
+        roleTargetApi.unassignGroupTargetFromUserAdminRole(user.getId(), role.getId(), adminGroup.getId())
 
-        groupTargets = userApi.listGroupTargetsForRole(user.getId(), role.getId(), null, null)
+        groupTargets = roleTargetApi.listGroupTargetsForRole(user.getId(), role.getId(), null, null)
         match = groupTargets.stream().filter(g -> g.getProfile().getName() == group.getProfile().getName()).findAny()
         assertThat(match.isPresent(), is(true))
     }
@@ -621,13 +625,12 @@ class UsersIT extends ITSupport {
 
         updateUserRequest.setProfile(userProfile)
 
-        userApi.partialUpdateUser(user.getId(), updateUserRequest, true)
+        userApi.updateUser(user.getId(), updateUserRequest, true)
 
         User updatedUser = userApi.getUser(user.getId())
 
         assertThat(updatedUser.lastUpdated, greaterThan(originalLastUpdated))
         assertThat(updatedUser.getProfile().getProperties().get("nickName"), equalTo("Batman"))
-        //assertThat(updatedUser.getProfile().getAdditionalProperties().get("key1"), equalTo("val1"))
     }
 
     @Test (groups = "group2")
@@ -754,7 +757,7 @@ class UsersIT extends ITSupport {
         registerForCleanup(user)
 
         assertThat user.getCredentials(), notNullValue()
-        assertThat user.getCredentials().getProvider().getType(), is("IMPORT")
+        assertThat user.getCredentials().getProvider().getType(), equalTo(AuthenticationProviderType.IMPORT)
     }
 
     @Test (groups = "group3")
@@ -794,7 +797,7 @@ class UsersIT extends ITSupport {
 
         userCredentials = userApi.forgotPasswordSetNewPassword(user.getId(), userCredentials, false)
         assertThat userCredentials.getRecoveryQuestion().getQuestion(), equalTo("How many roads must a man walk down?")
-        assertThat userCredentials.getProvider().getType(), equalTo("OKTA")
+        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
         assertThat userCredentials.getProvider().getName(), equalTo("OKTA")
     }
 
@@ -809,7 +812,7 @@ class UsersIT extends ITSupport {
 
         AuthenticationProvider authenticationProvider = new AuthenticationProvider()
         authenticationProvider.setName("FEDERATION")
-        authenticationProvider.setType("FEDERATION")
+        authenticationProvider.setType(AuthenticationProviderType.FEDERATION)
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -823,7 +826,7 @@ class UsersIT extends ITSupport {
         validateUser(user, firstName, lastName, email)
 
         assertThat user.getCredentials(), notNullValue()
-        assertThat user.getCredentials().getProvider().getType(), is("FEDERATION")
+        assertThat user.getCredentials().getProvider().getType(), equalTo(AuthenticationProviderType.FEDERATION)
         assertThat user.getCredentials().getProvider().getName(), equalTo("FEDERATION")
     }
 
@@ -854,7 +857,7 @@ class UsersIT extends ITSupport {
 
         assertThat after, notNullValue()
 
-        PagedList usersPagedListTwo = userApi.listUsersWithPaginationInfo(after, null, pageSize, null, null, null, null)
+        PagedList usersPagedListTwo = userApi.listUsersWithPaginationInfo(null, after, pageSize, null, null, null, null)
 
         assertThat usersPagedListTwo, notNullValue()
         assertThat usersPagedListTwo.items().size(), is(greaterThanOrEqualTo(1))
