@@ -5,11 +5,7 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
-    - run: ./mvnw clean install -Pci 
-    - run:
-        command: |
-           circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings
-
+    - run: circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*IT.txt
