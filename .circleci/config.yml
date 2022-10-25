@@ -6,7 +6,12 @@ aliases:
     - checkout
     - run: java -version
     - run: circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings
-    - run: ./mvnw clean install -Pci
+    - run: mvn clean install -Dmaven.test.skip=true
+    - run:
+        command: |
+          cd ./integration-tests
+          mvn -Dtest=DomainIT,IdpIT test
+    - run: pwd
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*IT.txt
