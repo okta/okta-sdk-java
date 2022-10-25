@@ -17,7 +17,6 @@ This project includes:
   Apache Commons Codec under Apache License, Version 2.0
   Apache Commons IO under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
-  Apache Commons Text under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpCore under Apache License, Version 2.0
   Auto Common Libraries under Apache 2.0
@@ -38,7 +37,6 @@ This project includes:
   Guava InternalFutureFailureAccess and InternalFutures under The Apache Software License, Version 2.0
   Guava ListenableFuture only under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under Apache License, Version 2.0
-  Handlebars under The Apache Software License, Version 2.0
   J2ObjC Annotations under The Apache Software License, Version 2.0
   Jackson datatype: Guava under The Apache Software License, Version 2.0
   Jackson datatype: Joda under The Apache Software License, Version 2.0
@@ -66,7 +64,7 @@ This project includes:
   json-patch under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-core under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-validator under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
-  JsonNullable Jackson module under Apache License, Version 2.0
+  JsonNullable Jackson module under Apache License 2.0
   libphonenumber under The Apache Software License, Version 2.0
   Mozilla Rhino under Mozilla Public License, Version 2.0
   msg-simple under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0

@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
-        <version>10.0.1-beta-SNAPSHOT</version>
+        <version>10.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>okta-sdk-api</artifactId>
@@ -35,13 +35,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <swagger-annotations.version>1.6.6</swagger-annotations.version>
-        <spring-web.version>5.3.20</spring-web.version>
+        <swagger-annotations.version>1.6.8</swagger-annotations.version>
+        <spring-web.version>5.3.23</spring-web.version>
         <spring-retry.version>1.3.3</spring-retry.version>
-        <jackson-databind-nullable.version>0.2.2</jackson-databind-nullable.version>
+        <jackson-databind-nullable.version>0.2.3</jackson-databind-nullable.version>
         <jakarta-annotation.version>1.3.5</jakarta-annotation.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <gson.version>2.9.0</gson.version>
         <junit.version>4.13.2</junit.version>
     </properties>
 
@@ -137,7 +136,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>openapi-generator</artifactId>
-            <version>6.0.1</version>
+            <version>6.2.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -146,6 +145,14 @@
                 <exclusion>
                     <groupId>commons-cli</groupId>
                     <artifactId>commons-cli</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-text</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.jknack</groupId>
+                    <artifactId>handlebars</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
