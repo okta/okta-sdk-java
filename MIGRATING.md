@@ -42,29 +42,6 @@ ApplicationApi applicationApi = new ApplicationApi(client);
 Application app = applicationApi.getApplication("appId", null);
 ```
 
-### Enums
-
-In this initial Beta version, enums are *NOT* supported (they are now Strings). This is because if in the future the API adds a new value for that enum the SDK will fail in runtime until a new version is released with the latest changes.
-We will continue iterating this feature in order to provide the best experience possible.
-
-### Feature Parity
-
-In this first Beta version we ported some existing features from the previous revisions:
-
-* Inline configuration, configuration via environment variables, system properties or YAML files.
-* Manual Pagination for collections.
-* Default retry strategy for HTTP 429 response error code.
-* Proxy support.
-
-#### Coming Soon
-
-In the future releases we will provide support the following features:
-
-* OAuth for Okta.
-* Ability to provide your own retry strategy for HTTP 429 response error code.
-* Support custom profile attributes for User.
-* Caching.
-
 ## Migrating from 7.x.x to 8.0.0
 
 Version 8.0.0 of this SDK introduces few breaking changes from previous versions.
