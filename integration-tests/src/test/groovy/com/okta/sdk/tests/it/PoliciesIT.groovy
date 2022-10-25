@@ -148,6 +148,9 @@ class PoliciesIT extends ITSupport {
         assertThat(createdAccessPolicyRuleActions.getAppSignOn().getVerificationMethod().getType(), is("ASSURANCE"))
         assertThat(createdAccessPolicyRuleActions.getAppSignOn().getVerificationMethod().getFactorMode(), is("1FA"))
         assertThat(createdAccessPolicyRuleActions.getAppSignOn().getVerificationMethod().getReauthenticateIn(), is("PT43800H"))
+
+        policyApi.deactivatePolicyRule(accessPolicy.getId(), createdAccessPolicyRule.getId())
+        policyApi.deletePolicyRule(accessPolicy.getId(), createdAccessPolicyRule.getId())
     }
 
     @Test
@@ -180,6 +183,9 @@ class PoliciesIT extends ITSupport {
 
         assertThat(createdPolicyRule.getId(), notNullValue())
         assertThat(createdPolicyRule.name, is(policyRuleName))
+
+        policyApi.deactivatePolicyRule(policy.getId(), createdPolicyRule.getId())
+        policyApi.deletePolicyRule(policy.getId(), createdPolicyRule.getId())
     }
 
     @Test
