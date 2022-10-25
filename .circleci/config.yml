@@ -7,7 +7,8 @@ aliases:
     - run: java -version
     - run: ./mvnw clean install -Pci 
     - run:
-        command: | circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings
+        command: |
+           circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings
 
     - run:
         when: on_fail
