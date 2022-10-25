@@ -5,13 +5,17 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
-    - run: circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings
+    - run:
+        command: |
+          ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings | grep groovy |  xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',')
+          echo $ClassName
     - run: mvn clean install -Dmaven.test.skip=true
     - run:
         command: |
+          ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings | grep groovy |  xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',')
+          echo $ClassName
           cd ./integration-tests
-          mvn -Dtest=DomainIT,IdpIT test
-    - run: pwd
+          mvn -Dtest=$ClassName test
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*IT.txt
