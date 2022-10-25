@@ -21,6 +21,7 @@ import org.openapitools.client.model.Application;
 import org.openapitools.client.model.ApplicationSignOnMode;
 
 public interface ApplicationBuilder<T extends ApplicationBuilder> {
+
     static ApplicationBuilder<ApplicationBuilder> instance() {
         return Classes.newInstance("com.okta.sdk.impl.resource.DefaultApplicationBuilder");
     }

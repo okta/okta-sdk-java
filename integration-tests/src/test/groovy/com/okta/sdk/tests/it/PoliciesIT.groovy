@@ -124,6 +124,7 @@ class PoliciesIT extends ITSupport {
         AccessPolicyRule accessPolicyRule = new AccessPolicyRule()
         accessPolicyRule.name(name)
         accessPolicyRule.setType(PolicyRuleType.ACCESS_POLICY)
+
         AccessPolicyRuleActions accessPolicyRuleActions = new AccessPolicyRuleActions()
         AccessPolicyRuleApplicationSignOn accessPolicyRuleApplicationSignOn = new AccessPolicyRuleApplicationSignOn()
         accessPolicyRuleApplicationSignOn.access("DENY")
