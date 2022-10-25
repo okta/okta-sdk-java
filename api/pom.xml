@@ -39,7 +39,7 @@
         <spring-web.version>5.3.23</spring-web.version>
         <spring-retry.version>1.3.3</spring-retry.version>
         <jackson-databind-nullable.version>0.2.3</jackson-databind-nullable.version>
-        <jakarta-annotation.version>2.1.0</jakarta-annotation.version>
+        <jakarta-annotation.version>1.3.5</jakarta-annotation.version>
         <jsr305.version>3.0.2</jsr305.version>
         <junit.version>4.13.2</junit.version>
     </properties>
