@@ -26,7 +26,7 @@ jobs:
       - image: cimg/openjdk:8.0-node
     environment:
         JVM_OPTS: -Xmx3200m
-    parallelism: 10
+    parallelism: 9
     steps: *build_steps
 
 workflows:
