@@ -5,14 +5,10 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
-    - run:
-        command: |
-          ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings | grep groovy |  xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',')
-          echo $ClassName
     - run: mvn clean install -Dmaven.test.skip=true
     - run:
         command: |
-          ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings | grep groovy |  xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',')
+          ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings | grep groovy |  xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',' | sed 's/,*$//g')
           echo $ClassName
           cd ./integration-tests
           mvn -Dtest=$ClassName test
@@ -30,19 +26,10 @@ jobs:
       - image: cimg/openjdk:8.0-node
     environment:
         JVM_OPTS: -Xmx3200m
-    parallelism: 4
-    steps: *build_steps
-  
-  jdk11:
-    docker:
-      - image: cimg/openjdk:11.0-node
-    environment:
-        JVM_OPTS: -Xmx3200m
-    parallelism: 4
+    parallelism: 10
     steps: *build_steps
 
 workflows:
   build_and_test:
     jobs:
       - jdk8
-      - jdk11
