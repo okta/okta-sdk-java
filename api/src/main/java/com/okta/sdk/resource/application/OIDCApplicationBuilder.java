@@ -16,6 +16,12 @@
 package com.okta.sdk.resource.application;
 
 import com.okta.commons.lang.Classes;
+import org.openapitools.client.model.JsonWebKey;
+import org.openapitools.client.model.OAuthEndpointAuthenticationMethod;
+import org.openapitools.client.model.OAuthGrantType;
+import org.openapitools.client.model.OAuthResponseType;
+import org.openapitools.client.model.OpenIdConnectApplicationConsentMethod;
+import org.openapitools.client.model.OpenIdConnectApplicationType;
 
 import java.util.List;
 
@@ -60,4 +66,8 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
     OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod);
 
     OIDCApplicationBuilder setJwks(List<JsonWebKey> jsonWebKeyList);
+
+    OIDCApplicationBuilder setImplicitAssignment(Boolean isImplicitAssignment);
+
+    OIDCApplicationBuilder setInlineHookId(String inlineHookId);
 }

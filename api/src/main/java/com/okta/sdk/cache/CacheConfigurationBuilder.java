@@ -24,18 +24,18 @@ import java.util.concurrent.TimeUnit;
  * utility class.  For example:
  * <pre>
  * Caches.named("cacheRegionNameHere")
- *     .{@link #withTimeToLive(long, java.util.concurrent.TimeUnit) withTimeToLive(1, TimeUnit.DAYS)}
- *     .{@link #withTimeToIdle(long, java.util.concurrent.TimeUnit) withTimeToIdle(2, TimeUnit.HOURS)};
+ *     .{@link #withTimeToLive(long, TimeUnit) withTimeToLive(1, TimeUnit.DAYS)}
+ *     .{@link #withTimeToIdle(long, TimeUnit) withTimeToIdle(2, TimeUnit.HOURS)};
  * </pre>
  * or
  * <pre>
  * Caches.forResource(Account.class)
- *     .{@link #withTimeToLive(long, java.util.concurrent.TimeUnit) withTimeToLive(1, TimeUnit.DAYS)}
- *     .{@link #withTimeToIdle(long, java.util.concurrent.TimeUnit) withTimeToIdle(2, TimeUnit.HOURS)};
+ *     .{@link #withTimeToLive(long, TimeUnit) withTimeToLive(1, TimeUnit.DAYS)}
+ *     .{@link #withTimeToIdle(long, TimeUnit) withTimeToIdle(2, TimeUnit.HOURS)};
  * </pre>
  *
- * @see #withTimeToLive(long, java.util.concurrent.TimeUnit)
- * @see #withTimeToIdle(long, java.util.concurrent.TimeUnit)
+ * @see #withTimeToLive(long, TimeUnit)
+ * @see #withTimeToIdle(long, TimeUnit)
  * @see Caches#forResource(Class)
  * @see Caches#named(String)
  * @since 0.5.0
@@ -52,7 +52,7 @@ public interface CacheConfigurationBuilder {
      * If this value is not configured, it is assumed that the Cache's entries could potentially live indefinitely.
      * Note however that entries can still be expunged due to other conditions (e.g. memory constraints, Time to
      * Idle setting, etc).
-     * <h1>Usage</h1>
+     * <b>Usage</b>
      * <pre>
      *     ...withTimeToLive(30, TimeUnit.MINUTES)...
      *     ...withTimeToLive(1, TimeUnit.HOURS)...
@@ -74,7 +74,7 @@ public interface CacheConfigurationBuilder {
      * If this value is not configured, it is assumed that the Cache's entries could potentially live indefinitely.
      * Note however that entries can still be expunged due to other conditions (e.g. memory constraints, Time to
      * Live setting, etc).
-     * <h1>Usage</h1>
+     * <b>Usage</b>
      * <pre>
      *     ...withTimeToIdle(30, TimeUnit.MINUTES)...
      *     ...withTimeToIdle(1, TimeUnit.HOURS)...

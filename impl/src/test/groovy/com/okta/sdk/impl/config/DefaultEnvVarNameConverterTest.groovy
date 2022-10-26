@@ -17,11 +17,11 @@
 package com.okta.sdk.impl.config
 
 import com.okta.sdk.client.ClientBuilder
+import org.hamcrest.MatcherAssert
 import org.testng.annotations.Test
 
 import java.lang.reflect.Modifier
 
-import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
 
 class DefaultEnvVarNameConverterTest {
@@ -30,35 +30,35 @@ class DefaultEnvVarNameConverterTest {
     void testToEnvVarName() {
         def converter = new DefaultEnvVarNameConverter()
         def envVarName = converter.toEnvVarName('okta.client.apiKey.id')
-        assertThat envVarName, is('OKTA_CLIENT_APIKEY_ID')
+        MatcherAssert.assertThat envVarName, is('OKTA_CLIENT_APIKEY_ID')
     }
 
     @Test
     void testPropNameForApiKeyIdEnvVar() {
         def converter = new DefaultEnvVarNameConverter()
         def propName = converter.toDottedPropertyName('OKTA_API_KEY_ID')
-        assertThat propName, is('okta.api.key.id')
+        MatcherAssert.assertThat propName, is('okta.api.key.id')
     }
 
     @Test
     void testPropNameForApiKeySecretEnvVar() {
         def converter = new DefaultEnvVarNameConverter()
         def propName = converter.toDottedPropertyName('OKTA_CLIENT_TOKEN')
-        assertThat propName, is('okta.client.token')
+        MatcherAssert.assertThat propName, is('okta.client.token')
     }
 
     @Test
     void testPropNameForApiKeyFileEnvVar() {
         def converter = new DefaultEnvVarNameConverter()
         def propName = converter.toDottedPropertyName('OKTA_CONFIG_FILE')
-        assertThat propName, is('okta.config.file')
+        MatcherAssert.assertThat propName, is('okta.config.file')
     }
 
     @Test
     void testPropNameForNormalEnvVar() {
         def converter = new DefaultEnvVarNameConverter()
         def propName = converter.toDottedPropertyName('OKTA_CLIENT_AUTHENTICATIONSCHEME')
-        assertThat propName, is('okta.client.authenticationScheme')
+        MatcherAssert.assertThat propName, is('okta.client.authenticationScheme')
     }
 
     @Test
@@ -74,7 +74,7 @@ class DefaultEnvVarNameConverterTest {
                 // we want to round trip these properties
                 def env = converter.toEnvVarName(it)
                 def backToDotted = converter.toDottedPropertyName(env)
-                assertThat backToDotted, is(it)
+                MatcherAssert.assertThat backToDotted, is(it)
             }
     }
 }

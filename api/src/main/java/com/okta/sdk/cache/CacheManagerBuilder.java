@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * Builder for creating simple {@link CacheManager} instances <b>suitable for SINGLE-JVM APPLICATIONS</b>.  If your
  * application is deployed (mirrored or clustered) across multiple JVMs, you might not
  * want to use this builder and use your own clusterable CacheManager implementation instead.  See Clustering below.
- * <h1>Clustering</h1>
+ * <b>Clustering</b>
  * <b>The default CacheManager instances created by this Builder DO NOT SUPPORT CLUSTERING</b>.
  * <p>
  * If you use this Builder and your application is deployed on multiple JVMs, <b>each of your application instances will
@@ -32,8 +32,8 @@ import java.util.concurrent.TimeUnit;
  * account as ENABLED, but the other application instance could see it as DISABLED.
  * <p>
  * For some applications, this discrepancy might be an acceptable trade-off, especially if you configure
- * {@link #withDefaultTimeToIdle(long, java.util.concurrent.TimeUnit) timeToIdle} and
- * {@link #withDefaultTimeToLive(long, java.util.concurrent.TimeUnit) timeToLive} settings low enough.  For example,
+ * {@link #withDefaultTimeToIdle(long, TimeUnit) timeToIdle} and
+ * {@link #withDefaultTimeToLive(long, TimeUnit) timeToLive} settings low enough.  For example,
  * maybe a TTL of 5 or 10 minutes is an acceptable time to see 'stale' account data.  For other applications, this might
  * not be acceptable.  If it is acceptable, configuring the timeToIdle and timeToLive settings will allow you to
  * fine-tune how much variance you allow.
@@ -69,7 +69,7 @@ public interface CacheManagerBuilder {
      * If this value is not configured, it is assumed that cache entries could potentially live indefinitely.
      * Note however that entries can still be expunged due to other conditions (e.g. memory constraints, Time to
      * Idle setting, etc).
-     * <h1>Usage</h1>
+     * <b>Usage</b>
      * <pre>
      *     ...withDefaultTimeToLive(30, TimeUnit.MINUTES)...
      *     ...withDefaultTimeToLive(1, TimeUnit.HOURS)...
@@ -93,7 +93,7 @@ public interface CacheManagerBuilder {
      * If this value is not configured, it is assumed that cache entries could potentially live indefinitely.
      * Note however that entries can still be expunged due to other conditions (e.g. memory constraints, Time to
      * Live setting, etc).
-     * <h1>Usage</h1>
+     * <b>Usage</b>
      * <pre>
      *     ...withDefaultTimeToLive(30, TimeUnit.MINUTES)...
      *     ...withDefaultTimeToLive(1, TimeUnit.HOURS)...

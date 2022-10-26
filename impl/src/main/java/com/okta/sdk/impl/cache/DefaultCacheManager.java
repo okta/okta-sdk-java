@@ -20,10 +20,10 @@ import com.okta.commons.lang.Assert;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
 import com.okta.sdk.impl.util.SoftHashMap;
-import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  * an in-memory {@link ConcurrentMap ConcurrentMap}.  By default, this implementation creates thread-safe
  * {@link DefaultCache} instances via the {@link #createCache(String) createCache(name)} method, but this can be overridden
  * by subclasses that wish to provide different Cache implementations.
- * <h1>Clustering</h1>
+ * <h2>Clustering</h2>
  * <b>This implementation DOES NOT SUPPORT CLUSTERING</b>.
  * <p>
  * If your application is deployed on multiple hosts, it is
@@ -49,29 +49,29 @@ import java.util.concurrent.TimeUnit;
  * no longer be available.  If a cache entry is not accessed at all after this amount of time, it will be
  * removed from the cache as soon as possible.
  * <p>
- * This implementation's {@link #setDefaultTimeToIdle(java.time.Duration) defaultTimeToIdle}
+ * This implementation's {@link #setDefaultTimeToIdle(Duration) defaultTimeToIdle}
  * is {@code null}, which means that cache entries can potentially remain idle indefinitely.  Note however that a
  * cache entry can still be expunged due to other conditions (e.g. memory constraints, Time to Live setting, etc).
  * <p>
- * The {@link #setDefaultTimeToIdle(java.time.Duration) defaultTimeToIdle} setting is only
+ * The {@link #setDefaultTimeToIdle(Duration) defaultTimeToIdle} setting is only
  * applied to newly created {@code Cache} instances.  It does not affect already existing {@code Cache}s.
  * <h2>Time to Live</h2>
  * Time to Live is the amount of time a cache entry may exist after first being created before it will expire and no
  * longer be available.  If a cache entry ever becomes older than this amount of time (regardless of how often
  * it is accessed), it will be removed from the cache as soon as possible.
  * <p>
- * This implementation's {@link #setDefaultTimeToLive(java.time.Duration) defaultTimeToLive}
+ * This implementation's {@link #setDefaultTimeToLive(Duration) defaultTimeToLive}
  * is {@code null}, which means that cache entries could potentially live indefinitely.  Note however that a
  * cache entry can still be expunged due to other conditions (e.g. memory constraints, Time to Idle setting, etc).
  * <p>
- * The {@link #setDefaultTimeToLive(java.time.Duration) defaultTimeToLive} setting is only
+ * The {@link #setDefaultTimeToLive(Duration) defaultTimeToLive} setting is only
  * applied to newly created {@code Cache} instances.  It does not affect already existing {@code Cache}s.
  * <h2>Thread Safety</h2>
  * This implementation and the cache instances it creates are thread-safe and usable in concurrent environments.
  *
- * @see #setDefaultTimeToIdle(java.time.Duration)
+ * @see #setDefaultTimeToIdle(Duration)
  * @see #setDefaultTimeToIdleSeconds(long)
- * @see #setDefaultTimeToLive(java.time.Duration)
+ * @see #setDefaultTimeToLive(Duration)
  * @see #setDefaultTimeToLiveSeconds(long)
  * @since 0.5.0
  */
@@ -127,10 +127,10 @@ public class DefaultCacheManager implements CacheManager {
     }
 
     /**
-     * Convenience method that sets the {@link #setDefaultTimeToLive(java.time.Duration) defaultTimeToLive}
+     * Convenience method that sets the {@link #setDefaultTimeToLive(Duration) defaultTimeToLive}
      * value using a {@code TimeUnit} of {@link TimeUnit#SECONDS}.
      *
-     * @param seconds the {@link #setDefaultTimeToLive(java.time.Duration) defaultTimeToLive} value in seconds.
+     * @param seconds the {@link #setDefaultTimeToLive(Duration) defaultTimeToLive} value in seconds.
      */
     public void setDefaultTimeToLiveSeconds(long seconds) {
         setDefaultTimeToLive(Duration.ofSeconds(seconds));
@@ -162,10 +162,10 @@ public class DefaultCacheManager implements CacheManager {
     }
 
     /**
-     * Convenience method that sets the {@link #setDefaultTimeToIdle(java.time.Duration) defaultTimeToIdle}
+     * Convenience method that sets the {@link #setDefaultTimeToIdle(Duration) defaultTimeToIdle}
      * value using a {@code TimeUnit} of {@link TimeUnit#SECONDS}.
      *
-     * @param seconds the {@link #setDefaultTimeToIdle(java.time.Duration) defaultTimeToIdle} value in seconds.
+     * @param seconds the {@link #setDefaultTimeToIdle(Duration) defaultTimeToIdle} value in seconds.
      */
     public void setDefaultTimeToIdleSeconds(long seconds) {
         setDefaultTimeToIdle(Duration.ofSeconds(seconds));

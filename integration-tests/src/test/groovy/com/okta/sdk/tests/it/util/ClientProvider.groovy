@@ -16,26 +16,12 @@
 package com.okta.sdk.tests.it.util
 
 import com.okta.commons.lang.Strings
-import com.okta.sdk.authc.credentials.TokenClientCredentials
-import com.okta.sdk.client.Client
 import com.okta.sdk.client.Clients
-import com.okta.sdk.impl.cache.DisabledCacheManager
-import com.okta.sdk.resource.Deletable
-import com.okta.sdk.resource.ResourceException
-import com.okta.sdk.resource.application.Application
-import com.okta.sdk.resource.authorization.server.AuthorizationServer
-import com.okta.sdk.resource.event.hook.EventHook
-import com.okta.sdk.resource.group.GroupList
-import com.okta.sdk.resource.group.rule.GroupRule
-import com.okta.sdk.resource.group.rule.GroupRuleList
-import com.okta.sdk.resource.group.rule.GroupRuleStatus
-import com.okta.sdk.resource.identity.provider.IdentityProvider
-import com.okta.sdk.resource.inline.hook.InlineHook
-import com.okta.sdk.resource.linked.object.LinkedObject
-import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserStatus
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
+import org.openapitools.client.ApiClient
+import org.openapitools.client.api.*
+import org.openapitools.client.model.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.testng.IHookCallBack
@@ -43,7 +29,6 @@ import org.testng.IHookable
 import org.testng.ITestResult
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.Listeners
-
 
 /**
  * Creates a thread local client for a test method to use. The client may be connected to an actual Okta instance or a Test Server.
@@ -53,14 +38,14 @@ trait ClientProvider implements IHookable {
 
     private Logger log = LoggerFactory.getLogger(ClientProvider)
 
-    private ThreadLocal<Client> threadLocal = new ThreadLocal<>()
+    private ThreadLocal<ApiClient> threadLocal = new ThreadLocal<>()
     private ThreadLocal<String> testName = new ThreadLocal<>()
-    private List<Deletable> toBeDeleted = []
+    private List<Object> toBeDeleted = []
 
-    Client getClient(String scenarioId = null) {
-        Client client = threadLocal.get()
+    ApiClient getClient(String scenarioId = null) {
+        ApiClient client = threadLocal.get()
         if (client == null) {
-            threadLocal.set(buildClient(scenarioId))
+            threadLocal.set(buildClient())
         }
         return threadLocal.get()
     }
@@ -69,20 +54,11 @@ trait ClientProvider implements IHookable {
         return Strings.hasText(System.getProperty(TestServer.TEST_SERVER_BASE_URL))
     }
 
-    private Client buildClient(String scenarioId = null) {
+    private ApiClient buildClient() {
 
-        String testServerBaseUrl = System.getProperty(TestServer.TEST_SERVER_BASE_URL)
-        if (isRunningWithTestServer() && scenarioId != null) {
-            return Clients.builder()
-                    .setOrgUrl(testServerBaseUrl + scenarioId)
-                    .setClientCredentials(new TokenClientCredentials("00ICU812"))
-                    .setCacheManager(new DisabledCacheManager()) // disable cache when using mock server
-                    .build()
-        }
-
-        Client client = Clients.builder().build()
-        client.dataStore.requestExecutor.numRetries = 10
-        return client
+        ApiClient apiClient = Clients.builder().build()
+        //apiClient.setDebugging(true)
+        return apiClient
     }
 
     @Override
@@ -102,20 +78,20 @@ trait ClientProvider implements IHookable {
                 if (scenario != null) scenarioId = scenario.value()
             }
 
-            Client client = getClient(scenarioId)
+            ApiClient client = getClient(scenarioId)
 
             if (!isRunningWithTestServer() && testResources != null) {
                 // delete any users that may collide with the test that is about to run
-                testResources.users().each { email ->
-                    deleteUser(email, client)
+                testResources.users().each { id ->
+                    deleteUser(id, client)
                 }
 
-                testResources.groups().each { groupName ->
-                    deleteGroup(groupName, client)
+                testResources.groups().each { id ->
+                    deleteGroup(id, client)
                 }
 
-                testResources.rules().each { ruleName ->
-                    deleteRule(ruleName, client)
+                testResources.rules().each { id ->
+                    deleteGroupRule(id, client)
                 }
             }
             // run the tests
@@ -138,45 +114,121 @@ trait ClientProvider implements IHookable {
 
     /**
      * Registers a Deletable to be cleaned up after the test is run.
-     * @param deletable Resource to be deleted.
      */
-    void registerForCleanup(Deletable deletable) {
+    void registerForCleanup(Object deletable) {
         toBeDeleted.add(deletable)
     }
 
-    void deleteUser(String email, Client client) {
-        Util.ignoring(ResourceException) {
-            User user = client.getUser(email)
-            if (user.status != UserStatus.DEPROVISIONED) {
-                user.deactivate()
+    void deleteApp(String id, ApiClient client) {
+        log.info("Deleting App: {}", id)
+
+        ApplicationApi applicationApi = new ApplicationApi(client)
+        Application appToDelete = applicationApi.getApplication(id, null)
+
+        if (appToDelete != null) {
+            if (appToDelete.getStatus() == ApplicationLifecycleStatus.ACTIVE) {
+                // deactivate
+                applicationApi.deactivateApplication(appToDelete.getId())
             }
-            user.delete()
+            // delete
+            applicationApi.deleteApplication(appToDelete.getId())
         }
     }
 
-    void deleteGroup(String groupName, Client client) {
-        Util.ignoring(ResourceException) {
-            GroupList groups = client.listGroups(groupName, null, null)
-            groups.each {group ->
-                if (groupName.equals(group.profile.name)) {
-                    group.delete()
-                }
+    void deleteUser(String id, ApiClient client) {
+        log.info("Deleting User: {}", id)
+        UserApi userApi = new UserApi(client)
+        User userToDelete = userApi.getUser(id)
+
+        if (userToDelete != null) {
+            if (userToDelete.getStatus() != UserStatus.DEPROVISIONED) {
+                // deactivate
+                userApi.deactivateUser(userToDelete.getId(), false)
             }
+            // delete
+            userApi.deleteUser(userToDelete.getId(), false)
         }
     }
 
-    void deleteRule(String ruleName, Client client) {
-        Util.ignoring(ResourceException) {
-            GroupRuleList rules = client.listGroupRules()
-            rules.each {rule ->
-                if (ruleName.equals(rule.name)) {
-                    if (rule.status == GroupRuleStatus.ACTIVE) {
-                        rule.deactivate()
-                    }
-                    rule.delete()
-                }
-            }
+    void deleteUserType(String id, ApiClient client) {
+        log.info("Deleting UserType: {}", id)
+        UserTypeApi userTypeApi= new UserTypeApi(client)
+        UserType userTypeToDelete = userTypeApi.getUserType(id)
+
+        if (userTypeToDelete != null) {
+            userTypeApi.deleteUserType(userTypeToDelete.getId())
         }
+    }
+
+    void deleteGroup(String id, ApiClient client) {
+        log.info("Deleting Group: {}", id)
+        GroupApi groupApi = new GroupApi(client)
+        Group groupToDelete = groupApi.getGroup(id)
+
+        if (groupToDelete != null) {
+            groupApi.deleteGroup(groupToDelete.getId())
+        }
+    }
+
+    void deleteGroupRule(String id, ApiClient client) {
+        log.info("Deleting GroupRule: {}", id)
+        GroupApi groupApi = new GroupApi(client)
+        GroupRule groupRuleToDelete = groupApi.getGroupRule(id, null)
+
+        if (groupRuleToDelete != null) {
+            groupApi.deleteGroup(groupRuleToDelete.getId())
+        }
+    }
+
+    void deleteIdp(String id, ApiClient client) {
+        log.info("Deleting IdP: {}", id)
+        IdentityProviderApi idpApi = new IdentityProviderApi(client)
+        IdentityProvider idpToDelete = idpApi.getIdentityProvider(id)
+
+        if (idpToDelete != null) {
+            if (idpToDelete.getStatus() == LifecycleStatus.ACTIVE) {
+                // deactivate
+                idpApi.deactivateIdentityProvider(idpToDelete.getId())
+            }
+            // delete
+            idpApi.deleteIdentityProvider(idpToDelete.getId())
+        }
+    }
+
+    void deleteInlineHook(String id, ApiClient client) {
+        log.info("Deleting InlineHook: {}", id)
+        InlineHookApi inlineHookApi = new InlineHookApi(client)
+        InlineHook inlineHookToDelete = inlineHookApi.getInlineHook(id)
+
+        if (inlineHookToDelete != null) {
+            if (inlineHookToDelete.getStatus() == InlineHookStatus.ACTIVE) {
+                // deactivate
+                inlineHookApi.deactivateInlineHook(inlineHookToDelete.getId())
+            }
+            // delete
+            inlineHookApi.deleteInlineHook(inlineHookToDelete.getId())
+        }
+    }
+
+    void deletePolicy(String id, ApiClient client) {
+        log.info("Deleting Policy: {}", id)
+        PolicyApi policyApi = new PolicyApi(client)
+        Policy policyToDelete = policyApi.getPolicy(id, "false")
+
+        if (policyToDelete != null) {
+            if (policyToDelete.getStatus() == LifecycleStatus.ACTIVE) {
+                // deactivate
+                policyApi.deactivatePolicy(policyToDelete.getId())
+            }
+            // delete
+            policyApi.deletePolicy(policyToDelete.getId())
+        }
+    }
+
+    void deletePolicyRule(String policyId, String ruleId, ApiClient client) {
+        log.info("Deleting PolicyRule: policyId {}, ruleId: {}", policyId, ruleId)
+        PolicyApi policyApi = new PolicyApi(client)
+        policyApi.deletePolicyRule(policyId, ruleId)
     }
 
     @AfterMethod (groups = ["group1", "group2", "group3"])
@@ -185,16 +237,38 @@ trait ClientProvider implements IHookable {
             // delete them in reverse order so dependencies are resolved
             toBeDeleted.reverse().each { deletable ->
                 try {
-                    if (deletable instanceof User ||
-                        deletable instanceof Application ||
-                        deletable instanceof AuthorizationServer ||
-                        deletable instanceof EventHook ||
-                        deletable instanceof InlineHook ||
-                        deletable instanceof GroupRule ||
-                        deletable instanceof IdentityProvider) {
-                        deletable.deactivate()
+                    if (deletable instanceof User) {
+                        User tobeDeletedUser = (User) deletable
+                        deleteUser(tobeDeletedUser.getId(), getClient())
                     }
-                    deletable.delete()
+                    else if (deletable instanceof UserType) {
+                        UserType tobeDeletedUserType = (UserType) deletable
+                        deleteUserType(tobeDeletedUserType.getId(), getClient())
+                    }
+                    else if (deletable instanceof Group) {
+                        Group tobeDeletedGroup = (Group) deletable
+                        deleteGroup(tobeDeletedGroup.getId(), getClient())
+                    }
+                    else if (deletable instanceof GroupRule) {
+                        GroupRule tobeDeletedGroupRule = (GroupRule) deletable
+                        deleteGroupRule(tobeDeletedGroupRule.getId(), getClient())
+                    }
+                    else if (deletable instanceof Application) {
+                        Application tobeDeletedApp = (Application) deletable
+                        deleteApp(tobeDeletedApp.getId(), getClient())
+                    }
+                    else if (deletable instanceof IdentityProvider) {
+                        IdentityProvider tobeDeletedIdp = (IdentityProvider) deletable
+                        deleteIdp(tobeDeletedIdp.getId(), getClient())
+                    }
+                    else if (deletable instanceof InlineHook) {
+                        InlineHook tobeDeletedInlineHook = (InlineHook) deletable
+                        deleteInlineHook(tobeDeletedInlineHook.getId(), getClient())
+                    }
+                    else if (deletable instanceof Policy) {
+                        Policy tobeDeletedPolicy = (Policy) deletable
+                        deletePolicy(tobeDeletedPolicy.getId(), getClient())
+                    }
                 }
                 catch (Exception e) {
                     log.trace("Exception thrown during cleanup, it is ignored so the rest of the cleanup can be run:", e)

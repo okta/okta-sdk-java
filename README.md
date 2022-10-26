@@ -27,6 +27,19 @@ This repository contains the Okta management SDK for Java. This SDK can be used 
 * Add security factors to users with the [Factors API](https://developer.okta.com/docs/api/resources/factors)
 * Manage groups with the [Groups API](https://developer.okta.com/docs/api/resources/groups)
 * Manage applications with the [Apps API](https://developer.okta.com/docs/api/resources/apps)
+* Manage logs with the [Logs API](https://developer.okta.com/docs/api/resources/system_log)
+* Manage sessions with the [Sessions API](https://developer.okta.com/docs/api/resources/sessions)
+* Manage templates with the [Custom Templates API](https://developer.okta.com/docs/reference/api/templates/)
+* Manage identity providers with the [Identity Providers API](https://developer.okta.com/docs/reference/api/idps/)
+* Manage authorization servers with the [Authorization Servers API](https://developer.okta.com/docs/reference/api/authorization-servers/)
+* Manage event hooks with the [Event Hooks Management API](https://developer.okta.com/docs/reference/api/event-hooks/)
+* Manage inline hooks with the [Inline Hooks Management API](https://developer.okta.com/docs/reference/api/inline-hooks/).
+* Manage features with the [Features API](https://developer.okta.com/docs/reference/api/features/).
+* Manage linked objects with the [Linked Objects API](https://developer.okta.com/docs/reference/api/linked-objects/).
+* Manage trusted origins with the [Trusted Origins API](https://developer.okta.com/docs/reference/api/trusted-origins/).
+* Manage user types with the [User Types API](https://developer.okta.com/docs/reference/api/user-types/).
+* Manage custom domains with the [Domains API](https://developer.okta.com/docs/reference/api/domains/).
+* Manage network zones with the [Zones API](https://developer.okta.com/docs/reference/api/zones/).
 * Much more!
  
 We also publish these libraries for Java:
@@ -51,6 +64,8 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 6.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-5xx-to-600)) |
 | 7.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-6xx-to-700)) |
 | 8.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-7xx-to-800)) |
+| 9.x.x-beta | :heavy_check_mark: Beta release located in [branch](https://github.com/okta/okta-sdk-java/tree/swagger_v3) - Discontinued |
+| 10.x.x-beta | :heavy_check_mark: Beta release located in `oasv3` [branch](https://github.com/okta/okta-sdk-java/tree/oasv3) ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-8xx-to-10xx)) |
 
 The latest release can always be found on the [releases page][github-releases].
  
@@ -120,7 +135,7 @@ Construct a client instance by passing it your Okta domain name and API token:
  
 [//]: # (method: createClient)
 ```java
-Client client = Clients.builder()
+ApiClient client = Clients.builder()
     .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
     .setClientCredentials(new TokenClientCredentials("{apiToken}"))
     .build();
@@ -128,47 +143,13 @@ Client client = Clients.builder()
 [//]: # (end: createClient)
  
 Hard-coding the Okta domain and API token works for quick tests, but for real projects you should use a more secure way of storing these values (such as environment variables). This library supports a few different configuration sources, covered in the [configuration reference](#configuration-reference) section.
-
-In some cases, it maybe needed to check if the client is ready and able to execute requests. The _**isReady**_ method can be used for this. It does not produce exceptions if the wrong orgUrl or token have been used, but it returns a boolean indicating the client readiness.
-
-[//]: # (method: isClientReady)
-```java
-boolean isClientReadyStatus = client.isReady(client::listApplications);
-```
-[//]: # (end: isClientReady)
-
-## OAuth 2.0
-
-Okta allows you to interact with Okta APIs using scoped OAuth 2.0 access tokens. Each access token enables the bearer to perform specific actions on specific Okta endpoints, with that ability controlled by which scopes the access token contains.
-
-This SDK supports this feature only for service-to-service applications. Check out [our guides](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/overview/) to learn more about how to register a new service application using a private and public key pair.
-
-Check out [our guide](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/main/#generate-the-jwk-using-the-admin-console) to learn how to generate a JWK and convert the same to PEM format which would be used as PrivateKey in `Client` creation.
-
-When using this approach, you won't need an API Token because the SDK will request an access token for you. In order to use OAuth 2.0, construct a client instance by passing the following parameters:
-
-[//]: # (method: createOAuth2Client)
-```java
-Client client = Clients.builder()
-    .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
-    .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-    .setClientId("{clientId}")
-    .setKid("{kid}") // key id (optional)
-    .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
-    .setPrivateKey("/path/to/yourPrivateKey.pem")
-    // (or) .setPrivateKey("full PEM payload")
-    // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
-    // (or) .setPrivateKey(inputStream)
-    // (or) .setPrivateKey(privateKey)
-    .build();
-```
-[//]: # (end: createOAuth2Client)
  
 ## Usage guide
 
 These examples will help you understand how to use this library. You can also browse the full [API reference documentation][javadocs].
 
-Once you initialize a `Client`, you can call methods to make requests to the Okta API.
+Once you initialize a `ApiClient` instance, you can pass this instance to the constructor of any API area clients (such as `UserApi`, `GroupApi`, `ApplicationApi` etc.).
+You can start using these clients to call management APIs relevant to the chosen API area.
 
 ### Authenticate a User
 
@@ -178,7 +159,8 @@ This library should be used with the Okta management API. For authentication, we
 
 [//]: # (method: getUser)
 ```java
-User user = client.getUser("a-user-id");
+UserApi userApi = new UserApi(client);
+User user = userApi.getUser("userId");
 ```
 [//]: # (end: getUser)
 
@@ -186,10 +168,11 @@ User user = client.getUser("a-user-id");
 
 [//]: # (method: listAllUsers)
 ```java
-UserList users = client.listUsers();
+UserApi userApi = new UserApi(client);
+List<User> users = userApi.listUsers(null, null, 5, null, null, null, null);
 
 // stream
-client.listUsers().stream()
+users.stream()
     .forEach(user -> {
       // do something
     });
@@ -202,11 +185,13 @@ For more examples of handling collections see the [paging](#paging) section belo
 
 [//]: # (method: userSearch)
 ```java
+UserApi userApi = new UserApi(client);
+
 // search by email
-UserList users = client.listUsers("jcoder@example.com", null, null, null, null);
+List<User> users = userApi.listUsers(null, null, 5, null, "jcoder@example.com", null, null);
 
 // filter parameter
-users = client.listUsers(null, "status eq \"ACTIVE\"", null, null, null);
+users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
 ```
 [//]: # (end: userSearch)
 
@@ -214,11 +199,12 @@ users = client.listUsers(null, "status eq \"ACTIVE\"", null, null, null);
 
 [//]: # (method: createUser)
 ```java
+UserApi userApi = new UserApi(client);
 User user = UserBuilder.instance()
     .setEmail("joe.coder@example.com")
     .setFirstName("Joe")
     .setLastName("Code")
-    .buildAndCreate(client);
+    .buildAndCreate(userApi);
 ```
 [//]: # (end: createUser)
 
@@ -226,12 +212,13 @@ User user = UserBuilder.instance()
 
 [//]: # (method: createUserWithGroups)
 ```java
+UserApi userApi = new UserApi(client);
 User user = UserBuilder.instance()
     .setEmail("joe.coder@example.com")
     .setFirstName("Joe")
     .setLastName("Code")
-    .setGroups(new HashSet<>(Arrays.asList("group-id-1", "group-id-2")))
-    .buildAndCreate(client);
+    .setGroups(Arrays.asList("groupId-1", "groupId-2"))
+    .buildAndCreate(userApi);
 ```
 [//]: # (end: createUserWithGroups)
 
@@ -239,28 +226,26 @@ User user = UserBuilder.instance()
 
 [//]: # (method: updateUser)
 ```java
-user.getProfile().setFirstName("new-first-name");
-user.update();
+UserApi userApi = new UserApi(client);
+UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+UserProfile userProfile = new UserProfile();
+userProfile.setNickName("Batman");
+updateUserRequest.setProfile(userProfile);
+userApi.updateUser(user.getId(), updateUserRequest, true);
 ```
 [//]: # (end: updateUser)
  
-### Get and set custom attributes
-
-Custom attributes must first be defined in the Okta profile editor. Then, you can work with custom attributes on a user:
-
-[//]: # (method: customAttributes)
-```java
-user.getProfile().put("customPropertyKey", "a value");
-user.getProfile().get("customPropertyKey");
-```
-[//]: # (end: customAttributes)
-
 ### Remove a User
 
 [//]: # (method: deleteUser)
 ```java
-user.deactivate();
-user.delete();
+UserApi userApi = new UserApi(client);
+
+// deactivate first
+userApi.deactivateUser(user.getId(), false);
+
+// then delete
+userApi.deleteUser(user.getId(), false);
 ```
 [//]: # (end: deleteUser)
 
@@ -268,7 +253,8 @@ user.delete();
 
 [//]: # (method: listUsersGroup)
 ```java
-GroupList groups = user.listGroups();
+GroupApi groupApi = new GroupApi(client);
+List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null);
 ```
 [//]: # (end: listUsersGroup)
 
@@ -276,10 +262,11 @@ GroupList groups = user.listGroups();
 
 [//]: # (method: createGroup)
 ```java
+GroupApi groupApi = new GroupApi(client);
 Group group = GroupBuilder.instance()
     .setName("a-group-name")
     .setDescription("Example Group")
-    .buildAndCreate(client);
+    .buildAndCreate(groupApi);
 ```
 [//]: # (end: createGroup)
 
@@ -295,7 +282,8 @@ user.addToGroup("groupId");
 
 [//]: # (method: listUserFactors)
 ```java
-UserFactorList factors = user.listFactors();
+UserFactorApi userFactorApi = new UserFactorApi(client);
+List<UserFactor> userFactors = userFactorApi.listFactors("userId");
 ```
 [//]: # (end: listUserFactors)
 
@@ -303,9 +291,10 @@ UserFactorList factors = user.listFactors();
 
 [//]: # (method: enrollUserInFactor)
 ```java
-SmsUserFactor smsFactor = client.instantiate(SmsUserFactor.class);
+UserFactorApi userFactorApi = new UserFactorApi(client);
+SmsUserFactor smsFactor = new SmsUserFactor();
 smsFactor.getProfile().setPhoneNumber("555 867 5309");
-user.enrollFactor(smsFactor);
+UserFactor userFactor = userFactorApi.enrollFactor("userId", smsFactor, true, "templateId", 30, true);
 ```
 [//]: # (end: enrollUserInFactor)
 
@@ -313,10 +302,11 @@ user.enrollFactor(smsFactor);
 
 [//]: # (method: activateFactor)
 ```java
-UserFactor factor = user.getFactor("factorId");
-ActivateFactorRequest activateFactorRequest = client.instantiate(ActivateFactorRequest.class);
+UserFactorApi userFactorApi = new UserFactorApi(client);
+UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
 activateFactorRequest.setPassCode("123456");
-factor.activate(activateFactorRequest);
+UserFactor activatedUserFactor = userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
 ```
 [//]: # (end: activateFactor)
 
@@ -324,10 +314,12 @@ factor.activate(activateFactorRequest);
 
 [//]: # (method: verifyFactor)
 ```java
-UserFactor factor = user.getFactor("factorId");
-VerifyFactorRequest verifyFactorRequest = client.instantiate(VerifyFactorRequest.class);
+UserFactorApi userFactorApi = new UserFactorApi(client);
+UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
 verifyFactorRequest.setPassCode("123456");
-VerifyUserFactorResponse verifyUserFactorResponse = factor.setVerify(verifyFactorRequest).verify();
+VerifyUserFactorResponse verifyUserFactorResponse =
+    userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
 ```
 [//]: # (end: verifyFactor)
 
@@ -335,7 +327,8 @@ VerifyUserFactorResponse verifyUserFactorResponse = factor.setVerify(verifyFacto
 
 [//]: # (method: listApplication)
 ```java
-ApplicationList applications = client.listApplications();
+ApplicationApi applicationApi = new ApplicationApi(client);
+List<Application> applications = applicationApi.listApplications(null, null, 10, null, null, true);
 ```
 [//]: # (end: listApplication)
 
@@ -343,7 +336,8 @@ ApplicationList applications = client.listApplications();
 
 [//]: # (method: getApplication)
 ```java
-Application app = client.getApplication("appId");
+ApplicationApi applicationApi = new ApplicationApi(client);
+Application app = applicationApi.getApplication("appId", null);
 ```
 [//]: # (end: getApplication)
 
@@ -351,24 +345,32 @@ Application app = client.getApplication("appId");
 
 [//]: # (method: createSwaApplication)
 ```java
-SwaApplication swaApp = client.instantiate(SwaApplication.class)
-    .setSettings(client.instantiate(SwaApplicationSettings.class)
-    .setApp(client.instantiate(SwaApplicationSettingsApplication.class)
-      .setButtonField("btn-login")
-      .setPasswordField("txtbox-password")
-      .setUsernameField("txtbox-username")
-      .setUrl("https://example.com/login.html")));
+ApplicationApi applicationApi = new ApplicationApi(client);
+SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
+swaApplicationSettingsApplication.buttonField("btn-login")
+    .passwordField("txtbox-password")
+    .usernameField("txtbox-username")
+    .url("https://example.com/login.html");
+SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings();
+swaApplicationSettings.app(swaApplicationSettingsApplication);
+BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication();
+browserPluginApplication.name("template_swa");
+browserPluginApplication.label("Sample Plugin App");
+browserPluginApplication.settings(swaApplicationSettings);
+
+// create
+BrowserPluginApplication createdApp =
+    applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null);
 ```
 [//]: # (end: createSwaApplication)
 
 ### List System Logs
 [//]: # (method: listSysLogs)
 ```java
-// page through all log events
-LogEventList logEvents = client.getLogs();
+SystemLogApi systemLogApi = new SystemLogApi(client);
 
-// or use a filter (start date, end date, filter, or query, sort order) all options are nullable
-logEvents = client.getLogs(null, null, null, "interestingURI.com", "ASCENDING");
+// use a filter (start date, end date, filter, or query, sort order) all options are nullable
+List<LogEvent> logEvents = systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
 ```
 [//]: # (end: listSysLogs)
 
@@ -378,14 +380,33 @@ Not every API endpoint is represented by a method in this library. You can call 
 
 [//]: # (method: callAnotherEndpoint)
 ```java
-// Create an IdP, see: https://developer.okta.com/docs/api/resources/idps#add-identity-provider
-ExtensibleResource resource = client.instantiate(ExtensibleResource.class);
-ExtensibleResource protocolNode = client.instantiate(ExtensibleResource.class);
-protocolNode.put("type", "OAUTH");
-resource.put("protocol", protocolNode);
-ExtensibleResource result = client.http()
-    .setBody(resource)
-    .post("/api/v1/idps", ExtensibleResource.class);
+ApiClient apiClient = buildApiClient("orgBaseUrl", "apiKey");
+
+// Create a BookmarkApplication
+BookmarkApplication bookmarkApplication = new BookmarkApplication();
+bookmarkApplication.setName("bookmark");
+bookmarkApplication.setLabel("Sample Bookmark App");
+bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
+BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
+BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
+    new BookmarkApplicationSettingsApplication();
+bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
+bookmarkApplicationSettingsApplication.setRequestIntegration(false);
+bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
+bookmarkApplication.setSettings(bookmarkApplicationSettings);
+ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
+    HttpMethod.POST,
+    Collections.emptyMap(),
+    null,
+    bookmarkApplication,
+    new HttpHeaders(),
+    new LinkedMultiValueMap<>(),
+    null,
+    Collections.singletonList(MediaType.APPLICATION_JSON),
+    MediaType.APPLICATION_JSON,
+    new String[]{"API Token"},
+    new ParameterizedTypeReference<BookmarkApplication>() {});
+BookmarkApplication createdApp = responseEntity.getBody();
 ```
 [//]: # (end: callAnotherEndpoint)
 
@@ -395,23 +416,29 @@ Every instance of the SDK `Client` is thread-safe. You **should** use the same i
 
 ## Paging
 
-Paging is handled automatically when iterating over a any collection.
+Paging is handled automatically when iterating over a collection.
 
 [//]: # (method: paging)
 ```java
-// get the list of users
-UserList users = client.listUsers();
+UserApi userApi = new UserApi(client);
 
-// get the first user in the collection
-log.info("First user in collection: {}", users.iterator().next().getProfile().getEmail());
+// limit
+int pageSize = 2;
+PagedList<User> usersPagedListOne = userApi.listUsersWithPaginationInfo(null, null, pageSize, null, null, null, null);
 
-// or loop through all of them (paging is automatic)
-for (User tmpUser : users) {
+// e.g. https://example.okta.com/api/v1/users?after=000u3pfv9v4SQXvpBB0g7&limit=2
+String nextPageUrl = usersPagedListOne.getNextPage();
+
+// replace 'after' with actual cursor from the nextPageUrl
+PagedList<User> usersPagedListTwo = userApi.listUsersWithPaginationInfo("after", null, pageSize, null, null, null, null);
+
+// loop through all of them (paging is automatic)
+for (User tmpUser : usersPagedListOne.getItems()) {
     log.info("User: {}", tmpUser.getProfile().getEmail());
 }
 
-// or via a stream
-users.stream().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
+// or stream
+usersPagedListOne.getItems().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
 ```
 [//]: # (end: paging)
 
@@ -468,35 +495,6 @@ okta:
       username: null
       password: null
     token: yourApiToken
-    requestTimeout: 0 # seconds
-    rateLimit:
-      maxRetries: 4
-```
-
-When you use OAuth 2.0, the full YAML configuration looks like:
-
-```yaml
-okta:
-  client:
-    connectionTimeout: 30 # seconds
-    orgUrl: "https://{yourOktaDomain}" # i.e. https://dev-123456.oktapreview.com
-    proxy:
-      port: null
-      host: null
-      username: null
-      password: null
-    authorizationMode: "PrivateKey"
-    clientId: "yourClientId"
-    kid: "yourKeyId" # i.e. "92u3YfA6GgQwL1uSFbgqysQjz61kWtuAhgM2yHbmCuM". This parameter is optional
-    scopes: "okta.users.read okta.apps.read"
-    privateKey: |
-      -----BEGIN PRIVATE KEY-----
-      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABFwAAAAdzc2gtcn
-      ...b3BlbnNzaC1rZXktdjEAAAAAAAAAAAAABAAABFwAAAAdzc2gtcn-myN3AmcmmPMS...
-      CO7Hnjlg77HRNFXPAAAAFWxrYW1pcmVkZHlAdm13YXJlLmNvbQECAwQF
-      -----END PRIVATE KEY-----
-    # or specify a path to a PEM file
-    # privateKey: "/path/to/yourPrivateKey.pem" # PEM format. This SDK supports RSA AND EC algorithms - RS256, RS384, RS512, ES256, ES384, ES512.
     requestTimeout: 0 # seconds
     rateLimit:
       maxRetries: 4
@@ -567,7 +565,6 @@ okta.client.requestTimeout = 0
 okta.client.rateLimit.maxRetries = 0
 ```
 
-
 ## Caching
 
 By default, a simple production-grade in-memory CacheManager will be enabled when the Client instance is created. This CacheManager implementation has the following characteristics:
@@ -581,24 +578,24 @@ This is because the default implementation is 100% in-memory (in-process) in the
 
 As a result, if your application that uses an Okta Client instance is deployed across multiple JVMs, you SHOULD ensure that the Client is configured with a CacheManager implementation that uses coherent and clustered/distributed memory.
 
-See the [`ClientBuilder` Javadoc](https://developer.okta.com/okta-sdk-java/apidocs/com/okta/sdk/client/ClientBuilder) for more details on caching. 
+See the [`ClientBuilder` Javadoc](https://developer.okta.com/okta-sdk-java/apidocs/com/okta/sdk/client/ClientBuilder) for more details on caching.
 
 ### Caching for applications deployed on a single JVM
 
 If your application is deployed on a single JVM and you still want to use the default CacheManager implementation, but the default cache configuration does not meet your needs, you can specify a different configuration. For example:
- 
+
 [//]: # (method: complexCaching)
 ```java
 Caches.newCacheManager()
-     .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
-     .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
-     .withCache(forResource(User.class) //User-specific cache settings
-         .withTimeToLive(1, TimeUnit.HOURS)
-         .withTimeToIdle(30, TimeUnit.MINUTES))
-     .withCache(forResource(Group.class) //Group-specific cache settings
-         .withTimeToLive(2, TimeUnit.HOURS))
-     //... etc ...
-     .build();
+    .withDefaultTimeToLive(300, TimeUnit.SECONDS) // default
+    .withDefaultTimeToIdle(300, TimeUnit.SECONDS) //general default
+    .withCache(forResource(User.class) //User-specific cache settings
+        .withTimeToLive(1, TimeUnit.HOURS)
+        .withTimeToIdle(30, TimeUnit.MINUTES))
+    .withCache(forResource(Group.class) //Group-specific cache settings
+        .withTimeToLive(1, TimeUnit.HOURS))
+    //... etc ...
+    .build();
 ```
 [//]: # (end: complexCaching)
 
@@ -608,7 +605,7 @@ While production applications will usually enable a working CacheManager as desc
 
 [//]: # (method: disableCaching)
 ```java
-Client client = Clients.builder()
+ApiClient client = Clients.builder()
     .setCacheManager(Caches.newDisabledCacheManager())
     .build();
 ```

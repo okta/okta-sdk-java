@@ -1,7 +1,7 @@
 /*
  * Copyright 2020-Present Okta, Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,14 +15,11 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.resource.identity.provider.*
-import com.okta.sdk.resource.policy.*
-import com.okta.sdk.resource.user.User
-import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.it.util.ITSupport
+import org.openapitools.client.api.IdentityProviderApi
+import org.openapitools.client.model.*
 import org.testng.annotations.Test
 
-import static com.okta.sdk.tests.it.util.Util.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
@@ -37,105 +34,211 @@ class IdpIT extends ITSupport {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        // create idp
-        IdentityProvider createdIdp = IdentityProviderBuilders.oidc()
-            .setName(name)
-            .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
-            .setRequestSignatureAlgorithm("SHA-256")
-            .setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum.REQUEST)
-            .setResponseSignatureAlgorithm("SHA-256")
-            .setResponseSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum.ANY)
-            .setAcsEndpointBinding(ProtocolEndpoint.BindingEnum.POST)
-            .setAcsEndpointType(ProtocolEndpoint.TypeEnum.INSTANCE)
-            .setAuthorizationEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-            .setAuthorizationEndpointUrl("https://idp.example.com/authorize")
-            .setTokenEndpointBinding(ProtocolEndpoint.BindingEnum.POST)
-            .setTokenEndpointUrl("https://idp.example.com/token")
-            .setUserInfoEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-            .setUserInfoEndpointUrl("https://idp.example.com/userinfo")
-            .setJwksEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-            .setJwksEndpointUrl("https://idp.example.com/keys")
-            .setScopes(["openid", "profile", "email"])
-            .setClientId("your-client-id")
-            .setClientSecret("your-client-secret")
-            .setIssuerUrl("https://idp.example.com")
-            .setMaxClockSkew(120000)
-            .setUserName("idpuser.email")
-            .setMatchType(PolicySubjectMatchType.USERNAME)
-            .buildAndCreate(client)
+        // create oidc idp
+        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
+        IdentityProvider idp = new IdentityProvider()
+        idp.setName(name)
+        idp.setType(IdentityProviderType.OIDC)
+        idp.setIssuerMode(IssuerMode.ORG_URL)
+        Protocol protocol = new Protocol()
+
+        ProtocolAlgorithmType protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
+        ProtocolAlgorithmType protocolAlgorithmTypeRes = new ProtocolAlgorithmType()
+        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Req = new ProtocolAlgorithmTypeSignature()
+        protocolAlgorithmTypeSignature_Req.setScope(ProtocolAlgorithmTypeSignatureScope.REQUEST)
+        protocolAlgorithmTypeSignature_Req.setAlgorithm("SHA-256")
+        protocolAlgorithmTypeReq.setSignature(protocolAlgorithmTypeSignature_Req)
+        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Res = new ProtocolAlgorithmTypeSignature()
+        protocolAlgorithmTypeSignature_Res.setScope(ProtocolAlgorithmTypeSignatureScope.RESPONSE)
+        protocolAlgorithmTypeSignature_Res.setAlgorithm("SHA-256")
+        protocolAlgorithmTypeRes.setSignature(protocolAlgorithmTypeSignature_Res)
+
+        ProtocolAlgorithms protocolAlgorithms = new ProtocolAlgorithms()
+        protocolAlgorithms.setRequest(protocolAlgorithmTypeReq)
+        protocolAlgorithms.setResponse(protocolAlgorithmTypeRes)
+        protocol.setAlgorithms(protocolAlgorithms)
+        List<String> scopes = Arrays.asList("openid", "profile", "email")
+        protocol.setScopes(scopes)
+        protocol.setType(ProtocolType.OIDC)
+
+        ProtocolEndpoint protocolEndpointIssuer = new ProtocolEndpoint()
+        protocolEndpointIssuer.setUrl("https://idp.example.com")
+        protocol.setIssuer(protocolEndpointIssuer)
+        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+        identityProviderCredentialsClient.setClientId("your-client-id")
+        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+        protocol.setCredentials(identityProviderCredentials)
+
+        ProtocolEndpoints protocolEndpoints = new ProtocolEndpoints()
+        ProtocolEndpoint protocolEndpointAcs = new ProtocolEndpoint()
+        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
+
+        ProtocolEndpoint protocolEndpointAuthorization = new ProtocolEndpoint()
+        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize")
+
+        ProtocolEndpoint protocolEndpointToken = new ProtocolEndpoint()
+        protocolEndpointToken.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointToken.setUrl("https://idp.example.com/token")
+
+        ProtocolEndpoint protocolEndpointUserInfo = new ProtocolEndpoint()
+        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo")
+
+        ProtocolEndpoint protocolEndpointJwks = new ProtocolEndpoint()
+        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointJwks.setUrl("https://idp.example.com/keys")
+
+        protocolEndpoints.setAcs(protocolEndpointAcs)
+        protocolEndpoints.setAuthorization(protocolEndpointAuthorization)
+        protocolEndpoints.setToken(protocolEndpointToken)
+        protocolEndpoints.setUserInfo(protocolEndpointUserInfo)
+        protocolEndpoints.setJwks(protocolEndpointJwks)
+        protocol.setEndpoints(protocolEndpoints)
+        idp.setProtocol(protocol)
+
+        IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
+        PolicyAccountLink policyAccountLink = new PolicyAccountLink()
+        policyAccountLink.setAction(PolicyAccountLinkAction.AUTO)
+        identityProviderPolicy.setAccountLink(policyAccountLink)
+        Provisioning provisioning = new Provisioning()
+        provisioning.setAction(ProvisioningAction.AUTO)
+        ProvisioningConditions provisioningConditions = new ProvisioningConditions()
+        ProvisioningDeprovisionedCondition provisioningDeprovisionedConditionDeprov = new ProvisioningDeprovisionedCondition()
+        provisioningDeprovisionedConditionDeprov.setAction(ProvisioningDeprovisionedAction.NONE)
+        provisioningConditions.setDeprovisioned(provisioningDeprovisionedConditionDeprov)
+        ProvisioningSuspendedCondition provisioningDeprovisionedConditionSusp = new ProvisioningSuspendedCondition()
+        provisioningDeprovisionedConditionSusp.setAction(ProvisioningSuspendedAction.NONE)
+        provisioningConditions.setSuspended(provisioningDeprovisionedConditionSusp)
+        provisioning.setConditions(provisioningConditions)
+        identityProviderPolicy.setProvisioning(provisioning)
+        identityProviderPolicy.setMaxClockSkew(1000)
+        ProvisioningGroups provisioningGroups = new ProvisioningGroups()
+        provisioningGroups.setAction(ProvisioningGroupsAction.NONE)
+        provisioning.setGroups(provisioningGroups)
+        identityProviderPolicy.setProvisioning(provisioning)
+        PolicySubject policySubject = new PolicySubject()
+        PolicyUserNameTemplate policyUserNameTemplate = new PolicyUserNameTemplate()
+        policyUserNameTemplate.setTemplate("idpuser.email")
+        policySubject.setUserNameTemplate(policyUserNameTemplate)
+        policySubject.setMatchType(PolicySubjectMatchType.USERNAME)
+        identityProviderPolicy.setSubject(policySubject)
+        idp.setPolicy(identityProviderPolicy)
+
+        IdentityProvider createdIdp = identityProviderApi.createIdentityProvider(idp)
         registerForCleanup(createdIdp)
 
         assertThat(createdIdp, notNullValue())
         assertThat(createdIdp.getId(), notNullValue())
         assertThat(createdIdp.getName(), equalTo(name))
-        assertThat(createdIdp.getStatus(), equalTo(IdentityProvider.StatusEnum.ACTIVE))
+        assertThat(createdIdp.getStatus(), equalTo(LifecycleStatus.ACTIVE))
 
-        // get
-        IdentityProvider retrievedIdp = client.getIdentityProvider(createdIdp.getId())
+        // retrieve
+        IdentityProvider retrievedIdp = identityProviderApi.getIdentityProvider(createdIdp.getId())
         assertThat(retrievedIdp.getId(), equalTo(createdIdp.getId()))
 
         // update
         String newName = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProvider updatedIdp = createdIdp.update(client.instantiate(IdentityProvider)
-            .setType(IdentityProvider.TypeValues.OIDC)
-            .setName(newName)
-            .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
-            .setProtocol(client.instantiate(Protocol)
-                .setAlgorithms(client.instantiate(ProtocolAlgorithms)
-                    .setRequest(client.instantiate(ProtocolAlgorithmType)
-                        .setSignature(client.instantiate(ProtocolAlgorithmTypeSignature)
-                            .setAlgorithm("SHA-256")
-                            .setScope(ProtocolAlgorithmTypeSignature.ScopeEnum.REQUEST)))
-                    .setResponse(client.instantiate(ProtocolAlgorithmType)
-                        .setSignature(client.instantiate(ProtocolAlgorithmTypeSignature)
-                            .setAlgorithm("SHA-256")
-                            .setScope(ProtocolAlgorithmTypeSignature.ScopeEnum.ANY))))
-                .setEndpoints(client.instantiate(ProtocolEndpoints)
-                    .setAcs(client.instantiate(ProtocolEndpoint)
-                        .setBinding(ProtocolEndpoint.BindingEnum.POST)
-                        .setType(ProtocolEndpoint.TypeEnum.INSTANCE))
-                    .setAuthorization(client.instantiate(ProtocolEndpoint)
-                        .setBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-                        .setUrl("https://idp.example.com/authorize_new"))
-                    .setToken(client.instantiate(ProtocolEndpoint)
-                        .setBinding(ProtocolEndpoint.BindingEnum.POST)
-                        .setUrl("https://idp.example.com/token_new"))
-                    .setUserInfo(client.instantiate(ProtocolEndpoint)
-                        .setBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-                        .setUrl("https://idp.example.com/userinfo_new"))
-                    .setJwks(client.instantiate(ProtocolEndpoint)
-                        .setBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-                        .setUrl("https://idp.example.com/keys_new")))
-                .setScopes(["openid", "profile", "email"])
-                .setType(Protocol.TypeEnum.OIDC)
-                .setCredentials(client.instantiate(IdentityProviderCredentials)
-                    .setClient(client.instantiate(IdentityProviderCredentialsClient)
-                        .setClientId("your-new-client-id")
-                        .setClientSecret("your-new-client-secret")))
-                .setIssuer(client.instantiate(ProtocolEndpoint)
-                    .setUrl("https://idp.example.com/new")))
-            .setPolicy(client.instantiate(IdentityProviderPolicy)
-                .setAccountLink(client.instantiate(PolicyAccountLink)
-                    .setAction(PolicyAccountLink.ActionEnum.AUTO)
-                    .setFilter(null))
-                .setProvisioning(client.instantiate(Provisioning)
-                    .setAction(Provisioning.ActionEnum.AUTO)
-                    .setConditions(client.instantiate(ProvisioningConditions)
-                        .setDeprovisioned(client.instantiate(ProvisioningDeprovisionedCondition)
-                            .setAction(ProvisioningDeprovisionedCondition.ActionEnum.NONE))
-                        .setSuspended(client.instantiate(ProvisioningSuspendedCondition)
-                            .setAction(ProvisioningSuspendedCondition.ActionEnum.NONE)))
-                    .setGroups(client.instantiate(ProvisioningGroups)
-                        .setAction(ProvisioningGroups.ActionEnum.NONE)))
-                .setMaxClockSkew(120000)
-                .setSubject(client.instantiate(PolicySubject)
-                    .setUserNameTemplate(client.instantiate(PolicyUserNameTemplate)
-                        .setTemplate("idpuser.email"))
-                    .setMatchType(PolicySubjectMatchType.USERNAME))))
-        registerForCleanup(updatedIdp)
+        IdentityProvider newIdp = new IdentityProvider()
+        newIdp.setName(newName)
+        newIdp.setType(IdentityProviderType.OIDC)
+        newIdp.setIssuerMode(IssuerMode.ORG_URL)
+        protocol = new Protocol()
 
-        IdentityProvider retrievedUpdatedIdp = client.getIdentityProvider(updatedIdp.getId())
+        protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
+        protocolAlgorithmTypeRes = new ProtocolAlgorithmType()
+        protocolAlgorithmTypeSignature_Req = new ProtocolAlgorithmTypeSignature()
+        protocolAlgorithmTypeSignature_Req.setScope(ProtocolAlgorithmTypeSignatureScope.REQUEST)
+        protocolAlgorithmTypeSignature_Req.setAlgorithm("SHA-256")
+        protocolAlgorithmTypeReq.setSignature(protocolAlgorithmTypeSignature_Req)
+        protocolAlgorithmTypeSignature_Res = new ProtocolAlgorithmTypeSignature()
+        protocolAlgorithmTypeSignature_Res.setScope(ProtocolAlgorithmTypeSignatureScope.RESPONSE)
+        protocolAlgorithmTypeSignature_Res.setAlgorithm("SHA-256")
+        protocolAlgorithmTypeRes.setSignature(protocolAlgorithmTypeSignature_Res)
+
+        protocolAlgorithms = new ProtocolAlgorithms()
+        protocolAlgorithms.setRequest(protocolAlgorithmTypeReq)
+        protocolAlgorithms.setResponse(protocolAlgorithmTypeRes)
+        protocol.setAlgorithms(protocolAlgorithms)
+        protocol.setScopes(scopes)
+        protocol.setType(ProtocolType.OIDC)
+
+        protocolEndpointIssuer = new ProtocolEndpoint()
+        protocolEndpointIssuer.setUrl("https://idp.example.com/new")
+        protocol.setIssuer(protocolEndpointIssuer)
+        identityProviderCredentials = new IdentityProviderCredentials()
+        identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+        identityProviderCredentialsClient.setClientId("your-new-client-id")
+        identityProviderCredentialsClient.setClientSecret("your-new-client-secret")
+        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+        protocol.setCredentials(identityProviderCredentials)
+
+        protocolEndpoints = new ProtocolEndpoints()
+        protocolEndpointAcs = new ProtocolEndpoint()
+        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
+
+        protocolEndpointAuthorization = new ProtocolEndpoint()
+        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize_new")
+
+        protocolEndpointToken = new ProtocolEndpoint()
+        protocolEndpointToken.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointToken.setUrl("https://idp.example.com/token_new")
+
+        protocolEndpointUserInfo = new ProtocolEndpoint()
+        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo_new")
+
+        protocolEndpointJwks = new ProtocolEndpoint()
+        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointJwks.setUrl("https://idp.example.com/keys_new")
+
+        protocolEndpoints.setAcs(protocolEndpointAcs)
+        protocolEndpoints.setAuthorization(protocolEndpointAuthorization)
+        protocolEndpoints.setToken(protocolEndpointToken)
+        protocolEndpoints.setUserInfo(protocolEndpointUserInfo)
+        protocolEndpoints.setJwks(protocolEndpointJwks)
+        protocol.setEndpoints(protocolEndpoints)
+        newIdp.setProtocol(protocol)
+
+        identityProviderPolicy = new IdentityProviderPolicy()
+        policyAccountLink = new PolicyAccountLink()
+        policyAccountLink.setAction(PolicyAccountLinkAction.AUTO)
+        identityProviderPolicy.setAccountLink(policyAccountLink)
+        provisioning = new Provisioning()
+        provisioning.setAction(ProvisioningAction.AUTO)
+        provisioningConditions = new ProvisioningConditions()
+        provisioningDeprovisionedConditionDeprov = new ProvisioningDeprovisionedCondition()
+        provisioningDeprovisionedConditionDeprov.setAction(ProvisioningDeprovisionedAction.NONE)
+        provisioningConditions.setDeprovisioned(provisioningDeprovisionedConditionDeprov)
+        provisioningDeprovisionedConditionSusp = new ProvisioningSuspendedCondition()
+        provisioningDeprovisionedConditionSusp.setAction(ProvisioningSuspendedAction.NONE)
+        provisioningConditions.setSuspended(provisioningDeprovisionedConditionSusp)
+        provisioning.setConditions(provisioningConditions)
+        identityProviderPolicy.setProvisioning(provisioning)
+        identityProviderPolicy.setMaxClockSkew(1000)
+        provisioningGroups = new ProvisioningGroups()
+        provisioningGroups.setAction(ProvisioningGroupsAction.NONE)
+        provisioning.setGroups(provisioningGroups)
+        identityProviderPolicy.setProvisioning(provisioning)
+        policySubject = new PolicySubject()
+        policyUserNameTemplate = new PolicyUserNameTemplate()
+        policyUserNameTemplate.setTemplate("idpuser.email")
+        policySubject.setUserNameTemplate(policyUserNameTemplate)
+        policySubject.setMatchType(PolicySubjectMatchType.USERNAME)
+        identityProviderPolicy.setSubject(policySubject)
+        newIdp.setPolicy(identityProviderPolicy)
+
+        IdentityProvider updatedIdp = identityProviderApi.replaceIdentityProvider(createdIdp.getId(), newIdp)
+
+        // retrieve
+        IdentityProvider retrievedUpdatedIdp = identityProviderApi.getIdentityProvider(updatedIdp.getId())
+
         assertThat(retrievedUpdatedIdp.getId(), equalTo(createdIdp.getId()))
         assertThat(retrievedUpdatedIdp.getName(), equalTo(newName))
         assertThat(retrievedUpdatedIdp.getProtocol().getEndpoints().getAuthorization().getUrl(),
@@ -153,359 +256,480 @@ class IdpIT extends ITSupport {
         assertThat(retrievedUpdatedIdp.getProtocol().getIssuer().getUrl(),
             equalTo("https://idp.example.com/new"))
 
-        assertPresent(client.listIdentityProviders(), updatedIdp)
-
         // deactivate
-        createdIdp.deactivate()
+        identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
-
-        // earlier operation may not complete immediately
-        sleep(getTestOperationDelay())
-
-        assertNotPresent(client.listIdentityProviders(), createdIdp)
+        identityProviderApi.deleteIdentityProvider(createdIdp.getId())
     }
 
-    @Test
+    @Test (groups = "group2")
     void oidcIdpUserTest() {
 
         // create user
-        def email = "joe.coder+${uniqueTestName}@example.com"
-        User createdUser = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Joe")
-            .setLastName("Code")
-            .setPassword("Password1".toCharArray())
-            .buildAndCreate(client)
+        User createdUser = randomUser()
         registerForCleanup(createdUser)
 
-        // create idp
+        // create oidc idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProvider createdIdp = IdentityProviderBuilders.oidc()
-            .setName(name)
-            .setIssuerMode(IdentityProvider.IssuerModeEnum.ORG_URL)
-            .setRequestSignatureAlgorithm("SHA-256")
-            .setRequestSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum.REQUEST)
-            .setResponseSignatureAlgorithm("SHA-256")
-            .setResponseSignatureScope(ProtocolAlgorithmTypeSignature.ScopeEnum.ANY)
-            .setAcsEndpointBinding(ProtocolEndpoint.BindingEnum.POST)
-            .setAcsEndpointType(ProtocolEndpoint.TypeEnum.INSTANCE)
-            .setAuthorizationEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-            .setAuthorizationEndpointUrl("https://idp.example.com/authorize")
-            .setTokenEndpointBinding(ProtocolEndpoint.BindingEnum.POST)
-            .setTokenEndpointUrl("https://idp.example.com/token")
-            .setUserInfoEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-            .setUserInfoEndpointUrl("https://idp.example.com/userinfo")
-            .setJwksEndpointBinding(ProtocolEndpoint.BindingEnum.REDIRECT)
-            .setJwksEndpointUrl("https://idp.example.com/keys")
-            .setScopes(["openid", "profile", "email"])
-            .setClientId("your-client-id")
-            .setClientSecret("your-client-secret")
-            .setIssuerUrl("https://idp.example.com")
-            .setMaxClockSkew(120000)
-            .setUserName("idpuser.email")
-            .setMatchType(PolicySubjectMatchType.USERNAME)
-            .buildAndCreate(client)
+        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
+        IdentityProvider idp = new IdentityProvider()
+        idp.setName(name)
+        idp.setType(IdentityProviderType.OIDC)
+        idp.setIssuerMode(IssuerMode.ORG_URL)
+        Protocol protocol = new Protocol()
+
+        ProtocolAlgorithmType protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
+        ProtocolAlgorithmType protocolAlgorithmTypeRes = new ProtocolAlgorithmType()
+        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Req = new ProtocolAlgorithmTypeSignature()
+        protocolAlgorithmTypeSignature_Req.setScope(ProtocolAlgorithmTypeSignatureScope.REQUEST)
+        protocolAlgorithmTypeSignature_Req.setAlgorithm("SHA-256")
+        protocolAlgorithmTypeReq.setSignature(protocolAlgorithmTypeSignature_Req)
+        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Res = new ProtocolAlgorithmTypeSignature()
+        protocolAlgorithmTypeSignature_Res.setScope(ProtocolAlgorithmTypeSignatureScope.RESPONSE)
+        protocolAlgorithmTypeSignature_Res.setAlgorithm("SHA-256")
+        protocolAlgorithmTypeRes.setSignature(protocolAlgorithmTypeSignature_Res)
+
+        ProtocolAlgorithms protocolAlgorithms = new ProtocolAlgorithms()
+        protocolAlgorithms.setRequest(protocolAlgorithmTypeReq)
+        protocolAlgorithms.setResponse(protocolAlgorithmTypeRes)
+        protocol.setAlgorithms(protocolAlgorithms)
+        List<String> scopes = Arrays.asList("openid", "profile", "email")
+        protocol.setScopes(scopes)
+        protocol.setType(ProtocolType.OIDC)
+
+        ProtocolEndpoint protocolEndpointIssuer = new ProtocolEndpoint()
+        protocolEndpointIssuer.setUrl("https://idp.example.com")
+        protocol.setIssuer(protocolEndpointIssuer)
+        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+        identityProviderCredentialsClient.setClientId("your-client-id")
+        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+        protocol.setCredentials(identityProviderCredentials)
+
+        ProtocolEndpoints protocolEndpoints = new ProtocolEndpoints()
+        ProtocolEndpoint protocolEndpointAcs = new ProtocolEndpoint()
+        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
+
+        ProtocolEndpoint protocolEndpointAuthorization = new ProtocolEndpoint()
+        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize")
+
+        ProtocolEndpoint protocolEndpointToken = new ProtocolEndpoint()
+        protocolEndpointToken.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointToken.setUrl("https://idp.example.com/token")
+
+        ProtocolEndpoint protocolEndpointUserInfo = new ProtocolEndpoint()
+        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo")
+
+        ProtocolEndpoint protocolEndpointJwks = new ProtocolEndpoint()
+        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointJwks.setUrl("https://idp.example.com/keys")
+
+        protocolEndpoints.setAcs(protocolEndpointAcs)
+        protocolEndpoints.setAuthorization(protocolEndpointAuthorization)
+        protocolEndpoints.setToken(protocolEndpointToken)
+        protocolEndpoints.setUserInfo(protocolEndpointUserInfo)
+        protocolEndpoints.setJwks(protocolEndpointJwks)
+        protocol.setEndpoints(protocolEndpoints)
+        idp.setProtocol(protocol)
+
+        IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
+        PolicyAccountLink policyAccountLink = new PolicyAccountLink()
+        policyAccountLink.setAction(PolicyAccountLinkAction.AUTO)
+        identityProviderPolicy.setAccountLink(policyAccountLink)
+        Provisioning provisioning = new Provisioning()
+        provisioning.setAction(ProvisioningAction.AUTO)
+        ProvisioningConditions provisioningConditions = new ProvisioningConditions()
+        ProvisioningDeprovisionedCondition provisioningDeprovisionedConditionDeprov = new ProvisioningDeprovisionedCondition()
+        provisioningDeprovisionedConditionDeprov.setAction(ProvisioningDeprovisionedAction.NONE)
+        provisioningConditions.setDeprovisioned(provisioningDeprovisionedConditionDeprov)
+        ProvisioningSuspendedCondition provisioningDeprovisionedConditionSusp = new ProvisioningSuspendedCondition()
+        provisioningDeprovisionedConditionSusp.setAction(ProvisioningSuspendedAction.NONE)
+        provisioningConditions.setSuspended(provisioningDeprovisionedConditionSusp)
+        provisioning.setConditions(provisioningConditions)
+        identityProviderPolicy.setProvisioning(provisioning)
+        identityProviderPolicy.setMaxClockSkew(1000)
+        ProvisioningGroups provisioningGroups = new ProvisioningGroups()
+        provisioningGroups.setAction(ProvisioningGroupsAction.NONE)
+        provisioning.setGroups(provisioningGroups)
+        identityProviderPolicy.setProvisioning(provisioning)
+        PolicySubject policySubject = new PolicySubject()
+        PolicyUserNameTemplate policyUserNameTemplate = new PolicyUserNameTemplate()
+        policyUserNameTemplate.setTemplate("idpuser.email")
+        policySubject.setUserNameTemplate(policyUserNameTemplate)
+        policySubject.setMatchType(PolicySubjectMatchType.USERNAME)
+        identityProviderPolicy.setSubject(policySubject)
+        idp.setPolicy(identityProviderPolicy)
+
+        IdentityProvider createdIdp = identityProviderApi.createIdentityProvider(idp)
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), hasSize(0))
 
         // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
-            client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
-
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
-
-        // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
+        UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
+        userIdentityProviderLinkRequest.setExternalId("external-id")
+        identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), hasSize(1))
+
+        // unlink user
+        identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
+
+        // list linked idp users
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), hasSize(0))
 
         // list social auth tokens
-        SocialAuthTokenList socialAuthTokenList = createdIdp.listSocialAuthTokens(createdUser.getId())
+        List<SocialAuthToken> socialAuthTokenList = identityProviderApi.listSocialAuthTokens(createdIdp.getId(), createdUser.getId())
         assertThat(socialAuthTokenList, iterableWithSize(0))
 
         // deactivate
-        createdIdp.deactivate()
+        identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
+        identityProviderApi.deleteIdentityProvider(createdIdp.getId())
     }
 
     @Test (groups = "group2")
     void googleIdpTest() {
 
         // create user
-        def email = "joe.coder+${uniqueTestName}@example.com"
-        User createdUser = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Joe")
-            .setLastName("Code")
-            .setPassword("Password1".toCharArray())
-            .buildAndCreate(client)
+        User createdUser = randomUser()
         registerForCleanup(createdUser)
 
         // create Google idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProvider createdIdp = IdentityProviderBuilders.google()
-            .setName(name)
-            .setScopes(["openid", "profile", "email"])
-            .setClientId("your-client-id")
-            .setClientSecret("your-client-secret")
-            .isProfileMaster(true)
-            .setMaxClockSkew(120000)
-            .setUserName("idpuser.email")
-            .setMatchType(PolicySubjectMatchType.USERNAME)
-            .buildAndCreate(client)
+        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
+        IdentityProvider idp = new IdentityProvider()
+        idp.setName(name)
+        idp.setType(IdentityProviderType.GOOGLE)
+        Protocol protocol = new Protocol()
+
+        List<String> scopes = Arrays.asList("openid", "profile", "email")
+        protocol.setScopes(scopes)
+        protocol.setType(ProtocolType.OAUTH2)
+
+        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+        identityProviderCredentialsClient.setClientId("your-client-id")
+        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+        protocol.setCredentials(identityProviderCredentials)
+        idp.setProtocol(protocol)
+
+        IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
+        PolicyAccountLink policyAccountLink = new PolicyAccountLink()
+        policyAccountLink.setAction(PolicyAccountLinkAction.AUTO)
+        identityProviderPolicy.setAccountLink(policyAccountLink)
+        Provisioning provisioning = new Provisioning()
+        provisioning.setAction(ProvisioningAction.AUTO)
+        provisioning.setProfileMaster(Boolean.TRUE)
+        ProvisioningConditions provisioningConditions = new ProvisioningConditions()
+        ProvisioningDeprovisionedCondition provisioningDeprovisionedConditionDeprov = new ProvisioningDeprovisionedCondition()
+        provisioningDeprovisionedConditionDeprov.setAction(ProvisioningDeprovisionedAction.NONE)
+        provisioningConditions.setDeprovisioned(provisioningDeprovisionedConditionDeprov)
+        ProvisioningSuspendedCondition provisioningDeprovisionedConditionSusp = new ProvisioningSuspendedCondition()
+        provisioningDeprovisionedConditionSusp.setAction(ProvisioningSuspendedAction.NONE)
+        provisioningConditions.setSuspended(provisioningDeprovisionedConditionSusp)
+        provisioning.setConditions(provisioningConditions)
+        identityProviderPolicy.setProvisioning(provisioning)
+        identityProviderPolicy.setMaxClockSkew(120000)
+        ProvisioningGroups provisioningGroups = new ProvisioningGroups()
+        provisioningGroups.setAction(ProvisioningGroupsAction.NONE)
+        provisioning.setGroups(provisioningGroups)
+        identityProviderPolicy.setProvisioning(provisioning)
+        PolicySubject policySubject = new PolicySubject()
+        PolicyUserNameTemplate policyUserNameTemplate = new PolicyUserNameTemplate()
+        policyUserNameTemplate.setTemplate("idpuser.email")
+        policySubject.setUserNameTemplate(policyUserNameTemplate)
+        policySubject.setMatchType(PolicySubjectMatchType.USERNAME)
+        identityProviderPolicy.setSubject(policySubject)
+        idp.setPolicy(identityProviderPolicy)
+
+        IdentityProvider createdIdp = identityProviderApi.createIdentityProvider(idp)
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
-            client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
-
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
-
-        // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
+        UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
+        userIdentityProviderLinkRequest.setExternalId("external-id")
+        identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+
+        // unlink user
+        identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
+
+        // list linked idp users
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // deactivate
-        createdIdp.deactivate()
+        identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
-
-        assertNotPresent(client.listIdentityProviders(), createdIdp)
+        identityProviderApi.deleteIdentityProvider(createdIdp.getId())
     }
 
-    @Test
+    @Test (groups = "group2")
     void facebookIdpTest() {
 
         // create user
-        def email = "joe.coder+${uniqueTestName}@example.com"
-        User createdUser = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Joe")
-            .setLastName("Code")
-            .setPassword("Password1".toCharArray())
-            .buildAndCreate(client)
+        User createdUser = randomUser()
         registerForCleanup(createdUser)
 
         // create Facebook idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProvider createdIdp = IdentityProviderBuilders.facebook()
-            .setName(name)
-            .setScopes(["public_profile", "email"])
-            .setClientId("your-client-id")
-            .setClientSecret("your-client-secret")
-            .isProfileMaster(true)
-            .setMaxClockSkew(120000)
-            .setUserName("idpuser.email")
-            .setMatchType(PolicySubjectMatchType.USERNAME)
-            .buildAndCreate(client)
+        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
+        IdentityProvider idp = new IdentityProvider()
+        idp.setName(name)
+        idp.setType(IdentityProviderType.FACEBOOK)
+        Protocol protocol = new Protocol()
+
+        List<String> scopes = Arrays.asList("public_profile", "email")
+        protocol.setScopes(scopes)
+        protocol.setType(ProtocolType.OAUTH2)
+
+        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+        identityProviderCredentialsClient.setClientId("your-client-id")
+        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+        protocol.setCredentials(identityProviderCredentials)
+        idp.setProtocol(protocol)
+
+        IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
+        PolicyAccountLink policyAccountLink = new PolicyAccountLink()
+        policyAccountLink.setAction(PolicyAccountLinkAction.AUTO)
+        identityProviderPolicy.setAccountLink(policyAccountLink)
+        Provisioning provisioning = new Provisioning()
+        provisioning.setAction(ProvisioningAction.AUTO)
+        provisioning.setProfileMaster(Boolean.TRUE)
+        ProvisioningConditions provisioningConditions = new ProvisioningConditions()
+        ProvisioningDeprovisionedCondition provisioningDeprovisionedConditionDeprov = new ProvisioningDeprovisionedCondition()
+        provisioningDeprovisionedConditionDeprov.setAction(ProvisioningDeprovisionedAction.NONE)
+        provisioningConditions.setDeprovisioned(provisioningDeprovisionedConditionDeprov)
+        ProvisioningSuspendedCondition provisioningDeprovisionedConditionSusp = new ProvisioningSuspendedCondition()
+        provisioningDeprovisionedConditionSusp.setAction(ProvisioningSuspendedAction.NONE)
+        provisioningConditions.setSuspended(provisioningDeprovisionedConditionSusp)
+        provisioning.setConditions(provisioningConditions)
+        identityProviderPolicy.setProvisioning(provisioning)
+        identityProviderPolicy.setMaxClockSkew(0)
+        ProvisioningGroups provisioningGroups = new ProvisioningGroups()
+        provisioningGroups.setAction(ProvisioningGroupsAction.NONE)
+        provisioning.setGroups(provisioningGroups)
+        identityProviderPolicy.setProvisioning(provisioning)
+        PolicySubject policySubject = new PolicySubject()
+        PolicyUserNameTemplate policyUserNameTemplate = new PolicyUserNameTemplate()
+        policyUserNameTemplate.setTemplate("idpuser.email")
+        policySubject.setUserNameTemplate(policyUserNameTemplate)
+        policySubject.setMatchType(PolicySubjectMatchType.USERNAME)
+        identityProviderPolicy.setSubject(policySubject)
+        idp.setPolicy(identityProviderPolicy)
+
+        IdentityProvider createdIdp = identityProviderApi.createIdentityProvider(idp)
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
-            client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
-
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
-
-        // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
+        UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
+        userIdentityProviderLinkRequest.setExternalId("external-id")
+        identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+
+        // unlink user
+        identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
+
+        // list linked idp users
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // deactivate
-        createdIdp.deactivate()
+        identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
-
-        assertNotPresent(client.listIdentityProviders(), createdIdp)
+        identityProviderApi.deleteIdentityProvider(createdIdp.getId())
     }
 
-    // Remove this groups tag after OKTA-329987 is resolved (Adding this tag disables the test in bacon PDV)
-    @Test (groups = "bacon")
+    @Test (groups = "group2")
     void microsoftIdpTest() {
 
         // create user
-        def email = "joe.coder+${uniqueTestName}@example.com"
-        User createdUser = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Joe")
-            .setLastName("Code")
-            .setPassword("Password1".toCharArray())
-            .buildAndCreate(client)
+        User createdUser = randomUser()
         registerForCleanup(createdUser)
 
         // create Microsoft idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProvider createdIdp = IdentityProviderBuilders.microsoft()
-            .setName(name)
-            .setScopes(["openid", "email", "profile", "https://graph.microsoft.com/User.Read"])
-            .setClientId("your-client-id")
-            .setClientSecret("your-client-secret")
-            .isProfileMaster(true)
-            .setMaxClockSkew(120000)
-            .setUserName("idpuser.userPrincipalName")
-            .setMatchType(PolicySubjectMatchType.USERNAME)
-            .buildAndCreate(client)
+        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
+        IdentityProvider idp = new IdentityProvider()
+        idp.setName(name)
+        idp.setType(IdentityProviderType.MICROSOFT)
+        Protocol protocol = new Protocol()
+
+        List<String> scopes = Arrays.asList("openid", "email", "profile", "https://graph.microsoft.com/User.Read")
+        protocol.setScopes(scopes)
+        protocol.setType(ProtocolType.OAUTH2)
+
+        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+        identityProviderCredentialsClient.setClientId("your-client-id")
+        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+        protocol.setCredentials(identityProviderCredentials)
+        idp.setProtocol(protocol)
+
+        IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
+        PolicyAccountLink policyAccountLink = new PolicyAccountLink()
+        policyAccountLink.setAction(PolicyAccountLinkAction.AUTO)
+        identityProviderPolicy.setAccountLink(policyAccountLink)
+        Provisioning provisioning = new Provisioning()
+        provisioning.setAction(ProvisioningAction.AUTO)
+        provisioning.setProfileMaster(Boolean.TRUE)
+        ProvisioningConditions provisioningConditions = new ProvisioningConditions()
+        ProvisioningDeprovisionedCondition provisioningDeprovisionedConditionDeprov = new ProvisioningDeprovisionedCondition()
+        provisioningDeprovisionedConditionDeprov.setAction(ProvisioningDeprovisionedAction.NONE)
+        provisioningConditions.setDeprovisioned(provisioningDeprovisionedConditionDeprov)
+        ProvisioningSuspendedCondition provisioningDeprovisionedConditionSusp = new ProvisioningSuspendedCondition()
+        provisioningDeprovisionedConditionSusp.setAction(ProvisioningSuspendedAction.NONE)
+        provisioningConditions.setSuspended(provisioningDeprovisionedConditionSusp)
+        provisioning.setConditions(provisioningConditions)
+        identityProviderPolicy.setProvisioning(provisioning)
+        identityProviderPolicy.setMaxClockSkew(0)
+        ProvisioningGroups provisioningGroups = new ProvisioningGroups()
+        provisioningGroups.setAction(ProvisioningGroupsAction.NONE)
+        provisioning.setGroups(provisioningGroups)
+        identityProviderPolicy.setProvisioning(provisioning)
+        PolicySubject policySubject = new PolicySubject()
+        PolicyUserNameTemplate policyUserNameTemplate = new PolicyUserNameTemplate()
+        policyUserNameTemplate.setTemplate("idpuser.userPrincipalName")
+        policySubject.setUserNameTemplate(policyUserNameTemplate)
+        policySubject.setMatchType(PolicySubjectMatchType.USERNAME)
+        identityProviderPolicy.setSubject(policySubject)
+        idp.setPolicy(identityProviderPolicy)
+
+        IdentityProvider createdIdp = identityProviderApi.createIdentityProvider(idp)
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
-            client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
-
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
-
-        // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
+        UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
+        userIdentityProviderLinkRequest.setExternalId("external-id")
+        identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+
+        // unlink user
+        identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
+
+        // list linked idp users
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // deactivate
-        createdIdp.deactivate()
+        identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
-
-        assertNotPresent(client.listIdentityProviders(), createdIdp)
+        identityProviderApi.deleteIdentityProvider(createdIdp.getId())
     }
 
-    @Test
+    @Test (groups = "group2")
     void linkedInIdpTest() {
 
         // create user
-        def email = "joe.coder+${uniqueTestName}@example.com"
-        User createdUser = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Joe")
-            .setLastName("Code")
-            .setPassword("Password1".toCharArray())
-            .buildAndCreate(client)
+        User createdUser = randomUser()
         registerForCleanup(createdUser)
 
-        // create Linkedin idp
+        // create LinkedIn idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProvider createdIdp = IdentityProviderBuilders.linkedin()
-            .setName(name)
-            .setScopes(["r_basicprofile", "r_emailaddress"])
-            .setClientId("your-client-id")
-            .setClientSecret("your-client-secret")
-            .isProfileMaster(true)
-            .setMaxClockSkew(120000)
-            .setUserName("idpuser.email")
-            .setMatchType(PolicySubjectMatchType.EMAIL)
-            .buildAndCreate(client)
+        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
+        IdentityProvider idp = new IdentityProvider()
+        idp.setName(name)
+        idp.setType(IdentityProviderType.LINKEDIN)
+        Protocol protocol = new Protocol()
+
+        List<String> scopes = Arrays.asList("r_basicprofile", "r_emailaddress")
+        protocol.setScopes(scopes)
+        protocol.setType(ProtocolType.OAUTH2)
+
+        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+        identityProviderCredentialsClient.setClientId("your-client-id")
+        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+        protocol.setCredentials(identityProviderCredentials)
+        idp.setProtocol(protocol)
+
+        IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
+        PolicyAccountLink policyAccountLink = new PolicyAccountLink()
+        policyAccountLink.setAction(PolicyAccountLinkAction.AUTO)
+        identityProviderPolicy.setAccountLink(policyAccountLink)
+        Provisioning provisioning = new Provisioning()
+        provisioning.setAction(ProvisioningAction.AUTO)
+        provisioning.setProfileMaster(Boolean.TRUE)
+        ProvisioningConditions provisioningConditions = new ProvisioningConditions()
+        ProvisioningDeprovisionedCondition provisioningDeprovisionedConditionDeprov = new ProvisioningDeprovisionedCondition()
+        provisioningDeprovisionedConditionDeprov.setAction(ProvisioningDeprovisionedAction.NONE)
+        provisioningConditions.setDeprovisioned(provisioningDeprovisionedConditionDeprov)
+        ProvisioningSuspendedCondition provisioningDeprovisionedConditionSusp = new ProvisioningSuspendedCondition()
+        provisioningDeprovisionedConditionSusp.setAction(ProvisioningSuspendedAction.NONE)
+        provisioningConditions.setSuspended(provisioningDeprovisionedConditionSusp)
+        provisioning.setConditions(provisioningConditions)
+        identityProviderPolicy.setProvisioning(provisioning)
+        identityProviderPolicy.setMaxClockSkew(0)
+        ProvisioningGroups provisioningGroups = new ProvisioningGroups()
+        provisioningGroups.setAction(ProvisioningGroupsAction.NONE)
+        provisioning.setGroups(provisioningGroups)
+        identityProviderPolicy.setProvisioning(provisioning)
+        PolicySubject policySubject = new PolicySubject()
+        PolicyUserNameTemplate policyUserNameTemplate = new PolicyUserNameTemplate()
+        policyUserNameTemplate.setTemplate("idpuser.email")
+        policySubject.setUserNameTemplate(policyUserNameTemplate)
+        policySubject.setMatchType(PolicySubjectMatchType.EMAIL)
+        identityProviderPolicy.setSubject(policySubject)
+        idp.setPolicy(identityProviderPolicy)
+
+        IdentityProvider createdIdp = identityProviderApi.createIdentityProvider(idp)
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
-            client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
+        UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
+        userIdentityProviderLinkRequest.setExternalId("external-id")
+        identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
+        // list linked idp users
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
 
         // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
+        identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
 
         // deactivate
-        createdIdp.deactivate()
+        identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
 
         // delete
-        createdIdp.delete()
-
-        assertNotPresent(client.listIdentityProviders(), createdIdp)
-    }
-
-    @Test
-    void idpWithStringTypeTest() {
-
-        // create user
-        def email = "joe.coder+${uniqueTestName}@example.com"
-        User createdUser = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Joe")
-            .setLastName("Code")
-            .setPassword("Password1".toCharArray())
-            .buildAndCreate(client)
-        registerForCleanup(createdUser)
-
-        // create Linkedin idp
-        String name = "java-sdk-it-" + UUID.randomUUID().toString()
-
-        IdentityProvider createdIdp = IdentityProviderBuilders.ofType("GOOGLE")
-            .setName(name)
-            .setScopes(["r_basicprofile", "r_emailaddress"])
-            .setClientId("your-client-id")
-            .setClientSecret("your-client-secret")
-            .isProfileMaster(true)
-            .setMaxClockSkew(120000)
-            .setUserName("idpuser.email")
-            .setMatchType(PolicySubjectMatchType.EMAIL)
-            .buildAndCreate(client)
-        registerForCleanup(createdIdp)
-
-        // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
-
-        // link user
-        IdentityProviderApplicationUser idpAppUser = createdIdp.linkUser(createdUser.getId(),
-            client.instantiate(UserIdentityProviderLinkRequest)
-                .setExternalId("externalId"))
-
-        assertThat(createdIdp.listUsers(), iterableWithSize(1))
-        assertPresent(createdIdp.listUsers(), idpAppUser)
-
-        // unlink user
-        createdIdp.unlinkUser(createdUser.getId())
-
-        // list linked idp users
-        assertThat(createdIdp.listUsers(), iterableWithSize(0))
-
-        // deactivate
-        createdIdp.deactivate()
-
-        // delete
-        createdIdp.delete()
-
-        assertNotPresent(client.listIdentityProviders(), createdIdp)
+        identityProviderApi.deleteIdentityProvider(createdIdp.getId())
     }
 }
