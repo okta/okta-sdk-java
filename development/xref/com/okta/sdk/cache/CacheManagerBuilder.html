@@ -30,7 +30,7 @@
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> * Builder for creating simple {@link CacheManager} instances &lt;b&gt;suitable for SINGLE-JVM APPLICATIONS&lt;/b&gt;.  If your</em>
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> * application is deployed (mirrored or clustered) across multiple JVMs, you might not</em>
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment"> * want to use this builder and use your own clusterable CacheManager implementation instead.  See Clustering below.</em>
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> * &lt;h1&gt;Clustering&lt;/h1&gt;</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> * &lt;b&gt;Clustering&lt;/b&gt;</em>
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> * &lt;b&gt;The default CacheManager instances created by this Builder DO NOT SUPPORT CLUSTERING&lt;/b&gt;.</em>
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment"> * If you use this Builder and your application is deployed on multiple JVMs, &lt;b&gt;each of your application instances will</em>
@@ -40,8 +40,8 @@
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> * account as ENABLED, but the other application instance could see it as DISABLED.</em>
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment"> * For some applications, this discrepancy might be an acceptable trade-off, especially if you configure</em>
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> * {@link #withDefaultTimeToIdle(long, java.util.concurrent.TimeUnit) timeToIdle} and</em>
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * {@link #withDefaultTimeToLive(long, java.util.concurrent.TimeUnit) timeToLive} settings low enough.  For example,</em>
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> * {@link #withDefaultTimeToIdle(long, TimeUnit) timeToIdle} and</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * {@link #withDefaultTimeToLive(long, TimeUnit) timeToLive} settings low enough.  For example,</em>
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> * maybe a TTL of 5 or 10 minutes is an acceptable time to see 'stale' account data.  For other applications, this might</em>
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * not be acceptable.  If it is acceptable, configuring the timeToIdle and timeToLive settings will allow you to</em>
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * fine-tune how much variance you allow.</em>
@@ -77,7 +77,7 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">     * If this value is not configured, it is assumed that cache entries could potentially live indefinitely.</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">     * Note however that entries can still be expunged due to other conditions (e.g. memory constraints, Time to</em>
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">     * Idle setting, etc).</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">     * &lt;h1&gt;Usage&lt;/h1&gt;</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">     * &lt;b&gt;Usage&lt;/b&gt;</em>
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">     * &lt;pre&gt;</em>
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">     *     ...withDefaultTimeToLive(30, TimeUnit.MINUTES)...</em>
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">     *     ...withDefaultTimeToLive(1, TimeUnit.HOURS)...</em>
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">     * If this value is not configured, it is assumed that cache entries could potentially live indefinitely.</em>
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">     * Note however that entries can still be expunged due to other conditions (e.g. memory constraints, Time to</em>
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">     * Live setting, etc).</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment">     * &lt;h1&gt;Usage&lt;/h1&gt;</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment">     * &lt;b&gt;Usage&lt;/b&gt;</em>
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment">     * &lt;pre&gt;</em>
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment">     *     ...withDefaultTimeToLive(30, TimeUnit.MINUTES)...</em>
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment">     *     ...withDefaultTimeToLive(1, TimeUnit.HOURS)...</em>
