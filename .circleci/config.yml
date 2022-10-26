@@ -8,7 +8,7 @@ aliases:
     - run: mvn clean install -Dmaven.test.skip=true
     - run:
         command: |
-          ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings | grep groovy |  xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',' | sed 's/,*$//g')
+          ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings | grep groovy | grep -v ApplicationsIT | xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',' | sed 's/,*$//g')
           echo $ClassName
           cd ./integration-tests
           mvn -Dtest=$ClassName test
