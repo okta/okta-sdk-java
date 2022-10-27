@@ -6,7 +6,7 @@ aliases:
     - checkout
     - run: java -version
     - run: mvn clean install -Dmaven.test.skip=true
-    - run: mvn -Dtest=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=filesize) test
+    - run: mvn '-Dtest='+$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=filesize) test
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*IT.txt
