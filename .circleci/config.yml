@@ -36,7 +36,7 @@ jobs:
     environment:
       JVM_OPTS: -Xmx3200m
     resource_class: large
-    parallelism: 5
+    parallelism: 3
     steps: *build_steps
 
   jdk17:
@@ -52,3 +52,4 @@ workflows:
   build_and_test:
     jobs:
       - jdk8
+      - jdk11
