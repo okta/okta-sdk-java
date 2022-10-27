@@ -26,6 +26,7 @@ jobs:
       - image: cimg/openjdk:8.0.345-node
     environment:
       JVM_OPTS: -Xmx3200m
+    resource_class: large
     parallelism: 5
     steps: *build_steps
 
@@ -34,6 +35,7 @@ jobs:
       - image: cimg/openjdk:11.0.16-node
     environment:
       JVM_OPTS: -Xmx3200m
+    resource_class: large
     parallelism: 5
     steps: *build_steps
 
@@ -42,6 +44,7 @@ jobs:
       - image: cimg/openjdk:17.0.4-node
     environment:
       JVM_OPTS: -Xmx3200m
+    resource_class: large
     parallelism: 5
     steps: *build_steps
 
