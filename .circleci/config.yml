@@ -9,7 +9,7 @@ aliases:
     - run: 
         command: |
           cd ./integration-tests
-          circleci tests glob "src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split > /tmp/tests-to-run
+          circleci tests glob "src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split  --split-by=filesize | grep groovy | xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',' | sed 's/,*$//g' > /tmp/tests-to-run
           mvn $(cat /tmp/tests-to-run) test
     - run:
         when: on_fail
