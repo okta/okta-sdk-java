@@ -53,3 +53,4 @@ workflows:
     jobs:
       - jdk8
       - jdk11
+      - jdk17
