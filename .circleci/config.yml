@@ -8,14 +8,15 @@ aliases:
     - run: mvn clean install -Dmaven.test.skip=true
     - run: 
         command: |
-           circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split > /tmp/tests-to-run
-           
+           mvn test $(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=timings)   
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*IT.txt
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*dump*
+    - store_test_results:
+        path: ~/mvn-test-results
 
 jobs:
   
