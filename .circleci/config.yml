@@ -9,7 +9,7 @@ aliases:
     - run: 
         command: |
            circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split > /tmp/tests-to-run
-           mvn -Dtest=$(cat /tmp/tests-to-run) test
+           mvn test -Dtest=$(cat /tmp/tests-to-run)
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*IT.txt
