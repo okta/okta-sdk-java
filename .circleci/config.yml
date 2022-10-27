@@ -5,13 +5,13 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
-    - run: ./mvnw clean install -Pci
+    - run: mvn -T 10 clean install
     - run:
         when: on_fail
-        command: cat $(circleci tests glob "integration-tests/target/failsafe-reports/*IT.txt" | circleci tests split --split-by=timings)
+        command: cat integration-tests/target/failsafe-reports/*IT.txt
     - run:
         when: on_fail
-        command: cat $(circleci tests glob "integration-tests/target/failsafe-reports/*dump*" | circleci tests split --split-by=timings)
+        command: cat integration-tests/target/failsafe-reports/*dump*
 
 jobs:
   
