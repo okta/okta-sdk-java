@@ -52,5 +52,4 @@ workflows:
   build_and_test:
     jobs:
       - jdk8
-      - jdk11
-      - jdk17
+   
