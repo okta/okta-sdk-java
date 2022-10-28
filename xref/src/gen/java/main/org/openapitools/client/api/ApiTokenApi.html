@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2022-08-02T07:47:50.705939-05:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2022-10-28T09:53:26.092-05:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.ApiTokenApi"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ApiTokenApi" href="../../../../org/openapitools/client/api/ApiTokenApi.html#ApiTokenApi">ApiTokenApi</a> {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -72,7 +72,7 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">        * Retrieve an API Token&amp;#39;s Metadata</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">        * Get the metadata for an active API token by id.</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">        * Retrieves the metadata for an active API token by id</em>
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - OK</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -92,7 +92,7 @@
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>              <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">            * Retrieve an API Token&amp;#39;s Metadata</em>
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">            * Get the metadata for an active API token by id.</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">            * Retrieves the metadata for an active API token by id</em>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - OK</em>
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -125,7 +125,7 @@
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> 
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L121" href="#L121">121</a> 
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>         ParameterizedTypeReference&lt;ApiToken&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;ApiToken&gt;() {};
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/api-tokens/{apiTokenId}"</span>, HttpMethod.GET, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -139,7 +139,7 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> 
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">            * Retrieve an API Token&amp;#39;s Metadata</em>
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">            * Get the metadata for an active API token by id.</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">            * Retrieves the metadata for an active API token by id</em>
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - OK</em>
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -172,7 +172,7 @@
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L166" href="#L166">166</a> 
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> 
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>         ParameterizedTypeReference&lt;ApiToken&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;ApiToken&gt;() {};
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>             ResponseEntity&lt;ApiToken&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/api-tokens/{apiTokenId}"</span>, HttpMethod.GET, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -204,11 +204,11 @@
 <a class="jxr_linenumber" name="L196" href="#L196">196</a> 
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">        * List all API Token Metadata</em>
-<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">        * Enumerates the metadata of the active API tokens in your organization.</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">        * Lists all the metadata of the active API tokens</em>
 <a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - OK</em>
 <a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">                * @param after The cursor to use for pagination. It is an opaque string that specifies your current location in the list and is obtained from the &amp;#x60;Link&amp;#x60; response header. See [Pagination](<a href="https://developer.okta.com/docs/reference/core-okta-api/" target="alexandria_uri">https://developer.okta.com/docs/reference/core-okta-api/</a>#pagination) for more information. (optional)</em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">                * @param after The cursor to use for pagination. It is an opaque string that specifies your current location in the list and is obtained from the &amp;#x60;Link&amp;#x60; response header. See [Pagination](/#pagination) for more information. (optional)</em>
 <a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">                * @param limit A limit on the number of objects to return. (optional, default to 20)</em>
 <a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">                * @param q Finds a token that matches the name or clientName. (optional)</em>
 <a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">                * @return List&amp;lt;ApiToken&amp;gt;</em>
@@ -225,11 +225,11 @@
 <a class="jxr_linenumber" name="L217" href="#L217">217</a> 
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment">            * List all API Token Metadata</em>
-<a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">            * Enumerates the metadata of the active API tokens in your organization.</em>
+<a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">            * Lists all the metadata of the active API tokens</em>
 <a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - OK</em>
 <a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">                * @param after The cursor to use for pagination. It is an opaque string that specifies your current location in the list and is obtained from the &amp;#x60;Link&amp;#x60; response header. See [Pagination](<a href="https://developer.okta.com/docs/reference/core-okta-api/" target="alexandria_uri">https://developer.okta.com/docs/reference/core-okta-api/</a>#pagination) for more information. (optional)</em>
+<a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">                * @param after The cursor to use for pagination. It is an opaque string that specifies your current location in the list and is obtained from the &amp;#x60;Link&amp;#x60; response header. See [Pagination](/#pagination) for more information. (optional)</em>
 <a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">                * @param limit A limit on the number of objects to return. (optional, default to 20)</em>
 <a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_javadoccomment">                * @param q Finds a token that matches the name or clientName. (optional)</em>
 <a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;ApiToken&amp;gt;&amp;gt;</em>
@@ -255,7 +255,7 @@
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L249" href="#L249">249</a> 
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L251" href="#L251">251</a> 
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>         ParameterizedTypeReference&lt;List&lt;ApiToken&gt;&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;List&lt;ApiToken&gt;&gt;() {};
 <a class="jxr_linenumber" name="L253" href="#L253">253</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/api-tokens"</span>, HttpMethod.GET, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -269,11 +269,11 @@
 <a class="jxr_linenumber" name="L261" href="#L261">261</a> 
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">            * List all API Token Metadata</em>
-<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">            * Enumerates the metadata of the active API tokens in your organization.</em>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">            * Lists all the metadata of the active API tokens</em>
 <a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - OK</em>
 <a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">                * @param after The cursor to use for pagination. It is an opaque string that specifies your current location in the list and is obtained from the &amp;#x60;Link&amp;#x60; response header. See [Pagination](<a href="https://developer.okta.com/docs/reference/core-okta-api/" target="alexandria_uri">https://developer.okta.com/docs/reference/core-okta-api/</a>#pagination) for more information. (optional)</em>
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">                * @param after The cursor to use for pagination. It is an opaque string that specifies your current location in the list and is obtained from the &amp;#x60;Link&amp;#x60; response header. See [Pagination](/#pagination) for more information. (optional)</em>
 <a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">                * @param limit A limit on the number of objects to return. (optional, default to 20)</em>
 <a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">                * @param q Finds a token that matches the name or clientName. (optional)</em>
 <a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;ApiToken&amp;gt;&amp;gt;</em>
@@ -299,7 +299,7 @@
 <a class="jxr_linenumber" name="L291" href="#L291">291</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L293" href="#L293">293</a> 
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L295" href="#L295">295</a> 
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>         ParameterizedTypeReference&lt;List&lt;ApiToken&gt;&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;List&lt;ApiToken&gt;&gt;() {};
 <a class="jxr_linenumber" name="L297" href="#L297">297</a>             ResponseEntity&lt;List&lt;ApiToken&gt;&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/api-tokens"</span>, HttpMethod.GET, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -331,7 +331,7 @@
 <a class="jxr_linenumber" name="L323" href="#L323">323</a> 
 <a class="jxr_linenumber" name="L324" href="#L324">324</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L325" href="#L325">325</a> <em class="jxr_javadoccomment">        * Revoke an API Token</em>
-<a class="jxr_linenumber" name="L326" href="#L326">326</a> <em class="jxr_javadoccomment">        * Revoke an API token by id.</em>
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> <em class="jxr_javadoccomment">        * Revoke an API token by id</em>
 <a class="jxr_linenumber" name="L327" href="#L327">327</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;204&lt;/b&gt; - No Content</em>
 <a class="jxr_linenumber" name="L328" href="#L328">328</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L329" href="#L329">329</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -350,7 +350,7 @@
 <a class="jxr_linenumber" name="L342" href="#L342">342</a> 
 <a class="jxr_linenumber" name="L343" href="#L343">343</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">            * Revoke an API Token</em>
-<a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">            * Revoke an API token by id.</em>
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">            * Revoke an API token by id</em>
 <a class="jxr_linenumber" name="L346" href="#L346">346</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;204&lt;/b&gt; - No Content</em>
 <a class="jxr_linenumber" name="L347" href="#L347">347</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L348" href="#L348">348</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -383,7 +383,7 @@
 <a class="jxr_linenumber" name="L375" href="#L375">375</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L376" href="#L376">376</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L377" href="#L377">377</a> 
-<a class="jxr_linenumber" name="L378" href="#L378">378</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L378" href="#L378">378</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L379" href="#L379">379</a> 
 <a class="jxr_linenumber" name="L380" href="#L380">380</a>         ParameterizedTypeReference&lt;Void&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;Void&gt;() {};
 <a class="jxr_linenumber" name="L381" href="#L381">381</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/api-tokens/{apiTokenId}"</span>, HttpMethod.DELETE, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -397,7 +397,7 @@
 <a class="jxr_linenumber" name="L389" href="#L389">389</a> 
 <a class="jxr_linenumber" name="L390" href="#L390">390</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L391" href="#L391">391</a> <em class="jxr_javadoccomment">        * Revoke the Current API Token</em>
-<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">        * Revokes the API token provided in the Authorization header.</em>
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">        * Revokes the API token provided in the Authorization header</em>
 <a class="jxr_linenumber" name="L393" href="#L393">393</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;204&lt;/b&gt; - No Content</em>
 <a class="jxr_linenumber" name="L394" href="#L394">394</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L395" href="#L395">395</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -414,7 +414,7 @@
 <a class="jxr_linenumber" name="L406" href="#L406">406</a> 
 <a class="jxr_linenumber" name="L407" href="#L407">407</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">            * Revoke the Current API Token</em>
-<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">            * Revokes the API token provided in the Authorization header.</em>
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">            * Revokes the API token provided in the Authorization header</em>
 <a class="jxr_linenumber" name="L410" href="#L410">410</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;204&lt;/b&gt; - No Content</em>
 <a class="jxr_linenumber" name="L411" href="#L411">411</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L412" href="#L412">412</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -437,7 +437,7 @@
 <a class="jxr_linenumber" name="L429" href="#L429">429</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L430" href="#L430">430</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L431" href="#L431">431</a> 
-<a class="jxr_linenumber" name="L432" href="#L432">432</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span> };
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span> };
 <a class="jxr_linenumber" name="L433" href="#L433">433</a> 
 <a class="jxr_linenumber" name="L434" href="#L434">434</a>         ParameterizedTypeReference&lt;Void&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;Void&gt;() {};
 <a class="jxr_linenumber" name="L435" href="#L435">435</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/api-tokens/current"</span>, HttpMethod.DELETE, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);

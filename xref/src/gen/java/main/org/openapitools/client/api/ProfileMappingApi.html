@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2022-08-02T07:47:50.705939-05:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2022-10-28T09:53:26.092-05:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.ProfileMappingApi"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ProfileMappingApi" href="../../../../org/openapitools/client/api/ProfileMappingApi.html#ProfileMappingApi">ProfileMappingApi</a> {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -72,7 +72,7 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">        * Retrieve a Profile Mapping</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">        * Fetches a single Profile Mapping referenced by its ID.</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">        * Retrieves a single Profile Mapping referenced by its ID</em>
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -92,7 +92,7 @@
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>              <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">            * Retrieve a Profile Mapping</em>
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">            * Fetches a single Profile Mapping referenced by its ID.</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">            * Retrieves a single Profile Mapping referenced by its ID</em>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -125,7 +125,7 @@
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> 
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L121" href="#L121">121</a> 
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>         ParameterizedTypeReference&lt;ProfileMapping&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;ProfileMapping&gt;() {};
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/mappings/{mappingId}"</span>, HttpMethod.GET, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -139,7 +139,7 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> 
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">            * Retrieve a Profile Mapping</em>
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">            * Fetches a single Profile Mapping referenced by its ID.</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">            * Retrieves a single Profile Mapping referenced by its ID</em>
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -172,7 +172,7 @@
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L166" href="#L166">166</a> 
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> 
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>         ParameterizedTypeReference&lt;ProfileMapping&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;ProfileMapping&gt;() {};
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>             ResponseEntity&lt;ProfileMapping&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/mappings/{mappingId}"</span>, HttpMethod.GET, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -204,7 +204,7 @@
 <a class="jxr_linenumber" name="L196" href="#L196">196</a> 
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">        * List all Profile Mappings</em>
-<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">        * Enumerates Profile Mappings in your organization with pagination.</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">        * Lists all profile mappings with pagination</em>
 <a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -226,7 +226,7 @@
 <a class="jxr_linenumber" name="L218" href="#L218">218</a> 
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">            * List all Profile Mappings</em>
-<a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">            * Enumerates Profile Mappings in your organization with pagination.</em>
+<a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">            * Lists all profile mappings with pagination</em>
 <a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L223" href="#L223">223</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L224" href="#L224">224</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -258,7 +258,7 @@
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L252" href="#L252">252</a> 
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L254" href="#L254">254</a> 
 <a class="jxr_linenumber" name="L255" href="#L255">255</a>         ParameterizedTypeReference&lt;List&lt;ProfileMapping&gt;&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;List&lt;ProfileMapping&gt;&gt;() {};
 <a class="jxr_linenumber" name="L256" href="#L256">256</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/mappings"</span>, HttpMethod.GET, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -272,7 +272,7 @@
 <a class="jxr_linenumber" name="L264" href="#L264">264</a> 
 <a class="jxr_linenumber" name="L265" href="#L265">265</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">            * List all Profile Mappings</em>
-<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">            * Enumerates Profile Mappings in your organization with pagination.</em>
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">            * Lists all profile mappings with pagination</em>
 <a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L270" href="#L270">270</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -304,7 +304,7 @@
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L297" href="#L297">297</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L298" href="#L298">298</a> 
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L300" href="#L300">300</a> 
 <a class="jxr_linenumber" name="L301" href="#L301">301</a>         ParameterizedTypeReference&lt;List&lt;ProfileMapping&gt;&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;List&lt;ProfileMapping&gt;&gt;() {};
 <a class="jxr_linenumber" name="L302" href="#L302">302</a>             ResponseEntity&lt;List&lt;ProfileMapping&gt;&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/mappings"</span>, HttpMethod.GET, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -336,7 +336,7 @@
 <a class="jxr_linenumber" name="L328" href="#L328">328</a> 
 <a class="jxr_linenumber" name="L329" href="#L329">329</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L330" href="#L330">330</a> <em class="jxr_javadoccomment">        * Update a Profile Mapping</em>
-<a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">        * Updates an existing Profile Mapping by adding, updating, or removing one or many Property Mappings.</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">        * Updates an existing Profile Mapping by adding, updating, or removing one or many Property Mappings</em>
 <a class="jxr_linenumber" name="L332" href="#L332">332</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L333" href="#L333">333</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L334" href="#L334">334</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
@@ -356,7 +356,7 @@
 <a class="jxr_linenumber" name="L348" href="#L348">348</a> 
 <a class="jxr_linenumber" name="L349" href="#L349">349</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L350" href="#L350">350</a> <em class="jxr_javadoccomment">            * Update a Profile Mapping</em>
-<a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">            * Updates an existing Profile Mapping by adding, updating, or removing one or many Property Mappings.</em>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">            * Updates an existing Profile Mapping by adding, updating, or removing one or many Property Mappings</em>
 <a class="jxr_linenumber" name="L352" href="#L352">352</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L354" href="#L354">354</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
@@ -377,7 +377,7 @@
 <a class="jxr_linenumber" name="L369" href="#L369">369</a> 
 <a class="jxr_linenumber" name="L370" href="#L370">370</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L371" href="#L371">371</a> <em class="jxr_javadoccomment">            * Update a Profile Mapping</em>
-<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">            * Updates an existing Profile Mapping by adding, updating, or removing one or many Property Mappings.</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">            * Updates an existing Profile Mapping by adding, updating, or removing one or many Property Mappings</em>
 <a class="jxr_linenumber" name="L373" href="#L373">373</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
@@ -419,7 +419,7 @@
 <a class="jxr_linenumber" name="L411" href="#L411">411</a>          };
 <a class="jxr_linenumber" name="L412" href="#L412">412</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L413" href="#L413">413</a> 
-<a class="jxr_linenumber" name="L414" href="#L414">414</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L415" href="#L415">415</a> 
 <a class="jxr_linenumber" name="L416" href="#L416">416</a>         ParameterizedTypeReference&lt;ProfileMapping&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;ProfileMapping&gt;() {};
 <a class="jxr_linenumber" name="L417" href="#L417">417</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/mappings/{mappingId}"</span>, HttpMethod.POST, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -430,7 +430,7 @@
 <a class="jxr_linenumber" name="L422" href="#L422">422</a> 
 <a class="jxr_linenumber" name="L423" href="#L423">423</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L424" href="#L424">424</a> <em class="jxr_javadoccomment">            * Update a Profile Mapping</em>
-<a class="jxr_linenumber" name="L425" href="#L425">425</a> <em class="jxr_javadoccomment">            * Updates an existing Profile Mapping by adding, updating, or removing one or many Property Mappings.</em>
+<a class="jxr_linenumber" name="L425" href="#L425">425</a> <em class="jxr_javadoccomment">            * Updates an existing Profile Mapping by adding, updating, or removing one or many Property Mappings</em>
 <a class="jxr_linenumber" name="L426" href="#L426">426</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L427" href="#L427">427</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L428" href="#L428">428</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
@@ -472,7 +472,7 @@
 <a class="jxr_linenumber" name="L464" href="#L464">464</a>          };
 <a class="jxr_linenumber" name="L465" href="#L465">465</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L466" href="#L466">466</a> 
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L468" href="#L468">468</a> 
 <a class="jxr_linenumber" name="L469" href="#L469">469</a>         ParameterizedTypeReference&lt;T&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;T&gt;() {};
 <a class="jxr_linenumber" name="L470" href="#L470">470</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/mappings/{mappingId}"</span>, HttpMethod.POST, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -483,7 +483,7 @@
 <a class="jxr_linenumber" name="L475" href="#L475">475</a> 
 <a class="jxr_linenumber" name="L476" href="#L476">476</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L477" href="#L477">477</a> <em class="jxr_javadoccomment">            * Update a Profile Mapping</em>
-<a class="jxr_linenumber" name="L478" href="#L478">478</a> <em class="jxr_javadoccomment">            * Updates an existing Profile Mapping by adding, updating, or removing one or many Property Mappings.</em>
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> <em class="jxr_javadoccomment">            * Updates an existing Profile Mapping by adding, updating, or removing one or many Property Mappings</em>
 <a class="jxr_linenumber" name="L479" href="#L479">479</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L480" href="#L480">480</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L481" href="#L481">481</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
@@ -525,7 +525,7 @@
 <a class="jxr_linenumber" name="L517" href="#L517">517</a>          };
 <a class="jxr_linenumber" name="L518" href="#L518">518</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L519" href="#L519">519</a> 
-<a class="jxr_linenumber" name="L520" href="#L520">520</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L521" href="#L521">521</a> 
 <a class="jxr_linenumber" name="L522" href="#L522">522</a>         ParameterizedTypeReference&lt;ProfileMapping&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;ProfileMapping&gt;() {};
 <a class="jxr_linenumber" name="L523" href="#L523">523</a>             ResponseEntity&lt;ProfileMapping&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/mappings/{mappingId}"</span>, HttpMethod.POST, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);

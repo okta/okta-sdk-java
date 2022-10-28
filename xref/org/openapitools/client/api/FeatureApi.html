@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2022-08-02T07:47:50.705939-05:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2022-10-28T09:53:26.092-05:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.FeatureApi"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="FeatureApi" href="../../../../org/openapitools/client/api/FeatureApi.html#FeatureApi">FeatureApi</a> {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -72,7 +72,7 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">        * Retrieve a Feature</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">        * Success</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">        * Retrieves a feature</em>
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -92,7 +92,7 @@
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>              <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">            * Retrieve a Feature</em>
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">            * Success</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">            * Retrieves a feature</em>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -125,7 +125,7 @@
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> 
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L121" href="#L121">121</a> 
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>         ParameterizedTypeReference&lt;Feature&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;Feature&gt;() {};
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/features/{featureId}"</span>, HttpMethod.GET, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -139,7 +139,7 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> 
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">            * Retrieve a Feature</em>
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">            * Success</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">            * Retrieves a feature</em>
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -172,7 +172,7 @@
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L166" href="#L166">166</a> 
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> 
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>         ParameterizedTypeReference&lt;Feature&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;Feature&gt;() {};
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>             ResponseEntity&lt;Feature&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/features/{featureId}"</span>, HttpMethod.GET, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -204,7 +204,7 @@
 <a class="jxr_linenumber" name="L196" href="#L196">196</a> 
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">        * List all Dependencies</em>
-<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">        * Success</em>
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">        * Lists all dependencies</em>
 <a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -224,7 +224,7 @@
 <a class="jxr_linenumber" name="L216" href="#L216">216</a> 
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L218" href="#L218">218</a> <em class="jxr_javadoccomment">            * List all Dependencies</em>
-<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment">            * Success</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> <em class="jxr_javadoccomment">            * Lists all dependencies</em>
 <a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -257,7 +257,7 @@
 <a class="jxr_linenumber" name="L249" href="#L249">249</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L251" href="#L251">251</a> 
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L253" href="#L253">253</a> 
 <a class="jxr_linenumber" name="L254" href="#L254">254</a>         ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt;() {};
 <a class="jxr_linenumber" name="L255" href="#L255">255</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/features/{featureId}/dependencies"</span>, HttpMethod.GET, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -271,7 +271,7 @@
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> 
 <a class="jxr_linenumber" name="L264" href="#L264">264</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">            * List all Dependencies</em>
-<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">            * Success</em>
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> <em class="jxr_javadoccomment">            * Lists all dependencies</em>
 <a class="jxr_linenumber" name="L267" href="#L267">267</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L268" href="#L268">268</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L269" href="#L269">269</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -304,7 +304,7 @@
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L297" href="#L297">297</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L298" href="#L298">298</a> 
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L300" href="#L300">300</a> 
 <a class="jxr_linenumber" name="L301" href="#L301">301</a>         ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt;() {};
 <a class="jxr_linenumber" name="L302" href="#L302">302</a>             ResponseEntity&lt;List&lt;Feature&gt;&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/features/{featureId}/dependencies"</span>, HttpMethod.GET, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -336,7 +336,7 @@
 <a class="jxr_linenumber" name="L328" href="#L328">328</a> 
 <a class="jxr_linenumber" name="L329" href="#L329">329</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L330" href="#L330">330</a> <em class="jxr_javadoccomment">        * List all Dependents</em>
-<a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">        * Success</em>
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">        * Lists all dependents</em>
 <a class="jxr_linenumber" name="L332" href="#L332">332</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L333" href="#L333">333</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L334" href="#L334">334</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -356,7 +356,7 @@
 <a class="jxr_linenumber" name="L348" href="#L348">348</a> 
 <a class="jxr_linenumber" name="L349" href="#L349">349</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L350" href="#L350">350</a> <em class="jxr_javadoccomment">            * List all Dependents</em>
-<a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">            * Success</em>
+<a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">            * Lists all dependents</em>
 <a class="jxr_linenumber" name="L352" href="#L352">352</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L354" href="#L354">354</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -389,7 +389,7 @@
 <a class="jxr_linenumber" name="L381" href="#L381">381</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L382" href="#L382">382</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L383" href="#L383">383</a> 
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L385" href="#L385">385</a> 
 <a class="jxr_linenumber" name="L386" href="#L386">386</a>         ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt;() {};
 <a class="jxr_linenumber" name="L387" href="#L387">387</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/features/{featureId}/dependents"</span>, HttpMethod.GET, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -403,7 +403,7 @@
 <a class="jxr_linenumber" name="L395" href="#L395">395</a> 
 <a class="jxr_linenumber" name="L396" href="#L396">396</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">            * List all Dependents</em>
-<a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">            * Success</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">            * Lists all dependents</em>
 <a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L400" href="#L400">400</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L401" href="#L401">401</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -436,7 +436,7 @@
 <a class="jxr_linenumber" name="L428" href="#L428">428</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L429" href="#L429">429</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L430" href="#L430">430</a> 
-<a class="jxr_linenumber" name="L431" href="#L431">431</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L432" href="#L432">432</a> 
 <a class="jxr_linenumber" name="L433" href="#L433">433</a>         ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt;() {};
 <a class="jxr_linenumber" name="L434" href="#L434">434</a>             ResponseEntity&lt;List&lt;Feature&gt;&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/features/{featureId}/dependents"</span>, HttpMethod.GET, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -468,7 +468,7 @@
 <a class="jxr_linenumber" name="L460" href="#L460">460</a> 
 <a class="jxr_linenumber" name="L461" href="#L461">461</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L462" href="#L462">462</a> <em class="jxr_javadoccomment">        * List all Features</em>
-<a class="jxr_linenumber" name="L463" href="#L463">463</a> <em class="jxr_javadoccomment">        * Success</em>
+<a class="jxr_linenumber" name="L463" href="#L463">463</a> <em class="jxr_javadoccomment">        * Lists all features</em>
 <a class="jxr_linenumber" name="L464" href="#L464">464</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L465" href="#L465">465</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L466" href="#L466">466</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -486,7 +486,7 @@
 <a class="jxr_linenumber" name="L478" href="#L478">478</a> 
 <a class="jxr_linenumber" name="L479" href="#L479">479</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L480" href="#L480">480</a> <em class="jxr_javadoccomment">            * List all Features</em>
-<a class="jxr_linenumber" name="L481" href="#L481">481</a> <em class="jxr_javadoccomment">            * Success</em>
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> <em class="jxr_javadoccomment">            * Lists all features</em>
 <a class="jxr_linenumber" name="L482" href="#L482">482</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L483" href="#L483">483</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L484" href="#L484">484</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -509,7 +509,7 @@
 <a class="jxr_linenumber" name="L501" href="#L501">501</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L502" href="#L502">502</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L503" href="#L503">503</a> 
-<a class="jxr_linenumber" name="L504" href="#L504">504</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L505" href="#L505">505</a> 
 <a class="jxr_linenumber" name="L506" href="#L506">506</a>         ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt;() {};
 <a class="jxr_linenumber" name="L507" href="#L507">507</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/features"</span>, HttpMethod.GET, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -523,7 +523,7 @@
 <a class="jxr_linenumber" name="L515" href="#L515">515</a> 
 <a class="jxr_linenumber" name="L516" href="#L516">516</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L517" href="#L517">517</a> <em class="jxr_javadoccomment">            * List all Features</em>
-<a class="jxr_linenumber" name="L518" href="#L518">518</a> <em class="jxr_javadoccomment">            * Success</em>
+<a class="jxr_linenumber" name="L518" href="#L518">518</a> <em class="jxr_javadoccomment">            * Lists all features</em>
 <a class="jxr_linenumber" name="L519" href="#L519">519</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L520" href="#L520">520</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L521" href="#L521">521</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -546,7 +546,7 @@
 <a class="jxr_linenumber" name="L538" href="#L538">538</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L539" href="#L539">539</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L540" href="#L540">540</a> 
-<a class="jxr_linenumber" name="L541" href="#L541">541</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L542" href="#L542">542</a> 
 <a class="jxr_linenumber" name="L543" href="#L543">543</a>         ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;List&lt;Feature&gt;&gt;() {};
 <a class="jxr_linenumber" name="L544" href="#L544">544</a>             ResponseEntity&lt;List&lt;Feature&gt;&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/features"</span>, HttpMethod.GET, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -578,7 +578,7 @@
 <a class="jxr_linenumber" name="L570" href="#L570">570</a> 
 <a class="jxr_linenumber" name="L571" href="#L571">571</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L572" href="#L572">572</a> <em class="jxr_javadoccomment">        * Update a Feature Lifecycle</em>
-<a class="jxr_linenumber" name="L573" href="#L573">573</a> <em class="jxr_javadoccomment">        * Success</em>
+<a class="jxr_linenumber" name="L573" href="#L573">573</a> <em class="jxr_javadoccomment">        * Update a feature lifecycle</em>
 <a class="jxr_linenumber" name="L574" href="#L574">574</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L575" href="#L575">575</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L576" href="#L576">576</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -600,7 +600,7 @@
 <a class="jxr_linenumber" name="L592" href="#L592">592</a> 
 <a class="jxr_linenumber" name="L593" href="#L593">593</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L594" href="#L594">594</a> <em class="jxr_javadoccomment">            * Update a Feature Lifecycle</em>
-<a class="jxr_linenumber" name="L595" href="#L595">595</a> <em class="jxr_javadoccomment">            * Success</em>
+<a class="jxr_linenumber" name="L595" href="#L595">595</a> <em class="jxr_javadoccomment">            * Update a feature lifecycle</em>
 <a class="jxr_linenumber" name="L596" href="#L596">596</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L597" href="#L597">597</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L598" href="#L598">598</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -643,7 +643,7 @@
 <a class="jxr_linenumber" name="L635" href="#L635">635</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L636" href="#L636">636</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L637" href="#L637">637</a> 
-<a class="jxr_linenumber" name="L638" href="#L638">638</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L638" href="#L638">638</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L639" href="#L639">639</a> 
 <a class="jxr_linenumber" name="L640" href="#L640">640</a>         ParameterizedTypeReference&lt;Feature&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;Feature&gt;() {};
 <a class="jxr_linenumber" name="L641" href="#L641">641</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/features/{featureId}/{lifecycle}"</span>, HttpMethod.POST, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -657,7 +657,7 @@
 <a class="jxr_linenumber" name="L649" href="#L649">649</a> 
 <a class="jxr_linenumber" name="L650" href="#L650">650</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L651" href="#L651">651</a> <em class="jxr_javadoccomment">            * Update a Feature Lifecycle</em>
-<a class="jxr_linenumber" name="L652" href="#L652">652</a> <em class="jxr_javadoccomment">            * Success</em>
+<a class="jxr_linenumber" name="L652" href="#L652">652</a> <em class="jxr_javadoccomment">            * Update a feature lifecycle</em>
 <a class="jxr_linenumber" name="L653" href="#L653">653</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L654" href="#L654">654</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L655" href="#L655">655</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
@@ -700,7 +700,7 @@
 <a class="jxr_linenumber" name="L692" href="#L692">692</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L693" href="#L693">693</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L694" href="#L694">694</a> 
-<a class="jxr_linenumber" name="L695" href="#L695">695</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L695" href="#L695">695</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L696" href="#L696">696</a> 
 <a class="jxr_linenumber" name="L697" href="#L697">697</a>         ParameterizedTypeReference&lt;Feature&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;Feature&gt;() {};
 <a class="jxr_linenumber" name="L698" href="#L698">698</a>             ResponseEntity&lt;Feature&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/features/{featureId}/{lifecycle}"</span>, HttpMethod.POST, uriVariables, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);

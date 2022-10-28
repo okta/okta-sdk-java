@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2022-08-02T07:47:50.705939-05:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2022-10-28T09:53:26.092-05:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.ThreatInsightApi"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ThreatInsightApi" href="../../../../org/openapitools/client/api/ThreatInsightApi.html#ThreatInsightApi">ThreatInsightApi</a> {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -72,7 +72,7 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">        * Retrieve the ThreatInsight Configuration</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">        * Gets current ThreatInsight configuration</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">        * Retrieves current ThreatInsight configuration</em>
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -90,7 +90,7 @@
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>              <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">            * Retrieve the ThreatInsight Configuration</em>
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">            * Gets current ThreatInsight configuration</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">            * Retrieves current ThreatInsight configuration</em>
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -113,7 +113,7 @@
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> 
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L109" href="#L109">109</a> 
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>         ParameterizedTypeReference&lt;ThreatInsightConfiguration&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;ThreatInsightConfiguration&gt;() {};
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/threats/configuration"</span>, HttpMethod.GET, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -127,7 +127,7 @@
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> 
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">            * Retrieve the ThreatInsight Configuration</em>
-<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">            * Gets current ThreatInsight configuration</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> <em class="jxr_javadoccomment">            * Retrieves current ThreatInsight configuration</em>
 <a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -150,7 +150,7 @@
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>             <strong class="jxr_keyword">final</strong> String[] localVarContentTypes = {  };
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> 
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L146" href="#L146">146</a> 
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>         ParameterizedTypeReference&lt;ThreatInsightConfiguration&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;ThreatInsightConfiguration&gt;() {};
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>             ResponseEntity&lt;ThreatInsightConfiguration&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/threats/configuration"</span>, HttpMethod.GET, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -251,7 +251,7 @@
 <a class="jxr_linenumber" name="L243" href="#L243">243</a>          };
 <a class="jxr_linenumber" name="L244" href="#L244">244</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L245" href="#L245">245</a> 
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L247" href="#L247">247</a> 
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>         ParameterizedTypeReference&lt;ThreatInsightConfiguration&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;ThreatInsightConfiguration&gt;() {};
 <a class="jxr_linenumber" name="L249" href="#L249">249</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/threats/configuration"</span>, HttpMethod.POST, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -294,7 +294,7 @@
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>          };
 <a class="jxr_linenumber" name="L287" href="#L287">287</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L288" href="#L288">288</a> 
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L290" href="#L290">290</a> 
 <a class="jxr_linenumber" name="L291" href="#L291">291</a>         ParameterizedTypeReference&lt;T&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;T&gt;() {};
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>             <strong class="jxr_keyword">return</strong> apiClient.invokeAPI(<span class="jxr_string">"/api/v1/threats/configuration"</span>, HttpMethod.POST, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
@@ -337,7 +337,7 @@
 <a class="jxr_linenumber" name="L329" href="#L329">329</a>          };
 <a class="jxr_linenumber" name="L330" href="#L330">330</a>             <strong class="jxr_keyword">final</strong> MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 <a class="jxr_linenumber" name="L331" href="#L331">331</a> 
-<a class="jxr_linenumber" name="L332" href="#L332">332</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"API_Token"</span>, <span class="jxr_string">"OAuth_2.0"</span> };
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>             String[] localVarAuthNames = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"apiToken"</span>, <span class="jxr_string">"oauth2"</span> };
 <a class="jxr_linenumber" name="L333" href="#L333">333</a> 
 <a class="jxr_linenumber" name="L334" href="#L334">334</a>         ParameterizedTypeReference&lt;ThreatInsightConfiguration&gt; localReturnType = <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;ThreatInsightConfiguration&gt;() {};
 <a class="jxr_linenumber" name="L335" href="#L335">335</a>             ResponseEntity&lt;ThreatInsightConfiguration&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/threats/configuration"</span>, HttpMethod.POST, Collections.&lt;String, Object&gt;emptyMap(), localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
