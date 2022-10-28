@@ -54,18 +54,19 @@ You can learn more on the [Okta + Java][lang-landing] page in our documentation.
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The current stable major version series is: 8.x.x
+:heavy_check_mark: The latest stable major version series is: 10.x.x
 
-| Version | Status                    |
+| Version                  | Status                                                                                                                                                                                                              |
 | ------- | ------------------------- |
-| 0.0.x, 1.x, 2.x.x, 3.x.x | :warning: Retired |
-| 4.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-3xx-to-400)) |
-| 5.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-4xx-to-500)) |
-| 6.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-5xx-to-600)) |
-| 7.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-6xx-to-700)) |
-| 8.x.x | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-7xx-to-800)) |
-| 9.x.x-beta | :heavy_check_mark: Beta release located in [branch](https://github.com/okta/okta-sdk-java/tree/swagger_v3) - Discontinued |
-| 10.x.x-beta | :heavy_check_mark: Beta release located in `oasv3` [branch](https://github.com/okta/okta-sdk-java/tree/oasv3) ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-8xx-to-10xx)) |
+| 0.0.x, 1.x, 2.x.x, 3.x.x | :warning: Retired                                                                                                                                                                                                   |
+| 4.x.x                    | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-3xx-to-400))                                                                             |
+| 5.x.x                    | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-4xx-to-500))                                                                             |
+| 6.x.x                    | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-5xx-to-600))                                                                             |
+| 7.x.x                    | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-6xx-to-700))                                                                             |
+| 8.x.x                    | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-7xx-to-800))                                                                             |
+| 9.x.x-beta | :warning: Beta release located in [branch](https://github.com/okta/okta-sdk-java/tree/swagger_v3) - Discontinued                                                                                    |
+| 10.x.x-beta | :warning: Beta release located in `oasv3` [branch](https://github.com/okta/okta-sdk-java/tree/oasv3) ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-8xx-to-10xx)) |
+| 10.0.0 | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-8xx-to-10xx))                                                                            |
 
 The latest release can always be found on the [releases page][github-releases].
  
