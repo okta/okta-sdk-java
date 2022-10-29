@@ -15,21 +15,17 @@
  */
 package com.okta.sdk.tests.it.util
 
-import com.okta.sdk.resource.CollectionResource
-import com.okta.sdk.resource.Resource
-import com.okta.sdk.resource.group.Group
-import com.okta.sdk.resource.group.GroupList
-import com.okta.sdk.resource.linked.object.LinkedObject
-import com.okta.sdk.resource.user.Role
-import com.okta.sdk.resource.user.RoleList
-import com.okta.sdk.resource.user.User
+import org.openapitools.client.api.GroupApi
+import org.openapitools.client.model.Group
+import org.openapitools.client.model.GroupType
+import org.openapitools.client.model.User
 import org.testng.Assert
 
 import java.util.stream.Collectors
 import java.util.stream.StreamSupport
 
-import static org.hamcrest.MatcherAssert.*
-import static org.hamcrest.Matchers.*
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.notNullValue
 
@@ -48,23 +44,21 @@ class Util {
         assertThat(user, equalTo(expectedUser))
     }
 
-    static void  validateGroup(Group group, Group expectedGroup) {
+    static void validateGroup(Group group, Group expectedGroup) {
         validateGroup(group, expectedGroup.profile.name)
     }
 
-    static void  validateGroup(Group group, String groupName) {
-
+    static void validateGroup(Group group, String groupName) {
         assertThat(group.profile.name, equalTo(groupName))
-        assertThat(group.type, equalTo("OKTA_GROUP"))
+        assertThat(group.type, equalTo(GroupType.OKTA_GROUP))
     }
 
-    static void  validateGroup(Group group, String groupName, String description) {
-
+    static void validateGroup(Group group, String groupName, String description) {
         validateGroup(group, groupName)
         assertThat(group.profile.description, equalTo(description))
     }
 
-    static void assertGroupPresent(GroupList results, Group expectedGroup) {
+    static void assertGroupPresent(List<Group> results, Group expectedGroup) {
 
         List<Group> groupsFound = StreamSupport.stream(results.spliterator(), false)
                 .filter {group -> group.id == expectedGroup.id}
@@ -73,7 +67,7 @@ class Util {
         assertThat(groupsFound, hasSize(1))
     }
 
-    static void assertGroupAbsent(GroupList results, Group expectedGroup) {
+    static void assertGroupAbsent(List<Group> results, Group expectedGroup) {
 
         List<Group> groupsFound = StreamSupport.stream(results.spliterator(), false)
             .filter {group -> group.id == expectedGroup.id}
@@ -82,74 +76,27 @@ class Util {
         assertThat(groupsFound, hasSize(0))
     }
 
-    static void assertRolePresent(RoleList results, Role expectedRole) {
+    static void assertUserPresent(List<User> users, User expectedUser) {
 
-        List<Role> rolesFound = StreamSupport.stream(results.spliterator(), false)
-            .filter {role -> role.id == expectedRole.id}
-            .collect(Collectors.toList())
-
-        assertThat(rolesFound, hasSize(1))
-    }
-
-    static void assertRoleAbsent(RoleList results, Role expectedRole) {
-
-        List<Role> rolesFound = StreamSupport.stream(results.spliterator(), false)
-            .filter {role -> role.id == expectedRole.id}
-            .collect(Collectors.toList())
-
-        assertThat(rolesFound, hasSize(0))
-    }
-
-    static <T extends Resource, C extends CollectionResource<T>> void assertPresent(C results, T expected) {
-
-        List<T> resourcesFound = StreamSupport.stream(results.spliterator(), false)
-                .filter {listItem -> listItem.id == expected.id}
+        List<User> usersFound = StreamSupport.stream(users.spliterator(), false)
+                .filter { user -> user.id == expectedUser.id }
                 .collect(Collectors.toList())
 
-        assertThat(resourcesFound, hasSize(1))
+        assertThat(usersFound, hasSize(1))
     }
 
-    static <T extends Resource, C extends CollectionResource<T>> void assertNotPresent(C results, T expected) {
-
-        List<T> resourcesFound = StreamSupport.stream(results.spliterator(), false)
-                .filter {listItem -> listItem.id == expected.id}
-                .collect(Collectors.toList())
-
-        assertThat(resourcesFound, hasSize(0))
-    }
-
-    static <T extends Resource, C extends CollectionResource<T>> void assertLinkedObjectPresent(C results, T expected) {
-
-        List<T> resourcesFound = StreamSupport.stream(results.spliterator(), false)
-                .filter { listItem ->
-                    ((listItem.primary.name == expected.primary.name) &&
-                            (listItem.associated.name == expected.associated.name))}
-                .collect(Collectors.toList())
-
-        assertThat(resourcesFound, hasSize(1))
-    }
-
-    static void assertGroupTargetPresent(User user, Group group, Role role) {
-        def groupTargets = user.listGroupTargets(role.id)
-
-        assertThat "GroupTarget Present not found in User role",
-                StreamSupport.stream(groupTargets.spliterator(), false)
-                    .filter{ groupTarget -> groupTarget.profile.name == group.profile.name}
-                    .findFirst().isPresent()
-    }
-
-    static void assertUserInGroup(User user, Group group) {
-        assertThat "User was not found in group.", StreamSupport.stream(group.listUsers().spliterator(), false)
+    static void assertUserInGroup(User user, Group group, GroupApi groupApi) {
+        assertThat "User was not found in group.", StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()
     }
 
-    static void assertUserInGroup(User user, Group group, int times, long delayInMilliseconds, boolean present=true) {
+    static void assertUserInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds, boolean present=true) {
         for (int ii=0; ii<times; ii++) {
 
             sleep(delayInMilliseconds)
 
-            if (present == StreamSupport.stream(group.listUsers().spliterator(), false)
+            if (present == StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
                     .filter{ listUser -> listUser.id == user.id}
                     .findFirst().isPresent()) {
                 return
@@ -160,18 +107,18 @@ class Util {
         if (!present) Assert.fail("User found in group")
     }
 
-    static void assertUserNotInGroup(User user, Group group) {
-        assertThat "User was found in group.", !StreamSupport.stream(group.listUsers().spliterator(), false)
+    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi) {
+        assertThat "User was found in group.", !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()
     }
 
-    static void assertUserNotInGroup(User user, Group group, int times, long delayInMilliseconds, boolean present=true) {
+    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds, boolean present=true) {
         for (int ii=0; ii<times; ii++) {
 
             sleep(delayInMilliseconds)
 
-            if (present == !StreamSupport.stream(group.listUsers().spliterator(), false)
+            if (present == !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()) {
                 return

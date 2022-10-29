@@ -17,7 +17,6 @@
 package com.okta.sdk.cache;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.resource.Resource;
 
 /**
  * Static utility/helper <a href="http://en.wikipedia.org/wiki/Factory_method_pattern">factory method</a>s for
@@ -30,7 +29,7 @@ import com.okta.sdk.resource.Resource;
  * <p>See the {@link CacheManagerBuilder} JavaDoc for more information the effects of caching in
  * single-jvm vs distributed-jvm applications.</p>
  *
- * <h1>Usage Example</h1>
+ * <b>Usage Example</b>
  *
  * <pre>
  * import static com.okta.sdk.cache.Caches.*;
@@ -40,10 +39,10 @@ import com.okta.sdk.resource.Resource;
  * Caches.{@link #newCacheManager() newCacheManager()}
  *     .withDefaultTimeToLive(1, TimeUnit.DAYS) //general default
  *     .withDefaultTimeToIdle(2, TimeUnit.HOURS) //general default
- *     .withCache({@link com.okta.sdk.cache.Caches#forResource(Class) forResource}(Account.class) //Account-specific cache settings
+ *     .withCache({@link Caches#forResource(Class) forResource}(Account.class) //Account-specific cache settings
  *         .withTimeToLive(1, TimeUnit.HOURS)
  *         .withTimeToIdle(30, TimeUnit.MINUTES))
- *     .withCache({@link com.okta.sdk.cache.Caches#forResource(Class) forResource}(Group.class) //Group-specific cache settings
+ *     .withCache({@link Caches#forResource(Class) forResource}(Group.class) //Group-specific cache settings
  *         .withTimeToLive(2, TimeUnit.HOURS))
  *
  *     // ... etc ...
@@ -105,7 +104,7 @@ public class Caches {
      * @return a new {@link CacheConfigurationBuilder} to configure a cache region that will store data for instances
      *         of type {@code clazz}.
      */
-    public static <T extends Resource> CacheConfigurationBuilder forResource(Class<T> clazz) {
+    public static <T> CacheConfigurationBuilder forResource(Class<T> clazz) {
         return named(clazz.getName());
     }
 

@@ -16,13 +16,13 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.policy.Policy;
 import com.okta.sdk.resource.policy.PolicyBuilder;
-import com.okta.sdk.resource.policy.PolicyType;
+import org.openapitools.client.api.PolicyApi;
+import org.openapitools.client.model.LifecycleStatus;
+import org.openapitools.client.model.Policy;
+import org.openapitools.client.model.PolicyType;
 
 import java.util.Objects;
-
 
 public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuilder<T> {
 
@@ -30,11 +30,11 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     protected String description;
     protected PolicyType policyType;
     protected Integer priority;
-    protected Policy.StatusEnum status;
+    protected LifecycleStatus status;
     protected Boolean isActive = true;
 
     DefaultPolicyBuilder(){
-        this.status = Policy.StatusEnum.ACTIVE;
+        this.status = LifecycleStatus.ACTIVE;
     }
 
     @Override
@@ -62,12 +62,9 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     }
 
     @Override
-    public T setStatus(Policy.StatusEnum status) {
+    public T setStatus(LifecycleStatus status) {
         this.status = status;
-        if (Policy.StatusEnum.ACTIVE.equals(status))
-            this.isActive = true;
-        else
-            this.isActive = false;
+        this.isActive = LifecycleStatus.ACTIVE.equals(status);
         return self();
     }
 
@@ -77,12 +74,12 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     }
 
     @Override
-    public Policy buildAndCreate(Client client) {
-        return client.createPolicy(build(client), isActive);
+    public Policy buildAndCreate(PolicyApi client) {
+        return client.createPolicy(build(), isActive);
     }
 
-    private Policy build(Client client) {
-        Policy policy = client.instantiate(Policy.class);
+    private Policy build() {
+        Policy policy = new Policy();
 
         if (Strings.hasText(name)) policy.setName(name);
         if (Strings.hasText(description)) policy.setDescription(description);

@@ -50,3 +50,4 @@ travis_phantomjs
 
 # api.yaml will be fetched from NPM, the local copy will not be used.
 src/swagger/api.yaml
+/api/src/main/java/com/okta/sdk/client/AppMain.java

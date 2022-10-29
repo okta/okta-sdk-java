@@ -16,7 +16,6 @@
  */
 package com.okta.sdk.impl.config;
 
-import com.okta.commons.http.authc.RequestAuthenticator;
 import com.okta.commons.http.config.BaseUrlResolver;
 import com.okta.commons.http.config.HttpClientConfiguration;
 import com.okta.commons.lang.Strings;
@@ -24,8 +23,6 @@ import com.okta.sdk.cache.CacheConfigurationBuilder;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.api.ClientCredentialsResolver;
-import com.okta.sdk.impl.http.authc.DefaultRequestAuthenticatorFactory;
-import com.okta.sdk.impl.http.authc.RequestAuthenticatorFactory;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -49,7 +46,6 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private long cacheManagerTtl;
     private long cacheManagerTti;
     private Map<String, CacheConfigurationBuilder> cacheManagerCaches = new LinkedHashMap<>();
-    private RequestAuthenticatorFactory requestAuthenticatorFactory = new DefaultRequestAuthenticatorFactory();
     private AuthenticationScheme authenticationScheme;
     private BaseUrlResolver baseUrlResolver;
     private AuthorizationMode authorizationMode;
@@ -80,14 +76,6 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     public void setAuthenticationScheme(AuthenticationScheme authenticationScheme) {
         this.authenticationScheme = authenticationScheme;
-    }
-
-    public RequestAuthenticatorFactory getRequestAuthenticatorFactory() {
-        return requestAuthenticatorFactory;
-    }
-
-    public void setRequestAuthenticatorFactory(RequestAuthenticatorFactory requestAuthenticatorFactory) {
-        this.requestAuthenticatorFactory = requestAuthenticatorFactory;
     }
 
     public BaseUrlResolver getBaseUrlResolver() {
@@ -187,17 +175,6 @@ public class ClientConfiguration extends HttpClientConfiguration {
     }
 
     @Override
-    public RequestAuthenticator getRequestAuthenticator() {
-        RequestAuthenticator requestAuthenticator = super.getRequestAuthenticator();
-
-        if (requestAuthenticator == null) {
-            requestAuthenticator = requestAuthenticatorFactory.create(authenticationScheme, this.getClientCredentialsResolver().getClientCredentials());
-        }
-
-        return requestAuthenticator;
-    }
-
-    @Override
     public String getBaseUrl() {
         String baseUrl = super.getBaseUrl();
 
@@ -225,5 +202,4 @@ public class ClientConfiguration extends HttpClientConfiguration {
             ", proxy=" + getProxy() +
             " }";
     }
-
 }

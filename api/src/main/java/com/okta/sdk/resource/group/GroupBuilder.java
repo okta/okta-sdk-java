@@ -16,7 +16,8 @@
 package com.okta.sdk.resource.group;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.client.Client;
+import org.openapitools.client.api.GroupApi;
+import org.openapitools.client.model.Group;
 
 public interface GroupBuilder {
 
@@ -28,6 +29,5 @@ public interface GroupBuilder {
 
     GroupBuilder setDescription(String description);
 
-    Group buildAndCreate(Client client);
-
+    Group buildAndCreate(GroupApi client);
 }

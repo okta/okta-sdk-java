@@ -17,10 +17,11 @@
 package com.okta.sdk.impl.cache
 
 import com.okta.sdk.cache.Cache
-import java.time.Duration
 import groovy.json.JsonSlurper
 import org.testng.annotations.BeforeTest
 import org.testng.annotations.Test
+
+import java.time.Duration
 
 import static org.testng.Assert.*
 
