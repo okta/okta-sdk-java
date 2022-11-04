@@ -13685,7 +13685,7 @@ paths:
   /api/v1/users:
     get:
       summary: List all Users
-      description: Lists all users with pagination.  A subset of users can be returned that match a supported filter expression or search criteria.
+      description: List all users that do not have a status of 'DEPROVISIONED' (by default), up to the maximum (200 for most orgs), with pagination. A subset of users can be returned that match a supported filter expression or search criteria.
       operationId: listUsers
       parameters:
         - name: q
