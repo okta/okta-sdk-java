@@ -911,6 +911,7 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
 
                                                 SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5, retryableExceptions); //TODO - get this from client config
                                                 FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
+                                                backOffPolicy.setBackOffPeriod(3000l);
 
                                                 RetryTemplate retryTemplate = new RetryTemplate();
                                                 retryTemplate.setRetryPolicy(retryPolicy);
