@@ -43,7 +43,7 @@ public class Quickstart {
     public static void main(String[] args) {
 
         final String email = "joe.coder+" + UUID.randomUUID() + "@example.com";
-        final String groupName = "java-sdk-quickstart-" + UUID.randomUUID().toString();
+        final String groupName = "java-sdk-quickstart-" + UUID.randomUUID();
         final char[] password = {'P','a','s','s','w','o','r','d','1'};
 
         ClientBuilder builder;
@@ -90,16 +90,16 @@ public class Quickstart {
             println("User created with ID: " + userId);
 
             // You can look up user by ID
-            println("User lookup by ID: "+ userApi.getUser(userId).getProfile().getLogin());
+            println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId).getProfile()).getLogin());
 
             // or by Email
-            println("User lookup by Email: "+ userApi.getUser(email).getProfile().getLogin());
+            println("User lookup by Email: "+ Objects.requireNonNull(userApi.getUser(email).getProfile()).getLogin());
 
             // get the list of users
             List<User> users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"", null, null, null);
 
             // get the first user in the collection
-            println("First user in collection: " + users.stream().findFirst().get().getProfile().getEmail());
+            println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());
         }
         catch (Exception e) {
 

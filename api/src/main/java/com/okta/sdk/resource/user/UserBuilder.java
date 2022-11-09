@@ -48,6 +48,54 @@ public interface UserBuilder {
 
     UserBuilder setLastName(String lastName);
 
+    UserBuilder setMiddleName(String middleName);
+
+    UserBuilder setHonorificPrefix(String honorificPrefix);
+
+    UserBuilder setHonorificSuffix(String honorificSuffix);
+
+    UserBuilder setTitle(String title);
+
+    UserBuilder setDisplayName(String displayName);
+
+    UserBuilder setNickName(String nickName);
+
+    UserBuilder setProfileUrl(String profileUrl);
+
+    UserBuilder setPrimaryPhone(String primaryPhone);
+
+    UserBuilder setStreetAddress(String streetAddress);
+
+    UserBuilder setCity(String city);
+
+    UserBuilder setState(String state);
+
+    UserBuilder setZipCode(String zipCode);
+
+    UserBuilder setCountryCode(String countryCode);
+
+    UserBuilder setPostalAddress(String postalAddress);
+
+    UserBuilder setPreferredLanguage(String preferredLanguage);
+
+    UserBuilder setLocale(String locale);
+
+    UserBuilder setTimezone(String timezone);
+
+    UserBuilder setEmployeeNumber(String employeeNumber);
+
+    UserBuilder setCostCenter(String costCenter);
+
+    UserBuilder setOrganization(String organization);
+
+    UserBuilder setDivision(String division);
+
+    UserBuilder setDepartment(String department);
+
+    UserBuilder setManagerId(String managerId);
+
+    UserBuilder setManager(String manager);
+
     UserBuilder setLogin(String login);
 
     UserBuilder setMobilePhone(String mobilePhone);

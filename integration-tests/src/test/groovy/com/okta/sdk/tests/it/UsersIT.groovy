@@ -591,7 +591,13 @@ class UsersIT extends ITSupport {
 
         def password = 'Passw0rd!2@3#'
         def firstName = 'John'
+        def middleName = 'Mark'
         def lastName = 'Profile-Update'
+        def displayName = 'Joe Mark'
+        def honorificPrefix = 'Mr'
+        def city = 'Boston'
+        def countryCode = 'US'
+        def preferredLanguage = 'en-US'
         def email = "john-${uniqueTestName}@example.com"
 
         UserApi userApi = new UserApi(getClient())
@@ -600,12 +606,24 @@ class UsersIT extends ITSupport {
         User user = UserBuilder.instance()
             .setEmail(email)
             .setFirstName(firstName)
+            .setMiddleName(middleName)
             .setLastName(lastName)
+            .setDisplayName(displayName)
+            .setHonorificPrefix(honorificPrefix)
+            .setCity(city)
+            .setCountryCode(countryCode)
+            .setPreferredLanguage(preferredLanguage)
             .setPassword(password.toCharArray())
             .setActive(false)
             .buildAndCreate(userApi)
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
+
+        assertThat(user.getProfile().middleName, equalTo(middleName))
+        assertThat(user.getProfile().honorificPrefix, equalTo(honorificPrefix))
+        assertThat(user.getProfile().city, equalTo(city))
+        assertThat(user.getProfile().countryCode, equalTo(countryCode))
+        assertThat(user.getProfile().preferredLanguage, equalTo(preferredLanguage))
 
         def originalLastUpdated = user.lastUpdated
 
@@ -766,6 +784,7 @@ class UsersIT extends ITSupport {
 
         def password = 'OldPassw0rd!2@3#'
         def firstName = 'John'
+        def middleName = 'Mark'
         def lastName = 'Forgot-Password'
         def email = "john-${uniqueTestName}@example.com"
 
@@ -775,6 +794,7 @@ class UsersIT extends ITSupport {
         User user = UserBuilder.instance()
             .setEmail(email)
             .setFirstName(firstName)
+            .setMiddleName(middleName)
             .setLastName(lastName)
             .setPassword(password.toCharArray())
             .setActive(true)

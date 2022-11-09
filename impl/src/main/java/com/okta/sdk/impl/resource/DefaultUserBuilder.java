@@ -48,6 +48,30 @@ public class DefaultUserBuilder implements UserBuilder {
     private String secondEmail;
     private String firstName;
     private String lastName;
+    private String middleName;
+    private String honorificPrefix;
+    private String honorificSuffix;
+    private String title;
+    private String displayName;
+    private String nickName;
+    private String profileUrl;
+    private String primaryPhone;
+    private String streetAddress;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String countryCode;
+    private String postalAddress;
+    private String preferredLanguage;
+    private String locale;
+    private String timezone;
+    private String employeeNumber;
+    private String costCenter;
+    private String organization;
+    private String division;
+    private String department;
+    private String managerId;
+    private String manager;
     private String mobilePhone;
     private Boolean active;
     private AuthenticationProvider provider;
@@ -94,6 +118,145 @@ public class DefaultUserBuilder implements UserBuilder {
 
     public UserBuilder setLastName(String lastName) {
         this.lastName = lastName;
+        return this;
+    }
+
+    public UserBuilder setHonorificPrefix(String honorificPrefix) {
+        this.honorificPrefix = honorificPrefix;
+        return this;
+    }
+
+    public UserBuilder setHonorificSuffix(String honorificSuffix) {
+        this.honorificSuffix = honorificSuffix;
+        return this;
+    }
+
+    public UserBuilder setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public UserBuilder setDisplayName(String displayName) {
+        this.displayName = displayName;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setNickName(String nickName) {
+        this.nickName = nickName;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setPrimaryPhone(String primaryPhone) {
+        this.primaryPhone = primaryPhone;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setState(String state) {
+        this.state = state;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setPostalAddress(String postalAddress) {
+        this.postalAddress = postalAddress;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setPreferredLanguage(String preferredLanguage) {
+        this.preferredLanguage = preferredLanguage;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setLocale(String locale) {
+        this.locale = locale;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setTimezone(String timezone) {
+        this.timezone = timezone;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setCostCenter(String costCenter) {
+        this.costCenter = costCenter;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setOrganization(String organization) {
+        this.organization = organization;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setDivision(String division) {
+        this.division = division;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setDepartment(String department) {
+        this.department = department;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setManagerId(String managerId) {
+        this.managerId = managerId;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setManager(String manager) {
+        this.manager = manager;
+        return this;
+    }
+
+    public UserBuilder setMiddleName(String middleName) {
+        this.middleName = middleName;
         return this;
     }
 
@@ -157,14 +320,38 @@ public class DefaultUserBuilder implements UserBuilder {
         UserProfile userProfile = createUserRequest.getProfile();
         if (Strings.hasText(firstName)) userProfile.setFirstName(firstName);
         if (Strings.hasText(lastName)) userProfile.setLastName(lastName);
+        if (Strings.hasText(middleName)) userProfile.setMiddleName(middleName);
+        if (Strings.hasText(honorificPrefix)) userProfile.setHonorificPrefix(honorificPrefix);
+        if (Strings.hasText(honorificSuffix)) userProfile.setHonorificSuffix(honorificSuffix);
+        if (Strings.hasText(title)) userProfile.setTitle(title);
+        if (Strings.hasText(displayName)) userProfile.setDisplayName(displayName);
+        if (Strings.hasText(nickName)) userProfile.setNickName(nickName);
+        if (Strings.hasText(profileUrl)) userProfile.setProfileUrl(profileUrl);
+        if (Strings.hasText(primaryPhone)) userProfile.setPrimaryPhone(primaryPhone);
+        if (Strings.hasText(streetAddress)) userProfile.setStreetAddress(streetAddress);
+        if (Strings.hasText(city)) userProfile.setCity(city);
+        if (Strings.hasText(state)) userProfile.setState(state);
+        if (Strings.hasText(zipCode)) userProfile.setZipCode(zipCode);
+        if (Strings.hasText(countryCode)) userProfile.setCountryCode(countryCode);
+        if (Strings.hasText(postalAddress)) userProfile.setPostalAddress(postalAddress);
+        if (Strings.hasText(preferredLanguage)) userProfile.setPreferredLanguage(preferredLanguage);
+        if (Strings.hasText(locale)) userProfile.setLocale(locale);
+        if (Strings.hasText(timezone)) userProfile.setTimezone(timezone);
+        if (Strings.hasText(employeeNumber)) userProfile.setEmployeeNumber(city);
+        if (Strings.hasText(costCenter)) userProfile.setCostCenter(costCenter);
+        if (Strings.hasText(organization)) userProfile.setOrganization(organization);
+        if (Strings.hasText(division)) userProfile.setDivision(division);
+        if (Strings.hasText(department)) userProfile.setDepartment(department);
+        if (Strings.hasText(managerId)) userProfile.setManagerId(managerId);
+        if (Strings.hasText(manager)) userProfile.setManager(manager);
+
         if (Strings.hasText(email)) userProfile.setEmail(email);
         if (Strings.hasText(secondEmail)) userProfile.setSecondEmail(secondEmail);
         if (Strings.hasText(mobilePhone)) userProfile.setMobilePhone(mobilePhone);
 
         if (Strings.hasText(login)) {
             userProfile.setLogin(login);
-        }
-        else {
+        } else {
             userProfile.setLogin(email);
         }
 
@@ -172,8 +359,7 @@ public class DefaultUserBuilder implements UserBuilder {
             UserType userType = new UserType();
             userType.setId(userTypeId);
             createUserRequest.setType(userType);
-        }
-        else if (userType != null) {
+        } else if (userType != null) {
             createUserRequest.setType(userType);
         }
 
