@@ -56,40 +56,88 @@
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setLastName(String lastName);
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setLogin(String login);
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setMiddleName(String middleName);
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setMobilePhone(String mobilePhone);
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setHonorificPrefix(String honorificPrefix);
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setSecondEmail(String secondEmail);
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setHonorificSuffix(String honorificSuffix);
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setActive(Boolean active);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setTitle(String title);
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setProvider(AuthenticationProvider provider);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setDisplayName(String displayName);
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setType(UserType userType);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setNickName(String nickName);
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setType(String userTypeId);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setProfileUrl(String profileUrl);
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">default</strong> <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setGroups(String... groupIds) {
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <strong class="jxr_keyword">return</strong> setGroups(Arrays.stream(groupIds).collect(Collectors.toList()));
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      }
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setPrimaryPhone(String primaryPhone);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setStreetAddress(String streetAddress);
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setGroups(List&lt;String&gt; groupIds);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setCity(String city);
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> addGroup(String groupId);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setState(String state);
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setNextLogin(UserNextLogin nextLogin);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setZipCode(String zipCode);
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setBcryptPasswordHash(String value, String salt, <strong class="jxr_keyword">int</strong> workFactor);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setCountryCode(String countryCode);
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>  
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setSha256PasswordHash(String value, String salt, String saltOrder);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setPostalAddress(String postalAddress);
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setSha512PasswordHash(String value, String salt, String saltOrder);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setPreferredLanguage(String preferredLanguage);
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>  
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setSha1PasswordHash(String value, String salt, String saltOrder);
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setLocale(String locale);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      User buildAndCreate(UserApi client);
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>  }
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setTimezone(String timezone);
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setEmployeeNumber(String employeeNumber);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setCostCenter(String costCenter);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setOrganization(String organization);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setDivision(String division);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setDepartment(String department);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setManagerId(String managerId);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setManager(String manager);
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setLogin(String login);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setMobilePhone(String mobilePhone);
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setSecondEmail(String secondEmail);
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setActive(Boolean active);
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setProvider(AuthenticationProvider provider);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> 
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setType(UserType userType);
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> 
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setType(String userTypeId);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">default</strong> <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setGroups(String... groupIds) {
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>         <strong class="jxr_keyword">return</strong> setGroups(Arrays.stream(groupIds).collect(Collectors.toList()));
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     }
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setGroups(List&lt;String&gt; groupIds);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> 
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> addGroup(String groupId);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> 
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setNextLogin(UserNextLogin nextLogin);
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setBcryptPasswordHash(String value, String salt, <strong class="jxr_keyword">int</strong> workFactor);
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> 
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setSha256PasswordHash(String value, String salt, String saltOrder);
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> 
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setSha512PasswordHash(String value, String salt, String saltOrder);
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> 
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setSha1PasswordHash(String value, String salt, String saltOrder);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> 
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     User buildAndCreate(UserApi client);
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017&#x2013;2022 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
