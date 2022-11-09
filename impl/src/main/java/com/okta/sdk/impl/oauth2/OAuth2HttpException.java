@@ -16,14 +16,13 @@
 package com.okta.sdk.impl.oauth2;
 
 import com.okta.commons.http.HttpException;
-import com.okta.sdk.impl.error.DefaultError;
 
 /**
  * @since 1.6.0
  */
 public class OAuth2HttpException extends HttpException {
 
-    public OAuth2HttpException(DefaultError e, Throwable cause, boolean retryable) {
-        super(e.getMessage(), cause, retryable);
+    public OAuth2HttpException(String errMsg, Throwable cause, boolean retryable) {
+        super(errMsg, cause, retryable);
     }
 }

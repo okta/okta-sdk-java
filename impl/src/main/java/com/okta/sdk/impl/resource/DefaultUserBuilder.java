@@ -15,27 +15,28 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.sdk.client.Client;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.resource.user.AuthenticationProvider;
-import com.okta.sdk.resource.user.PasswordCredentialHook;
-import com.okta.sdk.resource.user.RecoveryQuestionCredential;
 import com.okta.sdk.resource.user.UserBuilder;
-import com.okta.sdk.resource.user.PasswordCredential;
-import com.okta.sdk.resource.user.User;
-import com.okta.sdk.resource.user.UserCredentials;
-import com.okta.sdk.resource.user.UserNextLogin;
-import com.okta.sdk.resource.user.UserProfile;
-import com.okta.sdk.resource.user.type.UserType;
-import com.okta.sdk.resource.user.CreateUserRequest;
+import org.openapitools.client.api.UserApi;
+import org.openapitools.client.model.AuthenticationProvider;
+import org.openapitools.client.model.CreateUserRequest;
+import org.openapitools.client.model.PasswordCredential;
+import org.openapitools.client.model.PasswordCredentialHash;
+import org.openapitools.client.model.PasswordCredentialHashAlgorithm;
+import org.openapitools.client.model.PasswordCredentialHook;
+import org.openapitools.client.model.RecoveryQuestionCredential;
+import org.openapitools.client.model.User;
+import org.openapitools.client.model.UserCredentials;
+import org.openapitools.client.model.UserNextLogin;
+import org.openapitools.client.model.UserProfile;
+import org.openapitools.client.model.UserType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class DefaultUserBuilder implements UserBuilder {
 
@@ -47,17 +48,39 @@ public class DefaultUserBuilder implements UserBuilder {
     private String secondEmail;
     private String firstName;
     private String lastName;
+    private String middleName;
+    private String honorificPrefix;
+    private String honorificSuffix;
+    private String title;
+    private String displayName;
+    private String nickName;
+    private String profileUrl;
+    private String primaryPhone;
+    private String streetAddress;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String countryCode;
+    private String postalAddress;
+    private String preferredLanguage;
+    private String locale;
+    private String timezone;
+    private String employeeNumber;
+    private String costCenter;
+    private String organization;
+    private String division;
+    private String department;
+    private String managerId;
+    private String manager;
     private String mobilePhone;
     private Boolean active;
     private AuthenticationProvider provider;
     private UserType userType;
     private String userTypeId;
     private UserNextLogin nextLogin;
-    private Set<String> groupIds = new HashSet<>();
+    private List<String> groupIds = new ArrayList<>();
     private Map<String, Object> passwordHashProperties;
     private String passwordHookImportType;
-
-    private Map<String, Object> customProfileAttributes = new LinkedHashMap<>();
 
     public UserBuilder setPassword(char[] password) {
         this.password = Arrays.copyOf(password, password.length);
@@ -98,6 +121,145 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
+    public UserBuilder setHonorificPrefix(String honorificPrefix) {
+        this.honorificPrefix = honorificPrefix;
+        return this;
+    }
+
+    public UserBuilder setHonorificSuffix(String honorificSuffix) {
+        this.honorificSuffix = honorificSuffix;
+        return this;
+    }
+
+    public UserBuilder setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public UserBuilder setDisplayName(String displayName) {
+        this.displayName = displayName;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setNickName(String nickName) {
+        this.nickName = nickName;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setPrimaryPhone(String primaryPhone) {
+        this.primaryPhone = primaryPhone;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setState(String state) {
+        this.state = state;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setPostalAddress(String postalAddress) {
+        this.postalAddress = postalAddress;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setPreferredLanguage(String preferredLanguage) {
+        this.preferredLanguage = preferredLanguage;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setLocale(String locale) {
+        this.locale = locale;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setTimezone(String timezone) {
+        this.timezone = timezone;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setCostCenter(String costCenter) {
+        this.costCenter = costCenter;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setOrganization(String organization) {
+        this.organization = organization;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setDivision(String division) {
+        this.division = division;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setDepartment(String department) {
+        this.department = department;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setManagerId(String managerId) {
+        this.managerId = managerId;
+        return this;
+    }
+
+    @Override
+    public UserBuilder setManager(String manager) {
+        this.manager = manager;
+        return this;
+    }
+
+    public UserBuilder setMiddleName(String middleName) {
+        this.middleName = middleName;
+        return this;
+    }
+
     public UserBuilder setLogin(String login) {
         this.login = login;
         return this;
@@ -135,24 +297,7 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
-    public UserBuilder setProfileProperties(Map<String, Object> profileProperties) {
-
-        this.customProfileAttributes.clear();
-        return putAllProfileProperties(profileProperties);
-    }
-
-    public UserBuilder putAllProfileProperties(Map<String, Object> profileProperties) {
-
-        this.customProfileAttributes.putAll(profileProperties);
-        return this;
-    }
-
-    public UserBuilder putProfileProperty(String key, Object value) {
-        this.customProfileAttributes.put(key, value);
-        return this;
-    }
-
-    public UserBuilder setGroups(Set<String> groupIds) {
+    public UserBuilder setGroups(List<String> groupIds) {
         this.groupIds = groupIds;
         return this;
     }
@@ -168,52 +313,71 @@ public class DefaultUserBuilder implements UserBuilder {
         return this;
     }
 
-    private CreateUserRequest build(Client client) {
+    private CreateUserRequest build() {
 
-        CreateUserRequest createUserRequest = client.instantiate(CreateUserRequest.class);
-        createUserRequest.setProfile(client.instantiate(UserProfile.class));
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        createUserRequest.setProfile(new UserProfile());
         UserProfile userProfile = createUserRequest.getProfile();
         if (Strings.hasText(firstName)) userProfile.setFirstName(firstName);
         if (Strings.hasText(lastName)) userProfile.setLastName(lastName);
+        if (Strings.hasText(middleName)) userProfile.setMiddleName(middleName);
+        if (Strings.hasText(honorificPrefix)) userProfile.setHonorificPrefix(honorificPrefix);
+        if (Strings.hasText(honorificSuffix)) userProfile.setHonorificSuffix(honorificSuffix);
+        if (Strings.hasText(title)) userProfile.setTitle(title);
+        if (Strings.hasText(displayName)) userProfile.setDisplayName(displayName);
+        if (Strings.hasText(nickName)) userProfile.setNickName(nickName);
+        if (Strings.hasText(profileUrl)) userProfile.setProfileUrl(profileUrl);
+        if (Strings.hasText(primaryPhone)) userProfile.setPrimaryPhone(primaryPhone);
+        if (Strings.hasText(streetAddress)) userProfile.setStreetAddress(streetAddress);
+        if (Strings.hasText(city)) userProfile.setCity(city);
+        if (Strings.hasText(state)) userProfile.setState(state);
+        if (Strings.hasText(zipCode)) userProfile.setZipCode(zipCode);
+        if (Strings.hasText(countryCode)) userProfile.setCountryCode(countryCode);
+        if (Strings.hasText(postalAddress)) userProfile.setPostalAddress(postalAddress);
+        if (Strings.hasText(preferredLanguage)) userProfile.setPreferredLanguage(preferredLanguage);
+        if (Strings.hasText(locale)) userProfile.setLocale(locale);
+        if (Strings.hasText(timezone)) userProfile.setTimezone(timezone);
+        if (Strings.hasText(employeeNumber)) userProfile.setEmployeeNumber(city);
+        if (Strings.hasText(costCenter)) userProfile.setCostCenter(costCenter);
+        if (Strings.hasText(organization)) userProfile.setOrganization(organization);
+        if (Strings.hasText(division)) userProfile.setDivision(division);
+        if (Strings.hasText(department)) userProfile.setDepartment(department);
+        if (Strings.hasText(managerId)) userProfile.setManagerId(managerId);
+        if (Strings.hasText(manager)) userProfile.setManager(manager);
+
         if (Strings.hasText(email)) userProfile.setEmail(email);
         if (Strings.hasText(secondEmail)) userProfile.setSecondEmail(secondEmail);
         if (Strings.hasText(mobilePhone)) userProfile.setMobilePhone(mobilePhone);
 
         if (Strings.hasText(login)) {
             userProfile.setLogin(login);
-        }
-        else {
+        } else {
             userProfile.setLogin(email);
         }
 
         if (Strings.hasText(userTypeId)) {
-            createUserRequest.setType(client.instantiate(UserType.class).setId(userTypeId));
-        }
-        else if (userType != null) {
+            UserType userType = new UserType();
+            userType.setId(userTypeId);
+            createUserRequest.setType(userType);
+        } else if (userType != null) {
             createUserRequest.setType(userType);
         }
 
         if (!Collections.isEmpty(groupIds)) {
-            if (createUserRequest instanceof AbstractResource) {
-                ((AbstractResource) createUserRequest).setProperty("groupIds", groupIds, true);
-            } else {
-                throw new IllegalArgumentException("'User' is not an instance of 'AbstractResource', so 'groupIds' cannot be set. This would only happen if the implementation of 'User' has been customized.");
-            }
+            createUserRequest.setGroupIds(groupIds);
         }
-
-        userProfile.putAll(customProfileAttributes);
 
         // security question
         if (Strings.hasText(securityQuestion)) {
-            RecoveryQuestionCredential question = client.instantiate(RecoveryQuestionCredential.class);
+            RecoveryQuestionCredential question = new RecoveryQuestionCredential();
             question.setQuestion(securityQuestion);
             question.setAnswer(securityQuestionAnswer);
-            createCredentialsIfNeeded(createUserRequest, client).setRecoveryQuestion(question);
+            createCredentialsIfNeeded(createUserRequest).setRecoveryQuestion(question);
         }
 
         // authentication provider
         if (provider != null) {
-            createCredentialsIfNeeded(createUserRequest, client).setProvider(provider);
+            createCredentialsIfNeeded(createUserRequest).setProvider(provider);
         }
 
         // user password
@@ -223,32 +387,39 @@ public class DefaultUserBuilder implements UserBuilder {
                 throw new IllegalArgumentException("Cannot specify both password and password hash, use one or the other.");
             }
 
-            PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
-            createCredentialsIfNeeded(createUserRequest, client).setPassword(passwordCredential.setValue(password));
+            PasswordCredential passwordCredential = new PasswordCredential();
+            passwordCredential.setValue(new String(password));
+            createCredentialsIfNeeded(createUserRequest).setPassword(passwordCredential);
         }
 
         // direct password import
         if (passwordHashProperties != null) {
-            PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
-            passwordCredential.put("hash", passwordHashProperties);
-            createCredentialsIfNeeded(createUserRequest, client).setPassword(passwordCredential);
+            PasswordCredential passwordCredential = new PasswordCredential();
+            PasswordCredentialHash passwordCredentialHash = new PasswordCredentialHash();
+            passwordCredentialHash.setAlgorithm(PasswordCredentialHashAlgorithm.valueOf(((String) passwordHashProperties.get("algorithm")).replaceAll("-", "_")));
+            passwordCredentialHash.setWorkFactor((Integer) passwordHashProperties.get("workFactor"));
+            passwordCredentialHash.setSalt((String) passwordHashProperties.get("salt"));
+            passwordCredentialHash.setValue((String) passwordHashProperties.get("value"));
+            passwordCredentialHash.setSaltOrder((String) passwordHashProperties.get("saltOrder"));
+            passwordCredential.setHash(passwordCredentialHash);
+            createCredentialsIfNeeded(createUserRequest).setPassword(passwordCredential);
         }
 
         // password hook import
         if (passwordHookImportType != null) {
-            PasswordCredential passwordCredential = client.instantiate(PasswordCredential.class);
-            PasswordCredentialHook passwordCredentialHook = client.instantiate(PasswordCredentialHook.class);
+            PasswordCredential passwordCredential = new PasswordCredential();
+            PasswordCredentialHook passwordCredentialHook = new PasswordCredentialHook();
             passwordCredentialHook.setType(passwordHookImportType);
             passwordCredential.setHook(passwordCredentialHook);
-            createCredentialsIfNeeded(createUserRequest, client).setPassword(passwordCredential);
+            createCredentialsIfNeeded(createUserRequest).setPassword(passwordCredential);
         }
 
         return createUserRequest;
     }
 
-    private UserCredentials createCredentialsIfNeeded(CreateUserRequest createUserRequest, Client client) {
+    private UserCredentials createCredentialsIfNeeded(CreateUserRequest createUserRequest) {
         if (createUserRequest.getCredentials() == null) {
-            UserCredentials credentials = client.instantiate(UserCredentials.class);
+            UserCredentials credentials = new UserCredentials();
             createUserRequest.setCredentials(credentials);
         }
         return createUserRequest.getCredentials();
@@ -285,7 +456,7 @@ public class DefaultUserBuilder implements UserBuilder {
     }
 
     @Override
-    public User buildAndCreate(Client client) {
-        return client.createUser(build(client), active, provider != null, nextLogin);
+    public User buildAndCreate(UserApi client) {
+        return client.createUser(build(), active, provider != null, nextLogin);
     }
 }

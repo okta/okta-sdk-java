@@ -16,8 +16,24 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.application.*;
+import com.okta.sdk.resource.application.OIDCApplicationBuilder;
+import org.openapitools.client.api.ApplicationApi;
+import org.openapitools.client.model.ApplicationAccessibility;
+import org.openapitools.client.model.ApplicationCredentialsOAuthClient;
+import org.openapitools.client.model.ApplicationSignOnMode;
+import org.openapitools.client.model.ApplicationVisibility;
+import org.openapitools.client.model.ApplicationVisibilityHide;
+import org.openapitools.client.model.JsonWebKey;
+import org.openapitools.client.model.OAuthApplicationCredentials;
+import org.openapitools.client.model.OAuthEndpointAuthenticationMethod;
+import org.openapitools.client.model.OAuthGrantType;
+import org.openapitools.client.model.OAuthResponseType;
+import org.openapitools.client.model.OpenIdConnectApplication;
+import org.openapitools.client.model.OpenIdConnectApplicationConsentMethod;
+import org.openapitools.client.model.OpenIdConnectApplicationSettings;
+import org.openapitools.client.model.OpenIdConnectApplicationSettingsClient;
+import org.openapitools.client.model.OpenIdConnectApplicationSettingsClientKeys;
+import org.openapitools.client.model.OpenIdConnectApplicationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +56,8 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     private Boolean autoKeyRotation;
     private OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
     private List<JsonWebKey> jsonWebKeyList = new ArrayList<>();
-
+    private Boolean isImplicitAssignment;
+    private String inlineHookId;
 
     @Override
     public OIDCApplicationBuilder setApplicationType(OpenIdConnectApplicationType applicationType) {
@@ -151,18 +168,29 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OpenIdConnectApplication buildAndCreate(Client client){ return (OpenIdConnectApplication) client.createApplication(build(client)); }
+    public OIDCApplicationBuilder setImplicitAssignment(Boolean isImplicitAssignment) {
+        this.isImplicitAssignment = isImplicitAssignment;
+        return this;
+    }
 
-    private Application build(Client client){
-        OpenIdConnectApplication application = client.instantiate(OpenIdConnectApplication.class);
+    @Override
+    public OIDCApplicationBuilder setInlineHookId(String inlineHookId) {
+        this.inlineHookId = inlineHookId;
+        return this;
+    }
+
+    @Override
+    public OpenIdConnectApplication buildAndCreate(ApplicationApi client){ return client.createApplication(OpenIdConnectApplication.class, build(), false, null); }
+
+    private OpenIdConnectApplication build(){
+        OpenIdConnectApplication application = new OpenIdConnectApplication();
 
         if (Strings.hasText(label)) application.setLabel(label);
 
-        if (Objects.nonNull(signOnMode)) application.setSignOnMode(signOnMode);
+        application.setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT);
 
         // Accessibility
-        application.setAccessibility(client.instantiate(ApplicationAccessibility.class));
-        ApplicationAccessibility applicationAccessibility = application.getAccessibility();
+        ApplicationAccessibility applicationAccessibility = new ApplicationAccessibility();
 
         if (Strings.hasText(loginRedirectUrl))
             applicationAccessibility.setLoginRedirectUrl(loginRedirectUrl);
@@ -173,88 +201,101 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         if (Objects.nonNull(selfService))
             applicationAccessibility.setSelfService(selfService);
 
+        application.setAccessibility(applicationAccessibility);
+
         // Visibility
-        application.setVisibility(client.instantiate(ApplicationVisibility.class));
-        ApplicationVisibility applicationVisibility = application.getVisibility();
-        ApplicationVisibilityHide applicationVisibilityHide = client.instantiate(ApplicationVisibilityHide.class);
+        ApplicationVisibility applicationVisibility = new ApplicationVisibility();
 
-        if(Objects.nonNull(iOS))
-            applicationVisibility.setHide(applicationVisibilityHide
-                .setIOS(iOS));
+        ApplicationVisibilityHide applicationVisibilityHide = new ApplicationVisibilityHide();
 
-        if(Objects.nonNull(web))
-            applicationVisibility.setHide(applicationVisibilityHide
-                .setWeb(web));
+        if (Objects.nonNull(iOS))
+            applicationVisibilityHide.setiOS(iOS);
+
+        if (Objects.nonNull(web))
+           applicationVisibilityHide.setWeb(web);
+
+        applicationVisibility.setHide(applicationVisibilityHide);
+
+        application.setVisibility(applicationVisibility);
 
         // Settings
-        application.setSettings(client.instantiate(OpenIdConnectApplicationSettings.class));
-        OpenIdConnectApplicationSettings openIdConnectApplicationSettings = application.getSettings();
-        OpenIdConnectApplicationSettingsClient openIdConnectApplicationSettingsClient= client.instantiate(OpenIdConnectApplicationSettingsClient.class);
+        OpenIdConnectApplicationSettings openIdConnectApplicationSettings = new OpenIdConnectApplicationSettings();
+
+        OpenIdConnectApplicationSettingsClient openIdConnectApplicationSettingsClient = new OpenIdConnectApplicationSettingsClient();
 
         if (Strings.hasText(clientUri))
-            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setClientUri(clientUri));
+            openIdConnectApplicationSettingsClient.setClientUri(clientUri);
 
         if (Strings.hasText(logoUri))
-            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setLogoUri(logoUri));
+            openIdConnectApplicationSettingsClient.setLogoUri(logoUri);
 
         if (Strings.hasText(policyUri))
-            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setPolicyUri(policyUri));
+            openIdConnectApplicationSettingsClient.setPolicyUri(policyUri);
 
         if (Strings.hasText(tosUri))
-            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setTosUri(tosUri));
+            openIdConnectApplicationSettingsClient.setTosUri(tosUri);
 
         if (Objects.nonNull(postLogoutRedirectUris) && !postLogoutRedirectUris.isEmpty())
-            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setPostLogoutRedirectUris(postLogoutRedirectUris));
+            openIdConnectApplicationSettingsClient.setPostLogoutRedirectUris(postLogoutRedirectUris);
 
         if (Objects.nonNull(redirectUris))
-            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setRedirectUris(redirectUris));
+            openIdConnectApplicationSettingsClient.setRedirectUris(redirectUris);
 
         if (Objects.nonNull(responseTypes) && responseTypes.size()>0)
-            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setResponseTypes(responseTypes));
+            openIdConnectApplicationSettingsClient.setResponseTypes(responseTypes);
         else
             throw new IllegalArgumentException("Response Type cannot be null, value should be of type OAuthResponseType");
 
-        if (Objects.nonNull(grantTypes) && grantTypes.size()>0)
-            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setGrantTypes(grantTypes));
+        if (Objects.nonNull(grantTypes) && grantTypes.size() > 0)
+            openIdConnectApplicationSettingsClient.setGrantTypes(grantTypes);
         else
             throw new IllegalArgumentException("Grant Type cannot be null, value should be of type OAuthGrantType");
 
         if (Objects.nonNull(consentMethod))
-            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setConsentMethod(consentMethod));
+            openIdConnectApplicationSettingsClient.setConsentMethod(consentMethod);
 
         if (Objects.nonNull(applicationType))
-            openIdConnectApplicationSettings.setOAuthClient(openIdConnectApplicationSettingsClient.setApplicationType(applicationType));
+            openIdConnectApplicationSettingsClient.setApplicationType(applicationType);
         else
             throw new IllegalArgumentException("Application Type cannot be null, value should be of type OpenIdConnectApplicationType");
 
-        if(jsonWebKeyList.size() > 0) {
-            openIdConnectApplicationSettings
-                .getOAuthClient()
-                .setJwks(
-                    client.instantiate(OpenIdConnectApplicationSettingsClientKeys.class)
-                        .setKeys(this.jsonWebKeyList)
-                );
-        }
+        if (Objects.nonNull(isImplicitAssignment))
+            openIdConnectApplicationSettings.setImplicitAssignment(isImplicitAssignment);
+
+        if (Objects.nonNull(inlineHookId))
+            openIdConnectApplicationSettings.setInlineHookId(inlineHookId);
 
         // Credentials
-        application.setCredentials(client.instantiate(OAuthApplicationCredentials.class));
-        OAuthApplicationCredentials oAuthApplicationCredentials = application.getCredentials();
-        ApplicationCredentialsOAuthClient applicationCredentialsOAuthClient = client.instantiate(ApplicationCredentialsOAuthClient.class);
+        OAuthApplicationCredentials oAuthApplicationCredentials = new OAuthApplicationCredentials();
+        ApplicationCredentialsOAuthClient applicationCredentialsOAuthClient = new ApplicationCredentialsOAuthClient();
 
         if (Strings.hasText(clientId))
-            oAuthApplicationCredentials.setOAuthClient(applicationCredentialsOAuthClient.setClientId(clientId));
+            applicationCredentialsOAuthClient.setClientId(clientId);
 
         if (Strings.hasText(clientSecret))
-            oAuthApplicationCredentials.setOAuthClient(applicationCredentialsOAuthClient.setClientSecret(clientSecret));
+            applicationCredentialsOAuthClient.setClientSecret(clientSecret);
 
         if (Objects.nonNull(autoKeyRotation))
-            oAuthApplicationCredentials.setOAuthClient(applicationCredentialsOAuthClient.setAutoKeyRotation(autoKeyRotation));
+            applicationCredentialsOAuthClient.setAutoKeyRotation(autoKeyRotation);
 
         if (Objects.nonNull(tokenEndpointAuthMethod))
-            oAuthApplicationCredentials.setOAuthClient(applicationCredentialsOAuthClient.setTokenEndpointAuthMethod(tokenEndpointAuthMethod));
+            applicationCredentialsOAuthClient.setTokenEndpointAuthMethod(tokenEndpointAuthMethod);
         else
             throw new IllegalArgumentException("Token Endpoint Auth Method cannot be null, value should be of type OAuthEndpointAuthenticationMethod");
 
+        oAuthApplicationCredentials.setOauthClient(applicationCredentialsOAuthClient);
+
+        application.setCredentials(oAuthApplicationCredentials);
+
+        openIdConnectApplicationSettings.setOauthClient(openIdConnectApplicationSettingsClient);
+
+        if (jsonWebKeyList.size() > 0) {
+            OpenIdConnectApplicationSettingsClientKeys openIdConnectApplicationSettingsClientKeys = new OpenIdConnectApplicationSettingsClientKeys();
+            openIdConnectApplicationSettingsClientKeys.setKeys(this.jsonWebKeyList);
+            openIdConnectApplicationSettings.getOauthClient().setJwks(openIdConnectApplicationSettingsClientKeys);
+        }
+
+        application.setSettings(openIdConnectApplicationSettings);
         return application;
     }
 }

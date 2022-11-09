@@ -16,20 +16,20 @@
  */
 package com.okta.sdk.impl.cache;
 
+import com.okta.commons.lang.Assert;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.impl.util.SoftHashMap;
-import com.okta.commons.lang.Assert;
-import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A {@code DefaultCache} is a {@link Cache Cache} implementation that uses a backing {@link Map} instance to store
  * and retrieve cached data.
- * <h1>Thread Safety</h1>
+ * <b>Thread Safety</b>
  * This implementation is thread-safe <em>only</em> if the backing map is thread-safe.
  *
  * @since 0.5.0
@@ -71,16 +71,16 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * This constructor uses a {@link SoftHashMap} instance as the cache's backing map, which is thread-safe and
      * auto-sizes itself based on the application's memory constraints.
      * <p>
-     * Finally, the {@link #setTimeToIdle(java.time.Duration) timeToIdle} and
-     * {@link #setTimeToLive(java.time.Duration) timeToLive} settings are both {@code null},
+     * Finally, the {@link #setTimeToIdle(Duration) timeToIdle} and
+     * {@link #setTimeToLive(Duration) timeToLive} settings are both {@code null},
      * indicating that cache entries will live indefinitely (except due to memory constraints as managed by the
      * {@code SoftHashMap}).
      *
      * @param name the name to assign to this instance, expected to be unique among all other caches in the parent
      *             {@code CacheManager}.
      * @see SoftHashMap
-     * @see #setTimeToIdle(java.time.Duration)
-     * @see #setTimeToLive(java.time.Duration)
+     * @see #setTimeToIdle(Duration)
+     * @see #setTimeToLive(Duration)
      */
     public DefaultCache(String name) {
         this(name, new SoftHashMap<K, Entry<V>>());
@@ -91,8 +91,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * {@code backingMap}.  It is expected that the {@code backingMap} implementation be thread-safe and preferrably
      * auto-sizing based on memory constraints (see {@link SoftHashMap} for such an implementation).
      * <p>
-     * The {@link #setTimeToIdle(java.time.Duration) timeToIdle} and
-     * {@link #setTimeToLive(java.time.Duration) timeToLive} settings are both {@code null},
+     * The {@link #setTimeToIdle(Duration) timeToIdle} and
+     * {@link #setTimeToLive(Duration) timeToLive} settings are both {@code null},
      * indicating that cache entries will live indefinitely (except due to memory constraints as managed by the
      * {@code backingMap} instance).
      *
@@ -100,8 +100,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      *                   {@code CacheManager}.
      * @param backingMap the (ideally thread-safe) map instance to store the Cache entries.
      * @see SoftHashMap
-     * @see #setTimeToIdle(java.time.Duration)
-     * @see #setTimeToLive(java.time.Duration)
+     * @see #setTimeToIdle(Duration)
+     * @see #setTimeToLive(Duration)
      */
     public DefaultCache(String name, Map<K, Entry<V>> backingMap) {
         this(name, backingMap, null, null);
@@ -122,8 +122,8 @@ public class DefaultCache<K, V> implements Cache<K, V> {
      * @throws IllegalArgumentException if either {@code timeToLive} or {@code timeToIdle} are non-null <em>and</em>
      *                                  represent a non-positive (zero or negative) value. This is only enforced for
      *                                  non-null values - {@code null} values are allowed for either argument.
-     * @see #setTimeToIdle(java.time.Duration)
-     * @see #setTimeToLive(java.time.Duration)
+     * @see #setTimeToIdle(Duration)
+     * @see #setTimeToLive(Duration)
      */
     public DefaultCache(String name, Map<K, Entry<V>> backingMap, Duration timeToLive, Duration timeToIdle) {
         Assert.notNull(name, "Cache name cannot be null.");

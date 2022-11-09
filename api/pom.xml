@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
-        <version>8.2.3-SNAPSHOT</version>
+        <version>10.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>okta-sdk-api</artifactId>
@@ -32,6 +32,17 @@
         depend on. Implementations of this API (implementation .jars) should be runtime dependencies only.
     </description>
     <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <swagger-annotations.version>1.6.8</swagger-annotations.version>
+        <spring-web.version>5.3.23</spring-web.version>
+        <spring-retry.version>1.3.3</spring-retry.version>
+        <jackson-databind-nullable.version>0.2.3</jackson-databind-nullable.version>
+        <jakarta-annotation.version>1.3.5</jakarta-annotation.version>
+        <jsr305.version>3.0.2</jsr305.version>
+        <junit.version>4.13.2</junit.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -50,10 +61,100 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+
+        <!-- Swagger annotations -->
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <optional>true</optional>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-annotations.version}</version>
+        </dependency>
+
+        <!-- @Nullable annotation -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>${jsr305.version}</version>
+        </dependency>
+
+        <!-- HTTP client: Spring RestTemplate -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring-web.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring-web.version}</version>
+        </dependency>
+
+        <!-- Spring Retry -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+            <version>${spring-retry.version}</version>
+        </dependency>
+
+        <!-- JSON processing: Jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${jackson-databind-nullable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>${jakarta-annotation.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator</artifactId>
+            <version>6.2.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-cli</groupId>
+                    <artifactId>commons-cli</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-text</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.jknack</groupId>
+                    <artifactId>handlebars</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -64,16 +165,25 @@
                 <artifactId>exec-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.zalando.maven.plugins</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>6.2.0</version>
                 <executions>
                     <execution>
-                        <id>swagger-codegen-api</id>
                         <goals>
-                            <goal>codegen</goal>
+                            <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <language>okta_java</language>
+                            <inputSpec>${project.basedir}/../src/swagger/api.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <configOptions>
+                                <sourceFolder>src/gen/java/main</sourceFolder>
+                            </configOptions>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiTests>false</generateApiTests>
+                            <templateDirectory>src/main/resources/custom_templates</templateDirectory>
+                            <library>resttemplate</library>
                         </configuration>
                     </execution>
                 </executions>
@@ -89,11 +199,36 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.build.directory}/generated-sources/swagger-codegen</source>
+                                <source>${project.build.directory}/generated-sources/openapi</source>
                             </sources>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- https://github.com/OpenAPITools/openapi-generator/issues/3272 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <!--                <version>3.1.1</version>-->
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>8</source>
+                    <!--                    <doclint>none</doclint>-->
+                    <tags>
+                        <tag>
+                            <name>http.response.details</name>
+                            <placement>a</placement>
+                            <head>Http Response Details:</head>
+                        </tag>
+                    </tags>
+                </configuration>
             </plugin>
         </plugins>
     </build>

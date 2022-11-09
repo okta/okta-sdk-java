@@ -16,8 +16,13 @@
 package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.application.*;
+import com.okta.sdk.resource.application.ApplicationBuilder;
+import org.openapitools.client.api.ApplicationApi;
+import org.openapitools.client.model.Application;
+import org.openapitools.client.model.ApplicationAccessibility;
+import org.openapitools.client.model.ApplicationSignOnMode;
+import org.openapitools.client.model.ApplicationVisibility;
+import org.openapitools.client.model.ApplicationVisibilityHide;
 
 import java.util.Objects;
 
@@ -31,7 +36,6 @@ public class DefaultApplicationBuilder<T extends ApplicationBuilder> implements 
     protected ApplicationSignOnMode signOnMode;
     protected Boolean iOS;
     protected Boolean web;
-
 
     @Override
     public T setName(String name) {
@@ -65,10 +69,6 @@ public class DefaultApplicationBuilder<T extends ApplicationBuilder> implements 
 
     @Override
     public T setSignOnMode(ApplicationSignOnMode signOnMode) {
-        if(signOnMode == ApplicationSignOnMode.SDK_UNKNOWN) {
-            throw new IllegalArgumentException(
-                "The " + signOnMode.getClass().getName() + ".SDK_UNKNOWN can not be used in setter");
-        }
         this.signOnMode = signOnMode;
         return self();
     }
@@ -89,22 +89,18 @@ public class DefaultApplicationBuilder<T extends ApplicationBuilder> implements 
     protected T self() { return (T) this;}
 
     @Override
-    public Application buildAndCreate(Client client) { return client.createApplication(build(client)); }
+    public Application buildAndCreate(ApplicationApi client) { return client.createApplication(build(), false, null); }
 
-    private Application build(Client client){
+    private Application build(){
 
-        Application application = client.instantiate(Application.class);
-
-        if (Strings.hasText(name))
-            ((AbstractResource)application).setProperty("name", name, true);
+        Application application = new Application();
 
         if (Strings.hasText(label)) application.setLabel(label);
 
         if (Objects.nonNull(signOnMode)) application.setSignOnMode(signOnMode);
 
         // Accessibility
-        application.setAccessibility(client.instantiate(ApplicationAccessibility.class));
-        ApplicationAccessibility applicationAccessibility = application.getAccessibility();
+        ApplicationAccessibility applicationAccessibility = new ApplicationAccessibility();
 
         if (Strings.hasText(loginRedirectUrl))
             applicationAccessibility.setLoginRedirectUrl(loginRedirectUrl);
@@ -115,18 +111,22 @@ public class DefaultApplicationBuilder<T extends ApplicationBuilder> implements 
         if (Objects.nonNull(selfService))
             applicationAccessibility.setSelfService(selfService);
 
+        application.setAccessibility(applicationAccessibility);
+
         // Visibility
-        application.setVisibility(client.instantiate(ApplicationVisibility.class));
-        ApplicationVisibility applicationVisibility = application.getVisibility();
-        ApplicationVisibilityHide applicationVisibilityHide = client.instantiate(ApplicationVisibilityHide.class);
+        ApplicationVisibility applicationVisibility = new ApplicationVisibility();
 
-        if(Objects.nonNull(iOS))
-            applicationVisibility.setHide(applicationVisibilityHide
-                .setIOS(iOS));
+        ApplicationVisibilityHide applicationVisibilityHide = new ApplicationVisibilityHide();
 
-        if(Objects.nonNull(web))
-            applicationVisibility.setHide(applicationVisibilityHide
-                .setWeb(web));
+        if (Objects.nonNull(iOS))
+            applicationVisibilityHide.setiOS(iOS);
+
+        if (Objects.nonNull(web))
+            applicationVisibilityHide.setWeb(web);
+
+        applicationVisibility.setHide(applicationVisibilityHide);
+
+        application.setVisibility(applicationVisibility);
 
         return application;
     }

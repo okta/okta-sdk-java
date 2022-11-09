@@ -16,9 +16,12 @@
 package com.okta.sdk.resource.application;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.client.Client;
+import org.openapitools.client.api.ApplicationApi;
+import org.openapitools.client.model.Application;
+import org.openapitools.client.model.ApplicationSignOnMode;
 
 public interface ApplicationBuilder<T extends ApplicationBuilder> {
+
     static ApplicationBuilder<ApplicationBuilder> instance() {
         return Classes.newInstance("com.okta.sdk.impl.resource.DefaultApplicationBuilder");
     }
@@ -39,5 +42,5 @@ public interface ApplicationBuilder<T extends ApplicationBuilder> {
 
     T setWeb(Boolean web);
 
-    Application buildAndCreate(Client client);
+    Application buildAndCreate(ApplicationApi client);
 }

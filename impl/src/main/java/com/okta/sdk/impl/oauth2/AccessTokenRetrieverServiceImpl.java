@@ -15,26 +15,32 @@
  */
 package com.okta.sdk.impl.oauth2;
 
-import com.okta.commons.http.MediaType;
 import com.okta.commons.http.authc.DisabledAuthenticator;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
+import com.okta.sdk.error.Error;
+import com.okta.sdk.error.ResourceException;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
-import com.okta.sdk.impl.error.DefaultError;
 import com.okta.sdk.impl.util.ConfigUtil;
-import com.okta.sdk.resource.ExtensibleResource;
-import com.okta.sdk.resource.ResourceException;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.openapitools.client.ApiClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -47,6 +53,7 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -64,19 +71,12 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     private static final String TOKEN_URI  = "/oauth2/v1/token";
 
     private final ClientConfiguration tokenClientConfiguration;
-    private final OAuth2TokenClient tokenClient;
+    private final ApiClient apiClient;
 
-    public AccessTokenRetrieverServiceImpl(ClientConfiguration apiClientConfiguration) {
+    public AccessTokenRetrieverServiceImpl(ClientConfiguration apiClientConfiguration, ApiClient apiClient) {
         Assert.notNull(apiClientConfiguration, "apiClientConfiguration must not be null.");
-        ClientConfiguration tokenClientConfig = constructTokenClientConfig(apiClientConfiguration);
-        this.tokenClient = new OAuth2TokenClient(tokenClientConfig);
-        this.tokenClientConfiguration = tokenClientConfig;
-    }
-
-    public AccessTokenRetrieverServiceImpl(ClientConfiguration apiClientConfiguration, OAuth2TokenClient tokenClient) {
-        Assert.notNull(apiClientConfiguration, "apiClientConfiguration must not be null.");
-        Assert.notNull(tokenClient, "tokenClient must not be null.");
-        this.tokenClient = tokenClient;
+        Assert.notNull(apiClient, "apiClient must not be null.");
+        this.apiClient = apiClient;
         this.tokenClientConfiguration = constructTokenClientConfig(apiClientConfiguration);
     }
 
@@ -92,32 +92,38 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         String scope = String.join(" ", tokenClientConfiguration.getScopes());
 
         try {
-            ExtensibleResource accessTokenResponse = tokenClient.http()
-                .addHeaderParameter("Accept", MediaType.APPLICATION_JSON_VALUE)
-                .addHeaderParameter("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .addQueryParameter("grant_type", "client_credentials")
-                .addQueryParameter("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
-                .addQueryParameter("client_assertion", signedJwt)
-                .addQueryParameter("scope", scope)
-                .post(TOKEN_URI, ExtensibleResource.class);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-            OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken();
-            oAuth2AccessToken.setTokenType(accessTokenResponse.getString(OAuth2AccessToken.TOKEN_TYPE_KEY));
-            oAuth2AccessToken.setExpiresIn(accessTokenResponse.getInteger(OAuth2AccessToken.EXPIRES_IN_KEY));
-            oAuth2AccessToken.setAccessToken(accessTokenResponse.getString(OAuth2AccessToken.ACCESS_TOKEN_KEY));
-            oAuth2AccessToken.setScope(accessTokenResponse.getString(OAuth2AccessToken.SCOPE_KEY));
+            MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+            queryParams.add("grant_type", "client_credentials");
+            queryParams.add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
+            queryParams.add("client_assertion", signedJwt);
+            queryParams.add("scope", scope);
+
+            ResponseEntity<OAuth2AccessToken> responseEntity = apiClient.invokeAPI(TOKEN_URI,
+                HttpMethod.POST,
+                Collections.emptyMap(),
+                queryParams,
+                null,
+                httpHeaders,
+                new LinkedMultiValueMap<>(),
+                null,
+                Collections.singletonList(MediaType.APPLICATION_JSON),
+                MediaType.APPLICATION_JSON,
+                new String[] { "OAuth_2.0" },
+                new ParameterizedTypeReference<OAuth2AccessToken>() {});
+
+            OAuth2AccessToken oAuth2AccessToken = responseEntity.getBody();
 
             log.debug("Got OAuth2 access token for client id {} from {}",
                 tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
 
             return oAuth2AccessToken;
         } catch (ResourceException e) {
-            //TODO: clean up the ugly casting and refactor code around it.
-            DefaultError defaultError = (DefaultError) e.getError();
-            String errorMessage = defaultError.getString(OAuth2AccessToken.ERROR_KEY);
-            String errorDescription = defaultError.getString(OAuth2AccessToken.ERROR_DESCRIPTION);
-            defaultError.setMessage(errorMessage + " - " + errorDescription);
-            throw new OAuth2HttpException(defaultError, e, e.getStatus() == 401);
+            Error defaultError = e.getError();
+            throw new OAuth2HttpException(defaultError.getMessage(), e, e.getStatus() == 401);
         } catch (Exception e) {
             throw new OAuth2TokenRetrieverException("Exception while trying to get " +
                 "OAuth2 access token for client id " + tokenClientConfiguration.getClientId(), e);
@@ -131,8 +137,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      * We use 50 minutes in order to have a 10 minutes leeway in case of clock skew.
      *
      * @return signed JWT string
-     * @throws InvalidKeyException
-     * @throws IOException
+     * @throws InvalidKeyException if the supplied key is invalid
+     * @throws IOException if the key could not be read
      */
     String createSignedJWT() throws InvalidKeyException, IOException {
         String clientId = tokenClientConfiguration.getClientId();
@@ -160,8 +166,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      *
      * @param pemReader a {@link Reader} that has access to a full PEM resource
      * @return {@link PrivateKey}
-     * @throws IOException
-     * @throws InvalidKeyException
+     * @throws IOException if the private key could not be read
+     * @throws InvalidKeyException if the supplied key is invalid
      */
     PrivateKey parsePrivateKey(Reader pemReader) throws IOException, InvalidKeyException {
 
@@ -188,9 +194,9 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
     /**
      * Get Private key from input PEM file.
      *
-     * @param reader
-     * @return {@link PrivateKey}
-     * @throws IOException
+     * @param reader the reader instance
+     * @return {@link PrivateKey} private key instance
+     * @throws IOException if the parser could not read the reader object
      */
     PrivateKey getPrivateKeyFromPEM(Reader reader) throws IOException {
         PrivateKey privateKey;
@@ -233,11 +239,12 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         ClientConfiguration tokenClientConfiguration = new ClientConfiguration();
 
         tokenClientConfiguration.setClientCredentialsResolver(
-            new DefaultClientCredentialsResolver(() -> Optional.empty()));
+            new DefaultClientCredentialsResolver(Optional::empty));
 
         tokenClientConfiguration.setRequestAuthenticator(new DisabledAuthenticator());
 
-        tokenClientConfiguration.setCacheManagerEnabled(false);
+        // TODO: set this to false explicitly when caching is implemented in OASv3 SDK
+        //tokenClientConfiguration.setCacheManagerEnabled(false);
 
         if (apiClientConfiguration.getBaseUrlResolver() != null)
             tokenClientConfiguration.setBaseUrlResolver(apiClientConfiguration.getBaseUrlResolver());

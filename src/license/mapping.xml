@@ -77,4 +77,20 @@
         <artifactId>auto-service</artifactId>
         <license>Apache License, Version 2.0</license>
     </artifact>
+    <artifact>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>javax.ws.rs</artifactId>
+        <license>Common Development and Distribution License, Version 1.0</license>
+    </artifact>
+    <artifact>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson-extras</artifactId>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.openapitools</groupId>
+        <artifactId>jackson-databind-nullable</artifactId>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+
 </license-lookup>

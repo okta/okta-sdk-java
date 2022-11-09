@@ -22,12 +22,6 @@ while (it.hasNext()) {
     def jApiClass = it.next()
     def fqn = jApiClass.getFullyQualifiedName()
 
-    // false positive due to moving methods to new parent BaseClient
-    // future changes would be reported under the parent class directly anyway
-    if (fqn.startsWith("com.okta.sdk.impl.client.DefaultClient")) {
-        jApiClass.getCompatibilityChanges().remove(METHOD_REMOVED_IN_SUPERCLASS)
-    }
-
     if (jApiClass.getChangeStatus() != UNCHANGED) {
         println("class ${fqn}: ${jApiClass.getChangeStatus()}")
 

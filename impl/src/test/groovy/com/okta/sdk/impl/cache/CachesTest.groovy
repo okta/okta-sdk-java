@@ -17,9 +17,9 @@
 package com.okta.sdk.impl.cache
 
 import com.okta.sdk.cache.CacheManager
-import java.time.Duration
 import org.testng.annotations.Test
 
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 import static com.okta.sdk.cache.Caches.*

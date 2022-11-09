@@ -15,18 +15,21 @@
  */
 package quickstart;
 
-import com.okta.sdk.client.Client;
-import com.okta.sdk.client.ClientBuilder;
+import org.openapitools.client.ApiClient;
 import com.okta.sdk.client.Clients;
+import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.resource.group.GroupBuilder;
-import com.okta.sdk.resource.ResourceException;
 import com.okta.sdk.resource.user.UserBuilder;
 
-import com.okta.sdk.resource.group.Group;
-import com.okta.sdk.resource.user.User;
-import com.okta.sdk.resource.user.UserList;
-import com.okta.sdk.resource.user.UserStatus;
+import org.openapitools.client.api.UserApi;
+import org.openapitools.client.api.GroupApi;
 
+import org.openapitools.client.model.Group;
+import org.openapitools.client.model.User;
+import org.openapitools.client.model.UserStatus;
+
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -39,14 +42,17 @@ public class Quickstart {
 
     public static void main(String[] args) {
 
-        final String email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com";
-        final String groupName = "java-sdk-quickstart-" + UUID.randomUUID().toString();
+        final String email = "joe.coder+" + UUID.randomUUID() + "@example.com";
+        final String groupName = "java-sdk-quickstart-" + UUID.randomUUID();
         final char[] password = {'P','a','s','s','w','o','r','d','1'};
 
         ClientBuilder builder;
-        Client client;
+        ApiClient client;
         Group group = null;
         User user = null;
+
+        UserApi userApi = null;
+        GroupApi groupApi = null;
 
         try {
             // Instantiate a builder for your Client. If needed, settings like Proxy and Caching can be defined here.
@@ -56,11 +62,14 @@ public class Quickstart {
             // in pre-defined locations: i.e. ~/.okta/okta.yaml
             client = builder.build();
 
+            userApi = new UserApi(client);
+            groupApi = new GroupApi(client);
+
             // Create a group
             group = GroupBuilder.instance()
                     .setName(groupName)
                     .setDescription("Quickstart created Group")
-                    .buildAndCreate(client);
+                    .buildAndCreate(groupApi);
 
             println("Group: '" + group.getId() + "' was last updated on: " + group.getLastUpdated());
 
@@ -72,43 +81,30 @@ public class Quickstart {
                 .setPassword(password)
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
-                .putProfileProperty("division", "Seven") // key/value pairs predefined in the user profile schema
+                //.putProfileProperty("division", "Seven") // key/value pairs predefined in the user profile schema //TODO: fix me
                 .setActive(true)
-                .buildAndCreate(client);
-
-            // add user to the newly created group
-            user.addToGroup(group.getId());
+                .addGroup(group.getId()) // add user to the newly created group
+                .buildAndCreate(userApi);
 
             String userId = user.getId();
             println("User created with ID: " + userId);
 
             // You can look up user by ID
-            println("User lookup by ID: "+ client.getUser(userId).getProfile().getLogin());
+            println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId).getProfile()).getLogin());
 
             // or by Email
-            println("User lookup by Email: "+ client.getUser(email).getProfile().getLogin());
-
+            println("User lookup by Email: "+ Objects.requireNonNull(userApi.getUser(email).getProfile()).getLogin());
 
             // get the list of users
-            UserList users = client.listUsers();
+            List<User> users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"", null, null, null);
 
             // get the first user in the collection
-            println("First user in collection: " + users.iterator().next().getProfile().getEmail());
-
-            // or loop through all of them (paging is automatic)
-//            int ii = 0;
-//            for (User tmpUser : users) {
-//                println("["+ ii++ +"] User: " + tmpUser.getProfile().getEmail());
-//            }
-
+            println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());
         }
-        catch (ResourceException e) {
+        catch (Exception e) {
 
-            // we can get the user friendly message from the Exception
+            // we can get the user-friendly message from the Exception
             println(e.getMessage());
-
-            // and you can get the details too
-            e.getCauses().forEach( cause -> println("\t" + cause.getSummary()));
             throw e;
         }
         finally {
@@ -116,15 +112,15 @@ public class Quickstart {
 
             // deactivate (if de-provisioned) and delete user
             if (user != null) {
-                if (user.getStatus() != UserStatus.DEPROVISIONED) {
-                    user.deactivate();
+                if (!Objects.equals(user.getStatus(), UserStatus.DEPROVISIONED)) {
+                    userApi.deactivateUser(user.getId(), false);
                 }
-                user.delete();
+                userApi.deleteUser(user.getId(), false);
             }
 
             // delete group
             if (group != null) {
-                group.delete();
+                groupApi.deleteGroup(group.getId());
             }
         }
     }

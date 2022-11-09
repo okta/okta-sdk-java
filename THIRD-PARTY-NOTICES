@@ -13,58 +13,87 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 This project includes:
-  Animal Sniffer Annotations under MIT license
+  A Jackson 2.x helper under The Apache Software License, Version 2.0
   Apache Commons Codec under Apache License, Version 2.0
   Apache Commons IO under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
-  Apache HttpClient Mime under Apache License, Version 2.0
   Apache HttpCore under Apache License, Version 2.0
   Auto Common Libraries under Apache 2.0
+  Automaton under BSD
   AutoService under Apache 2.0
   AutoService Processor under Apache 2.0
   Bean Validation API under The Apache Software License, Version 2.0
   Bouncy Castle ASN.1 Extension and Utility APIs under Bouncy Castle Licence
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
+  btf under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
+  Caffeine cache under Apache License, Version 2.0
+  Checker Qual under The MIT License
   commonmark-java core under BSD 2-Clause License
-  Commons CLI under The Apache Software License, Version 2.0
+  error-prone annotations under Apache 2.0
   FindBugs-jsr305 under The Apache Software License, Version 2.0
-  IntelliJ IDEA Annotations under The Apache Software License, Version 2.0
+  Generex under The Apache Software License, Version 2.0
+  Guava InternalFutureFailureAccess and InternalFutures under The Apache Software License, Version 2.0
+  Guava ListenableFuture only under The Apache Software License, Version 2.0
+  Guava: Google Core Libraries for Java under Apache License, Version 2.0
+  J2ObjC Annotations under The Apache Software License, Version 2.0
+  Jackson datatype: Guava under The Apache Software License, Version 2.0
+  Jackson datatype: Joda under The Apache Software License, Version 2.0
+  Jackson datatype: JSR310 under The Apache Software License, Version 2.0
+  Jackson module: Old JAXB Annotations (javax.xml.bind) under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
+  jackson-coreutils under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
+  jackson-coreutils-equivalence under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   jackson-databind under The Apache Software License, Version 2.0
   Jackson-dataformat-YAML under The Apache Software License, Version 2.0
-  JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
-  JavaMail API jar under CDDL or GPLv2+CE
+  Jackson-Datatype-ThreeTenBackport under The Apache Software License, Version 2.0
+  Jackson-JAXRS: base under The Apache Software License, Version 2.0
+  Jackson-JAXRS: JSON under The Apache Software License, Version 2.0
+  Jakarta Activation API jar under EDL 1.0
+  Jakarta Bean Validation API under Apache License 2.0
+  Jakarta XML Binding API under Eclipse Distribution License - v 1.0
+  Java Native Access under LGPL, version 2.1 or Apache License v2.0
+  JavaMail API (no providers) under CDDL/GPLv2+CE
   javax.annotation API under CDDL + GPLv2 with classpath exception
-  JCL 1.2 implemented over SLF4J under Apache License, Version 2.0
   JJWT :: API under Apache License, Version 2.0
   jmustache under The (New) BSD License
-  Joda-Time under Apache 2
+  Joda-Time under Apache License, Version 2.0
   JOpt Simple under The MIT License
+  json-patch under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-core under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   json-schema-validator under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
-  Kotlin Stdlib under The Apache License, Version 2.0
-  Kotlin Stdlib Common under The Apache License, Version 2.0
+  JsonNullable Jackson module under Apache License 2.0
   libphonenumber under The Apache Software License, Version 2.0
   Mozilla Rhino under Mozilla Public License, Version 2.0
-  null under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
-  okhttp under The Apache Software License, Version 2.0
-  Okio under The Apache Software License, Version 2.0
+  msg-simple under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
   Okta Commons :: Config Check under The Apache License, Version 2.0
   Okta Commons :: HTTP :: API under The Apache License, Version 2.0
-  Okta Commons :: HTTP :: HTTP Client under The Apache License, Version 2.0
-  Okta Commons :: HTTP :: OkHttp Client under The Apache License, Version 2.0
   Okta Commons :: Lang under The Apache License, Version 2.0
+  openapi-generator (core library) under Apache License 2.0
+  openapi-generator-core under Apache License 2.0
+  RgxGen under The Apache Software License, Version 2.0
   SLF4J API Module under MIT License
+  SLF4J Extensions Module under MIT License
   SnakeYAML under Apache License, Version 2.0
+  Spring AOP under Apache License, Version 2.0
+  Spring Beans under Apache License, Version 2.0
+  Spring Commons Logging Bridge under Apache License, Version 2.0
+  Spring Context under Apache License, Version 2.0
+  Spring Core under Apache License, Version 2.0
+  Spring Expression Language (SpEL) under Apache License, Version 2.0
+  Spring Retry under Apache 2.0
+  Spring Web under Apache License, Version 2.0
   swagger-annotations under Apache License 2.0
-  swagger-codegen (core library) under Apache License 2.0
   swagger-compat-spec-parser under Apache License 2.0
   swagger-core under Apache License 2.0
   swagger-models under Apache License 2.0
   swagger-parser under Apache License 2.0
+  swagger-parser-v2-converter under Apache License 2.0
+  swagger-parser-v3 under Apache License 2.0
+  ThreeTen backport under BSD 3-clause
+  uri-template under Lesser General Public License, version 3 or greater or Apache Software License, version 2.0
 
 
 This project also includes modified code based on the following copyrights:

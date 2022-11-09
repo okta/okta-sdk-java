@@ -16,12 +16,14 @@
 package com.okta.sdk.resource.user;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.client.Client;
-import com.okta.sdk.resource.user.type.UserType;
+import org.openapitools.client.api.UserApi;
+import org.openapitools.client.model.AuthenticationProvider;
+import org.openapitools.client.model.User;
+import org.openapitools.client.model.UserNextLogin;
+import org.openapitools.client.model.UserType;
 
 import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public interface UserBuilder {
@@ -46,6 +48,54 @@ public interface UserBuilder {
 
     UserBuilder setLastName(String lastName);
 
+    UserBuilder setMiddleName(String middleName);
+
+    UserBuilder setHonorificPrefix(String honorificPrefix);
+
+    UserBuilder setHonorificSuffix(String honorificSuffix);
+
+    UserBuilder setTitle(String title);
+
+    UserBuilder setDisplayName(String displayName);
+
+    UserBuilder setNickName(String nickName);
+
+    UserBuilder setProfileUrl(String profileUrl);
+
+    UserBuilder setPrimaryPhone(String primaryPhone);
+
+    UserBuilder setStreetAddress(String streetAddress);
+
+    UserBuilder setCity(String city);
+
+    UserBuilder setState(String state);
+
+    UserBuilder setZipCode(String zipCode);
+
+    UserBuilder setCountryCode(String countryCode);
+
+    UserBuilder setPostalAddress(String postalAddress);
+
+    UserBuilder setPreferredLanguage(String preferredLanguage);
+
+    UserBuilder setLocale(String locale);
+
+    UserBuilder setTimezone(String timezone);
+
+    UserBuilder setEmployeeNumber(String employeeNumber);
+
+    UserBuilder setCostCenter(String costCenter);
+
+    UserBuilder setOrganization(String organization);
+
+    UserBuilder setDivision(String division);
+
+    UserBuilder setDepartment(String department);
+
+    UserBuilder setManagerId(String managerId);
+
+    UserBuilder setManager(String manager);
+
     UserBuilder setLogin(String login);
 
     UserBuilder setMobilePhone(String mobilePhone);
@@ -60,17 +110,11 @@ public interface UserBuilder {
 
     UserBuilder setType(String userTypeId);
 
-    UserBuilder setProfileProperties(Map<String, Object> profileProperties);
-
-    UserBuilder putAllProfileProperties(Map<String, Object> profileProperties);
-
-    UserBuilder putProfileProperty(String key, Object value);
-
     default UserBuilder setGroups(String... groupIds) {
-        return setGroups(Arrays.stream(groupIds).collect(Collectors.toSet()));
+        return setGroups(Arrays.stream(groupIds).collect(Collectors.toList()));
     }
 
-    UserBuilder setGroups(Set<String> groupIds);
+    UserBuilder setGroups(List<String> groupIds);
 
     UserBuilder addGroup(String groupId);
 
@@ -84,5 +128,5 @@ public interface UserBuilder {
 
     UserBuilder setSha1PasswordHash(String value, String salt, String saltOrder);
 
-    User buildAndCreate(Client client);
+    User buildAndCreate(UserApi client);
 }
