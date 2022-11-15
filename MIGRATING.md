@@ -14,6 +14,16 @@ This revision will embrace the Open Source [openapi-generator](https://github.co
 In older version, you would instantiate a global `Client` and access the Okta resources using the Management APIs. 
 Now, each API area (such as Users, Groups, Applications etc.)  would have its own specific client, so you will only instantiate those clients you are interested in:
 
+Note that the below `okta-sdk-httpclient` dependency we used in previous versions is no longer needed:
+
+```xml
+<dependency>
+   <groupId>com.okta.sdk</groupId>
+   <artifactId>okta-sdk-httpclient</artifactId>
+   <scope>runtime</scope>
+</dependency>
+```
+
 _Earlier:_
 
 ```java

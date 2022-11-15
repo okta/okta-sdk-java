@@ -99,12 +99,6 @@ For Apache Maven:
     <version>${okta.sdk.version}</version>
     <scope>runtime</scope>
 </dependency>
-<dependency>
-    <groupId>com.okta.sdk</groupId>
-    <artifactId>okta-sdk-httpclient</artifactId>
-    <version>${okta.sdk.version}</version>
-    <scope>runtime</scope>
-</dependency>
 ```
 
 For Gradle:
@@ -112,7 +106,6 @@ For Gradle:
 ```groovy
 compile "com.okta.sdk:okta-sdk-api:${okta.sdk.version}"
 runtime "com.okta.sdk:okta-sdk-impl:${okta.sdk.version}"
-runtime "com.okta.sdk:okta-sdk-httpclient:${okta.sdk.version}"
 ```
 
 where ${okta.sdk.version} is the latest published version in [Maven Central](https://search.maven.org/search?q=g:com.okta.sdk%20a:okta-sdk-api).
