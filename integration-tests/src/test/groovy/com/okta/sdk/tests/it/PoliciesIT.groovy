@@ -15,9 +15,11 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.error.ResourceException
 import com.okta.sdk.resource.application.OIDCApplicationBuilder
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
+import com.okta.sdk.resource.policy.PasswordPolicyBuilder
 import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.it.util.ITSupport
 import org.openapitools.client.api.ApplicationApi
@@ -26,6 +28,7 @@ import org.openapitools.client.api.PolicyApi
 import org.openapitools.client.model.*
 import org.testng.annotations.Test
 
+import static com.okta.sdk.tests.it.util.Util.expect
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 /**
@@ -33,6 +36,63 @@ import static org.hamcrest.Matchers.*
  * @since 0.5.0
  */
 class PoliciesIT extends ITSupport {
+
+    @Test
+    void createOktaPasswordPolicy() {
+        def policyName = "policy+" + UUID.randomUUID().toString()
+        def policyDesc = "IT created password policy"
+
+        PolicyApi policyApi = new PolicyApi(getClient())
+
+        PasswordPolicyRecoveryFactorSettings recoveryFactorSettings = new PasswordPolicyRecoveryFactorSettings()
+        recoveryFactorSettings.setStatus(LifecycleStatus.ACTIVE)
+
+        Policy createdPasswordPolicy = PasswordPolicyBuilder.instance()
+            .setName(policyName)
+            .setDescription(policyDesc)
+            .setAuthProvider(PasswordPolicyAuthenticationProviderType.OKTA)
+            .setMinLowerCase(1) //Integer but only allow 1. 1 for True and 0 for off/false?
+            .setMinUpperCase(1)
+            .setMinNumbers(1)
+            .setExcludeUserNameInPassword(true) //username --which is the email address.
+            .setExcludePasswordDictionary(true) //??? Restrict use of common passwords in beta?
+            .setPasswordHistoryCount(6)
+            .setPasswordMaxAgeDays(365)
+            .setPasswordExpireWarnDays(15)
+            .setPasswordMaxAttempts(3)
+            .setPasswordAutoUnlockMinutes(15)
+            .setShowLockoutFailures(false)
+            .setPasswordPolicyRecoveryEmailStatus(recoveryFactorSettings)
+            .setPasswordRecoveryOktaSMS(recoveryFactorSettings)
+            .setPasswordRecoveryTokenLifeMinutes(60) //lowest is 60
+            .setPriority(1) //Make this the main policy. Defaults to 1.
+            .buildAndCreate(policyApi)
+        registerForCleanup(createdPasswordPolicy)
+
+        assertThat createdPasswordPolicy, notNullValue()
+        assertThat createdPasswordPolicy.getName(), is(policyName)
+
+        // create a policy rule
+        PolicyRule policyRule = new PasswordPolicyRule()
+        policyRule.setName("policyrule+" + UUID.randomUUID().toString())
+        policyRule.setType(PolicyRuleType.PASSWORD)
+
+        policyRule = policyApi.createPolicyRule(createdPasswordPolicy.getId(), policyRule)
+
+        List<PolicyRule> policyRules = policyApi.listPolicyRules(createdPasswordPolicy.getId())
+        assertThat policyRules, notNullValue()
+        assertThat policyRules, hasSize(1)
+        assertThat policyRules.get(0), notNullValue()
+        assertThat policyRules.get(0).getName(), equalTo(policyRule.getName())
+
+        // delete policy
+        policyApi.deletePolicy(createdPasswordPolicy.getId())
+
+        // expect 404
+        expect(ResourceException) {
+            policyApi.getPolicy(createdPasswordPolicy.getId(), null)
+        }
+    }
 
     @Test (groups = "group2")
     void signOnPolicyWithGroupConditions() {
