@@ -5,7 +5,13 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
-    - run: ./mvnw clean install -Pci
+    - run: mvn clean install -Dmaven.test.skip=true
+    - run:
+        command: |
+          ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=filesize | grep groovy | xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',' | sed 's/,*$//g')
+          echo $ClassName
+          cd ./integration-tests
+          mvn -Dtest=$ClassName test
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*IT.txt
@@ -20,6 +26,8 @@ jobs:
       - image: cimg/openjdk:8.0.345-node
     environment:
       JVM_OPTS: -Xmx3200m
+    resource_class: large
+    parallelism: 3
     steps: *build_steps
 
   jdk11:
@@ -27,6 +35,8 @@ jobs:
       - image: cimg/openjdk:11.0.16-node
     environment:
       JVM_OPTS: -Xmx3200m
+    resource_class: large
+    parallelism: 3
     steps: *build_steps
 
   jdk17:
@@ -34,6 +44,8 @@ jobs:
       - image: cimg/openjdk:17.0.4-node
     environment:
       JVM_OPTS: -Xmx3200m
+    resource_class: large
+    parallelism: 3
     steps: *build_steps
 
 workflows:
