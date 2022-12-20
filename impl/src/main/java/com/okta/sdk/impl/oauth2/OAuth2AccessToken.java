@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.impl.oauth2;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Duration;
 import java.time.Instant;
 
@@ -31,16 +33,16 @@ public class OAuth2AccessToken {
     public static final String ACCESS_TOKEN_KEY = "access_token";
     public static final String SCOPE_KEY = "scope";
 
-    /* Token error constants */
-    public static final String ERROR_KEY = "error";
-    public static final String ERROR_DESCRIPTION = "error_description";
-
+    @JsonProperty(TOKEN_TYPE_KEY)
     private String tokenType;
 
+    @JsonProperty(EXPIRES_IN_KEY)
     private Integer expiresIn;
 
+    @JsonProperty(ACCESS_TOKEN_KEY)
     private String accessToken;
 
+    @JsonProperty(SCOPE_KEY)
     private String scope;
 
     private Instant issuedAt = Instant.now();

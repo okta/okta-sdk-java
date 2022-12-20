@@ -349,6 +349,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig), this.cacheManager);
+        apiClient.setBasePath(this.clientConfig.getBaseUrl());
 
         if (!isOAuth2Flow()) {
             if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
@@ -357,7 +358,6 @@ public class DefaultClientBuilder implements ClientBuilder {
                 this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
             }
 
-            apiClient.setBasePath(this.clientConfig.getBaseUrl());
             apiClient.setApiKeyPrefix("SSWS");
             apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
         } else {
