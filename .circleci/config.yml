@@ -5,7 +5,8 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
-    - run: mvn clean install -DskipTests
+    - run: mvn clean install -Dmaven.test.skip.exec=true
+    - run: mvn test
     - run:
         command: |
           ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=filesize | grep groovy | xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',' | sed 's/,*$//g')
