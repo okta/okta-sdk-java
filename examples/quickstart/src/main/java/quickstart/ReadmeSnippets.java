@@ -89,7 +89,7 @@ public class ReadmeSnippets {
             .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
             .setClientId("{clientId}")
             .setKid("{kid}") // optional
-            .setScopes(new HashSet<>(Arrays.asList("okta.users.read", "okta.apps.read")))
+            .setScopes(new HashSet<>(Arrays.asList("okta.users.manage", "okta.apps.manage", "okta.groups.manage")))
             .setPrivateKey("/path/to/yourPrivateKey.pem")
             // (or) .setPrivateKey("full PEM payload")
             // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
