@@ -5,7 +5,6 @@ aliases:
   - &build_steps
     - checkout
     - run: java -version
-    - run: mvn clean install -Dmaven.test.skip.exec=true
     - run: mvn test
     - run:
         command: |
