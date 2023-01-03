@@ -357,15 +357,15 @@
 <a class="jxr_linenumber" name="L349" href="#L349">349</a>         }
 <a class="jxr_linenumber" name="L350" href="#L350">350</a> 
 <a class="jxr_linenumber" name="L351" href="#L351">351</a>         <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient = <strong class="jxr_keyword">new</strong> <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a>(restTemplate(<strong class="jxr_keyword">this</strong>.clientConfig), <strong class="jxr_keyword">this</strong>.cacheManager);
-<a class="jxr_linenumber" name="L352" href="#L352">352</a> 
-<a class="jxr_linenumber" name="L353" href="#L353">353</a>         <strong class="jxr_keyword">if</strong> (!isOAuth2Flow()) {
-<a class="jxr_linenumber" name="L354" href="#L354">354</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver() == <strong class="jxr_keyword">null</strong> &amp;&amp; <strong class="jxr_keyword">this</strong>.clientCredentials != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setClientCredentialsResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(<strong class="jxr_keyword">this</strong>.clientCredentials));
-<a class="jxr_linenumber" name="L356" href="#L356">356</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver() == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L357" href="#L357">357</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setClientCredentialsResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(<strong class="jxr_keyword">this</strong>.clientConfig));
-<a class="jxr_linenumber" name="L358" href="#L358">358</a>             }
-<a class="jxr_linenumber" name="L359" href="#L359">359</a> 
-<a class="jxr_linenumber" name="L360" href="#L360">360</a>             apiClient.setBasePath(<strong class="jxr_keyword">this</strong>.clientConfig.getBaseUrl());
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>         apiClient.setBasePath(<strong class="jxr_keyword">this</strong>.clientConfig.getBaseUrl());
+<a class="jxr_linenumber" name="L353" href="#L353">353</a> 
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>         <strong class="jxr_keyword">if</strong> (!isOAuth2Flow()) {
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver() == <strong class="jxr_keyword">null</strong> &amp;&amp; <strong class="jxr_keyword">this</strong>.clientCredentials != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setClientCredentialsResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(<strong class="jxr_keyword">this</strong>.clientCredentials));
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver() == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setClientCredentialsResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(<strong class="jxr_keyword">this</strong>.clientConfig));
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>             }
+<a class="jxr_linenumber" name="L360" href="#L360">360</a> 
 <a class="jxr_linenumber" name="L361" href="#L361">361</a>             apiClient.setApiKeyPrefix(<span class="jxr_string">"SSWS"</span>);
 <a class="jxr_linenumber" name="L362" href="#L362">362</a>             apiClient.setApiKey((String) <strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
 <a class="jxr_linenumber" name="L363" href="#L363">363</a>         } <strong class="jxr_keyword">else</strong> {
@@ -607,6 +607,6 @@
 <a class="jxr_linenumber" name="L599" href="#L599">599</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017&#x2013;2022 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
 </body>
 </html>
