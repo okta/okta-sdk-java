@@ -60,9 +60,7 @@ import java.util.UUID;
 
 /**
  * Implementation of {@link AccessTokenRetrieverService} interface.
- *
  * This has logic to fetch OAuth2 access token from the Authorization server endpoint.
- *
  * @since 1.6.0
  */
 public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverService {
@@ -92,10 +90,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         String scope = String.join(" ", tokenClientConfiguration.getScopes());
 
         try {
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
             MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
             queryParams.add("grant_type", "client_credentials");
             queryParams.add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
@@ -107,18 +101,20 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
                 Collections.emptyMap(),
                 queryParams,
                 null,
-                httpHeaders,
+                new HttpHeaders(),
                 new LinkedMultiValueMap<>(),
                 null,
                 Collections.singletonList(MediaType.APPLICATION_JSON),
-                MediaType.APPLICATION_JSON,
-                new String[] { "OAuth_2.0" },
+                MediaType.APPLICATION_FORM_URLENCODED,
+                new String[] { "oauth2" },
                 new ParameterizedTypeReference<OAuth2AccessToken>() {});
 
             OAuth2AccessToken oAuth2AccessToken = responseEntity.getBody();
 
             log.debug("Got OAuth2 access token for client id {} from {}",
                 tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);
+
+            apiClient.setAccessToken(oAuth2AccessToken.getAccessToken());
 
             return oAuth2AccessToken;
         } catch (ResourceException e) {
@@ -252,7 +248,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         if (apiClientConfiguration.getProxy() != null)
             tokenClientConfiguration.setProxy(apiClientConfiguration.getProxy());
 
-        tokenClientConfiguration.setAuthenticationScheme(AuthenticationScheme.NONE);
+        tokenClientConfiguration.setBaseUrl(apiClientConfiguration.getBaseUrl());
+        tokenClientConfiguration.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
         tokenClientConfiguration.setAuthorizationMode(AuthorizationMode.get(tokenClientConfiguration.getAuthenticationScheme()));
         tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
         tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());

@@ -17,6 +17,7 @@ package quickstart;
 
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.cache.Caches;
+import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
@@ -56,6 +57,7 @@ import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -78,6 +80,21 @@ public class ReadmeSnippets {
         ApiClient client = Clients.builder()
             .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
             .setClientCredentials(new TokenClientCredentials("{apiToken}"))
+            .build();
+    }
+
+    private void createOAuth2Client() {
+        ApiClient client = Clients.builder()
+            .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
+            .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+            .setClientId("{clientId}")
+            .setKid("{kid}") // optional
+            .setScopes(new HashSet<>(Arrays.asList("okta.users.manage", "okta.apps.manage", "okta.groups.manage")))
+            .setPrivateKey("/path/to/yourPrivateKey.pem")
+            // (or) .setPrivateKey("full PEM payload")
+            // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
+            // (or) .setPrivateKey(inputStream)
+            // (or) .setPrivateKey(privateKey)
             .build();
     }
 

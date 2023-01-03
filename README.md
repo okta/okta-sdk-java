@@ -137,6 +137,33 @@ ApiClient client = Clients.builder()
 [//]: # (end: createClient)
  
 Hard-coding the Okta domain and API token works for quick tests, but for real projects you should use a more secure way of storing these values (such as environment variables). This library supports a few different configuration sources, covered in the [configuration reference](#configuration-reference) section.
+
+## OAuth 2.0
+
+Okta allows you to interact with Okta APIs using scoped OAuth 2.0 access tokens. Each access token enables the bearer to perform specific actions on specific Okta endpoints, with that ability controlled by which scopes the access token contains.
+
+This SDK supports this feature only for service-to-service applications. Check out [our guides](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/overview/) to learn more about how to register a new service application using a private and public key pair.
+
+Check out [our guide](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/main/#generate-the-jwk-using-the-admin-console) to learn how to generate a JWK and convert the same to PEM format which would be used as PrivateKey in `Client` creation.
+
+When using this approach, you will not need an API Token because the SDK will request an access token for you. In order to use OAuth 2.0, construct a client instance by passing the following parameters:
+
+[//]: # (method: createOAuth2Client)
+```java
+ApiClient client = Clients.builder()
+    .setOrgUrl("https://{yourOktaDomain}")  // e.g. https://dev-123456.okta.com
+    .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+    .setClientId("{clientId}")
+    .setKid("{kid}") // optional
+    .setScopes(new HashSet<>(Arrays.asList("okta.users.manage", "okta.apps.manage", "okta.groups.manage")))
+    .setPrivateKey("/path/to/yourPrivateKey.pem")
+    // (or) .setPrivateKey("full PEM payload")
+    // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
+    // (or) .setPrivateKey(inputStream)
+    // (or) .setPrivateKey(privateKey)
+    .build();
+```
+[//]: # (end: createOAuth2Client)
  
 ## Usage guide
 

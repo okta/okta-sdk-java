@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.impl.oauth2;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Duration;
 import java.time.Instant;
 
@@ -28,19 +30,25 @@ public class OAuth2AccessToken {
     /* Token body constants */
     public static final String TOKEN_TYPE_KEY = "token_type";
     public static final String EXPIRES_IN_KEY = "expires_in";
+
+    public static final String ID_TOKEN_KEY = "id_token";
+
     public static final String ACCESS_TOKEN_KEY = "access_token";
     public static final String SCOPE_KEY = "scope";
 
-    /* Token error constants */
-    public static final String ERROR_KEY = "error";
-    public static final String ERROR_DESCRIPTION = "error_description";
-
+    @JsonProperty(TOKEN_TYPE_KEY)
     private String tokenType;
 
+    @JsonProperty(EXPIRES_IN_KEY)
     private Integer expiresIn;
 
+    @JsonProperty(ACCESS_TOKEN_KEY)
     private String accessToken;
 
+    @JsonProperty(ID_TOKEN_KEY)
+    private String idToken;
+
+    @JsonProperty(SCOPE_KEY)
     private String scope;
 
     private Instant issuedAt = Instant.now();
@@ -59,6 +67,12 @@ public class OAuth2AccessToken {
 
     public void setExpiresIn(Integer expiresIn) {
         this.expiresIn = expiresIn;
+    }
+
+    public String getIdToken() { return idToken; }
+
+    public void setIdToken(String idToken) {
+        this.idToken = idToken;
     }
 
     public String getAccessToken() {
@@ -96,6 +110,7 @@ public class OAuth2AccessToken {
         return "OAuth2AccessToken [tokenType=" + tokenType +
             ", issuedAt=" + issuedAt +
             ", expiresIn=" + expiresIn +
+            ", idToken=xxxxx" +
             ", accessToken=xxxxx" +
             ", scope=" + scope + "]";
     }
