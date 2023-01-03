@@ -33,8 +33,12 @@ import org.bouncycastle.openssl.PEMException
 import org.hamcrest.MatcherAssert
 import org.mockito.ArgumentMatchers
 import org.openapitools.client.ApiClient
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.testng.annotations.Test
 
@@ -158,6 +162,44 @@ class AccessTokenRetrieverServiceImplTest {
         assertThat(parsedPrivateKey, notNullValue())
         MatcherAssert.assertThat(parsedPrivateKey.getAlgorithm(), is("RSA"))
         MatcherAssert.assertThat(parsedPrivateKey.getFormat(), is("PKCS#8"))
+    }
+
+    @Test
+    void testAccessTokenRetrieval() {
+
+        def apiClient = mock(ApiClient)
+        def clientConfiguration = mock(ClientConfiguration)
+
+        when(clientConfiguration.getPrivateKey()).thenReturn(PRIVATE_KEY)
+
+        def accessTokenRetrievalService = new AccessTokenRetrieverServiceImpl(clientConfiguration, apiClient)
+
+        OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken()
+        oAuth2AccessToken.setAccessToken("accessToken")
+        oAuth2AccessToken.setIdToken("idToken")
+        oAuth2AccessToken.setTokenType("Bearer")
+        oAuth2AccessToken.setExpiresIn(3600)
+        oAuth2AccessToken.setScope("openid")
+
+        when(apiClient.invokeAPI(contains("oauth2/v1/token"),
+            eq(HttpMethod.POST),
+            anyMap(),
+            any(MultiValueMap.class),
+            isNull(),
+            any(HttpHeaders.class),
+            any(LinkedMultiValueMap.class),
+            isNull(),
+            eq(Collections.singletonList(MediaType.APPLICATION_JSON)),
+            eq(MediaType.APPLICATION_FORM_URLENCODED),
+            any(),
+            any())).thenReturn(ResponseEntity.ok(oAuth2AccessToken))
+
+        OAuth2AccessToken mockResponseAccessToken = accessTokenRetrievalService.getOAuth2AccessToken()
+        assertEquals(mockResponseAccessToken.getAccessToken(), "accessToken")
+        assertEquals(mockResponseAccessToken.getIdToken(), "idToken")
+        assertEquals(mockResponseAccessToken.getTokenType(), "Bearer")
+        assertEquals(mockResponseAccessToken.getExpiresIn(), 3600)
+        assertEquals(mockResponseAccessToken.getScope(), "openid")
     }
 
     @Test

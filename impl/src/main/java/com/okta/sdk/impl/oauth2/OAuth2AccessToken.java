@@ -30,6 +30,9 @@ public class OAuth2AccessToken {
     /* Token body constants */
     public static final String TOKEN_TYPE_KEY = "token_type";
     public static final String EXPIRES_IN_KEY = "expires_in";
+
+    public static final String ID_TOKEN_KEY = "id_token";
+
     public static final String ACCESS_TOKEN_KEY = "access_token";
     public static final String SCOPE_KEY = "scope";
 
@@ -41,6 +44,9 @@ public class OAuth2AccessToken {
 
     @JsonProperty(ACCESS_TOKEN_KEY)
     private String accessToken;
+
+    @JsonProperty(ID_TOKEN_KEY)
+    private String idToken;
 
     @JsonProperty(SCOPE_KEY)
     private String scope;
@@ -61,6 +67,12 @@ public class OAuth2AccessToken {
 
     public void setExpiresIn(Integer expiresIn) {
         this.expiresIn = expiresIn;
+    }
+
+    public String getIdToken() { return idToken; }
+
+    public void setIdToken(String idToken) {
+        this.idToken = idToken;
     }
 
     public String getAccessToken() {
@@ -98,6 +110,7 @@ public class OAuth2AccessToken {
         return "OAuth2AccessToken [tokenType=" + tokenType +
             ", issuedAt=" + issuedAt +
             ", expiresIn=" + expiresIn +
+            ", idToken=xxxxx" +
             ", accessToken=xxxxx" +
             ", scope=" + scope + "]";
     }
