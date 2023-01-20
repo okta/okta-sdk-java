@@ -26,16 +26,15 @@ import org.springframework.web.client.ResponseErrorHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ErrorHandler implements ResponseErrorHandler {
 
+    static final String ERROR_CODE_PROPERTY = "errorCode";
     static final String ERROR_ID_PROPERTY = "errorId";
     static final String SUMMARY_PROPERTY = "errorSummary";
     static final String CAUSES_PROPERTY = "errorCauses";
-    static final String HEADERS_PROPERTY = "errorHeaders";
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -56,6 +55,7 @@ public class ErrorHandler implements ResponseErrorHandler {
         }
 
         final Map<String, Object> errorMap = mapper.readValue(message, Map.class);
+        final Map<String, List<String>> responseHeaders = httpResponse.getHeaders();
 
         Error error = new Error() {
             @Override
@@ -65,7 +65,7 @@ public class ErrorHandler implements ResponseErrorHandler {
 
             @Override
             public String getCode() {
-                return String.valueOf(statusCode);
+                return String.valueOf(errorMap.get(ERROR_CODE_PROPERTY));
             }
 
             @Override
@@ -91,12 +91,7 @@ public class ErrorHandler implements ResponseErrorHandler {
 
             @Override
             public Map<String, List<String>> getHeaders() {
-                Map<String, List<String>> results = new HashMap<>();
-                Object rawProp = errorMap.get(HEADERS_PROPERTY);
-                if (rawProp instanceof List) {
-                    results.put(HEADERS_PROPERTY, (ArrayList) rawProp);
-                }
-                return Collections.unmodifiableMap(results);
+                return Collections.unmodifiableMap(responseHeaders);
             }
         };
 
