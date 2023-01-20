@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.http.HttpHeaders;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class ErrorHandler implements ResponseErrorHandler {
             throw new ResourceException(new NonJsonError(message));
         }
 
-        final Map<String, Object> errorMap = mapper.readValue(message, Map.class);
+	final Map<String, List<String>> errorMap = (Map<String, List<String>>)httpResponse.getHeaders();
 
         Error error = new Error() {
             @Override
@@ -91,12 +92,7 @@ public class ErrorHandler implements ResponseErrorHandler {
 
             @Override
             public Map<String, List<String>> getHeaders() {
-                Map<String, List<String>> results = new HashMap<>();
-                Object rawProp = errorMap.get(HEADERS_PROPERTY);
-                if (rawProp instanceof List) {
-                    results.put(HEADERS_PROPERTY, (ArrayList) rawProp);
-                }
-                return Collections.unmodifiableMap(results);
+		return Collections.unmodifiableMap(errorMap);
             }
         };
 
