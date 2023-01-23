@@ -37,6 +37,18 @@ public class PagedList<T> {
         return nextPage;
     }
 
+    public String getAfter(String nextPage) {
+        String after = null;
+        if (nextPage != null) {
+            String query = nextPage.split("\\?")[1];
+            for (String pair : query.split("&")) {
+                String[] nv = pair.split("=", 2);
+                if (nv[0].equals("after")) after = nv[1];
+            }
+        }
+        return after;
+    }
+
     public void setSelf(String self) {
         this.self = self;
     }

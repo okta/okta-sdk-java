@@ -871,9 +871,8 @@ class UsersIT extends ITSupport {
         assertThat usersPagedListOne.self, notNullValue()
         assertThat usersPagedListOne.nextPage, notNullValue()
 
-        // e.g. https://example.okta.com/api/v1/users?after=000u3pfv9v4SQXvpBB0g7&limit=2
-        String nextPageUrl = usersPagedListOne.nextPage
-        String after = splitQuery(new URL(nextPageUrl)).get("after")
+        // e.g. nextPage is of the form (for e.g.) https://example.okta.com/api/v1/users?after=000u3pfv9v4SQXvpBB0g7&limit=2
+        String after = usersPagedListOne.getAfter(usersPagedListOne.nextPage)
 
         assertThat after, notNullValue()
 
@@ -920,20 +919,4 @@ class UsersIT extends ITSupport {
         return Base64.getEncoder().encodeToString(bytes)
     }
 
-    /**
-     * Split a URL with query strings into name value pairs.
-     * @param url
-     * @return map of query string name value pairs
-     * @throws UnsupportedEncodingException
-     */
-    private static Map<String, String> splitQuery(URL url) throws UnsupportedEncodingException {
-        Map<String, String> query_pairs = new LinkedHashMap<String, String>()
-        String query = url.getQuery()
-        String[] pairs = query.split("&")
-        for (String pair : pairs) {
-            int index = pair.indexOf("=")
-            query_pairs.put(URLDecoder.decode(pair.substring(0, index), "UTF-8"), URLDecoder.decode(pair.substring(index + 1), "UTF-8"))
-        }
-        return query_pairs
-    }
 }

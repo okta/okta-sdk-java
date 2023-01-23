@@ -371,28 +371,20 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
         {{#returnType}}ParameterizedTypeReference<{{{returnType}}}> localReturnType = new ParameterizedTypeReference<{{{returnType}}}>() {};{{/returnType}}{{^returnType}}ParameterizedTypeReference<Void> localReturnType = new ParameterizedTypeReference<Void>() {};{{/returnType}}
             ResponseEntity<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}> responseEntity = apiClient.invokeAPI("{{{path}}}", HttpMethod.{{httpMethod}}, {{#hasPathParams}}uriVariables{{/hasPathParams}}{{^hasPathParams}}Collections.<String, Object>emptyMap(){{/hasPathParams}}, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
             {{#returnType}}
-                    HttpHeaders headers = responseEntity.getHeaders();
                     PagedList pagedList = new PagedList();
-                    List<String> linkHeaders = headers.get("link");
-                    String self = null, nextPage = null;
-                    for (String link : linkHeaders) {
-                    if (link.contains("next")) {
-                    nextPage = link.split(";")[0]
-                    .replaceAll("<", "")
-                    .replaceAll(">", "");
-                    }
-                    if (link.contains("self")) {
-                    self = link.split(";")[0]
-                    .replaceAll("<", "")
-                    .replaceAll(">", "");
-                    }
-                    }
                     pagedList.addItems(Arrays.asList(responseEntity.getBody()));
-                    if (Objects.nonNull(nextPage)) {
-                    pagedList.setNextPage(nextPage);
+                    List<String> linkHeaders = responseEntity.getHeaders().get("link");
+                    for (String link : linkHeaders) {
+                    String[] parts = link.split("; *");
+                    String url = parts[0]
+                    .replaceAll("<", "")
+                    .replaceAll(">", "");
+                    String rel = parts[1];
+                    if (rel.equals("rel=\"next\"")) {
+                    pagedList.setNextPage(url);
+                    } else if (rel.equals("rel=\"self\"")) {
+                    pagedList.setSelf(url);
                     }
-                    if (Objects.nonNull(self)) {
-                    pagedList.setSelf(self);
                     }
                     return pagedList;
             {{/returnType}}
