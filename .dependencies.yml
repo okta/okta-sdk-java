@@ -1,0 +1,9 @@
+vault:
+  - OKTA_CLIENT_ORGURL:
+      devex/okta-sdk-java: OKTA_CLIENT_ORGURL
+  - OKTA_CLIENT_TOKEN:
+      devex/okta-sdk-java: OKTA_CLIENT_TOKEN
+  - OKTA_CLIENT_CONNECTIONTIMEOUT:
+      devex/okta-sdk-java: OKTA_CLIENT_CONNECTIONTIMEOUT
+  - OKTA_IT_OPERATION_DELAY:
+      devex/okta-sdk-java: OKTA_IT_OPERATION_DELAY
