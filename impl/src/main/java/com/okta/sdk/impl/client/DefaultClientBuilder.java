@@ -70,6 +70,7 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -431,7 +432,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         return restTemplate;
     }
 
-    private HttpComponentsClientHttpRequestFactory requestFactory(ClientConfiguration clientConfig) {
+    private BufferingClientHttpRequestFactory requestFactory(ClientConfiguration clientConfig) {
 
         final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 
@@ -455,7 +456,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         clientHttpRequestFactory.setConnectTimeout(clientConfig.getConnectionTimeout() * 1000);
         clientHttpRequestFactory.setReadTimeout(clientConfig.getConnectionTimeout() * 1000);
 
-        return clientHttpRequestFactory;
+        return new BufferingClientHttpRequestFactory(clientHttpRequestFactory);
     }
 
     @Override

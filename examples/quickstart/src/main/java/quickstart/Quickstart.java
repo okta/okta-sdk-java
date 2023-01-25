@@ -15,6 +15,7 @@
  */
 package quickstart;
 
+import com.okta.sdk.resource.common.PagedList;
 import org.openapitools.client.ApiClient;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.client.ClientBuilder;
@@ -61,6 +62,7 @@ public class Quickstart {
             // No need to define anything else; build the Client instance. The ClientCredential information will be automatically found
             // in pre-defined locations: i.e. ~/.okta/okta.yaml
             client = builder.build();
+            client.setDebugging(true);
 
             userApi = new UserApi(client);
             groupApi = new GroupApi(client);
@@ -97,6 +99,9 @@ public class Quickstart {
 
             // get the list of users
             List<User> users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"", null, null, null);
+
+            // get the paginated list of users
+            PagedList<User> pagedUserList = userApi.listUsersWithPaginationInfo(null, null, 5, "status eq \"ACTIVE\"", null, null, null);
 
             // get the first user in the collection
             println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());

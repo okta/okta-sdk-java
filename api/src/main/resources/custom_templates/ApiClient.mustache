@@ -40,10 +40,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.RequestEntity.BodyBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.client.config.RequestConfig;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.util.StreamUtils;
+import java.nio.charset.Charset;
 {{#withXml}}
     import org.springframework.http.converter.HttpMessageConverter;
     import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
@@ -896,7 +903,7 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                                     RestTemplate restTemplate = new RestTemplate(messageConverters);
                                                 {{/withXml}}{{^withXml}}RestTemplate restTemplate = new RestTemplate();{{/withXml}}
                                                 // This allows us to read the response more than once - Necessary for debugging.
-                                                restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
+                                                restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(getClientHttpRequestFactory()));
 
                                                 // disable default URL encoding
                                                 DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory();
@@ -905,29 +912,45 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                                 return restTemplate;
                                                 }
 
+                                                private ClientHttpRequestFactory getClientHttpRequestFactory() {
+                                                    int timeout = 5000; //TODO: set from config
+
+                                                    RequestConfig config = RequestConfig.custom()
+                                                      .setConnectTimeout(timeout)
+                                                      .setConnectionRequestTimeout(timeout)
+                                                      .setSocketTimeout(timeout)
+                                                      .build();
+
+                                                    CloseableHttpClient client = HttpClientBuilder
+                                                      .create()
+                                                      .setDefaultRequestConfig(config)
+                                                      .build();
+
+                                                    return new HttpComponentsClientHttpRequestFactory(client);
+                                                 }
+
                                                 protected RetryTemplate buildRetryTemplate() {
-                                                Map<Class<? extends Throwable>, Boolean> retryableExceptions = new HashMap<>();
-                                                retryableExceptions.put(RetryableException.class, Boolean.TRUE);
+                                                   Map<Class<? extends Throwable>, Boolean> retryableExceptions = new HashMap<>();
+                                                   retryableExceptions.put(RetryableException.class, Boolean.TRUE);
 
-                                                SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5, retryableExceptions); //TODO - get this from client config
-                                                FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
+                                                   SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5, retryableExceptions); //TODO - get this from client config
+                                                   FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
 
-                                                RetryTemplate retryTemplate = new RetryTemplate();
-                                                retryTemplate.setRetryPolicy(retryPolicy);
-                                                retryTemplate.setBackOffPolicy(backOffPolicy);
-                                                retryTemplate.setThrowLastExceptionOnExhausted(true);
-                                                return retryTemplate;
+                                                   RetryTemplate retryTemplate = new RetryTemplate();
+                                                   retryTemplate.setRetryPolicy(retryPolicy);
+                                                   retryTemplate.setBackOffPolicy(backOffPolicy);
+                                                   retryTemplate.setThrowLastExceptionOnExhausted(true);
+                                                   return retryTemplate;
                                                 }
 
-                                                        private ObjectMapper objectMapper() {
-                                                        ObjectMapper objectMapper = new ObjectMapper();
-                                                        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-                                                        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                                                        objectMapper.registerModule(new JavaTimeModule());
-                                                        objectMapper.registerModule(new JsonNullableModule());
-
-                                                        return objectMapper;
-                                                        }
+                                                private ObjectMapper objectMapper() {
+                                                   ObjectMapper objectMapper = new ObjectMapper();
+                                                   objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                                                   objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                                                   objectMapper.registerModule(new JavaTimeModule());
+                                                   objectMapper.registerModule(new JsonNullableModule());
+                                                   return objectMapper;
+                                                }
 
                                                 /**
                                                 * Update query and header parameters based on authentication settings.
@@ -947,32 +970,30 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                                 }
 
                                                 private class ApiClientHttpRequestInterceptor implements ClientHttpRequestInterceptor {
-                                                private final Log log = LogFactory.getLog(ApiClientHttpRequestInterceptor.class);
+                                                private final Log logger = LogFactory.getLog(ApiClientHttpRequestInterceptor.class);
 
                                                 @Override
                                                 public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-                                                logRequest(request, body);
-                                                ClientHttpResponse response = execution.execute(request, body);
-                                                logResponse(response);
-                                                return response;
+                                                   logRequest(request, body);
+                                                   ClientHttpResponse response = execution.execute(request, body);
+                                                   logResponse(response);
+                                                   return response;
                                                 }
 
                                                 private void logRequest(HttpRequest request, byte[] body) throws UnsupportedEncodingException {
-                                                log.info("URI: " + request.getURI());
-                                                log.info("HTTP Method: " + request.getMethod());
-                                                log.info("HTTP Headers: " + headersToString(request.getHeaders()));
-                                                log.info("Request Body: " + new String(body, StandardCharsets.UTF_8));
+                                                    logger.info("URI: " + request.getMethod() +  " " + request.getURI());
+                                                    logger.info("Request Headers: " + headersToString(request.getHeaders()));
+                                                    logger.info("Request Body: " + new String(body, StandardCharsets.UTF_8));
                                                 }
 
                                                 private void logResponse(ClientHttpResponse response) throws IOException {
-                                                log.info("HTTP Status Code: " + response.getRawStatusCode());
-                                                log.info("Status Text: " + response.getStatusText());
-                                                log.info("HTTP Headers: " + headersToString(response.getHeaders()));
-                                                log.info("Response Body: " + bodyToString(response.getBody()));
+                                                    logger.info("Response Status: " + response.getRawStatusCode() + " " + response.getStatusText());
+                                                    logger.info("Response Headers: " + headersToString(response.getHeaders()));
+                                                    logger.info("Response Body: " + StreamUtils.copyToString(response.getBody(), Charset.defaultCharset()));
                                                 }
 
                                                 private String headersToString(HttpHeaders headers) {
-                                                if(headers == null || headers.isEmpty()) {
+                                                if (headers == null || headers.isEmpty()) {
                                                 return "";
                                                 }
                                                 StringBuilder builder = new StringBuilder();
@@ -989,18 +1010,6 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                                     builder.append("],");
                                                     }
                                                     builder.setLength(builder.length() - 1); // Get rid of trailing comma
-                                                    return builder.toString();
-                                                    }
-
-                                                    private String bodyToString(InputStream body) throws IOException {
-                                                    StringBuilder builder = new StringBuilder();
-                                                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(body, StandardCharsets.UTF_8));
-                                                    String line = bufferedReader.readLine();
-                                                    while (line != null) {
-                                                    builder.append(line).append(System.lineSeparator());
-                                                    line = bufferedReader.readLine();
-                                                    }
-                                                    bufferedReader.close();
                                                     return builder.toString();
                                                     }
                                                     }

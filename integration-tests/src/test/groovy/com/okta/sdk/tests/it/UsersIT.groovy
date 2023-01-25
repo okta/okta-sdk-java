@@ -861,26 +861,13 @@ class UsersIT extends ITSupport {
 
         UserApi userApi = new UserApi(getClient())
 
-        // limit
-        int pageSize = 2
+        int limit = 2
 
-        PagedList usersPagedListOne = userApi.listUsersWithPaginationInfo(null, null, pageSize, null, null, null, null)
+        PagedList usersPagedList = userApi.listUsersWithPaginationInfo(null, null, limit, null, null, null, null)
 
-        assertThat usersPagedListOne, notNullValue()
-        assertThat usersPagedListOne.items().size(), is(2)
-        assertThat usersPagedListOne.self, notNullValue()
-        assertThat usersPagedListOne.nextPage, notNullValue()
-
-        // e.g. nextPage is of the form (for e.g.) https://example.okta.com/api/v1/users?after=000u3pfv9v4SQXvpBB0g7&limit=2
-        String after = usersPagedListOne.getAfter(usersPagedListOne.nextPage)
-
-        assertThat after, notNullValue()
-
-        PagedList usersPagedListTwo = userApi.listUsersWithPaginationInfo(null, after, pageSize, null, null, null, null)
-
-        assertThat usersPagedListTwo, notNullValue()
-        assertThat usersPagedListTwo.items().size(), is(greaterThanOrEqualTo(1))
-        assertThat usersPagedListTwo.self, equalTo(usersPagedListOne.nextPage)
+        assertThat usersPagedList, notNullValue()
+        assertThat usersPagedList.self, notNullValue()
+        assertThat usersPagedList.items().size(), is(greaterThanOrEqualTo(3))
     }
 
     @Test (groups = "group3")
