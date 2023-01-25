@@ -35,13 +35,13 @@ jobs:
           name: "Vault login"
           command: |
             vault login -method=userpass username=$vault_username password=$vault_password > /dev/null 2>&1
-      - general-platform-helpers/save-dependencies
+      - platform-org/save-dependencies
   load-secrets:
     docker:
       - image: cimg/openjdk:11.0
     steps:
       - checkout
-      - general-platform-helpers/load-dependencies
+      - platform-org/load-dependencies
 
   jdk8:
     docker:
