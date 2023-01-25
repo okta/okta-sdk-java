@@ -36,12 +36,6 @@ jobs:
           command: |
             vault login -method=userpass username=$vault_username password=$vault_password > /dev/null 2>&1
       - platform-orb/save-dependencies
-  load-secrets:
-    docker:
-      - image: cimg/openjdk:11.0
-    steps:
-      - checkout
-      - platform-orb/load-dependencies
 
   jdk8:
     docker:
@@ -74,15 +68,12 @@ workflows:
   "Circle CI Tests":
     jobs:
       - cache-secrets
-      - load-secrets:
-          requires:
-            - cache-secrets
       - jdk8:
           requires:
-            - load-secrets
+            - cache-secrets
       - jdk11:
           requires:
-            - load-secrets
+            - cache-secrets
       - jdk17:
           requires:
-            - load-secrets
+            - cache-secrets
