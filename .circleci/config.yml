@@ -8,6 +8,10 @@ aliases:
   - &build_steps
     - checkout
     - platform-orb/load-dependencies
+    - run: 
+        command: |
+          source /home/circleci/.dependencycache/vault-cache/vault_items.sh
+          echo ${OKTA_CLIENT_ORGURL}
     - run: java -version
     - run: mvn clean install -Dmaven.test.skip.exec=true
     - run: mvn test
