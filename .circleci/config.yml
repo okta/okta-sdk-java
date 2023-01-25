@@ -71,7 +71,7 @@ jobs:
     steps: *build_steps
 
 workflows:
-  build_and_test:
+  "Circle CI Tests":
     jobs:
       - cache-secrets
       - load-secrets:
