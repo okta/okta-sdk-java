@@ -9,7 +9,7 @@ aliases:
     - checkout
     - platform-orb/load-dependencies
     - run: java -version
-    - run: mvn clean install -Pci -Dmaven.test.skip.exec=true
+    - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true
     - run: mvn test
     - run:
         no_output_timeout: 30m
