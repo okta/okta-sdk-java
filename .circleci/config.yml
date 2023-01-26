@@ -12,6 +12,7 @@ aliases:
     - run: mvn clean install -Dmaven.test.skip.exec=true
     - run: mvn test
     - run:
+        no_output_timeout: 30m
         command: |
           ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=filesize | grep groovy | xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',' | sed 's/,*$//g')
           echo $ClassName
