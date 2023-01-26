@@ -1,13 +1,18 @@
 version: 2.1
 
+orbs:
+  platform-orb: okta/general-platform-helpers@1.2.2
+
 aliases:
 
   - &build_steps
     - checkout
+    - platform-orb/load-dependencies
     - run: java -version
     - run: mvn clean install -Dmaven.test.skip.exec=true
     - run: mvn test
     - run:
+        no_output_timeout: 30m
         command: |
           ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=filesize | grep groovy | xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',' | sed 's/,*$//g')
           echo $ClassName
@@ -21,7 +26,19 @@ aliases:
         command: cat integration-tests/target/failsafe-reports/*dump*
 
 jobs:
-  
+  cache-secrets:
+    machine: true
+    resource_class: okta/generic-linux-x86
+    environment:
+      VAULT_ADDR: https://vault.aue1e.saasure.net
+    steps:
+      - checkout
+      - run:
+          name: "Vault login"
+          command: |
+            vault login -method=userpass username=$vault_username password=$vault_password > /dev/null 2>&1
+      - platform-orb/save-dependencies
+
   jdk8:
     docker:
       - image: cimg/openjdk:8.0.345-node
@@ -50,8 +67,15 @@ jobs:
     steps: *build_steps
 
 workflows:
-  build_and_test:
+  "Circle CI Tests":
     jobs:
-      - jdk8
-      - jdk11
-      - jdk17
+      - cache-secrets
+      - jdk8:
+          requires:
+            - cache-secrets
+      - jdk11:
+          requires:
+            - cache-secrets
+      - jdk17:
+          requires:
+            - cache-secrets
