@@ -62,7 +62,6 @@ public class Quickstart {
             // No need to define anything else; build the Client instance. The ClientCredential information will be automatically found
             // in pre-defined locations: i.e. ~/.okta/okta.yaml
             client = builder.build();
-            client.setDebugging(true);
 
             userApi = new UserApi(client);
             groupApi = new GroupApi(client);

@@ -440,9 +440,7 @@ Every instance of the SDK `Client` is thread-safe. You **should** use the same i
 [//]: # (method: paging)
 ```java
 UserApi userApi = new UserApi(client);
-
 int limit = 2;
-
 PagedList<User> pagedUserList = userApi.listUsersWithPaginationInfo(null, null, limit, null, null, null, null);
 
 // loop through all of them

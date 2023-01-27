@@ -18,8 +18,14 @@ package com.okta.sdk.resource.common;
 import com.okta.commons.lang.Assert;
 import org.springframework.http.ResponseEntity;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,16 +47,14 @@ public class PagedList<T> {
         return nextPage;
     }
 
-    public String getAfter(String nextPage) {
-        String after = null;
-        if (nextPage != null) {
-            String query = nextPage.split("\\?")[1];
-            for (String pair : query.split("&")) {
-                String[] nv = pair.split("=", 2);
-                if (nv[0].equals("after")) after = nv[1];
-            }
+    public String getAfter(String nextPageUrl) {
+        URL url;
+        try {
+            url = new URL(nextPageUrl);
+            return splitQuery(url).get("after");
+        } catch (MalformedURLException | UnsupportedEncodingException e) {
+            return null;
         }
-        return after;
     }
 
     public void setSelf(String self) {
@@ -95,5 +99,21 @@ public class PagedList<T> {
             }
         }
         return pagedList;
+    }
+
+    /**
+     * Split a URL with query strings into name value pairs.
+     * @param url the url to split
+     * @return map of query string name value pairs
+     */
+    private static Map<String, String> splitQuery(URL url) throws UnsupportedEncodingException {
+        Map<String, String> query_pairs = new LinkedHashMap<>();
+        String query = url.getQuery();
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            int index = pair.indexOf("=");
+            query_pairs.put(URLDecoder.decode(pair.substring(0, index), "UTF-8"), URLDecoder.decode(pair.substring(index + 1), "UTF-8"));
+        }
+        return query_pairs;
     }
 }
