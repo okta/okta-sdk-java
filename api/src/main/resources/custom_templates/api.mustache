@@ -371,28 +371,21 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
         {{#returnType}}ParameterizedTypeReference<{{{returnType}}}> localReturnType = new ParameterizedTypeReference<{{{returnType}}}>() {};{{/returnType}}{{^returnType}}ParameterizedTypeReference<Void> localReturnType = new ParameterizedTypeReference<Void>() {};{{/returnType}}
             ResponseEntity<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}> responseEntity = apiClient.invokeAPI("{{{path}}}", HttpMethod.{{httpMethod}}, {{#hasPathParams}}uriVariables{{/hasPathParams}}{{^hasPathParams}}Collections.<String, Object>emptyMap(){{/hasPathParams}}, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
             {{#returnType}}
-                    HttpHeaders headers = responseEntity.getHeaders();
-                    PagedList pagedList = new PagedList();
-                    List<String> linkHeaders = headers.get("link");
-                    String self = null, nextPage = null;
-                    for (String link : linkHeaders) {
-                    if (link.contains("next")) {
-                    nextPage = link.split(";")[0]
-                    .replaceAll("<", "")
-                    .replaceAll(">", "");
-                    }
-                    if (link.contains("self")) {
-                    self = link.split(";")[0]
-                    .replaceAll("<", "")
-                    .replaceAll(">", "");
-                    }
-                    }
-                    pagedList.addItems(Arrays.asList(responseEntity.getBody()));
-                    if (Objects.nonNull(nextPage)) {
-                    pagedList.setNextPage(nextPage);
-                    }
-                    if (Objects.nonNull(self)) {
-                    pagedList.setSelf(self);
+                    PagedList pagedList = PagedList.constructPagedList(responseEntity);
+
+                    String afterMarker = pagedList.getAfter(pagedList.getNextPage());
+
+                    if (afterMarker != null) {
+                    do {
+                    localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "after", afterMarker));
+
+                    ResponseEntity<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}> newResponseEntity = apiClient.invokeAPI("{{{path}}}", HttpMethod.{{httpMethod}}, {{#hasPathParams}}uriVariables{{/hasPathParams}}{{^hasPathParams}}Collections.<String, Object>emptyMap(){{/hasPathParams}}, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
+
+                    PagedList newPagedList = PagedList.constructPagedList(newResponseEntity);
+                    pagedList.getItems().addAll(newPagedList.getItems());
+                    pagedList.setNextPage(newPagedList.getNextPage());
+                    afterMarker = newPagedList.getAfter(newPagedList.getNextPage());
+                    } while (afterMarker != null);
                     }
                     return pagedList;
             {{/returnType}}

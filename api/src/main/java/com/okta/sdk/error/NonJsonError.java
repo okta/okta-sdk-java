@@ -20,15 +20,17 @@ import java.util.Map;
 
 public class NonJsonError implements Error {
 
+    private final int status;
     private final String message;
 
-    public NonJsonError(String message) {
+    public NonJsonError(int status, String message) {
+        this.status = status;
         this.message = message;
     }
 
     @Override
     public int getStatus() {
-        return 0;
+        return status;
     }
 
     @Override

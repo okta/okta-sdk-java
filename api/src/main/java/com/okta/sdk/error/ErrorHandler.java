@@ -51,7 +51,7 @@ public class ErrorHandler implements ResponseErrorHandler {
         final String message = new String(FileCopyUtils.copyToByteArray(httpResponse.getBody()));
 
         if (!isValid(message)) {
-            throw new ResourceException(new NonJsonError(message));
+            throw new ResourceException(new NonJsonError(statusCode, message));
         }
 
         final Map<String, Object> errorMap = mapper.readValue(message, Map.class);

@@ -861,27 +861,13 @@ class UsersIT extends ITSupport {
 
         UserApi userApi = new UserApi(getClient())
 
-        // limit
-        int pageSize = 2
+        int limit = 2
 
-        PagedList usersPagedListOne = userApi.listUsersWithPaginationInfo(null, null, pageSize, null, null, null, null)
+        PagedList usersPagedList = userApi.listUsersWithPaginationInfo(null, null, limit, null, null, null, null)
 
-        assertThat usersPagedListOne, notNullValue()
-        assertThat usersPagedListOne.items().size(), is(2)
-        assertThat usersPagedListOne.self, notNullValue()
-        assertThat usersPagedListOne.nextPage, notNullValue()
-
-        // e.g. https://example.okta.com/api/v1/users?after=000u3pfv9v4SQXvpBB0g7&limit=2
-        String nextPageUrl = usersPagedListOne.nextPage
-        String after = splitQuery(new URL(nextPageUrl)).get("after")
-
-        assertThat after, notNullValue()
-
-        PagedList usersPagedListTwo = userApi.listUsersWithPaginationInfo(null, after, pageSize, null, null, null, null)
-
-        assertThat usersPagedListTwo, notNullValue()
-        assertThat usersPagedListTwo.items().size(), is(greaterThanOrEqualTo(1))
-        assertThat usersPagedListTwo.self, equalTo(usersPagedListOne.nextPage)
+        assertThat usersPagedList, notNullValue()
+        assertThat usersPagedList.self, notNullValue()
+        assertThat usersPagedList.items().size(), is(greaterThanOrEqualTo(3))
     }
 
     @Test (groups = "group3")
@@ -920,20 +906,4 @@ class UsersIT extends ITSupport {
         return Base64.getEncoder().encodeToString(bytes)
     }
 
-    /**
-     * Split a URL with query strings into name value pairs.
-     * @param url
-     * @return map of query string name value pairs
-     * @throws UnsupportedEncodingException
-     */
-    private static Map<String, String> splitQuery(URL url) throws UnsupportedEncodingException {
-        Map<String, String> query_pairs = new LinkedHashMap<String, String>()
-        String query = url.getQuery()
-        String[] pairs = query.split("&")
-        for (String pair : pairs) {
-            int index = pair.indexOf("=")
-            query_pairs.put(URLDecoder.decode(pair.substring(0, index), "UTF-8"), URLDecoder.decode(pair.substring(index + 1), "UTF-8"))
-        }
-        return query_pairs
-    }
 }

@@ -118,7 +118,7 @@ public class ReadmeSnippets {
     private void userSearch() {
         UserApi userApi = new UserApi(client);
         // search by email
-        List<User> users = userApi.listUsers(null, null, 5, null, "jcoder@example.com", null, null);
+        List<User> users = userApi.listUsers(null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
 
         // filter parameter
         users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
@@ -291,24 +291,17 @@ public class ReadmeSnippets {
 
         UserApi userApi = new UserApi(client);
 
-        // limit
-        int pageSize = 2;
+        int limit = 2;
 
-        PagedList<User> usersPagedListOne = userApi.listUsersWithPaginationInfo(null, null, pageSize, null, null, null, null);
+        PagedList<User> pagedUserList = userApi.listUsersWithPaginationInfo(null, null, limit, null, null, null, null);
 
-        // e.g. https://example.okta.com/api/v1/users?after=000u3pfv9v4SQXvpBB0g7&limit=2
-        String nextPageUrl = usersPagedListOne.getNextPage();
-
-        // replace 'after' with actual cursor from the nextPageUrl
-        PagedList<User> usersPagedListTwo = userApi.listUsersWithPaginationInfo("after", null, pageSize, null, null, null, null);
-
-        // loop through all of them (paging is automatic)
-        for (User tmpUser : usersPagedListOne.getItems()) {
+        // loop through all of them
+        for (User tmpUser : pagedUserList.getItems()) {
             log.info("User: {}", tmpUser.getProfile().getEmail());
         }
 
         // or stream
-        usersPagedListOne.getItems().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
+        pagedUserList.getItems().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
     }
 
     private void complexCaching() {
