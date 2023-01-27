@@ -59,7 +59,7 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>          <strong class="jxr_keyword">final</strong> String message = <strong class="jxr_keyword">new</strong> String(FileCopyUtils.copyToByteArray(httpResponse.getBody()));
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>          <strong class="jxr_keyword">if</strong> (!isValid(message)) {
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="ResourceException" href="../../../../com/okta/sdk/error/ResourceException.html#ResourceException">ResourceException</a>(<strong class="jxr_keyword">new</strong> <a name="NonJsonError" href="../../../../com/okta/sdk/error/NonJsonError.html#NonJsonError">NonJsonError</a>(message));
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="ResourceException" href="../../../../com/okta/sdk/error/ResourceException.html#ResourceException">ResourceException</a>(<strong class="jxr_keyword">new</strong> <a name="NonJsonError" href="../../../../com/okta/sdk/error/NonJsonError.html#NonJsonError">NonJsonError</a>(statusCode, message));
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>          }
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>          <strong class="jxr_keyword">final</strong> Map&lt;String, Object&gt; errorMap = mapper.readValue(message, Map.<strong class="jxr_keyword">class</strong>);
