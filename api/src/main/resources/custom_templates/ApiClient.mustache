@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.commons.lang.Classes;
+import com.okta.commons.http.config.HttpClientConfiguration;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
 import java.util.LinkedHashMap;
@@ -66,6 +67,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.retry.RetryPolicy;
+import org.springframework.retry.policy.NeverRetryPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 {{#openApiNullable}}
     import org.openapitools.jackson.nullable.JsonNullableModule;
@@ -156,6 +159,8 @@ private Cache<String, ResponseEntity> cache;
 
 private CacheManager cacheManager;
 
+private HttpClientConfiguration httpClientConfiguration;
+
 public ApiClient() {
 init();
 }
@@ -163,6 +168,13 @@ init();
 public ApiClient(RestTemplate restTemplate, CacheManager cacheManager) {
 this.restTemplate = restTemplate;
 this.cacheManager = cacheManager;
+init();
+}
+
+public ApiClient(RestTemplate restTemplate, CacheManager cacheManager, HttpClientConfiguration httpClientConfiguration) {
+this.restTemplate = restTemplate;
+this.cacheManager = cacheManager;
+this.httpClientConfiguration = httpClientConfiguration;
 init();
 }
 
@@ -930,13 +942,22 @@ List<ClientHttpRequestInterceptor> currentInterceptors = this.restTemplate.getIn
                                                  }
 
                                                 protected RetryTemplate buildRetryTemplate() {
+                                                   RetryTemplate retryTemplate = new RetryTemplate();
+                                                   RetryPolicy retryPolicy;
+
+                                                   // retry is disabled if both the below config variables are set to zero
+                                                   if (this.httpClientConfiguration.getConnectionTimeout() == 0 &&
+                                                      this.httpClientConfiguration.getRetryMaxAttempts() == 0) {
+                                                      retryPolicy = new NeverRetryPolicy();
+                                                      retryTemplate.setRetryPolicy(retryPolicy);
+                                                      return retryTemplate;
+                                                   }
+
                                                    Map<Class<? extends Throwable>, Boolean> retryableExceptions = new HashMap<>();
                                                    retryableExceptions.put(RetryableException.class, Boolean.TRUE);
 
-                                                   SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5, retryableExceptions); //TODO - get this from client config
+                                                   retryPolicy = new SimpleRetryPolicy(this.httpClientConfiguration.getRetryMaxAttempts(), retryableExceptions);
                                                    FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
-
-                                                   RetryTemplate retryTemplate = new RetryTemplate();
                                                    retryTemplate.setRetryPolicy(retryPolicy);
                                                    retryTemplate.setBackOffPolicy(backOffPolicy);
                                                    retryTemplate.setThrowLastExceptionOnExhausted(true);

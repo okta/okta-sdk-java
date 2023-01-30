@@ -23,6 +23,12 @@ public class NonJsonError implements Error {
     private final int status;
     private final String message;
 
+    @Deprecated
+    public NonJsonError(String message) {
+        this.status = 0;
+        this.message = message;
+    }
+
     public NonJsonError(int status, String message) {
         this.status = status;
         this.message = message;
