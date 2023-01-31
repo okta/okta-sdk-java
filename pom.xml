@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.okta</groupId>
         <artifactId>okta-parent</artifactId>
-        <version>24</version>
+        <version>27</version>
     </parent>
 
     <groupId>com.okta.sdk</groupId>
@@ -35,8 +35,8 @@
 
     <properties>
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
-        <jackson.version>2.13.4</jackson.version>
-        <snakeyaml.version>1.32</snakeyaml.version>
+        <jackson.version>2.14.2</jackson.version>
+        <snakeyaml.version>1.33</snakeyaml.version>
         <bouncycastle.version>1.70</bouncycastle.version>
         <jjwt.version>0.11.5</jjwt.version>
         <okta.sdk.previousVersion>8.2.2</okta.sdk.previousVersion>
@@ -156,7 +156,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.11</version>
+                <version>1.3.5</version> 
             </dependency>
 
             <!-- Bouncy Castle -->
@@ -206,13 +206,28 @@
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-stdlib</artifactId>
-                <version>1.6.0</version>
+                <version>1.8.0</version>
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-stdlib-common</artifactId>
-                <version>1.6.0</version>
+                <version>1.8.0</version>
             </dependency>
+<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk7 -->
+<dependency>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <artifactId>kotlin-stdlib-jdk7</artifactId>
+    <version>1.8.0</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk7 -->
+<dependency>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <artifactId>kotlin-stdlib-jdk8</artifactId>
+    <version>1.8.0</version>
+</dependency>
+
+
 
             <dependency>
                 <groupId>org.testng</groupId>
