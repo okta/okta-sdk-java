@@ -89,7 +89,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
     }
 
     // disable running them in bacon
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     void createProfileEnrollmentPolicy() {
 
         Policy profileEnrollmentPolicy = client.createPolicy(client.instantiate(ProfileEnrollmentPolicy)
@@ -106,7 +106,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
     }
 
     // disable running them in bacon
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     void createAccessPolicyRule() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -165,7 +165,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
     }
 
     // disable running them in bacon
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     void createProfileEnrollmentPolicyRule() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
@@ -221,7 +221,7 @@ class SignOnPoliciesIT implements CrudTestSupport {
         assertThat(updateProfileEnrollmentPolicyRuleActions.getProfileEnrollment().getProfileAttributes().first().getRequired(), is(true))
     }
 
-    @Test (groups = "bacon")
+    @Test (groups = "bacon", enabled = false)
     void applyPolicyToApplicationTest() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()

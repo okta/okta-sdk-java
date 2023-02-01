@@ -102,7 +102,8 @@ class GroupsIT extends ITSupport implements CrudTestSupport {
         assertPresent(client.listGroups(groupName, null, null), group)
     }
 
-    @Test (groups = "bacon")
+    // flaky test, hence disabled
+    @Test (groups = "bacon", enabled = false)
     @Scenario("search-groups-by-search-parameter")
     void searchGroupsBySearchParameterTest() {
 

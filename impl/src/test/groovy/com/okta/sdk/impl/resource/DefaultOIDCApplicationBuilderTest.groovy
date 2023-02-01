@@ -72,7 +72,6 @@ class DefaultOIDCApplicationBuilderTest {
         verify(application).setLabel("test_app")
         verify(applicationAccessibility).setSelfService(false)
         verify(applicationAccessibility).setErrorRedirectUrl("http://www.myApp.com/errror")
-        verify(applicationAccessibility).setLoginRedirectUrl("http://www.myApp.com")
         verify(applicationVisibilityHide).setWeb(false)
         verify(applicationVisibilityHide).setIOS(true)
         verify(openIdConnectApplicationSettingsClient).setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))

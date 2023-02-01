@@ -164,9 +164,6 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         application.setAccessibility(client.instantiate(ApplicationAccessibility.class));
         ApplicationAccessibility applicationAccessibility = application.getAccessibility();
 
-        if (Strings.hasText(loginRedirectUrl))
-            applicationAccessibility.setLoginRedirectUrl(loginRedirectUrl);
-
         if (Strings.hasText(errorRedirectUrl))
             applicationAccessibility.setErrorRedirectUrl(errorRedirectUrl);
 
