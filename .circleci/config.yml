@@ -41,7 +41,7 @@ jobs:
 
   jdk8:
     docker:
-      - image: cimg/openjdk:8.0.345-node
+      - image: cimg/openjdk:8.0.362-node
     environment:
       JVM_OPTS: -Xmx3200m
     resource_class: large
@@ -50,7 +50,7 @@ jobs:
 
   jdk11:
     docker:
-      - image: cimg/openjdk:11.0.16-node
+      - image: cimg/openjdk:11.0.18-node
     environment:
       JVM_OPTS: -Xmx3200m
     resource_class: large
@@ -59,7 +59,7 @@ jobs:
 
   jdk17:
     docker:
-      - image: cimg/openjdk:17.0.4-node
+      - image: cimg/openjdk:17.0.6-node
     environment:
       JVM_OPTS: -Xmx3200m
     resource_class: large
