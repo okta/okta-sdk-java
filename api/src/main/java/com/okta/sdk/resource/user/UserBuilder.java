@@ -128,5 +128,7 @@ public interface UserBuilder {
 
     UserBuilder setSha1PasswordHash(String value, String salt, String saltOrder);
 
+    UserBuilder setCustomProfileProperty(String key, Object value);
+
     User buildAndCreate(UserApi client);
 }

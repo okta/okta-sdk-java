@@ -637,9 +637,9 @@ class UsersIT extends ITSupport {
 
         // Note: Custom user profile properties can be added with something like below, but
         // the respective property must first be associated to the User schema.
-        // You can use the Profile Editor in your Org's administrator UI or the Schemas API
+        // You can use the Profile Editor in your Org administrator UI or the Schemas API
         // to manage schema extensions.
-        //userProfile.getAdditionalProperties().put("key1", "val1")
+        //userProfile.getAdditionalProperties().put("foo", "bar")
 
         updateUserRequest.setProfile(userProfile)
 
@@ -649,6 +649,7 @@ class UsersIT extends ITSupport {
 
         assertThat(updatedUser.lastUpdated, greaterThan(originalLastUpdated))
         assertThat(updatedUser.getProfile().getProperties().get("nickName"), equalTo("Batman"))
+        //assertThat(userProfile.getAdditionalProperties().get("foo"), equalTo("bar"))
     }
 
     @Test (groups = "group2")
