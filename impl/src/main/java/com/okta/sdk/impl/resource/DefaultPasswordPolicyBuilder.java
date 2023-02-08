@@ -241,7 +241,7 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
         if (priority != null)
             policy.setPriority(priority);
 
-        if (policyType.equals("PASSWORD"))
+        if (PolicyType.PASSWORD.equals(policyType))
             policy.setType(policyType);
         else
             throw new IllegalArgumentException("PolicyType should be 'PASSWORD', please use PolicyBuilder for other policy types.");
