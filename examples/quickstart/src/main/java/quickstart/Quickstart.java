@@ -82,7 +82,7 @@ public class Quickstart {
                 .setPassword(password)
                 .setSecurityQuestion("Favorite security question?")
                 .setSecurityQuestionAnswer("None of them!")
-                //.putProfileProperty("division", "Seven") // key/value pairs predefined in the user profile schema //TODO: fix me
+                //.setCustomProfileProperty("foo", "bar") // pre-req: custom profile properties need to be set in your Org's Profile editor via Admin UI.
                 .setActive(true)
                 .addGroup(group.getId()) // add user to the newly created group
                 .buildAndCreate(userApi);

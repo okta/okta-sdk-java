@@ -82,6 +82,8 @@ public class DefaultUserBuilder implements UserBuilder {
     private Map<String, Object> passwordHashProperties;
     private String passwordHookImportType;
 
+    private final UserProfile userProfile = new UserProfile();
+
     public UserBuilder setPassword(char[] password) {
         this.password = Arrays.copyOf(password, password.length);
         return this;
@@ -316,7 +318,7 @@ public class DefaultUserBuilder implements UserBuilder {
     private CreateUserRequest build() {
 
         CreateUserRequest createUserRequest = new CreateUserRequest();
-        createUserRequest.setProfile(new UserProfile());
+        createUserRequest.setProfile(userProfile);
         UserProfile userProfile = createUserRequest.getProfile();
         if (Strings.hasText(firstName)) userProfile.setFirstName(firstName);
         if (Strings.hasText(lastName)) userProfile.setLastName(lastName);
@@ -452,6 +454,12 @@ public class DefaultUserBuilder implements UserBuilder {
         passwordHashProperties.put("salt", salt);
         passwordHashProperties.put("value", value);
         passwordHashProperties.put("saltOrder", saltOrder);
+        return this;
+    }
+
+    @Override
+    public UserBuilder setCustomProfileProperty(String key, Object value) {
+        userProfile.getAdditionalProperties().put(key, value);
         return this;
     }
 
