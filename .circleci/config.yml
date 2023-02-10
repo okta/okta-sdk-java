@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  platform-orb: okta/general-platform-helpers@1.2.2
+  platform-orb: okta/general-platform-helpers@1.2.3
 
 aliases:
 
