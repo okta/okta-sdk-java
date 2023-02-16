@@ -45,9 +45,13 @@ public class ResourceException extends RuntimeException implements Error {
     private static String buildExceptionMessage(Error error) {
         Assert.notNull(error, "Error argument cannot be null.");
         StringBuilder sb = new StringBuilder();
-        sb.append("HTTP ").append(error.getStatus())
-          .append(", Okta ").append(error.getCode())
-          .append(" (").append(error.getMessage());
+        sb.append("HTTP ").append(error.getStatus());
+
+        if (Strings.hasText(error.getCode())) {
+          sb.append(", Okta ").append(error.getCode());
+        }
+
+        sb.append(" (").append(error.getMessage());
 
         // if there is only one cause (most common) just include it, otherwise show the cause count
         int causeCount = Collections.size(error.getCauses());

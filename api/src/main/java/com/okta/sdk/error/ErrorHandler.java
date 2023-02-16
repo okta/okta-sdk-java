@@ -24,17 +24,16 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ErrorHandler implements ResponseErrorHandler {
 
+    static final String ERROR_PROPERTY = "error";
+    static final String ERROR_DESC_PROPERTY = "error_description";
     static final String ERROR_CODE_PROPERTY = "errorCode";
     static final String ERROR_ID_PROPERTY = "errorId";
-    static final String SUMMARY_PROPERTY = "errorSummary";
-    static final String CAUSES_PROPERTY = "errorCauses";
+    static final String ERROR_SUMMARY_PROPERTY = "errorSummary";
+    static final String ERROR_CAUSES_PROPERTY = "errorCauses";
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -65,26 +64,39 @@ public class ErrorHandler implements ResponseErrorHandler {
 
             @Override
             public String getCode() {
-                return String.valueOf(errorMap.get(ERROR_CODE_PROPERTY));
+                if (Objects.nonNull(errorMap.get(ERROR_CODE_PROPERTY))) {
+                    return String.valueOf(errorMap.get(ERROR_CODE_PROPERTY));
+                }
+                return null;
             }
 
             @Override
             public String getMessage() {
-                return String.valueOf(errorMap.get(SUMMARY_PROPERTY));
+                StringBuilder stringBuilder = new StringBuilder();
+                if (Objects.nonNull(errorMap.get(ERROR_PROPERTY)))
+                    stringBuilder.append(errorMap.get(ERROR_PROPERTY) + ", ");
+                if (Objects.nonNull(errorMap.get(ERROR_DESC_PROPERTY)))
+                    stringBuilder.append(errorMap.get(ERROR_DESC_PROPERTY));
+                if (Objects.nonNull(errorMap.get(ERROR_SUMMARY_PROPERTY)))
+                    stringBuilder.append(errorMap.get(ERROR_SUMMARY_PROPERTY));
+                return stringBuilder.toString();
             }
 
             @Override
             public String getId() {
-                return String.valueOf(errorMap.get(ERROR_ID_PROPERTY));
+                if (Objects.nonNull(errorMap.get(ERROR_ID_PROPERTY))) {
+                    return String.valueOf(errorMap.get(ERROR_ID_PROPERTY));
+                }
+                return null;
             }
 
             @Override
             public List<ErrorCause> getCauses() {
                 List<ErrorCause> results = new ArrayList<>();
-                Object rawProp = errorMap.get(CAUSES_PROPERTY);
+                Object rawProp = errorMap.get(ERROR_CAUSES_PROPERTY);
                 if (rawProp instanceof List) {
                     ((List<Map<String, Object>>) rawProp).forEach(causeMap ->
-                        results.add(new ErrorCause(String.valueOf(causeMap.get(SUMMARY_PROPERTY)))));
+                        results.add(new ErrorCause(String.valueOf(causeMap.get(ERROR_SUMMARY_PROPERTY)))));
                 }
                 return Collections.unmodifiableList(results);
             }
