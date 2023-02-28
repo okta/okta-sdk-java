@@ -52,7 +52,7 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-16T17:12:48.333Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-28T18:21:37.496Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.GroupApi"</span>)
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="GroupApi" href="../../../../org/openapitools/client/api/GroupApi.html#GroupApi">GroupApi</a> {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>              <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; activateGroupRuleWithHttpInfo(String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>              <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; activateGroupRuleWithHttpInfo(String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>         
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>                 <em class="jxr_comment">// verify the required parameter 'ruleId' is set ''</em>
@@ -194,7 +194,7 @@
 <a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;GroupOwner&amp;gt;</em>
 <a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;GroupOwner&gt; assignGroupOwnerWithHttpInfo(String groupId, GroupOwner groupOwner) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;GroupOwner&gt; assignGroupOwnerWithHttpInfo(String groupId, GroupOwner groupOwner) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>             Object localVarPostBody = groupOwner;
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>         
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -386,7 +386,7 @@
 <a class="jxr_linenumber" name="L378" href="#L378">378</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L379" href="#L379">379</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L380" href="#L380">380</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; assignUserToGroupWithHttpInfo(String groupId, String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; assignUserToGroupWithHttpInfo(String groupId, String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L382" href="#L382">382</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L383" href="#L383">383</a>         
 <a class="jxr_linenumber" name="L384" href="#L384">384</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -476,7 +476,7 @@
 <a class="jxr_linenumber" name="L468" href="#L468">468</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Group&amp;gt;</em>
 <a class="jxr_linenumber" name="L469" href="#L469">469</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L470" href="#L470">470</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Group&gt; createGroupWithHttpInfo(Group group) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Group&gt; createGroupWithHttpInfo(Group group) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L472" href="#L472">472</a>             Object localVarPostBody = group;
 <a class="jxr_linenumber" name="L473" href="#L473">473</a>         
 <a class="jxr_linenumber" name="L474" href="#L474">474</a>                 <em class="jxr_comment">// verify the required parameter 'group' is set ''</em>
@@ -656,7 +656,7 @@
 <a class="jxr_linenumber" name="L648" href="#L648">648</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;GroupRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L649" href="#L649">649</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L650" href="#L650">650</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L651" href="#L651">651</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;GroupRule&gt; createGroupRuleWithHttpInfo(GroupRule groupRule) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L651" href="#L651">651</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;GroupRule&gt; createGroupRuleWithHttpInfo(GroupRule groupRule) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L652" href="#L652">652</a>             Object localVarPostBody = groupRule;
 <a class="jxr_linenumber" name="L653" href="#L653">653</a>         
 <a class="jxr_linenumber" name="L654" href="#L654">654</a>                 <em class="jxr_comment">// verify the required parameter 'groupRule' is set ''</em>
@@ -818,7 +818,7 @@
 <a class="jxr_linenumber" name="L810" href="#L810">810</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L811" href="#L811">811</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L812" href="#L812">812</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L813" href="#L813">813</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deactivateGroupRuleWithHttpInfo(String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L813" href="#L813">813</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deactivateGroupRuleWithHttpInfo(String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L814" href="#L814">814</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L815" href="#L815">815</a>         
 <a class="jxr_linenumber" name="L816" href="#L816">816</a>                 <em class="jxr_comment">// verify the required parameter 'ruleId' is set ''</em>
@@ -884,7 +884,7 @@
 <a class="jxr_linenumber" name="L876" href="#L876">876</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L877" href="#L877">877</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L878" href="#L878">878</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L879" href="#L879">879</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteGroupWithHttpInfo(String groupId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L879" href="#L879">879</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteGroupWithHttpInfo(String groupId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L880" href="#L880">880</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L881" href="#L881">881</a>         
 <a class="jxr_linenumber" name="L882" href="#L882">882</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -952,7 +952,7 @@
 <a class="jxr_linenumber" name="L944" href="#L944">944</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L945" href="#L945">945</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L946" href="#L946">946</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L947" href="#L947">947</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteGroupOwnerWithHttpInfo(String groupId, String ownerId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L947" href="#L947">947</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteGroupOwnerWithHttpInfo(String groupId, String ownerId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L948" href="#L948">948</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L949" href="#L949">949</a>         
 <a class="jxr_linenumber" name="L950" href="#L950">950</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -1026,7 +1026,7 @@
 <a class="jxr_linenumber" name="L1018" href="#L1018">1018</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L1019" href="#L1019">1019</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1020" href="#L1020">1020</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteGroupRuleWithHttpInfo(String ruleId, Boolean removeUsers) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1021" href="#L1021">1021</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteGroupRuleWithHttpInfo(String ruleId, Boolean removeUsers) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1022" href="#L1022">1022</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1023" href="#L1023">1023</a>         
 <a class="jxr_linenumber" name="L1024" href="#L1024">1024</a>                 <em class="jxr_comment">// verify the required parameter 'ruleId' is set ''</em>
@@ -1095,7 +1095,7 @@
 <a class="jxr_linenumber" name="L1087" href="#L1087">1087</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Group&amp;gt;</em>
 <a class="jxr_linenumber" name="L1088" href="#L1088">1088</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1089" href="#L1089">1089</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1090" href="#L1090">1090</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Group&gt; getGroupWithHttpInfo(String groupId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1090" href="#L1090">1090</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Group&gt; getGroupWithHttpInfo(String groupId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1091" href="#L1091">1091</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1092" href="#L1092">1092</a>         
 <a class="jxr_linenumber" name="L1093" href="#L1093">1093</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -1222,7 +1222,7 @@
 <a class="jxr_linenumber" name="L1214" href="#L1214">1214</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;GroupRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L1215" href="#L1215">1215</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1216" href="#L1216">1216</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1217" href="#L1217">1217</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;GroupRule&gt; getGroupRuleWithHttpInfo(String ruleId, String expand) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1217" href="#L1217">1217</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;GroupRule&gt; getGroupRuleWithHttpInfo(String ruleId, String expand) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1218" href="#L1218">1218</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1219" href="#L1219">1219</a>         
 <a class="jxr_linenumber" name="L1220" href="#L1220">1220</a>                 <em class="jxr_comment">// verify the required parameter 'ruleId' is set ''</em>
@@ -1356,7 +1356,7 @@
 <a class="jxr_linenumber" name="L1348" href="#L1348">1348</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;Application&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L1349" href="#L1349">1349</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1350" href="#L1350">1350</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1351" href="#L1351">1351</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;Application&gt;&gt; listAssignedApplicationsForGroupWithHttpInfo(String groupId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1351" href="#L1351">1351</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;Application&gt;&gt; listAssignedApplicationsForGroupWithHttpInfo(String groupId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1352" href="#L1352">1352</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1353" href="#L1353">1353</a>         
 <a class="jxr_linenumber" name="L1354" href="#L1354">1354</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -1495,7 +1495,7 @@
 <a class="jxr_linenumber" name="L1487" href="#L1487">1487</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;GroupOwner&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L1488" href="#L1488">1488</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1489" href="#L1489">1489</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1490" href="#L1490">1490</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;GroupOwner&gt;&gt; listGroupOwnersWithHttpInfo(String groupId, String filter, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1490" href="#L1490">1490</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;GroupOwner&gt;&gt; listGroupOwnersWithHttpInfo(String groupId, String filter, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1491" href="#L1491">1491</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1492" href="#L1492">1492</a>         
 <a class="jxr_linenumber" name="L1493" href="#L1493">1493</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -1635,7 +1635,7 @@
 <a class="jxr_linenumber" name="L1627" href="#L1627">1627</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;GroupRule&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L1628" href="#L1628">1628</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1629" href="#L1629">1629</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1630" href="#L1630">1630</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;GroupRule&gt;&gt; listGroupRulesWithHttpInfo(Integer limit, String after, String search, String expand) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1630" href="#L1630">1630</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;GroupRule&gt;&gt; listGroupRulesWithHttpInfo(Integer limit, String after, String search, String expand) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1631" href="#L1631">1631</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1632" href="#L1632">1632</a>         
 <a class="jxr_linenumber" name="L1633" href="#L1633">1633</a> 
@@ -1760,7 +1760,7 @@
 <a class="jxr_linenumber" name="L1752" href="#L1752">1752</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;User&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L1753" href="#L1753">1753</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1754" href="#L1754">1754</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1755" href="#L1755">1755</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;User&gt;&gt; listGroupUsersWithHttpInfo(String groupId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1755" href="#L1755">1755</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;User&gt;&gt; listGroupUsersWithHttpInfo(String groupId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1756" href="#L1756">1756</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1757" href="#L1757">1757</a>         
 <a class="jxr_linenumber" name="L1758" href="#L1758">1758</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -1901,7 +1901,7 @@
 <a class="jxr_linenumber" name="L1893" href="#L1893">1893</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;Group&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L1894" href="#L1894">1894</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1895" href="#L1895">1895</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1896" href="#L1896">1896</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;Group&gt;&gt; listGroupsWithHttpInfo(String q, String filter, String after, Integer limit, String expand, String search) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1896" href="#L1896">1896</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;Group&gt;&gt; listGroupsWithHttpInfo(String q, String filter, String after, Integer limit, String expand, String search) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1897" href="#L1897">1897</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1898" href="#L1898">1898</a>         
 <a class="jxr_linenumber" name="L1899" href="#L1899">1899</a> 
@@ -2051,7 +2051,7 @@
 <a class="jxr_linenumber" name="L2043" href="#L2043">2043</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Group&amp;gt;</em>
 <a class="jxr_linenumber" name="L2044" href="#L2044">2044</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2045" href="#L2045">2045</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2046" href="#L2046">2046</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Group&gt; replaceGroupWithHttpInfo(String groupId, Group group) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2046" href="#L2046">2046</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Group&gt; replaceGroupWithHttpInfo(String groupId, Group group) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2047" href="#L2047">2047</a>             Object localVarPostBody = group;
 <a class="jxr_linenumber" name="L2048" href="#L2048">2048</a>         
 <a class="jxr_linenumber" name="L2049" href="#L2049">2049</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -2265,7 +2265,7 @@
 <a class="jxr_linenumber" name="L2257" href="#L2257">2257</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;GroupRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L2258" href="#L2258">2258</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2259" href="#L2259">2259</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2260" href="#L2260">2260</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;GroupRule&gt; replaceGroupRuleWithHttpInfo(String ruleId, GroupRule groupRule) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2260" href="#L2260">2260</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;GroupRule&gt; replaceGroupRuleWithHttpInfo(String ruleId, GroupRule groupRule) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2261" href="#L2261">2261</a>             Object localVarPostBody = groupRule;
 <a class="jxr_linenumber" name="L2262" href="#L2262">2262</a>         
 <a class="jxr_linenumber" name="L2263" href="#L2263">2263</a>                 <em class="jxr_comment">// verify the required parameter 'ruleId' is set ''</em>
@@ -2457,7 +2457,7 @@
 <a class="jxr_linenumber" name="L2449" href="#L2449">2449</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L2450" href="#L2450">2450</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2451" href="#L2451">2451</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2452" href="#L2452">2452</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unassignUserFromGroupWithHttpInfo(String groupId, String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2452" href="#L2452">2452</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unassignUserFromGroupWithHttpInfo(String groupId, String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2453" href="#L2453">2453</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2454" href="#L2454">2454</a>         
 <a class="jxr_linenumber" name="L2455" href="#L2455">2455</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>

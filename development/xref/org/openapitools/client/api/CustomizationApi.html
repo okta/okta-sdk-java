@@ -67,7 +67,7 @@
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-16T17:12:48.333Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-28T18:21:37.496Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.CustomizationApi"</span>)
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="CustomizationApi" href="../../../../org/openapitools/client/api/CustomizationApi.html#CustomizationApi">CustomizationApi</a> {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -137,7 +137,7 @@
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Brand&amp;gt;</em>
 <a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Brand&gt; createBrandWithHttpInfo(CreateBrandRequest createBrandRequest) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Brand&gt; createBrandWithHttpInfo(CreateBrandRequest createBrandRequest) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>             Object localVarPostBody = createBrandRequest;
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>         
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> 
@@ -314,7 +314,7 @@
 <a class="jxr_linenumber" name="L306" href="#L306">306</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;EmailCustomization&amp;gt;</em>
 <a class="jxr_linenumber" name="L307" href="#L307">307</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L309" href="#L309">309</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;EmailCustomization&gt; createEmailCustomizationWithHttpInfo(String brandId, String templateName, EmailCustomization instance) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;EmailCustomization&gt; createEmailCustomizationWithHttpInfo(String brandId, String templateName, EmailCustomization instance) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L310" href="#L310">310</a>             Object localVarPostBody = instance;
 <a class="jxr_linenumber" name="L311" href="#L311">311</a>         
 <a class="jxr_linenumber" name="L312" href="#L312">312</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -513,7 +513,7 @@
 <a class="jxr_linenumber" name="L505" href="#L505">505</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L506" href="#L506">506</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L507" href="#L507">507</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L508" href="#L508">508</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteAllCustomizationsWithHttpInfo(String brandId, String templateName) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteAllCustomizationsWithHttpInfo(String brandId, String templateName) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L509" href="#L509">509</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L510" href="#L510">510</a>         
 <a class="jxr_linenumber" name="L511" href="#L511">511</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -587,7 +587,7 @@
 <a class="jxr_linenumber" name="L579" href="#L579">579</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L580" href="#L580">580</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L581" href="#L581">581</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L582" href="#L582">582</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteBrandWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L582" href="#L582">582</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteBrandWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L583" href="#L583">583</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L584" href="#L584">584</a>         
 <a class="jxr_linenumber" name="L585" href="#L585">585</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -655,7 +655,7 @@
 <a class="jxr_linenumber" name="L647" href="#L647">647</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L648" href="#L648">648</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L649" href="#L649">649</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L650" href="#L650">650</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteBrandThemeBackgroundImageWithHttpInfo(String brandId, String themeId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L650" href="#L650">650</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteBrandThemeBackgroundImageWithHttpInfo(String brandId, String themeId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L651" href="#L651">651</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L652" href="#L652">652</a>         
 <a class="jxr_linenumber" name="L653" href="#L653">653</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -729,7 +729,7 @@
 <a class="jxr_linenumber" name="L721" href="#L721">721</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L722" href="#L722">722</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L723" href="#L723">723</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L724" href="#L724">724</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteBrandThemeFaviconWithHttpInfo(String brandId, String themeId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L724" href="#L724">724</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteBrandThemeFaviconWithHttpInfo(String brandId, String themeId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L725" href="#L725">725</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L726" href="#L726">726</a>         
 <a class="jxr_linenumber" name="L727" href="#L727">727</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -803,7 +803,7 @@
 <a class="jxr_linenumber" name="L795" href="#L795">795</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L796" href="#L796">796</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L797" href="#L797">797</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L798" href="#L798">798</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteBrandThemeLogoWithHttpInfo(String brandId, String themeId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L798" href="#L798">798</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteBrandThemeLogoWithHttpInfo(String brandId, String themeId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L799" href="#L799">799</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L800" href="#L800">800</a>         
 <a class="jxr_linenumber" name="L801" href="#L801">801</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -881,7 +881,7 @@
 <a class="jxr_linenumber" name="L873" href="#L873">873</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L874" href="#L874">874</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L875" href="#L875">875</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L876" href="#L876">876</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteEmailCustomizationWithHttpInfo(String brandId, String templateName, String customizationId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L876" href="#L876">876</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteEmailCustomizationWithHttpInfo(String brandId, String templateName, String customizationId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L877" href="#L877">877</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L878" href="#L878">878</a>         
 <a class="jxr_linenumber" name="L879" href="#L879">879</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -960,7 +960,7 @@
 <a class="jxr_linenumber" name="L952" href="#L952">952</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Brand&amp;gt;</em>
 <a class="jxr_linenumber" name="L953" href="#L953">953</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L954" href="#L954">954</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L955" href="#L955">955</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Brand&gt; getBrandWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L955" href="#L955">955</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Brand&gt; getBrandWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L956" href="#L956">956</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L957" href="#L957">957</a>         
 <a class="jxr_linenumber" name="L958" href="#L958">958</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -1087,7 +1087,7 @@
 <a class="jxr_linenumber" name="L1079" href="#L1079">1079</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ThemeResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L1080" href="#L1080">1080</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1081" href="#L1081">1081</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1082" href="#L1082">1082</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ThemeResponse&gt; getBrandThemeWithHttpInfo(String brandId, String themeId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1082" href="#L1082">1082</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ThemeResponse&gt; getBrandThemeWithHttpInfo(String brandId, String themeId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1083" href="#L1083">1083</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1084" href="#L1084">1084</a>         
 <a class="jxr_linenumber" name="L1085" href="#L1085">1085</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -1229,7 +1229,7 @@
 <a class="jxr_linenumber" name="L1221" href="#L1221">1221</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;EmailPreview&amp;gt;</em>
 <a class="jxr_linenumber" name="L1222" href="#L1222">1222</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1223" href="#L1223">1223</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1224" href="#L1224">1224</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;EmailPreview&gt; getCustomizationPreviewWithHttpInfo(String brandId, String templateName, String customizationId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1224" href="#L1224">1224</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;EmailPreview&gt; getCustomizationPreviewWithHttpInfo(String brandId, String templateName, String customizationId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1225" href="#L1225">1225</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1226" href="#L1226">1226</a>         
 <a class="jxr_linenumber" name="L1227" href="#L1227">1227</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -1380,7 +1380,7 @@
 <a class="jxr_linenumber" name="L1372" href="#L1372">1372</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;CustomizablePage&amp;gt;</em>
 <a class="jxr_linenumber" name="L1373" href="#L1373">1373</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1374" href="#L1374">1374</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1375" href="#L1375">1375</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;CustomizablePage&gt; getCustomizedErrorPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1375" href="#L1375">1375</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;CustomizablePage&gt; getCustomizedErrorPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1376" href="#L1376">1376</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1377" href="#L1377">1377</a>         
 <a class="jxr_linenumber" name="L1378" href="#L1378">1378</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -1505,7 +1505,7 @@
 <a class="jxr_linenumber" name="L1497" href="#L1497">1497</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;SignInPage&amp;gt;</em>
 <a class="jxr_linenumber" name="L1498" href="#L1498">1498</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1499" href="#L1499">1499</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1500" href="#L1500">1500</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;SignInPage&gt; getCustomizedSignInPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1500" href="#L1500">1500</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;SignInPage&gt; getCustomizedSignInPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1501" href="#L1501">1501</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1502" href="#L1502">1502</a>         
 <a class="jxr_linenumber" name="L1503" href="#L1503">1503</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -1630,7 +1630,7 @@
 <a class="jxr_linenumber" name="L1622" href="#L1622">1622</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;CustomizablePage&amp;gt;</em>
 <a class="jxr_linenumber" name="L1623" href="#L1623">1623</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1624" href="#L1624">1624</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1625" href="#L1625">1625</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;CustomizablePage&gt; getDefaultErrorPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1625" href="#L1625">1625</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;CustomizablePage&gt; getDefaultErrorPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1626" href="#L1626">1626</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1627" href="#L1627">1627</a>         
 <a class="jxr_linenumber" name="L1628" href="#L1628">1628</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -1755,7 +1755,7 @@
 <a class="jxr_linenumber" name="L1747" href="#L1747">1747</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;SignInPage&amp;gt;</em>
 <a class="jxr_linenumber" name="L1748" href="#L1748">1748</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1749" href="#L1749">1749</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1750" href="#L1750">1750</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;SignInPage&gt; getDefaultSignInPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1750" href="#L1750">1750</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;SignInPage&gt; getDefaultSignInPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1751" href="#L1751">1751</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1752" href="#L1752">1752</a>         
 <a class="jxr_linenumber" name="L1753" href="#L1753">1753</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -1884,7 +1884,7 @@
 <a class="jxr_linenumber" name="L1876" href="#L1876">1876</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;EmailCustomization&amp;gt;</em>
 <a class="jxr_linenumber" name="L1877" href="#L1877">1877</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1878" href="#L1878">1878</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1879" href="#L1879">1879</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;EmailCustomization&gt; getEmailCustomizationWithHttpInfo(String brandId, String templateName, String customizationId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1879" href="#L1879">1879</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;EmailCustomization&gt; getEmailCustomizationWithHttpInfo(String brandId, String templateName, String customizationId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1880" href="#L1880">1880</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1881" href="#L1881">1881</a>         
 <a class="jxr_linenumber" name="L1882" href="#L1882">1882</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -2039,7 +2039,7 @@
 <a class="jxr_linenumber" name="L2031" href="#L2031">2031</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;EmailDefaultContent&amp;gt;</em>
 <a class="jxr_linenumber" name="L2032" href="#L2032">2032</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2033" href="#L2033">2033</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2034" href="#L2034">2034</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;EmailDefaultContent&gt; getEmailDefaultContentWithHttpInfo(String brandId, String templateName, String language) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2034" href="#L2034">2034</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;EmailDefaultContent&gt; getEmailDefaultContentWithHttpInfo(String brandId, String templateName, String language) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2035" href="#L2035">2035</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2036" href="#L2036">2036</a>         
 <a class="jxr_linenumber" name="L2037" href="#L2037">2037</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -2186,7 +2186,7 @@
 <a class="jxr_linenumber" name="L2178" href="#L2178">2178</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;EmailPreview&amp;gt;</em>
 <a class="jxr_linenumber" name="L2179" href="#L2179">2179</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2180" href="#L2180">2180</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2181" href="#L2181">2181</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;EmailPreview&gt; getEmailDefaultPreviewWithHttpInfo(String brandId, String templateName, String language) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2181" href="#L2181">2181</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;EmailPreview&gt; getEmailDefaultPreviewWithHttpInfo(String brandId, String templateName, String language) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2182" href="#L2182">2182</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2183" href="#L2183">2183</a>         
 <a class="jxr_linenumber" name="L2184" href="#L2184">2184</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -2331,7 +2331,7 @@
 <a class="jxr_linenumber" name="L2323" href="#L2323">2323</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;EmailSettings&amp;gt;</em>
 <a class="jxr_linenumber" name="L2324" href="#L2324">2324</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2325" href="#L2325">2325</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2326" href="#L2326">2326</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;EmailSettings&gt; getEmailSettingsWithHttpInfo(String brandId, String templateName) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2326" href="#L2326">2326</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;EmailSettings&gt; getEmailSettingsWithHttpInfo(String brandId, String templateName) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2327" href="#L2327">2327</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2328" href="#L2328">2328</a>         
 <a class="jxr_linenumber" name="L2329" href="#L2329">2329</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -2473,7 +2473,7 @@
 <a class="jxr_linenumber" name="L2465" href="#L2465">2465</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;EmailTemplate&amp;gt;</em>
 <a class="jxr_linenumber" name="L2466" href="#L2466">2466</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2467" href="#L2467">2467</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2468" href="#L2468">2468</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;EmailTemplate&gt; getEmailTemplateWithHttpInfo(String brandId, String templateName, List&lt;String&gt; expand) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2468" href="#L2468">2468</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;EmailTemplate&gt; getEmailTemplateWithHttpInfo(String brandId, String templateName, List&lt;String&gt; expand) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2469" href="#L2469">2469</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2470" href="#L2470">2470</a>         
 <a class="jxr_linenumber" name="L2471" href="#L2471">2471</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -2618,7 +2618,7 @@
 <a class="jxr_linenumber" name="L2610" href="#L2610">2610</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PageRoot&amp;gt;</em>
 <a class="jxr_linenumber" name="L2611" href="#L2611">2611</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2612" href="#L2612">2612</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2613" href="#L2613">2613</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PageRoot&gt; getErrorPageWithHttpInfo(String brandId, List&lt;String&gt; expand) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2613" href="#L2613">2613</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PageRoot&gt; getErrorPageWithHttpInfo(String brandId, List&lt;String&gt; expand) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2614" href="#L2614">2614</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2615" href="#L2615">2615</a>         
 <a class="jxr_linenumber" name="L2616" href="#L2616">2616</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -2748,7 +2748,7 @@
 <a class="jxr_linenumber" name="L2740" href="#L2740">2740</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;CustomizablePage&amp;gt;</em>
 <a class="jxr_linenumber" name="L2741" href="#L2741">2741</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2742" href="#L2742">2742</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2743" href="#L2743">2743</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;CustomizablePage&gt; getPreviewErrorPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2743" href="#L2743">2743</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;CustomizablePage&gt; getPreviewErrorPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2744" href="#L2744">2744</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2745" href="#L2745">2745</a>         
 <a class="jxr_linenumber" name="L2746" href="#L2746">2746</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -2873,7 +2873,7 @@
 <a class="jxr_linenumber" name="L2865" href="#L2865">2865</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;SignInPage&amp;gt;</em>
 <a class="jxr_linenumber" name="L2866" href="#L2866">2866</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2867" href="#L2867">2867</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2868" href="#L2868">2868</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;SignInPage&gt; getPreviewSignInPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2868" href="#L2868">2868</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;SignInPage&gt; getPreviewSignInPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2869" href="#L2869">2869</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2870" href="#L2870">2870</a>         
 <a class="jxr_linenumber" name="L2871" href="#L2871">2871</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -3000,7 +3000,7 @@
 <a class="jxr_linenumber" name="L2992" href="#L2992">2992</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PageRoot&amp;gt;</em>
 <a class="jxr_linenumber" name="L2993" href="#L2993">2993</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2994" href="#L2994">2994</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2995" href="#L2995">2995</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PageRoot&gt; getSignInPageWithHttpInfo(String brandId, List&lt;String&gt; expand) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2995" href="#L2995">2995</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PageRoot&gt; getSignInPageWithHttpInfo(String brandId, List&lt;String&gt; expand) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2996" href="#L2996">2996</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2997" href="#L2997">2997</a>         
 <a class="jxr_linenumber" name="L2998" href="#L2998">2998</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -3130,7 +3130,7 @@
 <a class="jxr_linenumber" name="L3122" href="#L3122">3122</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;HostedPage&amp;gt;</em>
 <a class="jxr_linenumber" name="L3123" href="#L3123">3123</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L3124" href="#L3124">3124</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L3125" href="#L3125">3125</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;HostedPage&gt; getSignOutPageSettingsWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L3125" href="#L3125">3125</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;HostedPage&gt; getSignOutPageSettingsWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L3126" href="#L3126">3126</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L3127" href="#L3127">3127</a>         
 <a class="jxr_linenumber" name="L3128" href="#L3128">3128</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -3281,7 +3281,7 @@
 <a class="jxr_linenumber" name="L3273" href="#L3273">3273</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;BrandDomain&amp;gt;</em>
 <a class="jxr_linenumber" name="L3274" href="#L3274">3274</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L3275" href="#L3275">3275</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L3276" href="#L3276">3276</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;BrandDomain&gt; linkBrandDomainWithHttpInfo(String brandId, CreateBrandDomainRequest createBrandDomainRequest) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L3276" href="#L3276">3276</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;BrandDomain&gt; linkBrandDomainWithHttpInfo(String brandId, CreateBrandDomainRequest createBrandDomainRequest) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L3277" href="#L3277">3277</a>             Object localVarPostBody = createBrandDomainRequest;
 <a class="jxr_linenumber" name="L3278" href="#L3278">3278</a>         
 <a class="jxr_linenumber" name="L3279" href="#L3279">3279</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -3459,7 +3459,7 @@
 <a class="jxr_linenumber" name="L3451" href="#L3451">3451</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;String&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L3452" href="#L3452">3452</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L3453" href="#L3453">3453</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L3454" href="#L3454">3454</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;String&gt;&gt; listAllSignInWidgetVersionsWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L3454" href="#L3454">3454</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;String&gt;&gt; listAllSignInWidgetVersionsWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L3455" href="#L3455">3455</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L3456" href="#L3456">3456</a>         
 <a class="jxr_linenumber" name="L3457" href="#L3457">3457</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -3584,7 +3584,7 @@
 <a class="jxr_linenumber" name="L3576" href="#L3576">3576</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;DomainResponse&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L3577" href="#L3577">3577</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L3578" href="#L3578">3578</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L3579" href="#L3579">3579</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;DomainResponse&gt;&gt; listBrandDomainsWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L3579" href="#L3579">3579</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;DomainResponse&gt;&gt; listBrandDomainsWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L3580" href="#L3580">3580</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L3581" href="#L3581">3581</a>         
 <a class="jxr_linenumber" name="L3582" href="#L3582">3582</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -3709,7 +3709,7 @@
 <a class="jxr_linenumber" name="L3701" href="#L3701">3701</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;ThemeResponse&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L3702" href="#L3702">3702</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L3703" href="#L3703">3703</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L3704" href="#L3704">3704</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;ThemeResponse&gt;&gt; listBrandThemesWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L3704" href="#L3704">3704</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;ThemeResponse&gt;&gt; listBrandThemesWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L3705" href="#L3705">3705</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L3706" href="#L3706">3706</a>         
 <a class="jxr_linenumber" name="L3707" href="#L3707">3707</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -3830,7 +3830,7 @@
 <a class="jxr_linenumber" name="L3822" href="#L3822">3822</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;Brand&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L3823" href="#L3823">3823</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L3824" href="#L3824">3824</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L3825" href="#L3825">3825</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;Brand&gt;&gt; listBrandsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L3825" href="#L3825">3825</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;Brand&gt;&gt; listBrandsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L3826" href="#L3826">3826</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L3827" href="#L3827">3827</a>         
 <a class="jxr_linenumber" name="L3828" href="#L3828">3828</a> 
@@ -3943,7 +3943,7 @@
 <a class="jxr_linenumber" name="L3935" href="#L3935">3935</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;EmailCustomization&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L3936" href="#L3936">3936</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L3937" href="#L3937">3937</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L3938" href="#L3938">3938</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;EmailCustomization&gt;&gt; listEmailCustomizationsWithHttpInfo(String brandId, String templateName, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L3938" href="#L3938">3938</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;EmailCustomization&gt;&gt; listEmailCustomizationsWithHttpInfo(String brandId, String templateName, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L3939" href="#L3939">3939</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L3940" href="#L3940">3940</a>         
 <a class="jxr_linenumber" name="L3941" href="#L3941">3941</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -4095,7 +4095,7 @@
 <a class="jxr_linenumber" name="L4087" href="#L4087">4087</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;EmailTemplate&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L4088" href="#L4088">4088</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L4089" href="#L4089">4089</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L4090" href="#L4090">4090</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;EmailTemplate&gt;&gt; listEmailTemplatesWithHttpInfo(String brandId, String after, Integer limit, List&lt;String&gt; expand) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L4090" href="#L4090">4090</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;EmailTemplate&gt;&gt; listEmailTemplatesWithHttpInfo(String brandId, String after, Integer limit, List&lt;String&gt; expand) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L4091" href="#L4091">4091</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L4092" href="#L4092">4092</a>         
 <a class="jxr_linenumber" name="L4093" href="#L4093">4093</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -4254,7 +4254,7 @@
 <a class="jxr_linenumber" name="L4246" href="#L4246">4246</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Brand&amp;gt;</em>
 <a class="jxr_linenumber" name="L4247" href="#L4247">4247</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L4248" href="#L4248">4248</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L4249" href="#L4249">4249</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Brand&gt; replaceBrandWithHttpInfo(String brandId, BrandRequest brand) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L4249" href="#L4249">4249</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Brand&gt; replaceBrandWithHttpInfo(String brandId, BrandRequest brand) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L4250" href="#L4250">4250</a>             Object localVarPostBody = brand;
 <a class="jxr_linenumber" name="L4251" href="#L4251">4251</a>         
 <a class="jxr_linenumber" name="L4252" href="#L4252">4252</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -4471,7 +4471,7 @@
 <a class="jxr_linenumber" name="L4463" href="#L4463">4463</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ThemeResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L4464" href="#L4464">4464</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L4465" href="#L4465">4465</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L4466" href="#L4466">4466</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ThemeResponse&gt; replaceBrandThemeWithHttpInfo(String brandId, String themeId, Theme theme) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L4466" href="#L4466">4466</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ThemeResponse&gt; replaceBrandThemeWithHttpInfo(String brandId, String themeId, Theme theme) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L4467" href="#L4467">4467</a>             Object localVarPostBody = theme;
 <a class="jxr_linenumber" name="L4468" href="#L4468">4468</a>         
 <a class="jxr_linenumber" name="L4469" href="#L4469">4469</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -4705,7 +4705,7 @@
 <a class="jxr_linenumber" name="L4697" href="#L4697">4697</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;CustomizablePage&amp;gt;</em>
 <a class="jxr_linenumber" name="L4698" href="#L4698">4698</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L4699" href="#L4699">4699</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L4700" href="#L4700">4700</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;CustomizablePage&gt; replaceCustomizedErrorPageWithHttpInfo(String brandId, CustomizablePage customizablePage) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L4700" href="#L4700">4700</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;CustomizablePage&gt; replaceCustomizedErrorPageWithHttpInfo(String brandId, CustomizablePage customizablePage) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L4701" href="#L4701">4701</a>             Object localVarPostBody = customizablePage;
 <a class="jxr_linenumber" name="L4702" href="#L4702">4702</a>         
 <a class="jxr_linenumber" name="L4703" href="#L4703">4703</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -4919,7 +4919,7 @@
 <a class="jxr_linenumber" name="L4911" href="#L4911">4911</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;SignInPage&amp;gt;</em>
 <a class="jxr_linenumber" name="L4912" href="#L4912">4912</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L4913" href="#L4913">4913</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L4914" href="#L4914">4914</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;SignInPage&gt; replaceCustomizedSignInPageWithHttpInfo(String brandId, SignInPage signInPage) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L4914" href="#L4914">4914</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;SignInPage&gt; replaceCustomizedSignInPageWithHttpInfo(String brandId, SignInPage signInPage) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L4915" href="#L4915">4915</a>             Object localVarPostBody = signInPage;
 <a class="jxr_linenumber" name="L4916" href="#L4916">4916</a>         
 <a class="jxr_linenumber" name="L4917" href="#L4917">4917</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -5142,7 +5142,7 @@
 <a class="jxr_linenumber" name="L5134" href="#L5134">5134</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;EmailCustomization&amp;gt;</em>
 <a class="jxr_linenumber" name="L5135" href="#L5135">5135</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L5136" href="#L5136">5136</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L5137" href="#L5137">5137</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;EmailCustomization&gt; replaceEmailCustomizationWithHttpInfo(String brandId, String templateName, String customizationId, EmailCustomization instance) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L5137" href="#L5137">5137</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;EmailCustomization&gt; replaceEmailCustomizationWithHttpInfo(String brandId, String templateName, String customizationId, EmailCustomization instance) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L5138" href="#L5138">5138</a>             Object localVarPostBody = instance;
 <a class="jxr_linenumber" name="L5139" href="#L5139">5139</a>         
 <a class="jxr_linenumber" name="L5140" href="#L5140">5140</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -5387,7 +5387,7 @@
 <a class="jxr_linenumber" name="L5379" href="#L5379">5379</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L5380" href="#L5380">5380</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L5381" href="#L5381">5381</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L5382" href="#L5382">5382</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; replaceEmailSettingsWithHttpInfo(String brandId, String templateName, EmailSettings emailSettings) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L5382" href="#L5382">5382</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; replaceEmailSettingsWithHttpInfo(String brandId, String templateName, EmailSettings emailSettings) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L5383" href="#L5383">5383</a>             Object localVarPostBody = emailSettings;
 <a class="jxr_linenumber" name="L5384" href="#L5384">5384</a>         
 <a class="jxr_linenumber" name="L5385" href="#L5385">5385</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -5485,7 +5485,7 @@
 <a class="jxr_linenumber" name="L5477" href="#L5477">5477</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;CustomizablePage&amp;gt;</em>
 <a class="jxr_linenumber" name="L5478" href="#L5478">5478</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L5479" href="#L5479">5479</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L5480" href="#L5480">5480</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;CustomizablePage&gt; replacePreviewErrorPageWithHttpInfo(String brandId, CustomizablePage customizablePage) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L5480" href="#L5480">5480</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;CustomizablePage&gt; replacePreviewErrorPageWithHttpInfo(String brandId, CustomizablePage customizablePage) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L5481" href="#L5481">5481</a>             Object localVarPostBody = customizablePage;
 <a class="jxr_linenumber" name="L5482" href="#L5482">5482</a>         
 <a class="jxr_linenumber" name="L5483" href="#L5483">5483</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -5699,7 +5699,7 @@
 <a class="jxr_linenumber" name="L5691" href="#L5691">5691</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;SignInPage&amp;gt;</em>
 <a class="jxr_linenumber" name="L5692" href="#L5692">5692</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L5693" href="#L5693">5693</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L5694" href="#L5694">5694</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;SignInPage&gt; replacePreviewSignInPageWithHttpInfo(String brandId, SignInPage signInPage) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L5694" href="#L5694">5694</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;SignInPage&gt; replacePreviewSignInPageWithHttpInfo(String brandId, SignInPage signInPage) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L5695" href="#L5695">5695</a>             Object localVarPostBody = signInPage;
 <a class="jxr_linenumber" name="L5696" href="#L5696">5696</a>         
 <a class="jxr_linenumber" name="L5697" href="#L5697">5697</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -5913,7 +5913,7 @@
 <a class="jxr_linenumber" name="L5905" href="#L5905">5905</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;HostedPage&amp;gt;</em>
 <a class="jxr_linenumber" name="L5906" href="#L5906">5906</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L5907" href="#L5907">5907</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L5908" href="#L5908">5908</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;HostedPage&gt; replaceSignOutPageSettingsWithHttpInfo(String brandId, HostedPage hostedPage) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L5908" href="#L5908">5908</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;HostedPage&gt; replaceSignOutPageSettingsWithHttpInfo(String brandId, HostedPage hostedPage) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L5909" href="#L5909">5909</a>             Object localVarPostBody = hostedPage;
 <a class="jxr_linenumber" name="L5910" href="#L5910">5910</a>         
 <a class="jxr_linenumber" name="L5911" href="#L5911">5911</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -6103,7 +6103,7 @@
 <a class="jxr_linenumber" name="L6095" href="#L6095">6095</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L6096" href="#L6096">6096</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L6097" href="#L6097">6097</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L6098" href="#L6098">6098</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; resetCustomizedErrorPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L6098" href="#L6098">6098</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; resetCustomizedErrorPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L6099" href="#L6099">6099</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L6100" href="#L6100">6100</a>         
 <a class="jxr_linenumber" name="L6101" href="#L6101">6101</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -6169,7 +6169,7 @@
 <a class="jxr_linenumber" name="L6161" href="#L6161">6161</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L6162" href="#L6162">6162</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L6163" href="#L6163">6163</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L6164" href="#L6164">6164</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; resetCustomizedSignInPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L6164" href="#L6164">6164</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; resetCustomizedSignInPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L6165" href="#L6165">6165</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L6166" href="#L6166">6166</a>         
 <a class="jxr_linenumber" name="L6167" href="#L6167">6167</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -6235,7 +6235,7 @@
 <a class="jxr_linenumber" name="L6227" href="#L6227">6227</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L6228" href="#L6228">6228</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L6229" href="#L6229">6229</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L6230" href="#L6230">6230</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; resetPreviewErrorPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L6230" href="#L6230">6230</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; resetPreviewErrorPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L6231" href="#L6231">6231</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L6232" href="#L6232">6232</a>         
 <a class="jxr_linenumber" name="L6233" href="#L6233">6233</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -6301,7 +6301,7 @@
 <a class="jxr_linenumber" name="L6293" href="#L6293">6293</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L6294" href="#L6294">6294</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L6295" href="#L6295">6295</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L6296" href="#L6296">6296</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; resetPreviewSignInPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L6296" href="#L6296">6296</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; resetPreviewSignInPageWithHttpInfo(String brandId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L6297" href="#L6297">6297</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L6298" href="#L6298">6298</a>         
 <a class="jxr_linenumber" name="L6299" href="#L6299">6299</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -6371,7 +6371,7 @@
 <a class="jxr_linenumber" name="L6363" href="#L6363">6363</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L6364" href="#L6364">6364</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L6365" href="#L6365">6365</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L6366" href="#L6366">6366</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; sendTestEmailWithHttpInfo(String brandId, String templateName, String language) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L6366" href="#L6366">6366</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; sendTestEmailWithHttpInfo(String brandId, String templateName, String language) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L6367" href="#L6367">6367</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L6368" href="#L6368">6368</a>         
 <a class="jxr_linenumber" name="L6369" href="#L6369">6369</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -6447,7 +6447,7 @@
 <a class="jxr_linenumber" name="L6439" href="#L6439">6439</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L6440" href="#L6440">6440</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L6441" href="#L6441">6441</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L6442" href="#L6442">6442</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unlinkBrandDomainWithHttpInfo(String brandId, String domainId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L6442" href="#L6442">6442</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unlinkBrandDomainWithHttpInfo(String brandId, String domainId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L6443" href="#L6443">6443</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L6444" href="#L6444">6444</a>         
 <a class="jxr_linenumber" name="L6445" href="#L6445">6445</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -6526,7 +6526,7 @@
 <a class="jxr_linenumber" name="L6518" href="#L6518">6518</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ImageUploadResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L6519" href="#L6519">6519</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L6520" href="#L6520">6520</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L6521" href="#L6521">6521</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ImageUploadResponse&gt; uploadBrandThemeBackgroundImageWithHttpInfo(String brandId, String themeId, File _file) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L6521" href="#L6521">6521</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ImageUploadResponse&gt; uploadBrandThemeBackgroundImageWithHttpInfo(String brandId, String themeId, File _file) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L6522" href="#L6522">6522</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L6523" href="#L6523">6523</a>         
 <a class="jxr_linenumber" name="L6524" href="#L6524">6524</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -6692,7 +6692,7 @@
 <a class="jxr_linenumber" name="L6684" href="#L6684">6684</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ImageUploadResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L6685" href="#L6685">6685</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L6686" href="#L6686">6686</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L6687" href="#L6687">6687</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ImageUploadResponse&gt; uploadBrandThemeFaviconWithHttpInfo(String brandId, String themeId, File _file) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L6687" href="#L6687">6687</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ImageUploadResponse&gt; uploadBrandThemeFaviconWithHttpInfo(String brandId, String themeId, File _file) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L6688" href="#L6688">6688</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L6689" href="#L6689">6689</a>         
 <a class="jxr_linenumber" name="L6690" href="#L6690">6690</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>
@@ -6858,7 +6858,7 @@
 <a class="jxr_linenumber" name="L6850" href="#L6850">6850</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ImageUploadResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L6851" href="#L6851">6851</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L6852" href="#L6852">6852</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L6853" href="#L6853">6853</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ImageUploadResponse&gt; uploadBrandThemeLogoWithHttpInfo(String brandId, String themeId, File _file) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L6853" href="#L6853">6853</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ImageUploadResponse&gt; uploadBrandThemeLogoWithHttpInfo(String brandId, String themeId, File _file) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L6854" href="#L6854">6854</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L6855" href="#L6855">6855</a>         
 <a class="jxr_linenumber" name="L6856" href="#L6856">6856</a>                 <em class="jxr_comment">// verify the required parameter 'brandId' is set ''</em>

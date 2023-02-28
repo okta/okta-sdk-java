@@ -51,7 +51,7 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-16T17:12:48.333Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-28T18:21:37.496Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.RoleApi"</span>)
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="RoleApi" href="../../../../org/openapitools/client/api/RoleApi.html#RoleApi">RoleApi</a> {
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -121,7 +121,7 @@
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;IamRole&amp;gt;</em>
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;IamRole&gt; createRoleWithHttpInfo(IamRole instance) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;IamRole&gt; createRoleWithHttpInfo(IamRole instance) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>             Object localVarPostBody = instance;
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>         
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>                 <em class="jxr_comment">// verify the required parameter 'instance' is set ''</em>
@@ -287,7 +287,7 @@
 <a class="jxr_linenumber" name="L279" href="#L279">279</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L280" href="#L280">280</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L281" href="#L281">281</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; createRolePermissionWithHttpInfo(String roleIdOrLabel, String permissionType) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; createRolePermissionWithHttpInfo(String roleIdOrLabel, String permissionType) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L283" href="#L283">283</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>         
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>                 <em class="jxr_comment">// verify the required parameter 'roleIdOrLabel' is set ''</em>
@@ -359,7 +359,7 @@
 <a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L352" href="#L352">352</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L354" href="#L354">354</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteRoleWithHttpInfo(String roleIdOrLabel) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteRoleWithHttpInfo(String roleIdOrLabel) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L355" href="#L355">355</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L356" href="#L356">356</a>         
 <a class="jxr_linenumber" name="L357" href="#L357">357</a>                 <em class="jxr_comment">// verify the required parameter 'roleIdOrLabel' is set ''</em>
@@ -427,7 +427,7 @@
 <a class="jxr_linenumber" name="L419" href="#L419">419</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L420" href="#L420">420</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L421" href="#L421">421</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L422" href="#L422">422</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteRolePermissionWithHttpInfo(String roleIdOrLabel, String permissionType) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteRolePermissionWithHttpInfo(String roleIdOrLabel, String permissionType) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L423" href="#L423">423</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L424" href="#L424">424</a>         
 <a class="jxr_linenumber" name="L425" href="#L425">425</a>                 <em class="jxr_comment">// verify the required parameter 'roleIdOrLabel' is set ''</em>
@@ -500,7 +500,7 @@
 <a class="jxr_linenumber" name="L492" href="#L492">492</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;IamRole&amp;gt;</em>
 <a class="jxr_linenumber" name="L493" href="#L493">493</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L494" href="#L494">494</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L495" href="#L495">495</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;IamRole&gt; getRoleWithHttpInfo(String roleIdOrLabel) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;IamRole&gt; getRoleWithHttpInfo(String roleIdOrLabel) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L496" href="#L496">496</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L497" href="#L497">497</a>         
 <a class="jxr_linenumber" name="L498" href="#L498">498</a>                 <em class="jxr_comment">// verify the required parameter 'roleIdOrLabel' is set ''</em>
@@ -627,7 +627,7 @@
 <a class="jxr_linenumber" name="L619" href="#L619">619</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Permission&amp;gt;</em>
 <a class="jxr_linenumber" name="L620" href="#L620">620</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L621" href="#L621">621</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L622" href="#L622">622</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Permission&gt; getRolePermissionWithHttpInfo(String roleIdOrLabel, String permissionType) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L622" href="#L622">622</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Permission&gt; getRolePermissionWithHttpInfo(String roleIdOrLabel, String permissionType) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L623" href="#L623">623</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L624" href="#L624">624</a>         
 <a class="jxr_linenumber" name="L625" href="#L625">625</a>                 <em class="jxr_comment">// verify the required parameter 'roleIdOrLabel' is set ''</em>
@@ -765,7 +765,7 @@
 <a class="jxr_linenumber" name="L757" href="#L757">757</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Permissions&amp;gt;</em>
 <a class="jxr_linenumber" name="L758" href="#L758">758</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L759" href="#L759">759</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L760" href="#L760">760</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Permissions&gt; listRolePermissionsWithHttpInfo(String roleIdOrLabel) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L760" href="#L760">760</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Permissions&gt; listRolePermissionsWithHttpInfo(String roleIdOrLabel) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L761" href="#L761">761</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L762" href="#L762">762</a>         
 <a class="jxr_linenumber" name="L763" href="#L763">763</a>                 <em class="jxr_comment">// verify the required parameter 'roleIdOrLabel' is set ''</em>
@@ -888,7 +888,7 @@
 <a class="jxr_linenumber" name="L880" href="#L880">880</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;IamRoles&amp;gt;</em>
 <a class="jxr_linenumber" name="L881" href="#L881">881</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L882" href="#L882">882</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L883" href="#L883">883</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;IamRoles&gt; listRolesWithHttpInfo(String after) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L883" href="#L883">883</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;IamRoles&gt; listRolesWithHttpInfo(String after) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L884" href="#L884">884</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L885" href="#L885">885</a>         
 <a class="jxr_linenumber" name="L886" href="#L886">886</a> 
@@ -1023,7 +1023,7 @@
 <a class="jxr_linenumber" name="L1015" href="#L1015">1015</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;IamRole&amp;gt;</em>
 <a class="jxr_linenumber" name="L1016" href="#L1016">1016</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1017" href="#L1017">1017</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;IamRole&gt; replaceRoleWithHttpInfo(String roleIdOrLabel, IamRole instance) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1018" href="#L1018">1018</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;IamRole&gt; replaceRoleWithHttpInfo(String roleIdOrLabel, IamRole instance) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1019" href="#L1019">1019</a>             Object localVarPostBody = instance;
 <a class="jxr_linenumber" name="L1020" href="#L1020">1020</a>         
 <a class="jxr_linenumber" name="L1021" href="#L1021">1021</a>                 <em class="jxr_comment">// verify the required parameter 'roleIdOrLabel' is set ''</em>

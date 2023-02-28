@@ -49,7 +49,7 @@
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-16T17:12:48.333Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-28T18:21:37.496Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.PolicyApi"</span>)
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="PolicyApi" href="../../../../org/openapitools/client/api/PolicyApi.html#PolicyApi">PolicyApi</a> {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; activatePolicyWithHttpInfo(String policyId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; activatePolicyWithHttpInfo(String policyId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>              Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>          
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>                  <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -169,7 +169,7 @@
 <a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; activatePolicyRuleWithHttpInfo(String policyId, String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; activatePolicyRuleWithHttpInfo(String policyId, String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>         
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -244,7 +244,7 @@
 <a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Policy&amp;gt;</em>
 <a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Policy&gt; clonePolicyWithHttpInfo(String policyId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Policy&gt; clonePolicyWithHttpInfo(String policyId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>         
 <a class="jxr_linenumber" name="L242" href="#L242">242</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -390,7 +390,7 @@
 <a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Policy&amp;gt;</em>
 <a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L384" href="#L384">384</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Policy&gt; createPolicyWithHttpInfo(Policy policy, Boolean activate) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Policy&gt; createPolicyWithHttpInfo(Policy policy, Boolean activate) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L386" href="#L386">386</a>             Object localVarPostBody = policy;
 <a class="jxr_linenumber" name="L387" href="#L387">387</a>         
 <a class="jxr_linenumber" name="L388" href="#L388">388</a>                 <em class="jxr_comment">// verify the required parameter 'policy' is set ''</em>
@@ -584,7 +584,7 @@
 <a class="jxr_linenumber" name="L576" href="#L576">576</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PolicyRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L577" href="#L577">577</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L578" href="#L578">578</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L579" href="#L579">579</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PolicyRule&gt; createPolicyRuleWithHttpInfo(String policyId, PolicyRule policyRule) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L579" href="#L579">579</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PolicyRule&gt; createPolicyRuleWithHttpInfo(String policyId, PolicyRule policyRule) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L580" href="#L580">580</a>             Object localVarPostBody = policyRule;
 <a class="jxr_linenumber" name="L581" href="#L581">581</a>         
 <a class="jxr_linenumber" name="L582" href="#L582">582</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -774,7 +774,7 @@
 <a class="jxr_linenumber" name="L766" href="#L766">766</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L767" href="#L767">767</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L768" href="#L768">768</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L769" href="#L769">769</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deactivatePolicyWithHttpInfo(String policyId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L769" href="#L769">769</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deactivatePolicyWithHttpInfo(String policyId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L770" href="#L770">770</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L771" href="#L771">771</a>         
 <a class="jxr_linenumber" name="L772" href="#L772">772</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -842,7 +842,7 @@
 <a class="jxr_linenumber" name="L834" href="#L834">834</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L835" href="#L835">835</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L836" href="#L836">836</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L837" href="#L837">837</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deactivatePolicyRuleWithHttpInfo(String policyId, String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L837" href="#L837">837</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deactivatePolicyRuleWithHttpInfo(String policyId, String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L838" href="#L838">838</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L839" href="#L839">839</a>         
 <a class="jxr_linenumber" name="L840" href="#L840">840</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -914,7 +914,7 @@
 <a class="jxr_linenumber" name="L906" href="#L906">906</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L907" href="#L907">907</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L908" href="#L908">908</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L909" href="#L909">909</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deletePolicyWithHttpInfo(String policyId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L909" href="#L909">909</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deletePolicyWithHttpInfo(String policyId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L910" href="#L910">910</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L911" href="#L911">911</a>         
 <a class="jxr_linenumber" name="L912" href="#L912">912</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -982,7 +982,7 @@
 <a class="jxr_linenumber" name="L974" href="#L974">974</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L975" href="#L975">975</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L976" href="#L976">976</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L977" href="#L977">977</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deletePolicyRuleWithHttpInfo(String policyId, String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L977" href="#L977">977</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deletePolicyRuleWithHttpInfo(String policyId, String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L978" href="#L978">978</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L979" href="#L979">979</a>         
 <a class="jxr_linenumber" name="L980" href="#L980">980</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -1057,7 +1057,7 @@
 <a class="jxr_linenumber" name="L1049" href="#L1049">1049</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Policy&amp;gt;</em>
 <a class="jxr_linenumber" name="L1050" href="#L1050">1050</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1051" href="#L1051">1051</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1052" href="#L1052">1052</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Policy&gt; getPolicyWithHttpInfo(String policyId, String expand) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1052" href="#L1052">1052</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Policy&gt; getPolicyWithHttpInfo(String policyId, String expand) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1053" href="#L1053">1053</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1054" href="#L1054">1054</a>         
 <a class="jxr_linenumber" name="L1055" href="#L1055">1055</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -1189,7 +1189,7 @@
 <a class="jxr_linenumber" name="L1181" href="#L1181">1181</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PolicyRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L1182" href="#L1182">1182</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1183" href="#L1183">1183</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1184" href="#L1184">1184</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PolicyRule&gt; getPolicyRuleWithHttpInfo(String policyId, String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1184" href="#L1184">1184</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PolicyRule&gt; getPolicyRuleWithHttpInfo(String policyId, String ruleId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1185" href="#L1185">1185</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1186" href="#L1186">1186</a>         
 <a class="jxr_linenumber" name="L1187" href="#L1187">1187</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -1329,7 +1329,7 @@
 <a class="jxr_linenumber" name="L1321" href="#L1321">1321</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;Policy&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L1322" href="#L1322">1322</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1323" href="#L1323">1323</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1324" href="#L1324">1324</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;Policy&gt;&gt; listPoliciesWithHttpInfo(String type, String status, String expand) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1324" href="#L1324">1324</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;Policy&gt;&gt; listPoliciesWithHttpInfo(String type, String status, String expand) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1325" href="#L1325">1325</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1326" href="#L1326">1326</a>         
 <a class="jxr_linenumber" name="L1327" href="#L1327">1327</a>                 <em class="jxr_comment">// verify the required parameter 'type' is set ''</em>
@@ -1457,7 +1457,7 @@
 <a class="jxr_linenumber" name="L1449" href="#L1449">1449</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;PolicyRule&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L1450" href="#L1450">1450</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1451" href="#L1451">1451</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1452" href="#L1452">1452</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;PolicyRule&gt;&gt; listPolicyRulesWithHttpInfo(String policyId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1452" href="#L1452">1452</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;PolicyRule&gt;&gt; listPolicyRulesWithHttpInfo(String policyId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1453" href="#L1453">1453</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1454" href="#L1454">1454</a>         
 <a class="jxr_linenumber" name="L1455" href="#L1455">1455</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -1605,7 +1605,7 @@
 <a class="jxr_linenumber" name="L1597" href="#L1597">1597</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Policy&amp;gt;</em>
 <a class="jxr_linenumber" name="L1598" href="#L1598">1598</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1599" href="#L1599">1599</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1600" href="#L1600">1600</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Policy&gt; replacePolicyWithHttpInfo(String policyId, Policy policy) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1600" href="#L1600">1600</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Policy&gt; replacePolicyWithHttpInfo(String policyId, Policy policy) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1601" href="#L1601">1601</a>             Object localVarPostBody = policy;
 <a class="jxr_linenumber" name="L1602" href="#L1602">1602</a>         
 <a class="jxr_linenumber" name="L1603" href="#L1603">1603</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>
@@ -1822,7 +1822,7 @@
 <a class="jxr_linenumber" name="L1814" href="#L1814">1814</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PolicyRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L1815" href="#L1815">1815</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1816" href="#L1816">1816</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1817" href="#L1817">1817</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PolicyRule&gt; replacePolicyRuleWithHttpInfo(String policyId, String ruleId, PolicyRule policyRule) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1817" href="#L1817">1817</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PolicyRule&gt; replacePolicyRuleWithHttpInfo(String policyId, String ruleId, PolicyRule policyRule) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1818" href="#L1818">1818</a>             Object localVarPostBody = policyRule;
 <a class="jxr_linenumber" name="L1819" href="#L1819">1819</a>         
 <a class="jxr_linenumber" name="L1820" href="#L1820">1820</a>                 <em class="jxr_comment">// verify the required parameter 'policyId' is set ''</em>

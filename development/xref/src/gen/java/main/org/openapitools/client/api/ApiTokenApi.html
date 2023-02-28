@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-16T17:12:48.333Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-28T18:21:37.496Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.ApiTokenApi"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ApiTokenApi" href="../../../../org/openapitools/client/api/ApiTokenApi.html#ApiTokenApi">ApiTokenApi</a> {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ApiToken&amp;gt;</em>
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ApiToken&gt; getApiTokenWithHttpInfo(String apiTokenId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ApiToken&gt; getApiTokenWithHttpInfo(String apiTokenId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>              Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>          
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>                  <em class="jxr_comment">// verify the required parameter 'apiTokenId' is set ''</em>
@@ -228,7 +228,7 @@
 <a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;ApiToken&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;ApiToken&gt;&gt; listApiTokensWithHttpInfo(String after, Integer limit, String q) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;ApiToken&gt;&gt; listApiTokensWithHttpInfo(String after, Integer limit, String q) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L224" href="#L224">224</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>         
 <a class="jxr_linenumber" name="L226" href="#L226">226</a> 
@@ -345,7 +345,7 @@
 <a class="jxr_linenumber" name="L337" href="#L337">337</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L338" href="#L338">338</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L339" href="#L339">339</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L340" href="#L340">340</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; revokeApiTokenWithHttpInfo(String apiTokenId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; revokeApiTokenWithHttpInfo(String apiTokenId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L341" href="#L341">341</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L342" href="#L342">342</a>         
 <a class="jxr_linenumber" name="L343" href="#L343">343</a>                 <em class="jxr_comment">// verify the required parameter 'apiTokenId' is set ''</em>
@@ -407,7 +407,7 @@
 <a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L400" href="#L400">400</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L401" href="#L401">401</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L402" href="#L402">402</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; revokeCurrentApiTokenWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; revokeCurrentApiTokenWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L403" href="#L403">403</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L404" href="#L404">404</a>         
 <a class="jxr_linenumber" name="L405" href="#L405">405</a> 

@@ -57,7 +57,7 @@
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-16T17:12:48.333Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-28T18:21:37.496Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.OrgSettingApi"</span>)
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="OrgSettingApi" href="../../../../org/openapitools/client/api/OrgSettingApi.html#OrgSettingApi">OrgSettingApi</a> {
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -127,7 +127,7 @@
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;BouncesRemoveListResult&amp;gt;</em>
 <a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;BouncesRemoveListResult&gt; bulkRemoveEmailAddressBouncesWithHttpInfo(BouncesRemoveListObj bouncesRemoveListObj) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;BouncesRemoveListResult&gt; bulkRemoveEmailAddressBouncesWithHttpInfo(BouncesRemoveListObj bouncesRemoveListObj) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>             Object localVarPostBody = bouncesRemoveListObj;
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>         
 <a class="jxr_linenumber" name="L125" href="#L125">125</a> 
@@ -271,7 +271,7 @@
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgOktaSupportSettingsObj&amp;gt;</em>
 <a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgOktaSupportSettingsObj&gt; extendOktaSupportWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgOktaSupportSettingsObj&gt; extendOktaSupportWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L267" href="#L267">267</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L268" href="#L268">268</a>         
 <a class="jxr_linenumber" name="L269" href="#L269">269</a> 
@@ -374,7 +374,7 @@
 <a class="jxr_linenumber" name="L366" href="#L366">366</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgOktaCommunicationSetting&amp;gt;</em>
 <a class="jxr_linenumber" name="L367" href="#L367">367</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L369" href="#L369">369</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgOktaCommunicationSetting&gt; getOktaCommunicationSettingsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgOktaCommunicationSetting&gt; getOktaCommunicationSettingsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L370" href="#L370">370</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L371" href="#L371">371</a>         
 <a class="jxr_linenumber" name="L372" href="#L372">372</a> 
@@ -477,7 +477,7 @@
 <a class="jxr_linenumber" name="L469" href="#L469">469</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;OrgContactTypeObj&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L470" href="#L470">470</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L471" href="#L471">471</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;OrgContactTypeObj&gt;&gt; getOrgContactTypesWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;OrgContactTypeObj&gt;&gt; getOrgContactTypesWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L473" href="#L473">473</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L474" href="#L474">474</a>         
 <a class="jxr_linenumber" name="L475" href="#L475">475</a> 
@@ -584,7 +584,7 @@
 <a class="jxr_linenumber" name="L576" href="#L576">576</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgContactUser&amp;gt;</em>
 <a class="jxr_linenumber" name="L577" href="#L577">577</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L578" href="#L578">578</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L579" href="#L579">579</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgContactUser&gt; getOrgContactUserWithHttpInfo(String contactType) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L579" href="#L579">579</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgContactUser&gt; getOrgContactUserWithHttpInfo(String contactType) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L580" href="#L580">580</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L581" href="#L581">581</a>         
 <a class="jxr_linenumber" name="L582" href="#L582">582</a>                 <em class="jxr_comment">// verify the required parameter 'contactType' is set ''</em>
@@ -705,7 +705,7 @@
 <a class="jxr_linenumber" name="L697" href="#L697">697</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgOktaSupportSettingsObj&amp;gt;</em>
 <a class="jxr_linenumber" name="L698" href="#L698">698</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L699" href="#L699">699</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L700" href="#L700">700</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgOktaSupportSettingsObj&gt; getOrgOktaSupportSettingsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L700" href="#L700">700</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgOktaSupportSettingsObj&gt; getOrgOktaSupportSettingsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L701" href="#L701">701</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L702" href="#L702">702</a>         
 <a class="jxr_linenumber" name="L703" href="#L703">703</a> 
@@ -808,7 +808,7 @@
 <a class="jxr_linenumber" name="L800" href="#L800">800</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgPreferences&amp;gt;</em>
 <a class="jxr_linenumber" name="L801" href="#L801">801</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L802" href="#L802">802</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L803" href="#L803">803</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgPreferences&gt; getOrgPreferencesWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L803" href="#L803">803</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgPreferences&gt; getOrgPreferencesWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L804" href="#L804">804</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L805" href="#L805">805</a>         
 <a class="jxr_linenumber" name="L806" href="#L806">806</a> 
@@ -911,7 +911,7 @@
 <a class="jxr_linenumber" name="L903" href="#L903">903</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgSetting&amp;gt;</em>
 <a class="jxr_linenumber" name="L904" href="#L904">904</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L905" href="#L905">905</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L906" href="#L906">906</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgSetting&gt; getOrgSettingsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L906" href="#L906">906</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgSetting&gt; getOrgSettingsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L907" href="#L907">907</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L908" href="#L908">908</a>         
 <a class="jxr_linenumber" name="L909" href="#L909">909</a> 
@@ -1012,7 +1012,7 @@
 <a class="jxr_linenumber" name="L1004" href="#L1004">1004</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;WellKnownOrgMetadata&amp;gt;</em>
 <a class="jxr_linenumber" name="L1005" href="#L1005">1005</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1006" href="#L1006">1006</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1007" href="#L1007">1007</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;WellKnownOrgMetadata&gt; getWellknownOrgMetadataWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1007" href="#L1007">1007</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;WellKnownOrgMetadata&gt; getWellknownOrgMetadataWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1008" href="#L1008">1008</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1009" href="#L1009">1009</a>         
 <a class="jxr_linenumber" name="L1010" href="#L1010">1010</a> 
@@ -1114,7 +1114,7 @@
 <a class="jxr_linenumber" name="L1106" href="#L1106">1106</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgOktaSupportSettingsObj&amp;gt;</em>
 <a class="jxr_linenumber" name="L1107" href="#L1107">1107</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1108" href="#L1108">1108</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1109" href="#L1109">1109</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgOktaSupportSettingsObj&gt; grantOktaSupportWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1109" href="#L1109">1109</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgOktaSupportSettingsObj&gt; grantOktaSupportWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1110" href="#L1110">1110</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1111" href="#L1111">1111</a>         
 <a class="jxr_linenumber" name="L1112" href="#L1112">1112</a> 
@@ -1217,7 +1217,7 @@
 <a class="jxr_linenumber" name="L1209" href="#L1209">1209</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgOktaCommunicationSetting&amp;gt;</em>
 <a class="jxr_linenumber" name="L1210" href="#L1210">1210</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1211" href="#L1211">1211</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1212" href="#L1212">1212</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgOktaCommunicationSetting&gt; optInUsersToOktaCommunicationEmailsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1212" href="#L1212">1212</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgOktaCommunicationSetting&gt; optInUsersToOktaCommunicationEmailsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1213" href="#L1213">1213</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1214" href="#L1214">1214</a>         
 <a class="jxr_linenumber" name="L1215" href="#L1215">1215</a> 
@@ -1320,7 +1320,7 @@
 <a class="jxr_linenumber" name="L1312" href="#L1312">1312</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgOktaCommunicationSetting&amp;gt;</em>
 <a class="jxr_linenumber" name="L1313" href="#L1313">1313</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1314" href="#L1314">1314</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1315" href="#L1315">1315</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgOktaCommunicationSetting&gt; optOutUsersFromOktaCommunicationEmailsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1315" href="#L1315">1315</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgOktaCommunicationSetting&gt; optOutUsersFromOktaCommunicationEmailsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1316" href="#L1316">1316</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1317" href="#L1317">1317</a>         
 <a class="jxr_linenumber" name="L1318" href="#L1318">1318</a> 
@@ -1450,7 +1450,7 @@
 <a class="jxr_linenumber" name="L1442" href="#L1442">1442</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgContactUser&amp;gt;</em>
 <a class="jxr_linenumber" name="L1443" href="#L1443">1443</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1444" href="#L1444">1444</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1445" href="#L1445">1445</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgContactUser&gt; replaceOrgContactUserWithHttpInfo(String contactType, OrgContactUser orgContactUser) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1445" href="#L1445">1445</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgContactUser&gt; replaceOrgContactUserWithHttpInfo(String contactType, OrgContactUser orgContactUser) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1446" href="#L1446">1446</a>             Object localVarPostBody = orgContactUser;
 <a class="jxr_linenumber" name="L1447" href="#L1447">1447</a>         
 <a class="jxr_linenumber" name="L1448" href="#L1448">1448</a>                 <em class="jxr_comment">// verify the required parameter 'contactType' is set ''</em>
@@ -1658,7 +1658,7 @@
 <a class="jxr_linenumber" name="L1650" href="#L1650">1650</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgSetting&amp;gt;</em>
 <a class="jxr_linenumber" name="L1651" href="#L1651">1651</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1652" href="#L1652">1652</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1653" href="#L1653">1653</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgSetting&gt; replaceOrgSettingsWithHttpInfo(OrgSetting orgSetting) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1653" href="#L1653">1653</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgSetting&gt; replaceOrgSettingsWithHttpInfo(OrgSetting orgSetting) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1654" href="#L1654">1654</a>             Object localVarPostBody = orgSetting;
 <a class="jxr_linenumber" name="L1655" href="#L1655">1655</a>         
 <a class="jxr_linenumber" name="L1656" href="#L1656">1656</a>                 <em class="jxr_comment">// verify the required parameter 'orgSetting' is set ''</em>
@@ -1817,7 +1817,7 @@
 <a class="jxr_linenumber" name="L1809" href="#L1809">1809</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgOktaSupportSettingsObj&amp;gt;</em>
 <a class="jxr_linenumber" name="L1810" href="#L1810">1810</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1811" href="#L1811">1811</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1812" href="#L1812">1812</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgOktaSupportSettingsObj&gt; revokeOktaSupportWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1812" href="#L1812">1812</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgOktaSupportSettingsObj&gt; revokeOktaSupportWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1813" href="#L1813">1813</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1814" href="#L1814">1814</a>         
 <a class="jxr_linenumber" name="L1815" href="#L1815">1815</a> 
@@ -1920,7 +1920,7 @@
 <a class="jxr_linenumber" name="L1912" href="#L1912">1912</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgPreferences&amp;gt;</em>
 <a class="jxr_linenumber" name="L1913" href="#L1913">1913</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1914" href="#L1914">1914</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1915" href="#L1915">1915</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgPreferences&gt; updateOrgHideOktaUIFooterWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1915" href="#L1915">1915</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgPreferences&gt; updateOrgHideOktaUIFooterWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1916" href="#L1916">1916</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1917" href="#L1917">1917</a>         
 <a class="jxr_linenumber" name="L1918" href="#L1918">1918</a> 
@@ -2044,7 +2044,7 @@
 <a class="jxr_linenumber" name="L2036" href="#L2036">2036</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgSetting&amp;gt;</em>
 <a class="jxr_linenumber" name="L2037" href="#L2037">2037</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2038" href="#L2038">2038</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2039" href="#L2039">2039</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgSetting&gt; updateOrgSettingsWithHttpInfo(OrgSetting orgSetting) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2039" href="#L2039">2039</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgSetting&gt; updateOrgSettingsWithHttpInfo(OrgSetting orgSetting) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2040" href="#L2040">2040</a>             Object localVarPostBody = orgSetting;
 <a class="jxr_linenumber" name="L2041" href="#L2041">2041</a>         
 <a class="jxr_linenumber" name="L2042" href="#L2042">2042</a> 
@@ -2188,7 +2188,7 @@
 <a class="jxr_linenumber" name="L2180" href="#L2180">2180</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;OrgPreferences&amp;gt;</em>
 <a class="jxr_linenumber" name="L2181" href="#L2181">2181</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2182" href="#L2182">2182</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2183" href="#L2183">2183</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;OrgPreferences&gt; updateOrgShowOktaUIFooterWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2183" href="#L2183">2183</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;OrgPreferences&gt; updateOrgShowOktaUIFooterWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2184" href="#L2184">2184</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2185" href="#L2185">2185</a>         
 <a class="jxr_linenumber" name="L2186" href="#L2186">2186</a> 
@@ -2294,7 +2294,7 @@
 <a class="jxr_linenumber" name="L2286" href="#L2286">2286</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L2287" href="#L2287">2287</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2288" href="#L2288">2288</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2289" href="#L2289">2289</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; uploadOrgLogoWithHttpInfo(File _file) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2289" href="#L2289">2289</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; uploadOrgLogoWithHttpInfo(File _file) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2290" href="#L2290">2290</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2291" href="#L2291">2291</a>         
 <a class="jxr_linenumber" name="L2292" href="#L2292">2292</a>                 <em class="jxr_comment">// verify the required parameter '_file' is set ''</em>

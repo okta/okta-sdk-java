@@ -52,7 +52,7 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-16T17:12:48.333Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-28T18:21:37.496Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.DomainApi"</span>)
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="DomainApi" href="../../../../org/openapitools/client/api/DomainApi.html#DomainApi">DomainApi</a> {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -122,7 +122,7 @@
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;DomainResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;DomainResponse&gt; createDomainWithHttpInfo(Domain domain) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;DomainResponse&gt; createDomainWithHttpInfo(Domain domain) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>             Object localVarPostBody = domain;
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>         
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>                 <em class="jxr_comment">// verify the required parameter 'domain' is set ''</em>
@@ -284,7 +284,7 @@
 <a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteDomainWithHttpInfo(String domainId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteDomainWithHttpInfo(String domainId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>         
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>                 <em class="jxr_comment">// verify the required parameter 'domainId' is set ''</em>
@@ -351,7 +351,7 @@
 <a class="jxr_linenumber" name="L343" href="#L343">343</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;DomainResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L346" href="#L346">346</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;DomainResponse&gt; getDomainWithHttpInfo(String domainId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;DomainResponse&gt; getDomainWithHttpInfo(String domainId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L347" href="#L347">347</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L348" href="#L348">348</a>         
 <a class="jxr_linenumber" name="L349" href="#L349">349</a>                 <em class="jxr_comment">// verify the required parameter 'domainId' is set ''</em>
@@ -472,7 +472,7 @@
 <a class="jxr_linenumber" name="L464" href="#L464">464</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;DomainListResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L465" href="#L465">465</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L466" href="#L466">466</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;DomainListResponse&gt; listDomainsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;DomainListResponse&gt; listDomainsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L468" href="#L468">468</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L469" href="#L469">469</a>         
 <a class="jxr_linenumber" name="L470" href="#L470">470</a> 
@@ -602,7 +602,7 @@
 <a class="jxr_linenumber" name="L594" href="#L594">594</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;DomainResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L595" href="#L595">595</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L596" href="#L596">596</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L597" href="#L597">597</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;DomainResponse&gt; replaceDomainWithHttpInfo(String domainId, UpdateDomain updateDomain) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L597" href="#L597">597</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;DomainResponse&gt; replaceDomainWithHttpInfo(String domainId, UpdateDomain updateDomain) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L598" href="#L598">598</a>             Object localVarPostBody = updateDomain;
 <a class="jxr_linenumber" name="L599" href="#L599">599</a>         
 <a class="jxr_linenumber" name="L600" href="#L600">600</a>                 <em class="jxr_comment">// verify the required parameter 'domainId' is set ''</em>
@@ -814,7 +814,7 @@
 <a class="jxr_linenumber" name="L806" href="#L806">806</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L807" href="#L807">807</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L808" href="#L808">808</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L809" href="#L809">809</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; upsertCertificateWithHttpInfo(String domainId, DomainCertificate certificate) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L809" href="#L809">809</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; upsertCertificateWithHttpInfo(String domainId, DomainCertificate certificate) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L810" href="#L810">810</a>             Object localVarPostBody = certificate;
 <a class="jxr_linenumber" name="L811" href="#L811">811</a>         
 <a class="jxr_linenumber" name="L812" href="#L812">812</a>                 <em class="jxr_comment">// verify the required parameter 'domainId' is set ''</em>
@@ -888,7 +888,7 @@
 <a class="jxr_linenumber" name="L880" href="#L880">880</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;DomainResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L881" href="#L881">881</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L882" href="#L882">882</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L883" href="#L883">883</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;DomainResponse&gt; verifyDomainWithHttpInfo(String domainId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L883" href="#L883">883</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;DomainResponse&gt; verifyDomainWithHttpInfo(String domainId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L884" href="#L884">884</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L885" href="#L885">885</a>         
 <a class="jxr_linenumber" name="L886" href="#L886">886</a>                 <em class="jxr_comment">// verify the required parameter 'domainId' is set ''</em>
