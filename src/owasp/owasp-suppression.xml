@@ -31,12 +31,6 @@
         <cve>CVE-2021-3765</cve>
     </suppress>
 
-    <!-- False Positive - See https://github.com/jeremylong/DependencyCheck/issues/4919 -->
-    <suppress>
-        <notes><![CDATA[ file name: snakeyaml-1.33.jar ]]></notes>
-        <cve>CVE-2022-38752</cve>
-    </suppress>
-
     <!-- See https://bitbucket.org/snakeyaml/snakeyaml/issues/561/cve-2022-1471-vulnerability-in -->
     <suppress>
         <notes><![CDATA[Ignored since it is deemed "won't fix" by the library authors.]]></notes>
@@ -48,6 +42,13 @@
     <suppress>
         <notes><![CDATA[FP per issue #5502]]></notes>
         <cve>CVE-2022-45688</cve>
+    </suppress>
+
+    <!-- False Positive - See https://github.com/jeremylong/DependencyCheck/issues/5526 -->
+    <suppress>
+        <notes><![CDATA[FP per issue #5526]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
+        <cve>CVE-2020-8908</cve>
     </suppress>
 
 </suppressions>
