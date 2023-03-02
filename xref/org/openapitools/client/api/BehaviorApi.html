@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-10T11:07:23.580-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-02T10:22:32.284451-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.BehaviorApi"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="BehaviorApi" href="../../../../org/openapitools/client/api/BehaviorApi.html#BehaviorApi">BehaviorApi</a> {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;BehaviorRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">private</strong> ResponseEntity&lt;BehaviorRule&gt; activateBehaviorDetectionRuleWithHttpInfo(String behaviorId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">public</strong> ResponseEntity&lt;BehaviorRule&gt; activateBehaviorDetectionRuleWithHttpInfo(String behaviorId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>              Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>          
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>                  <em class="jxr_comment">// verify the required parameter 'behaviorId' is set ''</em>
@@ -243,7 +243,7 @@
 <a class="jxr_linenumber" name="L235" href="#L235">235</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;BehaviorRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;BehaviorRule&gt; createBehaviorDetectionRuleWithHttpInfo(BehaviorRule rule) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;BehaviorRule&gt; createBehaviorDetectionRuleWithHttpInfo(BehaviorRule rule) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>             Object localVarPostBody = rule;
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>         
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>                 <em class="jxr_comment">// verify the required parameter 'rule' is set ''</em>
@@ -406,7 +406,7 @@
 <a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;BehaviorRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L400" href="#L400">400</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;BehaviorRule&gt; deactivateBehaviorDetectionRuleWithHttpInfo(String behaviorId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;BehaviorRule&gt; deactivateBehaviorDetectionRuleWithHttpInfo(String behaviorId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L402" href="#L402">402</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L403" href="#L403">403</a>         
 <a class="jxr_linenumber" name="L404" href="#L404">404</a>                 <em class="jxr_comment">// verify the required parameter 'behaviorId' is set ''</em>
@@ -530,7 +530,7 @@
 <a class="jxr_linenumber" name="L522" href="#L522">522</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L523" href="#L523">523</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L524" href="#L524">524</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L525" href="#L525">525</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteBehaviorDetectionRuleWithHttpInfo(String behaviorId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteBehaviorDetectionRuleWithHttpInfo(String behaviorId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L526" href="#L526">526</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L527" href="#L527">527</a>         
 <a class="jxr_linenumber" name="L528" href="#L528">528</a>                 <em class="jxr_comment">// verify the required parameter 'behaviorId' is set ''</em>
@@ -597,7 +597,7 @@
 <a class="jxr_linenumber" name="L589" href="#L589">589</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;BehaviorRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L590" href="#L590">590</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L591" href="#L591">591</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L592" href="#L592">592</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;BehaviorRule&gt; getBehaviorDetectionRuleWithHttpInfo(String behaviorId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L592" href="#L592">592</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;BehaviorRule&gt; getBehaviorDetectionRuleWithHttpInfo(String behaviorId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L593" href="#L593">593</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L594" href="#L594">594</a>         
 <a class="jxr_linenumber" name="L595" href="#L595">595</a>                 <em class="jxr_comment">// verify the required parameter 'behaviorId' is set ''</em>
@@ -718,7 +718,7 @@
 <a class="jxr_linenumber" name="L710" href="#L710">710</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;BehaviorRule&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L711" href="#L711">711</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L712" href="#L712">712</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L713" href="#L713">713</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;BehaviorRule&gt;&gt; listBehaviorDetectionRulesWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L713" href="#L713">713</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;BehaviorRule&gt;&gt; listBehaviorDetectionRulesWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L714" href="#L714">714</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L715" href="#L715">715</a>         
 <a class="jxr_linenumber" name="L716" href="#L716">716</a> 
@@ -848,7 +848,7 @@
 <a class="jxr_linenumber" name="L840" href="#L840">840</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;BehaviorRule&amp;gt;</em>
 <a class="jxr_linenumber" name="L841" href="#L841">841</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L842" href="#L842">842</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L843" href="#L843">843</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;BehaviorRule&gt; replaceBehaviorDetectionRuleWithHttpInfo(String behaviorId, BehaviorRule rule) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L843" href="#L843">843</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;BehaviorRule&gt; replaceBehaviorDetectionRuleWithHttpInfo(String behaviorId, BehaviorRule rule) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L844" href="#L844">844</a>             Object localVarPostBody = rule;
 <a class="jxr_linenumber" name="L845" href="#L845">845</a>         
 <a class="jxr_linenumber" name="L846" href="#L846">846</a>                 <em class="jxr_comment">// verify the required parameter 'behaviorId' is set ''</em>

@@ -49,7 +49,7 @@
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-10T11:07:23.580-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-02T10:22:32.284451-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.RoleTargetApi"</span>)
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="RoleTargetApi" href="../../../../org/openapitools/client/api/RoleTargetApi.html#RoleTargetApi">RoleTargetApi</a> {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -103,7 +103,7 @@
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>              <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; assignAllAppsAsTargetToRoleForUserWithHttpInfo(String userId, String roleId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>              <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; assignAllAppsAsTargetToRoleForUserWithHttpInfo(String userId, String roleId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>              Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>         
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -181,7 +181,7 @@
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; assignAppInstanceTargetToAppAdminRoleForGroupWithHttpInfo(String groupId, String roleId, String appName, String applicationId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; assignAppInstanceTargetToAppAdminRoleForGroupWithHttpInfo(String groupId, String roleId, String appName, String applicationId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>         
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -271,7 +271,7 @@
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L265" href="#L265">265</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; assignAppInstanceTargetToAppAdminRoleForUserWithHttpInfo(String userId, String roleId, String appName, String applicationId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; assignAppInstanceTargetToAppAdminRoleForUserWithHttpInfo(String userId, String roleId, String appName, String applicationId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L267" href="#L267">267</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L268" href="#L268">268</a>         
 <a class="jxr_linenumber" name="L269" href="#L269">269</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -359,7 +359,7 @@
 <a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L352" href="#L352">352</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L354" href="#L354">354</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; assignAppTargetToAdminRoleForGroupWithHttpInfo(String groupId, String roleId, String appName) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; assignAppTargetToAdminRoleForGroupWithHttpInfo(String groupId, String roleId, String appName) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L355" href="#L355">355</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L356" href="#L356">356</a>         
 <a class="jxr_linenumber" name="L357" href="#L357">357</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -441,7 +441,7 @@
 <a class="jxr_linenumber" name="L433" href="#L433">433</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L434" href="#L434">434</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L435" href="#L435">435</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L436" href="#L436">436</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; assignAppTargetToAdminRoleForUserWithHttpInfo(String userId, String roleId, String appName) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; assignAppTargetToAdminRoleForUserWithHttpInfo(String userId, String roleId, String appName) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L437" href="#L437">437</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L438" href="#L438">438</a>         
 <a class="jxr_linenumber" name="L439" href="#L439">439</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -523,7 +523,7 @@
 <a class="jxr_linenumber" name="L515" href="#L515">515</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L516" href="#L516">516</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L517" href="#L517">517</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L518" href="#L518">518</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; assignGroupTargetToGroupAdminRoleWithHttpInfo(String groupId, String roleId, String targetGroupId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; assignGroupTargetToGroupAdminRoleWithHttpInfo(String groupId, String roleId, String targetGroupId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L519" href="#L519">519</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L520" href="#L520">520</a>         
 <a class="jxr_linenumber" name="L521" href="#L521">521</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -605,7 +605,7 @@
 <a class="jxr_linenumber" name="L597" href="#L597">597</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L598" href="#L598">598</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L599" href="#L599">599</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L600" href="#L600">600</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; assignGroupTargetToUserRoleWithHttpInfo(String userId, String roleId, String groupId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L600" href="#L600">600</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; assignGroupTargetToUserRoleWithHttpInfo(String userId, String roleId, String groupId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L601" href="#L601">601</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L602" href="#L602">602</a>         
 <a class="jxr_linenumber" name="L603" href="#L603">603</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -690,7 +690,7 @@
 <a class="jxr_linenumber" name="L682" href="#L682">682</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;CatalogApplication&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L683" href="#L683">683</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L684" href="#L684">684</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L685" href="#L685">685</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;CatalogApplication&gt;&gt; listApplicationTargetsForApplicationAdministratorRoleForGroupWithHttpInfo(String groupId, String roleId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L685" href="#L685">685</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;CatalogApplication&gt;&gt; listApplicationTargetsForApplicationAdministratorRoleForGroupWithHttpInfo(String groupId, String roleId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L686" href="#L686">686</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L687" href="#L687">687</a>         
 <a class="jxr_linenumber" name="L688" href="#L688">688</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -842,7 +842,7 @@
 <a class="jxr_linenumber" name="L834" href="#L834">834</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;CatalogApplication&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L835" href="#L835">835</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L836" href="#L836">836</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L837" href="#L837">837</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;CatalogApplication&gt;&gt; listApplicationTargetsForApplicationAdministratorRoleForUserWithHttpInfo(String userId, String roleId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L837" href="#L837">837</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;CatalogApplication&gt;&gt; listApplicationTargetsForApplicationAdministratorRoleForUserWithHttpInfo(String userId, String roleId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L838" href="#L838">838</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L839" href="#L839">839</a>         
 <a class="jxr_linenumber" name="L840" href="#L840">840</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -994,7 +994,7 @@
 <a class="jxr_linenumber" name="L986" href="#L986">986</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;Group&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L987" href="#L987">987</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L988" href="#L988">988</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L989" href="#L989">989</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;Group&gt;&gt; listGroupTargetsForGroupRoleWithHttpInfo(String groupId, String roleId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L989" href="#L989">989</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;Group&gt;&gt; listGroupTargetsForGroupRoleWithHttpInfo(String groupId, String roleId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L990" href="#L990">990</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L991" href="#L991">991</a>         
 <a class="jxr_linenumber" name="L992" href="#L992">992</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -1146,7 +1146,7 @@
 <a class="jxr_linenumber" name="L1138" href="#L1138">1138</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;Group&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L1139" href="#L1139">1139</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1140" href="#L1140">1140</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1141" href="#L1141">1141</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;Group&gt;&gt; listGroupTargetsForRoleWithHttpInfo(String userId, String roleId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1141" href="#L1141">1141</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;Group&gt;&gt; listGroupTargetsForRoleWithHttpInfo(String userId, String roleId, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1142" href="#L1142">1142</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1143" href="#L1143">1143</a>         
 <a class="jxr_linenumber" name="L1144" href="#L1144">1144</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -1297,7 +1297,7 @@
 <a class="jxr_linenumber" name="L1289" href="#L1289">1289</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L1290" href="#L1290">1290</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1291" href="#L1291">1291</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1292" href="#L1292">1292</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unassignAppInstanceTargetFromAdminRoleForUserWithHttpInfo(String userId, String roleId, String appName, String applicationId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1292" href="#L1292">1292</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unassignAppInstanceTargetFromAdminRoleForUserWithHttpInfo(String userId, String roleId, String appName, String applicationId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1293" href="#L1293">1293</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1294" href="#L1294">1294</a>         
 <a class="jxr_linenumber" name="L1295" href="#L1295">1295</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -1387,7 +1387,7 @@
 <a class="jxr_linenumber" name="L1379" href="#L1379">1379</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L1380" href="#L1380">1380</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1381" href="#L1381">1381</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1382" href="#L1382">1382</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unassignAppInstanceTargetToAppAdminRoleForGroupWithHttpInfo(String groupId, String roleId, String appName, String applicationId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1382" href="#L1382">1382</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unassignAppInstanceTargetToAppAdminRoleForGroupWithHttpInfo(String groupId, String roleId, String appName, String applicationId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1383" href="#L1383">1383</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1384" href="#L1384">1384</a>         
 <a class="jxr_linenumber" name="L1385" href="#L1385">1385</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -1475,7 +1475,7 @@
 <a class="jxr_linenumber" name="L1467" href="#L1467">1467</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L1468" href="#L1468">1468</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1469" href="#L1469">1469</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1470" href="#L1470">1470</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unassignAppTargetFromAppAdminRoleForUserWithHttpInfo(String userId, String roleId, String appName) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1470" href="#L1470">1470</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unassignAppTargetFromAppAdminRoleForUserWithHttpInfo(String userId, String roleId, String appName) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1471" href="#L1471">1471</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1472" href="#L1472">1472</a>         
 <a class="jxr_linenumber" name="L1473" href="#L1473">1473</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -1557,7 +1557,7 @@
 <a class="jxr_linenumber" name="L1549" href="#L1549">1549</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L1550" href="#L1550">1550</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1551" href="#L1551">1551</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1552" href="#L1552">1552</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unassignAppTargetToAdminRoleForGroupWithHttpInfo(String groupId, String roleId, String appName) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1552" href="#L1552">1552</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unassignAppTargetToAdminRoleForGroupWithHttpInfo(String groupId, String roleId, String appName) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1553" href="#L1553">1553</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1554" href="#L1554">1554</a>         
 <a class="jxr_linenumber" name="L1555" href="#L1555">1555</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -1639,7 +1639,7 @@
 <a class="jxr_linenumber" name="L1631" href="#L1631">1631</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L1632" href="#L1632">1632</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1633" href="#L1633">1633</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1634" href="#L1634">1634</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unassignGroupTargetFromGroupAdminRoleWithHttpInfo(String groupId, String roleId, String targetGroupId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1634" href="#L1634">1634</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unassignGroupTargetFromGroupAdminRoleWithHttpInfo(String groupId, String roleId, String targetGroupId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1635" href="#L1635">1635</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1636" href="#L1636">1636</a>         
 <a class="jxr_linenumber" name="L1637" href="#L1637">1637</a>                 <em class="jxr_comment">// verify the required parameter 'groupId' is set ''</em>
@@ -1721,7 +1721,7 @@
 <a class="jxr_linenumber" name="L1713" href="#L1713">1713</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L1714" href="#L1714">1714</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1715" href="#L1715">1715</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1716" href="#L1716">1716</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unassignGroupTargetFromUserAdminRoleWithHttpInfo(String userId, String roleId, String groupId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1716" href="#L1716">1716</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unassignGroupTargetFromUserAdminRoleWithHttpInfo(String userId, String roleId, String groupId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1717" href="#L1717">1717</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1718" href="#L1718">1718</a>         
 <a class="jxr_linenumber" name="L1719" href="#L1719">1719</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>

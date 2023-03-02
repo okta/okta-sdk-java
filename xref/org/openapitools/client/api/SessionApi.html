@@ -49,7 +49,7 @@
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-10T11:07:23.580-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-02T10:22:32.284451-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.SessionApi"</span>)
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="SessionApi" href="../../../../org/openapitools/client/api/SessionApi.html#SessionApi">SessionApi</a> {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -119,7 +119,7 @@
 <a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Session&amp;gt;</em>
 <a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Session&gt; createSessionWithHttpInfo(CreateSessionRequest createSessionRequest) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Session&gt; createSessionWithHttpInfo(CreateSessionRequest createSessionRequest) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>             Object localVarPostBody = createSessionRequest;
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>         
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>                 <em class="jxr_comment">// verify the required parameter 'createSessionRequest' is set ''</em>
@@ -284,7 +284,7 @@
 <a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Session&amp;gt;</em>
 <a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Session&gt; getSessionWithHttpInfo(String sessionId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Session&gt; getSessionWithHttpInfo(String sessionId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>         
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>                 <em class="jxr_comment">// verify the required parameter 'sessionId' is set ''</em>
@@ -410,7 +410,7 @@
 <a class="jxr_linenumber" name="L402" href="#L402">402</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Session&amp;gt;</em>
 <a class="jxr_linenumber" name="L403" href="#L403">403</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L404" href="#L404">404</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L405" href="#L405">405</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Session&gt; refreshSessionWithHttpInfo(String sessionId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L405" href="#L405">405</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Session&gt; refreshSessionWithHttpInfo(String sessionId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L406" href="#L406">406</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L407" href="#L407">407</a>         
 <a class="jxr_linenumber" name="L408" href="#L408">408</a>                 <em class="jxr_comment">// verify the required parameter 'sessionId' is set ''</em>
@@ -534,7 +534,7 @@
 <a class="jxr_linenumber" name="L526" href="#L526">526</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L527" href="#L527">527</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L528" href="#L528">528</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L529" href="#L529">529</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; revokeSessionWithHttpInfo(String sessionId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; revokeSessionWithHttpInfo(String sessionId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L530" href="#L530">530</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L531" href="#L531">531</a>         
 <a class="jxr_linenumber" name="L532" href="#L532">532</a>                 <em class="jxr_comment">// verify the required parameter 'sessionId' is set ''</em>

@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-10T11:07:23.580-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-02T10:22:32.284451-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.AuthenticatorApi"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="AuthenticatorApi" href="../../../../org/openapitools/client/api/AuthenticatorApi.html#AuthenticatorApi">AuthenticatorApi</a> {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Authenticator&amp;gt;</em>
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Authenticator&gt; activateAuthenticatorWithHttpInfo(String authenticatorId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Authenticator&gt; activateAuthenticatorWithHttpInfo(String authenticatorId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>              Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>          
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>                  <em class="jxr_comment">// verify the required parameter 'authenticatorId' is set ''</em>
@@ -246,7 +246,7 @@
 <a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Authenticator&amp;gt;</em>
 <a class="jxr_linenumber" name="L239" href="#L239">239</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Authenticator&gt; createAuthenticatorWithHttpInfo(Authenticator authenticator, Boolean activate) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Authenticator&gt; createAuthenticatorWithHttpInfo(Authenticator authenticator, Boolean activate) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L242" href="#L242">242</a>             Object localVarPostBody = authenticator;
 <a class="jxr_linenumber" name="L243" href="#L243">243</a>         
 <a class="jxr_linenumber" name="L244" href="#L244">244</a>                 <em class="jxr_comment">// verify the required parameter 'authenticator' is set ''</em>
@@ -417,7 +417,7 @@
 <a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Authenticator&amp;gt;</em>
 <a class="jxr_linenumber" name="L410" href="#L410">410</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L411" href="#L411">411</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L412" href="#L412">412</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Authenticator&gt; deactivateAuthenticatorWithHttpInfo(String authenticatorId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Authenticator&gt; deactivateAuthenticatorWithHttpInfo(String authenticatorId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L413" href="#L413">413</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L414" href="#L414">414</a>         
 <a class="jxr_linenumber" name="L415" href="#L415">415</a>                 <em class="jxr_comment">// verify the required parameter 'authenticatorId' is set ''</em>
@@ -542,7 +542,7 @@
 <a class="jxr_linenumber" name="L534" href="#L534">534</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Authenticator&amp;gt;</em>
 <a class="jxr_linenumber" name="L535" href="#L535">535</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L536" href="#L536">536</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L537" href="#L537">537</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Authenticator&gt; getAuthenticatorWithHttpInfo(String authenticatorId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Authenticator&gt; getAuthenticatorWithHttpInfo(String authenticatorId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L538" href="#L538">538</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L539" href="#L539">539</a>         
 <a class="jxr_linenumber" name="L540" href="#L540">540</a>                 <em class="jxr_comment">// verify the required parameter 'authenticatorId' is set ''</em>
@@ -663,7 +663,7 @@
 <a class="jxr_linenumber" name="L655" href="#L655">655</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;Authenticator&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L656" href="#L656">656</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L657" href="#L657">657</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L658" href="#L658">658</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;Authenticator&gt;&gt; listAuthenticatorsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L658" href="#L658">658</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;Authenticator&gt;&gt; listAuthenticatorsWithHttpInfo() <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L659" href="#L659">659</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L660" href="#L660">660</a>         
 <a class="jxr_linenumber" name="L661" href="#L661">661</a> 
@@ -793,7 +793,7 @@
 <a class="jxr_linenumber" name="L785" href="#L785">785</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Authenticator&amp;gt;</em>
 <a class="jxr_linenumber" name="L786" href="#L786">786</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L787" href="#L787">787</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L788" href="#L788">788</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Authenticator&gt; replaceAuthenticatorWithHttpInfo(String authenticatorId, Authenticator authenticator) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L788" href="#L788">788</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Authenticator&gt; replaceAuthenticatorWithHttpInfo(String authenticatorId, Authenticator authenticator) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L789" href="#L789">789</a>             Object localVarPostBody = authenticator;
 <a class="jxr_linenumber" name="L790" href="#L790">790</a>         
 <a class="jxr_linenumber" name="L791" href="#L791">791</a>                 <em class="jxr_comment">// verify the required parameter 'authenticatorId' is set ''</em>

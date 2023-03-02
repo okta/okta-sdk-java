@@ -49,7 +49,7 @@
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-10T11:07:23.580-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-02T10:22:32.284451-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.InlineHookApi"</span>)
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="InlineHookApi" href="../../../../org/openapitools/client/api/InlineHookApi.html#InlineHookApi">InlineHookApi</a> {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -102,7 +102,7 @@
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;InlineHook&amp;gt;</em>
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>              <strong class="jxr_keyword">private</strong> ResponseEntity&lt;InlineHook&gt; activateInlineHookWithHttpInfo(String inlineHookId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>              <strong class="jxr_keyword">public</strong> ResponseEntity&lt;InlineHook&gt; activateInlineHookWithHttpInfo(String inlineHookId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>              Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>          
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>                 <em class="jxr_comment">// verify the required parameter 'inlineHookId' is set ''</em>
@@ -244,7 +244,7 @@
 <a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;InlineHook&amp;gt;</em>
 <a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;InlineHook&gt; createInlineHookWithHttpInfo(InlineHook inlineHook) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;InlineHook&gt; createInlineHookWithHttpInfo(InlineHook inlineHook) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>             Object localVarPostBody = inlineHook;
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>         
 <a class="jxr_linenumber" name="L242" href="#L242">242</a>                 <em class="jxr_comment">// verify the required parameter 'inlineHook' is set ''</em>
@@ -407,7 +407,7 @@
 <a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;InlineHook&amp;gt;</em>
 <a class="jxr_linenumber" name="L400" href="#L400">400</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L401" href="#L401">401</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L402" href="#L402">402</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;InlineHook&gt; deactivateInlineHookWithHttpInfo(String inlineHookId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;InlineHook&gt; deactivateInlineHookWithHttpInfo(String inlineHookId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L403" href="#L403">403</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L404" href="#L404">404</a>         
 <a class="jxr_linenumber" name="L405" href="#L405">405</a>                 <em class="jxr_comment">// verify the required parameter 'inlineHookId' is set ''</em>
@@ -531,7 +531,7 @@
 <a class="jxr_linenumber" name="L523" href="#L523">523</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L524" href="#L524">524</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L525" href="#L525">525</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L526" href="#L526">526</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteInlineHookWithHttpInfo(String inlineHookId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteInlineHookWithHttpInfo(String inlineHookId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L527" href="#L527">527</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L528" href="#L528">528</a>         
 <a class="jxr_linenumber" name="L529" href="#L529">529</a>                 <em class="jxr_comment">// verify the required parameter 'inlineHookId' is set ''</em>
@@ -621,7 +621,7 @@
 <a class="jxr_linenumber" name="L613" href="#L613">613</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;InlineHookResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L614" href="#L614">614</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L615" href="#L615">615</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L616" href="#L616">616</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;InlineHookResponse&gt; executeInlineHookWithHttpInfo(String inlineHookId, Object payloadData) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;InlineHookResponse&gt; executeInlineHookWithHttpInfo(String inlineHookId, Object payloadData) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L617" href="#L617">617</a>             Object localVarPostBody = payloadData;
 <a class="jxr_linenumber" name="L618" href="#L618">618</a>         
 <a class="jxr_linenumber" name="L619" href="#L619">619</a>                 <em class="jxr_comment">// verify the required parameter 'inlineHookId' is set ''</em>
@@ -812,7 +812,7 @@
 <a class="jxr_linenumber" name="L804" href="#L804">804</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;InlineHook&amp;gt;</em>
 <a class="jxr_linenumber" name="L805" href="#L805">805</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L806" href="#L806">806</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L807" href="#L807">807</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;InlineHook&gt; getInlineHookWithHttpInfo(String inlineHookId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L807" href="#L807">807</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;InlineHook&gt; getInlineHookWithHttpInfo(String inlineHookId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L808" href="#L808">808</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L809" href="#L809">809</a>         
 <a class="jxr_linenumber" name="L810" href="#L810">810</a>                 <em class="jxr_comment">// verify the required parameter 'inlineHookId' is set ''</em>
@@ -935,7 +935,7 @@
 <a class="jxr_linenumber" name="L927" href="#L927">927</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;InlineHook&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L928" href="#L928">928</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L929" href="#L929">929</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L930" href="#L930">930</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;InlineHook&gt;&gt; listInlineHooksWithHttpInfo(String type) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L930" href="#L930">930</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;InlineHook&gt;&gt; listInlineHooksWithHttpInfo(String type) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L931" href="#L931">931</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L932" href="#L932">932</a>         
 <a class="jxr_linenumber" name="L933" href="#L933">933</a> 
@@ -1070,7 +1070,7 @@
 <a class="jxr_linenumber" name="L1062" href="#L1062">1062</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;InlineHook&amp;gt;</em>
 <a class="jxr_linenumber" name="L1063" href="#L1063">1063</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1064" href="#L1064">1064</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1065" href="#L1065">1065</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;InlineHook&gt; replaceInlineHookWithHttpInfo(String inlineHookId, InlineHook inlineHook) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1065" href="#L1065">1065</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;InlineHook&gt; replaceInlineHookWithHttpInfo(String inlineHookId, InlineHook inlineHook) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1066" href="#L1066">1066</a>             Object localVarPostBody = inlineHook;
 <a class="jxr_linenumber" name="L1067" href="#L1067">1067</a>         
 <a class="jxr_linenumber" name="L1068" href="#L1068">1068</a>                 <em class="jxr_comment">// verify the required parameter 'inlineHookId' is set ''</em>

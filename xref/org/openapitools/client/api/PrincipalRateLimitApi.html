@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-10T11:07:23.580-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-02T10:22:32.284451-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.PrincipalRateLimitApi"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="PrincipalRateLimitApi" href="../../../../org/openapitools/client/api/PrincipalRateLimitApi.html#PrincipalRateLimitApi">PrincipalRateLimitApi</a> {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -121,7 +121,7 @@
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PrincipalRateLimitEntity&amp;gt;</em>
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PrincipalRateLimitEntity&gt; createPrincipalRateLimitEntityWithHttpInfo(PrincipalRateLimitEntity entity) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PrincipalRateLimitEntity&gt; createPrincipalRateLimitEntityWithHttpInfo(PrincipalRateLimitEntity entity) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>             Object localVarPostBody = entity;
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>         
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>                 <em class="jxr_comment">// verify the required parameter 'entity' is set ''</em>
@@ -286,7 +286,7 @@
 <a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PrincipalRateLimitEntity&amp;gt;</em>
 <a class="jxr_linenumber" name="L279" href="#L279">279</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L280" href="#L280">280</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PrincipalRateLimitEntity&gt; getPrincipalRateLimitEntityWithHttpInfo(String principalRateLimitId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PrincipalRateLimitEntity&gt; getPrincipalRateLimitEntityWithHttpInfo(String principalRateLimitId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L283" href="#L283">283</a>         
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>                 <em class="jxr_comment">// verify the required parameter 'principalRateLimitId' is set ''</em>
@@ -415,7 +415,7 @@
 <a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;PrincipalRateLimitEntity&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L410" href="#L410">410</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;PrincipalRateLimitEntity&gt;&gt; listPrincipalRateLimitEntitiesWithHttpInfo(String filter, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;PrincipalRateLimitEntity&gt;&gt; listPrincipalRateLimitEntitiesWithHttpInfo(String filter, String after, Integer limit) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L411" href="#L411">411</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L412" href="#L412">412</a>         
 <a class="jxr_linenumber" name="L413" href="#L413">413</a> 
@@ -557,7 +557,7 @@
 <a class="jxr_linenumber" name="L549" href="#L549">549</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PrincipalRateLimitEntity&amp;gt;</em>
 <a class="jxr_linenumber" name="L550" href="#L550">550</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L551" href="#L551">551</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L552" href="#L552">552</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PrincipalRateLimitEntity&gt; replacePrincipalRateLimitEntityWithHttpInfo(String principalRateLimitId, PrincipalRateLimitEntity entity) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PrincipalRateLimitEntity&gt; replacePrincipalRateLimitEntityWithHttpInfo(String principalRateLimitId, PrincipalRateLimitEntity entity) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L553" href="#L553">553</a>             Object localVarPostBody = entity;
 <a class="jxr_linenumber" name="L554" href="#L554">554</a>         
 <a class="jxr_linenumber" name="L555" href="#L555">555</a>                 <em class="jxr_comment">// verify the required parameter 'principalRateLimitId' is set ''</em>

@@ -49,7 +49,7 @@
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-10T11:07:23.580-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-02T10:22:32.284451-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.PushProviderApi"</span>)
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="PushProviderApi" href="../../../../org/openapitools/client/api/PushProviderApi.html#PushProviderApi">PushProviderApi</a> {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -119,7 +119,7 @@
 <a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PushProvider&amp;gt;</em>
 <a class="jxr_linenumber" name="L112" href="#L112">112</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PushProvider&gt; createPushProviderWithHttpInfo(PushProvider pushProvider) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PushProvider&gt; createPushProviderWithHttpInfo(PushProvider pushProvider) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>             Object localVarPostBody = pushProvider;
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>         
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>                 <em class="jxr_comment">// verify the required parameter 'pushProvider' is set ''</em>
@@ -283,7 +283,7 @@
 <a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deletePushProviderWithHttpInfo(String pushProviderId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deletePushProviderWithHttpInfo(String pushProviderId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>         
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>                 <em class="jxr_comment">// verify the required parameter 'pushProviderId' is set ''</em>
@@ -350,7 +350,7 @@
 <a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PushProvider&amp;gt;</em>
 <a class="jxr_linenumber" name="L343" href="#L343">343</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L345" href="#L345">345</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PushProvider&gt; getPushProviderWithHttpInfo(String pushProviderId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PushProvider&gt; getPushProviderWithHttpInfo(String pushProviderId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L346" href="#L346">346</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L347" href="#L347">347</a>         
 <a class="jxr_linenumber" name="L348" href="#L348">348</a>                 <em class="jxr_comment">// verify the required parameter 'pushProviderId' is set ''</em>
@@ -473,7 +473,7 @@
 <a class="jxr_linenumber" name="L465" href="#L465">465</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;PushProvider&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L466" href="#L466">466</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L467" href="#L467">467</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;PushProvider&gt;&gt; listPushProvidersWithHttpInfo(<a name="ProviderType" href="../../../../org/openapitools/client/model/ProviderType.html#ProviderType">ProviderType</a> type) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;PushProvider&gt;&gt; listPushProvidersWithHttpInfo(<a name="ProviderType" href="../../../../org/openapitools/client/model/ProviderType.html#ProviderType">ProviderType</a> type) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L469" href="#L469">469</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L470" href="#L470">470</a>         
 <a class="jxr_linenumber" name="L471" href="#L471">471</a> 
@@ -608,7 +608,7 @@
 <a class="jxr_linenumber" name="L600" href="#L600">600</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;PushProvider&amp;gt;</em>
 <a class="jxr_linenumber" name="L601" href="#L601">601</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L602" href="#L602">602</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L603" href="#L603">603</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;PushProvider&gt; replacePushProviderWithHttpInfo(String pushProviderId, PushProvider pushProvider) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;PushProvider&gt; replacePushProviderWithHttpInfo(String pushProviderId, PushProvider pushProvider) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L604" href="#L604">604</a>             Object localVarPostBody = pushProvider;
 <a class="jxr_linenumber" name="L605" href="#L605">605</a>         
 <a class="jxr_linenumber" name="L606" href="#L606">606</a>                 <em class="jxr_comment">// verify the required parameter 'pushProviderId' is set ''</em>

@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-10T11:07:23.580-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-02T10:22:32.284451-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.SubscriptionApi"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="SubscriptionApi" href="../../../../org/openapitools/client/api/SubscriptionApi.html#SubscriptionApi">SubscriptionApi</a> {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -101,7 +101,7 @@
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;Subscription&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;Subscription&gt;&gt; listRoleSubscriptionsWithHttpInfo(String roleTypeOrRoleId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;Subscription&gt;&gt; listRoleSubscriptionsWithHttpInfo(String roleTypeOrRoleId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>              Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>          
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>                  <em class="jxr_comment">// verify the required parameter 'roleTypeOrRoleId' is set ''</em>
@@ -228,7 +228,7 @@
 <a class="jxr_linenumber" name="L220" href="#L220">220</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Subscription&amp;gt;</em>
 <a class="jxr_linenumber" name="L221" href="#L221">221</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L222" href="#L222">222</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Subscription&gt; listRoleSubscriptionsByNotificationTypeWithHttpInfo(String roleTypeOrRoleId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Subscription&gt; listRoleSubscriptionsByNotificationTypeWithHttpInfo(String roleTypeOrRoleId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L224" href="#L224">224</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>         
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>                 <em class="jxr_comment">// verify the required parameter 'roleTypeOrRoleId' is set ''</em>
@@ -366,7 +366,7 @@
 <a class="jxr_linenumber" name="L358" href="#L358">358</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;Subscription&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L359" href="#L359">359</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L360" href="#L360">360</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;Subscription&gt;&gt; listUserSubscriptionsWithHttpInfo(String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;Subscription&gt;&gt; listUserSubscriptionsWithHttpInfo(String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L362" href="#L362">362</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L363" href="#L363">363</a>         
 <a class="jxr_linenumber" name="L364" href="#L364">364</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -493,7 +493,7 @@
 <a class="jxr_linenumber" name="L485" href="#L485">485</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Subscription&amp;gt;</em>
 <a class="jxr_linenumber" name="L486" href="#L486">486</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L487" href="#L487">487</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L488" href="#L488">488</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Subscription&gt; listUserSubscriptionsByNotificationTypeWithHttpInfo(String userId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Subscription&gt; listUserSubscriptionsByNotificationTypeWithHttpInfo(String userId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L489" href="#L489">489</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L490" href="#L490">490</a>         
 <a class="jxr_linenumber" name="L491" href="#L491">491</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -632,7 +632,7 @@
 <a class="jxr_linenumber" name="L624" href="#L624">624</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L625" href="#L625">625</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L626" href="#L626">626</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L627" href="#L627">627</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; subscribeRoleSubscriptionByNotificationTypeWithHttpInfo(String roleTypeOrRoleId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L627" href="#L627">627</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; subscribeRoleSubscriptionByNotificationTypeWithHttpInfo(String roleTypeOrRoleId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L628" href="#L628">628</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L629" href="#L629">629</a>         
 <a class="jxr_linenumber" name="L630" href="#L630">630</a>                 <em class="jxr_comment">// verify the required parameter 'roleTypeOrRoleId' is set ''</em>
@@ -706,7 +706,7 @@
 <a class="jxr_linenumber" name="L698" href="#L698">698</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L699" href="#L699">699</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L700" href="#L700">700</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L701" href="#L701">701</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; subscribeUserSubscriptionByNotificationTypeWithHttpInfo(String userId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L701" href="#L701">701</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; subscribeUserSubscriptionByNotificationTypeWithHttpInfo(String userId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L702" href="#L702">702</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L703" href="#L703">703</a>         
 <a class="jxr_linenumber" name="L704" href="#L704">704</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -780,7 +780,7 @@
 <a class="jxr_linenumber" name="L772" href="#L772">772</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L773" href="#L773">773</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L774" href="#L774">774</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L775" href="#L775">775</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unsubscribeRoleSubscriptionByNotificationTypeWithHttpInfo(String roleTypeOrRoleId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L775" href="#L775">775</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unsubscribeRoleSubscriptionByNotificationTypeWithHttpInfo(String roleTypeOrRoleId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L776" href="#L776">776</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L777" href="#L777">777</a>         
 <a class="jxr_linenumber" name="L778" href="#L778">778</a>                 <em class="jxr_comment">// verify the required parameter 'roleTypeOrRoleId' is set ''</em>
@@ -854,7 +854,7 @@
 <a class="jxr_linenumber" name="L846" href="#L846">846</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L847" href="#L847">847</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L848" href="#L848">848</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L849" href="#L849">849</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unsubscribeUserSubscriptionByNotificationTypeWithHttpInfo(String userId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L849" href="#L849">849</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unsubscribeUserSubscriptionByNotificationTypeWithHttpInfo(String userId, String notificationType) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L850" href="#L850">850</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L851" href="#L851">851</a>         
 <a class="jxr_linenumber" name="L852" href="#L852">852</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>

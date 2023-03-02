@@ -57,7 +57,7 @@
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-10T11:07:23.580-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-02T10:22:32.284451-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.ResourceSetApi"</span>)
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ResourceSetApi" href="../../../../org/openapitools/client/api/ResourceSetApi.html#ResourceSetApi">ResourceSetApi</a> {
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -136,7 +136,7 @@
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSetBindingResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSetBindingResponse&gt; addMembersToBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel, ResourceSetBindingAddMembersRequest instance) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSetBindingResponse&gt; addMembersToBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel, ResourceSetBindingAddMembersRequest instance) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>             Object localVarPostBody = instance;
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>         
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -370,7 +370,7 @@
 <a class="jxr_linenumber" name="L362" href="#L362">362</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSet&amp;gt;</em>
 <a class="jxr_linenumber" name="L363" href="#L363">363</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L364" href="#L364">364</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L365" href="#L365">365</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSet&gt; addResourceSetResourceWithHttpInfo(String resourceSetId, ResourceSetResourcePatchRequest instance) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSet&gt; addResourceSetResourceWithHttpInfo(String resourceSetId, ResourceSetResourcePatchRequest instance) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L366" href="#L366">366</a>             Object localVarPostBody = instance;
 <a class="jxr_linenumber" name="L367" href="#L367">367</a>         
 <a class="jxr_linenumber" name="L368" href="#L368">368</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -578,7 +578,7 @@
 <a class="jxr_linenumber" name="L570" href="#L570">570</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSet&amp;gt;</em>
 <a class="jxr_linenumber" name="L571" href="#L571">571</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L572" href="#L572">572</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L573" href="#L573">573</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSet&gt; createResourceSetWithHttpInfo(ResourceSet instance) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L573" href="#L573">573</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSet&gt; createResourceSetWithHttpInfo(ResourceSet instance) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L574" href="#L574">574</a>             Object localVarPostBody = instance;
 <a class="jxr_linenumber" name="L575" href="#L575">575</a>         
 <a class="jxr_linenumber" name="L576" href="#L576">576</a>                 <em class="jxr_comment">// verify the required parameter 'instance' is set ''</em>
@@ -764,7 +764,7 @@
 <a class="jxr_linenumber" name="L756" href="#L756">756</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSetBindingResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L757" href="#L757">757</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L758" href="#L758">758</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L759" href="#L759">759</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSetBindingResponse&gt; createResourceSetBindingWithHttpInfo(String resourceSetId, ResourceSetBindingCreateRequest instance) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L759" href="#L759">759</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSetBindingResponse&gt; createResourceSetBindingWithHttpInfo(String resourceSetId, ResourceSetBindingCreateRequest instance) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L760" href="#L760">760</a>             Object localVarPostBody = instance;
 <a class="jxr_linenumber" name="L761" href="#L761">761</a>         
 <a class="jxr_linenumber" name="L762" href="#L762">762</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -956,7 +956,7 @@
 <a class="jxr_linenumber" name="L948" href="#L948">948</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L949" href="#L949">949</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L950" href="#L950">950</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L951" href="#L951">951</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L951" href="#L951">951</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L952" href="#L952">952</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L953" href="#L953">953</a>         
 <a class="jxr_linenumber" name="L954" href="#L954">954</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -1028,7 +1028,7 @@
 <a class="jxr_linenumber" name="L1020" href="#L1020">1020</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L1021" href="#L1021">1021</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1022" href="#L1022">1022</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteResourceSetWithHttpInfo(String resourceSetId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1023" href="#L1023">1023</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteResourceSetWithHttpInfo(String resourceSetId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1024" href="#L1024">1024</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1025" href="#L1025">1025</a>         
 <a class="jxr_linenumber" name="L1026" href="#L1026">1026</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -1096,7 +1096,7 @@
 <a class="jxr_linenumber" name="L1088" href="#L1088">1088</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L1089" href="#L1089">1089</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1090" href="#L1090">1090</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1091" href="#L1091">1091</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteResourceSetResourceWithHttpInfo(String resourceSetId, String resourceId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1091" href="#L1091">1091</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteResourceSetResourceWithHttpInfo(String resourceSetId, String resourceId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1092" href="#L1092">1092</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1093" href="#L1093">1093</a>         
 <a class="jxr_linenumber" name="L1094" href="#L1094">1094</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -1171,7 +1171,7 @@
 <a class="jxr_linenumber" name="L1163" href="#L1163">1163</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSetBindingResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L1164" href="#L1164">1164</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1165" href="#L1165">1165</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1166" href="#L1166">1166</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSetBindingResponse&gt; getBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1166" href="#L1166">1166</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSetBindingResponse&gt; getBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1167" href="#L1167">1167</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1168" href="#L1168">1168</a>         
 <a class="jxr_linenumber" name="L1169" href="#L1169">1169</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -1313,7 +1313,7 @@
 <a class="jxr_linenumber" name="L1305" href="#L1305">1305</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSetBindingMember&amp;gt;</em>
 <a class="jxr_linenumber" name="L1306" href="#L1306">1306</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1307" href="#L1307">1307</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1308" href="#L1308">1308</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSetBindingMember&gt; getMemberOfBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel, String memberId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1308" href="#L1308">1308</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSetBindingMember&gt; getMemberOfBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel, String memberId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1309" href="#L1309">1309</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1310" href="#L1310">1310</a>         
 <a class="jxr_linenumber" name="L1311" href="#L1311">1311</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -1464,7 +1464,7 @@
 <a class="jxr_linenumber" name="L1456" href="#L1456">1456</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSet&amp;gt;</em>
 <a class="jxr_linenumber" name="L1457" href="#L1457">1457</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1458" href="#L1458">1458</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1459" href="#L1459">1459</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSet&gt; getResourceSetWithHttpInfo(String resourceSetId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1459" href="#L1459">1459</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSet&gt; getResourceSetWithHttpInfo(String resourceSetId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1460" href="#L1460">1460</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1461" href="#L1461">1461</a>         
 <a class="jxr_linenumber" name="L1462" href="#L1462">1462</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -1591,7 +1591,7 @@
 <a class="jxr_linenumber" name="L1583" href="#L1583">1583</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSetBindings&amp;gt;</em>
 <a class="jxr_linenumber" name="L1584" href="#L1584">1584</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1585" href="#L1585">1585</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1586" href="#L1586">1586</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSetBindings&gt; listBindingsWithHttpInfo(String resourceSetId, String after) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1586" href="#L1586">1586</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSetBindings&gt; listBindingsWithHttpInfo(String resourceSetId, String after) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1587" href="#L1587">1587</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1588" href="#L1588">1588</a>         
 <a class="jxr_linenumber" name="L1589" href="#L1589">1589</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -1725,7 +1725,7 @@
 <a class="jxr_linenumber" name="L1717" href="#L1717">1717</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSetBindingMembers&amp;gt;</em>
 <a class="jxr_linenumber" name="L1718" href="#L1718">1718</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1719" href="#L1719">1719</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1720" href="#L1720">1720</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSetBindingMembers&gt; listMembersOfBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel, String after) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1720" href="#L1720">1720</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSetBindingMembers&gt; listMembersOfBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel, String after) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1721" href="#L1721">1721</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1722" href="#L1722">1722</a>         
 <a class="jxr_linenumber" name="L1723" href="#L1723">1723</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -1868,7 +1868,7 @@
 <a class="jxr_linenumber" name="L1860" href="#L1860">1860</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSetResources&amp;gt;</em>
 <a class="jxr_linenumber" name="L1861" href="#L1861">1861</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1862" href="#L1862">1862</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1863" href="#L1863">1863</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSetResources&gt; listResourceSetResourcesWithHttpInfo(String resourceSetId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1863" href="#L1863">1863</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSetResources&gt; listResourceSetResourcesWithHttpInfo(String resourceSetId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1864" href="#L1864">1864</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1865" href="#L1865">1865</a>         
 <a class="jxr_linenumber" name="L1866" href="#L1866">1866</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -1991,7 +1991,7 @@
 <a class="jxr_linenumber" name="L1983" href="#L1983">1983</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSets&amp;gt;</em>
 <a class="jxr_linenumber" name="L1984" href="#L1984">1984</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1985" href="#L1985">1985</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1986" href="#L1986">1986</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSets&gt; listResourceSetsWithHttpInfo(String after) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1986" href="#L1986">1986</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSets&gt; listResourceSetsWithHttpInfo(String after) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1987" href="#L1987">1987</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1988" href="#L1988">1988</a>         
 <a class="jxr_linenumber" name="L1989" href="#L1989">1989</a> 
@@ -2126,7 +2126,7 @@
 <a class="jxr_linenumber" name="L2118" href="#L2118">2118</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;ResourceSet&amp;gt;</em>
 <a class="jxr_linenumber" name="L2119" href="#L2119">2119</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2120" href="#L2120">2120</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2121" href="#L2121">2121</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;ResourceSet&gt; replaceResourceSetWithHttpInfo(String resourceSetId, ResourceSet instance) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2121" href="#L2121">2121</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;ResourceSet&gt; replaceResourceSetWithHttpInfo(String resourceSetId, ResourceSet instance) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2122" href="#L2122">2122</a>             Object localVarPostBody = instance;
 <a class="jxr_linenumber" name="L2123" href="#L2123">2123</a>         
 <a class="jxr_linenumber" name="L2124" href="#L2124">2124</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>
@@ -2320,7 +2320,7 @@
 <a class="jxr_linenumber" name="L2312" href="#L2312">2312</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L2313" href="#L2313">2313</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L2314" href="#L2314">2314</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L2315" href="#L2315">2315</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; unassignMemberFromBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel, String memberId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L2315" href="#L2315">2315</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; unassignMemberFromBindingWithHttpInfo(String resourceSetId, String roleIdOrLabel, String memberId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L2316" href="#L2316">2316</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L2317" href="#L2317">2317</a>         
 <a class="jxr_linenumber" name="L2318" href="#L2318">2318</a>                 <em class="jxr_comment">// verify the required parameter 'resourceSetId' is set ''</em>

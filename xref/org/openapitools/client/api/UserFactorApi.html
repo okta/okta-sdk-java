@@ -52,7 +52,7 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-02-10T11:07:23.580-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-02T10:22:32.284451-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.UserFactorApi"</span>)
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="UserFactorApi" href="../../../../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a> {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -131,7 +131,7 @@
 <a class="jxr_linenumber" name="L123" href="#L123">123</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;UserFactor&amp;gt;</em>
 <a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;UserFactor&gt; activateFactorWithHttpInfo(String userId, String factorId, ActivateFactorRequest body) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;UserFactor&gt; activateFactorWithHttpInfo(String userId, String factorId, ActivateFactorRequest body) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>             Object localVarPostBody = body;
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>         
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -330,7 +330,7 @@
 <a class="jxr_linenumber" name="L322" href="#L322">322</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L323" href="#L323">323</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L324" href="#L324">324</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L325" href="#L325">325</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;Void&gt; deleteFactorWithHttpInfo(String userId, String factorId, Boolean removeEnrollmentRecovery) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;Void&gt; deleteFactorWithHttpInfo(String userId, String factorId, Boolean removeEnrollmentRecovery) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L326" href="#L326">326</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L327" href="#L327">327</a>         
 <a class="jxr_linenumber" name="L328" href="#L328">328</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -440,7 +440,7 @@
 <a class="jxr_linenumber" name="L432" href="#L432">432</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;UserFactor&amp;gt;</em>
 <a class="jxr_linenumber" name="L433" href="#L433">433</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L434" href="#L434">434</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L435" href="#L435">435</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;UserFactor&gt; enrollFactorWithHttpInfo(String userId, UserFactor body, Boolean updatePhone, String templateId, Integer tokenLifetimeSeconds, Boolean activate) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;UserFactor&gt; enrollFactorWithHttpInfo(String userId, UserFactor body, Boolean updatePhone, String templateId, Integer tokenLifetimeSeconds, Boolean activate) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L436" href="#L436">436</a>             Object localVarPostBody = body;
 <a class="jxr_linenumber" name="L437" href="#L437">437</a>         
 <a class="jxr_linenumber" name="L438" href="#L438">438</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -656,7 +656,7 @@
 <a class="jxr_linenumber" name="L648" href="#L648">648</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;UserFactor&amp;gt;</em>
 <a class="jxr_linenumber" name="L649" href="#L649">649</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L650" href="#L650">650</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L651" href="#L651">651</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;UserFactor&gt; getFactorWithHttpInfo(String userId, String factorId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L651" href="#L651">651</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;UserFactor&gt; getFactorWithHttpInfo(String userId, String factorId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L652" href="#L652">652</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L653" href="#L653">653</a>         
 <a class="jxr_linenumber" name="L654" href="#L654">654</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -798,7 +798,7 @@
 <a class="jxr_linenumber" name="L790" href="#L790">790</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;VerifyUserFactorResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L791" href="#L791">791</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L792" href="#L792">792</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L793" href="#L793">793</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;VerifyUserFactorResponse&gt; getFactorTransactionStatusWithHttpInfo(String userId, String factorId, String transactionId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L793" href="#L793">793</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;VerifyUserFactorResponse&gt; getFactorTransactionStatusWithHttpInfo(String userId, String factorId, String transactionId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L794" href="#L794">794</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L795" href="#L795">795</a>         
 <a class="jxr_linenumber" name="L796" href="#L796">796</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -949,7 +949,7 @@
 <a class="jxr_linenumber" name="L941" href="#L941">941</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;UserFactor&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L942" href="#L942">942</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L943" href="#L943">943</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L944" href="#L944">944</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;UserFactor&gt;&gt; listFactorsWithHttpInfo(String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L944" href="#L944">944</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;UserFactor&gt;&gt; listFactorsWithHttpInfo(String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L945" href="#L945">945</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L946" href="#L946">946</a>         
 <a class="jxr_linenumber" name="L947" href="#L947">947</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -1074,7 +1074,7 @@
 <a class="jxr_linenumber" name="L1066" href="#L1066">1066</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;UserFactor&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L1067" href="#L1067">1067</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1068" href="#L1068">1068</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1069" href="#L1069">1069</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;UserFactor&gt;&gt; listSupportedFactorsWithHttpInfo(String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1069" href="#L1069">1069</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;UserFactor&gt;&gt; listSupportedFactorsWithHttpInfo(String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1070" href="#L1070">1070</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1071" href="#L1071">1071</a>         
 <a class="jxr_linenumber" name="L1072" href="#L1072">1072</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -1199,7 +1199,7 @@
 <a class="jxr_linenumber" name="L1191" href="#L1191">1191</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;List&amp;lt;SecurityQuestion&amp;gt;&amp;gt;</em>
 <a class="jxr_linenumber" name="L1192" href="#L1192">1192</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1193" href="#L1193">1193</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1194" href="#L1194">1194</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;List&lt;SecurityQuestion&gt;&gt; listSupportedSecurityQuestionsWithHttpInfo(String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1194" href="#L1194">1194</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;List&lt;SecurityQuestion&gt;&gt; listSupportedSecurityQuestionsWithHttpInfo(String userId) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1195" href="#L1195">1195</a>             Object localVarPostBody = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L1196" href="#L1196">1196</a>         
 <a class="jxr_linenumber" name="L1197" href="#L1197">1197</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
@@ -1365,7 +1365,7 @@
 <a class="jxr_linenumber" name="L1357" href="#L1357">1357</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;VerifyUserFactorResponse&amp;gt;</em>
 <a class="jxr_linenumber" name="L1358" href="#L1358">1358</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L1359" href="#L1359">1359</a> <em class="jxr_javadoccomment">            */</em>
-<a class="jxr_linenumber" name="L1360" href="#L1360">1360</a>             <strong class="jxr_keyword">private</strong> ResponseEntity&lt;VerifyUserFactorResponse&gt; verifyFactorWithHttpInfo(String userId, String factorId, String templateId, Integer tokenLifetimeSeconds, String xForwardedFor, String userAgent, String acceptLanguage, VerifyFactorRequest body) <strong class="jxr_keyword">throws</strong> RestClientException {
+<a class="jxr_linenumber" name="L1360" href="#L1360">1360</a>             <strong class="jxr_keyword">public</strong> ResponseEntity&lt;VerifyUserFactorResponse&gt; verifyFactorWithHttpInfo(String userId, String factorId, String templateId, Integer tokenLifetimeSeconds, String xForwardedFor, String userAgent, String acceptLanguage, VerifyFactorRequest body) <strong class="jxr_keyword">throws</strong> RestClientException {
 <a class="jxr_linenumber" name="L1361" href="#L1361">1361</a>             Object localVarPostBody = body;
 <a class="jxr_linenumber" name="L1362" href="#L1362">1362</a>         
 <a class="jxr_linenumber" name="L1363" href="#L1363">1363</a>                 <em class="jxr_comment">// verify the required parameter 'userId' is set ''</em>
