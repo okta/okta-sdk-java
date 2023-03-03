@@ -52,7 +52,7 @@ public class UserProfileDeserializer extends StdDeserializer<UserProfile> {
         for (Map.Entry<String, Object> entry : profileMap.entrySet()) {
 
             String key = entry.getKey();
-            String value = String.valueOf(entry.getValue());
+            String value = entry.getValue() == null ? null : String.valueOf(entry.getValue());
 
             switch (key) {
                 case UserProfile.JSON_PROPERTY_CITY:
