@@ -27209,6 +27209,8 @@ components:
           $ref: '#/components/schemas/UserCredentials'
         profile:
           $ref: '#/components/schemas/UserProfile'
+        type:
+          $ref: '#/components/schemas/UserType'
         realmId:
           type: string
           x-okta-lifecycle:
