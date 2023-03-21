@@ -308,10 +308,10 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>8.0.0</version>
                     <configuration>
                         <!-- no js is used in this project -->
                         <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+                        <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
                     </configuration>
                 </plugin>
             </plugins>
