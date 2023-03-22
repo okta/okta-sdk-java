@@ -79,11 +79,10 @@ public class PagedList<T> {
             .collect(Collectors.toList());
     }
 
-    public static PagedList constructPagedList(ResponseEntity responseEntity) {
-
-        PagedList pagedList = new PagedList();
+    public static <T> PagedList<T> constructPagedList(final ResponseEntity<List<T>> responseEntity) {
+        PagedList<T> pagedList = new PagedList<>();
         Assert.notNull(responseEntity);
-        pagedList.addItems(Collections.singletonList(responseEntity.getBody()));
+        pagedList.addItems(responseEntity.getBody());
         List<String> linkHeaders = responseEntity.getHeaders().get("link");
         Assert.notNull(linkHeaders);
         for (String link : linkHeaders) {
