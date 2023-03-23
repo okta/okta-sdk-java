@@ -75,6 +75,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -428,6 +429,10 @@ public class DefaultClientBuilder implements ClientBuilder {
         RestTemplate restTemplate = new RestTemplate(messageConverters);
         restTemplate.setErrorHandler(new ErrorHandler());
         restTemplate.setRequestFactory(requestFactory(clientConfig));
+
+        DefaultUriBuilderFactory uriTemplateHandler = new DefaultUriBuilderFactory();
+        uriTemplateHandler.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
+        restTemplate.setUriTemplateHandler(uriTemplateHandler);
 
         return restTemplate;
     }
