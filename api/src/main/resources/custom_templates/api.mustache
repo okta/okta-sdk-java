@@ -371,7 +371,7 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
         {{#returnType}}ParameterizedTypeReference<{{{returnType}}}> localReturnType = new ParameterizedTypeReference<{{{returnType}}}>() {};{{/returnType}}{{^returnType}}ParameterizedTypeReference<Void> localReturnType = new ParameterizedTypeReference<Void>() {};{{/returnType}}
             ResponseEntity<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}> responseEntity = apiClient.invokeAPI("{{{path}}}", HttpMethod.{{httpMethod}}, {{#hasPathParams}}uriVariables{{/hasPathParams}}{{^hasPathParams}}Collections.<String, Object>emptyMap(){{/hasPathParams}}, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
             {{#returnType}}
-                    PagedList pagedList = PagedList.constructPagedList(responseEntity);
+                    PagedList<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}> pagedList = PagedList.constructPagedList(responseEntity);
 
                     String afterMarker = pagedList.getAfter(pagedList.getNextPage());
 
@@ -381,7 +381,7 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
 
                     ResponseEntity<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}> newResponseEntity = apiClient.invokeAPI("{{{path}}}", HttpMethod.{{httpMethod}}, {{#hasPathParams}}uriVariables{{/hasPathParams}}{{^hasPathParams}}Collections.<String, Object>emptyMap(){{/hasPathParams}}, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
 
-                    PagedList newPagedList = PagedList.constructPagedList(newResponseEntity);
+                    PagedList<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}> newPagedList = PagedList.constructPagedList(newResponseEntity);
                     pagedList.getItems().addAll(newPagedList.getItems());
                     pagedList.setNextPage(newPagedList.getNextPage());
                     afterMarker = newPagedList.getAfter(newPagedList.getNextPage());
