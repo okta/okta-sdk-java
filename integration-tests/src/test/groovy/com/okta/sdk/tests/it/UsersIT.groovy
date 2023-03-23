@@ -164,6 +164,32 @@ class UsersIT extends ITSupport {
     }
 
     @Test (groups = "group2")
+    @Scenario("user-with-plus-sign-in-email")
+    void filterUserTest() {
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'hashtag'
+        def email = firstName + "+" + lastName + "@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setPassword(password.toCharArray())
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        Thread.sleep(getTestOperationDelay())
+
+        List<User> users = userApi.listUsers(null, null, null, "profile.login eq \"${email}\"", null, null, null)
+
+        assertUserPresent(users, user)
+    }
+
+    @Test (groups = "group2")
     @Scenario("user-role-assign")
     void roleAssignTest() {
 
