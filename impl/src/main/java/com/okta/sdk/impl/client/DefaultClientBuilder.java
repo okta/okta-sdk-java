@@ -79,11 +79,9 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
@@ -100,6 +98,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -267,6 +266,10 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientConfig.setPrivateKey(props.get(DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME));
         }
 
+        if (Strings.hasText(props.get(DEFAULT_CLIENT_OAUTH2_ACCESS_TOKEN_PROPERTY_NAME))) {
+            clientConfig.setOAuth2AccessToken(props.get(DEFAULT_CLIENT_OAUTH2_ACCESS_TOKEN_PROPERTY_NAME));
+        }
+
         if (Strings.hasText(props.get(DEFAULT_CLIENT_KID_PROPERTY_NAME))) {
             clientConfig.setKid(props.get(DEFAULT_CLIENT_KID_PROPERTY_NAME));
         }
@@ -346,7 +349,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (this.clientConfig.getBaseUrlResolver() == null) {
-            ConfigurationValidator.validateOrgUrl(this.clientConfig.getBaseUrl(), allowNonHttpsForTesting);
+            ConfigurationValidator.assertOrgUrl(this.clientConfig.getBaseUrl(), allowNonHttpsForTesting);
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
@@ -367,12 +370,18 @@ public class DefaultClientBuilder implements ClientBuilder {
 
             validateOAuth2ClientConfig(this.clientConfig);
 
-            accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig, apiClient);
+            if (Strings.hasText(this.clientConfig.getOAuth2AccessToken())) {
+                log.debug("Will use client provided Access token for OAuth2 authentication (private key, if supplied would be ignored)");
+                apiClient.setAccessToken(this.clientConfig.getOAuth2AccessToken());
+            } else {
+                log.debug("Will retrieve Access Token automatically from Okta for OAuth2 authentication");
+                accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig, apiClient);
 
-            OAuth2ClientCredentials oAuth2ClientCredentials =
-                new OAuth2ClientCredentials(accessTokenRetrieverService);
+                OAuth2ClientCredentials oAuth2ClientCredentials =
+                    new OAuth2ClientCredentials(accessTokenRetrieverService);
 
-            this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
+                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
+            }
         }
 
         return apiClient;
@@ -386,9 +395,11 @@ public class DefaultClientBuilder implements ClientBuilder {
         Assert.isTrue(clientConfiguration.getScopes() != null && !clientConfiguration.getScopes().isEmpty(),
             "At least one scope is required");
         String privateKey = clientConfiguration.getPrivateKey();
-        Assert.hasText(privateKey, "privateKey cannot be null (either PEM file path (or) full PEM content must be supplied)");
+        String oAuth2AccessToken = clientConfiguration.getOAuth2AccessToken();
+        Assert.isTrue(Objects.nonNull(privateKey) || Objects.nonNull(oAuth2AccessToken),
+            "Either Private Key (or) Access Token must be supplied for OAuth2 Authentication mode");
 
-        if (!ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
+        if (Strings.hasText(privateKey) && !ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
             // privateKey is a file path, check if the file exists
             Path privateKeyPemFilePath;
             try {
@@ -533,7 +544,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     private String getFileContent(File file) {
-        try (InputStream inputStream = new FileInputStream(file)) {
+        try (InputStream inputStream = Files.newInputStream(file.toPath())) {
             return readFromInputStream(inputStream);
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not read from supplied private key file");
@@ -557,7 +568,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         Assert.notNull(inputStream, "InputStream cannot be null.");
         StringBuilder resultStringBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
-            inputStream, Charset.forName(StandardCharsets.UTF_8.name())))) {
+            inputStream, StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
                 resultStringBuilder.append(line).append("\n");
@@ -570,6 +581,13 @@ public class DefaultClientBuilder implements ClientBuilder {
     public ClientBuilder setClientId(String clientId) {
         ConfigurationValidator.assertClientId(clientId);
         this.clientConfig.setClientId(clientId);
+        return this;
+    }
+
+    @Override
+    public ClientBuilder setOAuth2AccessToken(String oAuth2AccessToken) {
+        Assert.notNull(oAuth2AccessToken, "oAuth2AccessToken cannot be null.");
+        this.clientConfig.setOAuth2AccessToken(oAuth2AccessToken);
         return this;
     }
 

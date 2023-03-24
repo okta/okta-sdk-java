@@ -45,7 +45,7 @@ public class Quickstart {
 
         final String email = "joe.coder+" + UUID.randomUUID() + "@example.com";
         final String groupName = "java-sdk-quickstart-" + UUID.randomUUID();
-        final char[] password = {'P','a','s','s','w','o','r','d','1'};
+        final char[] password = {'$','D','o','l','l','a','r','d','i','m','e','1','2','3','*'};
 
         ClientBuilder builder;
         ApiClient client;

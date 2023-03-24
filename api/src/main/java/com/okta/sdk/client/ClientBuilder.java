@@ -80,6 +80,7 @@ public interface ClientBuilder {
     String DEFAULT_CLIENT_ID_PROPERTY_NAME = "okta.client.clientId";
     String DEFAULT_CLIENT_SCOPES_PROPERTY_NAME = "okta.client.scopes";
     String DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME = "okta.client.privateKey";
+    String DEFAULT_CLIENT_OAUTH2_ACCESS_TOKEN_PROPERTY_NAME = "okta.client.oauth2.accessToken";
     String DEFAULT_CLIENT_KID_PROPERTY_NAME = "okta.client.kid";
     String DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME = "okta.client.requestTimeout";
     String DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME = "okta.client.rateLimit.maxRetries";
@@ -89,7 +90,7 @@ public interface ClientBuilder {
      * Allows specifying an {@code ApiKey} instance directly instead of relying on the
      * default location + override/fallback behavior defined in the {@link ClientBuilder documentation above}.
      *
-     * Currently you should use a com.okta.sdk.impl.api.TokenClientCredentials (if you are NOT using an okta.yaml file)
+     * Currently, you should use a com.okta.sdk.impl.api.TokenClientCredentials (if you are NOT using an okta.yaml file)
      *
      * @param clientCredentials the token to use to authenticate requests to the Okta API server.
      * @return the ClientBuilder instance for method chaining.
@@ -241,6 +242,18 @@ public interface ClientBuilder {
      * @since 3.0.0
      */
     ClientBuilder setPrivateKey(PrivateKey privateKey);
+
+    /**
+     * Allows specifying the user obtained OAuth2 access token to be used by the SDK.
+     * The SDK will NOT obtain access token automatically (using the supplied private key)
+     * when this is set.
+     *
+     * @param oAuth2AccessToken the token string.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 10.2.x
+     */
+    ClientBuilder setOAuth2AccessToken(String oAuth2AccessToken);
 
     /**
      * Allows specifying the client ID instead of relying on the default location + override/fallback behavior defined
