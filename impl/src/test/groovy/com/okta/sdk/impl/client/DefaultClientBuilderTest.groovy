@@ -63,6 +63,7 @@ class DefaultClientBuilderTest {
         System.clearProperty("okta.client.scopes")
         System.clearProperty("okta.client.privateKey")
         System.clearProperty("okta.client.connectionTimeout")
+        System.clearProperty("okta.client.oauth2.accessToken")
 
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_TOKEN", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_ORGURL", null)
@@ -72,6 +73,7 @@ class DefaultClientBuilderTest {
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_SCOPES", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_PRIVATEKEY", null)
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_CONNECTIONTIMEOUT", null)
+        RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_OAUTH2_ACCESSTOKEN", null)
     }
 
     @Test
