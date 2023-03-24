@@ -348,7 +348,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (this.clientConfig.getBaseUrlResolver() == null) {
-            ConfigurationValidator.validateOrgUrl(this.clientConfig.getBaseUrl(), allowNonHttpsForTesting);
+            ConfigurationValidator.assertOrgUrl(this.clientConfig.getBaseUrl(), allowNonHttpsForTesting);
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
@@ -370,10 +370,10 @@ public class DefaultClientBuilder implements ClientBuilder {
             validateOAuth2ClientConfig(this.clientConfig);
 
             if (Strings.hasText(this.clientConfig.getOAuth2AccessToken())) {
-                log.info("Will use client provided Access token for OAuth2 authentication (private key, if supplied would be ignored)");
+                log.debug("Will use client provided Access token for OAuth2 authentication (private key, if supplied would be ignored)");
                 apiClient.setAccessToken(this.clientConfig.getOAuth2AccessToken());
             } else {
-                log.info("Will retrieve Access Token automatically from Okta for OAuth2 authentication");
+                log.debug("Will retrieve Access Token automatically from Okta for OAuth2 authentication");
                 accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig, apiClient);
 
                 OAuth2ClientCredentials oAuth2ClientCredentials =
