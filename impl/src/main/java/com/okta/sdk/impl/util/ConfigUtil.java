@@ -23,10 +23,10 @@ public class ConfigUtil {
     public static final String EC_PRIVATE_KEY_FOOTER = "-----END EC PRIVATE KEY-----";
 
     /**
-     * Check if the PEM key has BEGIN content wrapper.
+     * Check if the private key PEM has BEGIN content wrapper.
      *
-     * @param key the supplied key has BEGIN wrapper/header
-     * @return
+     * @param key the supplied private key PEM string.
+     * @return true if the supplied private key has the BEGIN content wrapper, false otherwise.
      */
     public static boolean hasPrivateKeyContentWrapper(String key) {
         return key.startsWith("-----BEGIN");

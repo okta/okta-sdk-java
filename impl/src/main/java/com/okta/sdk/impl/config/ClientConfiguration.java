@@ -52,6 +52,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private String clientId;
     private Set<String> scopes = new HashSet<>();
     private String privateKey;
+    private String oAuth2AccessToken;
     private String kid;
 
     public String getApiToken() {
@@ -116,6 +117,14 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     public void setPrivateKey(String privateKey) {
         this.privateKey = privateKey;
+    }
+
+    public String getOAuth2AccessToken() {
+        return oAuth2AccessToken;
+    }
+
+    public void setOAuth2AccessToken(String oAuth2AccessToken) {
+        this.oAuth2AccessToken = oAuth2AccessToken;
     }
 
     public boolean isCacheManagerEnabled() {

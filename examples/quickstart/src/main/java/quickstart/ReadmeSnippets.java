@@ -95,6 +95,7 @@ public class ReadmeSnippets {
             // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
             // (or) .setPrivateKey(inputStream)
             // (or) .setPrivateKey(privateKey)
+            // (or) .setOAuth2AccessToken("access token string") // if set, private key (if supplied) will be ignored
             .build();
     }
 

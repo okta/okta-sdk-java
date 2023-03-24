@@ -18,6 +18,7 @@ package com.okta.sdk.error;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JacksonException;
 
+import com.okta.commons.lang.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.FileCopyUtils;
@@ -47,9 +48,12 @@ public class ErrorHandler implements ResponseErrorHandler {
     public void handleError(ClientHttpResponse httpResponse) throws IOException, ResourceException {
 
         final int statusCode = httpResponse.getRawStatusCode();
-        final String message = new String(FileCopyUtils.copyToByteArray(httpResponse.getBody()));
+        String message = new String(FileCopyUtils.copyToByteArray(httpResponse.getBody()));
 
         if (!isValid(message)) {
+            if (!Strings.hasText(message)) {
+                message = httpResponse.getStatusText();
+            }
             throw new ResourceException(new NonJsonError(statusCode, message));
         }
 
