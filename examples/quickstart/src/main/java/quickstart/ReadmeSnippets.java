@@ -180,6 +180,28 @@ public class ReadmeSnippets {
             .buildAndCreate(groupApi);
     }
 
+    private void assignUserToGroup() {
+        // create user
+        UserApi userApi = new UserApi(client);
+
+        User user = UserBuilder.instance()
+            .setEmail("joe.coder@example.com")
+            .setFirstName("Joe")
+            .setLastName("Code")
+            .buildAndCreate(userApi);
+
+        // create group
+        GroupApi groupApi = new GroupApi(client);
+
+        Group group = GroupBuilder.instance()
+            .setName("a-group-name")
+            .setDescription("Example Group")
+            .buildAndCreate(groupApi);
+
+        // assign user to group
+        groupApi.assignUserToGroup(group.getId(), user.getId());
+    }
+
     private void listUserFactors() {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
