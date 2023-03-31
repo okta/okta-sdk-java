@@ -188,163 +188,185 @@
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>             .buildAndCreate(groupApi);
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>     }
 <a class="jxr_linenumber" name="L182" href="#L182">182</a> 
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> listUserFactors() {
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>         <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a> userFactorApi = <strong class="jxr_keyword">new</strong> <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a>(client);
-<a class="jxr_linenumber" name="L185" href="#L185">185</a> 
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>         List&lt;UserFactor&gt; userFactors = userFactorApi.listFactors(<span class="jxr_string">"userId"</span>);
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>     }
-<a class="jxr_linenumber" name="L188" href="#L188">188</a> 
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> enrollUserInFactor() {
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>         <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a> userFactorApi = <strong class="jxr_keyword">new</strong> <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a>(client);
-<a class="jxr_linenumber" name="L191" href="#L191">191</a> 
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>         SmsUserFactor smsFactor = <strong class="jxr_keyword">new</strong> SmsUserFactor();
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>         smsFactor.getProfile().setPhoneNumber(<span class="jxr_string">"555 867 5309"</span>);
-<a class="jxr_linenumber" name="L194" href="#L194">194</a> 
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>         UserFactor userFactor = userFactorApi.enrollFactor(<span class="jxr_string">"userId"</span>, smsFactor, <strong class="jxr_keyword">true</strong>, <span class="jxr_string">"templateId"</span>, 30, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>     }
-<a class="jxr_linenumber" name="L197" href="#L197">197</a> 
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> activateFactor() {
-<a class="jxr_linenumber" name="L199" href="#L199">199</a>         <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a> userFactorApi = <strong class="jxr_keyword">new</strong> <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a>(client);
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> assignUserToGroup() {
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>         <em class="jxr_comment">// create user</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>         <a name="UserApi" href="../org/openapitools/client/api/UserApi.html#UserApi">UserApi</a> userApi = <strong class="jxr_keyword">new</strong> <a name="UserApi" href="../org/openapitools/client/api/UserApi.html#UserApi">UserApi</a>(client);
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> 
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>         User user = UserBuilder.instance()
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>             .setEmail(<span class="jxr_string">"joe.coder@example.com"</span>)
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>             .setFirstName(<span class="jxr_string">"Joe"</span>)
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>             .setLastName(<span class="jxr_string">"Code"</span>)
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>             .buildAndCreate(userApi);
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> 
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>         <em class="jxr_comment">// create group</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>         <a name="GroupApi" href="../org/openapitools/client/api/GroupApi.html#GroupApi">GroupApi</a> groupApi = <strong class="jxr_keyword">new</strong> <a name="GroupApi" href="../org/openapitools/client/api/GroupApi.html#GroupApi">GroupApi</a>(client);
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> 
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>         Group group = GroupBuilder.instance()
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>             .setName(<span class="jxr_string">"a-group-name"</span>)
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>             .setDescription(<span class="jxr_string">"Example Group"</span>)
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>             .buildAndCreate(groupApi);
 <a class="jxr_linenumber" name="L200" href="#L200">200</a> 
-<a class="jxr_linenumber" name="L201" href="#L201">201</a>         UserFactor userFactor = userFactorApi.getFactor(<span class="jxr_string">"userId"</span>, <span class="jxr_string">"factorId"</span>);
-<a class="jxr_linenumber" name="L202" href="#L202">202</a>         ActivateFactorRequest activateFactorRequest = <strong class="jxr_keyword">new</strong> ActivateFactorRequest();
-<a class="jxr_linenumber" name="L203" href="#L203">203</a>         activateFactorRequest.setPassCode(<span class="jxr_string">"123456"</span>);
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>         <em class="jxr_comment">// assign user to group</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>         groupApi.assignUserToGroup(group.getId(), user.getId());
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>     }
 <a class="jxr_linenumber" name="L204" href="#L204">204</a> 
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>         UserFactor activatedUserFactor = userFactorApi.activateFactor(<span class="jxr_string">"userId"</span>, <span class="jxr_string">"factorId"</span>, activateFactorRequest);
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>     }
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> listUserFactors() {
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>         <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a> userFactorApi = <strong class="jxr_keyword">new</strong> <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a>(client);
 <a class="jxr_linenumber" name="L207" href="#L207">207</a> 
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> verifyFactor() {
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>         <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a> userFactorApi = <strong class="jxr_keyword">new</strong> <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a>(client);
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>         List&lt;UserFactor&gt; userFactors = userFactorApi.listFactors(<span class="jxr_string">"userId"</span>);
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>     }
 <a class="jxr_linenumber" name="L210" href="#L210">210</a> 
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>         UserFactor userFactor = userFactorApi.getFactor(<span class="jxr_string">"userId"</span>, <span class="jxr_string">"factorId"</span>);
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>         VerifyFactorRequest verifyFactorRequest = <strong class="jxr_keyword">new</strong> VerifyFactorRequest();
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>         verifyFactorRequest.setPassCode(<span class="jxr_string">"123456"</span>);
-<a class="jxr_linenumber" name="L214" href="#L214">214</a> 
-<a class="jxr_linenumber" name="L215" href="#L215">215</a>         VerifyUserFactorResponse verifyUserFactorResponse =
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>             userFactorApi.verifyFactor(<span class="jxr_string">"userId"</span>, <span class="jxr_string">"factorId"</span>, <span class="jxr_string">"templateId"</span>, 10, <span class="jxr_string">"xForwardedFor"</span>, <span class="jxr_string">"userAgent"</span>, <span class="jxr_string">"acceptLanguage"</span>, verifyFactorRequest);
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>     }
-<a class="jxr_linenumber" name="L218" href="#L218">218</a> 
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> listApplication() {
-<a class="jxr_linenumber" name="L220" href="#L220">220</a>         <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a> applicationApi = <strong class="jxr_keyword">new</strong> <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a>(client);
-<a class="jxr_linenumber" name="L221" href="#L221">221</a> 
-<a class="jxr_linenumber" name="L222" href="#L222">222</a>         List&lt;Application&gt; applications = applicationApi.listApplications(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, 10, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>     }
-<a class="jxr_linenumber" name="L224" href="#L224">224</a> 
-<a class="jxr_linenumber" name="L225" href="#L225">225</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> getApplication() {
-<a class="jxr_linenumber" name="L226" href="#L226">226</a>         <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a> applicationApi = <strong class="jxr_keyword">new</strong> <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a>(client);
-<a class="jxr_linenumber" name="L227" href="#L227">227</a> 
-<a class="jxr_linenumber" name="L228" href="#L228">228</a>         Application app = applicationApi.getApplication(<span class="jxr_string">"appId"</span>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>     }
-<a class="jxr_linenumber" name="L230" href="#L230">230</a> 
-<a class="jxr_linenumber" name="L231" href="#L231">231</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createSwaApplication() {
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>         <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a> applicationApi = <strong class="jxr_keyword">new</strong> <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a>(client);
-<a class="jxr_linenumber" name="L233" href="#L233">233</a> 
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>         SwaApplicationSettingsApplication swaApplicationSettingsApplication = <strong class="jxr_keyword">new</strong> SwaApplicationSettingsApplication();
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>         swaApplicationSettingsApplication.buttonField(<span class="jxr_string">"btn-login"</span>)
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>             .passwordField(<span class="jxr_string">"txtbox-password"</span>)
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>             .usernameField(<span class="jxr_string">"txtbox-username"</span>)
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>             .url(<span class="jxr_string">"https://example.com/login.html"</span>);
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>         SwaApplicationSettings swaApplicationSettings = <strong class="jxr_keyword">new</strong> SwaApplicationSettings();
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>         swaApplicationSettings.app(swaApplicationSettingsApplication);
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>         BrowserPluginApplication browserPluginApplication = <strong class="jxr_keyword">new</strong> BrowserPluginApplication();
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>         browserPluginApplication.name(<span class="jxr_string">"template_swa"</span>);
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>         browserPluginApplication.label(<span class="jxr_string">"Sample Plugin App"</span>);
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>         browserPluginApplication.settings(swaApplicationSettings);
-<a class="jxr_linenumber" name="L245" href="#L245">245</a> 
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>         <em class="jxr_comment">// create</em>
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>         BrowserPluginApplication createdApp =
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>             applicationApi.createApplication(BrowserPluginApplication.<strong class="jxr_keyword">class</strong>, browserPluginApplication, <strong class="jxr_keyword">true</strong>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>     }
-<a class="jxr_linenumber" name="L250" href="#L250">250</a> 
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> listSysLogs() {
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>         <a name="SystemLogApi" href="../org/openapitools/client/api/SystemLogApi.html#SystemLogApi">SystemLogApi</a> systemLogApi = <strong class="jxr_keyword">new</strong> <a name="SystemLogApi" href="../org/openapitools/client/api/SystemLogApi.html#SystemLogApi">SystemLogApi</a>(client);
-<a class="jxr_linenumber" name="L253" href="#L253">253</a> 
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <em class="jxr_comment">// use a filter (start date, end date, filter, or query, sort order) all options are nullable</em>
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>         List&lt;LogEvent&gt; logEvents = systemLogApi.listLogEvents(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <span class="jxr_string">"interestingURI.com"</span>, 100, <span class="jxr_string">"ASCENDING"</span>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>     }
-<a class="jxr_linenumber" name="L257" href="#L257">257</a> 
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> callAnotherEndpoint() {
-<a class="jxr_linenumber" name="L259" href="#L259">259</a> 
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>         <a name="ApiClient" href="../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient = buildApiClient(<span class="jxr_string">"orgBaseUrl"</span>, <span class="jxr_string">"apiKey"</span>);
-<a class="jxr_linenumber" name="L261" href="#L261">261</a> 
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>         <em class="jxr_comment">// Create a BookmarkApplication</em>
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>         BookmarkApplication bookmarkApplication = <strong class="jxr_keyword">new</strong> BookmarkApplication();
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>         bookmarkApplication.setName(<span class="jxr_string">"bookmark"</span>);
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>         bookmarkApplication.setLabel(<span class="jxr_string">"Sample Bookmark App"</span>);
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>         bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>         BookmarkApplicationSettings bookmarkApplicationSettings = <strong class="jxr_keyword">new</strong> BookmarkApplicationSettings();
-<a class="jxr_linenumber" name="L268" href="#L268">268</a>         BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>             <strong class="jxr_keyword">new</strong> BookmarkApplicationSettingsApplication();
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>         bookmarkApplicationSettingsApplication.setUrl(<span class="jxr_string">"https://example.com/bookmark.htm"</span>);
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>         bookmarkApplicationSettingsApplication.setRequestIntegration(false);
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>         bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>         bookmarkApplication.setSettings(bookmarkApplicationSettings);
-<a class="jxr_linenumber" name="L274" href="#L274">274</a> 
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>         ResponseEntity&lt;BookmarkApplication&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/apps"</span>,
-<a class="jxr_linenumber" name="L276" href="#L276">276</a>             HttpMethod.POST,
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>             Collections.emptyMap(),
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>             <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>             bookmarkApplication,
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>             <strong class="jxr_keyword">new</strong> HttpHeaders(),
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>             <strong class="jxr_keyword">new</strong> LinkedMultiValueMap&lt;&gt;(),
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>             <strong class="jxr_keyword">null</strong>,
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>             Collections.singletonList(MediaType.APPLICATION_JSON),
-<a class="jxr_linenumber" name="L284" href="#L284">284</a>             MediaType.APPLICATION_JSON,
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>             <strong class="jxr_keyword">new</strong> String[]{<span class="jxr_string">"API Token"</span>},
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>             <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;BookmarkApplication&gt;() {});
-<a class="jxr_linenumber" name="L287" href="#L287">287</a> 
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>         BookmarkApplication createdApp = responseEntity.getBody();
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>     }
-<a class="jxr_linenumber" name="L290" href="#L290">290</a> 
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paging() {
-<a class="jxr_linenumber" name="L292" href="#L292">292</a> 
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>         <a name="UserApi" href="../org/openapitools/client/api/UserApi.html#UserApi">UserApi</a> userApi = <strong class="jxr_keyword">new</strong> <a name="UserApi" href="../org/openapitools/client/api/UserApi.html#UserApi">UserApi</a>(client);
-<a class="jxr_linenumber" name="L294" href="#L294">294</a> 
-<a class="jxr_linenumber" name="L295" href="#L295">295</a>         <strong class="jxr_keyword">int</strong> limit = 2;
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> enrollUserInFactor() {
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>         <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a> userFactorApi = <strong class="jxr_keyword">new</strong> <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a>(client);
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> 
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>         SmsUserFactor smsFactor = <strong class="jxr_keyword">new</strong> SmsUserFactor();
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         smsFactor.getProfile().setPhoneNumber(<span class="jxr_string">"555 867 5309"</span>);
+<a class="jxr_linenumber" name="L216" href="#L216">216</a> 
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>         UserFactor userFactor = userFactorApi.enrollFactor(<span class="jxr_string">"userId"</span>, smsFactor, <strong class="jxr_keyword">true</strong>, <span class="jxr_string">"templateId"</span>, 30, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>     }
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> 
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> activateFactor() {
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>         <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a> userFactorApi = <strong class="jxr_keyword">new</strong> <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a>(client);
+<a class="jxr_linenumber" name="L222" href="#L222">222</a> 
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>         UserFactor userFactor = userFactorApi.getFactor(<span class="jxr_string">"userId"</span>, <span class="jxr_string">"factorId"</span>);
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>         ActivateFactorRequest activateFactorRequest = <strong class="jxr_keyword">new</strong> ActivateFactorRequest();
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>         activateFactorRequest.setPassCode(<span class="jxr_string">"123456"</span>);
+<a class="jxr_linenumber" name="L226" href="#L226">226</a> 
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>         UserFactor activatedUserFactor = userFactorApi.activateFactor(<span class="jxr_string">"userId"</span>, <span class="jxr_string">"factorId"</span>, activateFactorRequest);
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     }
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> 
+<a class="jxr_linenumber" name="L230" href="#L230">230</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> verifyFactor() {
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a> userFactorApi = <strong class="jxr_keyword">new</strong> <a name="UserFactorApi" href="../org/openapitools/client/api/UserFactorApi.html#UserFactorApi">UserFactorApi</a>(client);
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> 
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>         UserFactor userFactor = userFactorApi.getFactor(<span class="jxr_string">"userId"</span>, <span class="jxr_string">"factorId"</span>);
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>         VerifyFactorRequest verifyFactorRequest = <strong class="jxr_keyword">new</strong> VerifyFactorRequest();
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>         verifyFactorRequest.setPassCode(<span class="jxr_string">"123456"</span>);
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> 
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>         VerifyUserFactorResponse verifyUserFactorResponse =
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>             userFactorApi.verifyFactor(<span class="jxr_string">"userId"</span>, <span class="jxr_string">"factorId"</span>, <span class="jxr_string">"templateId"</span>, 10, <span class="jxr_string">"xForwardedFor"</span>, <span class="jxr_string">"userAgent"</span>, <span class="jxr_string">"acceptLanguage"</span>, verifyFactorRequest);
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     }
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> 
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> listApplication() {
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a> applicationApi = <strong class="jxr_keyword">new</strong> <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a>(client);
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> 
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>         List&lt;Application&gt; applications = applicationApi.listApplications(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, 10, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>     }
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> 
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> getApplication() {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a> applicationApi = <strong class="jxr_keyword">new</strong> <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a>(client);
+<a class="jxr_linenumber" name="L249" href="#L249">249</a> 
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         Application app = applicationApi.getApplication(<span class="jxr_string">"appId"</span>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>     }
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> 
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> createSwaApplication() {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a> applicationApi = <strong class="jxr_keyword">new</strong> <a name="ApplicationApi" href="../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a>(client);
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> 
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>         SwaApplicationSettingsApplication swaApplicationSettingsApplication = <strong class="jxr_keyword">new</strong> SwaApplicationSettingsApplication();
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>         swaApplicationSettingsApplication.buttonField(<span class="jxr_string">"btn-login"</span>)
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>             .passwordField(<span class="jxr_string">"txtbox-password"</span>)
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>             .usernameField(<span class="jxr_string">"txtbox-username"</span>)
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>             .url(<span class="jxr_string">"https://example.com/login.html"</span>);
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>         SwaApplicationSettings swaApplicationSettings = <strong class="jxr_keyword">new</strong> SwaApplicationSettings();
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>         swaApplicationSettings.app(swaApplicationSettingsApplication);
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>         BrowserPluginApplication browserPluginApplication = <strong class="jxr_keyword">new</strong> BrowserPluginApplication();
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>         browserPluginApplication.name(<span class="jxr_string">"template_swa"</span>);
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>         browserPluginApplication.label(<span class="jxr_string">"Sample Plugin App"</span>);
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>         browserPluginApplication.settings(swaApplicationSettings);
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> 
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>         <em class="jxr_comment">// create</em>
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>         BrowserPluginApplication createdApp =
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>             applicationApi.createApplication(BrowserPluginApplication.<strong class="jxr_keyword">class</strong>, browserPluginApplication, <strong class="jxr_keyword">true</strong>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>     }
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> 
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> listSysLogs() {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>         <a name="SystemLogApi" href="../org/openapitools/client/api/SystemLogApi.html#SystemLogApi">SystemLogApi</a> systemLogApi = <strong class="jxr_keyword">new</strong> <a name="SystemLogApi" href="../org/openapitools/client/api/SystemLogApi.html#SystemLogApi">SystemLogApi</a>(client);
+<a class="jxr_linenumber" name="L275" href="#L275">275</a> 
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>         <em class="jxr_comment">// use a filter (start date, end date, filter, or query, sort order) all options are nullable</em>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>         List&lt;LogEvent&gt; logEvents = systemLogApi.listLogEvents(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <span class="jxr_string">"interestingURI.com"</span>, 100, <span class="jxr_string">"ASCENDING"</span>, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>     }
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> 
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> callAnotherEndpoint() {
+<a class="jxr_linenumber" name="L281" href="#L281">281</a> 
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>         <a name="ApiClient" href="../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient = buildApiClient(<span class="jxr_string">"orgBaseUrl"</span>, <span class="jxr_string">"apiKey"</span>);
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> 
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>         <em class="jxr_comment">// Create a BookmarkApplication</em>
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>         BookmarkApplication bookmarkApplication = <strong class="jxr_keyword">new</strong> BookmarkApplication();
+<a class="jxr_linenumber" name="L286" href="#L286">286</a>         bookmarkApplication.setName(<span class="jxr_string">"bookmark"</span>);
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>         bookmarkApplication.setLabel(<span class="jxr_string">"Sample Bookmark App"</span>);
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>         bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>         BookmarkApplicationSettings bookmarkApplicationSettings = <strong class="jxr_keyword">new</strong> BookmarkApplicationSettings();
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>         BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>             <strong class="jxr_keyword">new</strong> BookmarkApplicationSettingsApplication();
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>         bookmarkApplicationSettingsApplication.setUrl(<span class="jxr_string">"https://example.com/bookmark.htm"</span>);
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>         bookmarkApplicationSettingsApplication.setRequestIntegration(false);
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>         bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>         bookmarkApplication.setSettings(bookmarkApplicationSettings);
 <a class="jxr_linenumber" name="L296" href="#L296">296</a> 
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>         PagedList&lt;User&gt; pagedUserList = userApi.listUsersWithPaginationInfo(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, limit, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L298" href="#L298">298</a> 
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>         <em class="jxr_comment">// loop through all of them</em>
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>         <strong class="jxr_keyword">for</strong> (User tmpUser : pagedUserList.getItems()) {
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>             log.info(<span class="jxr_string">"User: {}"</span>, tmpUser.getProfile().getEmail());
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>         }
-<a class="jxr_linenumber" name="L303" href="#L303">303</a> 
-<a class="jxr_linenumber" name="L304" href="#L304">304</a>         <em class="jxr_comment">// or stream</em>
-<a class="jxr_linenumber" name="L305" href="#L305">305</a>         pagedUserList.getItems().forEach(tmpUser -&gt; log.info(<span class="jxr_string">"User: {}"</span>, tmpUser.getProfile().getEmail()));
-<a class="jxr_linenumber" name="L306" href="#L306">306</a>     }
-<a class="jxr_linenumber" name="L307" href="#L307">307</a> 
-<a class="jxr_linenumber" name="L308" href="#L308">308</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> complexCaching() {
-<a class="jxr_linenumber" name="L309" href="#L309">309</a>         Caches.newCacheManager()
-<a class="jxr_linenumber" name="L310" href="#L310">310</a>             .withDefaultTimeToLive(300, TimeUnit.SECONDS) <em class="jxr_comment">// default</em>
-<a class="jxr_linenumber" name="L311" href="#L311">311</a>             .withDefaultTimeToIdle(300, TimeUnit.SECONDS) <em class="jxr_comment">//general default</em>
-<a class="jxr_linenumber" name="L312" href="#L312">312</a>             .withCache(forResource(User.<strong class="jxr_keyword">class</strong>) <em class="jxr_comment">//User-specific cache settings</em>
-<a class="jxr_linenumber" name="L313" href="#L313">313</a>                 .withTimeToLive(1, TimeUnit.HOURS)
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>                 .withTimeToIdle(30, TimeUnit.MINUTES))
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>             .withCache(forResource(Group.<strong class="jxr_keyword">class</strong>) <em class="jxr_comment">//Group-specific cache settings</em>
-<a class="jxr_linenumber" name="L316" href="#L316">316</a>                 .withTimeToLive(1, TimeUnit.HOURS))
-<a class="jxr_linenumber" name="L317" href="#L317">317</a>             <em class="jxr_comment">//... etc ...</em>
-<a class="jxr_linenumber" name="L318" href="#L318">318</a>             .build(); <em class="jxr_comment">//build the CacheManager</em>
-<a class="jxr_linenumber" name="L319" href="#L319">319</a>     }
+<a class="jxr_linenumber" name="L297" href="#L297">297</a>         ResponseEntity&lt;BookmarkApplication&gt; responseEntity = apiClient.invokeAPI(<span class="jxr_string">"/api/v1/apps"</span>,
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>             HttpMethod.POST,
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>             Collections.emptyMap(),
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>             <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>             bookmarkApplication,
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>             <strong class="jxr_keyword">new</strong> HttpHeaders(),
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>             <strong class="jxr_keyword">new</strong> LinkedMultiValueMap&lt;&gt;(),
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>             <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>             Collections.singletonList(MediaType.APPLICATION_JSON),
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>             MediaType.APPLICATION_JSON,
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>             <strong class="jxr_keyword">new</strong> String[]{<span class="jxr_string">"API Token"</span>},
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>             <strong class="jxr_keyword">new</strong> ParameterizedTypeReference&lt;BookmarkApplication&gt;() {});
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> 
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>         BookmarkApplication createdApp = responseEntity.getBody();
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>     }
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> 
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> paging() {
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> 
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>         <a name="UserApi" href="../org/openapitools/client/api/UserApi.html#UserApi">UserApi</a> userApi = <strong class="jxr_keyword">new</strong> <a name="UserApi" href="../org/openapitools/client/api/UserApi.html#UserApi">UserApi</a>(client);
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> 
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>         <strong class="jxr_keyword">int</strong> limit = 2;
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> 
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>         PagedList&lt;User&gt; pagedUserList = userApi.listUsersWithPaginationInfo(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, limit, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L320" href="#L320">320</a> 
-<a class="jxr_linenumber" name="L321" href="#L321">321</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> disableCaching() {
-<a class="jxr_linenumber" name="L322" href="#L322">322</a>         <a name="ApiClient" href="../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> client = Clients.builder()
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>             .setCacheManager(Caches.newDisabledCacheManager())
-<a class="jxr_linenumber" name="L324" href="#L324">324</a>             .build();
-<a class="jxr_linenumber" name="L325" href="#L325">325</a>     }
-<a class="jxr_linenumber" name="L326" href="#L326">326</a> 
-<a class="jxr_linenumber" name="L327" href="#L327">327</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a name="ApiClient" href="../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> buildApiClient(String orgBaseUrl, String apiKey) {
-<a class="jxr_linenumber" name="L328" href="#L328">328</a> 
-<a class="jxr_linenumber" name="L329" href="#L329">329</a>         <a name="ApiClient" href="../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient = <strong class="jxr_keyword">new</strong> <a name="ApiClient" href="../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a>();
-<a class="jxr_linenumber" name="L330" href="#L330">330</a>         <em class="jxr_comment">// set your custom rest template and retry template,</em>
-<a class="jxr_linenumber" name="L331" href="#L331">331</a>         <em class="jxr_comment">// not setting it would use the default templates</em>
-<a class="jxr_linenumber" name="L332" href="#L332">332</a>         <em class="jxr_comment">//apiClient.setRestTemplate();</em>
-<a class="jxr_linenumber" name="L333" href="#L333">333</a>         <em class="jxr_comment">//apiClient.setRetryTemplate(retryTemplate(this.clientConfig));</em>
-<a class="jxr_linenumber" name="L334" href="#L334">334</a>         apiClient.setBasePath(orgBaseUrl);
-<a class="jxr_linenumber" name="L335" href="#L335">335</a>         apiClient.setApiKey(apiKey);
-<a class="jxr_linenumber" name="L336" href="#L336">336</a>         apiClient.setApiKeyPrefix(<span class="jxr_string">"SSWS"</span>);
-<a class="jxr_linenumber" name="L337" href="#L337">337</a>         <strong class="jxr_keyword">return</strong> apiClient;
-<a class="jxr_linenumber" name="L338" href="#L338">338</a>     }
-<a class="jxr_linenumber" name="L339" href="#L339">339</a> }
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>         <em class="jxr_comment">// loop through all of them</em>
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>         <strong class="jxr_keyword">for</strong> (User tmpUser : pagedUserList.getItems()) {
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>             log.info(<span class="jxr_string">"User: {}"</span>, tmpUser.getProfile().getEmail());
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>         }
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> 
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>         <em class="jxr_comment">// or stream</em>
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>         pagedUserList.getItems().forEach(tmpUser -&gt; log.info(<span class="jxr_string">"User: {}"</span>, tmpUser.getProfile().getEmail()));
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>     }
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> 
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> complexCaching() {
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>         Caches.newCacheManager()
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>             .withDefaultTimeToLive(300, TimeUnit.SECONDS) <em class="jxr_comment">// default</em>
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>             .withDefaultTimeToIdle(300, TimeUnit.SECONDS) <em class="jxr_comment">//general default</em>
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>             .withCache(forResource(User.<strong class="jxr_keyword">class</strong>) <em class="jxr_comment">//User-specific cache settings</em>
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>                 .withTimeToLive(1, TimeUnit.HOURS)
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>                 .withTimeToIdle(30, TimeUnit.MINUTES))
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>             .withCache(forResource(Group.<strong class="jxr_keyword">class</strong>) <em class="jxr_comment">//Group-specific cache settings</em>
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>                 .withTimeToLive(1, TimeUnit.HOURS))
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>             <em class="jxr_comment">//... etc ...</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a>             .build(); <em class="jxr_comment">//build the CacheManager</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>     }
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> 
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> disableCaching() {
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>         <a name="ApiClient" href="../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> client = Clients.builder()
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>             .setCacheManager(Caches.newDisabledCacheManager())
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>             .build();
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>     }
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> 
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <a name="ApiClient" href="../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> buildApiClient(String orgBaseUrl, String apiKey) {
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> 
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>         <a name="ApiClient" href="../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient = <strong class="jxr_keyword">new</strong> <a name="ApiClient" href="../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a>();
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>         <em class="jxr_comment">// set your custom rest template and retry template,</em>
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>         <em class="jxr_comment">// not setting it would use the default templates</em>
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>         <em class="jxr_comment">//apiClient.setRestTemplate();</em>
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>         <em class="jxr_comment">//apiClient.setRetryTemplate(retryTemplate(this.clientConfig));</em>
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>         apiClient.setBasePath(orgBaseUrl);
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>         apiClient.setApiKey(apiKey);
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>         apiClient.setApiKeyPrefix(<span class="jxr_string">"SSWS"</span>);
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>         <strong class="jxr_keyword">return</strong> apiClient;
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>     }
+<a class="jxr_linenumber" name="L361" href="#L361">361</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
