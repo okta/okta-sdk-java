@@ -211,10 +211,15 @@ public class ReadmeSnippets {
     private void enrollUserInFactor() {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
-        SmsUserFactor smsFactor = new SmsUserFactor();
-        smsFactor.getProfile().setPhoneNumber("555 867 5309");
+        SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
+        smsUserFactorProfile.setPhoneNumber("555 867 5309");
 
-        UserFactor userFactor = userFactorApi.enrollFactor("userId", smsFactor, true, "templateId", 30, true);
+        SmsUserFactor smsUserFactor = new SmsUserFactor();
+        smsUserFactor.setProvider(FactorProvider.OKTA);
+        smsUserFactor.setFactorType(FactorType.SMS);
+        smsUserFactor.setProfile(smsUserFactorProfile);
+
+        UserFactor userFactor = userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
     }
 
     private void activateFactor() {
