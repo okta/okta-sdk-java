@@ -35,9 +35,12 @@ import org.openapitools.client.model.BookmarkApplication;
 import org.openapitools.client.model.BookmarkApplicationSettings;
 import org.openapitools.client.model.BookmarkApplicationSettingsApplication;
 import org.openapitools.client.model.BrowserPluginApplication;
+import org.openapitools.client.model.FactorProvider;
+import org.openapitools.client.model.FactorType;
 import org.openapitools.client.model.Group;
 import org.openapitools.client.model.LogEvent;
 import org.openapitools.client.model.SmsUserFactor;
+import org.openapitools.client.model.SmsUserFactorProfile;
 import org.openapitools.client.model.SwaApplicationSettings;
 import org.openapitools.client.model.SwaApplicationSettingsApplication;
 import org.openapitools.client.model.UpdateUserRequest;
@@ -211,10 +214,15 @@ public class ReadmeSnippets {
     private void enrollUserInFactor() {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
-        SmsUserFactor smsFactor = new SmsUserFactor();
-        smsFactor.getProfile().setPhoneNumber("555 867 5309");
+        SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
+        smsUserFactorProfile.setPhoneNumber("555 867 5309");
 
-        UserFactor userFactor = userFactorApi.enrollFactor("userId", smsFactor, true, "templateId", 30, true);
+        SmsUserFactor smsUserFactor = new SmsUserFactor();
+        smsUserFactor.setProvider(FactorProvider.OKTA);
+        smsUserFactor.setFactorType(FactorType.SMS);
+        smsUserFactor.setProfile(smsUserFactorProfile);
+
+        UserFactor userFactor = userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
     }
 
     private void activateFactor() {
