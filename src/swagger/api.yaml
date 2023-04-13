@@ -25216,6 +25216,8 @@ components:
           type: string
           format: date-time
           readOnly: true
+        profile:
+          type: object
         provider:
           $ref: '#/components/schemas/FactorProvider'
         status:
