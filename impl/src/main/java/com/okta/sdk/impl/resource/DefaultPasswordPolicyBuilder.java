@@ -47,7 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordPolicyBuilder> implements PasswordPolicyBuilder {
+public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordPolicyBuilder>
+        implements PasswordPolicyBuilder {
 
     private PasswordPolicyAuthenticationProviderType provider;
     private List<String> groupIds = new ArrayList<>();
@@ -84,7 +85,7 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
 
     @Override
     public PasswordPolicyBuilder setGroups(List<String> groupIds) {
-        this.groupIds=groupIds;
+        this.groupIds = groupIds;
         return this;
     }
 
@@ -236,15 +237,18 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
         policy.setSettings(new PasswordPolicySettings());
         PasswordPolicySettings passwordPolicySettings = policy.getSettings();
 
-        if (Strings.hasText(name)) policy.setName(name);
-        if (Strings.hasText(description)) policy.setDescription(description);
+        if (Strings.hasText(name))
+            policy.setName(name);
+        if (Strings.hasText(description))
+            policy.setDescription(description);
         if (priority != null)
             policy.setPriority(priority);
 
         if (PolicyType.PASSWORD.equals(policyType))
             policy.setType(policyType);
         else
-            throw new IllegalArgumentException("PolicyType should be 'PASSWORD', please use PolicyBuilder for other policy types.");
+            throw new IllegalArgumentException(
+                    "PolicyType should be 'PASSWORD', please use PolicyBuilder for other policy types.");
 
         if (Objects.nonNull(status))
             policy.setStatus(status);
@@ -381,10 +385,10 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
             passwordPolicySettings.setPassword(passwordPolicyPasswordSettings);
         }
 
-        //Instantiate PasswordRecoverySettings
+        // Instantiate PasswordRecoverySettings
         PasswordPolicyRecoverySettings passwordPolicyRecoverySettings = new PasswordPolicyRecoverySettings();
 
-        //RecoveryFactors
+        // RecoveryFactors
         PasswordPolicyRecoveryFactors passwordPolicyRecoveryFactors = new PasswordPolicyRecoveryFactors();
 
         if (Objects.nonNull(pwdRecoveryOktaCall)) {

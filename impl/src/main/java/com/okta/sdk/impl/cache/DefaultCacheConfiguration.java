@@ -62,10 +62,7 @@ public class DefaultCacheConfiguration implements CacheConfiguration {
 
     @Override
     public String toString() {
-        return "DefaultCacheConfiguration{" +
-                "name='" + name + '\'' +
-                ", timeToLive=" + timeToLive +
-                ", timeToIdle=" + timeToIdle +
-                '}';
+        return "DefaultCacheConfiguration{" + "name='" + name + '\'' + ", timeToLive=" + timeToLive + ", timeToIdle="
+                + timeToIdle + '}';
     }
 }

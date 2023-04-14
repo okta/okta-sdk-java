@@ -24,9 +24,9 @@ import java.util.Map;
 public class EnvironmentVariablesPropertiesSource implements PropertiesSource {
 
     @Override
-    public Map<String,String> getProperties() {
+    public Map<String, String> getProperties() {
 
-        Map<String,String> envVars = System.getenv();
+        Map<String, String> envVars = System.getenv();
 
         if (!Collections.isEmpty(envVars)) {
             return new LinkedHashMap<>(envVars);
@@ -44,18 +44,16 @@ public class EnvironmentVariablesPropertiesSource implements PropertiesSource {
         private static final EnvVarNameConverter envVarNameConverter = new DefaultEnvVarNameConverter();
 
         private OktaFilteredEnvironmentPropertiesSource() {
-            super(new EnvironmentVariablesPropertiesSource(),
-                    (key, value) -> {
-                        if (key.startsWith("OKTA_")) {
-                            //we want to convert env var naming convention to dotted property convention
-                            //to allow overrides.  Overrides work based on overriding identically-named keys:
-                            key = envVarNameConverter.toDottedPropertyName(key);
-                            return new String[]{key, value};
-                        } else {
-                            return null;
-                        }
-                    }
-            );
+            super(new EnvironmentVariablesPropertiesSource(), (key, value) -> {
+                if (key.startsWith("OKTA_")) {
+                    // we want to convert env var naming convention to dotted property convention
+                    // to allow overrides. Overrides work based on overriding identically-named keys:
+                    key = envVarNameConverter.toDottedPropertyName(key);
+                    return new String[] { key, value };
+                } else {
+                    return null;
+                }
+            });
         }
     }
 }

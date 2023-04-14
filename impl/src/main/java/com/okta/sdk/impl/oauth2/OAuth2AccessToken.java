@@ -69,7 +69,9 @@ public class OAuth2AccessToken {
         this.expiresIn = expiresIn;
     }
 
-    public String getIdToken() { return idToken; }
+    public String getIdToken() {
+        return idToken;
+    }
 
     public void setIdToken(String idToken) {
         this.idToken = idToken;
@@ -107,11 +109,7 @@ public class OAuth2AccessToken {
 
     @Override
     public String toString() {
-        return "OAuth2AccessToken [tokenType=" + tokenType +
-            ", issuedAt=" + issuedAt +
-            ", expiresIn=" + expiresIn +
-            ", idToken=xxxxx" +
-            ", accessToken=xxxxx" +
-            ", scope=" + scope + "]";
+        return "OAuth2AccessToken [tokenType=" + tokenType + ", issuedAt=" + issuedAt + ", expiresIn=" + expiresIn
+                + ", idToken=xxxxx" + ", accessToken=xxxxx" + ", scope=" + scope + "]";
     }
 }

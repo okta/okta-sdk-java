@@ -26,7 +26,7 @@ public class StringResource implements Resource {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
 
-    private final String  string;
+    private final String string;
     private final Charset charset;
 
     public StringResource(String s) {

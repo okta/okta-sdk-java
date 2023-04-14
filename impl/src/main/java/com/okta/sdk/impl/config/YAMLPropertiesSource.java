@@ -63,13 +63,15 @@ public class YAMLPropertiesSource implements PropertiesSource {
     }
 
     /**
-     * Return a flattened version of the given map, recursively following any nested Map
-     * or Collection values. Entries from the resulting map retain the same order as the
-     * source.
+     * Return a flattened version of the given map, recursively following any nested Map or Collection values. Entries
+     * from the resulting map retain the same order as the source.
      *
-     * Copied from https://github.com/spring-projects/spring-framework/blob/master/spring-beans/src/main/java/org/springframework/beans/factory/config/YamlProcessor.java
+     * Copied from
+     * https://github.com/spring-projects/spring-framework/blob/master/spring-beans/src/main/java/org/springframework/beans/factory/config/YamlProcessor.java
      *
-     * @param source the source map
+     * @param source
+     *            the source map
+     *
      * @return a flattened map
      */
     private Map<String, String> getFlattenedMap(Map<String, Object> source) {
@@ -84,28 +86,24 @@ public class YAMLPropertiesSource implements PropertiesSource {
             if (Strings.hasText(path)) {
                 if (key.startsWith("[")) {
                     key = path + key;
-                }
-                else {
+                } else {
                     key = path + "." + key;
                 }
             }
             Object value = entry.getValue();
             if (value instanceof String) {
                 result.put(key, String.valueOf(value));
-            }
-            else if (value instanceof Map) {
+            } else if (value instanceof Map) {
                 // Need a compound key
                 @SuppressWarnings("unchecked")
                 Map<String, Object> map = (Map<String, Object>) value;
                 buildFlattenedMap(result, map, key);
-            }
-            else if (value instanceof Collection) {
+            } else if (value instanceof Collection) {
                 // Need a compound key
                 @SuppressWarnings("unchecked")
                 Collection<Object> collection = (Collection<Object>) value;
                 result.put(key, Strings.collectionToCommaDelimitedString(collection));
-            }
-            else {
+            } else {
                 result.put(key, value != null ? String.valueOf(value) : "");
             }
         }

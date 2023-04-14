@@ -39,7 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OIDCApplicationBuilder> implements OIDCApplicationBuilder {
+public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OIDCApplicationBuilder>
+        implements OIDCApplicationBuilder {
 
     private OpenIdConnectApplicationType applicationType;
     private String clientUri;
@@ -156,7 +157,8 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod) {
+    public OIDCApplicationBuilder setTokenEndpointAuthMethod(
+            OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod) {
         this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
         return this;
     }
@@ -180,12 +182,15 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OpenIdConnectApplication buildAndCreate(ApplicationApi client){ return client.createApplication(OpenIdConnectApplication.class, build(), false, null); }
+    public OpenIdConnectApplication buildAndCreate(ApplicationApi client) {
+        return client.createApplication(OpenIdConnectApplication.class, build(), false, null);
+    }
 
-    private OpenIdConnectApplication build(){
+    private OpenIdConnectApplication build() {
         OpenIdConnectApplication application = new OpenIdConnectApplication();
 
-        if (Strings.hasText(label)) application.setLabel(label);
+        if (Strings.hasText(label))
+            application.setLabel(label);
 
         application.setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT);
 
@@ -209,7 +214,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
             applicationVisibilityHide.setiOS(iOS);
 
         if (Objects.nonNull(web))
-           applicationVisibilityHide.setWeb(web);
+            applicationVisibilityHide.setWeb(web);
 
         applicationVisibility.setHide(applicationVisibilityHide);
 
@@ -238,10 +243,11 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         if (Objects.nonNull(redirectUris))
             openIdConnectApplicationSettingsClient.setRedirectUris(redirectUris);
 
-        if (Objects.nonNull(responseTypes) && responseTypes.size()>0)
+        if (Objects.nonNull(responseTypes) && responseTypes.size() > 0)
             openIdConnectApplicationSettingsClient.setResponseTypes(responseTypes);
         else
-            throw new IllegalArgumentException("Response Type cannot be null, value should be of type OAuthResponseType");
+            throw new IllegalArgumentException(
+                    "Response Type cannot be null, value should be of type OAuthResponseType");
 
         if (Objects.nonNull(grantTypes) && grantTypes.size() > 0)
             openIdConnectApplicationSettingsClient.setGrantTypes(grantTypes);
@@ -254,7 +260,8 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         if (Objects.nonNull(applicationType))
             openIdConnectApplicationSettingsClient.setApplicationType(applicationType);
         else
-            throw new IllegalArgumentException("Application Type cannot be null, value should be of type OpenIdConnectApplicationType");
+            throw new IllegalArgumentException(
+                    "Application Type cannot be null, value should be of type OpenIdConnectApplicationType");
 
         if (Objects.nonNull(isImplicitAssignment))
             openIdConnectApplicationSettings.setImplicitAssignment(isImplicitAssignment);
@@ -278,7 +285,8 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         if (Objects.nonNull(tokenEndpointAuthMethod))
             applicationCredentialsOAuthClient.setTokenEndpointAuthMethod(tokenEndpointAuthMethod);
         else
-            throw new IllegalArgumentException("Token Endpoint Auth Method cannot be null, value should be of type OAuthEndpointAuthenticationMethod");
+            throw new IllegalArgumentException(
+                    "Token Endpoint Auth Method cannot be null, value should be of type OAuthEndpointAuthenticationMethod");
 
         oAuthApplicationCredentials.setOauthClient(applicationCredentialsOAuthClient);
 

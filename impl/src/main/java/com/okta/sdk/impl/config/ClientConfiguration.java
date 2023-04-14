@@ -32,9 +32,9 @@ import java.util.Set;
 /**
  * This class holds the default configuration properties.
  *
- * During application initialization all the properties found in the pre-defined locations that are
- * defined by the user will be added here in the order defined in {@link com.okta.sdk.impl.client.DefaultClientBuilder}.
- * Unset values will use default values from {@code com/okta/sdk/config/okta.yaml}.
+ * During application initialization all the properties found in the pre-defined locations that are defined by the user
+ * will be added here in the order defined in {@link com.okta.sdk.impl.client.DefaultClientBuilder}. Unset values will
+ * use default values from {@code com/okta/sdk/config/okta.yaml}.
  *
  * @since 0.5.0
  */
@@ -153,6 +153,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     /**
      * Time to idle for cache manager in seconds
+     *
      * @return seconds until time to idle expires
      */
     public long getCacheManagerTti() {
@@ -161,7 +162,9 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     /**
      * The cache manager's time to idle in seconds
-     * @param cacheManagerTti the time to idle in seconds
+     *
+     * @param cacheManagerTti
+     *            the time to idle in seconds
      */
     public void setCacheManagerTti(long cacheManagerTti) {
         this.cacheManagerTti = cacheManagerTti;
@@ -169,6 +172,7 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     /**
      * Time to live for cache manager in seconds
+     *
      * @return seconds until time to live expires
      */
     public long getCacheManagerTtl() {
@@ -177,7 +181,9 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     /**
      * The cache manager's time to live in seconds
-     * @param cacheManagerTtl the time to live in seconds
+     *
+     * @param cacheManagerTtl
+     *            the time to live in seconds
      */
     public void setCacheManagerTtl(long cacheManagerTtl) {
         this.cacheManagerTtl = cacheManagerTtl;
@@ -196,19 +202,11 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     @Override
     public String toString() {
-        return "ClientConfiguration {cacheManagerTtl=" + cacheManagerTtl +
-            ", cacheManagerTti=" + cacheManagerTti +
-            ", cacheManagerCaches=" + cacheManagerCaches +
-            ", baseUrl='" + getBaseUrl() + '\'' +
-            ", authorizationMode=" + getAuthorizationMode() +
-            ", clientId=" + getClientId() +
-            ", scopes=" + getScopes() +
-            ", privateKey=" + ((getPrivateKey() != null) ? "xxxxx" : null) +
-            ", connectionTimeout=" + getConnectionTimeout() +
-            ", requestAuthenticator=" + getRequestAuthenticator() +
-            ", retryMaxElapsed=" + getRetryMaxElapsed() +
-            ", retryMaxAttempts=" + getRetryMaxAttempts() +
-            ", proxy=" + getProxy() +
-            " }";
+        return "ClientConfiguration {cacheManagerTtl=" + cacheManagerTtl + ", cacheManagerTti=" + cacheManagerTti
+                + ", cacheManagerCaches=" + cacheManagerCaches + ", baseUrl='" + getBaseUrl() + '\''
+                + ", authorizationMode=" + getAuthorizationMode() + ", clientId=" + getClientId() + ", scopes="
+                + getScopes() + ", privateKey=" + ((getPrivateKey() != null) ? "xxxxx" : null) + ", connectionTimeout="
+                + getConnectionTimeout() + ", requestAuthenticator=" + getRequestAuthenticator() + ", retryMaxElapsed="
+                + getRetryMaxElapsed() + ", retryMaxAttempts=" + getRetryMaxAttempts() + ", proxy=" + getProxy() + " }";
     }
 }

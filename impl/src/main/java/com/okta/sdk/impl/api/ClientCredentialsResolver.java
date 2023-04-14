@@ -16,7 +16,6 @@
  */
 package com.okta.sdk.impl.api;
 
-
 import com.okta.sdk.authc.credentials.ClientCredentials;
 
 /**

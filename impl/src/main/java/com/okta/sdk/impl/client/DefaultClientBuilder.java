@@ -102,8 +102,10 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
- * in the following locations and order of precedence (last one wins).</p>
+ * <p>
+ * The default {@link ClientBuilder} implementation. This looks for configuration files in the following locations and
+ * order of precedence (last one wins).
+ * </p>
  * <ul>
  * <li>classpath:com/okta/sdk/config/okta.properties</li>
  * <li>classpath:com/okta/sdk/config/okta.yaml</li>
@@ -115,8 +117,8 @@ import java.util.concurrent.TimeUnit;
  * <li>Programmatically</li>
  * </ul>
  *
- * Please be aware that, in general, loading secrets (such as api-keys or PEM-content) from environment variables
- * or system properties can lead to those secrets being leaked.
+ * Please be aware that, in general, loading secrets (such as api-keys or PEM-content) from environment variables or
+ * system properties can lead to those secrets being leaked.
  *
  * @since 0.5.0
  */
@@ -124,10 +126,10 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
 
-    private static final String ENVVARS_TOKEN   = "envvars";
-    private static final String SYSPROPS_TOKEN  = "sysprops";
-    private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
-    private static final String OKTA_YAML       = "okta.yaml";
+    private static final String ENVVARS_TOKEN = "envvars";
+    private static final String SYSPROPS_TOKEN = "sysprops";
+    private static final String OKTA_CONFIG_CP = "com/okta/sdk/config/";
+    private static final String OKTA_YAML = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
 
     private CacheManager cacheManager;
@@ -149,11 +151,9 @@ public class DefaultClientBuilder implements ClientBuilder {
 
             if (ENVVARS_TOKEN.equalsIgnoreCase(location)) {
                 sources.add(EnvironmentVariablesPropertiesSource.oktaFilteredPropertiesSource());
-            }
-            else if (SYSPROPS_TOKEN.equalsIgnoreCase(location)) {
+            } else if (SYSPROPS_TOKEN.equalsIgnoreCase(location)) {
                 sources.add(SystemPropertiesSource.oktaFilteredPropertiesSource());
-            }
-            else {
+            } else {
                 Resource resource = resourceFactory.createResource(location);
 
                 PropertiesSource wrappedSource;
@@ -182,7 +182,8 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME))) {
-            clientConfig.setCacheManagerEnabled(Boolean.parseBoolean(props.get(DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME)));
+            clientConfig.setCacheManagerEnabled(
+                    Boolean.parseBoolean(props.get(DEFAULT_CLIENT_CACHE_ENABLED_PROPERTY_NAME)));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME))) {
@@ -197,7 +198,8 @@ public class DefaultClientBuilder implements ClientBuilder {
             boolean isPrefix = prop.length() == DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME.length();
             if (!isPrefix && prop.startsWith(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME)) {
                 // get class from prop name
-                String cacheClass = prop.substring(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME.length() + 1, prop.length() - 4);
+                String cacheClass = prop.substring(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME.length() + 1,
+                        prop.length() - 4);
                 String cacheTti = props.get(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME + "." + cacheClass + ".tti");
                 String cacheTtl = props.get(DEFAULT_CLIENT_CACHE_CACHES_PROPERTY_NAME + "." + cacheClass + ".ttl");
                 CacheConfigurationBuilder cacheBuilder = Caches.forResource(Classes.forName(cacheClass));
@@ -214,7 +216,8 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME))) {
-            allowNonHttpsForTesting = Boolean.parseBoolean(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME));
+            allowNonHttpsForTesting = Boolean
+                    .parseBoolean(props.get(DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME))) {
@@ -226,11 +229,13 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME))) {
-            clientConfig.setConnectionTimeout(Integer.parseInt(props.get(DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME)));
+            clientConfig
+                    .setConnectionTimeout(Integer.parseInt(props.get(DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME)));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME))) {
-            clientConfig.setAuthenticationScheme(Enum.valueOf(AuthenticationScheme.class, props.get(DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME)));
+            clientConfig.setAuthenticationScheme(Enum.valueOf(AuthenticationScheme.class,
+                    props.get(DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME)));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_PROXY_PORT_PROPERTY_NAME))) {
@@ -250,7 +255,8 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME))) {
-            clientConfig.setAuthorizationMode(AuthorizationMode.getAuthorizationMode(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME)));
+            clientConfig.setAuthorizationMode(
+                    AuthorizationMode.getAuthorizationMode(props.get(DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME)));
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_ID_PROPERTY_NAME))) {
@@ -258,7 +264,8 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME))) {
-            Set<String> scopes = new HashSet<>(Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split("[\\s,]+")));
+            Set<String> scopes = new HashSet<>(
+                    Arrays.asList(props.get(DEFAULT_CLIENT_SCOPES_PROPERTY_NAME).split("[\\s,]+")));
             clientConfig.setScopes(scopes);
         }
 
@@ -279,7 +286,8 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         if (Strings.hasText(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME))) {
-            clientConfig.setRetryMaxAttempts(Integer.parseInt(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME)));
+            clientConfig
+                    .setRetryMaxAttempts(Integer.parseInt(props.get(DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME)));
         }
     }
 
@@ -334,11 +342,12 @@ public class DefaultClientBuilder implements ClientBuilder {
             log.debug("CacheManager disabled. Defaulting to DisabledCacheManager");
             this.cacheManager = Caches.newDisabledCacheManager();
         } else if (this.cacheManager == null) {
-            log.debug("No CacheManager configured. Defaulting to in-memory CacheManager with default TTL and TTI of five minutes.");
+            log.debug(
+                    "No CacheManager configured. Defaulting to in-memory CacheManager with default TTL and TTI of five minutes.");
 
             CacheManagerBuilder cacheManagerBuilder = Caches.newCacheManager()
-                .withDefaultTimeToIdle(this.clientConfig.getCacheManagerTti(), TimeUnit.SECONDS)
-                .withDefaultTimeToLive(this.clientConfig.getCacheManagerTtl(), TimeUnit.SECONDS);
+                    .withDefaultTimeToIdle(this.clientConfig.getCacheManagerTti(), TimeUnit.SECONDS)
+                    .withDefaultTimeToLive(this.clientConfig.getCacheManagerTtl(), TimeUnit.SECONDS);
             if (this.clientConfig.getCacheManagerCaches().size() > 0) {
                 for (CacheConfigurationBuilder builder : this.clientConfig.getCacheManagerCaches().values()) {
                     cacheManagerBuilder.withCache(builder);
@@ -358,29 +367,33 @@ public class DefaultClientBuilder implements ClientBuilder {
 
         if (!isOAuth2Flow()) {
             if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
-                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
+                this.clientConfig
+                        .setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientCredentials));
             } else if (this.clientConfig.getClientCredentialsResolver() == null) {
                 this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
             }
 
             apiClient.setApiKeyPrefix("SSWS");
-            apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
+            apiClient.setApiKey(
+                    (String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
         } else {
             this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
 
             validateOAuth2ClientConfig(this.clientConfig);
 
             if (Strings.hasText(this.clientConfig.getOAuth2AccessToken())) {
-                log.debug("Will use client provided Access token for OAuth2 authentication (private key, if supplied would be ignored)");
+                log.debug(
+                        "Will use client provided Access token for OAuth2 authentication (private key, if supplied would be ignored)");
                 apiClient.setAccessToken(this.clientConfig.getOAuth2AccessToken());
             } else {
                 log.debug("Will retrieve Access Token automatically from Okta for OAuth2 authentication");
                 accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig, apiClient);
 
-                OAuth2ClientCredentials oAuth2ClientCredentials =
-                    new OAuth2ClientCredentials(accessTokenRetrieverService);
+                OAuth2ClientCredentials oAuth2ClientCredentials = new OAuth2ClientCredentials(
+                        accessTokenRetrieverService);
 
-                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
+                this.clientConfig
+                        .setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
             }
         }
 
@@ -393,11 +406,11 @@ public class DefaultClientBuilder implements ClientBuilder {
     private void validateOAuth2ClientConfig(ClientConfiguration clientConfiguration) {
         Assert.notNull(clientConfiguration.getClientId(), "clientId cannot be null");
         Assert.isTrue(clientConfiguration.getScopes() != null && !clientConfiguration.getScopes().isEmpty(),
-            "At least one scope is required");
+                "At least one scope is required");
         String privateKey = clientConfiguration.getPrivateKey();
         String oAuth2AccessToken = clientConfiguration.getOAuth2AccessToken();
         Assert.isTrue(Objects.nonNull(privateKey) || Objects.nonNull(oAuth2AccessToken),
-            "Either Private Key (or) Access Token must be supplied for OAuth2 Authentication mode");
+                "Either Private Key (or) Access Token must be supplied for OAuth2 Authentication mode");
 
         if (Strings.hasText(privateKey) && !ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
             // privateKey is a file path, check if the file exists
@@ -426,14 +439,13 @@ public class DefaultClientBuilder implements ClientBuilder {
         module.addDeserializer(UserProfile.class, new UserProfileDeserializer());
         objectMapper.registerModule(module);
 
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter =
-            new MappingJackson2HttpMessageConverter(objectMapper);
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter(
+                objectMapper);
 
-        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(
-            MediaType.APPLICATION_JSON,
-            MediaType.parseMediaType("application/x-pem-file"),
-            MediaType.parseMediaType("application/x-x509-ca-cert"),
-            MediaType.parseMediaType("application/pkix-cert")));
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(
+                Arrays.asList(MediaType.APPLICATION_JSON, MediaType.parseMediaType("application/x-pem-file"),
+                        MediaType.parseMediaType("application/x-x509-ca-cert"),
+                        MediaType.parseMediaType("application/pkix-cert")));
 
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
         messageConverters.add(mappingJackson2HttpMessageConverter);
@@ -458,8 +470,8 @@ public class DefaultClientBuilder implements ClientBuilder {
             clientBuilder.setProxy(new HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
             final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
-            UsernamePasswordCredentials usernamePasswordCredentials =
-                new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword());
+            UsernamePasswordCredentials usernamePasswordCredentials = new UsernamePasswordCredentials(
+                    clientConfig.getProxyUsername(), clientConfig.getProxyPassword());
             credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
             clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
             clientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
@@ -527,16 +539,16 @@ public class DefaultClientBuilder implements ClientBuilder {
             try {
                 ASN1Primitive primitive = privateKeyInfo.parsePrivateKey().toASN1Primitive();
                 String encodedString = ConfigUtil.RSA_PRIVATE_KEY_HEADER + "\n"
-                    + Base64.getEncoder().encodeToString(primitive.getEncoded()) + "\n"
-                    + ConfigUtil.RSA_PRIVATE_KEY_FOOTER;
+                        + Base64.getEncoder().encodeToString(primitive.getEncoded()) + "\n"
+                        + ConfigUtil.RSA_PRIVATE_KEY_FOOTER;
                 this.clientConfig.setPrivateKey(encodedString);
             } catch (IOException e) {
                 throw new IllegalArgumentException("Could not parse private key");
             }
-        } else if(algorithm.equals("EC")) {
+        } else if (algorithm.equals("EC")) {
             String encodedString = ConfigUtil.EC_PRIVATE_KEY_HEADER + "\n"
-                + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
-                + ConfigUtil.EC_PRIVATE_KEY_FOOTER;
+                    + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
+                    + ConfigUtil.EC_PRIVATE_KEY_FOOTER;
             this.clientConfig.setPrivateKey(encodedString);
         } else {
             throw new IllegalArgumentException("Supplied privateKey is not an RSA or EC key - " + algorithm);
@@ -568,8 +580,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     private String readFromInputStream(InputStream inputStream) throws IOException {
         Assert.notNull(inputStream, "InputStream cannot be null.");
         StringBuilder resultStringBuilder = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(
-            inputStream, StandardCharsets.UTF_8))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
                 resultStringBuilder.append(line).append("\n");
@@ -610,15 +621,11 @@ public class DefaultClientBuilder implements ClientBuilder {
     private static String[] configSources() {
 
         // lazy load the config sources as the user.home system prop could change for testing
-        return new String[] {
-            ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_PROPERTIES,
-            ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_YAML,
-            ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
-            ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
-            System.getProperty("user.home") + File.separatorChar + ".okta" + File.separatorChar + OKTA_YAML,
-            ENVVARS_TOKEN,
-            SYSPROPS_TOKEN
-        };
+        return new String[] { ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_PROPERTIES,
+                ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_YAML,
+                ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES, ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
+                System.getProperty("user.home") + File.separatorChar + ".okta" + File.separatorChar + OKTA_YAML,
+                ENVVARS_TOKEN, SYSPROPS_TOKEN };
     }
 
 }

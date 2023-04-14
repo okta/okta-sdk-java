@@ -74,9 +74,8 @@ public class PagedList<T> {
     }
 
     private List<?> flatten(List<?> list) {
-        return list.stream()
-            .flatMap(e -> e instanceof List ? flatten((List) e).stream() : Stream.of(e))
-            .collect(Collectors.toList());
+        return list.stream().flatMap(e -> e instanceof List ? flatten((List) e).stream() : Stream.of(e))
+                .collect(Collectors.toList());
     }
 
     public static PagedList constructPagedList(ResponseEntity responseEntity) {
@@ -88,9 +87,7 @@ public class PagedList<T> {
         Assert.notNull(linkHeaders);
         for (String link : linkHeaders) {
             String[] parts = link.split("; *");
-            String url = parts[0]
-                .replaceAll("<", "")
-                .replaceAll(">", "");
+            String url = parts[0].replaceAll("<", "").replaceAll(">", "");
             String rel = parts[1];
             if (rel.equals("rel=\"next\"")) {
                 pagedList.setNextPage(url);
@@ -103,7 +100,10 @@ public class PagedList<T> {
 
     /**
      * Split a URL with query strings into name value pairs.
-     * @param url the url to split
+     *
+     * @param url
+     *            the url to split
+     *
      * @return map of query string name value pairs
      */
     private static Map<String, String> splitQuery(URL url) throws UnsupportedEncodingException {
@@ -112,7 +112,8 @@ public class PagedList<T> {
         String[] pairs = query.split("&");
         for (String pair : pairs) {
             int index = pair.indexOf("=");
-            query_pairs.put(URLDecoder.decode(pair.substring(0, index), "UTF-8"), URLDecoder.decode(pair.substring(index + 1), "UTF-8"));
+            query_pairs.put(URLDecoder.decode(pair.substring(0, index), "UTF-8"),
+                    URLDecoder.decode(pair.substring(index + 1), "UTF-8"));
         }
         return query_pairs;
     }

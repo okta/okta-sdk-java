@@ -30,26 +30,25 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
 
     public DefaultEnvVarNameConverter() {
 
-        // this dependency on ClientBuilder isn't great, in the future we can change the API to ONLY support a one way conversion
-        this.envToDotPropMap = buildReverseLookupToMap(
-            ClientBuilder.DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_ID_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_SCOPES_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME,
-            ClientBuilder.DEFAULT_CLIENT_OAUTH2_ACCESS_TOKEN_PROPERTY_NAME);
+        // this dependency on ClientBuilder isn't great, in the future we can change the API to ONLY support a one way
+        // conversion
+        this.envToDotPropMap = buildReverseLookupToMap(ClientBuilder.DEFAULT_CLIENT_CACHE_TTL_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_CACHE_TTI_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_ORG_URL_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_CONNECTION_TIMEOUT_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_AUTHENTICATION_SCHEME_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_REQUEST_TIMEOUT_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_RETRY_MAX_ATTEMPTS_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_TESTING_DISABLE_HTTPS_CHECK_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_AUTHORIZATION_MODE_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_ID_PROPERTY_NAME, ClientBuilder.DEFAULT_CLIENT_SCOPES_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_PRIVATE_KEY_PROPERTY_NAME,
+                ClientBuilder.DEFAULT_CLIENT_OAUTH2_ACCESS_TOKEN_PROPERTY_NAME);
     }
 
     private Map<String, String> buildReverseLookupToMap(String... dottedPropertyNames) {
         return Arrays.stream(dottedPropertyNames)
-            .collect(Collectors.toMap(this::toEnvVarName, dottedPropertyName -> dottedPropertyName));
+                .collect(Collectors.toMap(this::toEnvVarName, dottedPropertyName -> dottedPropertyName));
     }
 
     @Override
@@ -59,7 +58,7 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
 
         StringBuilder sb = new StringBuilder();
 
-        for(char c : dottedPropertyName.toCharArray()) {
+        for (char c : dottedPropertyName.toCharArray()) {
             if (c == '.') {
                 sb.append('_');
                 continue;
@@ -75,15 +74,15 @@ public class DefaultEnvVarNameConverter implements EnvVarNameConverter {
         Assert.hasText(envVarName, "envVarName argument cannot be null or empty.");
         envVarName = Strings.trimWhitespace(envVarName);
 
-        //special cases (camel case):
+        // special cases (camel case):
         if (envToDotPropMap.containsKey(envVarName)) {
             return envToDotPropMap.get(envVarName);
         }
 
-        //default cases:
+        // default cases:
         StringBuilder sb = new StringBuilder();
 
-        for(char c : envVarName.toCharArray()) {
+        for (char c : envVarName.toCharArray()) {
             if (c == '_') {
                 sb.append('.');
                 continue;
