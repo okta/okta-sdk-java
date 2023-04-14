@@ -28,24 +28,28 @@ public interface Error {
 
     /**
      * Returns this error's HTTP status code.
+     *
      * @return the status code of this Error
      */
     int getStatus();
 
     /**
      * Returns the Okta specific error code.
+     *
      * @return an Okta specific error code
      */
     String getCode();
 
     /**
      * Returns the detail message string of this error.
+     *
      * @return message string of this error.
      */
     String getMessage();
 
     /**
      * Returns the error ID of this error. This maybe used when opening a support case and troubleshooting.
+     *
      * @return error ID of this error
      */
     String getId();
@@ -53,12 +57,14 @@ public interface Error {
     /**
      * Returns the list of causes of this error. When validating a resource (for example a User) multiple validation
      * errors could occur.
+     *
      * @return A list of causes, which could be {code}null{code} or empty
      */
     List<ErrorCause> getCauses();
 
     /**
      * Returns the HTTP headers associated with this error response.
+     *
      * @return A list headers, which could be {code}null{code} or empty
      */
     Map<String, List<String>> getHeaders();

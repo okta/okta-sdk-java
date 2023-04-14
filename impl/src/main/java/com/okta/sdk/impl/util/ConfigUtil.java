@@ -25,7 +25,9 @@ public class ConfigUtil {
     /**
      * Check if the private key PEM has BEGIN content wrapper.
      *
-     * @param key the supplied private key PEM string.
+     * @param key
+     *            the supplied private key PEM string.
+     *
      * @return true if the supplied private key has the BEGIN content wrapper, false otherwise.
      */
     public static boolean hasPrivateKeyContentWrapper(String key) {

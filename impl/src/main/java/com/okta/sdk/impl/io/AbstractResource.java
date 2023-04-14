@@ -35,12 +35,14 @@ public abstract class AbstractResource implements Resource {
     }
 
     /**
-     * Returns {@code true} if the resource path is not null and starts with one of the recognized
-     * resource prefixes ({@code classpath:}, {@code url:}, or {@code file:}, {@code false} otherwise.
+     * Returns {@code true} if the resource path is not null and starts with one of the recognized resource prefixes
+     * ({@code classpath:}, {@code url:}, or {@code file:}, {@code false} otherwise.
      *
-     * @param resourcePath the resource path to check
-     * @return {@code true} if the resource path is not null and starts with one of the recognized
-     *         resource prefixes, {@code false} otherwise.
+     * @param resourcePath
+     *            the resource path to check
+     *
+     * @return {@code true} if the resource path is not null and starts with one of the recognized resource prefixes,
+     *         {@code false} otherwise.
      */
     protected boolean hasResourcePrefix(String resourcePath) {
         return resourcePath != null && resourcePath.startsWith(getScheme() + ":");

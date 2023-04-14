@@ -36,7 +36,7 @@ public class DefaultResourceFactory implements ResourceFactory {
             return new UrlResource(location);
         }
 
-        //otherwise we assume a file:
+        // otherwise we assume a file:
         return new FileResource(location);
     }
 }

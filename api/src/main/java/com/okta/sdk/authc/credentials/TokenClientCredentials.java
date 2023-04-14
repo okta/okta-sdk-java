@@ -20,6 +20,7 @@ import com.okta.commons.configcheck.ConfigurationValidator;
 
 /**
  * This implementation represents the api key that is used to authenticate a Tenant in Okta.
+ *
  * @since 0.5.0
  */
 public class TokenClientCredentials implements ClientCredentials<String> {
@@ -37,7 +38,7 @@ public class TokenClientCredentials implements ClientCredentials<String> {
 
     @Override
     public String toString() {
-        return "<TokenClientCredentials>"; //never ever print the secret
+        return "<TokenClientCredentials>"; // never ever print the secret
     }
 
     @Override
@@ -51,7 +52,7 @@ public class TokenClientCredentials implements ClientCredentials<String> {
             return true;
         }
         if (o instanceof TokenClientCredentials) {
-            TokenClientCredentials other = (TokenClientCredentials)o;
+            TokenClientCredentials other = (TokenClientCredentials) o;
             return secret != null ? secret.equals(other.secret) : other.secret == null;
         }
 

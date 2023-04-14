@@ -35,11 +35,11 @@ public class FilteredPropertiesSource implements PropertiesSource {
     }
 
     @Override
-    public Map<String,String> getProperties() {
+    public Map<String, String> getProperties() {
 
-        Map<String,String> props = this.propertiesSource.getProperties();
+        Map<String, String> props = this.propertiesSource.getProperties();
 
-        Map<String,String> retained = new LinkedHashMap<String, String>();
+        Map<String, String> retained = new LinkedHashMap<String, String>();
 
         if (!Collections.isEmpty(props)) {
 

@@ -28,9 +28,13 @@ public interface AccessTokenRetrieverService {
      * Obtain OAuth2 access token from Authorization Server endpoint.
      *
      * @return {@link OAuth2AccessToken}
-     * @throws IOException if problems are encountered extracting the input private key
-     * @throws InvalidKeyException if supplied private key is invalid
-     * @throws OAuth2TokenRetrieverException if token could not be retrieved
+     *
+     * @throws IOException
+     *             if problems are encountered extracting the input private key
+     * @throws InvalidKeyException
+     *             if supplied private key is invalid
+     * @throws OAuth2TokenRetrieverException
+     *             if token could not be retrieved
      */
     OAuth2AccessToken getOAuth2AccessToken() throws IOException, InvalidKeyException, OAuth2TokenRetrieverException;
 }

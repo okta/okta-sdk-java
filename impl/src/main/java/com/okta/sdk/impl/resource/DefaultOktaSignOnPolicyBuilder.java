@@ -30,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSignOnPolicyBuilder> implements OktaSignOnPolicyBuilder {
+public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSignOnPolicyBuilder>
+        implements OktaSignOnPolicyBuilder {
 
     private List<String> groupIds = new ArrayList<>();
     private List<String> userIds = new ArrayList<>();
@@ -67,20 +68,23 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
     private OktaSignOnPolicy build() {
         OktaSignOnPolicy policy = new OktaSignOnPolicy();
 
-        if (Strings.hasText(name)) policy.setName(name);
-        if (Strings.hasText(description)) policy.setDescription(description);
+        if (Strings.hasText(name))
+            policy.setName(name);
+        if (Strings.hasText(description))
+            policy.setDescription(description);
         if (priority != null)
             policy.setPriority(priority);
 
         if (PolicyType.OKTA_SIGN_ON.equals(policyType))
             policy.setType(policyType);
         else
-            throw new IllegalArgumentException("PolicyType should be 'OKTA_SIGN_ON', please use PolicyBuilder for other policy types.");
+            throw new IllegalArgumentException(
+                    "PolicyType should be 'OKTA_SIGN_ON', please use PolicyBuilder for other policy types.");
 
         if (Objects.nonNull(status))
             policy.setStatus(status);
 
-        policy.setConditions( new OktaSignOnPolicyConditions());
+        policy.setConditions(new OktaSignOnPolicyConditions());
         OktaSignOnPolicyConditions oktaSignOnPolicyConditions = policy.getConditions();
 
         if (!Collections.isEmpty(groupIds)) {

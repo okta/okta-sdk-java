@@ -21,20 +21,21 @@ import com.okta.commons.http.authc.RequestAuthenticator;
 import com.okta.commons.lang.Assert;
 
 /**
- * Enumeration that defines the available HTTP authentication schemes to be used when communicating with the Okta API server.
+ * Enumeration that defines the available HTTP authentication schemes to be used when communicating with the Okta API
+ * server.
  * <p>
- * The Authentication Scheme setting is helpful in cases where the code is run in a platform where the header information for
- * outgoing HTTP requests is modified and thus causing communication issues.
+ * The Authentication Scheme setting is helpful in cases where the code is run in a platform where the header
+ * information for outgoing HTTP requests is modified and thus causing communication issues.
  * <p>
- * One of SSWS (Okta session bearer token) (or) OAUTH2 authentication schemes should be used for the management SDK, {@code NONE}
- * should be used for unauthenticated requests.
+ * One of SSWS (Okta session bearer token) (or) OAUTH2 authentication schemes should be used for the management SDK,
+ * {@code NONE} should be used for unauthenticated requests.
  *
  * @since 0.5.0
  */
 public enum AuthenticationScheme {
 
-    SSWS("com.okta.sdk.impl.http.authc.SswsAuthenticator"), //SSWS Authentication
-    OAUTH2_PRIVATE_KEY("com.okta.sdk.impl.http.authc.OAuth2RequestAuthenticator"), //OAuth2
+    SSWS("com.okta.sdk.impl.http.authc.SswsAuthenticator"), // SSWS Authentication
+    OAUTH2_PRIVATE_KEY("com.okta.sdk.impl.http.authc.OAuth2RequestAuthenticator"), // OAuth2
     NONE(DisabledAuthenticator.class);
 
     private final String requestAuthenticatorClassName;

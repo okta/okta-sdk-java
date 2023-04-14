@@ -35,7 +35,7 @@ public class OptionalPropertiesSource implements PropertiesSource {
     }
 
     @Override
-    public Map<String,String> getProperties() {
+    public Map<String, String> getProperties() {
         try {
             return propertiesSource.getProperties();
         } catch (Exception e) {
