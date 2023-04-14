@@ -26,9 +26,9 @@ import java.util.Properties;
 public class SystemPropertiesSource implements PropertiesSource {
 
     @Override
-    public Map<String, String> getProperties() {
+    public Map<String,String> getProperties() {
 
-        Map<String, String> properties = new LinkedHashMap<>();
+        Map<String,String> properties = new LinkedHashMap<>();
 
         Properties systemProps = System.getProperties();
 
@@ -36,7 +36,7 @@ public class SystemPropertiesSource implements PropertiesSource {
 
             Enumeration e = systemProps.propertyNames();
 
-            while (e.hasMoreElements()) {
+            while(e.hasMoreElements()) {
 
                 Object name = e.nextElement();
                 String key = String.valueOf(name);
@@ -58,12 +58,14 @@ public class SystemPropertiesSource implements PropertiesSource {
     private static class OktaFilteredSystemPropertiesSource extends FilteredPropertiesSource {
 
         private OktaFilteredSystemPropertiesSource() {
-            super(new SystemPropertiesSource(), (key, value) -> {
-                if (key.startsWith("okta.")) {
-                    return new String[] { key, value };
-                }
-                return null;
-            });
+            super(new SystemPropertiesSource(),
+                    (key, value) -> {
+                            if (key.startsWith("okta.")) {
+                                return new String[]{key, value};
+                            }
+                            return null;
+                    }
+            );
         }
     }
 }

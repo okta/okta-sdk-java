@@ -23,39 +23,31 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- * Parses a {@code .properties} source (string, file, stream, etc) and returns a {@code Map<String,String>} that
- * reflects the parsed properties.
- * <p>
- * This implementation differs from default Java property loading behavior in that the returned Map's iteration order is
- * guaranteed to be the same as the order in which the properties are read. This can be beneficial if it is desired to
- * assign meaning to property definition order.
- * </p>
+ * Parses a {@code .properties} source (string, file, stream, etc) and returns a {@code Map<String,String>}
+ * that reflects the parsed properties.
+ * <p>This implementation differs from default Java property loading behavior in that the returned Map's iteration
+ * order is guaranteed to be the same as the order in which the properties are read.  This can be beneficial if it is
+ * desired to assign meaning to property definition order.</p>
  */
 public interface PropertiesParser {
 
     /**
-     * Parses the specified {@code .properties}-formatted String and returns a map of the parsed properties or an empty
-     * map if no properties were found.
+     * Parses the specified {@code .properties}-formatted String and returns a map of the parsed properties or an
+     * empty map if no properties were found.
      *
-     * @param source
-     *            the String to parse
-     *
+     * @param source the String to parse
      * @return a map of the parsed properties or an empty map if no properties were found.
      */
     Map<String, String> parse(String source);
 
     /**
-     * Parses the specified {@code .properties} resource and returns a map of the parsed properties or an empty map if
-     * no properties were found.
+     * Parses the specified {@code .properties} resource and returns a map of the parsed properties or an
+     * empty map if no properties were found.
      *
-     * @param resource
-     *            the resource to parse.
-     *
+     * @param resource the resource to parse.
      * @return a map of the parsed properties or an empty map if no properties were found.
-     *
-     * @throws IOException
-     *             if unable to obtain the resource's {@link com.okta.sdk.impl.io.Resource#getInputStream()
-     *             inputStream}.
+     * @throws IOException if unable to obtain the resource's {@link com.okta.sdk.impl.io.Resource#getInputStream()
+     *                     inputStream}.
      */
     Map<String, String> parse(Resource resource) throws IOException;
 
@@ -63,9 +55,7 @@ public interface PropertiesParser {
      * Parses the scanned content according to {@code .properties} formatting rules and returns a map of the parsed
      * properties or an empty map if no properties were found.
      *
-     * @param source
-     *            the Scanner to use to parse the content
-     *
+     * @param source the Scanner to use to parse the content
      * @return a map of the parsed properties or an empty map if no properties were found.
      */
     Map<String, String> parse(Scanner source);

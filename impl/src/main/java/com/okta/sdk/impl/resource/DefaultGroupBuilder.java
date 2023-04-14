@@ -44,8 +44,7 @@ public class DefaultGroupBuilder implements GroupBuilder {
         Group group = new Group();
         GroupProfile groupProfile = new GroupProfile();
         groupProfile.setName(name);
-        if (Strings.hasText(description))
-            groupProfile.setDescription(description);
+        if (Strings.hasText(description)) groupProfile.setDescription(description);
         group.setProfile(groupProfile);
 
         return client.createGroup(group);

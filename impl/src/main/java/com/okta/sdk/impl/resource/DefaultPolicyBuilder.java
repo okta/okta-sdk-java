@@ -33,7 +33,7 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     protected LifecycleStatus status;
     protected Boolean isActive = true;
 
-    DefaultPolicyBuilder() {
+    DefaultPolicyBuilder(){
         this.status = LifecycleStatus.ACTIVE;
     }
 
@@ -81,10 +81,8 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     private Policy build() {
         Policy policy = new Policy();
 
-        if (Strings.hasText(name))
-            policy.setName(name);
-        if (Strings.hasText(description))
-            policy.setDescription(description);
+        if (Strings.hasText(name)) policy.setName(name);
+        if (Strings.hasText(description)) policy.setDescription(description);
         if (priority != null)
             policy.setPriority(priority);
 

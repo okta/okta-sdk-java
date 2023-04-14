@@ -20,7 +20,6 @@ import com.okta.commons.lang.Classes;
 
 /**
  * Static utility/helper class for working with {@link org.openapitools.client.ApiClient} resources. For example:
- *
  * <pre>
  * <b>Clients.builder()</b>
  *     // ... etc ...
@@ -28,22 +27,17 @@ import com.okta.commons.lang.Classes;
  *     .build();
  * </pre>
  *
- * <p>
- * See the {@link ClientBuilder ClientBuilder} JavaDoc for extensive documentation on client configuration.
- * </p>
+ * <p>See the {@link ClientBuilder ClientBuilder} JavaDoc for extensive documentation on client configuration.</p>
  *
  * @see ClientBuilder
- *
  * @since 0.5.0
  */
 public final class Clients {
 
     /**
-     * Returns a new {@link ClientBuilder} instance, used to construct {@link org.openapitools.client.ApiClient}
-     * instances.
+     * Returns a new {@link ClientBuilder} instance, used to construct {@link org.openapitools.client.ApiClient} instances.
      *
-     * @return a a new {@link ClientBuilder} instance, used to construct {@link org.openapitools.client.ApiClient}
-     *         instances.
+     * @return a a new {@link ClientBuilder} instance, used to construct {@link org.openapitools.client.ApiClient} instances.
      */
     public static ClientBuilder builder() {
         return (ClientBuilder) Classes.newInstance("com.okta.sdk.impl.client.DefaultClientBuilder");

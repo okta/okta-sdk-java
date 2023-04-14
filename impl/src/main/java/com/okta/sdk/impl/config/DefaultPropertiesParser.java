@@ -33,7 +33,7 @@ public class DefaultPropertiesParser implements PropertiesParser {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultPropertiesParser.class);
 
-    private static final String COMMENT_POUND = "#";
+    private static final String COMMENT_POUND     = "#";
     private static final String COMMENT_SEMICOLON = ";";
     private static final char ESCAPE_TOKEN = '\\';
 
@@ -51,11 +51,10 @@ public class DefaultPropertiesParser implements PropertiesParser {
     }
 
     /**
-     * Loads the .properties-formatted text backed by the given Scanner. This implementation will close the scanner
-     * after it has finished loading.
+     * Loads the .properties-formatted text backed by the given Scanner.  This implementation will close the
+     * scanner after it has finished loading.
      *
-     * @param scanner
-     *            the {@code Scanner} from which to read the .properties-formatted text
+     * @param scanner the {@code Scanner} from which to read the .properties-formatted text
      */
     public Map<String, String> parse(Scanner scanner) {
 
@@ -71,12 +70,12 @@ public class DefaultPropertiesParser implements PropertiesParser {
             String line = Strings.clean(rawLine);
 
             if (line == null || line.startsWith(COMMENT_POUND) || line.startsWith(COMMENT_SEMICOLON)) {
-                // skip empty lines and comments:
+                //skip empty lines and comments:
                 continue;
             }
 
             if (isContinued(line)) {
-                // strip off the last continuation backslash:
+                //strip off the last continuation backslash:
                 line = line.substring(0, line.length() - 1);
                 lineBuffer.append(line);
                 continue;
@@ -100,8 +99,8 @@ public class DefaultPropertiesParser implements PropertiesParser {
             return false;
         }
         int length = line.length();
-        // find the number of backslashes at the end of the line. If an even number, the
-        // backslashes are considered escaped. If an odd number, the line is considered continued on the next line
+        //find the number of backslashes at the end of the line.  If an even number, the
+        //backslashes are considered escaped.  If an odd number, the line is considered continued on the next line
         int backslashCount = 0;
         for (int i = length - 1; i > 0; i--) {
             if (line.charAt(i) == ESCAPE_TOKEN) {
@@ -121,7 +120,7 @@ public class DefaultPropertiesParser implements PropertiesParser {
         return index > 0 && s.charAt(index - 1) == ESCAPE_TOKEN;
     }
 
-    // Protected to access in a test case - NOT considered part of the public API
+    //Protected to access in a test case - NOT considered part of the public API
     private static String[] splitKeyValue(String keyValueLine) {
         String line = Strings.clean(keyValueLine);
         if (line == null) {
@@ -130,19 +129,19 @@ public class DefaultPropertiesParser implements PropertiesParser {
         StringBuilder keyBuffer = new StringBuilder();
         StringBuilder valueBuffer = new StringBuilder();
 
-        boolean buildingKey = true; // we'll build the value next:
+        boolean buildingKey = true; //we'll build the value next:
 
         for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
 
             if (buildingKey) {
                 if (isKeyValueSeparatorChar(c) && !isCharEscaped(line, i)) {
-                    buildingKey = false;// now start building the value
+                    buildingKey = false;//now start building the value
                 } else {
                     keyBuffer.append(c);
                 }
             } else {
-                // swallow the separator chars before we start building the value
+                //swallow the separator chars before we start building the value
                 if (!(valueBuffer.length() == 0 && isKeyValueSeparatorChar(c) && !isCharEscaped(line, i))) {
                     valueBuffer.append(c);
                 }
@@ -159,6 +158,6 @@ public class DefaultPropertiesParser implements PropertiesParser {
 
         log.trace("Discovered key/value pair: {} = {}", key, value);
 
-        return new String[] { key, value };
+        return new String[]{key, value};
     }
 }

@@ -86,24 +86,18 @@ public class DefaultApplicationBuilder<T extends ApplicationBuilder> implements 
     }
 
     @SuppressWarnings("unchecked")
-    protected T self() {
-        return (T) this;
-    }
+    protected T self() { return (T) this;}
 
     @Override
-    public Application buildAndCreate(ApplicationApi client) {
-        return client.createApplication(build(), false, null);
-    }
+    public Application buildAndCreate(ApplicationApi client) { return client.createApplication(build(), false, null); }
 
-    private Application build() {
+    private Application build(){
 
         Application application = new Application();
 
-        if (Strings.hasText(label))
-            application.setLabel(label);
+        if (Strings.hasText(label)) application.setLabel(label);
 
-        if (Objects.nonNull(signOnMode))
-            application.setSignOnMode(signOnMode);
+        if (Objects.nonNull(signOnMode)) application.setSignOnMode(signOnMode);
 
         // Accessibility
         ApplicationAccessibility applicationAccessibility = new ApplicationAccessibility();
