@@ -60,7 +60,7 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-04-13T20:49:43.810Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-04-14T16:46:34.160Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.ApplicationApi"</span>)
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ApplicationApi" href="../../../../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a> {
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -5866,9 +5866,10 @@
 <a class="jxr_linenumber" name="L5858" href="#L5858">5858</a>         objectMapper.registerModule(<strong class="jxr_keyword">new</strong> JsonNullableModule());
 <a class="jxr_linenumber" name="L5859" href="#L5859">5859</a>         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 <a class="jxr_linenumber" name="L5860" href="#L5860">5860</a>         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-<a class="jxr_linenumber" name="L5861" href="#L5861">5861</a>         <strong class="jxr_keyword">return</strong> objectMapper;
-<a class="jxr_linenumber" name="L5862" href="#L5862">5862</a>     }
-<a class="jxr_linenumber" name="L5863" href="#L5863">5863</a>         }
+<a class="jxr_linenumber" name="L5861" href="#L5861">5861</a>         objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L5862" href="#L5862">5862</a>         <strong class="jxr_keyword">return</strong> objectMapper;
+<a class="jxr_linenumber" name="L5863" href="#L5863">5863</a>     }
+<a class="jxr_linenumber" name="L5864" href="#L5864">5864</a>         }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
