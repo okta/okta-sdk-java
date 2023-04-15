@@ -19,19 +19,15 @@ package com.okta.sdk.cache;
 import com.okta.commons.lang.Classes;
 
 /**
- * Static utility/helper <a href="http://en.wikipedia.org/wiki/Factory_method_pattern">factory method</a>s for building
- * {@link CacheManager}s and their associated cache regions, suitable for <b>SINGLE-JVM APPLICATIONS</b>.
+ * Static utility/helper <a href="http://en.wikipedia.org/wiki/Factory_method_pattern">factory method</a>s for
+ * building {@link CacheManager}s and their associated cache regions, suitable for <b>SINGLE-JVM APPLICATIONS</b>.
  *
- * <p>
- * If your application is deployed on multiple JVMs (e.g. a distributed/clustered web app), you might not want to use
- * the builders here and instead implement the {@link CacheManager} API directly to use your distributed/clustered cache
- * technology of choice.
- * </p>
+ * <p>If your application is deployed on multiple JVMs (e.g. a distributed/clustered web app), you might not want to
+ * use the builders here and instead implement the {@link CacheManager} API directly to use your distributed/clustered
+ * cache technology of choice.</p>
  *
- * <p>
- * See the {@link CacheManagerBuilder} JavaDoc for more information the effects of caching in single-jvm vs
- * distributed-jvm applications.
- * </p>
+ * <p>See the {@link CacheManagerBuilder} JavaDoc for more information the effects of caching in
+ * single-jvm vs distributed-jvm applications.</p>
  *
  * <b>Usage Example</b>
  *
@@ -54,25 +50,21 @@ import com.okta.commons.lang.Classes;
  *     .build(); //build the CacheManager
  * </pre>
  *
- * <p>
- * <em>The above TTL and TTI times are just examples showing API usage - the times themselves are not recommendations.
- * Choose TTL and TTI times based on your application requirements.</em>
- * </p>
+ * <p><em>The above TTL and TTI times are just examples showing API usage - the times themselves are not
+ * recommendations.  Choose TTL and TTI times based on your application requirements.</em></p>
  *
  * @since 0.5.0
  */
 public class Caches {
 
     /**
-     * Instantiates a new {@code CacheManagerBuilder} suitable for <b>SINGLE-JVM APPLICATIONS</b>. If your application
+     * Instantiates a new {@code CacheManagerBuilder} suitable for <b>SINGLE-JVM APPLICATIONS</b>.  If your application
      * is deployed on multiple JVMs (e.g. for a distributed/clustered web app), you might not want to use this method
-     * and instead implement the {@link CacheManager} API directly to use your distributed/clustered cache technology of
-     * choice.
+     * and instead implement the {@link CacheManager} API directly to use your distributed/clustered cache technology
+     * of choice.
      *
-     * <p>
-     * See the {@link CacheManagerBuilder} JavaDoc for more information the effects of caching in single-jvm vs
-     * distributed-jvm applications.
-     * </p>
+     * <p>See the {@link CacheManagerBuilder} JavaDoc for more information the effects of caching in
+     * single-jvm vs distributed-jvm applications.</p>
      *
      * @return a new {@code CacheManagerBuilder} suitable for <b>SINGLE-JVM APPLICATIONS</b>.
      */
@@ -81,24 +73,23 @@ public class Caches {
     }
 
     /**
-     * Instantiates a new {@code CacheManager} that disables caching entirely. While production applications will
-     * usually enable a working CacheManager, you might configure a disabled CacheManager for your Client when testing
-     * or debugging to remove 'moving parts' for better clarity into request/response behavior.
+     * Instantiates a new {@code CacheManager} that disables caching entirely.  While production applications
+     * will usually enable a working CacheManager, you might configure a disabled CacheManager for
+     * your Client when testing or debugging to remove 'moving parts' for better clarity into request/response
+     * behavior.
      *
-     * @return a new disabled {@code CacheManager} instance. All caching
+     * @return a new disabled {@code CacheManager} instance.  All caching
      */
     public static CacheManager newDisabledCacheManager() {
         return (CacheManager) Classes.newInstance("com.okta.sdk.impl.cache.DisabledCacheManager");
     }
 
     /**
-     * Returns a new {@link CacheConfigurationBuilder} to configure a cache region that will store data for instances of
-     * type {@code clazz}.
+     * Returns a new {@link CacheConfigurationBuilder} to configure a cache region that will store data for instances
+     * of type {@code clazz}.
      *
-     * <p>
-     * This is a convenience method equivalent to {@link #named(String) named(clazz.getName())}, but it could help with
-     * readability, for example:
-     * </p>
+     * <p>This is a convenience method equivalent to {@link #named(String) named(clazz.getName())}, but it could help
+     * with readability, for example:</p>
      *
      * <pre>
      * import static com.okta.sdk.cache.Caches.*
@@ -108,20 +99,17 @@ public class Caches {
      *     .build();
      * </pre>
      *
-     * @param clazz
-     *            the resource class that will have a backing cache region for storing data of that type
-     * @param <T>
-     *            Resource sub-interface
-     *
-     * @return a new {@link CacheConfigurationBuilder} to configure a cache region that will store data for instances of
-     *         type {@code clazz}.
+     * @param clazz the resource class that will have a backing cache region for storing data of that type
+     * @param <T>   Resource sub-interface
+     * @return a new {@link CacheConfigurationBuilder} to configure a cache region that will store data for instances
+     *         of type {@code clazz}.
      */
     public static <T> CacheConfigurationBuilder forResource(Class<T> clazz) {
         return named(clazz.getName());
     }
 
     /**
-     * Returns a new {@link CacheConfigurationBuilder} used to configure a cache region with the specified name. For
+     * Returns a new {@link CacheConfigurationBuilder} used to configure a cache region with the specified name.  For
      * example:
      *
      * <pre>
@@ -132,14 +120,11 @@ public class Caches {
      *     .build();
      * </pre>
      *
-     * @param name
-     *            the name of the cache region for which the configuration will apply
-     *
+     * @param name the name of the cache region for which the configuration will apply
      * @return a new {@link CacheConfigurationBuilder} used to configure a cache region with the specified name.
      */
     public static CacheConfigurationBuilder named(String name) {
-        return (CacheConfigurationBuilder) Classes
-                .newInstance("com.okta.sdk.impl.cache.DefaultCacheConfigurationBuilder", name);
+        return (CacheConfigurationBuilder) Classes.newInstance("com.okta.sdk.impl.cache.DefaultCacheConfigurationBuilder", name);
     }
 
 }

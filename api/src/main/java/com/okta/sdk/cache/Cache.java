@@ -19,43 +19,38 @@ package com.okta.sdk.cache;
 /**
  * A Cache efficiently stores temporary objects primarily to improve an application's performance.
  * <p>
- * This interface provides an abstraction (wrapper) API on top of an underlying cache framework's cache instance (e.g.
- * JCache, Ehcache, Hazelcast, JCS, OSCache, JBossCache, TerraCotta, Coherence, GigaSpaces, etc, etc), allowing a Okta
- * SDK user to configure any cache mechanism they choose.
+ * This interface provides an abstraction (wrapper) API on top of an underlying
+ * cache framework's cache instance (e.g. JCache, Ehcache, Hazelcast, JCS, OSCache, JBossCache, TerraCotta, Coherence,
+ * GigaSpaces, etc, etc), allowing a Okta SDK user to configure any cache mechanism they choose.
  *
  * @since 0.5.0
  */
 public interface Cache<K, V> {
 
     /**
-     * Returns the cached value stored under the specified {@code key} or {@code null} if there is no cache entry for
-     * that {@code key}.
+     * Returns the cached value stored under the specified {@code key} or
+     * {@code null} if there is no cache entry for that {@code key}.
      *
-     * @param key
-     *            the key that the value was previous added with
-     *
+     * @param key the key that the value was previous added with
      * @return the cached object or {@code null} if there is no entry for the specified {@code key}
      */
     V get(K key);
 
+
     /**
      * Adds a cache entry.
      *
-     * @param key
-     *            the key used to identify the object being stored.
-     * @param value
-     *            the value to be stored in the cache.
-     *
+     * @param key   the key used to identify the object being stored.
+     * @param value the value to be stored in the cache.
      * @return the previous value associated with the given {@code key} or {@code null} if there was no previous value
      */
     V put(K key, V value);
 
+
     /**
      * Removes the cached value stored under the specified {@code key}.
      *
-     * @param key
-     *            the key used to identify the object being stored.
-     *
+     * @param key the key used to identify the object being stored.
      * @return the removed value or {@code null} if there was no value cached.
      */
     V remove(K key);

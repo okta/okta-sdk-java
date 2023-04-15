@@ -40,8 +40,8 @@ public class ErrorHandler implements ResponseErrorHandler {
 
     @Override
     public boolean hasError(ClientHttpResponse httpResponse) throws IOException {
-        return httpResponse.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR
-                || httpResponse.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR;
+        return httpResponse.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR ||
+            httpResponse.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR;
     }
 
     @Override
@@ -99,8 +99,8 @@ public class ErrorHandler implements ResponseErrorHandler {
                 List<ErrorCause> results = new ArrayList<>();
                 Object rawProp = errorMap.get(ERROR_CAUSES_PROPERTY);
                 if (rawProp instanceof List) {
-                    ((List<Map<String, Object>>) rawProp).forEach(causeMap -> results
-                            .add(new ErrorCause(String.valueOf(causeMap.get(ERROR_SUMMARY_PROPERTY)))));
+                    ((List<Map<String, Object>>) rawProp).forEach(causeMap ->
+                        results.add(new ErrorCause(String.valueOf(causeMap.get(ERROR_SUMMARY_PROPERTY)))));
                 }
                 return Collections.unmodifiableList(results);
             }
@@ -121,9 +121,7 @@ public class ErrorHandler implements ResponseErrorHandler {
     /**
      * Backend might return a non JSON error message (HTML), so check if error message is a valid JSON.
      *
-     * @param json
-     *            error message
-     *
+     * @param json error message
      * @return true if json is valid, false otherwise
      */
     boolean isValid(String json) {

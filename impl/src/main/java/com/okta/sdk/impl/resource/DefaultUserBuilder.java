@@ -320,65 +320,36 @@ public class DefaultUserBuilder implements UserBuilder {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setProfile(userProfile);
         UserProfile userProfile = createUserRequest.getProfile();
-        if (Strings.hasText(firstName))
-            userProfile.setFirstName(firstName);
-        if (Strings.hasText(lastName))
-            userProfile.setLastName(lastName);
-        if (Strings.hasText(middleName))
-            userProfile.setMiddleName(middleName);
-        if (Strings.hasText(honorificPrefix))
-            userProfile.setHonorificPrefix(honorificPrefix);
-        if (Strings.hasText(honorificSuffix))
-            userProfile.setHonorificSuffix(honorificSuffix);
-        if (Strings.hasText(title))
-            userProfile.setTitle(title);
-        if (Strings.hasText(displayName))
-            userProfile.setDisplayName(displayName);
-        if (Strings.hasText(nickName))
-            userProfile.setNickName(nickName);
-        if (Strings.hasText(profileUrl))
-            userProfile.setProfileUrl(profileUrl);
-        if (Strings.hasText(primaryPhone))
-            userProfile.setPrimaryPhone(primaryPhone);
-        if (Strings.hasText(streetAddress))
-            userProfile.setStreetAddress(streetAddress);
-        if (Strings.hasText(city))
-            userProfile.setCity(city);
-        if (Strings.hasText(state))
-            userProfile.setState(state);
-        if (Strings.hasText(zipCode))
-            userProfile.setZipCode(zipCode);
-        if (Strings.hasText(countryCode))
-            userProfile.setCountryCode(countryCode);
-        if (Strings.hasText(postalAddress))
-            userProfile.setPostalAddress(postalAddress);
-        if (Strings.hasText(preferredLanguage))
-            userProfile.setPreferredLanguage(preferredLanguage);
-        if (Strings.hasText(locale))
-            userProfile.setLocale(locale);
-        if (Strings.hasText(timezone))
-            userProfile.setTimezone(timezone);
-        if (Strings.hasText(employeeNumber))
-            userProfile.setEmployeeNumber(city);
-        if (Strings.hasText(costCenter))
-            userProfile.setCostCenter(costCenter);
-        if (Strings.hasText(organization))
-            userProfile.setOrganization(organization);
-        if (Strings.hasText(division))
-            userProfile.setDivision(division);
-        if (Strings.hasText(department))
-            userProfile.setDepartment(department);
-        if (Strings.hasText(managerId))
-            userProfile.setManagerId(managerId);
-        if (Strings.hasText(manager))
-            userProfile.setManager(manager);
+        if (Strings.hasText(firstName)) userProfile.setFirstName(firstName);
+        if (Strings.hasText(lastName)) userProfile.setLastName(lastName);
+        if (Strings.hasText(middleName)) userProfile.setMiddleName(middleName);
+        if (Strings.hasText(honorificPrefix)) userProfile.setHonorificPrefix(honorificPrefix);
+        if (Strings.hasText(honorificSuffix)) userProfile.setHonorificSuffix(honorificSuffix);
+        if (Strings.hasText(title)) userProfile.setTitle(title);
+        if (Strings.hasText(displayName)) userProfile.setDisplayName(displayName);
+        if (Strings.hasText(nickName)) userProfile.setNickName(nickName);
+        if (Strings.hasText(profileUrl)) userProfile.setProfileUrl(profileUrl);
+        if (Strings.hasText(primaryPhone)) userProfile.setPrimaryPhone(primaryPhone);
+        if (Strings.hasText(streetAddress)) userProfile.setStreetAddress(streetAddress);
+        if (Strings.hasText(city)) userProfile.setCity(city);
+        if (Strings.hasText(state)) userProfile.setState(state);
+        if (Strings.hasText(zipCode)) userProfile.setZipCode(zipCode);
+        if (Strings.hasText(countryCode)) userProfile.setCountryCode(countryCode);
+        if (Strings.hasText(postalAddress)) userProfile.setPostalAddress(postalAddress);
+        if (Strings.hasText(preferredLanguage)) userProfile.setPreferredLanguage(preferredLanguage);
+        if (Strings.hasText(locale)) userProfile.setLocale(locale);
+        if (Strings.hasText(timezone)) userProfile.setTimezone(timezone);
+        if (Strings.hasText(employeeNumber)) userProfile.setEmployeeNumber(city);
+        if (Strings.hasText(costCenter)) userProfile.setCostCenter(costCenter);
+        if (Strings.hasText(organization)) userProfile.setOrganization(organization);
+        if (Strings.hasText(division)) userProfile.setDivision(division);
+        if (Strings.hasText(department)) userProfile.setDepartment(department);
+        if (Strings.hasText(managerId)) userProfile.setManagerId(managerId);
+        if (Strings.hasText(manager)) userProfile.setManager(manager);
 
-        if (Strings.hasText(email))
-            userProfile.setEmail(email);
-        if (Strings.hasText(secondEmail))
-            userProfile.setSecondEmail(secondEmail);
-        if (Strings.hasText(mobilePhone))
-            userProfile.setMobilePhone(mobilePhone);
+        if (Strings.hasText(email)) userProfile.setEmail(email);
+        if (Strings.hasText(secondEmail)) userProfile.setSecondEmail(secondEmail);
+        if (Strings.hasText(mobilePhone)) userProfile.setMobilePhone(mobilePhone);
 
         if (Strings.hasText(login)) {
             userProfile.setLogin(login);
@@ -415,8 +386,7 @@ public class DefaultUserBuilder implements UserBuilder {
         if (password != null && password.length > 0) {
 
             if (passwordHashProperties != null) {
-                throw new IllegalArgumentException(
-                        "Cannot specify both password and password hash, use one or the other.");
+                throw new IllegalArgumentException("Cannot specify both password and password hash, use one or the other.");
             }
 
             PasswordCredential passwordCredential = new PasswordCredential();
@@ -428,8 +398,7 @@ public class DefaultUserBuilder implements UserBuilder {
         if (passwordHashProperties != null) {
             PasswordCredential passwordCredential = new PasswordCredential();
             PasswordCredentialHash passwordCredentialHash = new PasswordCredentialHash();
-            passwordCredentialHash.setAlgorithm(PasswordCredentialHashAlgorithm
-                    .valueOf(((String) passwordHashProperties.get("algorithm")).replaceAll("-", "_")));
+            passwordCredentialHash.setAlgorithm(PasswordCredentialHashAlgorithm.valueOf(((String) passwordHashProperties.get("algorithm")).replaceAll("-", "_")));
             passwordCredentialHash.setWorkFactor((Integer) passwordHashProperties.get("workFactor"));
             passwordCredentialHash.setSalt((String) passwordHashProperties.get("salt"));
             passwordCredentialHash.setValue((String) passwordHashProperties.get("value"));

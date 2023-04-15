@@ -25,7 +25,6 @@ import java.util.Map;
 
 /**
  * A Runtime exception typically thrown when the remote server returns a non 20x response.
- *
  * @since 0.5.0
  */
 public class ResourceException extends RuntimeException implements Error {
@@ -34,15 +33,13 @@ public class ResourceException extends RuntimeException implements Error {
 
     /**
      * Ensures the message used for the exception (i.e. exception.getMessage()) reports the {@code developerMessage}
-     * returned by the Okta API Server. The regular Okta response body {@code message} field is targeted at application
-     * end-users that could very likely be non-technical. Since an exception should be helpful to developers, it is
-     * better to show a more technical message.
+     * returned by the Okta API Server.  The regular Okta response body {@code message} field is targeted
+     * at application end-users that could very likely be non-technical.  Since an exception should be helpful to
+     * developers, it is better to show a more technical message.
      * <p>
      * Added as a fix for <a href="https://github.com/stormpath/stormpath-sdk-java/issues/28">Issue #28</a>.
      *
-     * @param error
-     *            the response Error. Cannot be null.
-     *
+     * @param error the response Error. Cannot be null.
      * @return {@code error.getDeveloperMessage()}
      */
     private static String buildExceptionMessage(Error error) {
@@ -51,7 +48,7 @@ public class ResourceException extends RuntimeException implements Error {
         sb.append("HTTP ").append(error.getStatus());
 
         if (Strings.hasText(error.getCode())) {
-            sb.append(", Okta ").append(error.getCode());
+          sb.append(", Okta ").append(error.getCode());
         }
 
         sb.append(" (").append(error.getMessage());
@@ -83,8 +80,8 @@ public class ResourceException extends RuntimeException implements Error {
     }
 
     /**
-     * Get the Okta Error Code, <a href="https://developer.okta.com/reference/error_codes/">click here</a> for the list
-     * of Okta error codes.
+     * Get the Okta Error Code, <a href="https://developer.okta.com/reference/error_codes/">click here</a> for the
+     * list of Okta error codes.
      *
      * @return the code of the error
      */
@@ -92,6 +89,7 @@ public class ResourceException extends RuntimeException implements Error {
     public String getCode() {
         return error.getCode();
     }
+
 
     @Override
     public String getId() {
@@ -112,16 +110,15 @@ public class ResourceException extends RuntimeException implements Error {
      * Returns the underlying REST {@link Error} returned from the Okta API server.
      * <p>
      * Because this class's {@link #getMessage() getMessage()} value returns a developer-friendly message to help you
-     * debug when you see stack traces, you might want to acquire the underlying {@code Error} to show an end-user the
-     * simpler end-user appropriate error message. The end-user error message is non-technical in nature - as a
+     * debug when you see stack traces, you might want to acquire the underlying {@code Error} to show an end-user
+     * the simpler end-user appropriate error message.  The end-user error message is non-technical in nature - as a
      * convenience, you can show this message directly to your application end-users.
      * <p>
      * For example:
-     *
      * <pre>
      * try {
      *
-     *     // something that causes a ResourceException
+     *     //something that causes a ResourceException
      *
      * } catch (ResourceException re) {
      *
