@@ -31,4 +31,17 @@
         <cve>CVE-2022-45688</cve>
     </suppress>
 
+    <!-- openapi generator is used for build time code generation purpose only, should not affect runtime -->
+    <suppress>
+        <notes><![CDATA[ file name: openapi-generator-core-6.4.0.jar]]></notes>
+        <cve>CVE-2023-27162</cve>
+    </suppress>
+
+    <!-- upgrade to spring 6 will resolve this -->
+    <suppress>
+        <notes><![CDATA[ file name: spring-core-5.3.23.jar]]></notes>
+        <cve>CVE-2023-20860</cve>
+        <cve>CVE-2023-20861</cve>
+    </suppress>
+
 </suppressions>
