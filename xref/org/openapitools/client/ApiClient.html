@@ -94,7 +94,7 @@
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.auth.ApiKeyAuth;
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.auth.OAuth;
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-03-21T10:43:44.443896-05:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-04-19T09:13:33.853361-05:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  @Component(<span class="jxr_string">"org.openapitools.client.ApiClient"</span>)
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ApiClient" href="../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> <strong class="jxr_keyword">extends</strong> <a name="JavaTimeFormatter" href="../../../org/openapitools/client/JavaTimeFormatter.html#JavaTimeFormatter">JavaTimeFormatter</a> {
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  <strong class="jxr_keyword">public</strong> enum CollectionFormat {
@@ -875,73 +875,74 @@
 <a class="jxr_linenumber" name="L867" href="#L867">867</a>                                                    ObjectMapper objectMapper = <strong class="jxr_keyword">new</strong> ObjectMapper();
 <a class="jxr_linenumber" name="L868" href="#L868">868</a>                                                    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 <a class="jxr_linenumber" name="L869" href="#L869">869</a>                                                    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-<a class="jxr_linenumber" name="L870" href="#L870">870</a>                                                    objectMapper.registerModule(<strong class="jxr_keyword">new</strong> JavaTimeModule());
-<a class="jxr_linenumber" name="L871" href="#L871">871</a>                                                    objectMapper.registerModule(<strong class="jxr_keyword">new</strong> JsonNullableModule());
-<a class="jxr_linenumber" name="L872" href="#L872">872</a>                                                    <strong class="jxr_keyword">return</strong> objectMapper;
-<a class="jxr_linenumber" name="L873" href="#L873">873</a>                                                 }
-<a class="jxr_linenumber" name="L874" href="#L874">874</a> 
-<a class="jxr_linenumber" name="L875" href="#L875">875</a>                                                 <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L876" href="#L876">876</a> <em class="jxr_javadoccomment">                                                * Update query and header parameters based on authentication settings.</em>
-<a class="jxr_linenumber" name="L877" href="#L877">877</a> <em class="jxr_javadoccomment">                                                *</em>
-<a class="jxr_linenumber" name="L878" href="#L878">878</a> <em class="jxr_javadoccomment">                                                * @param authNames The authentications to apply</em>
-<a class="jxr_linenumber" name="L879" href="#L879">879</a> <em class="jxr_javadoccomment">                                                * @param queryParams The query parameters</em>
-<a class="jxr_linenumber" name="L880" href="#L880">880</a> <em class="jxr_javadoccomment">                                                * @param headerParams The header parameters</em>
-<a class="jxr_linenumber" name="L881" href="#L881">881</a> <em class="jxr_javadoccomment">                                                */</em>
-<a class="jxr_linenumber" name="L882" href="#L882">882</a>                                                 <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> updateParamsForAuth(String[] authNames, MultiValueMap&lt;String, String&gt; queryParams, HttpHeaders headerParams, MultiValueMap&lt;String, String&gt; cookieParams) {
-<a class="jxr_linenumber" name="L883" href="#L883">883</a>                                                 <strong class="jxr_keyword">for</strong> (String authName : authNames) {
-<a class="jxr_linenumber" name="L884" href="#L884">884</a>                                                 <a name="Authentication" href="../../../org/openapitools/client/auth/Authentication.html#Authentication">Authentication</a> auth = authentications.get(authName);
-<a class="jxr_linenumber" name="L885" href="#L885">885</a>                                                 <strong class="jxr_keyword">if</strong> (auth == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L886" href="#L886">886</a>                                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RestClientException(<span class="jxr_string">"Authentication undefined: "</span> + authName);
-<a class="jxr_linenumber" name="L887" href="#L887">887</a>                                                 }
-<a class="jxr_linenumber" name="L888" href="#L888">888</a>                                                 auth.applyToParams(queryParams, headerParams, cookieParams);
-<a class="jxr_linenumber" name="L889" href="#L889">889</a>                                                 }
+<a class="jxr_linenumber" name="L870" href="#L870">870</a>                                                    objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, <strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L871" href="#L871">871</a>                                                    objectMapper.registerModule(<strong class="jxr_keyword">new</strong> JavaTimeModule());
+<a class="jxr_linenumber" name="L872" href="#L872">872</a>                                                    objectMapper.registerModule(<strong class="jxr_keyword">new</strong> JsonNullableModule());
+<a class="jxr_linenumber" name="L873" href="#L873">873</a>                                                    <strong class="jxr_keyword">return</strong> objectMapper;
+<a class="jxr_linenumber" name="L874" href="#L874">874</a>                                                 }
+<a class="jxr_linenumber" name="L875" href="#L875">875</a> 
+<a class="jxr_linenumber" name="L876" href="#L876">876</a>                                                 <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L877" href="#L877">877</a> <em class="jxr_javadoccomment">                                                * Update query and header parameters based on authentication settings.</em>
+<a class="jxr_linenumber" name="L878" href="#L878">878</a> <em class="jxr_javadoccomment">                                                *</em>
+<a class="jxr_linenumber" name="L879" href="#L879">879</a> <em class="jxr_javadoccomment">                                                * @param authNames The authentications to apply</em>
+<a class="jxr_linenumber" name="L880" href="#L880">880</a> <em class="jxr_javadoccomment">                                                * @param queryParams The query parameters</em>
+<a class="jxr_linenumber" name="L881" href="#L881">881</a> <em class="jxr_javadoccomment">                                                * @param headerParams The header parameters</em>
+<a class="jxr_linenumber" name="L882" href="#L882">882</a> <em class="jxr_javadoccomment">                                                */</em>
+<a class="jxr_linenumber" name="L883" href="#L883">883</a>                                                 <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> updateParamsForAuth(String[] authNames, MultiValueMap&lt;String, String&gt; queryParams, HttpHeaders headerParams, MultiValueMap&lt;String, String&gt; cookieParams) {
+<a class="jxr_linenumber" name="L884" href="#L884">884</a>                                                 <strong class="jxr_keyword">for</strong> (String authName : authNames) {
+<a class="jxr_linenumber" name="L885" href="#L885">885</a>                                                 <a name="Authentication" href="../../../org/openapitools/client/auth/Authentication.html#Authentication">Authentication</a> auth = authentications.get(authName);
+<a class="jxr_linenumber" name="L886" href="#L886">886</a>                                                 <strong class="jxr_keyword">if</strong> (auth == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L887" href="#L887">887</a>                                                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RestClientException(<span class="jxr_string">"Authentication undefined: "</span> + authName);
+<a class="jxr_linenumber" name="L888" href="#L888">888</a>                                                 }
+<a class="jxr_linenumber" name="L889" href="#L889">889</a>                                                 auth.applyToParams(queryParams, headerParams, cookieParams);
 <a class="jxr_linenumber" name="L890" href="#L890">890</a>                                                 }
-<a class="jxr_linenumber" name="L891" href="#L891">891</a> 
-<a class="jxr_linenumber" name="L892" href="#L892">892</a>                                                 <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">class</strong> ApiClientHttpRequestInterceptor <strong class="jxr_keyword">implements</strong> ClientHttpRequestInterceptor {
-<a class="jxr_linenumber" name="L893" href="#L893">893</a>                                                 <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Log logger = LogFactory.getLog(ApiClientHttpRequestInterceptor.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L894" href="#L894">894</a> 
-<a class="jxr_linenumber" name="L895" href="#L895">895</a>                                                 @Override
-<a class="jxr_linenumber" name="L896" href="#L896">896</a>                                                 <strong class="jxr_keyword">public</strong> ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L897" href="#L897">897</a>                                                    logRequest(request, body);
-<a class="jxr_linenumber" name="L898" href="#L898">898</a>                                                    ClientHttpResponse response = execution.execute(request, body);
-<a class="jxr_linenumber" name="L899" href="#L899">899</a>                                                    logResponse(response);
-<a class="jxr_linenumber" name="L900" href="#L900">900</a>                                                    <strong class="jxr_keyword">return</strong> response;
-<a class="jxr_linenumber" name="L901" href="#L901">901</a>                                                 }
-<a class="jxr_linenumber" name="L902" href="#L902">902</a> 
-<a class="jxr_linenumber" name="L903" href="#L903">903</a>                                                 <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> logRequest(HttpRequest request, byte[] body) <strong class="jxr_keyword">throws</strong> UnsupportedEncodingException {
-<a class="jxr_linenumber" name="L904" href="#L904">904</a>                                                     logger.info(<span class="jxr_string">"URI: "</span> + request.getMethod() +  <span class="jxr_string">" "</span> + request.getURI());
-<a class="jxr_linenumber" name="L905" href="#L905">905</a>                                                     logger.info(<span class="jxr_string">"Request Headers: "</span> + headersToString(request.getHeaders()));
-<a class="jxr_linenumber" name="L906" href="#L906">906</a>                                                     logger.info(<span class="jxr_string">"Request Body: "</span> + <strong class="jxr_keyword">new</strong> String(body, StandardCharsets.UTF_8));
-<a class="jxr_linenumber" name="L907" href="#L907">907</a>                                                 }
-<a class="jxr_linenumber" name="L908" href="#L908">908</a> 
-<a class="jxr_linenumber" name="L909" href="#L909">909</a>                                                 <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> logResponse(ClientHttpResponse response) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L910" href="#L910">910</a>                                                     logger.info(<span class="jxr_string">"Response Status: "</span> + response.getRawStatusCode() + <span class="jxr_string">" "</span> + response.getStatusText());
-<a class="jxr_linenumber" name="L911" href="#L911">911</a>                                                     logger.info(<span class="jxr_string">"Response Headers: "</span> + headersToString(response.getHeaders()));
-<a class="jxr_linenumber" name="L912" href="#L912">912</a>                                                     logger.info(<span class="jxr_string">"Response Body: "</span> + StreamUtils.copyToString(response.getBody(), Charset.defaultCharset()));
-<a class="jxr_linenumber" name="L913" href="#L913">913</a>                                                 }
-<a class="jxr_linenumber" name="L914" href="#L914">914</a> 
-<a class="jxr_linenumber" name="L915" href="#L915">915</a>                                                 <strong class="jxr_keyword">private</strong> String headersToString(HttpHeaders headers) {
-<a class="jxr_linenumber" name="L916" href="#L916">916</a>                                                 <strong class="jxr_keyword">if</strong> (headers == <strong class="jxr_keyword">null</strong> || headers.isEmpty()) {
-<a class="jxr_linenumber" name="L917" href="#L917">917</a>                                                 <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
-<a class="jxr_linenumber" name="L918" href="#L918">918</a>                                                 }
-<a class="jxr_linenumber" name="L919" href="#L919">919</a>                                                 StringBuilder builder = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L920" href="#L920">920</a>                                                 <strong class="jxr_keyword">for</strong> (Entry&lt;String, List&lt;String&gt;&gt; entry : headers.entrySet()) {
-<a class="jxr_linenumber" name="L921" href="#L921">921</a>                                                     builder.append(entry.getKey()).append(<span class="jxr_string">"=["</span>);
-<a class="jxr_linenumber" name="L922" href="#L922">922</a>                                                     <strong class="jxr_keyword">for</strong> (String value : entry.getValue()) {
-<a class="jxr_linenumber" name="L923" href="#L923">923</a>                                                     <strong class="jxr_keyword">if</strong> (entry.getKey().equals(<span class="jxr_string">"Authorization"</span>)) {
-<a class="jxr_linenumber" name="L924" href="#L924">924</a>                                                     builder.append(<span class="jxr_string">"*****"</span>).append(<span class="jxr_string">","</span>);
-<a class="jxr_linenumber" name="L925" href="#L925">925</a>                                                     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L926" href="#L926">926</a>                                                     builder.append(value).append(<span class="jxr_string">","</span>);
-<a class="jxr_linenumber" name="L927" href="#L927">927</a>                                                     }
+<a class="jxr_linenumber" name="L891" href="#L891">891</a>                                                 }
+<a class="jxr_linenumber" name="L892" href="#L892">892</a> 
+<a class="jxr_linenumber" name="L893" href="#L893">893</a>                                                 <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">class</strong> ApiClientHttpRequestInterceptor <strong class="jxr_keyword">implements</strong> ClientHttpRequestInterceptor {
+<a class="jxr_linenumber" name="L894" href="#L894">894</a>                                                 <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Log logger = LogFactory.getLog(ApiClientHttpRequestInterceptor.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L895" href="#L895">895</a> 
+<a class="jxr_linenumber" name="L896" href="#L896">896</a>                                                 @Override
+<a class="jxr_linenumber" name="L897" href="#L897">897</a>                                                 <strong class="jxr_keyword">public</strong> ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L898" href="#L898">898</a>                                                    logRequest(request, body);
+<a class="jxr_linenumber" name="L899" href="#L899">899</a>                                                    ClientHttpResponse response = execution.execute(request, body);
+<a class="jxr_linenumber" name="L900" href="#L900">900</a>                                                    logResponse(response);
+<a class="jxr_linenumber" name="L901" href="#L901">901</a>                                                    <strong class="jxr_keyword">return</strong> response;
+<a class="jxr_linenumber" name="L902" href="#L902">902</a>                                                 }
+<a class="jxr_linenumber" name="L903" href="#L903">903</a> 
+<a class="jxr_linenumber" name="L904" href="#L904">904</a>                                                 <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> logRequest(HttpRequest request, byte[] body) <strong class="jxr_keyword">throws</strong> UnsupportedEncodingException {
+<a class="jxr_linenumber" name="L905" href="#L905">905</a>                                                     logger.info(<span class="jxr_string">"URI: "</span> + request.getMethod() +  <span class="jxr_string">" "</span> + request.getURI());
+<a class="jxr_linenumber" name="L906" href="#L906">906</a>                                                     logger.info(<span class="jxr_string">"Request Headers: "</span> + headersToString(request.getHeaders()));
+<a class="jxr_linenumber" name="L907" href="#L907">907</a>                                                     logger.info(<span class="jxr_string">"Request Body: "</span> + <strong class="jxr_keyword">new</strong> String(body, StandardCharsets.UTF_8));
+<a class="jxr_linenumber" name="L908" href="#L908">908</a>                                                 }
+<a class="jxr_linenumber" name="L909" href="#L909">909</a> 
+<a class="jxr_linenumber" name="L910" href="#L910">910</a>                                                 <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> logResponse(ClientHttpResponse response) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L911" href="#L911">911</a>                                                     logger.info(<span class="jxr_string">"Response Status: "</span> + response.getRawStatusCode() + <span class="jxr_string">" "</span> + response.getStatusText());
+<a class="jxr_linenumber" name="L912" href="#L912">912</a>                                                     logger.info(<span class="jxr_string">"Response Headers: "</span> + headersToString(response.getHeaders()));
+<a class="jxr_linenumber" name="L913" href="#L913">913</a>                                                     logger.info(<span class="jxr_string">"Response Body: "</span> + StreamUtils.copyToString(response.getBody(), Charset.defaultCharset()));
+<a class="jxr_linenumber" name="L914" href="#L914">914</a>                                                 }
+<a class="jxr_linenumber" name="L915" href="#L915">915</a> 
+<a class="jxr_linenumber" name="L916" href="#L916">916</a>                                                 <strong class="jxr_keyword">private</strong> String headersToString(HttpHeaders headers) {
+<a class="jxr_linenumber" name="L917" href="#L917">917</a>                                                 <strong class="jxr_keyword">if</strong> (headers == <strong class="jxr_keyword">null</strong> || headers.isEmpty()) {
+<a class="jxr_linenumber" name="L918" href="#L918">918</a>                                                 <strong class="jxr_keyword">return</strong> <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="L919" href="#L919">919</a>                                                 }
+<a class="jxr_linenumber" name="L920" href="#L920">920</a>                                                 StringBuilder builder = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L921" href="#L921">921</a>                                                 <strong class="jxr_keyword">for</strong> (Entry&lt;String, List&lt;String&gt;&gt; entry : headers.entrySet()) {
+<a class="jxr_linenumber" name="L922" href="#L922">922</a>                                                     builder.append(entry.getKey()).append(<span class="jxr_string">"=["</span>);
+<a class="jxr_linenumber" name="L923" href="#L923">923</a>                                                     <strong class="jxr_keyword">for</strong> (String value : entry.getValue()) {
+<a class="jxr_linenumber" name="L924" href="#L924">924</a>                                                     <strong class="jxr_keyword">if</strong> (entry.getKey().equals(<span class="jxr_string">"Authorization"</span>)) {
+<a class="jxr_linenumber" name="L925" href="#L925">925</a>                                                     builder.append(<span class="jxr_string">"*****"</span>).append(<span class="jxr_string">","</span>);
+<a class="jxr_linenumber" name="L926" href="#L926">926</a>                                                     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L927" href="#L927">927</a>                                                     builder.append(value).append(<span class="jxr_string">","</span>);
 <a class="jxr_linenumber" name="L928" href="#L928">928</a>                                                     }
-<a class="jxr_linenumber" name="L929" href="#L929">929</a>                                                     builder.setLength(builder.length() - 1); <em class="jxr_comment">// Get rid of trailing comma</em>
-<a class="jxr_linenumber" name="L930" href="#L930">930</a>                                                     builder.append(<span class="jxr_string">"],"</span>);
-<a class="jxr_linenumber" name="L931" href="#L931">931</a>                                                     }
-<a class="jxr_linenumber" name="L932" href="#L932">932</a>                                                     builder.setLength(builder.length() - 1); <em class="jxr_comment">// Get rid of trailing comma</em>
-<a class="jxr_linenumber" name="L933" href="#L933">933</a>                                                     <strong class="jxr_keyword">return</strong> builder.toString();
-<a class="jxr_linenumber" name="L934" href="#L934">934</a>                                                     }
+<a class="jxr_linenumber" name="L929" href="#L929">929</a>                                                     }
+<a class="jxr_linenumber" name="L930" href="#L930">930</a>                                                     builder.setLength(builder.length() - 1); <em class="jxr_comment">// Get rid of trailing comma</em>
+<a class="jxr_linenumber" name="L931" href="#L931">931</a>                                                     builder.append(<span class="jxr_string">"],"</span>);
+<a class="jxr_linenumber" name="L932" href="#L932">932</a>                                                     }
+<a class="jxr_linenumber" name="L933" href="#L933">933</a>                                                     builder.setLength(builder.length() - 1); <em class="jxr_comment">// Get rid of trailing comma</em>
+<a class="jxr_linenumber" name="L934" href="#L934">934</a>                                                     <strong class="jxr_keyword">return</strong> builder.toString();
 <a class="jxr_linenumber" name="L935" href="#L935">935</a>                                                     }
 <a class="jxr_linenumber" name="L936" href="#L936">936</a>                                                     }
+<a class="jxr_linenumber" name="L937" href="#L937">937</a>                                                     }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
