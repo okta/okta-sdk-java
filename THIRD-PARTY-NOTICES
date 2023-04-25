@@ -54,7 +54,7 @@ This project includes:
   Jakarta Activation API jar under EDL 1.0
   Jakarta Bean Validation API under Apache License 2.0
   Jakarta XML Binding API under Eclipse Distribution License - v 1.0
-  Java Native Access under LGPL, version 2.1 or Apache License v2.0
+  Java Native Access under LGPL-2.1-or-later or Apache-2.0
   JavaMail API (no providers) under CDDL/GPLv2+CE
   javax.annotation API under CDDL + GPLv2 with classpath exception
   JJWT :: API under Apache License, Version 2.0
