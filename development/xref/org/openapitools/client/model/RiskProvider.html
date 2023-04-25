@@ -16,7 +16,7 @@
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>      <strong class="jxr_keyword">import</strong> java.time.OffsetDateTime;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.ApiTokenLink;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.LinksSelf;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.RiskProviderAction;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
@@ -35,7 +35,7 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>          RiskProvider.JSON_PROPERTY_NAME,
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>          RiskProvider.JSON_PROPERTY_LINKS
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>      })
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-04-19T16:05:47.563Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-04-25T16:47:28.013Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> RiskProvider {
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
@@ -58,7 +58,7 @@
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>              <strong class="jxr_keyword">private</strong> String name;
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_LINKS = <span class="jxr_string">"_links"</span>;
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>              <strong class="jxr_keyword">private</strong> ApiTokenLink links;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>              <strong class="jxr_keyword">private</strong> LinksSelf links;
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  <strong class="jxr_keyword">public</strong> RiskProvider() { 
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  }
@@ -115,7 +115,7 @@
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment">    * @return clientId</em>
 <a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment">    **/</em>
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>             @javax.annotation.Nonnull
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>       @ApiModelProperty(required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">"The ID of the [OAuth service app](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/main/#create-a-service-app-and-grant-scopes) that is used to send risk events to Okta"</span>)
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>       @ApiModelProperty(example = <span class="jxr_string">"00cjkjjkkgjkdkjdkkljjsd"</span>, required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">"The ID of the [OAuth service app](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/main/#create-a-service-app-and-grant-scopes) that is used to send risk events to Okta"</span>)
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>       @JsonProperty(JSON_PROPERTY_CLIENT_ID)
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> 
@@ -132,11 +132,11 @@
 <a class="jxr_linenumber" name="L124" href="#L124">124</a> 
 <a class="jxr_linenumber" name="L125" href="#L125">125</a> 
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">        * Timestamp when the risk provider was created</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">        * Timestamp when the Risk Provider object was created</em>
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">    * @return created</em>
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">    **/</em>
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>         @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>       @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the risk provider was created"</span>)
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>       @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the Risk Provider object was created"</span>)
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>       @JsonProperty(JSON_PROPERTY_CREATED)
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L134" href="#L134">134</a> 
@@ -148,11 +148,11 @@
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> 
 <a class="jxr_linenumber" name="L141" href="#L141">141</a> 
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">        * The ID of the risk provider</em>
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">        * The ID of the Risk Provider object</em>
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">    * @return id</em>
 <a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">    **/</em>
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>         @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>       @ApiModelProperty(value = <span class="jxr_string">"The ID of the risk provider"</span>)
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>       @ApiModelProperty(example = <span class="jxr_string">"00rp12r4skkjkjgsn"</span>, value = <span class="jxr_string">"The ID of the Risk Provider object"</span>)
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>       @JsonProperty(JSON_PROPERTY_ID)
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L150" href="#L150">150</a> 
@@ -164,11 +164,11 @@
 <a class="jxr_linenumber" name="L156" href="#L156">156</a> 
 <a class="jxr_linenumber" name="L157" href="#L157">157</a> 
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">        * Timestamp when the risk provider was last updated</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">        * Timestamp when the Risk Provider object was last updated</em>
 <a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">    * @return lastUpdated</em>
 <a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">    **/</em>
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>         @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>       @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the risk provider was last updated"</span>)
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>       @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the Risk Provider object was last updated"</span>)
 <a class="jxr_linenumber" name="L164" href="#L164">164</a>       @JsonProperty(JSON_PROPERTY_LAST_UPDATED)
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L166" href="#L166">166</a> 
@@ -190,7 +190,7 @@
 <a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment">    * @return name</em>
 <a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">    **/</em>
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>             @javax.annotation.Nonnull
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>       @ApiModelProperty(required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">"Name of the risk provider"</span>)
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>       @ApiModelProperty(example = <span class="jxr_string">"Risk-Partner-X"</span>, required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">"Name of the risk provider"</span>)
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>       @JsonProperty(JSON_PROPERTY_NAME)
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L188" href="#L188">188</a> 
@@ -206,7 +206,7 @@
 <a class="jxr_linenumber" name="L198" href="#L198">198</a>         }
 <a class="jxr_linenumber" name="L199" href="#L199">199</a> 
 <a class="jxr_linenumber" name="L200" href="#L200">200</a> 
-<a class="jxr_linenumber" name="L201" href="#L201">201</a>         <strong class="jxr_keyword">public</strong> RiskProvider links(ApiTokenLink links) {
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>         <strong class="jxr_keyword">public</strong> RiskProvider links(LinksSelf links) {
 <a class="jxr_linenumber" name="L202" href="#L202">202</a>         
 <a class="jxr_linenumber" name="L203" href="#L203">203</a>         <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L204" href="#L204">204</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -221,14 +221,14 @@
 <a class="jxr_linenumber" name="L213" href="#L213">213</a>       @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L215" href="#L215">215</a> 
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>     <strong class="jxr_keyword">public</strong> ApiTokenLink getLinks() {
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     <strong class="jxr_keyword">public</strong> LinksSelf getLinks() {
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>         <strong class="jxr_keyword">return</strong> links;
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>     }
 <a class="jxr_linenumber" name="L219" href="#L219">219</a> 
 <a class="jxr_linenumber" name="L220" href="#L220">220</a> 
 <a class="jxr_linenumber" name="L221" href="#L221">221</a>           @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L222" href="#L222">222</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(ApiTokenLink links) {
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(LinksSelf links) {
 <a class="jxr_linenumber" name="L224" href="#L224">224</a>             <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>         }
 <a class="jxr_linenumber" name="L226" href="#L226">226</a> 

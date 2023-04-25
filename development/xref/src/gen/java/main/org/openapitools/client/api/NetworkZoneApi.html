@@ -48,7 +48,7 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-04-19T16:05:47.563Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-04-25T16:47:28.013Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.NetworkZoneApi"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="NetworkZoneApi" href="../../../../org/openapitools/client/api/NetworkZoneApi.html#NetworkZoneApi">NetworkZoneApi</a> {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -72,12 +72,12 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">        * Activate a Network Zone</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">        * Activates a network zone</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">        * Activates a network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">                * @return NetworkZone</em>
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">            */</em>
@@ -92,12 +92,12 @@
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>              <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">            * Activate a Network Zone</em>
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">            * Activates a network zone</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">            * Activates a network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_javadoccomment">            */</em>
@@ -139,12 +139,12 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> 
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">            * Activate a Network Zone</em>
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">            * Activates a network zone</em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">            * Activates a network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">            */</em>
@@ -197,7 +197,7 @@
 <a class="jxr_linenumber" name="L189" href="#L189">189</a> 
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L191" href="#L191">191</a> <em class="jxr_javadoccomment">        * Create a Network Zone</em>
-<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">        * Creates a new network zone to your Okta organization</em>
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> <em class="jxr_javadoccomment">        * Creates a new network zone. * At least one of either the &amp;#x60;gateways&amp;#x60; attribute or &amp;#x60;proxies&amp;#x60; attribute must be defined when creating a Network Zone. * At least one of the following attributes must be defined: &amp;#x60;proxyType&amp;#x60;, &amp;#x60;locations&amp;#x60;, or &amp;#x60;asns&amp;#x60;.</em>
 <a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
@@ -215,7 +215,7 @@
 <a class="jxr_linenumber" name="L207" href="#L207">207</a> 
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">            * Create a Network Zone</em>
-<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">            * Creates a new network zone to your Okta organization</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">            * Creates a new network zone. * At least one of either the &amp;#x60;gateways&amp;#x60; attribute or &amp;#x60;proxies&amp;#x60; attribute must be defined when creating a Network Zone. * At least one of the following attributes must be defined: &amp;#x60;proxyType&amp;#x60;, &amp;#x60;locations&amp;#x60;, or &amp;#x60;asns&amp;#x60;.</em>
 <a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L212" href="#L212">212</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L213" href="#L213">213</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
@@ -234,7 +234,7 @@
 <a class="jxr_linenumber" name="L226" href="#L226">226</a> 
 <a class="jxr_linenumber" name="L227" href="#L227">227</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L228" href="#L228">228</a> <em class="jxr_javadoccomment">            * Create a Network Zone</em>
-<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">            * Creates a new network zone to your Okta organization</em>
+<a class="jxr_linenumber" name="L229" href="#L229">229</a> <em class="jxr_javadoccomment">            * Creates a new network zone. * At least one of either the &amp;#x60;gateways&amp;#x60; attribute or &amp;#x60;proxies&amp;#x60; attribute must be defined when creating a Network Zone. * At least one of the following attributes must be defined: &amp;#x60;proxyType&amp;#x60;, &amp;#x60;locations&amp;#x60;, or &amp;#x60;asns&amp;#x60;.</em>
 <a class="jxr_linenumber" name="L230" href="#L230">230</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L231" href="#L231">231</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L232" href="#L232">232</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
@@ -277,7 +277,7 @@
 <a class="jxr_linenumber" name="L269" href="#L269">269</a> 
 <a class="jxr_linenumber" name="L270" href="#L270">270</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L271" href="#L271">271</a> <em class="jxr_javadoccomment">            * Create a Network Zone</em>
-<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">            * Creates a new network zone to your Okta organization</em>
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">            * Creates a new network zone. * At least one of either the &amp;#x60;gateways&amp;#x60; attribute or &amp;#x60;proxies&amp;#x60; attribute must be defined when creating a Network Zone. * At least one of the following attributes must be defined: &amp;#x60;proxyType&amp;#x60;, &amp;#x60;locations&amp;#x60;, or &amp;#x60;asns&amp;#x60;.</em>
 <a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
@@ -320,7 +320,7 @@
 <a class="jxr_linenumber" name="L312" href="#L312">312</a> 
 <a class="jxr_linenumber" name="L313" href="#L313">313</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L314" href="#L314">314</a> <em class="jxr_javadoccomment">            * Create a Network Zone</em>
-<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment">            * Creates a new network zone to your Okta organization</em>
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> <em class="jxr_javadoccomment">            * Creates a new network zone. * At least one of either the &amp;#x60;gateways&amp;#x60; attribute or &amp;#x60;proxies&amp;#x60; attribute must be defined when creating a Network Zone. * At least one of the following attributes must be defined: &amp;#x60;proxyType&amp;#x60;, &amp;#x60;locations&amp;#x60;, or &amp;#x60;asns&amp;#x60;.</em>
 <a class="jxr_linenumber" name="L316" href="#L316">316</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
@@ -377,12 +377,12 @@
 <a class="jxr_linenumber" name="L369" href="#L369">369</a> 
 <a class="jxr_linenumber" name="L370" href="#L370">370</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L371" href="#L371">371</a> <em class="jxr_javadoccomment">        * Deactivate a Network Zone</em>
-<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">        * Deactivates a network zone</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">        * Deactivates a network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L373" href="#L373">373</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L376" href="#L376">376</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L377" href="#L377">377</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L378" href="#L378">378</a> <em class="jxr_javadoccomment">                * @return NetworkZone</em>
 <a class="jxr_linenumber" name="L379" href="#L379">379</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L380" href="#L380">380</a> <em class="jxr_javadoccomment">            */</em>
@@ -397,12 +397,12 @@
 <a class="jxr_linenumber" name="L389" href="#L389">389</a> 
 <a class="jxr_linenumber" name="L390" href="#L390">390</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L391" href="#L391">391</a> <em class="jxr_javadoccomment">            * Deactivate a Network Zone</em>
-<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">            * Deactivates a network zone</em>
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">            * Deactivates a network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L393" href="#L393">393</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L394" href="#L394">394</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L395" href="#L395">395</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L396" href="#L396">396</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L400" href="#L400">400</a> <em class="jxr_javadoccomment">            */</em>
@@ -444,12 +444,12 @@
 <a class="jxr_linenumber" name="L436" href="#L436">436</a> 
 <a class="jxr_linenumber" name="L437" href="#L437">437</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">            * Deactivate a Network Zone</em>
-<a class="jxr_linenumber" name="L439" href="#L439">439</a> <em class="jxr_javadoccomment">            * Deactivates a network zone</em>
+<a class="jxr_linenumber" name="L439" href="#L439">439</a> <em class="jxr_javadoccomment">            * Deactivates a network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L440" href="#L440">440</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L442" href="#L442">442</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L443" href="#L443">443</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L444" href="#L444">444</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L444" href="#L444">444</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L445" href="#L445">445</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L446" href="#L446">446</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L447" href="#L447">447</a> <em class="jxr_javadoccomment">            */</em>
@@ -502,12 +502,12 @@
 <a class="jxr_linenumber" name="L494" href="#L494">494</a> 
 <a class="jxr_linenumber" name="L495" href="#L495">495</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L496" href="#L496">496</a> <em class="jxr_javadoccomment">        * Delete a Network Zone</em>
-<a class="jxr_linenumber" name="L497" href="#L497">497</a> <em class="jxr_javadoccomment">        * Deletes network zone</em>
+<a class="jxr_linenumber" name="L497" href="#L497">497</a> <em class="jxr_javadoccomment">        * Deletes network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L498" href="#L498">498</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;204&lt;/b&gt; - No Content</em>
 <a class="jxr_linenumber" name="L499" href="#L499">499</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L500" href="#L500">500</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L501" href="#L501">501</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L502" href="#L502">502</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L502" href="#L502">502</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L503" href="#L503">503</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L504" href="#L504">504</a> <em class="jxr_javadoccomment">            */</em>
 <a class="jxr_linenumber" name="L505" href="#L505">505</a>             <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> deleteNetworkZone(String zoneId) <strong class="jxr_keyword">throws</strong> RestClientException {
@@ -521,12 +521,12 @@
 <a class="jxr_linenumber" name="L513" href="#L513">513</a> 
 <a class="jxr_linenumber" name="L514" href="#L514">514</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L515" href="#L515">515</a> <em class="jxr_javadoccomment">            * Delete a Network Zone</em>
-<a class="jxr_linenumber" name="L516" href="#L516">516</a> <em class="jxr_javadoccomment">            * Deletes network zone</em>
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> <em class="jxr_javadoccomment">            * Deletes network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L517" href="#L517">517</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;204&lt;/b&gt; - No Content</em>
 <a class="jxr_linenumber" name="L518" href="#L518">518</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L519" href="#L519">519</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L520" href="#L520">520</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L521" href="#L521">521</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L521" href="#L521">521</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L522" href="#L522">522</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;Void&amp;gt;</em>
 <a class="jxr_linenumber" name="L523" href="#L523">523</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L524" href="#L524">524</a> <em class="jxr_javadoccomment">            */</em>
@@ -568,12 +568,12 @@
 <a class="jxr_linenumber" name="L560" href="#L560">560</a> 
 <a class="jxr_linenumber" name="L561" href="#L561">561</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L562" href="#L562">562</a> <em class="jxr_javadoccomment">        * Retrieve a Network Zone</em>
-<a class="jxr_linenumber" name="L563" href="#L563">563</a> <em class="jxr_javadoccomment">        * Retrieves a network zone from your Okta organization by &amp;#x60;id&amp;#x60;</em>
+<a class="jxr_linenumber" name="L563" href="#L563">563</a> <em class="jxr_javadoccomment">        * Retrieves a network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L564" href="#L564">564</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L565" href="#L565">565</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L566" href="#L566">566</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L567" href="#L567">567</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L568" href="#L568">568</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L568" href="#L568">568</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L569" href="#L569">569</a> <em class="jxr_javadoccomment">                * @return NetworkZone</em>
 <a class="jxr_linenumber" name="L570" href="#L570">570</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L571" href="#L571">571</a> <em class="jxr_javadoccomment">            */</em>
@@ -588,12 +588,12 @@
 <a class="jxr_linenumber" name="L580" href="#L580">580</a> 
 <a class="jxr_linenumber" name="L581" href="#L581">581</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L582" href="#L582">582</a> <em class="jxr_javadoccomment">            * Retrieve a Network Zone</em>
-<a class="jxr_linenumber" name="L583" href="#L583">583</a> <em class="jxr_javadoccomment">            * Retrieves a network zone from your Okta organization by &amp;#x60;id&amp;#x60;</em>
+<a class="jxr_linenumber" name="L583" href="#L583">583</a> <em class="jxr_javadoccomment">            * Retrieves a network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L584" href="#L584">584</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L585" href="#L585">585</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L586" href="#L586">586</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L587" href="#L587">587</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L588" href="#L588">588</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L588" href="#L588">588</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L589" href="#L589">589</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L590" href="#L590">590</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L591" href="#L591">591</a> <em class="jxr_javadoccomment">            */</em>
@@ -635,12 +635,12 @@
 <a class="jxr_linenumber" name="L627" href="#L627">627</a> 
 <a class="jxr_linenumber" name="L628" href="#L628">628</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L629" href="#L629">629</a> <em class="jxr_javadoccomment">            * Retrieve a Network Zone</em>
-<a class="jxr_linenumber" name="L630" href="#L630">630</a> <em class="jxr_javadoccomment">            * Retrieves a network zone from your Okta organization by &amp;#x60;id&amp;#x60;</em>
+<a class="jxr_linenumber" name="L630" href="#L630">630</a> <em class="jxr_javadoccomment">            * Retrieves a network zone by &amp;#x60;zoneId&amp;#x60;</em>
 <a class="jxr_linenumber" name="L631" href="#L631">631</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L632" href="#L632">632</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L633" href="#L633">633</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L634" href="#L634">634</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L635" href="#L635">635</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L635" href="#L635">635</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L636" href="#L636">636</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L637" href="#L637">637</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
 <a class="jxr_linenumber" name="L638" href="#L638">638</a> <em class="jxr_javadoccomment">            */</em>
@@ -693,7 +693,7 @@
 <a class="jxr_linenumber" name="L685" href="#L685">685</a> 
 <a class="jxr_linenumber" name="L686" href="#L686">686</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L687" href="#L687">687</a> <em class="jxr_javadoccomment">        * List all Network Zones</em>
-<a class="jxr_linenumber" name="L688" href="#L688">688</a> <em class="jxr_javadoccomment">        * Lists all network zones with pagination. A subset of zones can be returned that match a supported filter expression or query.</em>
+<a class="jxr_linenumber" name="L688" href="#L688">688</a> <em class="jxr_javadoccomment">        * Lists all network zones with pagination. A subset of zones can be returned that match a supported filter expression or query.  This operation requires URL encoding. For example, &amp;#x60;filter&amp;#x3D;(id eq \&amp;quot;nzoul0wf9jyb8xwZm0g3\&amp;quot; or id eq \&amp;quot;nzoul1MxmGN18NDQT0g3\&amp;quot;)&amp;#x60; is encoded as &amp;#x60;filter&amp;#x3D;%28id+eq+%22nzoul0wf9jyb8xwZm0g3%22+or+id+eq+%22nzoul1MxmGN18NDQT0g3%22%29&amp;#x60;.  Okta supports filtering on the &amp;#x60;id&amp;#x60; and &amp;#x60;usage&amp;#x60; properties. See [Filtering](<a href="https://developer.okta.com/docs/reference/core-okta-api/" target="alexandria_uri">https://developer.okta.com/docs/reference/core-okta-api/</a>#filter) for more information on the expressions that are used in filtering.</em>
 <a class="jxr_linenumber" name="L689" href="#L689">689</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L690" href="#L690">690</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L691" href="#L691">691</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -714,7 +714,7 @@
 <a class="jxr_linenumber" name="L706" href="#L706">706</a> 
 <a class="jxr_linenumber" name="L707" href="#L707">707</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L708" href="#L708">708</a> <em class="jxr_javadoccomment">            * List all Network Zones</em>
-<a class="jxr_linenumber" name="L709" href="#L709">709</a> <em class="jxr_javadoccomment">            * Lists all network zones with pagination. A subset of zones can be returned that match a supported filter expression or query.</em>
+<a class="jxr_linenumber" name="L709" href="#L709">709</a> <em class="jxr_javadoccomment">            * Lists all network zones with pagination. A subset of zones can be returned that match a supported filter expression or query.  This operation requires URL encoding. For example, &amp;#x60;filter&amp;#x3D;(id eq \&amp;quot;nzoul0wf9jyb8xwZm0g3\&amp;quot; or id eq \&amp;quot;nzoul1MxmGN18NDQT0g3\&amp;quot;)&amp;#x60; is encoded as &amp;#x60;filter&amp;#x3D;%28id+eq+%22nzoul0wf9jyb8xwZm0g3%22+or+id+eq+%22nzoul1MxmGN18NDQT0g3%22%29&amp;#x60;.  Okta supports filtering on the &amp;#x60;id&amp;#x60; and &amp;#x60;usage&amp;#x60; properties. See [Filtering](<a href="https://developer.okta.com/docs/reference/core-okta-api/" target="alexandria_uri">https://developer.okta.com/docs/reference/core-okta-api/</a>#filter) for more information on the expressions that are used in filtering.</em>
 <a class="jxr_linenumber" name="L710" href="#L710">710</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L711" href="#L711">711</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L712" href="#L712">712</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -758,7 +758,7 @@
 <a class="jxr_linenumber" name="L750" href="#L750">750</a> 
 <a class="jxr_linenumber" name="L751" href="#L751">751</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L752" href="#L752">752</a> <em class="jxr_javadoccomment">            * List all Network Zones</em>
-<a class="jxr_linenumber" name="L753" href="#L753">753</a> <em class="jxr_javadoccomment">            * Lists all network zones with pagination. A subset of zones can be returned that match a supported filter expression or query.</em>
+<a class="jxr_linenumber" name="L753" href="#L753">753</a> <em class="jxr_javadoccomment">            * Lists all network zones with pagination. A subset of zones can be returned that match a supported filter expression or query.  This operation requires URL encoding. For example, &amp;#x60;filter&amp;#x3D;(id eq \&amp;quot;nzoul0wf9jyb8xwZm0g3\&amp;quot; or id eq \&amp;quot;nzoul1MxmGN18NDQT0g3\&amp;quot;)&amp;#x60; is encoded as &amp;#x60;filter&amp;#x3D;%28id+eq+%22nzoul0wf9jyb8xwZm0g3%22+or+id+eq+%22nzoul1MxmGN18NDQT0g3%22%29&amp;#x60;.  Okta supports filtering on the &amp;#x60;id&amp;#x60; and &amp;#x60;usage&amp;#x60; properties. See [Filtering](<a href="https://developer.okta.com/docs/reference/core-okta-api/" target="alexandria_uri">https://developer.okta.com/docs/reference/core-okta-api/</a>#filter) for more information on the expressions that are used in filtering.</em>
 <a class="jxr_linenumber" name="L754" href="#L754">754</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L755" href="#L755">755</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L756" href="#L756">756</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
@@ -813,13 +813,13 @@
 <a class="jxr_linenumber" name="L805" href="#L805">805</a> 
 <a class="jxr_linenumber" name="L806" href="#L806">806</a>         <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L807" href="#L807">807</a> <em class="jxr_javadoccomment">        * Replace a Network Zone</em>
-<a class="jxr_linenumber" name="L808" href="#L808">808</a> <em class="jxr_javadoccomment">        * Replaces a network zone</em>
+<a class="jxr_linenumber" name="L808" href="#L808">808</a> <em class="jxr_javadoccomment">        * Replaces a network zone by &amp;#x60;zoneId&amp;#x60;. The replaced network zone type must be the same as the existing type. You may replace the usage (&amp;#x60;POLICY&amp;#x60;, &amp;#x60;BLOCKLIST&amp;#x60;) of a network zone by updating the &amp;#x60;usage&amp;#x60; attribute.</em>
 <a class="jxr_linenumber" name="L809" href="#L809">809</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L810" href="#L810">810</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L811" href="#L811">811</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L812" href="#L812">812</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L813" href="#L813">813</a> <em class="jxr_javadoccomment">            * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L814" href="#L814">814</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L814" href="#L814">814</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L815" href="#L815">815</a> <em class="jxr_javadoccomment">                * @param zone  (required)</em>
 <a class="jxr_linenumber" name="L816" href="#L816">816</a> <em class="jxr_javadoccomment">                * @return NetworkZone</em>
 <a class="jxr_linenumber" name="L817" href="#L817">817</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
@@ -833,14 +833,14 @@
 <a class="jxr_linenumber" name="L825" href="#L825">825</a> 
 <a class="jxr_linenumber" name="L826" href="#L826">826</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L827" href="#L827">827</a> <em class="jxr_javadoccomment">            * Replace a Network Zone</em>
-<a class="jxr_linenumber" name="L828" href="#L828">828</a> <em class="jxr_javadoccomment">            * Replaces a network zone</em>
+<a class="jxr_linenumber" name="L828" href="#L828">828</a> <em class="jxr_javadoccomment">            * Replaces a network zone by &amp;#x60;zoneId&amp;#x60;. The replaced network zone type must be the same as the existing type. You may replace the usage (&amp;#x60;POLICY&amp;#x60;, &amp;#x60;BLOCKLIST&amp;#x60;) of a network zone by updating the &amp;#x60;usage&amp;#x60; attribute.</em>
 <a class="jxr_linenumber" name="L829" href="#L829">829</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L830" href="#L830">830</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L831" href="#L831">831</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L832" href="#L832">832</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L833" href="#L833">833</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
 <a class="jxr_linenumber" name="L834" href="#L834">834</a> <em class="jxr_javadoccomment">                * @param T (required) - the assignable return type</em>
-<a class="jxr_linenumber" name="L835" href="#L835">835</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L835" href="#L835">835</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L836" href="#L836">836</a> <em class="jxr_javadoccomment">                * @param zone  (required)</em>
 <a class="jxr_linenumber" name="L837" href="#L837">837</a> <em class="jxr_javadoccomment">                * @return T instance</em>
 <a class="jxr_linenumber" name="L838" href="#L838">838</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
@@ -854,13 +854,13 @@
 <a class="jxr_linenumber" name="L846" href="#L846">846</a> 
 <a class="jxr_linenumber" name="L847" href="#L847">847</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L848" href="#L848">848</a> <em class="jxr_javadoccomment">            * Replace a Network Zone</em>
-<a class="jxr_linenumber" name="L849" href="#L849">849</a> <em class="jxr_javadoccomment">            * Replaces a network zone</em>
+<a class="jxr_linenumber" name="L849" href="#L849">849</a> <em class="jxr_javadoccomment">            * Replaces a network zone by &amp;#x60;zoneId&amp;#x60;. The replaced network zone type must be the same as the existing type. You may replace the usage (&amp;#x60;POLICY&amp;#x60;, &amp;#x60;BLOCKLIST&amp;#x60;) of a network zone by updating the &amp;#x60;usage&amp;#x60; attribute.</em>
 <a class="jxr_linenumber" name="L850" href="#L850">850</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L851" href="#L851">851</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L852" href="#L852">852</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L853" href="#L853">853</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L854" href="#L854">854</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L855" href="#L855">855</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L855" href="#L855">855</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L856" href="#L856">856</a> <em class="jxr_javadoccomment">                * @param zone  (required)</em>
 <a class="jxr_linenumber" name="L857" href="#L857">857</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L858" href="#L858">858</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
@@ -907,13 +907,13 @@
 <a class="jxr_linenumber" name="L899" href="#L899">899</a> 
 <a class="jxr_linenumber" name="L900" href="#L900">900</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L901" href="#L901">901</a> <em class="jxr_javadoccomment">            * Replace a Network Zone</em>
-<a class="jxr_linenumber" name="L902" href="#L902">902</a> <em class="jxr_javadoccomment">            * Replaces a network zone</em>
+<a class="jxr_linenumber" name="L902" href="#L902">902</a> <em class="jxr_javadoccomment">            * Replaces a network zone by &amp;#x60;zoneId&amp;#x60;. The replaced network zone type must be the same as the existing type. You may replace the usage (&amp;#x60;POLICY&amp;#x60;, &amp;#x60;BLOCKLIST&amp;#x60;) of a network zone by updating the &amp;#x60;usage&amp;#x60; attribute.</em>
 <a class="jxr_linenumber" name="L903" href="#L903">903</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L904" href="#L904">904</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L905" href="#L905">905</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L906" href="#L906">906</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L907" href="#L907">907</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L908" href="#L908">908</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L908" href="#L908">908</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L909" href="#L909">909</a> <em class="jxr_javadoccomment">                * @param zone  (required)</em>
 <a class="jxr_linenumber" name="L910" href="#L910">910</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L911" href="#L911">911</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
@@ -960,13 +960,13 @@
 <a class="jxr_linenumber" name="L952" href="#L952">952</a> 
 <a class="jxr_linenumber" name="L953" href="#L953">953</a>             <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L954" href="#L954">954</a> <em class="jxr_javadoccomment">            * Replace a Network Zone</em>
-<a class="jxr_linenumber" name="L955" href="#L955">955</a> <em class="jxr_javadoccomment">            * Replaces a network zone</em>
+<a class="jxr_linenumber" name="L955" href="#L955">955</a> <em class="jxr_javadoccomment">            * Replaces a network zone by &amp;#x60;zoneId&amp;#x60;. The replaced network zone type must be the same as the existing type. You may replace the usage (&amp;#x60;POLICY&amp;#x60;, &amp;#x60;BLOCKLIST&amp;#x60;) of a network zone by updating the &amp;#x60;usage&amp;#x60; attribute.</em>
 <a class="jxr_linenumber" name="L956" href="#L956">956</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;200&lt;/b&gt; - Success</em>
 <a class="jxr_linenumber" name="L957" href="#L957">957</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;400&lt;/b&gt; - Bad Request</em>
 <a class="jxr_linenumber" name="L958" href="#L958">958</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;403&lt;/b&gt; - Forbidden</em>
 <a class="jxr_linenumber" name="L959" href="#L959">959</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;404&lt;/b&gt; - Not Found</em>
 <a class="jxr_linenumber" name="L960" href="#L960">960</a> <em class="jxr_javadoccomment">                * &lt;p&gt;&lt;b&gt;429&lt;/b&gt; - Too Many Requests</em>
-<a class="jxr_linenumber" name="L961" href="#L961">961</a> <em class="jxr_javadoccomment">                * @param zoneId  (required)</em>
+<a class="jxr_linenumber" name="L961" href="#L961">961</a> <em class="jxr_javadoccomment">                * @param zoneId &amp;#x60;id&amp;#x60; of the Network Zone (required)</em>
 <a class="jxr_linenumber" name="L962" href="#L962">962</a> <em class="jxr_javadoccomment">                * @param zone  (required)</em>
 <a class="jxr_linenumber" name="L963" href="#L963">963</a> <em class="jxr_javadoccomment">            * @return ResponseEntity&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L964" href="#L964">964</a> <em class="jxr_javadoccomment">            * @throws RestClientException if an error occurs while attempting to invoke the API</em>
