@@ -80,7 +80,7 @@ class OktaOrgCleaner {
         GroupApi groupApi = new GroupApi(client)
 
         log.info("Deleting Groups:")
-        groupApi.listGroups(null, null, null, 100, null, null).stream()
+        groupApi.listGroups(null, null, null, 100, null, null, null, null).stream()
             .filter { it.getProfile().getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getProfile().getName()}")

@@ -171,7 +171,7 @@ public class ReadmeSnippets {
 
     private void listUsersGroup() {
         GroupApi groupApi = new GroupApi(client);
-        List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null);
+        List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null, null, null);
     }
 
     private void createGroup() {

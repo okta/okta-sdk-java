@@ -237,7 +237,7 @@ class AppsIT extends ITSupport {
             .headers(headers)
             .authScheme(inlineHookChannelConfigAuthScheme)
 
-        InlineHookChannel inlineHookChannel = new InlineHookChannel()
+        InlineHookChannelHttp inlineHookChannel = new InlineHookChannelHttp()
         inlineHookChannel.type(InlineHookChannelType.HTTP)
         inlineHookChannel.version(version)
         inlineHookChannel.config(inlineHookChannelConfig)

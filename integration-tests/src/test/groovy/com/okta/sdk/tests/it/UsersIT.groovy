@@ -23,6 +23,7 @@ import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.apache.commons.lang3.RandomStringUtils
+import org.apache.commons.lang3.StringUtils
 import org.openapitools.client.api.*
 import org.openapitools.client.model.*
 import org.testng.annotations.Test
@@ -169,7 +170,7 @@ class UsersIT extends ITSupport {
         def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'hashtag'
-        def email = firstName + "+" + lastName + "@example.com"
+        def email = "john+${uniqueTestName}@example.com"
 
         UserApi userApi = new UserApi(getClient())
 
@@ -199,7 +200,6 @@ class UsersIT extends ITSupport {
         def email = "john-${uniqueTestName}@example.com"
 
         UserApi userApi = new UserApi(getClient())
-        RoleApi roleApi = new RoleApi(getClient())
         RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
 
         // 1. Create a user
@@ -446,7 +446,7 @@ class UsersIT extends ITSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        ResetPasswordToken response = userApi.resetPassword(user.getId(), false)
+        ResetPasswordToken response = userApi.generateResetPasswordToken(user.getId(), false, false)
         assertThat response.getResetPasswordUrl(), containsString("/reset_password/")
     }
 
@@ -501,7 +501,7 @@ class UsersIT extends ITSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Get the reset password link
-        ResetPasswordToken token = userApi.resetPassword(user.getId(), false)
+        ResetPasswordToken token = userApi.generateResetPasswordToken(user.getId(), false, false)
         assertThat token.getResetPasswordUrl(), notNullValue()
     }
 
@@ -928,8 +928,8 @@ class UsersIT extends ITSupport {
 
     private static String hashPassword(String password, String salt) {
         def messageDigest = MessageDigest.getInstance("SHA-512")
-        messageDigest.update(salt.getBytes(StandardCharsets.UTF_8))
-        def bytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8))
+        messageDigest.update(StringUtils.getBytes(salt, StandardCharsets.UTF_8))
+        def bytes = messageDigest.digest(StringUtils.getBytes(password, StandardCharsets.UTF_8))
         return Base64.getEncoder().encodeToString(bytes)
     }
 
