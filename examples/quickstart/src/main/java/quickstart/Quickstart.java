@@ -25,7 +25,9 @@ import com.okta.sdk.resource.user.UserBuilder;
 import org.openapitools.client.api.UserApi;
 import org.openapitools.client.api.GroupApi;
 
-import org.openapitools.client.model.*;
+import org.openapitools.client.model.Group;
+import org.openapitools.client.model.User;
+import org.openapitools.client.model.UserStatus;
 
 import java.util.List;
 import java.util.Objects;
