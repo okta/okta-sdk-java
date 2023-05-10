@@ -339,7 +339,7 @@ public class DefaultUserBuilder implements UserBuilder {
         if (Strings.hasText(preferredLanguage)) userProfile.setPreferredLanguage(preferredLanguage);
         if (Strings.hasText(locale)) userProfile.setLocale(locale);
         if (Strings.hasText(timezone)) userProfile.setTimezone(timezone);
-        if (Strings.hasText(employeeNumber)) userProfile.setEmployeeNumber(city);
+        if (Strings.hasText(employeeNumber)) userProfile.setEmployeeNumber(employeeNumber);
         if (Strings.hasText(costCenter)) userProfile.setCostCenter(costCenter);
         if (Strings.hasText(organization)) userProfile.setOrganization(organization);
         if (Strings.hasText(division)) userProfile.setDivision(division);
