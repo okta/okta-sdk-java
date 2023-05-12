@@ -58,7 +58,7 @@ class AppsIT extends ITSupport {
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(basicAuthApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BASIC_AUTH))
-        assertThat(createdApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     @Test
@@ -84,9 +84,10 @@ class AppsIT extends ITSupport {
 
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
+        assertThat(createdApp.getName(), equalTo("bookmark"))
         assertThat(createdApp.getLabel(), equalTo(bookmarkApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BOOKMARK))
-        assertThat(createdApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // update
         Application toBeUpdatedApp = bookmarkApplication.label("updated-" + bookmarkApplication.getLabel())
@@ -95,13 +96,14 @@ class AppsIT extends ITSupport {
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
         // retrieve
-        Application retrievedApp = applicationApi.getApplication(createdApp.getId(), null)
+        BookmarkApplication retrievedApp = applicationApi.getApplicationOfType(BookmarkApplication.class, createdApp.getId(), null)
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
+        assertThat(retrievedApp.getName(), equalTo(updatedApp.getName()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BOOKMARK))
-        assertThat(retrievedApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     @Test
@@ -128,9 +130,10 @@ class AppsIT extends ITSupport {
 
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
+        assertThat(createdApp.getName(), equalTo("template_swa"))
         assertThat(createdApp.getLabel(), equalTo(browserPluginApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BROWSER_PLUGIN))
-        assertThat(createdApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // update
         Application toBeUpdatedApp = browserPluginApplication.label("updated-" + browserPluginApplication.getLabel())
@@ -139,13 +142,14 @@ class AppsIT extends ITSupport {
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
         // retrieve
-        Application retrievedApp = applicationApi.getApplication(createdApp.getId(), null)
+        BrowserPluginApplication retrievedApp = applicationApi.getApplicationOfType(BrowserPluginApplication.class, createdApp.getId(), null)
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
+        assertThat(retrievedApp.getName(), equalTo("template_swa"))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BROWSER_PLUGIN))
-        assertThat(retrievedApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     @Test
@@ -192,9 +196,10 @@ class AppsIT extends ITSupport {
 
         assertThat(createdApp, notNullValue())
         assertThat(createdApp.getId(), notNullValue())
+        assertThat(createdApp.getName(), equalTo("oidc_client"))
         assertThat(createdApp.getLabel(), equalTo(openIdConnectApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.OPENID_CONNECT))
-        assertThat(createdApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // update
         Application toBeUpdatedApp = openIdConnectApplication.label("updated-" + openIdConnectApplication.getLabel())
@@ -203,13 +208,14 @@ class AppsIT extends ITSupport {
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
         // retrieve
-        Application retrievedApp = applicationApi.getApplication(createdApp.getId(), null)
+        OpenIdConnectApplication retrievedApp = applicationApi.getApplicationOfType(OpenIdConnectApplication.class, createdApp.getId(), null)
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
+        assertThat(retrievedApp.getName(), equalTo("oidc_client"))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.OPENID_CONNECT))
-        assertThat(retrievedApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     @Test
@@ -307,7 +313,7 @@ class AppsIT extends ITSupport {
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(samlApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.SAML_2_0))
-        assertThat(createdApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // update
         Application toBeUpdatedApp = samlApplication.label("updated-" + samlApplication.getLabel())
@@ -316,13 +322,14 @@ class AppsIT extends ITSupport {
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
         // retrieve
-        Application retrievedApp = applicationApi.getApplication(createdApp.getId(), null)
+        SamlApplication retrievedApp = applicationApi.getApplicationOfType(SamlApplication.class, createdApp.getId(), null)
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
+        assertThat(retrievedApp.getName(), equalTo(updatedApp.getName()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.SAML_2_0))
-        assertThat(retrievedApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     //TODO: fix me

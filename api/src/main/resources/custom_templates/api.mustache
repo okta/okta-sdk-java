@@ -28,6 +28,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.LinkedHashMap;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.okta.sdk.helper.CustomTypeReference;
 import java.util.stream.Collectors;{{/fullJavaUtil}}
 
 import com.okta.sdk.resource.common.PagedList;
@@ -394,6 +396,86 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
             {{/returnType}}
         }
     {{/returnType}}
+
+            /**
+            * {{summary}}
+            * {{notes}}
+        {{#responses}}
+                * <p><b>{{code}}</b>{{#message}} - {{.}}{{/message}}
+        {{/responses}}
+        {{#allParams}}
+                * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/required}}
+        {{/allParams}}
+            * @return ResponseEntity&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;
+            * @throws RestClientException if an error occurs while attempting to invoke the API
+        {{#externalDocs}}
+                * {{description}}
+                * @see <a href="{{url}}">{{summary}} Documentation</a>
+        {{/externalDocs}}
+        {{#isDeprecated}}
+                * @deprecated
+        {{/isDeprecated}}
+            */
+        {{#isDeprecated}}
+                @Deprecated
+        {{/isDeprecated}}
+            public <T> T {{operationId}}OfType({{#hasParams}}Class<?> T,{{/hasParams}} {{#allParams}}{{#isFile}}{{#useAbstractionForFiles}}{{#collectionFormat}}java.util.Collection<org.springframework.core.io.Resource>{{/collectionFormat}}{{^collectionFormat}}org.springframework.core.io.Resource{{/collectionFormat}}{{/useAbstractionForFiles}}{{^useAbstractionForFiles}}{{{dataType}}}{{/useAbstractionForFiles}}{{/isFile}}{{^isFile}}{{{dataType}}}{{/isFile}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws RestClientException {
+            Object localVarPostBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
+        {{#allParams}}{{#required}}
+                // verify the required parameter '{{paramName}}' is set '{{paramType}}'
+                if ({{paramName}} == null) {
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter '{{paramName}}' when calling {{operationId}}");
+                }
+        {{/required}}{{/allParams}}{{#hasPathParams}}
+                // create path and map variables
+                final Map<String, Object> uriVariables = new HashMap<String, Object>();{{#pathParams}}
+                    uriVariables.put("{{baseName}}", {{#collectionFormat}}apiClient.collectionPathParameterToString(ApiClient.CollectionFormat.valueOf("{{{collectionFormat}}}".toUpperCase()), {{{paramName}}}){{/collectionFormat}}{{^collectionFormat}}{{{paramName}}}{{/collectionFormat}});{{/pathParams}}{{/hasPathParams}}
+
+            final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<String, String>();
+            final HttpHeaders localVarHeaderParams = new HttpHeaders();
+            final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
+            final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();{{#hasQueryParams}}
+
+            {{#queryParams}}localVarQueryParams.putAll(apiClient.parameterToMultiValueMap({{#collectionFormat}}ApiClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT)){{/collectionFormat}}{{^collectionFormat}}null{{/collectionFormat}}, "{{baseName}}", {{paramName}}));{{^-last}}
+            {{/-last}}{{/queryParams}}{{/hasQueryParams}}{{#hasHeaderParams}}
+
+            {{#headerParams}}if ({{paramName}} != null)
+                localVarHeaderParams.add("{{baseName}}", apiClient.parameterToString({{paramName}}));{{^-last}}
+            {{/-last}}{{/headerParams}}{{/hasHeaderParams}}{{#hasCookieParams}}
+
+            {{#cookieParams}}if ({{paramName}} != null)
+                localVarCookieParams.add("{{baseName}}", apiClient.parameterToString({{paramName}}));{{^-last}}
+            {{/-last}}{{/cookieParams}}{{/hasCookieParams}}{{#hasFormParams}}
+
+            {{#formParams}}if ({{paramName}} != null)
+                localVarFormParams.{{^collectionFormat}}add{{/collectionFormat}}{{#collectionFormat}}addAll{{/collectionFormat}}("{{baseName}}", {{#isFile}}{{^collectionFormat}}{{#useAbstractionForFiles}}{{paramName}}{{/useAbstractionForFiles}}{{^useAbstractionForFiles}}new FileSystemResource({{paramName}}){{/useAbstractionForFiles}}{{/collectionFormat}}{{/isFile}}{{#isFile}}{{#collectionFormat}}{{paramName}}.stream(){{^useAbstractionForFiles}}.map(FileSystemResource::new){{/useAbstractionForFiles}}.collect(Collectors.toList()){{/collectionFormat}}{{/isFile}}{{^isFile}}{{paramName}}{{/isFile}});{{^-last}}
+            {{/-last}}{{/formParams}}{{/hasFormParams}}
+
+            final String[] localVarAccepts = { {{#hasProduces}}
+            {{#produces}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/produces}}
+        {{/hasProduces}} };
+            final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+            final String[] localVarContentTypes = { {{#hasConsumes}}
+            {{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}
+        {{/hasConsumes}} };
+            final MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+            String[] localVarAuthNames = new String[] { {{#authMethods}}"{{name}}"{{^-last}}, {{/-last}}{{/authMethods}} };
+
+            ParameterizedTypeReference<T> localReturnType = new ParameterizedTypeReference<T>() {};
+            ResponseEntity<T> respEntity = apiClient.invokeAPI("{{{path}}}", HttpMethod.{{httpMethod}}, {{#hasPathParams}}uriVariables{{/hasPathParams}}{{^hasPathParams}}Collections.<String, Object>emptyMap(){{/hasPathParams}}, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
+            TypeReference typeRef = new CustomTypeReference(localReturnType);
+        {{#hasParams}}
+                try {
+                   return (T) getObjectMapper().convertValue(respEntity.getBody(), Class.forName(T.getName()));
+                } catch (ClassNotFoundException e) {
+                   throw new IllegalArgumentException("Invalid Class type supplied: " + T.getName());
+                }
+        {{/hasParams}}
+        {{^hasParams}}
+                return (T) getObjectMapper().convertValue(respEntity.getBody(), typeRef);
+        {{/hasParams}}
+            }
 
     {{/operation}}
 

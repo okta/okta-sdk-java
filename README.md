@@ -270,7 +270,7 @@ userApi.deleteUser(user.getId(), false);
 [//]: # (method: listUsersGroup)
 ```java
 GroupApi groupApi = new GroupApi(client);
-List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null);
+List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null, null, null);
 ```
 [//]: # (end: listUsersGroup)
 
@@ -374,6 +374,9 @@ List<Application> applications = applicationApi.listApplications(null, null, 10,
 ```java
 ApplicationApi applicationApi = new ApplicationApi(client);
 Application app = applicationApi.getApplication("appId", null);
+
+// get application of specific type (e.g. Bookmark app)
+BookmarkApplication bookmarkApp = applicationApi.getApplicationOfType(BookmarkApplication.class, "appId", null);
 ```
 [//]: # (end: getApplication)
 

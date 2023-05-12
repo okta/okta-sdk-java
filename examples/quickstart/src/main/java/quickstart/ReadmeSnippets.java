@@ -256,6 +256,9 @@ public class ReadmeSnippets {
         ApplicationApi applicationApi = new ApplicationApi(client);
 
         Application app = applicationApi.getApplication("appId", null);
+
+        // get application of specific type (e.g. Bookmark app)
+        BookmarkApplication bookmarkApp = applicationApi.getApplicationOfType(BookmarkApplication.class, "appId", null);
     }
 
     private void createSwaApplication() {
