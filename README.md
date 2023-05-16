@@ -270,7 +270,7 @@ userApi.deleteUser(user.getId(), false);
 [//]: # (method: listUsersGroup)
 ```java
 GroupApi groupApi = new GroupApi(client);
-List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null);
+List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null, null, null);
 ```
 [//]: # (end: listUsersGroup)
 
@@ -361,19 +361,24 @@ VerifyUserFactorResponse verifyUserFactorResponse =
 
 ### List all Applications
 
-[//]: # (method: listApplication)
+[//]: # (method: listApplications)
 ```java
 ApplicationApi applicationApi = new ApplicationApi(client);
-List<Application> applications = applicationApi.listApplications(null, null, 10, null, null, true);
+List<Application> applications = ApplicationApiHelper.listApplications(client, null, null, null, null, null, true);
 ```
-[//]: # (end: listApplication)
+[//]: # (end: listApplications)
 
 ### Get an Application
 
 [//]: # (method: getApplication)
 ```java
 ApplicationApi applicationApi = new ApplicationApi(client);
-Application app = applicationApi.getApplication("appId", null);
+
+// get generic application type
+Application genericApp = applicationApi.getApplication("generic-app-id", null);
+
+// get sub-class application type
+BookmarkApplication subclassApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
 ```
 [//]: # (end: getApplication)
 
