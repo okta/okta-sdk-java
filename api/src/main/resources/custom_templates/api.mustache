@@ -397,7 +397,7 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
 
     {{/operation}}
 
-    private ObjectMapper getObjectMapper() {
+    protected static ObjectMapper getObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new JsonNullableModule());

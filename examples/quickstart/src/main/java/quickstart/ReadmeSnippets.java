@@ -19,6 +19,7 @@ import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
+import com.okta.sdk.helper.ApplicationApiHelper;
 import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
@@ -246,16 +247,20 @@ public class ReadmeSnippets {
             userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
     }
 
-    private void listApplication() {
+    private void listApplications() {
         ApplicationApi applicationApi = new ApplicationApi(client);
 
-        List<Application> applications = applicationApi.listApplications(null, null, 10, null, null, true);
+        List<Application> applications = ApplicationApiHelper.listApplications(client, null, null, null, null, null, true);
     }
 
     private void getApplication() {
         ApplicationApi applicationApi = new ApplicationApi(client);
 
-        Application app = applicationApi.getApplication("appId", null);
+        // get generic application type
+        Application genericApp = applicationApi.getApplication("generic-app-id", null);
+
+        // get sub-class application type
+        BookmarkApplication subclassApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
     }
 
     private void createSwaApplication() {

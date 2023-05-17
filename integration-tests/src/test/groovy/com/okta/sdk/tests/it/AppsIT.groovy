@@ -16,6 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.google.common.net.HttpHeaders
+import com.okta.sdk.helper.ApplicationApiHelper
 import com.okta.sdk.tests.it.util.ITSupport
 import org.openapitools.client.api.ApplicationApi
 import org.openapitools.client.api.InlineHookApi
@@ -24,6 +25,8 @@ import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.Matchers.greaterThanOrEqualTo
+import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.notNullValue
 
 /**
@@ -58,7 +61,7 @@ class AppsIT extends ITSupport {
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(basicAuthApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BASIC_AUTH))
-        assertThat(createdApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     @Test
@@ -86,7 +89,7 @@ class AppsIT extends ITSupport {
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(bookmarkApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BOOKMARK))
-        assertThat(createdApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // update
         Application toBeUpdatedApp = bookmarkApplication.label("updated-" + bookmarkApplication.getLabel())
@@ -101,7 +104,7 @@ class AppsIT extends ITSupport {
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BOOKMARK))
-        assertThat(retrievedApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     @Test
@@ -130,7 +133,7 @@ class AppsIT extends ITSupport {
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(browserPluginApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BROWSER_PLUGIN))
-        assertThat(createdApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // update
         Application toBeUpdatedApp = browserPluginApplication.label("updated-" + browserPluginApplication.getLabel())
@@ -145,7 +148,7 @@ class AppsIT extends ITSupport {
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BROWSER_PLUGIN))
-        assertThat(retrievedApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     @Test
@@ -194,7 +197,7 @@ class AppsIT extends ITSupport {
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(openIdConnectApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.OPENID_CONNECT))
-        assertThat(createdApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // update
         Application toBeUpdatedApp = openIdConnectApplication.label("updated-" + openIdConnectApplication.getLabel())
@@ -209,7 +212,7 @@ class AppsIT extends ITSupport {
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.OPENID_CONNECT))
-        assertThat(retrievedApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     @Test
@@ -307,7 +310,7 @@ class AppsIT extends ITSupport {
         assertThat(createdApp.getId(), notNullValue())
         assertThat(createdApp.getLabel(), equalTo(samlApplication.getLabel()))
         assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.SAML_2_0))
-        assertThat(createdApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
 
         // update
         Application toBeUpdatedApp = samlApplication.label("updated-" + samlApplication.getLabel())
@@ -322,7 +325,7 @@ class AppsIT extends ITSupport {
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.SAML_2_0))
-        assertThat(retrievedApp.getStatus().name(), equalTo("ACTIVE"))
+        assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
     }
 
     //TODO: fix me
@@ -354,5 +357,45 @@ class AppsIT extends ITSupport {
 //        println("Uploading logo file " + file.getName() + " of size: " + file.size())
 //
 //        applicationApi.uploadApplicationLogo(createdApp.getId(), file)
+    }
+
+    @Test
+    void testApplicationApiHelper() {
+
+        ApplicationApi applicationApi = new ApplicationApi(getClient())
+        BookmarkApplication bookmarkApplication = new BookmarkApplication()
+        bookmarkApplication.name("bookmark")
+            .label(prefix + UUID.randomUUID().toString())
+            .signOnMode(ApplicationSignOnMode.BOOKMARK)
+        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
+            new BookmarkApplicationSettingsApplication()
+        bookmarkApplicationSettingsApplication.url("https://example.com/bookmark.htm")
+            .requestIntegration(false)
+        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings()
+        bookmarkApplicationSettings.app(bookmarkApplicationSettingsApplication)
+        bookmarkApplication.settings(bookmarkApplicationSettings)
+
+        // create
+        BookmarkApplication createdApp =
+            applicationApi.createApplication(BookmarkApplication.class, bookmarkApplication, true, null)
+        registerForCleanup(createdApp)
+
+        assertThat(createdApp, notNullValue())
+        assertThat(createdApp.getId(), notNullValue())
+        assertThat(createdApp.getLabel(), equalTo(bookmarkApplication.getLabel()))
+        assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BOOKMARK))
+        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
+
+        // retrieve app (sub-typed)
+        BookmarkApplication retrievedBookmarkApplication = ApplicationApiHelper.getApplication(getClient(), createdApp.getId(), null)
+        assertThat(retrievedBookmarkApplication, notNullValue())
+        assertThat(retrievedBookmarkApplication.getId(), equalTo(createdApp.getId()))
+        assertThat(retrievedBookmarkApplication.getLabel(), equalTo(createdApp.getLabel()))
+        assertThat(retrievedBookmarkApplication.getSignOnMode(), equalTo(createdApp.getSignOnMode()))
+        assertThat(retrievedBookmarkApplication.getStatus(), equalTo(createdApp.getStatus()))
+
+        List<Application> retrievedApplications = ApplicationApiHelper.listApplications(getClient(), null, null, null, null, null, true)
+        assertThat(retrievedApplications, notNullValue())
+        assertThat(retrievedApplications, hasSize(greaterThanOrEqualTo(1)))
     }
 }
