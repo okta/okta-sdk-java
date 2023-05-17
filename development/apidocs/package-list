@@ -2,6 +2,7 @@ com.okta.sdk.authc.credentials
 com.okta.sdk.cache
 com.okta.sdk.client
 com.okta.sdk.error
+com.okta.sdk.helper
 com.okta.sdk.impl.api
 com.okta.sdk.impl.cache
 com.okta.sdk.impl.client

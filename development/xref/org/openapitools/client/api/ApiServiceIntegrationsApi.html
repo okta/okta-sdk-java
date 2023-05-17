@@ -50,7 +50,7 @@
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-05-10T14:51:17.314Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-05-17T14:23:20.864Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  @Component(<span class="jxr_string">"org.openapitools.client.api.ApiServiceIntegrationsApi"</span>)
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ApiServiceIntegrationsApi" href="../../../../org/openapitools/client/api/ApiServiceIntegrationsApi.html#ApiServiceIntegrationsApi">ApiServiceIntegrationsApi</a> {
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">private</strong> <a name="ApiClient" href="../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
@@ -567,7 +567,7 @@
 <a class="jxr_linenumber" name="L559" href="#L559">559</a>         }
 <a class="jxr_linenumber" name="L560" href="#L560">560</a> 
 <a class="jxr_linenumber" name="L561" href="#L561">561</a> 
-<a class="jxr_linenumber" name="L562" href="#L562">562</a>     <strong class="jxr_keyword">private</strong> ObjectMapper getObjectMapper() {
+<a class="jxr_linenumber" name="L562" href="#L562">562</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">static</strong> ObjectMapper getObjectMapper() {
 <a class="jxr_linenumber" name="L563" href="#L563">563</a>         ObjectMapper objectMapper = <strong class="jxr_keyword">new</strong> ObjectMapper();
 <a class="jxr_linenumber" name="L564" href="#L564">564</a>         objectMapper.registerModule(<strong class="jxr_keyword">new</strong> JavaTimeModule());
 <a class="jxr_linenumber" name="L565" href="#L565">565</a>         objectMapper.registerModule(<strong class="jxr_keyword">new</strong> JsonNullableModule());
