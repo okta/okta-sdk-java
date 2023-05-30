@@ -363,7 +363,6 @@ VerifyUserFactorResponse verifyUserFactorResponse =
 
 [//]: # (method: listApplications)
 ```java
-ApplicationApi applicationApi = new ApplicationApi(client);
 List<Application> applications = ApplicationApiHelper.listApplications(client, null, null, null, null, null, true);
 ```
 [//]: # (end: listApplications)
@@ -375,10 +374,10 @@ List<Application> applications = ApplicationApiHelper.listApplications(client, n
 ApplicationApi applicationApi = new ApplicationApi(client);
 
 // get generic application type
-Application genericApp = applicationApi.getApplication("generic-app-id", null);
+Application genericApp = applicationApi.getApplication("app-id", null);
 
 // get sub-class application type
-BookmarkApplication subclassApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
+BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
 ```
 [//]: # (end: getApplication)
 
@@ -404,6 +403,28 @@ BrowserPluginApplication createdApp =
     applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null);
 ```
 [//]: # (end: createSwaApplication)
+
+### List Policies
+
+[//]: # (method: listPolicies)
+```java
+List<Policy> policies = PolicyApiHelper.listPolicies(client, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+```
+[//]: # (end: listPolicies)
+
+### Get a Policy
+
+[//]: # (method: getPolicy)
+```java
+PolicyApi policyApi = new PolicyApi(client);
+
+// get generic policy type
+Policy genericPolicy = PolicyApiHelper.getPolicy(client, "policy-id", null);
+
+// get sub-class policy type
+MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(client, "mfa-policy-id", null);
+```
+[//]: # (end: getPolicy)
 
 ### List System Logs
 [//]: # (method: listSysLogs)

@@ -15,9 +15,11 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.helper.PolicyApiHelper
 import com.okta.sdk.resource.application.OIDCApplicationBuilder
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
+import com.okta.sdk.resource.policy.PasswordPolicyBuilder
 import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.it.util.ITSupport
 import org.openapitools.client.api.ApplicationApi
@@ -208,7 +210,7 @@ class PoliciesIT extends ITSupport {
 
         policy = policyApi.getPolicy(policy.getId(), null)
 
-        assertThat(policy.getStatus(),  is(LifecycleStatus.ACTIVE))
+        assertThat(policy.getStatus(), is(LifecycleStatus.ACTIVE))
 
         // deactivate
         policyApi.deactivatePolicy(policy.getId())
@@ -266,6 +268,54 @@ class PoliciesIT extends ITSupport {
         policies.stream()
             .limit(5)
             .forEach { assertRulesExpanded(it) }
+    }
+
+    @Test
+    void testPolicyApiHelper() {
+
+        PolicyApi policyApi = new PolicyApi(getClient())
+        GroupApi groupApi = new GroupApi(getClient())
+
+        def group = GroupBuilder.instance()
+            .setName("group-" + UUID.randomUUID().toString())
+            .buildAndCreate(groupApi)
+        registerForCleanup(group)
+
+        PasswordPolicy policy = PasswordPolicyBuilder.instance()
+            .setAuthProvider(PasswordPolicyAuthenticationProviderType.OKTA)
+            .setExcludePasswordDictionary(false)
+            .setExcludeUserNameInPassword(false)
+            .setMinPasswordLength(8)
+            .setMinLowerCase(1)
+            .setMinUpperCase(1)
+            .setMinNumbers(1)
+            .setMinSymbols(1)
+            .addGroup(group.getId())
+            .setSkipUnlock(false)
+            .setPasswordExpireWarnDays(85)
+            .setPasswordHistoryCount(5)
+            .setPasswordMaxAgeDays(90)
+            .setPasswordMinMinutes(2)
+            .setPasswordAutoUnlockMinutes(5)
+            .setPasswordMaxAttempts(3)
+            .setShowLockoutFailures(true)
+            .setType(PolicyType.PASSWORD)
+            .setStatus(LifecycleStatus.ACTIVE)
+            .setPriority(1)
+            .setDescription("Dummy policy for sdk test")
+            .setName("SDK policy "+ UUID.randomUUID().toString())
+            .buildAndCreate(policyApi)
+        registerForCleanup(policy)
+
+        // get policy (sub-typed)
+        PasswordPolicy passwordPolicy = PolicyApiHelper.getPolicy(getClient(), policy.getId(), null)
+        assertThat(passwordPolicy, notNullValue())
+        assertThat(passwordPolicy.getType(), is(PolicyType.PASSWORD))
+        assertThat(passwordPolicy.getStatus(), is(LifecycleStatus.ACTIVE))
+
+        // list policies
+        def policies= PolicyApiHelper.listPolicies(getClient(), PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null)
+        assertThat policies, not(empty())
     }
 
     static void assertRulesNotExpanded(Policy policy) {
