@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Collections;
 
 /**
- * Helper class that provide
+ * Helper class that provide typed Application references.
  */
 public class ApplicationApiHelper extends ApplicationApi {
 
