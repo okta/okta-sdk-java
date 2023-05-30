@@ -20,36 +20,13 @@ import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.helper.ApplicationApiHelper;
+import com.okta.sdk.helper.PolicyApiHelper;
 import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
 import org.openapitools.client.ApiClient;
-import org.openapitools.client.api.ApplicationApi;
-import org.openapitools.client.api.GroupApi;
-import org.openapitools.client.api.SystemLogApi;
-import org.openapitools.client.api.UserApi;
-import org.openapitools.client.api.UserFactorApi;
-import org.openapitools.client.model.ActivateFactorRequest;
-import org.openapitools.client.model.Application;
-import org.openapitools.client.model.ApplicationSignOnMode;
-import org.openapitools.client.model.BookmarkApplication;
-import org.openapitools.client.model.BookmarkApplicationSettings;
-import org.openapitools.client.model.BookmarkApplicationSettingsApplication;
-import org.openapitools.client.model.BrowserPluginApplication;
-import org.openapitools.client.model.FactorProvider;
-import org.openapitools.client.model.FactorType;
-import org.openapitools.client.model.Group;
-import org.openapitools.client.model.LogEvent;
-import org.openapitools.client.model.SmsUserFactor;
-import org.openapitools.client.model.SmsUserFactorProfile;
-import org.openapitools.client.model.SwaApplicationSettings;
-import org.openapitools.client.model.SwaApplicationSettingsApplication;
-import org.openapitools.client.model.UpdateUserRequest;
-import org.openapitools.client.model.User;
-import org.openapitools.client.model.UserFactor;
-import org.openapitools.client.model.UserProfile;
-import org.openapitools.client.model.VerifyFactorRequest;
-import org.openapitools.client.model.VerifyUserFactorResponse;
+import org.openapitools.client.api.*;
+import org.openapitools.client.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -248,8 +225,6 @@ public class ReadmeSnippets {
     }
 
     private void listApplications() {
-        ApplicationApi applicationApi = new ApplicationApi(client);
-
         List<Application> applications = ApplicationApiHelper.listApplications(client, null, null, null, null, null, true);
     }
 
@@ -257,10 +232,10 @@ public class ReadmeSnippets {
         ApplicationApi applicationApi = new ApplicationApi(client);
 
         // get generic application type
-        Application genericApp = applicationApi.getApplication("generic-app-id", null);
+        Application genericApp = applicationApi.getApplication("app-id", null);
 
         // get sub-class application type
-        BookmarkApplication subclassApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
+        BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
     }
 
     private void createSwaApplication() {
@@ -281,6 +256,20 @@ public class ReadmeSnippets {
         // create
         BrowserPluginApplication createdApp =
             applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null);
+    }
+
+    private void listPolicies() {
+        List<Policy> policies = PolicyApiHelper.listPolicies(client, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+    }
+
+    private void getPolicy() {
+        PolicyApi policyApi = new PolicyApi(client);
+
+        // get generic policy type
+        Policy genericPolicy = PolicyApiHelper.getPolicy(client, "policy-id", null);
+
+        // get sub-class policy type
+        MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(client, "mfa-policy-id", null);
     }
 
     private void listSysLogs() {
