@@ -456,13 +456,15 @@ public class DefaultClientBuilder implements ClientBuilder {
         if (clientConfig.getProxy() != null) {
             clientBuilder.useSystemProperties();
             clientBuilder.setProxy(new HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
-            final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
-            UsernamePasswordCredentials usernamePasswordCredentials =
-                new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword());
-            credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
-            clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-            clientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
+            if (clientConfig.getProxyUsername() != null) {
+                final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
+                UsernamePasswordCredentials usernamePasswordCredentials =
+                    new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword());
+                credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
+                clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                clientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
+            }
         }
 
         final CloseableHttpClient httpClient = clientBuilder.build();
