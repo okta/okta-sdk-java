@@ -40,7 +40,6 @@ class AppsIT extends ITSupport {
     @Test
     void basicAuthAppTest() {
 
-        ApplicationApi applicationApi = new ApplicationApi(getClient())
         BasicAuthApplication basicAuthApplication = new BasicAuthApplication()
         basicAuthApplication.name("template_basic_auth")
             .label(prefix + UUID.randomUUID().toString())
@@ -54,7 +53,7 @@ class AppsIT extends ITSupport {
         basicAuthApplication.settings(basicApplicationSettings)
 
         BasicAuthApplication createdApp =
-            applicationApi.createApplication(BasicAuthApplication.class, basicAuthApplication, true, null)
+            ApplicationApiHelper.createApplication(BasicAuthApplication.class, getClient(), basicAuthApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -82,7 +81,7 @@ class AppsIT extends ITSupport {
 
         // create
         BookmarkApplication createdApp =
-            applicationApi.createApplication(BookmarkApplication.class, bookmarkApplication, true, null)
+            ApplicationApiHelper.createApplication(BookmarkApplication.class, getClient(), bookmarkApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -93,7 +92,7 @@ class AppsIT extends ITSupport {
 
         // update
         Application toBeUpdatedApp = bookmarkApplication.label("updated-" + bookmarkApplication.getLabel())
-        BookmarkApplication updatedApp = applicationApi.replaceApplication(BookmarkApplication.class, createdApp.getId(), toBeUpdatedApp)
+        BookmarkApplication updatedApp = ApplicationApiHelper.replaceApplication(BookmarkApplication.class, getClient(), createdApp.getId(), toBeUpdatedApp)
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -126,7 +125,7 @@ class AppsIT extends ITSupport {
 
         // create
         BrowserPluginApplication createdApp =
-            applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null)
+            ApplicationApiHelper.createApplication(BrowserPluginApplication.class, getClient(), browserPluginApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -137,7 +136,7 @@ class AppsIT extends ITSupport {
 
         // update
         Application toBeUpdatedApp = browserPluginApplication.label("updated-" + browserPluginApplication.getLabel())
-        BrowserPluginApplication updatedApp = applicationApi.replaceApplication(BrowserPluginApplication.class, createdApp.getId(), toBeUpdatedApp)
+        BrowserPluginApplication updatedApp = ApplicationApiHelper.replaceApplication(BrowserPluginApplication.class, getClient(), createdApp.getId(), toBeUpdatedApp)
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -190,7 +189,7 @@ class AppsIT extends ITSupport {
 
         // create
         OpenIdConnectApplication createdApp =
-            applicationApi.createApplication(OpenIdConnectApplication.class, openIdConnectApplication, true, null)
+            ApplicationApiHelper.createApplication(OpenIdConnectApplication.class, getClient(), openIdConnectApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -201,7 +200,7 @@ class AppsIT extends ITSupport {
 
         // update
         Application toBeUpdatedApp = openIdConnectApplication.label("updated-" + openIdConnectApplication.getLabel())
-        OpenIdConnectApplication updatedApp = applicationApi.replaceApplication(OpenIdConnectApplication.class, createdApp.getId(), toBeUpdatedApp)
+        OpenIdConnectApplication updatedApp = ApplicationApiHelper.replaceApplication(OpenIdConnectApplication.class, getClient(), createdApp.getId(), toBeUpdatedApp)
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -303,7 +302,7 @@ class AppsIT extends ITSupport {
         samlApplication.signOnMode(ApplicationSignOnMode.SAML_2_0)
 
         // create
-        SamlApplication createdApp = applicationApi.createApplication(SamlApplication.class, samlApplication, true, null)
+        SamlApplication createdApp = ApplicationApiHelper.createApplication(SamlApplication.class, getClient(), samlApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -314,7 +313,7 @@ class AppsIT extends ITSupport {
 
         // update
         Application toBeUpdatedApp = samlApplication.label("updated-" + samlApplication.getLabel())
-        SamlApplication updatedApp = applicationApi.replaceApplication(SamlApplication.class, createdApp.getId(), toBeUpdatedApp)
+        SamlApplication updatedApp = ApplicationApiHelper.replaceApplication(SamlApplication.class, getClient(), createdApp.getId(), toBeUpdatedApp)
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -332,10 +331,9 @@ class AppsIT extends ITSupport {
     @Test
     void testUploadApplicationLogo() {
         /**
-         * Currently is no way to check the logo.
+         * Currently there is no way to check the logo.
          * Just make sure that no exception was thrown during the upload.
          */
-        ApplicationApi applicationApi = new ApplicationApi(getClient())
 
         SamlApplication org2OrgApplication = new SamlApplication()
         org2OrgApplication.name("okta_org2org")
@@ -350,7 +348,7 @@ class AppsIT extends ITSupport {
         samlApplicationSettings.app(samlApplicationSettingsApplication)
         org2OrgApplication.settings(samlApplicationSettings)
 
-        SamlApplication createdApp = applicationApi.createApplication(SamlApplication.class, org2OrgApplication, true, null)
+        SamlApplication createdApp = ApplicationApiHelper.createApplication(SamlApplication.class, getClient(), org2OrgApplication, true, null)
         registerForCleanup(createdApp)
 
 //        File file = new File("/tmp/okta_logo_favicon.png")
@@ -362,7 +360,6 @@ class AppsIT extends ITSupport {
     @Test
     void testApplicationApiHelper() {
 
-        ApplicationApi applicationApi = new ApplicationApi(getClient())
         BookmarkApplication bookmarkApplication = new BookmarkApplication()
         bookmarkApplication.name("bookmark")
             .label(prefix + UUID.randomUUID().toString())
@@ -377,7 +374,7 @@ class AppsIT extends ITSupport {
 
         // create
         BookmarkApplication createdApp =
-            applicationApi.createApplication(BookmarkApplication.class, bookmarkApplication, true, null)
+            ApplicationApiHelper.createApplication(BookmarkApplication.class, getClient(), bookmarkApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())

@@ -27,9 +27,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 
 /**
- * Helper class that provide typed Application references.
+ * Helper class that enables working with sub-typed {@link Application} references.
  */
 public class ApplicationApiHelper extends ApplicationApi {
+
+    public static <T extends Application> T createApplication(Class<?> clazz, ApplicationApi applicationApi, Application application, Boolean activate, String oktaAccessGatewayAgent) throws ApiException {
+        return (T) getObjectMapper().convertValue(applicationApi.createApplication(application, activate, oktaAccessGatewayAgent), clazz);
+    }
+
+    public static <T extends Application> T createApplication(Class<?> clazz, ApiClient apiClient, Application application, Boolean activate, String oktaAccessGatewayAgent) throws ApiException {
+        ApplicationApi applicationApi = new ApplicationApi(apiClient);
+        return (T) getObjectMapper().convertValue(applicationApi.createApplication(application, activate, oktaAccessGatewayAgent), clazz);
+    }
 
     public static <T extends Application> T getApplication(ApiClient apiClient, String appId, String expand) throws ApiException {
 
@@ -61,12 +70,13 @@ public class ApplicationApiHelper extends ApplicationApi {
         };
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
+        String[] localVarAuthNames = new String[]{"apiToken", "oauth2"};
 
-        TypeReference<T> localVarReturnType = new TypeReference<T>() {};
+        TypeReference<T> localVarReturnType = new TypeReference<T>() {
+        };
         Application application = apiClient.invokeAPI(
             localVarPath,
-            "GET",
+            HttpMethod.GET.name(),
             localVarQueryParams,
             localVarCollectionQueryParams,
             localVarQueryStringJoiner.toString(),
@@ -107,6 +117,11 @@ public class ApplicationApiHelper extends ApplicationApi {
         return (T) application;
     }
 
+    public static <T extends Application> T replaceApplication(Class<?> clazz, ApiClient apiClient, String appId, Application application) throws ApiException {
+        ApplicationApi applicationApi = new ApplicationApi(apiClient);
+        return (T) getObjectMapper().convertValue(applicationApi.replaceApplication(appId, application), clazz);
+    }
+
     public static List<Application> listApplications(ApiClient apiClient, String q, String after, Integer limit, String filter, String expand, Boolean includeNonDeleted) throws ApiException {
 
         // create path and map variables
@@ -142,7 +157,7 @@ public class ApplicationApiHelper extends ApplicationApi {
         };
         List<Application> applications = apiClient.invokeAPI(
             localVarPath,
-            "GET",
+            HttpMethod.GET.name(),
             localVarQueryParams,
             localVarCollectionQueryParams,
             localVarQueryStringJoiner.toString(),

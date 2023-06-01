@@ -41,8 +41,17 @@ import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.DefaultAuthenticationStrategy;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.util.Timeout;
 
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
@@ -311,16 +320,35 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
-        //ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig), this.cacheManager, this.clientConfig);
-//        final CloseableHttpClient httpclient = HttpClients.custom()
-//            .setConnectionManager(connManager)
-//            .setDefaultCookieStore(cookieStore)
-//            .setDefaultCredentialsProvider(credentialsProvider)
-//            .setProxy(new HttpHost("myproxy", 8080))
-//            .setDefaultRequestConfig(defaultRequestConfig)
-//            .build();
+        HttpClientBuilder clientBuilder = HttpClients.custom();
 
-        final CloseableHttpClient httpclient = HttpClients.createDefault();
+        RequestConfig requestConfig = RequestConfig.custom()
+            .setConnectTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
+            .setResponseTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
+            .setConnectionRequestTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
+            .build();
+
+        if (clientConfig.getProxy() != null) {
+            clientBuilder.useSystemProperties();
+            clientBuilder.setProxy(new HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
+            if (clientConfig.getProxyUsername() != null) {
+                final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
+                UsernamePasswordCredentials usernamePasswordCredentials =
+                    new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword().toCharArray());
+                credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
+                clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                clientBuilder.setProxyAuthenticationStrategy(new DefaultAuthenticationStrategy());
+            }
+        }
+
+        PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
+
+        CloseableHttpClient httpclient = clientBuilder
+            .setDefaultRequestConfig(requestConfig)
+            .setConnectionManager(poolingHttpClientConnectionManager)
+            .build();
+
         ApiClient apiClient = new ApiClient(httpclient);
         apiClient.setBasePath(this.clientConfig.getBaseUrl());
 
@@ -331,7 +359,7 @@ public class DefaultClientBuilder implements ClientBuilder {
                 this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
             }
 
-            apiClient.setApiKeyPrefix("SSWS");
+            apiClient.setApiKeyPrefix(AuthenticationScheme.SSWS.name());
             apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
         } else {
             this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
@@ -379,43 +407,6 @@ public class DefaultClientBuilder implements ClientBuilder {
             Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
         }
     }
-
-//    private RestTemplate restTemplate(ClientConfiguration clientConfig) {
-//
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-//        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
-//        objectMapper.registerModule(new JavaTimeModule());
-//        objectMapper.registerModule(new JsonNullableModule());
-//
-//        SimpleModule module = new SimpleModule();
-//        module.addSerializer(UserProfile.class, new UserProfileSerializer());
-//        module.addDeserializer(UserProfile.class, new UserProfileDeserializer());
-//        objectMapper.registerModule(module);
-//
-//        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter =
-//            new MappingJackson2HttpMessageConverter(objectMapper);
-//
-//        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(
-//            MediaType.APPLICATION_JSON,
-//            MediaType.parseMediaType("application/x-pem-file"),
-//            MediaType.parseMediaType("application/x-x509-ca-cert"),
-//            MediaType.parseMediaType("application/pkix-cert")));
-//
-//        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-//        messageConverters.add(mappingJackson2HttpMessageConverter);
-//
-//        RestTemplate restTemplate = new RestTemplate(messageConverters);
-//        restTemplate.setErrorHandler(new ErrorHandler());
-//        restTemplate.setRequestFactory(requestFactory(clientConfig));
-//
-//        DefaultUriBuilderFactory uriTemplateHandler = new DefaultUriBuilderFactory();
-//        uriTemplateHandler.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
-//        restTemplate.setUriTemplateHandler(uriTemplateHandler);
-//
-//        return restTemplate;
-//    }
 
 //    private BufferingClientHttpRequestFactory requestFactory(ClientConfiguration clientConfig) {
 //

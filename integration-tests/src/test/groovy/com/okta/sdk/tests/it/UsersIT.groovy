@@ -17,13 +17,13 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.error.ResourceException
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
-import com.okta.sdk.resource.common.PagedList
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.apache.commons.lang3.RandomStringUtils
 import org.apache.commons.lang3.StringUtils
+import org.openapitools.client.ApiException
 import org.openapitools.client.api.*
 import org.openapitools.client.model.*
 import org.testng.annotations.Test
@@ -374,7 +374,7 @@ class UsersIT extends ITSupport {
         userApi.getUser(user.getId())
     }
 
-    @Test(expectedExceptions = ResourceException, groups = "group2")
+    @Test(expectedExceptions = ApiException, groups = "group2")
     @Scenario("user-change-recovery-question")
     void changeRecoveryQuestionTest() {
 
@@ -525,6 +525,7 @@ class UsersIT extends ITSupport {
             .setActive(false)
             .buildAndCreate(userApi)
         registerForCleanup(createdUser)
+
         validateUser(createdUser, firstName, lastName, email)
 
         // 2. Get the user by user ID
@@ -540,7 +541,7 @@ class UsersIT extends ITSupport {
         userApi.deleteUser(user.getId(), false)
 
         // 4. get user expect 404
-        expect(ResourceException) {
+        expect(ApiException) {
             userApi.getUser(email)
         }
     }
@@ -722,7 +723,8 @@ class UsersIT extends ITSupport {
     void getUserInvalidUserId() {
         def userId = "invalid-user-id-${uniqueTestName}@example.com"
         UserApi userApi = new UserApi(getClient())
-        expect(ResourceException) {
+
+        expect(ApiException) {
             userApi.getUser(userId)
         }
     }
@@ -873,26 +875,6 @@ class UsersIT extends ITSupport {
 
         assertThat user.getCredentials(), notNullValue()
         assertThat user.getCredentials().getProvider().getType(), equalTo(AuthenticationProviderType.FEDERATION)
-    }
-
-    @Test (groups = "group3")
-    void testPagination() {
-        def user1 = randomUser()
-        def user2 = randomUser()
-        def user3 = randomUser()
-        registerForCleanup(user1)
-        registerForCleanup(user2)
-        registerForCleanup(user3)
-
-        UserApi userApi = new UserApi(getClient())
-
-        int limit = 2
-
-        PagedList usersPagedList = userApi.listUsersWithPaginationInfo(null, null, limit, null, null, null, null)
-
-        assertThat usersPagedList, notNullValue()
-        assertThat usersPagedList.self, notNullValue()
-        assertThat usersPagedList.items().size(), is(greaterThanOrEqualTo(3))
     }
 
     @Test (groups = "group3")

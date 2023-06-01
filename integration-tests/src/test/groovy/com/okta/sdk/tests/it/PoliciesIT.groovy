@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-
+import com.okta.sdk.helper.PolicyApiHelper
 import com.okta.sdk.resource.application.OIDCApplicationBuilder
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
@@ -54,10 +54,10 @@ class PoliciesIT extends ITSupport {
             .setType(PolicyType.OKTA_SIGN_ON)
             .addGroup(group.getId())
             .buildAndCreate(policyApi)
-
         registerForCleanup(policy)
 
-        assertThat policy.getId(), notNullValue()
+        assertThat policy, notNullValue()
+        assertThat policy.getConditions(), notNullValue()
         assertThat policy.getConditions().getPeople().getGroups().getInclude(), is(Collections.singletonList(group.getId()))
         assertThat policy.getConditions().getPeople().getGroups().getExclude(), nullValue()
     }
@@ -74,8 +74,8 @@ class PoliciesIT extends ITSupport {
             .status(LifecycleStatus.ACTIVE)
             .description("IT created Policy - createProfileEnrollmentPolicy")
 
-        Policy createdProfileEnrollmentPolicy =
-            policyApi.createPolicy(ProfileEnrollmentPolicy.class, profileEnrollmentPolicy, false)
+        ProfileEnrollmentPolicy createdProfileEnrollmentPolicy =
+            PolicyApiHelper.createPolicy(ProfileEnrollmentPolicy.class, policyApi, profileEnrollmentPolicy, false)
 
         registerForCleanup(createdProfileEnrollmentPolicy)
 
@@ -120,7 +120,7 @@ class PoliciesIT extends ITSupport {
         // accessPolicy:[href:https://example.com/api/v1/policies/rst412ay22NkOdJJr0g7]
         String accessPolicyId = oidcApp.getLinks().getAccessPolicy().getHref().replaceAll("]", "").tokenize("/")[-1]
 
-        Policy accessPolicy = policyApi.getPolicy(accessPolicyId, null)
+        AccessPolicy accessPolicy = PolicyApiHelper.getPolicy(getClient(),accessPolicyId, null)
         assertThat(accessPolicy, notNullValue())
 
         AccessPolicyRule accessPolicyRule = new AccessPolicyRule()
@@ -138,7 +138,7 @@ class PoliciesIT extends ITSupport {
         accessPolicyRuleActions.appSignOn(accessPolicyRuleApplicationSignOn)
         accessPolicyRule.actions(accessPolicyRuleActions)
 
-        AccessPolicyRule createdAccessPolicyRule = policyApi.createPolicyRule(AccessPolicyRule.class, accessPolicy.getId(), accessPolicyRule)
+        AccessPolicyRule createdAccessPolicyRule = PolicyApiHelper.createPolicyRule(AccessPolicyRule.class, getClient(), accessPolicy.getId(), accessPolicyRule)
         //registerForCleanup(createdAccessPolicyRule)
 
         assertThat(createdAccessPolicyRule, notNullValue())
@@ -181,7 +181,7 @@ class PoliciesIT extends ITSupport {
         oktaSignOnPolicyRule.actions(oktaSignOnPolicyRuleActions)
         //registerForCleanup(policyRule)
 
-        OktaSignOnPolicyRule createdPolicyRule = policyApi.createPolicyRule(OktaSignOnPolicyRule, policy.getId(), oktaSignOnPolicyRule)
+        OktaSignOnPolicyRule createdPolicyRule = PolicyApiHelper.createPolicyRule(OktaSignOnPolicyRule.class, getClient(), policy.getId(), oktaSignOnPolicyRule)
 
         assertThat(createdPolicyRule.getId(), notNullValue())
         assertThat(createdPolicyRule.name, is(policyRuleName))

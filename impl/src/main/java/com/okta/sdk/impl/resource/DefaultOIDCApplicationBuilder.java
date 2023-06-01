@@ -35,6 +35,7 @@ import org.openapitools.client.model.OpenIdConnectApplicationSettings;
 import org.openapitools.client.model.OpenIdConnectApplicationSettingsClient;
 import org.openapitools.client.model.OpenIdConnectApplicationSettingsClientKeys;
 import org.openapitools.client.model.OpenIdConnectApplicationType;
+import com.okta.sdk.helper.ApplicationApiHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,7 +182,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     @Override
     public OpenIdConnectApplication buildAndCreate(ApplicationApi client){
         try {
-            return (OpenIdConnectApplication) client.createApplication(build(), false, null);
+            return ApplicationApiHelper.createApplication(OpenIdConnectApplication.class, client, build(), false, null);
         } catch (ApiException e) {
             throw new RuntimeException(e); //TODO fix me!
         }
