@@ -15,17 +15,21 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.okta.commons.http.MediaType
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder
 import com.okta.sdk.resource.policy.PolicyBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
 import com.okta.sdk.tests.Scenario
+import org.openapitools.client.Pair
 import org.openapitools.client.api.GroupApi
 import org.openapitools.client.api.PolicyApi
 import org.openapitools.client.api.UserApi
 import org.openapitools.client.model.CreateUserRequest
 import org.openapitools.client.model.Group
+import org.openapitools.client.model.HttpMethod
 import org.openapitools.client.model.LifecycleStatus
 import org.openapitools.client.model.OktaSignOnPolicy
 import org.openapitools.client.model.PasswordPolicy
@@ -33,14 +37,10 @@ import org.openapitools.client.model.Policy
 import org.openapitools.client.model.PolicyType
 import org.openapitools.client.model.User
 import org.openapitools.client.model.UserProfile
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
-import org.springframework.util.LinkedMultiValueMap
+
 import org.testng.ITestContext
 import org.testng.ITestResult
 import org.testng.annotations.AfterMethod
@@ -211,21 +211,23 @@ abstract class ITSupport implements ClientProvider {
 
     boolean isOIEEnvironment() {
 
-        ResponseEntity<Map<String, Object>> responseEntity = getClient().invokeAPI("/.well-known/okta-organization",
-            HttpMethod.GET,
-            Collections.emptyMap(),
+        Map<String, Object> response = getClient().invokeAPI(
+            "/.well-known/okta-organization",
+            HttpMethod.GET.name(),
+            new ArrayList<Pair>(),
+            new ArrayList<Pair>(),
             null,
             null,
-            new HttpHeaders(),
-            new LinkedMultiValueMap<String, String>(),
-            null,
-            Collections.singletonList(MediaType.APPLICATION_JSON),
+            new HashMap<String, String>(),
+            new HashMap<String, String>(),
+            new HashMap<String, Object>(),
+            MediaType.APPLICATION_JSON_VALUE,
             null,
             new String[]{ "apiToken" },
-            new ParameterizedTypeReference<Map<String, Object>>() {})
+            new TypeReference<Map<String, Object>>() {})
 
-        if (responseEntity != null && responseEntity.getBody() != null) {
-            String pipeline = responseEntity.getBody().get("pipeline")
+        if (response != null && response.containsKey("pipeline")) {
+            String pipeline = response.get("pipeline")
             if (Objects.equals(pipeline, "idx")) {
                 return true
             }

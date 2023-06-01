@@ -17,6 +17,7 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.group.GroupBuilder;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.GroupApi;
 import org.openapitools.client.model.Group;
 import org.openapitools.client.model.GroupProfile;
@@ -47,6 +48,10 @@ public class DefaultGroupBuilder implements GroupBuilder {
         if (Strings.hasText(description)) groupProfile.setDescription(description);
         group.setProfile(groupProfile);
 
-        return client.createGroup(group);
+        try {
+            return client.createGroup(group);
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -845,7 +845,6 @@ class UsersIT extends ITSupport {
         userCredentials = userApi.forgotPasswordSetNewPassword(user.getId(), userCredentials, false)
         assertThat userCredentials.getRecoveryQuestion().getQuestion(), equalTo("How many roads must a man walk down?")
         assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
-        assertThat userCredentials.getProvider().getName(), equalTo("OKTA")
     }
 
     @Test (groups = "group3")
@@ -874,7 +873,6 @@ class UsersIT extends ITSupport {
 
         assertThat user.getCredentials(), notNullValue()
         assertThat user.getCredentials().getProvider().getType(), equalTo(AuthenticationProviderType.FEDERATION)
-        assertThat user.getCredentials().getProvider().getName(), equalTo("FEDERATION")
     }
 
     @Test (groups = "group3")

@@ -18,6 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.user.UserBuilder;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.UserApi;
 import org.openapitools.client.model.AuthenticationProvider;
 import org.openapitools.client.model.CreateUserRequest;
@@ -465,6 +466,10 @@ public class DefaultUserBuilder implements UserBuilder {
 
     @Override
     public User buildAndCreate(UserApi client) {
-        return client.createUser(build(), active, provider != null, nextLogin);
+        try {
+            return client.createUser(build(), active, provider != null, nextLogin);
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

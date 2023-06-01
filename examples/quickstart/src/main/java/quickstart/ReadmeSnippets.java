@@ -20,24 +20,16 @@ import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.helper.ApplicationApiHelper;
-import com.okta.sdk.helper.PolicyApiHelper;
-import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
 import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.*;
 import org.openapitools.client.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -80,13 +72,13 @@ public class ReadmeSnippets {
             .build();
     }
 
-    private void getUser() {
+    private void getUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 
         User user = userApi.getUser("userId");
     }
 
-    private void listAllUsers() {
+    private void listAllUsers() throws ApiException {
         UserApi userApi = new UserApi(client);
         List<User> users = userApi.listUsers(null, null, 5, null, null, null, null);
 
@@ -97,7 +89,7 @@ public class ReadmeSnippets {
             });
     }
 
-    private void userSearch() {
+    private void userSearch() throws ApiException {
         UserApi userApi = new UserApi(client);
         // search by email
         List<User> users = userApi.listUsers(null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
@@ -127,7 +119,7 @@ public class ReadmeSnippets {
             .buildAndCreate(userApi);
     }
 
-    private void updateUser() {
+    private void updateUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 
         UpdateUserRequest updateUserRequest = new UpdateUserRequest();
@@ -138,7 +130,7 @@ public class ReadmeSnippets {
         userApi.updateUser(user.getId(), updateUserRequest, true);
     }
 
-    private void deleteUser() {
+    private void deleteUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 
         // deactivate first
@@ -147,7 +139,7 @@ public class ReadmeSnippets {
         userApi.deleteUser(user.getId(), false);
     }
 
-    private void listUsersGroup() {
+    private void listUsersGroup() throws ApiException {
         GroupApi groupApi = new GroupApi(client);
         List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null, null, null);
     }
@@ -161,7 +153,7 @@ public class ReadmeSnippets {
             .buildAndCreate(groupApi);
     }
 
-    private void assignUserToGroup() {
+    private void assignUserToGroup() throws ApiException {
         // create user
         UserApi userApi = new UserApi(client);
 
@@ -183,13 +175,13 @@ public class ReadmeSnippets {
         groupApi.assignUserToGroup(group.getId(), user.getId());
     }
 
-    private void listUserFactors() {
+    private void listUserFactors() throws ApiException {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
         List<UserFactor> userFactors = userFactorApi.listFactors("userId");
     }
 
-    private void enrollUserInFactor() {
+    private void enrollUserInFactor() throws ApiException {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
         SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
@@ -203,7 +195,7 @@ public class ReadmeSnippets {
         UserFactor userFactor = userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
     }
 
-    private void activateFactor() {
+    private void activateFactor() throws ApiException {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
         UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
@@ -213,7 +205,7 @@ public class ReadmeSnippets {
         UserFactor activatedUserFactor = userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
     }
 
-    private void verifyFactor() {
+    private void verifyFactor() throws ApiException {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
         UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
@@ -224,11 +216,11 @@ public class ReadmeSnippets {
             userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
     }
 
-    private void listApplications() {
+    private void listApplications() throws ApiException {
         List<Application> applications = ApplicationApiHelper.listApplications(client, null, null, null, null, null, true);
     }
 
-    private void getApplication() {
+    private void getApplication() throws ApiException {
         ApplicationApi applicationApi = new ApplicationApi(client);
 
         // get generic application type
@@ -238,96 +230,79 @@ public class ReadmeSnippets {
         BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
     }
 
-    private void createSwaApplication() {
-        ApplicationApi applicationApi = new ApplicationApi(client);
+//    private void createSwaApplication() {
+//        ApplicationApi applicationApi = new ApplicationApi(client);
+//
+//        SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
+//        swaApplicationSettingsApplication.buttonField("btn-login")
+//            .passwordField("txtbox-password")
+//            .usernameField("txtbox-username")
+//            .url("https://example.com/login.html");
+//        SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings();
+//        swaApplicationSettings.app(swaApplicationSettingsApplication);
+//        BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication();
+//        browserPluginApplication.name("template_swa");
+//        browserPluginApplication.label("Sample Plugin App");
+//        browserPluginApplication.settings(swaApplicationSettings);
+//
+//        // create
+//        BrowserPluginApplication createdApp =
+//            applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null);
+//    }
 
-        SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
-        swaApplicationSettingsApplication.buttonField("btn-login")
-            .passwordField("txtbox-password")
-            .usernameField("txtbox-username")
-            .url("https://example.com/login.html");
-        SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings();
-        swaApplicationSettings.app(swaApplicationSettingsApplication);
-        BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication();
-        browserPluginApplication.name("template_swa");
-        browserPluginApplication.label("Sample Plugin App");
-        browserPluginApplication.settings(swaApplicationSettings);
+//    private void listPolicies() {
+//        List<Policy> policies = PolicyApiHelper.listPolicies(client, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+//    }
+//
+//    private void getPolicy() {
+//        PolicyApi policyApi = new PolicyApi(client);
+//
+//        // get generic policy type
+//        Policy genericPolicy = PolicyApiHelper.getPolicy(client, "policy-id", null);
+//
+//        // get sub-class policy type
+//        MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(client, "mfa-policy-id", null);
+//    }
 
-        // create
-        BrowserPluginApplication createdApp =
-            applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null);
-    }
-
-    private void listPolicies() {
-        List<Policy> policies = PolicyApiHelper.listPolicies(client, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
-    }
-
-    private void getPolicy() {
-        PolicyApi policyApi = new PolicyApi(client);
-
-        // get generic policy type
-        Policy genericPolicy = PolicyApiHelper.getPolicy(client, "policy-id", null);
-
-        // get sub-class policy type
-        MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(client, "mfa-policy-id", null);
-    }
-
-    private void listSysLogs() {
+    private void listSysLogs() throws ApiException {
         SystemLogApi systemLogApi = new SystemLogApi(client);
 
         // use a filter (start date, end date, filter, or query, sort order) all options are nullable
         List<LogEvent> logEvents = systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
     }
 
-    private void callAnotherEndpoint() {
-
-        ApiClient apiClient = buildApiClient("orgBaseUrl", "apiKey");
-
-        // Create a BookmarkApplication
-        BookmarkApplication bookmarkApplication = new BookmarkApplication();
-        bookmarkApplication.setName("bookmark");
-        bookmarkApplication.setLabel("Sample Bookmark App");
-        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
-        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
-        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
-            new BookmarkApplicationSettingsApplication();
-        bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
-        bookmarkApplicationSettingsApplication.setRequestIntegration(false);
-        bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
-        bookmarkApplication.setSettings(bookmarkApplicationSettings);
-
-        ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
-            HttpMethod.POST,
-            Collections.emptyMap(),
-            null,
-            bookmarkApplication,
-            new HttpHeaders(),
-            new LinkedMultiValueMap<>(),
-            null,
-            Collections.singletonList(MediaType.APPLICATION_JSON),
-            MediaType.APPLICATION_JSON,
-            new String[]{"API Token"},
-            new ParameterizedTypeReference<BookmarkApplication>() {});
-
-        BookmarkApplication createdApp = responseEntity.getBody();
-    }
-
-    private void paging() {
-
-        UserApi userApi = new UserApi(client);
-
-        int limit = 2;
-
-        PagedList<User> pagedUserList = userApi.listUsersWithPaginationInfo(null, null, limit, null, null, null, null);
-
-        // loop through all of them
-        for (User tmpUser : pagedUserList.getItems()) {
-            log.info("User: {}", tmpUser.getProfile().getEmail());
-        }
-
-        // or stream
-        pagedUserList.getItems().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
-    }
+//    private void callAnotherEndpoint() {
+//
+//        ApiClient apiClient = buildApiClient("orgBaseUrl", "apiKey");
+//
+//        // Create a BookmarkApplication
+//        BookmarkApplication bookmarkApplication = new BookmarkApplication();
+//        bookmarkApplication.setName("bookmark");
+//        bookmarkApplication.setLabel("Sample Bookmark App");
+//        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
+//        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
+//        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
+//            new BookmarkApplicationSettingsApplication();
+//        bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
+//        bookmarkApplicationSettingsApplication.setRequestIntegration(false);
+//        bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
+//        bookmarkApplication.setSettings(bookmarkApplicationSettings);
+//
+//        ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
+//            HttpMethod.POST,
+//            Collections.emptyMap(),
+//            null,
+//            bookmarkApplication,
+//            new HttpHeaders(),
+//            new LinkedMultiValueMap<>(),
+//            null,
+//            Collections.singletonList(MediaType.APPLICATION_JSON),
+//            MediaType.APPLICATION_JSON,
+//            new String[]{"API Token"},
+//            new ParameterizedTypeReference<BookmarkApplication>() {});
+//
+//        BookmarkApplication createdApp = responseEntity.getBody();
+//    }
 
     private void complexCaching() {
         Caches.newCacheManager()

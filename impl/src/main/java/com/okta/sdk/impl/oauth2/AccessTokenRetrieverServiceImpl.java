@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.impl.oauth2;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.okta.commons.http.MediaType;
 import com.okta.commons.http.authc.DisabledAuthenticator;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Strings;
@@ -32,15 +34,10 @@ import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.openapitools.client.ApiClient;
+import org.openapitools.client.Pair;
+import org.openapitools.client.model.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -53,10 +50,7 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Implementation of {@link AccessTokenRetrieverService} interface.
@@ -90,26 +84,26 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         String scope = String.join(" ", tokenClientConfiguration.getScopes());
 
         try {
-            MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-            queryParams.add("grant_type", "client_credentials");
-            queryParams.add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
-            queryParams.add("client_assertion", signedJwt);
-            queryParams.add("scope", scope);
+            List<Pair> queryParams = new LinkedList<>();
+            queryParams.add(new Pair("grant_type", "client_credentials"));
+            queryParams.add(new Pair("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"));
+            queryParams.add(new Pair("client_assertion", signedJwt));
+            queryParams.add(new Pair("scope", scope));
 
-            ResponseEntity<OAuth2AccessToken> responseEntity = apiClient.invokeAPI(TOKEN_URI,
-                HttpMethod.POST,
-                Collections.emptyMap(),
+            OAuth2AccessToken oAuth2AccessToken = apiClient.invokeAPI(
+                TOKEN_URI,
+                HttpMethod.POST.name(),
                 queryParams,
+                new LinkedList<>(),
                 null,
-                new HttpHeaders(),
-                new LinkedMultiValueMap<>(),
                 null,
-                Collections.singletonList(MediaType.APPLICATION_JSON),
-                MediaType.APPLICATION_FORM_URLENCODED,
+                new LinkedHashMap<>(),
+                new LinkedHashMap<>(),
+                new LinkedHashMap<>(),
+                MediaType.APPLICATION_JSON_VALUE,
+                MediaType.APPLICATION_FORM_URLENCODED_VALUE,
                 new String[] { "oauth2" },
-                new ParameterizedTypeReference<OAuth2AccessToken>() {});
-
-            OAuth2AccessToken oAuth2AccessToken = responseEntity.getBody();
+                new TypeReference<OAuth2AccessToken>() {});
 
             log.debug("Got OAuth2 access token for client id {} from {}",
                 tokenClientConfiguration.getClientId(), tokenClientConfiguration.getBaseUrl() + TOKEN_URI);

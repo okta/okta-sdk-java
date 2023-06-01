@@ -15,22 +15,16 @@
  */
 package com.okta.sdk.resource.common;
 
-import com.okta.commons.lang.Assert;
-import org.springframework.http.ResponseEntity;
-
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 public class PagedList<T> {
-
     private List<T> items;
     private String self;
     private String nextPage;
@@ -77,28 +71,6 @@ public class PagedList<T> {
         return list.stream()
             .flatMap(e -> e instanceof List ? flatten((List) e).stream() : Stream.of(e))
             .collect(Collectors.toList());
-    }
-
-    public static PagedList constructPagedList(ResponseEntity responseEntity) {
-
-        PagedList pagedList = new PagedList();
-        Assert.notNull(responseEntity);
-        pagedList.addItems(Collections.singletonList(responseEntity.getBody()));
-        List<String> linkHeaders = responseEntity.getHeaders().get("link");
-        Assert.notNull(linkHeaders);
-        for (String link : linkHeaders) {
-            String[] parts = link.split("; *");
-            String url = parts[0]
-                .replaceAll("<", "")
-                .replaceAll(">", "");
-            String rel = parts[1];
-            if (rel.equals("rel=\"next\"")) {
-                pagedList.setNextPage(url);
-            } else if (rel.equals("rel=\"self\"")) {
-                pagedList.setSelf(url);
-            }
-        }
-        return pagedList;
     }
 
     /**

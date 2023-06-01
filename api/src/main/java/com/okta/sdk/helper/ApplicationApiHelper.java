@@ -15,64 +15,73 @@
  */
 package com.okta.sdk.helper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Pair;
 import org.openapitools.client.api.ApplicationApi;
 import org.openapitools.client.model.*;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
-import org.springframework.http.HttpMethod;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
 
-import java.util.Objects;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.*;
 
 /**
  * Helper class that provide typed Application references.
  */
 public class ApplicationApiHelper extends ApplicationApi {
 
-    public static <T extends Application> T getApplication(ApiClient apiClient, String appId, String expand) throws RestClientException {
+    public static <T extends Application> T getApplication(ApiClient apiClient, String appId, String expand) throws ApiException {
 
-        // verify the required parameter 'appId' is set ''
+        // verify the required parameter 'appId' is set
         if (appId == null) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'appId' when calling getApplication");
+            throw new ApiException(400, "Missing the required parameter 'appId' when calling getApplication");
         }
 
         // create path and map variables
-        final Map<String, Object> uriVariables = new HashMap<>();
-        uriVariables.put("appId", appId);
+        String localVarPath = "/api/v1/apps/{appId}"
+            .replaceAll("\\{" + "appId" + "\\}", apiClient.escapeString(appId.toString()));
 
-        final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<>();
-        final HttpHeaders localVarHeaderParams = new HttpHeaders();
-        final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<>();
-        final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<>();
+        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "expand", expand));
+        localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
 
         final String[] localVarAccepts = {
             "application/json"
         };
-        final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        final String[] localVarContentTypes = {  };
-        final MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+        final String[] localVarContentTypes = {
+
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
         String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
 
-        ParameterizedTypeReference<T> localReturnType = new ParameterizedTypeReference<T>() {};
-        ResponseEntity<T> respEntity = apiClient.invokeAPI("/api/v1/apps/{appId}", HttpMethod.GET, uriVariables,
-            localVarQueryParams, null, localVarHeaderParams, localVarCookieParams, localVarFormParams,
-            localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
+        TypeReference<T> localVarReturnType = new TypeReference<T>() {};
+        Application application = apiClient.invokeAPI(
+            localVarPath,
+            "GET",
+            localVarQueryParams,
+            localVarCollectionQueryParams,
+            localVarQueryStringJoiner.toString(),
+            null,
+            localVarHeaderParams,
+            localVarCookieParams,
+            localVarFormParams,
+            localVarAccept,
+            localVarContentType,
+            localVarAuthNames,
+            localVarReturnType
+        );
+
         ObjectMapper objectMapper = getObjectMapper();
 
-        Application application = respEntity.getBody();
         ApplicationSignOnMode applicationSignOnMode = application.getSignOnMode();
 
         switch (Objects.requireNonNull(applicationSignOnMode)) {
@@ -98,33 +107,55 @@ public class ApplicationApiHelper extends ApplicationApi {
         return (T) application;
     }
 
-    public static List<Application> listApplications(ApiClient apiClient, String q, String after, Integer limit, String filter, String expand, Boolean includeNonDeleted) throws RestClientException {
+    public static List<Application> listApplications(ApiClient apiClient, String q, String after, Integer limit, String filter, String expand, Boolean includeNonDeleted) throws ApiException {
 
-        final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<>();
-        final HttpHeaders localVarHeaderParams = new HttpHeaders();
-        final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<>();
-        final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<>();
+        // create path and map variables
+        String localVarPath = "/api/v1/apps";
 
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "q", q));
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "after", after));
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "limit", limit));
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "filter", filter));
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "expand", expand));
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "includeNonDeleted", includeNonDeleted));
+        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        localVarQueryParams.addAll(apiClient.parameterToPair("q", q));
+        localVarQueryParams.addAll(apiClient.parameterToPair("after", after));
+        localVarQueryParams.addAll(apiClient.parameterToPair("limit", limit));
+        localVarQueryParams.addAll(apiClient.parameterToPair("filter", filter));
+        localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
+        localVarQueryParams.addAll(apiClient.parameterToPair("includeNonDeleted", includeNonDeleted));
 
         final String[] localVarAccepts = {
             "application/json"
         };
-        final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        final String[] localVarContentTypes = {  };
-        final MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
+        final String[] localVarContentTypes = {
 
-        ParameterizedTypeReference<List<Application>> localReturnType = new ParameterizedTypeReference<List<Application>>() {};
-        List<Application> applications = apiClient.invokeAPI("/api/v1/apps", HttpMethod.GET, Collections.emptyMap(),
-            localVarQueryParams, null, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept,
-            localVarContentType, localVarAuthNames, localReturnType).getBody();
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+        String[] localVarAuthNames = new String[]{"apiToken", "oauth2"};
+
+        TypeReference<List<Application>> localVarReturnType = new TypeReference<List<Application>>() {
+        };
+        List<Application> applications = apiClient.invokeAPI(
+            localVarPath,
+            "GET",
+            localVarQueryParams,
+            localVarCollectionQueryParams,
+            localVarQueryStringJoiner.toString(),
+            null,
+            localVarHeaderParams,
+            localVarCookieParams,
+            localVarFormParams,
+            localVarAccept,
+            localVarContentType,
+            localVarAuthNames,
+            localVarReturnType
+        );
+
         ObjectMapper objectMapper = getObjectMapper();
 
         List<Application> typedApplications = new ArrayList<>(applications.size());

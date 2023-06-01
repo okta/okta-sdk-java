@@ -40,8 +40,25 @@
             <artifactId>okta-sdk-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator</artifactId>
+            <version>6.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <!-- HTTP client: apache client -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.1</version>
         </dependency>
         <dependency>
             <groupId>com.okta.commons</groupId>
@@ -147,21 +164,6 @@
         </resources>
 
         <plugins>
-            <!--            <plugin>-->
-            <!--                <groupId>org.zalando.maven.plugins</groupId>-->
-            <!--                <artifactId>swagger-codegen-maven-plugin</artifactId>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>swagger-codegen-impl</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>codegen</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <language>okta_java_impl</language>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

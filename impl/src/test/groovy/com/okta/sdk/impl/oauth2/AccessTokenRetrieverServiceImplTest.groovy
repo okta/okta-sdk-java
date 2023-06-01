@@ -31,15 +31,11 @@ import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
 import org.bouncycastle.openssl.PEMException
 import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 import org.mockito.ArgumentMatchers
 import org.openapitools.client.ApiClient
-import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.util.MultiValueMap
+import org.openapitools.client.Pair
+import org.openapitools.client.model.HttpMethod
 import org.testng.annotations.Test
 
 import java.security.KeyPair
@@ -47,8 +43,10 @@ import java.security.KeyPairGenerator
 import java.security.PrivateKey
 
 import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.anyOf
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
+import static org.hamcrest.Matchers.nullValue
 import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
 import static org.testng.Assert.assertEquals
@@ -181,18 +179,20 @@ class AccessTokenRetrieverServiceImplTest {
         oAuth2AccessToken.setExpiresIn(3600)
         oAuth2AccessToken.setScope("openid")
 
-        when(apiClient.invokeAPI(contains("oauth2/v1/token"),
-            eq(HttpMethod.POST),
-            anyMap(),
-            any(MultiValueMap.class),
-            isNull(),
-            any(HttpHeaders.class),
-            any(LinkedMultiValueMap.class),
-            isNull(),
-            eq(Collections.singletonList(MediaType.APPLICATION_JSON)),
-            eq(MediaType.APPLICATION_FORM_URLENCODED),
-            any(),
-            any())).thenReturn(ResponseEntity.ok(oAuth2AccessToken))
+        when(apiClient.invokeAPI(
+            anyString(),
+            eq(HttpMethod.POST.name()) as String,
+            anyObject() as List<Pair>,
+            anyObject() as List<Pair>,
+            isNull() as String,
+            isNull() as String,
+            ArgumentMatchers.any() as Map<String, String>,
+            ArgumentMatchers.any() as Map<String, String>,
+            ArgumentMatchers.any() as Map<String, Object>,
+            anyString(),
+            anyString(),
+            ArgumentMatchers.any() as String[],
+            any())).thenReturn(oAuth2AccessToken)
 
         OAuth2AccessToken mockResponseAccessToken = accessTokenRetrievalService.getOAuth2AccessToken()
         assertEquals(mockResponseAccessToken.getAccessToken(), "accessToken")
@@ -377,16 +377,18 @@ class AccessTokenRetrieverServiceImplTest {
 
         ResourceException resourceException = new ResourceException(defaultError)
 
-        when(apiClient.invokeAPI(anyString(),
-            anyObject(),
+        when(apiClient.invokeAPI(
+            anyString(),
+            eq(HttpMethod.POST.name()),
+            anyObject() as List<Pair>,
+            anyObject() as List<Pair>,
+            isNull() as String,
+            isNull() as String,
+            ArgumentMatchers.any() as Map<String, String>,
+            ArgumentMatchers.any() as Map<String, String>,
             ArgumentMatchers.any() as Map<String, Object>,
-            ArgumentMatchers.any() as MultiValueMap<String, String>,
-            any(),
-            ArgumentMatchers.any() as HttpHeaders,
-            ArgumentMatchers.any() as MultiValueMap<String, String>,
-            ArgumentMatchers.any() as MultiValueMap<String, Object>,
-            ArgumentMatchers.any() as List<MediaType>,
-            ArgumentMatchers.any() as MediaType,
+            anyString(),
+            anyString(),
             ArgumentMatchers.any() as String[],
             any())).thenThrow(resourceException)
 

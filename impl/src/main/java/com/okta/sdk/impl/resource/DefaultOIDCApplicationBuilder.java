@@ -17,6 +17,7 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.application.OIDCApplicationBuilder;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.ApplicationApi;
 import org.openapitools.client.model.ApplicationAccessibility;
 import org.openapitools.client.model.ApplicationCredentialsOAuthClient;
@@ -38,9 +39,7 @@ import org.openapitools.client.model.OpenIdConnectApplicationType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OIDCApplicationBuilder> implements OIDCApplicationBuilder {
-
     private OpenIdConnectApplicationType applicationType;
     private String clientUri;
     private OpenIdConnectApplicationConsentMethod consentMethod;
@@ -180,7 +179,13 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OpenIdConnectApplication buildAndCreate(ApplicationApi client){ return client.createApplication(OpenIdConnectApplication.class, build(), false, null); }
+    public OpenIdConnectApplication buildAndCreate(ApplicationApi client){
+        try {
+            return (OpenIdConnectApplication) client.createApplication(build(), false, null);
+        } catch (ApiException e) {
+            throw new RuntimeException(e); //TODO fix me!
+        }
+    }
 
     private OpenIdConnectApplication build(){
         OpenIdConnectApplication application = new OpenIdConnectApplication();

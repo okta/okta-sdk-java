@@ -17,6 +17,7 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.application.ApplicationBuilder;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.ApplicationApi;
 import org.openapitools.client.model.Application;
 import org.openapitools.client.model.ApplicationAccessibility;
@@ -89,7 +90,13 @@ public class DefaultApplicationBuilder<T extends ApplicationBuilder> implements 
     protected T self() { return (T) this;}
 
     @Override
-    public Application buildAndCreate(ApplicationApi client) { return client.createApplication(build(), false, null); }
+    public Application buildAndCreate(ApplicationApi client) {
+        try {
+            return client.createApplication(build(), false, null);
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private Application build(){
 

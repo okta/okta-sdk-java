@@ -18,6 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.PolicyApi;
 import org.openapitools.client.model.GroupCondition;
 import org.openapitools.client.model.PasswordDictionary;
@@ -222,7 +223,11 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
 
     @Override
     public PasswordPolicy buildAndCreate(PolicyApi client) {
-        return client.createPolicy(PasswordPolicy.class, build(), isActive);
+        try {
+            return (PasswordPolicy) client.createPolicy(build(), isActive);
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private PasswordPolicy build() {

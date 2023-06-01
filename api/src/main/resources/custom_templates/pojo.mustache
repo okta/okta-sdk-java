@@ -149,7 +149,7 @@ public {{classname}}() { {{#parent}}{{#parcelableModel}}
             public {{classname}} add{{nameInCamelCase}}Item({{{items.datatypeWithEnum}}} {{name}}Item) {
             {{#vendorExtensions.x-is-jackson-optional-nullable}}
                 if (this.{{name}} == null || !this.{{name}}.isPresent()) {
-                this.{{name}} = JsonNullable.<{{{datatypeWithEnum}}}>of({{{defaultValue}}});
+                this.{{name}} = JsonNullable.<{{{datatypeWithEnum}}}>of({{{defaultValue}}}{{^defaultValue}}new {{#uniqueItems}}LinkedHashSet{{/uniqueItems}}{{^uniqueItems}}ArrayList{{/uniqueItems}}<>(){{/defaultValue}});
                 }
                 try {
                 this.{{name}}.get().add({{name}}Item);
@@ -159,11 +159,9 @@ public {{classname}}() { {{#parent}}{{#parcelableModel}}
                 return this;
             {{/vendorExtensions.x-is-jackson-optional-nullable}}
             {{^vendorExtensions.x-is-jackson-optional-nullable}}
-                {{^required}}
-                    if (this.{{name}} == null) {
-                    this.{{name}} = {{{defaultValue}}};
-                    }
-                {{/required}}
+                if (this.{{name}} == null) {
+                this.{{name}} = {{{defaultValue}}}{{^defaultValue}}new {{#uniqueItems}}LinkedHashSet{{/uniqueItems}}{{^uniqueItems}}ArrayList{{/uniqueItems}}<>(){{/defaultValue}};
+                }
                 this.{{name}}.add({{name}}Item);
                 return this;
             {{/vendorExtensions.x-is-jackson-optional-nullable}}
