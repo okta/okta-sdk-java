@@ -36,9 +36,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <swagger-annotations.version>1.6.8</swagger-annotations.version>
-        <openapi-generator.version>6.5.0</openapi-generator.version>
-        <spring-web.version>5.3.23</spring-web.version>
-        <spring-retry.version>1.3.3</spring-retry.version>
+        <openapi-generator.version>6.6.0</openapi-generator.version>
         <jackson-databind-nullable.version>0.2.3</jackson-databind-nullable.version>
         <jakarta-annotation.version>1.3.5</jakarta-annotation.version>
         <jsr305.version>3.0.2</jsr305.version>
@@ -77,18 +75,11 @@
             <version>${jsr305.version}</version>
         </dependency>
 
-        <!-- HTTP client: apache client -->
+        <!-- Apache HTTP Client -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
             <version>5.2.1</version>
-        </dependency>
-
-        <!-- Spring Retry -->
-        <dependency>
-            <groupId>org.springframework.retry</groupId>
-            <artifactId>spring-retry</artifactId>
-            <version>${spring-retry.version}</version>
         </dependency>
 
         <!-- JSON processing: Jackson -->

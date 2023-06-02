@@ -56,6 +56,8 @@ import org.apache.hc.core5.http.message.BasicNameValuePair;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,6 +82,12 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.Paths;
 import java.lang.reflect.Type;
 import java.net.URI;
+
+import com.okta.commons.http.config.HttpClientConfiguration;
+import com.okta.sdk.cache.Cache;
+import com.okta.sdk.cache.CacheManager;
+
+import org.openapitools.client.model.HttpMethod;
 
 import java.text.DateFormat;
 
@@ -138,6 +146,12 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
     private Map<String, Authentication> authentications;
 
+    private Cache<String, Object> cache;
+
+    private CacheManager cacheManager;
+
+    private HttpClientConfiguration httpClientConfiguration;
+
     private int statusCode;
     private Map<String, List<String>> responseHeaders;
 
@@ -146,7 +160,7 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
         // Methods that can have a request body
         private static List<String> bodyMethods = Arrays.asList("POST", "PUT", "DELETE", "PATCH");
 
-            public ApiClient(CloseableHttpClient httpClient) {
+            public ApiClient(CloseableHttpClient httpClient, CacheManager cacheManager, HttpClientConfiguration httpClientConfiguration) {
             objectMapper = new ObjectMapper();
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
@@ -180,10 +194,14 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
             authentications = Collections.unmodifiableMap(authentications);
 
             this.httpClient = httpClient;
+
+            this.cacheManager = cacheManager;
+            this.httpClientConfiguration = httpClientConfiguration;
+            this.cache = cacheManager.getCache("default");
             }
 
             public ApiClient() {
-            this(HttpClients.createDefault());
+            this(HttpClients.createDefault(), null, null);
             }
 
             public static DateFormat buildDefaultDateFormat() {
@@ -1097,12 +1115,83 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             builder.setEntity(new StringEntity("", contentTypeObj));
                                                                                             }
 
+                                                                                            String cacheKey = url;
+
+                                                                                            if (Objects.nonNull(path)) {
+                                                                                            cacheKey = cacheKey.split("\\?")[0];
+                                                                                            }
+
+                                                                                            if (method == HttpMethod.DELETE.name()) {
+                                                                                            cache.remove(cacheKey);
+                                                                                            }
+
+                                                                                            String[] uriSegments = path.split("/");
+
+                                                                                            if (uriSegments != null && uriSegments.length >= 6) {
+                                                                                            String key = getBasePath() + "/" + uriSegments[1] + "/" + uriSegments[2] + "/" + uriSegments[3] + "/" + uriSegments[4];
+                                                                                            if (cache.get(key) != null) {
+                                                                                            cache.remove(key);
+                                                                                            }
+                                                                                            }
+
+                                                                                            if (method == HttpMethod.GET.name() &&
+                                                                                            !returnType.getType().getTypeName().contains("List") &&
+                                                                                            !(url.contains("expand"))) {
+
+                                                                                            T cacheData = (T) cache.get(cacheKey);
+
+                                                                                                if (Objects.isNull(cacheData)) {
+
                                                                                             try (CloseableHttpResponse response = httpClient.execute(builder.build(), context)) {
-                                                                                            return processResponse(response, returnType);
+                                                                                            T t = processResponse(response, returnType);
+
+                                                                                            if (method.equals(HttpMethod.GET.name()) && Objects.nonNull(t)) {
+
+                                                                                            Map<String, ?> map = getObjectMapper().convertValue(t, LinkedHashMap.class);
+
+                                                                                            String href = null;
+
+                                                                                            if (Objects.nonNull(map)) {
+                                                                                            Map<String, LinkedHashMap> links = (Map<String, LinkedHashMap>) map.get("_links");
+                                                                                            if (Objects.nonNull(links)) {
+                                                                                            LinkedHashMap<String, String> self = links.get("self");
+                                                                                            if (Objects.nonNull(self)) {
+                                                                                            href = (String) self.get("href");
+                                                                                            }
+                                                                                            }
+                                                                                            }
+
+                                                                                            if (Objects.nonNull(href)) {
+                                                                                            cache.put(href, t);
+                                                                                            } else {
+                                                                                            cache.put(cacheKey, t);
+                                                                                            }
+                                                                                            }
+
+                                                                                            return t;
+                                                                                            } catch (IOException | ParseException e) {
+                                                                                            throw new ApiException(e);
+                                                                                            }
+                                                                                            } else {
+                                                                                            // return data from cache
+                                                                                            return (T) cache.get(cacheKey);
+                                                                                            }
+
+                                                                                            } else {
+
+                                                                                            try (CloseableHttpResponse response = httpClient.execute(builder.build(), context)) {
+                                                                                            T t = processResponse(response, returnType);
+
+                                                                                            if (cache.get(cacheKey) != null) {
+                                                                                            cache.put(cacheKey, t);
+                                                                                            }
+                                                                                            return t;
                                                                                             } catch (IOException | ParseException e) {
                                                                                             throw new ApiException(e);
                                                                                             }
                                                                                             }
+                                                                                            }
+
 
                                                                                             /**
                                                                                             * Update query and header parameters based on authentication settings.

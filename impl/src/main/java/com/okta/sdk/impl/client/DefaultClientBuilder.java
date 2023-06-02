@@ -349,7 +349,7 @@ public class DefaultClientBuilder implements ClientBuilder {
             .setConnectionManager(poolingHttpClientConnectionManager)
             .build();
 
-        ApiClient apiClient = new ApiClient(httpclient);
+        ApiClient apiClient = new ApiClient(httpclient, this.cacheManager, this.clientConfig);
         apiClient.setBasePath(this.clientConfig.getBaseUrl());
 
         if (!isOAuth2Flow()) {
