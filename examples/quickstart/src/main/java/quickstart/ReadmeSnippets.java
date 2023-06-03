@@ -15,23 +15,27 @@
  */
 package quickstart;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.okta.commons.http.MediaType;
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.cache.Caches;
+import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.helper.ApplicationApiHelper;
+import com.okta.sdk.helper.PolicyApiHelper;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
+import org.openapitools.client.Pair;
 import org.openapitools.client.api.*;
 import org.openapitools.client.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.lang.reflect.Type;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.okta.sdk.cache.Caches.forResource;
@@ -230,39 +234,41 @@ public class ReadmeSnippets {
         BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(applicationApi, "bookmark-app-id", null);
     }
 
-//    private void createSwaApplication() {
-//        ApplicationApi applicationApi = new ApplicationApi(client);
-//
-//        SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
-//        swaApplicationSettingsApplication.buttonField("btn-login")
-//            .passwordField("txtbox-password")
-//            .usernameField("txtbox-username")
-//            .url("https://example.com/login.html");
-//        SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings();
-//        swaApplicationSettings.app(swaApplicationSettingsApplication);
-//        BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication();
-//        browserPluginApplication.name("template_swa");
-//        browserPluginApplication.label("Sample Plugin App");
-//        browserPluginApplication.settings(swaApplicationSettings);
-//
-//        // create
-//        BrowserPluginApplication createdApp =
-//            applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null);
-//    }
+    private void createSwaApplication() throws ApiException {
+        ApplicationApi applicationApi = new ApplicationApi(client);
 
-//    private void listPolicies() {
-//        List<Policy> policies = PolicyApiHelper.listPolicies(client, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
-//    }
-//
-//    private void getPolicy() {
-//        PolicyApi policyApi = new PolicyApi(client);
-//
-//        // get generic policy type
-//        Policy genericPolicy = PolicyApiHelper.getPolicy(client, "policy-id", null);
-//
-//        // get sub-class policy type
-//        MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(client, "mfa-policy-id", null);
-//    }
+        SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
+        swaApplicationSettingsApplication.buttonField("btn-login")
+            .passwordField("txtbox-password")
+            .usernameField("txtbox-username")
+            .url("https://example.com/login.html");
+        SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings();
+        swaApplicationSettings.app(swaApplicationSettingsApplication);
+        BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication();
+        browserPluginApplication.name("template_swa");
+        browserPluginApplication.label("Sample Plugin App");
+        browserPluginApplication.settings(swaApplicationSettings);
+
+        // create
+        BrowserPluginApplication createdApp =
+            ApplicationApiHelper.createApplication(BrowserPluginApplication.class, applicationApi, browserPluginApplication, true, null);
+    }
+
+    private void listPolicies() throws ApiException {
+        PolicyApi policyApi = new PolicyApi(client);
+
+        List<Policy> policies = PolicyApiHelper.listPolicies(policyApi, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+    }
+
+    private void getPolicy() throws ApiException {
+        PolicyApi policyApi = new PolicyApi(client);
+
+        // get generic policy type
+        Policy genericPolicy = PolicyApiHelper.getPolicy(policyApi, "policy-id", null);
+
+        // get sub-class policy type
+        MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(policyApi, "mfa-policy-id", null);
+    }
 
     private void listSysLogs() throws ApiException {
         SystemLogApi systemLogApi = new SystemLogApi(client);
@@ -271,38 +277,51 @@ public class ReadmeSnippets {
         List<LogEvent> logEvents = systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
     }
 
-//    private void callAnotherEndpoint() {
-//
-//        ApiClient apiClient = buildApiClient("orgBaseUrl", "apiKey");
-//
-//        // Create a BookmarkApplication
-//        BookmarkApplication bookmarkApplication = new BookmarkApplication();
-//        bookmarkApplication.setName("bookmark");
-//        bookmarkApplication.setLabel("Sample Bookmark App");
-//        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
-//        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
-//        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
-//            new BookmarkApplicationSettingsApplication();
-//        bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
-//        bookmarkApplicationSettingsApplication.setRequestIntegration(false);
-//        bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
-//        bookmarkApplication.setSettings(bookmarkApplicationSettings);
-//
-//        ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
-//            HttpMethod.POST,
-//            Collections.emptyMap(),
-//            null,
-//            bookmarkApplication,
-//            new HttpHeaders(),
-//            new LinkedMultiValueMap<>(),
-//            null,
-//            Collections.singletonList(MediaType.APPLICATION_JSON),
-//            MediaType.APPLICATION_JSON,
-//            new String[]{"API Token"},
-//            new ParameterizedTypeReference<BookmarkApplication>() {});
-//
-//        BookmarkApplication createdApp = responseEntity.getBody();
-//    }
+    private void callAnotherEndpoint() throws ApiException {
+
+        ApiClient apiClient = buildApiClient("orgBaseUrl", "apiKey");
+
+        // Create a BookmarkApplication
+        BookmarkApplication bookmarkApplication = new BookmarkApplication();
+        bookmarkApplication.setName("bookmark");
+        bookmarkApplication.setLabel("Sample Bookmark App");
+        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
+        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
+        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
+            new BookmarkApplicationSettingsApplication();
+        bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
+        bookmarkApplicationSettingsApplication.setRequestIntegration(false);
+        bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
+        bookmarkApplication.setSettings(bookmarkApplicationSettings);
+
+        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
+        Map<String, String> localVarCookieParams = new HashMap<>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
+
+        BookmarkApplication createdApp = apiClient.invokeAPI(
+            "/api/v1/apps",   // path
+            HttpMethod.POST.name(),   // http method
+            localVarQueryParams,   // query params
+            localVarCollectionQueryParams, // collection query params
+            localVarQueryStringJoiner.toString(),
+            bookmarkApplication,   // request body
+            localVarHeaderParams,   // header params
+            localVarCookieParams,   // cookie params
+            localVarFormParams,   // form params
+            MediaType.APPLICATION_JSON_VALUE,   // accept
+            MediaType.APPLICATION_JSON_VALUE,   // content type
+            new String[]{ "apiToken", "oauth2" },   // auth names
+            new TypeReference<BookmarkApplication>() {   // return type
+                @Override
+                public Type getType() {
+                    return super.getType();
+                }
+            }
+        );
+    }
 
     private void complexCaching() {
         Caches.newCacheManager()
@@ -326,13 +345,9 @@ public class ReadmeSnippets {
     private static ApiClient buildApiClient(String orgBaseUrl, String apiKey) {
 
         ApiClient apiClient = new ApiClient();
-        // set your custom rest template and retry template,
-        // not setting it would use the default templates
-        //apiClient.setRestTemplate();
-        //apiClient.setRetryTemplate(retryTemplate(this.clientConfig));
         apiClient.setBasePath(orgBaseUrl);
         apiClient.setApiKey(apiKey);
-        apiClient.setApiKeyPrefix("SSWS");
+        apiClient.setApiKeyPrefix(AuthenticationScheme.SSWS.name());
         return apiClient;
     }
 }

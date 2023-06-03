@@ -377,7 +377,7 @@ ApplicationApi applicationApi = new ApplicationApi(client);
 Application genericApp = applicationApi.getApplication("app-id", null);
 
 // get sub-class application type
-BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
+BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(applicationApi, "bookmark-app-id", null);
 ```
 [//]: # (end: getApplication)
 
@@ -400,7 +400,7 @@ browserPluginApplication.settings(swaApplicationSettings);
 
 // create
 BrowserPluginApplication createdApp =
-    applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null);
+    ApplicationApiHelper.createApplication(BrowserPluginApplication.class, applicationApi, browserPluginApplication, true, null);
 ```
 [//]: # (end: createSwaApplication)
 
@@ -408,7 +408,8 @@ BrowserPluginApplication createdApp =
 
 [//]: # (method: listPolicies)
 ```java
-List<Policy> policies = PolicyApiHelper.listPolicies(client, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+PolicyApi policyApi = new PolicyApi(client);
+List<Policy> policies = PolicyApiHelper.listPolicies(policyApi, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
 ```
 [//]: # (end: listPolicies)
 
@@ -419,10 +420,10 @@ List<Policy> policies = PolicyApiHelper.listPolicies(client, PolicyType.PASSWORD
 PolicyApi policyApi = new PolicyApi(client);
 
 // get generic policy type
-Policy genericPolicy = PolicyApiHelper.getPolicy(client, "policy-id", null);
+Policy genericPolicy = PolicyApiHelper.getPolicy(policyApi, "policy-id", null);
 
 // get sub-class policy type
-MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(client, "mfa-policy-id", null);
+MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(policyApi, "mfa-policy-id", null);
 ```
 [//]: # (end: getPolicy)
 
@@ -456,19 +457,32 @@ bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm"
 bookmarkApplicationSettingsApplication.setRequestIntegration(false);
 bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
 bookmarkApplication.setSettings(bookmarkApplicationSettings);
-ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
-    HttpMethod.POST,
-    Collections.emptyMap(),
-    null,
-    bookmarkApplication,
-    new HttpHeaders(),
-    new LinkedMultiValueMap<>(),
-    null,
-    Collections.singletonList(MediaType.APPLICATION_JSON),
-    MediaType.APPLICATION_JSON,
-    new String[]{"API Token"},
-    new ParameterizedTypeReference<BookmarkApplication>() {});
-BookmarkApplication createdApp = responseEntity.getBody();
+StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+List<Pair> localVarQueryParams = new ArrayList<>();
+List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+Map<String, String> localVarHeaderParams = new HashMap<>();
+Map<String, String> localVarCookieParams = new HashMap<>();
+Map<String, Object> localVarFormParams = new HashMap<>();
+BookmarkApplication createdApp = apiClient.invokeAPI(
+    "/api/v1/apps",   // path
+    HttpMethod.POST.name(),   // http method
+    localVarQueryParams,   // query params
+    localVarCollectionQueryParams, // collection query params
+    localVarQueryStringJoiner.toString(),
+    bookmarkApplication,   // request body
+    localVarHeaderParams,   // header params
+    localVarCookieParams,   // cookie params
+    localVarFormParams,   // form params
+    MediaType.APPLICATION_JSON_VALUE,   // accept
+    MediaType.APPLICATION_JSON_VALUE,   // content type
+    new String[]{ "apiToken", "oauth2" },   // auth names
+    new TypeReference<BookmarkApplication>() {   // return type
+        @Override
+        public Type getType() {
+            return super.getType();
+        }
+    }
+);
 ```
 [//]: # (end: callAnotherEndpoint)
 
