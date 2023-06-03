@@ -17,6 +17,8 @@ package com.okta.sdk.helper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.okta.commons.http.MediaType;
+import org.apache.hc.core5.http.HttpStatus;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Pair;
@@ -37,7 +39,7 @@ public class PolicyApiHelper extends PolicyApi {
 
         // verify the required parameter 'policy' is set
         if (policy == null) {
-            throw new ApiException(400, "Missing the required parameter 'policy' when calling createPolicy");
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'policy' when calling createPolicy");
         }
 
         // create path and map variables
@@ -50,14 +52,10 @@ public class PolicyApiHelper extends PolicyApi {
         Map<String, String> localVarCookieParams = new HashMap<>();
         Map<String, Object> localVarFormParams = new HashMap<>();
 
-        final String[] localVarAccepts = {
-            "application/json"
-        };
+        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-        final String[] localVarContentTypes = {
-            "application/json"
-        };
+        final String[] localVarContentTypes = { MediaType.APPLICATION_JSON_VALUE };
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
         String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
@@ -93,7 +91,7 @@ public class PolicyApiHelper extends PolicyApi {
 
         // verify the required parameter 'policyId' is set
         if (policyId == null) {
-            throw new ApiException(400, "Missing the required parameter 'policyId' when calling getPolicy");
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'policyId' when calling getPolicy");
         }
 
         // create path and map variables
@@ -107,17 +105,13 @@ public class PolicyApiHelper extends PolicyApi {
         Map<String, String> localVarCookieParams = new HashMap<>();
         Map<String, Object> localVarFormParams = new HashMap<>();
 
-        final String[] localVarAccepts = {
-            "application/json"
-        };
+        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-        final String[] localVarContentTypes = {
-
-        };
+        final String[] localVarContentTypes = { };
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-        String[] localVarAuthNames = new String[]{"apiToken", "oauth2"};
+        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
 
         TypeReference<Policy> localVarReturnType = new TypeReference<Policy>() {
         };
@@ -166,7 +160,7 @@ public class PolicyApiHelper extends PolicyApi {
 
         // verify the required parameter 'type' is set
         if (type == null) {
-            throw new ApiException(400, "Missing the required parameter 'type' when calling listPolicies");
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'type' when calling listPolicies");
         }
 
         // create path and map variables
@@ -183,17 +177,13 @@ public class PolicyApiHelper extends PolicyApi {
         localVarQueryParams.addAll(apiClient.parameterToPair("status", status));
         localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
 
-        final String[] localVarAccepts = {
-            "application/json"
-        };
+        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-        final String[] localVarContentTypes = {
-
-        };
+        final String[] localVarContentTypes = { };
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-        String[] localVarAuthNames = new String[]{"apiToken", "oauth2"};
+        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
 
         TypeReference<List<Policy>> localVarReturnType = new TypeReference<List<Policy>>() {
         };
@@ -252,12 +242,12 @@ public class PolicyApiHelper extends PolicyApi {
 
         // verify the required parameter 'policyId' is set
         if (policyId == null) {
-            throw new ApiException(400, "Missing the required parameter 'policyId' when calling createPolicyRule");
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'policyId' when calling createPolicyRule");
         }
 
         // verify the required parameter 'policyRule' is set
         if (policyRule == null) {
-            throw new ApiException(400, "Missing the required parameter 'policyRule' when calling createPolicyRule");
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'policyRule' when calling createPolicyRule");
         }
 
         // create path and map variables
@@ -271,17 +261,13 @@ public class PolicyApiHelper extends PolicyApi {
         Map<String, String> localVarCookieParams = new HashMap<>();
         Map<String, Object> localVarFormParams = new HashMap<>();
 
-        final String[] localVarAccepts = {
-            "application/json"
-        };
+        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-        final String[] localVarContentTypes = {
-            "application/json"
-        };
+        final String[] localVarContentTypes = { MediaType.APPLICATION_JSON_VALUE };
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-        String[] localVarAuthNames = new String[]{"apiToken", "oauth2"};
+        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
 
         TypeReference<T> localVarReturnType = new TypeReference<T>() {
             @Override

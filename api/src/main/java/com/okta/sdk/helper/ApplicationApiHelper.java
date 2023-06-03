@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.helper;
 
+import com.okta.commons.http.MediaType;
+import org.apache.hc.core5.http.HttpStatus;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Pair;
@@ -55,14 +57,10 @@ public class ApplicationApiHelper extends ApplicationApi {
             localVarHeaderParams.put("OktaAccessGateway-Agent", apiClient.parameterToString(oktaAccessGatewayAgent));
         }
 
-        final String[] localVarAccepts = {
-            "application/json"
-        };
+        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-        final String[] localVarContentTypes = {
-            "application/json"
-        };
+        final String[] localVarContentTypes = { MediaType.APPLICATION_JSON_VALUE };
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
         String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
@@ -73,6 +71,7 @@ public class ApplicationApiHelper extends ApplicationApi {
                 return classType;
             }
         };
+
         Application createdApplication = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.POST.name(),
@@ -98,7 +97,7 @@ public class ApplicationApiHelper extends ApplicationApi {
 
         // verify the required parameter 'appId' is set
         if (appId == null) {
-            throw new ApiException(400, "Missing the required parameter 'appId' when calling getApplication");
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'appId' when calling getApplication");
         }
 
         // create path and map variables
@@ -112,20 +111,15 @@ public class ApplicationApiHelper extends ApplicationApi {
         Map<String, String> localVarCookieParams = new HashMap<>();
         Map<String, Object> localVarFormParams = new HashMap<>();
 
-        final String[] localVarAccepts = {
-            "application/json"
-        };
+        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-        final String[] localVarContentTypes = {
-
-        };
+        final String[] localVarContentTypes = { };
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-        String[] localVarAuthNames = new String[]{"apiToken", "oauth2"};
+        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
 
-        TypeReference<T> localVarReturnType = new TypeReference<T>() {
-        };
+        TypeReference<T> localVarReturnType = new TypeReference<T>() { };
         Application application = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
@@ -193,20 +187,16 @@ public class ApplicationApiHelper extends ApplicationApi {
         localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
         localVarQueryParams.addAll(apiClient.parameterToPair("includeNonDeleted", includeNonDeleted));
 
-        final String[] localVarAccepts = {
-            "application/json"
-        };
+        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
         final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
 
-        final String[] localVarContentTypes = {
-
-        };
+        final String[] localVarContentTypes = { };
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-        String[] localVarAuthNames = new String[]{"apiToken", "oauth2"};
+        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
 
-        TypeReference<List<Application>> localVarReturnType = new TypeReference<List<Application>>() {
-        };
+        TypeReference<List<Application>> localVarReturnType = new TypeReference<List<Application>>() { };
+
         List<Application> applications = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
