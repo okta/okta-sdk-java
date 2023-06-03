@@ -39,7 +39,6 @@
         <openapi-generator.version>6.6.0</openapi-generator.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <jakarta-annotation.version>2.1.0</jakarta-annotation.version>
-        <org.apache.httpcomponents.client5.version>5.2.1</org.apache.httpcomponents.client5.version>
         <jsr305.version>3.0.2</jsr305.version>
         <junit.version>4.13.2</junit.version>
         <com.github.jknack.handlebars.version>4.3.1</com.github.jknack.handlebars.version>
@@ -81,7 +80,6 @@
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
-            <version>${org.apache.httpcomponents.client5.version}</version>
         </dependency>
 
         <!-- JSON processing: Jackson -->
