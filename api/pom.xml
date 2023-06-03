@@ -37,10 +37,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <swagger-annotations.version>1.6.8</swagger-annotations.version>
         <openapi-generator.version>6.6.0</openapi-generator.version>
-        <jackson-databind-nullable.version>0.2.3</jackson-databind-nullable.version>
-        <jakarta-annotation.version>1.3.5</jakarta-annotation.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        <jakarta-annotation.version>2.1.0</jakarta-annotation.version>
+        <org.apache.httpcomponents.client5.version>5.2.1</org.apache.httpcomponents.client5.version>
         <jsr305.version>3.0.2</jsr305.version>
         <junit.version>4.13.2</junit.version>
+        <com.github.jknack.handlebars.version>4.3.1</com.github.jknack.handlebars.version>
     </properties>
 
     <dependencies>
@@ -79,7 +81,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
-            <version>5.2.1</version>
+            <version>${org.apache.httpcomponents.client5.version}</version>
         </dependency>
 
         <!-- JSON processing: Jackson -->
@@ -119,6 +121,16 @@
             <version>${jakarta-annotation.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.jknack</groupId>
+            <artifactId>handlebars</artifactId>
+            <version>${com.github.jknack.handlebars.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jknack</groupId>
+            <artifactId>handlebars-jackson2</artifactId>
+            <version>${com.github.jknack.handlebars.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.openapitools</groupId>
@@ -136,10 +148,6 @@
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-text</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.jknack</groupId>
-                    <artifactId>handlebars</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -209,11 +217,9 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- https://github.com/OpenAPITools/openapi-generator/issues/3272 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <!--                <version>3.1.1</version>-->
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -224,7 +230,6 @@
                 </executions>
                 <configuration>
                     <source>8</source>
-                    <!--                    <doclint>none</doclint>-->
                     <tags>
                         <tag>
                             <name>http.response.details</name>

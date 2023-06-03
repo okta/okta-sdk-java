@@ -53,10 +53,11 @@ class PoliciesIT extends ITSupport {
             .setDescription("IT created Policy - signOnPolicyWithGroupConditions")
             .setType(PolicyType.OKTA_SIGN_ON)
             .addGroup(group.getId())
-            .buildAndCreate(policyApi)
+            .buildAndCreate(policyApi) as OktaSignOnPolicy
         registerForCleanup(policy)
 
         assertThat policy, notNullValue()
+        assertThat policy.getType(), is(PolicyType.OKTA_SIGN_ON)
         assertThat policy.getConditions(), notNullValue()
         assertThat policy.getConditions().getPeople().getGroups().getInclude(), is(Collections.singletonList(group.getId()))
         assertThat policy.getConditions().getPeople().getGroups().getExclude(), nullValue()
@@ -97,8 +98,8 @@ class PoliciesIT extends ITSupport {
         Application oidcApp = OIDCApplicationBuilder.instance()
             .setName(name)
             .setLabel(name)
-            .addRedirectUris("http://www.example.com")
-            .setPostLogoutRedirectUris(Collections.singletonList("http://www.example.com/logout"))
+            .addRedirectUris("https://www.example.com")
+            .setPostLogoutRedirectUris(Collections.singletonList("https://www.example.com/logout"))
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
             .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
@@ -108,19 +109,20 @@ class PoliciesIT extends ITSupport {
             .setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.NONE)
             .setIOS(false)
             .setWeb(true)
-            .setLoginRedirectUrl("http://www.myapp.com")
-            .setErrorRedirectUrl("http://www.myapp.com/error")
+            .setLoginRedirectUrl("https://www.myapp.com")
+            .setErrorRedirectUrl("https://www.myapp.com/error")
             .buildAndCreate(applicationApi)
         registerForCleanup(oidcApp)
 
         assertThat(oidcApp, notNullValue())
+        assertThat(oidcApp.getSignOnMode(), is(ApplicationSignOnMode.OPENID_CONNECT))
         assertThat(oidcApp.getLinks(), notNullValue())
         assertThat(oidcApp.getLinks().getAccessPolicy(), notNullValue())
 
         // accessPolicy:[href:https://example.com/api/v1/policies/rst412ay22NkOdJJr0g7]
         String accessPolicyId = oidcApp.getLinks().getAccessPolicy().getHref().replaceAll("]", "").tokenize("/")[-1]
 
-        AccessPolicy accessPolicy = PolicyApiHelper.getPolicy(getClient(),accessPolicyId, null)
+        AccessPolicy accessPolicy = PolicyApiHelper.getPolicy(policyApi, accessPolicyId, null)
         assertThat(accessPolicy, notNullValue())
 
         AccessPolicyRule accessPolicyRule = new AccessPolicyRule()
@@ -138,7 +140,7 @@ class PoliciesIT extends ITSupport {
         accessPolicyRuleActions.appSignOn(accessPolicyRuleApplicationSignOn)
         accessPolicyRule.actions(accessPolicyRuleActions)
 
-        AccessPolicyRule createdAccessPolicyRule = PolicyApiHelper.createPolicyRule(AccessPolicyRule.class, getClient(), accessPolicy.getId(), accessPolicyRule)
+        AccessPolicyRule createdAccessPolicyRule = PolicyApiHelper.createPolicyRule(AccessPolicyRule.class, policyApi, accessPolicy.getId(), accessPolicyRule)
         //registerForCleanup(createdAccessPolicyRule)
 
         assertThat(createdAccessPolicyRule, notNullValue())
@@ -165,7 +167,7 @@ class PoliciesIT extends ITSupport {
             .setDescription("IT created Policy - signOnActionsTest")
             .setType(PolicyType.OKTA_SIGN_ON)
             .setStatus(LifecycleStatus.ACTIVE)
-            .buildAndCreate(policyApi)
+            .buildAndCreate(policyApi) as OktaSignOnPolicy
         registerForCleanup(policy)
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
@@ -181,10 +183,11 @@ class PoliciesIT extends ITSupport {
         oktaSignOnPolicyRule.actions(oktaSignOnPolicyRuleActions)
         //registerForCleanup(policyRule)
 
-        OktaSignOnPolicyRule createdPolicyRule = PolicyApiHelper.createPolicyRule(OktaSignOnPolicyRule.class, getClient(), policy.getId(), oktaSignOnPolicyRule)
+        OktaSignOnPolicyRule createdPolicyRule = PolicyApiHelper.createPolicyRule(OktaSignOnPolicyRule.class, policyApi, policy.getId(), oktaSignOnPolicyRule)
 
         assertThat(createdPolicyRule.getId(), notNullValue())
-        assertThat(createdPolicyRule.name, is(policyRuleName))
+        assertThat(createdPolicyRule.getName(), is(policyRuleName))
+        assertThat(createdPolicyRule.getType(), is(PolicyRuleType.SIGN_ON))
 
         policyApi.deactivatePolicyRule(policy.getId(), createdPolicyRule.getId())
         policyApi.deletePolicyRule(policy.getId(), createdPolicyRule.getId())
@@ -203,7 +206,9 @@ class PoliciesIT extends ITSupport {
             .buildAndCreate(policyApi)
         registerForCleanup(policy)
 
+        assertThat(policy, notNullValue())
         assertThat(policy.getStatus(), is(LifecycleStatus.INACTIVE))
+        assertThat(policy.getType(), is(PolicyType.OKTA_SIGN_ON))
 
         // activate
         policyApi.activatePolicy(policy.getId())
@@ -304,17 +309,17 @@ class PoliciesIT extends ITSupport {
             .setPriority(1)
             .setDescription("Dummy policy for sdk test")
             .setName("SDK policy "+ UUID.randomUUID().toString())
-            .buildAndCreate(policyApi)
+            .buildAndCreate(policyApi) as PasswordPolicy
         registerForCleanup(policy)
 
         // get policy (sub-typed)
-        PasswordPolicy passwordPolicy = PolicyApiHelper.getPolicy(getClient(), policy.getId(), null)
+        PasswordPolicy passwordPolicy = PolicyApiHelper.getPolicy(policyApi, policy.getId(), null)
         assertThat(passwordPolicy, notNullValue())
         assertThat(passwordPolicy.getType(), is(PolicyType.PASSWORD))
         assertThat(passwordPolicy.getStatus(), is(LifecycleStatus.ACTIVE))
 
         // list policies
-        def policies= PolicyApiHelper.listPolicies(getClient(), PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null)
+        def policies= PolicyApiHelper.listPolicies(policyApi, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null)
         assertThat policies, not(empty())
     }
 
@@ -329,8 +334,8 @@ class PoliciesIT extends ITSupport {
     @Test (groups = "group2")
     void listPolicyRulesTest() {
 
-        Group group = randomGroup()
-        Policy policy = randomSignOnPolicy(group.getId())
+        Policy policy = randomSignOnPolicy()
+        registerForCleanup(policy)
 
         PolicyApi policyApi = new PolicyApi(getClient())
 

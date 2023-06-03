@@ -24,6 +24,7 @@ import org.openapitools.client.model.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -31,16 +32,69 @@ import java.util.*;
  */
 public class ApplicationApiHelper extends ApplicationApi {
 
-    public static <T extends Application> T createApplication(Class<?> clazz, ApplicationApi applicationApi, Application application, Boolean activate, String oktaAccessGatewayAgent) throws ApiException {
-        return (T) getObjectMapper().convertValue(applicationApi.createApplication(application, activate, oktaAccessGatewayAgent), clazz);
+    public static <T extends Application> T createApplication(Class<T> classType, ApplicationApi applicationApi, Application application, Boolean activate, String oktaAccessGatewayAgent) throws ApiException {
+
+        ApiClient apiClient = applicationApi.getApiClient();
+
+        // verify the required parameter 'application' is set
+        if (application == null) {
+            throw new ApiException(400, "Missing the required parameter 'application' when calling createApplication");
+        }
+
+        // create path and map variables
+        String localVarPath = "/api/v1/apps";
+
+        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+        List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("activate", activate));
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
+        Map<String, String> localVarCookieParams = new HashMap<>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
+
+        if (oktaAccessGatewayAgent != null) {
+            localVarHeaderParams.put("OktaAccessGateway-Agent", apiClient.parameterToString(oktaAccessGatewayAgent));
+        }
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
+
+        TypeReference<T> localVarReturnType = new TypeReference<T>() {
+            @Override
+            public Type getType() {
+                return classType;
+            }
+        };
+        Application createdApplication = apiClient.invokeAPI(
+            localVarPath,
+            HttpMethod.POST.name(),
+            localVarQueryParams,
+            localVarCollectionQueryParams,
+            localVarQueryStringJoiner.toString(),
+            application,
+            localVarHeaderParams,
+            localVarCookieParams,
+            localVarFormParams,
+            localVarAccept,
+            localVarContentType,
+            localVarAuthNames,
+            localVarReturnType
+        );
+
+        return (T) createdApplication;
     }
 
-    public static <T extends Application> T createApplication(Class<?> clazz, ApiClient apiClient, Application application, Boolean activate, String oktaAccessGatewayAgent) throws ApiException {
-        ApplicationApi applicationApi = new ApplicationApi(apiClient);
-        return (T) getObjectMapper().convertValue(applicationApi.createApplication(application, activate, oktaAccessGatewayAgent), clazz);
-    }
+    public static <T extends Application> T getApplication(ApplicationApi applicationApi, String appId, String expand) throws ApiException {
 
-    public static <T extends Application> T getApplication(ApiClient apiClient, String appId, String expand) throws ApiException {
+        ApiClient apiClient = applicationApi.getApiClient();
 
         // verify the required parameter 'appId' is set
         if (appId == null) {
@@ -49,16 +103,14 @@ public class ApplicationApiHelper extends ApplicationApi {
 
         // create path and map variables
         String localVarPath = "/api/v1/apps/{appId}"
-            .replaceAll("\\{" + "appId" + "\\}", apiClient.escapeString(appId.toString()));
+            .replaceAll("\\{" + "appId" + "\\}", apiClient.escapeString(appId));
 
         StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        Map<String, String> localVarCookieParams = new HashMap<String, String>();
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
+        List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("expand", expand));
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
+        Map<String, String> localVarCookieParams = new HashMap<>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {
             "application/json"
@@ -128,11 +180,11 @@ public class ApplicationApiHelper extends ApplicationApi {
         String localVarPath = "/api/v1/apps";
 
         StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        Map<String, String> localVarCookieParams = new HashMap<String, String>();
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
+        Map<String, String> localVarCookieParams = new HashMap<>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         localVarQueryParams.addAll(apiClient.parameterToPair("q", q));
         localVarQueryParams.addAll(apiClient.parameterToPair("after", after));

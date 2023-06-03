@@ -133,6 +133,8 @@ abstract class ITSupport implements ClientProvider {
 
     User randomUser() {
 
+        UserApi userApi = new UserApi(getClient())
+
         def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
 
         UserProfile userProfile = new UserProfile()
@@ -145,8 +147,8 @@ abstract class ITSupport implements ClientProvider {
         CreateUserRequest createUserRequest = new CreateUserRequest()
             .profile(userProfile)
 
-        UserApi userApi = new UserApi(getClient())
         User createdUser = userApi.createUser(createUserRequest, true, null, null)
+
         return createdUser
     }
 
@@ -158,7 +160,6 @@ abstract class ITSupport implements ClientProvider {
             .setName(name)
             .setDescription(name)
             .buildAndCreate(groupApi)
-        registerForCleanup(group)
 
         return group
     }
@@ -173,28 +174,12 @@ abstract class ITSupport implements ClientProvider {
             .setDescription("IT created Policy")
             .setPriority(1)
             .addGroup(groupId)
-            .buildAndCreate(policyApi)
-        registerForCleanup(policy)
+            .buildAndCreate(policyApi) as PasswordPolicy
 
         return policy
     }
 
-    Policy randomPolicy() {
-
-        PolicyApi policyApi = new PolicyApi(getClient())
-
-        Policy policy = PolicyBuilder.instance()
-            .setName("java-sdk-it-" + UUID.randomUUID().toString())
-            .setStatus(LifecycleStatus.ACTIVE)
-            .setDescription("IT created Policy")
-            .setPriority(1)
-            .buildAndCreate(policyApi)
-        registerForCleanup(policy)
-
-        return policy
-    }
-
-    OktaSignOnPolicy randomSignOnPolicy(String groupId) {
+    OktaSignOnPolicy randomSignOnPolicy() {
 
         PolicyApi policyApi = new PolicyApi(getClient())
 
@@ -203,8 +188,7 @@ abstract class ITSupport implements ClientProvider {
             .setDescription("IT created Policy")
             .setStatus(LifecycleStatus.ACTIVE)
             .setType(PolicyType.OKTA_SIGN_ON)
-            .buildAndCreate(policyApi)
-        registerForCleanup(policy)
+            .buildAndCreate(policyApi) as OktaSignOnPolicy
 
         return policy
     }

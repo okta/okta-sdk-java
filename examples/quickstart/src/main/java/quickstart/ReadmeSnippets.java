@@ -227,7 +227,7 @@ public class ReadmeSnippets {
         Application genericApp = applicationApi.getApplication("app-id", null);
 
         // get sub-class application type
-        BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
+        BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(applicationApi, "bookmark-app-id", null);
     }
 
 //    private void createSwaApplication() {

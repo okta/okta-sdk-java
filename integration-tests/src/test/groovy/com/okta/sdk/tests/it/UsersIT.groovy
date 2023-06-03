@@ -16,6 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.error.ResourceException
+import com.okta.sdk.helper.PolicyApiHelper
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.UserBuilder
@@ -275,8 +276,7 @@ class UsersIT extends ITSupport {
         userApi.getUser(user.getId())
     }
 
-    // TODO: enable it after fixing the inheritance issue
-    @Test(expectedExceptions = ResourceException, groups = "group2", enabled = false)
+    @Test(expectedExceptions = ApiException, groups = "group2")
     void changeStrictPasswordTest() {
 
         def password = 'Passw0rd!2@3#'
@@ -313,7 +313,7 @@ class UsersIT extends ITSupport {
 
         policy.setSettings(passwordPolicySettings)
 
-        policy = policyApi.updatePolicy(policy.getId(), policy)
+        policy = policyApi.replacePolicy(policy.getId(), policy)
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
 
@@ -339,7 +339,7 @@ class UsersIT extends ITSupport {
         passwordPolicyRule.setActions(passwordPolicyRuleActions)
         passwordPolicyRule.setName(policyRuleName)
 
-        PolicyRule policyRule = policyApi.createPolicyRule(policy.getId(), passwordPolicyRule)
+        PolicyRule policyRule = PolicyApiHelper.createPolicyRule(PasswordPolicyRule.class, policyApi, policy.getId(), passwordPolicyRule)
         registerForCleanup(policyRule)
 
         // 1. Create a user
@@ -367,7 +367,7 @@ class UsersIT extends ITSupport {
         userApi.changePassword(user.getId(), changePasswordRequest, true)
 
         UserCredentials userCredentials = userApi.changePassword(user.getId(), changePasswordRequest, false)
-        assertThat userCredentials.getProvider().getType(), equalTo("OKTA")
+        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
         // TODO: fix har file

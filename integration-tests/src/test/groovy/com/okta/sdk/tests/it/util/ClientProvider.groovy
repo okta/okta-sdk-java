@@ -213,7 +213,7 @@ trait ClientProvider implements IHookable {
     void deletePolicy(String id, ApiClient client) {
         log.info("Deleting Policy: {}", id)
         PolicyApi policyApi = new PolicyApi(client)
-        Policy policyToDelete = policyApi.getPolicy(id, "false")
+        Policy policyToDelete = policyApi.getPolicy(id, null)
 
         if (policyToDelete != null) {
             if (policyToDelete.getStatus() == LifecycleStatus.ACTIVE) {

@@ -34,7 +34,6 @@ public class PolicyApiHelper extends PolicyApi {
     public static <T extends Policy> T createPolicy(Class<T> classType, PolicyApi policyApi, Policy policy, Boolean activate) throws ApiException {
 
         ApiClient apiClient = policyApi.getApiClient();
-        Object localVarPostBody = policy;
 
         // verify the required parameter 'policy' is set
         if (policy == null) {
@@ -45,13 +44,11 @@ public class PolicyApiHelper extends PolicyApi {
         String localVarPath = "/api/v1/policies";
 
         StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        Map<String, String> localVarCookieParams = new HashMap<String, String>();
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        localVarQueryParams.addAll(apiClient.parameterToPair("activate", activate));
+        List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("activate", activate));
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
+        Map<String, String> localVarCookieParams = new HashMap<>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {
             "application/json"
@@ -77,7 +74,7 @@ public class PolicyApiHelper extends PolicyApi {
             localVarQueryParams,
             localVarCollectionQueryParams,
             localVarQueryStringJoiner.toString(),
-            localVarPostBody,
+            policy,
             localVarHeaderParams,
             localVarCookieParams,
             localVarFormParams,
@@ -90,7 +87,9 @@ public class PolicyApiHelper extends PolicyApi {
         return (T) createdPolicy;
     }
 
-    public static <T extends Policy> T getPolicy(ApiClient apiClient, String policyId, String expand) throws ApiException {
+    public static <T extends Policy> T getPolicy(PolicyApi policyApi, String policyId, String expand) throws ApiException {
+
+        ApiClient apiClient = policyApi.getApiClient();
 
         // verify the required parameter 'policyId' is set
         if (policyId == null) {
@@ -102,13 +101,11 @@ public class PolicyApiHelper extends PolicyApi {
             .replaceAll("\\{" + "policyId" + "\\}", apiClient.escapeString(policyId));
 
         StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        Map<String, String> localVarCookieParams = new HashMap<String, String>();
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
+        List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("expand", expand));
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
+        Map<String, String> localVarCookieParams = new HashMap<>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {
             "application/json"
@@ -163,7 +160,9 @@ public class PolicyApiHelper extends PolicyApi {
         return (T) policy;
     }
 
-    public static List<Policy> listPolicies(ApiClient apiClient, String type, String status, String expand) throws ApiException {
+    public static List<Policy> listPolicies(PolicyApi policyApi, String type, String status, String expand) throws ApiException {
+
+        ApiClient apiClient = policyApi.getApiClient();
 
         // verify the required parameter 'type' is set
         if (type == null) {
@@ -174,11 +173,11 @@ public class PolicyApiHelper extends PolicyApi {
         String localVarPath = "/api/v1/policies";
 
         StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        Map<String, String> localVarCookieParams = new HashMap<String, String>();
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
+        Map<String, String> localVarCookieParams = new HashMap<>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         localVarQueryParams.addAll(apiClient.parameterToPair("type", type));
         localVarQueryParams.addAll(apiClient.parameterToPair("status", status));
@@ -247,9 +246,9 @@ public class PolicyApiHelper extends PolicyApi {
         return typedPolicies;
     }
 
-    public static <T extends PolicyRule> T createPolicyRule(Class<T> classType, ApiClient apiClient, String policyId, PolicyRule policyRule) throws ApiException {
+    public static <T extends PolicyRule> T createPolicyRule(Class<T> classType, PolicyApi policyApi, String policyId, PolicyRule policyRule) throws ApiException {
 
-        Object localVarPostBody = policyRule;
+        ApiClient apiClient = policyApi.getApiClient();
 
         // verify the required parameter 'policyId' is set
         if (policyId == null) {
@@ -266,11 +265,11 @@ public class PolicyApiHelper extends PolicyApi {
             .replaceAll("\\{" + "policyId" + "\\}", apiClient.escapeString(policyId));
 
         StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        Map<String, String> localVarCookieParams = new HashMap<String, String>();
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
+        Map<String, String> localVarCookieParams = new HashMap<>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
         final String[] localVarAccepts = {
             "application/json"
@@ -297,7 +296,7 @@ public class PolicyApiHelper extends PolicyApi {
             localVarQueryParams,
             localVarCollectionQueryParams,
             localVarQueryStringJoiner.toString(),
-            localVarPostBody,
+            policyRule,
             localVarHeaderParams,
             localVarCookieParams,
             localVarFormParams,
