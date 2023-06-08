@@ -236,14 +236,6 @@ trait ClientProvider implements IHookable {
         }
     }
 
-    void deletePolicyRule(String policyId, String ruleId, ApiClient client) {
-        PolicyApi policyApi = new PolicyApi(client)
-
-        log.info("Deleting PolicyRule: policyId {}, ruleId: {}", policyId, ruleId)
-
-        policyApi.deletePolicyRule(policyId, ruleId)
-    }
-
     @AfterMethod (groups = ["group1", "group2", "group3"])
     void clean() {
         if (!isRunningWithTestServer()) {

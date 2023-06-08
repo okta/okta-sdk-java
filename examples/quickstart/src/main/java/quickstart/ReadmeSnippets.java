@@ -24,6 +24,7 @@ import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.helper.ApplicationApiHelper;
+import com.okta.sdk.helper.UserFactorApiHelper;
 import com.okta.sdk.helper.PolicyApiHelper;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
@@ -184,7 +185,7 @@ public class ReadmeSnippets {
     private void listUserFactors() throws ApiException {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
-        List<UserFactor> userFactors = userFactorApi.listFactors("userId");
+        List<UserFactor> userFactors = UserFactorApiHelper.listFactors(userFactorApi, "userId");
     }
 
     private void enrollUserInFactor() throws ApiException {
@@ -198,23 +199,23 @@ public class ReadmeSnippets {
         smsUserFactor.setFactorType(FactorType.SMS);
         smsUserFactor.setProfile(smsUserFactorProfile);
 
-        UserFactor userFactor = userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
+        UserFactorApiHelper.enrollFactor(SmsUserFactor.class, userFactorApi, "userId", smsUserFactor, true, "templateId", 30, true);
     }
 
     private void activateFactor() throws ApiException {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
-        UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+        CallUserFactor userFactor = UserFactorApiHelper.getFactor(userFactorApi,"userId", "factorId");
         ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
         activateFactorRequest.setPassCode("123456");
 
-        UserFactor activatedUserFactor = userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
+        UserFactorApiHelper.activateFactor(CallUserFactor.class, userFactorApi, "userId", "factorId", activateFactorRequest);
     }
 
     private void verifyFactor() throws ApiException {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
-        UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+        UserFactor userFactor = UserFactorApiHelper.getFactor(userFactorApi, "userId", "factorId");
         VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
         verifyFactorRequest.setPassCode("123456");
 
@@ -223,7 +224,9 @@ public class ReadmeSnippets {
     }
 
     private void listApplications() throws ApiException {
-        List<Application> applications = ApplicationApiHelper.listApplications(client, null, null, null, null, null, true);
+        ApplicationApi applicationApi = new ApplicationApi(client);
+
+        List<Application> applications = ApplicationApiHelper.listApplications(applicationApi, null, null, null, null, null, true);
     }
 
     private void getApplication() throws ApiException {

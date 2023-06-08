@@ -168,7 +168,9 @@ public class ApplicationApiHelper extends ApplicationApi {
         return (T) getObjectMapper().convertValue(applicationApi.replaceApplication(appId, application), clazz);
     }
 
-    public static List<Application> listApplications(ApiClient apiClient, String q, String after, Integer limit, String filter, String expand, Boolean includeNonDeleted) throws ApiException {
+    public static List<Application> listApplications(ApplicationApi applicationApi, String q, String after, Integer limit, String filter, String expand, Boolean includeNonDeleted) throws ApiException {
+
+        ApiClient apiClient = applicationApi.getApiClient();
 
         // create path and map variables
         String localVarPath = "/api/v1/apps";

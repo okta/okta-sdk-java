@@ -41,7 +41,7 @@ import java.util.UUID;
 @SuppressWarnings("PMD.UnusedLocalVariable")
 public class Quickstart {
 
-    public static void main(String[] args) throws ApiException {
+    public static void main(String[] args) throws ApiException, InterruptedException {
 
         final String email = "joe.coder+" + UUID.randomUUID() + "@example.com";
         final String groupName = "java-sdk-quickstart-" + UUID.randomUUID();
@@ -101,6 +101,11 @@ public class Quickstart {
 
             // get the first user in the collection
             println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());
+
+            println("=== TEST CODE BEGIN ===");
+            userApi.deleteUser(user.getId(), false);
+            Thread.sleep(1000);
+            userApi.getUser(user.getId());
         }
         catch (Exception e) {
 

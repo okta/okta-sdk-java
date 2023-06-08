@@ -141,7 +141,6 @@ class PoliciesIT extends ITSupport {
         accessPolicyRule.actions(accessPolicyRuleActions)
 
         AccessPolicyRule createdAccessPolicyRule = PolicyApiHelper.createPolicyRule(AccessPolicyRule.class, policyApi, accessPolicy.getId(), accessPolicyRule)
-        //registerForCleanup(createdAccessPolicyRule)
 
         assertThat(createdAccessPolicyRule, notNullValue())
         assertThat(createdAccessPolicyRule.getName(), is(name))
@@ -181,7 +180,6 @@ class PoliciesIT extends ITSupport {
         oktaSignOnPolicyRuleSignonActions.setRequireFactor(false)
         oktaSignOnPolicyRuleActions.setSignon(oktaSignOnPolicyRuleSignonActions)
         oktaSignOnPolicyRule.actions(oktaSignOnPolicyRuleActions)
-        //registerForCleanup(policyRule)
 
         OktaSignOnPolicyRule createdPolicyRule = PolicyApiHelper.createPolicyRule(OktaSignOnPolicyRule.class, policyApi, policy.getId(), oktaSignOnPolicyRule)
 

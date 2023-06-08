@@ -16,6 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.error.ResourceException
+import com.okta.sdk.helper.ApplicationApiHelper
 import com.okta.sdk.helper.PolicyApiHelper
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
 import com.okta.sdk.resource.group.GroupBuilder
@@ -24,6 +25,7 @@ import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.apache.commons.lang3.RandomStringUtils
 import org.apache.commons.lang3.StringUtils
+import org.openapitools.client.ApiClient
 import org.openapitools.client.ApiException
 import org.openapitools.client.api.*
 import org.openapitools.client.model.*
@@ -340,7 +342,6 @@ class UsersIT extends ITSupport {
         passwordPolicyRule.setName(policyRuleName)
 
         PolicyRule policyRule = PolicyApiHelper.createPolicyRule(PasswordPolicyRule.class, policyApi, policy.getId(), passwordPolicyRule)
-        registerForCleanup(policyRule)
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -766,26 +767,6 @@ class UsersIT extends ITSupport {
         assertThat groups.get(1).getId(), equalTo(group.id)
     }
 
-//    @Test (groups = "group3")
-//    void setUserPasswordWithoutReset() {
-//
-//        def user = randomUser()
-//        def userId = user.getId()
-//
-//        Resource userPasswordRequest = client.instantiate(ExtensibleResource)
-//        userPasswordRequest.put("credentials", client.instantiate(ExtensibleResource)
-//            .put("password", client.instantiate(ExtensibleResource)
-//                .put("value", "aPassword1!".toCharArray())))
-//
-//        Resource result = client.getDataStore().http()
-//            .setBody(userPasswordRequest)
-//            .addQueryParameter("key1", "value1")
-//            .addQueryParameter("key2", "value2")
-//            .post("/api/v1/users/"+ userId, User.class)
-//
-//        assertThat(result, instanceOf(User))
-//    }
-
     @Test (groups = "group3")
     void importUserWithSha512Password() {
 
@@ -859,7 +840,7 @@ class UsersIT extends ITSupport {
         UserApi userApi = new UserApi(getClient())
 
         AuthenticationProvider authenticationProvider = new AuthenticationProvider()
-        authenticationProvider.setName("FEDERATION")
+        authenticationProvider.setName(AuthenticationProviderType.FEDERATION.name())
         authenticationProvider.setType(AuthenticationProviderType.FEDERATION)
 
         // 1. Create a user
@@ -891,7 +872,7 @@ class UsersIT extends ITSupport {
         //  Fetch the GroupAssignment list in two requests
         def expandParameter = "group"
         List<Application> applicationList =
-            applicationApi.listApplications(null, null, null, null, null, null)
+            ApplicationApiHelper.listApplications(applicationApi, null, null, null, null, null, null)
         Application application = applicationList.first()
         List<ApplicationGroupAssignment> groupAssignments =
             applicationApi.listApplicationGroupAssignments(application.getId(), null, null, null, expandParameter)
@@ -904,6 +885,38 @@ class UsersIT extends ITSupport {
             assertThat(embedded.get(expandParameter).get("type"), notNullValue())
             assertThat(embedded.get(expandParameter).get("profile"), notNullValue())
         }
+    }
+
+    //TODO: remove this before check-in
+    @Test (groups = "group3")
+    void testMe() {
+
+        def firstName = 'John'
+        def lastName = 'Forgot-Password'
+        def email = "john-${uniqueTestName}@example.com"
+
+        UserApi userApi = new UserApi(getClient())
+
+        AuthenticationProvider authenticationProvider = new AuthenticationProvider()
+        authenticationProvider.setName("FEDERATION")
+        authenticationProvider.setType(AuthenticationProviderType.FEDERATION)
+
+        // 1. Create a user
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setLogin(email)
+            .setProvider(authenticationProvider)
+            .buildAndCreate(userApi)
+        //registerForCleanup(user)
+        //validateUser(user, firstName, lastName, email)
+
+        userApi.deactivateUser(user.getId(), false)
+        userApi.deleteUser(user.getId(), false)
+
+        User retUser = userApi.getUser(user.getId())
+        println(retUser.getId())
     }
 
     private static String hashPassword(String password, String salt) {

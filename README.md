@@ -315,7 +315,7 @@ groupApi.assignUserToGroup(group.getId(), user.getId());
 [//]: # (method: listUserFactors)
 ```java
 UserFactorApi userFactorApi = new UserFactorApi(client);
-List<UserFactor> userFactors = userFactorApi.listFactors("userId");
+List<UserFactor> userFactors = UserFactorApiHelper.listFactors(userFactorApi, "userId");
 ```
 [//]: # (end: listUserFactors)
 
@@ -330,7 +330,7 @@ SmsUserFactor smsUserFactor = new SmsUserFactor();
 smsUserFactor.setProvider(FactorProvider.OKTA);
 smsUserFactor.setFactorType(FactorType.SMS);
 smsUserFactor.setProfile(smsUserFactorProfile);
-UserFactor userFactor = userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
+UserFactorApiHelper.enrollFactor(SmsUserFactor.class, userFactorApi, "userId", smsUserFactor, true, "templateId", 30, true);
 ```
 [//]: # (end: enrollUserInFactor)
 
@@ -339,10 +339,10 @@ UserFactor userFactor = userFactorApi.enrollFactor("userId", smsUserFactor, true
 [//]: # (method: activateFactor)
 ```java
 UserFactorApi userFactorApi = new UserFactorApi(client);
-UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+CallUserFactor userFactor = UserFactorApiHelper.getFactor(userFactorApi,"userId", "factorId");
 ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
 activateFactorRequest.setPassCode("123456");
-UserFactor activatedUserFactor = userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
+UserFactorApiHelper.activateFactor(CallUserFactor.class, userFactorApi, "userId", "factorId", activateFactorRequest);
 ```
 [//]: # (end: activateFactor)
 
@@ -351,7 +351,7 @@ UserFactor activatedUserFactor = userFactorApi.activateFactor("userId", "factorI
 [//]: # (method: verifyFactor)
 ```java
 UserFactorApi userFactorApi = new UserFactorApi(client);
-UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+UserFactor userFactor = UserFactorApiHelper.getFactor(userFactorApi, "userId", "factorId");
 VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
 verifyFactorRequest.setPassCode("123456");
 VerifyUserFactorResponse verifyUserFactorResponse =
@@ -363,7 +363,8 @@ VerifyUserFactorResponse verifyUserFactorResponse =
 
 [//]: # (method: listApplications)
 ```java
-List<Application> applications = ApplicationApiHelper.listApplications(client, null, null, null, null, null, true);
+ApplicationApi applicationApi = new ApplicationApi(client);
+List<Application> applications = ApplicationApiHelper.listApplications(applicationApi, null, null, null, null, null, true);
 ```
 [//]: # (end: listApplications)
 
@@ -476,12 +477,7 @@ BookmarkApplication createdApp = apiClient.invokeAPI(
     MediaType.APPLICATION_JSON_VALUE,   // accept
     MediaType.APPLICATION_JSON_VALUE,   // content type
     new String[]{ "apiToken", "oauth2" },   // auth names
-    new TypeReference<BookmarkApplication>() {   // return type
-        @Override
-        public Type getType() {
-            return super.getType();
-        }
-    }
+    new TypeReference<BookmarkApplication>() { }  // return type
 );
 ```
 [//]: # (end: callAnotherEndpoint)
@@ -599,7 +595,7 @@ okta.client.requestTimeout = 10
 okta.client.rateLimit.maxRetries = 0
 ```
 
-or
+(or)
  
 ```java
 import com.okta.sdk.client.Client;
@@ -625,9 +621,8 @@ okta.client.requestTimeout = 30
 okta.client.rateLimit.maxRetries = 15
 ```
 
-To disable the retry functionality you need to set both variables to zero:
+To disable the retry functionality you need to set `maxRetries` to zero:
 ```properties
-okta.client.requestTimeout = 0
 okta.client.rateLimit.maxRetries = 0
 ```
 

@@ -15,6 +15,9 @@
 }}
 package {{invokerPackage}};
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.*;
 {{#joda}}
@@ -107,6 +110,9 @@ import {{invokerPackage}}.auth.Authentication;
 
 {{>generatedAnnotation}}
 public class ApiClient{{#jsr310}} extends JavaTimeFormatter{{/jsr310}} {
+
+private static final Logger log = LoggerFactory.getLogger(ApiClient.class);
+
 private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
 private Map<String, String> defaultCookieMap = new HashMap<String, String>();
 private String basePath = "{{{basePath}}}";
@@ -180,9 +186,6 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
             objectMapper.setDateFormat(ApiClient.buildDefaultDateFormat());
 
             dateFormat = ApiClient.buildDefaultDateFormat();
-
-            // Set default User-Agent.
-            setUserAgent("{{#httpUserAgent}}{{{.}}}{{/httpUserAgent}}{{^httpUserAgent}}OpenAPI-Generator/{{{artifactVersion}}}/java{{/httpUserAgent}}");
 
             // Setup authentications (key: authentication name, value: authentication).
             authentications = new HashMap<String, Authentication>();{{#authMethods}}{{#isBasic}}{{#isBasicBasic}}

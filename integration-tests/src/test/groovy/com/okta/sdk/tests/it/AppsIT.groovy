@@ -398,7 +398,7 @@ class AppsIT extends ITSupport {
         assertThat(retrievedBookmarkApplication.getSignOnMode(), equalTo(createdApp.getSignOnMode()))
         assertThat(retrievedBookmarkApplication.getStatus(), equalTo(createdApp.getStatus()))
 
-        List<Application> retrievedApplications = ApplicationApiHelper.listApplications(getClient(), null, null, null, null, null, true)
+        List<Application> retrievedApplications = ApplicationApiHelper.listApplications(applicationApi, null, null, null, null, null, true)
         assertThat(retrievedApplications, notNullValue())
         assertThat(retrievedApplications, hasSize(greaterThanOrEqualTo(1)))
     }

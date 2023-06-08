@@ -16,8 +16,11 @@
  */
 package com.okta.sdk.impl.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.okta.commons.configcheck.ConfigurationValidator;
 import com.okta.commons.http.config.Proxy;
+import com.okta.commons.lang.ApplicationInfo;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
@@ -31,6 +34,7 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.*;
+import com.okta.sdk.impl.deserializer.UserProfileDeserializer;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
@@ -38,19 +42,24 @@ import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
+import com.okta.sdk.impl.serializer.UserProfileSerializer;
 import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 
+import com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.DefaultAuthenticationStrategy;
+import org.apache.hc.client5.http.impl.DefaultConnectionKeepAliveStrategy;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.DefaultBackoffStrategy;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.*;
+import org.apache.hc.core5.http.impl.DefaultConnectionReuseStrategy;
 import org.apache.hc.core5.util.Timeout;
 
 import org.bouncycastle.asn1.ASN1Primitive;
@@ -58,6 +67,7 @@ import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 
 import org.openapitools.client.ApiClient;
 
+import org.openapitools.client.model.UserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +77,7 @@ import java.nio.file.*;
 import java.security.PrivateKey;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -88,21 +99,16 @@ import java.util.concurrent.TimeUnit;
  * @since 0.5.0
  */
 public class DefaultClientBuilder implements ClientBuilder {
-
     private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
-
     private static final String ENVVARS_TOKEN   = "envvars";
     private static final String SYSPROPS_TOKEN  = "sysprops";
     private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
-
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
-
     private ClientConfiguration clientConfig = new ClientConfiguration();
-
     private AccessTokenRetrieverService accessTokenRetrieverService;
 
     public DefaultClientBuilder() {
@@ -347,10 +353,22 @@ public class DefaultClientBuilder implements ClientBuilder {
         CloseableHttpClient httpclient = clientBuilder
             .setDefaultRequestConfig(requestConfig)
             .setConnectionManager(poolingHttpClientConnectionManager)
+            .setRetryStrategy(new OktaHttpRequestRetryStrategy(this.clientConfig.getRetryMaxAttempts()))
+            .setConnectionBackoffStrategy(new DefaultBackoffStrategy())
+            .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
+            .setConnectionReuseStrategy(new DefaultConnectionReuseStrategy())
+            .disableCookieManagement()
             .build();
 
         ApiClient apiClient = new ApiClient(httpclient, this.cacheManager, this.clientConfig);
         apiClient.setBasePath(this.clientConfig.getBaseUrl());
+
+        String userAgentValue = ApplicationInfo.get().entrySet().stream()
+            .map(entry -> entry.getKey() + "/" + entry.getValue())
+            .collect(Collectors.joining(" "));
+        apiClient.setUserAgent(userAgentValue);
+
+        addCustomSerializerAndDeserializers(apiClient);
 
         if (!isOAuth2Flow()) {
             if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
@@ -406,6 +424,14 @@ public class DefaultClientBuilder implements ClientBuilder {
             boolean privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, LinkOption.NOFOLLOW_LINKS);
             Assert.isTrue(privateKeyPemFileExists, "privateKey file does not exist");
         }
+    }
+
+    private void addCustomSerializerAndDeserializers(ApiClient apiClient) {
+        ObjectMapper mapper = apiClient.getObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(UserProfile.class, new UserProfileSerializer());
+        module.addDeserializer(UserProfile.class, new UserProfileDeserializer());
+        mapper.registerModule(module);
     }
 
 //    private BufferingClientHttpRequestFactory requestFactory(ClientConfiguration clientConfig) {
