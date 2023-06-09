@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.error.ResourceException
 import com.okta.sdk.helper.ApplicationApiHelper
 import com.okta.sdk.helper.PolicyApiHelper
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
