@@ -22,8 +22,6 @@ import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
-import com.okta.sdk.error.Error;
-import com.okta.sdk.error.ErrorCause;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.util.ConfigUtil;
