@@ -465,11 +465,7 @@ public class DefaultUserBuilder implements UserBuilder {
     }
 
     @Override
-    public User buildAndCreate(UserApi client) {
-        try {
-            return client.createUser(build(), active, provider != null, nextLogin);
-        } catch (ApiException e) {
-            throw new RuntimeException(e);
-        }
+    public User buildAndCreate(UserApi client) throws ApiException {
+        return client.createUser(build(), active, provider != null, nextLogin);
     }
 }

@@ -17,7 +17,6 @@ package com.okta.sdk.helper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okta.commons.http.MediaType;
 import org.apache.hc.core5.http.HttpStatus;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -28,10 +27,14 @@ import org.openapitools.client.model.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
+import static com.okta.sdk.helper.HelperConstants.*;
+
 /**
  * Helper class that enables working with sub-typed {@link UserFactor} references.
  */
 public class UserFactorApiHelper extends UserFactorApi {
+
+    private static final ObjectMapper objectMapper = getObjectMapper();
 
     public static <T extends UserFactor> T activateFactor(Class<T> classType, UserFactorApi userFactorApi,
                                                           String userId, String factorId,
@@ -54,21 +57,6 @@ public class UserFactorApiHelper extends UserFactorApi {
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId))
             .replaceAll("\\{" + "factorId" + "\\}", apiClient.escapeString(factorId));
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-        final String[] localVarContentTypes = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
-
         TypeReference<T> localVarReturnType = new TypeReference<T>() {
             @Override
             public Type getType() {
@@ -79,16 +67,16 @@ public class UserFactorApiHelper extends UserFactorApi {
         return apiClient.invokeAPI(
             localVarPath,
             HttpMethod.POST.name(),
-            localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             activateFactorRequest,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
-            localVarAccept,
-            localVarContentType,
-            localVarAuthNames,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(MEDIA_TYPE),
+            AUTH_NAMES,
             localVarReturnType
         );
     }
@@ -113,25 +101,11 @@ public class UserFactorApiHelper extends UserFactorApi {
         String localVarPath = "/api/v1/users/{userId}/factors"
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId));
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
         List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
         localVarQueryParams.addAll(apiClient.parameterToPair("updatePhone", updatePhone));
         localVarQueryParams.addAll(apiClient.parameterToPair("templateId", templateId));
         localVarQueryParams.addAll(apiClient.parameterToPair("tokenLifetimeSeconds", tokenLifetimeSeconds));
         localVarQueryParams.addAll(apiClient.parameterToPair("activate", activate));
-
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-        final String[] localVarContentTypes = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
 
         TypeReference<T> localVarReturnType = new TypeReference<T>() {
             @Override
@@ -144,15 +118,15 @@ public class UserFactorApiHelper extends UserFactorApi {
             localVarPath,
             HttpMethod.POST.name(),
             localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             userFactor,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
-            localVarAccept,
-            localVarContentType,
-            localVarAuthNames,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(MEDIA_TYPE),
+            AUTH_NAMES,
             localVarReturnType
         );
     }
@@ -177,35 +151,25 @@ public class UserFactorApiHelper extends UserFactorApi {
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId))
             .replaceAll("\\{" + "factorId" + "\\}", apiClient.escapeString(factorId));
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = apiClient.selectHeaderAccept(MEDIA_TYPE);
 
         final String[] localVarContentTypes = { };
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
-
         TypeReference<T> localVarReturnType = new TypeReference<T>() { };
-        UserFactor userFactor = apiClient.invokeAPI(
+        T userFactor = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
-            localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             null,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
             localVarAccept,
             localVarContentType,
-            localVarAuthNames,
+            AUTH_NAMES,
             localVarReturnType
         );
 
@@ -248,7 +212,7 @@ public class UserFactorApiHelper extends UserFactorApi {
                 return (T) objectMapper.convertValue(userFactor, WebAuthnUserFactor.class);
         }
 
-        return (T) userFactor;
+        return userFactor;
     }
 
     public static List<UserFactor> listFactors(UserFactorApi userFactorApi, String userId) throws ApiException {
@@ -264,43 +228,26 @@ public class UserFactorApiHelper extends UserFactorApi {
         String localVarPath = "/api/v1/users/{userId}/factors"
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId));
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-        final String[] localVarContentTypes = { };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
-
         TypeReference<List<UserFactor>> localVarReturnType = new TypeReference<List<UserFactor>>() {};
         List<UserFactor> userFactors = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
-            localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             null,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
-            localVarAccept,
-            localVarContentType,
-            localVarAuthNames,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(new String[] { }),
+            AUTH_NAMES,
             localVarReturnType
         );
 
-        ObjectMapper objectMapper = getObjectMapper();
-
         List<UserFactor> typedUserFactors = new ArrayList<>(userFactors.size());
 
-        for (UserFactor userFactor : typedUserFactors) {
+        for (UserFactor userFactor : userFactors) {
             switch (Objects.requireNonNull(userFactor.getFactorType())) {
                 case CALL:
                     typedUserFactors.add(objectMapper.convertValue(userFactor, CallUserFactor.class));
@@ -353,43 +300,26 @@ public class UserFactorApiHelper extends UserFactorApi {
         String localVarPath = "/api/v1/users/{userId}/factors/catalog"
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId));
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-        final String[] localVarContentTypes = { };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
-
         TypeReference<List<UserFactor>> localVarReturnType = new TypeReference<List<UserFactor>>() {};
         List<UserFactor> userFactors = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
-            localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             null,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
-            localVarAccept,
-            localVarContentType,
-            localVarAuthNames,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(new String[] { }),
+            AUTH_NAMES,
             localVarReturnType
         );
 
-        ObjectMapper objectMapper = getObjectMapper();
-
         List<UserFactor> typedUserFactors = new ArrayList<>(userFactors.size());
 
-        for (UserFactor userFactor : typedUserFactors) {
+        for (UserFactor userFactor : userFactors) {
             switch (Objects.requireNonNull(userFactor.getFactorType())) {
                 case CALL:
                     typedUserFactors.add(objectMapper.convertValue(userFactor, CallUserFactor.class));
@@ -454,37 +384,22 @@ public class UserFactorApiHelper extends UserFactorApi {
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId))
             .replaceAll("\\{" + "factorId" + "\\}", apiClient.escapeString(factorId));
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        localVarQueryParams.addAll(apiClient.parameterToPair("templateId", templateId));
-
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-        final String[] localVarContentTypes = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
+        List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("templateId", templateId));
 
         TypeReference<T> localVarReturnType = new TypeReference<T>() {};
         return apiClient.invokeAPI(
             localVarPath,
             HttpMethod.POST.name(),
             localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             userFactor,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
-            localVarAccept,
-            localVarContentType,
-            localVarAuthNames,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(MEDIA_TYPE),
+            AUTH_NAMES,
             localVarReturnType
         );
     }

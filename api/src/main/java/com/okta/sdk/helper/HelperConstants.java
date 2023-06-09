@@ -1,6 +1,5 @@
 /*
- * Copyright 2014 Stormpath, Inc.
- * Modifications Copyright 2018 Okta, Inc.
+ * Copyright 2023-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.error;
+package com.okta.sdk.helper;
 
-public class RetryableException extends ResourceException {
+import com.okta.commons.http.MediaType;
 
-    public RetryableException(Error error) {
-        super(error);
-    }
+import java.util.StringJoiner;
+
+public abstract class HelperConstants {
+
+    public static final StringJoiner QUERY_STRING_JOINER = new StringJoiner("&");
+    public static final String[] AUTH_NAMES = new String[] { "apiToken", "oauth2" };
+    public static final String[] MEDIA_TYPE = { MediaType.APPLICATION_JSON_VALUE };
+
 }

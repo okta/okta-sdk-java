@@ -434,35 +434,6 @@ public class DefaultClientBuilder implements ClientBuilder {
         mapper.registerModule(module);
     }
 
-//    private BufferingClientHttpRequestFactory requestFactory(ClientConfiguration clientConfig) {
-//
-//        final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-//
-//        if (clientConfig.getProxy() != null) {
-//            clientBuilder.useSystemProperties();
-//            clientBuilder.setProxy(new HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
-//            if (clientConfig.getProxyUsername() != null) {
-//                final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-//                AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
-//                UsernamePasswordCredentials usernamePasswordCredentials =
-//                    new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword());
-//                credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
-//                clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-//                clientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
-//            }
-//        }
-//
-//        final CloseableHttpClient httpClient = clientBuilder.build();
-//
-//        final HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-//        clientHttpRequestFactory.setHttpClient(httpClient);
-//        clientHttpRequestFactory.setConnectionRequestTimeout(clientConfig.getConnectionTimeout() * 1000);
-//        clientHttpRequestFactory.setConnectTimeout(clientConfig.getConnectionTimeout() * 1000);
-//        clientHttpRequestFactory.setReadTimeout(clientConfig.getConnectionTimeout() * 1000);
-//
-//        return new BufferingClientHttpRequestFactory(clientHttpRequestFactory);
-//    }
-
     @Override
     public ClientBuilder setOrgUrl(String baseUrl) {
         ConfigurationValidator.assertOrgUrl(baseUrl, allowNonHttpsForTesting);

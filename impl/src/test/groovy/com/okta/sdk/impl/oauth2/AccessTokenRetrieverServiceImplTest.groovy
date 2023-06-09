@@ -19,9 +19,7 @@ import com.nimbusds.jose.jwk.RSAKey
 import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.client.AuthorizationMode
 import com.okta.sdk.client.Clients
-import com.okta.sdk.error.Error
-import com.okta.sdk.error.ErrorCause
-import com.okta.sdk.error.ResourceException
+
 import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
 import com.okta.sdk.impl.client.DefaultClientBuilder
@@ -31,9 +29,9 @@ import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
 import org.bouncycastle.openssl.PEMException
 import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
 import org.mockito.ArgumentMatchers
 import org.openapitools.client.ApiClient
+import org.openapitools.client.ApiException
 import org.openapitools.client.Pair
 import org.openapitools.client.model.HttpMethod
 import org.testng.annotations.Test
@@ -43,10 +41,8 @@ import java.security.KeyPairGenerator
 import java.security.PrivateKey
 
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.anyOf
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
-import static org.hamcrest.Matchers.nullValue
 import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
 import static org.testng.Assert.assertEquals
@@ -182,8 +178,8 @@ class AccessTokenRetrieverServiceImplTest {
         when(apiClient.invokeAPI(
             anyString(),
             eq(HttpMethod.POST.name()) as String,
-            anyObject() as List<Pair>,
-            anyObject() as List<Pair>,
+            anyList() as List<Pair>,
+            anyList() as List<Pair>,
             isNull() as String,
             isNull() as String,
             ArgumentMatchers.any() as Map<String, String>,
@@ -343,45 +339,16 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
 
-        Error defaultError = new Error() {
-            @Override
-            int getStatus() {
-                return 401
-            }
-
-            @Override
-            String getCode() {
-                return null
-            }
-
-            @Override
-            String getMessage() {
-                return "Unauthorized"
-            }
-
-            @Override
-            String getId() {
-                return null
-            }
-
-            @Override
-            List<ErrorCause> getCauses() {
-                return null
-            }
-
-            @Override
-            Map<String, List<String>> getHeaders() {
-                return null
-            }
-        }
-
-        ResourceException resourceException = new ResourceException(defaultError)
+        ApiException apiException = new ApiException(401, "Unauthorized", null, "{\n" +
+            "    \"error\" : \"invalid_client\",\n" +
+            "    \"error_description\" : \"No client credentials found.\"\n" +
+            "}")
 
         when(apiClient.invokeAPI(
             anyString(),
             eq(HttpMethod.POST.name()),
-            anyObject() as List<Pair>,
-            anyObject() as List<Pair>,
+            anyList() as List<Pair>,
+            anyList() as List<Pair>,
             isNull() as String,
             isNull() as String,
             ArgumentMatchers.any() as Map<String, String>,
@@ -390,7 +357,7 @@ class AccessTokenRetrieverServiceImplTest {
             anyString(),
             anyString(),
             ArgumentMatchers.any() as String[],
-            any())).thenThrow(resourceException)
+            any())).thenThrow(apiException)
 
         def accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig, apiClient)
         accessTokenRetrieverService.getOAuth2AccessToken()
@@ -400,7 +367,7 @@ class AccessTokenRetrieverServiceImplTest {
 
     // helper methods
 
-    PrivateKey generatePrivateKey(String algorithm, int keySize) {
+    static PrivateKey generatePrivateKey(String algorithm, int keySize) {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm)
         keyPairGenerator.initialize(keySize)
         KeyPair keyPair = keyPairGenerator.generateKeyPair()
@@ -408,20 +375,21 @@ class AccessTokenRetrieverServiceImplTest {
         return privateKey
     }
 
-    String createPemFileContent(PrivateKey privateKey) {
+    static String createPemFileContent(PrivateKey privateKey) {
         String encodedString = "-----BEGIN PRIVATE KEY-----\n"
         encodedString = encodedString + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
         encodedString = encodedString + "-----END PRIVATE KEY-----\n"
         return encodedString
 
     }
-    File writePrivateKeyToPemFile(PrivateKey privateKey, String fileNamePrefix) {
+
+    static File writePrivateKeyToPemFile(PrivateKey privateKey, String fileNamePrefix) {
         File privateKeyPemFile = File.createTempFile(fileNamePrefix,".pem")
         privateKeyPemFile.write(createPemFileContent(privateKey))
         return privateKeyPemFile
     }
 
-    AccessTokenRetrieverServiceImpl getAccessTokenRetrieverServiceInstance(ClientConfiguration clientConfiguration, ApiClient apiClient) {
+    static AccessTokenRetrieverServiceImpl getAccessTokenRetrieverServiceInstance(ClientConfiguration clientConfiguration, ApiClient apiClient) {
         if (clientConfiguration == null) {
             ClientConfiguration cc = new ClientConfiguration()
             cc.setBaseUrlResolver(new BaseUrlResolver() {

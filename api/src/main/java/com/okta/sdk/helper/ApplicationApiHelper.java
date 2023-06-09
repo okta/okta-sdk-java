@@ -15,7 +15,8 @@
  */
 package com.okta.sdk.helper;
 
-import com.okta.commons.http.MediaType;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.core5.http.HttpStatus;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -23,16 +24,17 @@ import org.openapitools.client.Pair;
 import org.openapitools.client.api.ApplicationApi;
 import org.openapitools.client.model.*;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.lang.reflect.Type;
 import java.util.*;
+
+import static com.okta.sdk.helper.HelperConstants.*;
 
 /**
  * Helper class that enables working with sub-typed {@link Application} references.
  */
 public class ApplicationApiHelper extends ApplicationApi {
+
+    private static final ObjectMapper objectMapper = getObjectMapper();
 
     public static <T extends Application> T createApplication(Class<T> classType, ApplicationApi applicationApi, Application application, Boolean activate, String oktaAccessGatewayAgent) throws ApiException {
 
@@ -40,30 +42,18 @@ public class ApplicationApiHelper extends ApplicationApi {
 
         // verify the required parameter 'application' is set
         if (application == null) {
-            throw new ApiException(400, "Missing the required parameter 'application' when calling createApplication");
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'application' when calling createApplication");
         }
 
         // create path and map variables
         String localVarPath = "/api/v1/apps";
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
         List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("activate", activate));
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
         Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
 
         if (oktaAccessGatewayAgent != null) {
             localVarHeaderParams.put("OktaAccessGateway-Agent", apiClient.parameterToString(oktaAccessGatewayAgent));
         }
-
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-        final String[] localVarContentTypes = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
 
         TypeReference<T> localVarReturnType = new TypeReference<T>() {
             @Override
@@ -72,23 +62,21 @@ public class ApplicationApiHelper extends ApplicationApi {
             }
         };
 
-        Application createdApplication = apiClient.invokeAPI(
+        return apiClient.invokeAPI(
             localVarPath,
             HttpMethod.POST.name(),
             localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             application,
             localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
-            localVarAccept,
-            localVarContentType,
-            localVarAuthNames,
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(MEDIA_TYPE),
+            AUTH_NAMES,
             localVarReturnType
         );
-
-        return (T) createdApplication;
     }
 
     public static <T extends Application> T getApplication(ApplicationApi applicationApi, String appId, String expand) throws ApiException {
@@ -104,39 +92,24 @@ public class ApplicationApiHelper extends ApplicationApi {
         String localVarPath = "/api/v1/apps/{appId}"
             .replaceAll("\\{" + "appId" + "\\}", apiClient.escapeString(appId));
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
         List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("expand", expand));
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-        final String[] localVarContentTypes = { };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
 
         TypeReference<T> localVarReturnType = new TypeReference<T>() { };
-        Application application = apiClient.invokeAPI(
+        T application = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
             localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             null,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
-            localVarAccept,
-            localVarContentType,
-            localVarAuthNames,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(new String[] { }),
+            AUTH_NAMES,
             localVarReturnType
         );
-
-        ObjectMapper objectMapper = getObjectMapper();
 
         ApplicationSignOnMode applicationSignOnMode = application.getSignOnMode();
 
@@ -160,10 +133,11 @@ public class ApplicationApiHelper extends ApplicationApi {
                 return (T) objectMapper.convertValue(application, WsFederationApplication.class);
         }
 
-        return (T) application;
+        return application;
     }
 
     public static <T extends Application> T replaceApplication(Class<?> clazz, ApiClient apiClient, String appId, Application application) throws ApiException {
+
         ApplicationApi applicationApi = new ApplicationApi(apiClient);
         return (T) getObjectMapper().convertValue(applicationApi.replaceApplication(appId, application), clazz);
     }
@@ -175,13 +149,7 @@ public class ApplicationApiHelper extends ApplicationApi {
         // create path and map variables
         String localVarPath = "/api/v1/apps";
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
         List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
         localVarQueryParams.addAll(apiClient.parameterToPair("q", q));
         localVarQueryParams.addAll(apiClient.parameterToPair("after", after));
         localVarQueryParams.addAll(apiClient.parameterToPair("limit", limit));
@@ -189,33 +157,23 @@ public class ApplicationApiHelper extends ApplicationApi {
         localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
         localVarQueryParams.addAll(apiClient.parameterToPair("includeNonDeleted", includeNonDeleted));
 
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-        final String[] localVarContentTypes = { };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
-
         TypeReference<List<Application>> localVarReturnType = new TypeReference<List<Application>>() { };
 
         List<Application> applications = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
             localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             null,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
-            localVarAccept,
-            localVarContentType,
-            localVarAuthNames,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(new String[] { }),
+            AUTH_NAMES,
             localVarReturnType
         );
-
-        ObjectMapper objectMapper = getObjectMapper();
 
         List<Application> typedApplications = new ArrayList<>(applications.size());
 
@@ -248,6 +206,7 @@ public class ApplicationApiHelper extends ApplicationApi {
                     break;
             }
         }
+
         return typedApplications;
     }
 }

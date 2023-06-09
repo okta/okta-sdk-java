@@ -105,7 +105,7 @@ public class ReadmeSnippets {
         users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
     }
 
-    private void createUser() {
+    private void createUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 
         User user = UserBuilder.instance()
@@ -115,7 +115,7 @@ public class ReadmeSnippets {
             .buildAndCreate(userApi);
     }
 
-    private void createUserWithGroups() {
+    private void createUserWithGroups() throws ApiException {
         UserApi userApi = new UserApi(client);
 
         User user = UserBuilder.instance()
@@ -148,10 +148,11 @@ public class ReadmeSnippets {
 
     private void listUsersGroup() throws ApiException {
         GroupApi groupApi = new GroupApi(client);
+
         List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null, null, null);
     }
 
-    private void createGroup() {
+    private void createGroup() throws ApiException {
         GroupApi groupApi = new GroupApi(client);
 
         Group group = GroupBuilder.instance()
@@ -235,7 +236,7 @@ public class ReadmeSnippets {
         // get generic application type
         Application genericApp = applicationApi.getApplication("app-id", null);
 
-        // get sub-class application type
+        // get subclass application type
         BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(applicationApi, "bookmark-app-id", null);
     }
 
@@ -271,7 +272,7 @@ public class ReadmeSnippets {
         // get generic policy type
         Policy genericPolicy = PolicyApiHelper.getPolicy(policyApi, "policy-id", null);
 
-        // get sub-class policy type
+        // get subclass policy type
         MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(policyApi, "mfa-policy-id", null);
     }
 

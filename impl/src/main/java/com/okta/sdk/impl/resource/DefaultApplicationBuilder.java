@@ -90,12 +90,8 @@ public class DefaultApplicationBuilder<T extends ApplicationBuilder> implements 
     protected T self() { return (T) this;}
 
     @Override
-    public Application buildAndCreate(ApplicationApi client) {
-        try {
-            return client.createApplication(build(), false, null);
-        } catch (ApiException e) {
-            throw new RuntimeException(e);
-        }
+    public Application buildAndCreate(ApplicationApi client) throws ApiException {
+        return client.createApplication(build(), false, null);
     }
 
     private Application build(){

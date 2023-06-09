@@ -17,7 +17,6 @@ package com.okta.sdk.helper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okta.commons.http.MediaType;
 import org.apache.hc.core5.http.HttpStatus;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -28,10 +27,14 @@ import org.openapitools.client.model.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
+import static com.okta.sdk.helper.HelperConstants.*;
+
 /**
  * Helper class that enables working with sub-typed {@link Policy} references.
  */
 public class PolicyApiHelper extends PolicyApi {
+
+    private static final ObjectMapper objectMapper = getObjectMapper();
 
     public static <T extends Policy> T createPolicy(Class<T> classType, PolicyApi policyApi, Policy policy, Boolean activate) throws ApiException {
 
@@ -45,20 +48,10 @@ public class PolicyApiHelper extends PolicyApi {
         // create path and map variables
         String localVarPath = "/api/v1/policies";
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
         List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("activate", activate));
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
 
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-        final String[] localVarContentTypes = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
+        final String localVarAccept = apiClient.selectHeaderAccept(MEDIA_TYPE);
+        final String localVarContentType = apiClient.selectHeaderContentType(MEDIA_TYPE);
 
         TypeReference<T> localVarReturnType = new TypeReference<T>() {
             @Override
@@ -66,23 +59,22 @@ public class PolicyApiHelper extends PolicyApi {
                 return classType;
             }
         };
-        Policy createdPolicy = apiClient.invokeAPI(
+
+        return apiClient.invokeAPI(
             localVarPath,
             HttpMethod.POST.name(),
             localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             policy,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
             localVarAccept,
             localVarContentType,
-            localVarAuthNames,
+            AUTH_NAMES,
             localVarReturnType
         );
-
-        return (T) createdPolicy;
     }
 
     public static <T extends Policy> T getPolicy(PolicyApi policyApi, String policyId, String expand) throws ApiException {
@@ -98,40 +90,30 @@ public class PolicyApiHelper extends PolicyApi {
         String localVarPath = "/api/v1/policies/{policyId}"
             .replaceAll("\\{" + "policyId" + "\\}", apiClient.escapeString(policyId));
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
         List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("expand", expand));
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        final String localVarAccept = apiClient.selectHeaderAccept(MEDIA_TYPE);
 
         final String[] localVarContentTypes = { };
         final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
+        TypeReference<T> localVarReturnType = new TypeReference<T>() { };
 
-        TypeReference<Policy> localVarReturnType = new TypeReference<Policy>() {
-        };
-        Policy policy = apiClient.invokeAPI(
+        T policy = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
             localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             null,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
             localVarAccept,
             localVarContentType,
-            localVarAuthNames,
+            AUTH_NAMES,
             localVarReturnType
         );
 
-        ObjectMapper objectMapper = getObjectMapper();
         PolicyType policyType = policy.getType();
 
         switch (Objects.requireNonNull(policyType)) {
@@ -151,7 +133,7 @@ public class PolicyApiHelper extends PolicyApi {
                 return (T) objectMapper.convertValue(policy, ProfileEnrollmentPolicy.class);
         }
 
-        return (T) policy;
+        return policy;
     }
 
     public static List<Policy> listPolicies(PolicyApi policyApi, String type, String status, String expand) throws ApiException {
@@ -166,44 +148,28 @@ public class PolicyApiHelper extends PolicyApi {
         // create path and map variables
         String localVarPath = "/api/v1/policies";
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
         List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
         localVarQueryParams.addAll(apiClient.parameterToPair("type", type));
         localVarQueryParams.addAll(apiClient.parameterToPair("status", status));
         localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
 
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        TypeReference<List<Policy>> localVarReturnType = new TypeReference<List<Policy>>() { };
 
-        final String[] localVarContentTypes = { };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
-
-        TypeReference<List<Policy>> localVarReturnType = new TypeReference<List<Policy>>() {
-        };
         List<Policy> policies = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
             localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             null,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
-            localVarAccept,
-            localVarContentType,
-            localVarAuthNames,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(new String[] { }),
+            AUTH_NAMES,
             localVarReturnType
         );
-
-        ObjectMapper objectMapper = getObjectMapper();
 
         List<Policy> typedPolicies = new ArrayList<>(policies.size());
 
@@ -254,20 +220,8 @@ public class PolicyApiHelper extends PolicyApi {
         String localVarPath = "/api/v1/policies/{policyId}/rules"
             .replaceAll("\\{" + "policyId" + "\\}", apiClient.escapeString(policyId));
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
-
-        final String[] localVarAccepts = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-
-        final String[] localVarContentTypes = { MediaType.APPLICATION_JSON_VALUE };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
+        final String localVarAccept = apiClient.selectHeaderAccept(MEDIA_TYPE);
+        final String localVarContentType = apiClient.selectHeaderContentType(MEDIA_TYPE);
 
         TypeReference<T> localVarReturnType = new TypeReference<T>() {
             @Override
@@ -276,22 +230,20 @@ public class PolicyApiHelper extends PolicyApi {
             }
         };
 
-        PolicyRule createdPolicyRule = apiClient.invokeAPI(
+        return apiClient.invokeAPI(
             localVarPath,
             HttpMethod.POST.name(),
-            localVarQueryParams,
-            localVarCollectionQueryParams,
-            localVarQueryStringJoiner.toString(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
             policyRule,
-            localVarHeaderParams,
-            localVarCookieParams,
-            localVarFormParams,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
             localVarAccept,
             localVarContentType,
-            localVarAuthNames,
+            AUTH_NAMES,
             localVarReturnType
         );
-
-        return (T) createdPolicyRule;
     }
 }

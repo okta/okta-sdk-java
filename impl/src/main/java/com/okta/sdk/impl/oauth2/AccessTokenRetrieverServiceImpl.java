@@ -23,7 +23,7 @@ import com.okta.commons.lang.Strings;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.error.Error;
-import com.okta.sdk.error.ResourceException;
+import com.okta.sdk.error.ErrorCause;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.util.ConfigUtil;
@@ -34,6 +34,7 @@ import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.Pair;
 import org.openapitools.client.model.HttpMethod;
 import org.slf4j.Logger;
@@ -111,9 +112,8 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             apiClient.setAccessToken(oAuth2AccessToken.getAccessToken());
 
             return oAuth2AccessToken;
-        } catch (ResourceException e) {
-            Error defaultError = e.getError();
-            throw new OAuth2HttpException(defaultError.getMessage(), e, e.getStatus() == 401);
+        } catch (ApiException e) {
+            throw new OAuth2HttpException(e.getMessage(), e, e.getCode() == 401);
         } catch (Exception e) {
             throw new OAuth2TokenRetrieverException("Exception while trying to get " +
                 "OAuth2 access token for client id " + tokenClientConfiguration.getClientId(), e);

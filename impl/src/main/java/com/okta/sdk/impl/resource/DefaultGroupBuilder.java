@@ -40,7 +40,7 @@ public class DefaultGroupBuilder implements GroupBuilder {
     }
 
     @Override
-    public Group buildAndCreate(GroupApi client) {
+    public Group buildAndCreate(GroupApi client) throws ApiException {
 
         Group group = new Group();
         GroupProfile groupProfile = new GroupProfile();
@@ -48,10 +48,6 @@ public class DefaultGroupBuilder implements GroupBuilder {
         if (Strings.hasText(description)) groupProfile.setDescription(description);
         group.setProfile(groupProfile);
 
-        try {
-            return client.createGroup(group);
-        } catch (ApiException e) {
-            throw new RuntimeException(e);
-        }
+        return client.createGroup(group);
     }
 }

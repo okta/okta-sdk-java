@@ -16,6 +16,7 @@
 package com.okta.sdk.resource.group;
 
 import com.okta.commons.lang.Classes;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.GroupApi;
 import org.openapitools.client.model.Group;
 
@@ -29,5 +30,5 @@ public interface GroupBuilder {
 
     GroupBuilder setDescription(String description);
 
-    Group buildAndCreate(GroupApi client);
+    Group buildAndCreate(GroupApi client) throws ApiException;
 }
