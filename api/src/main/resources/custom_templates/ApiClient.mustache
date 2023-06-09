@@ -1139,7 +1139,8 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
                                                                                             if (method == HttpMethod.GET.name() &&
                                                                                             !returnType.getType().getTypeName().contains("List") &&
-                                                                                            !(url.contains("expand"))) {
+                                                                                            !(url.contains("expand")) &&
+                                                                                            !(url.contains(".well-known/okta-organization"))) {
 
                                                                                             T cacheData = (T) cache.get(cacheKey);
 
@@ -1185,7 +1186,7 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             try (CloseableHttpResponse response = httpClient.execute(builder.build(), context)) {
                                                                                             T t = processResponse(response, returnType);
 
-                                                                                            if (cache.get(cacheKey) != null) {
+                                                                                            if (cache.get(cacheKey) != null && !method.equals(HttpMethod.DELETE.name())) {
                                                                                             cache.put(cacheKey, t);
                                                                                             }
                                                                                             return t;
