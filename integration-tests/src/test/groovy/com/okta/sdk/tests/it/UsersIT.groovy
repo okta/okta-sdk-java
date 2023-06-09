@@ -887,38 +887,6 @@ class UsersIT extends ITSupport {
         }
     }
 
-    //TODO: remove this before check-in
-    @Test (groups = "group3")
-    void testMe() {
-
-        def firstName = 'John'
-        def lastName = 'Forgot-Password'
-        def email = "john-${uniqueTestName}@example.com"
-
-        UserApi userApi = new UserApi(getClient())
-
-        AuthenticationProvider authenticationProvider = new AuthenticationProvider()
-        authenticationProvider.setName("FEDERATION")
-        authenticationProvider.setType(AuthenticationProviderType.FEDERATION)
-
-        // 1. Create a user
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName(firstName)
-            .setLastName(lastName)
-            .setLogin(email)
-            .setProvider(authenticationProvider)
-            .buildAndCreate(userApi)
-        //registerForCleanup(user)
-        //validateUser(user, firstName, lastName, email)
-
-        userApi.deactivateUser(user.getId(), false)
-        userApi.deleteUser(user.getId(), false)
-
-        User retUser = userApi.getUser(user.getId())
-        println(retUser.getId())
-    }
-
     private static String hashPassword(String password, String salt) {
         def messageDigest = MessageDigest.getInstance("SHA-512")
         messageDigest.update(StringUtils.getBytes(salt, StandardCharsets.UTF_8))
