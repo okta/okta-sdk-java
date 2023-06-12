@@ -54,6 +54,8 @@ import static org.testng.Assert.assertEquals
  */
 class AccessTokenRetrieverServiceImplTest {
 
+    // dummy private key generated and used for unit test only
+
     private static final String PRIVATE_KEY = "-----BEGIN PRIVATE KEY-----\n" +
         "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDH0Y47a8w/Tgiv" +
         "V4mytjBSR/5HIu+P58/v3g6gbYvxC/NWPzPZ3hjTeRskJpB1AfNwm55rAhjSD99d" +
@@ -82,6 +84,8 @@ class AccessTokenRetrieverServiceImplTest {
         "8zZeebOsKqNB3Nlm8wNrYbJJvpTEyt6kpZi+YJ/S4mQ/0CzIpmq6014aKm16NJxv" +
         "AHYKHuDUvhiDFwadf8Q7kSK5KA==\n" +
         "-----END PRIVATE KEY-----"
+
+    // dummy private key generated and used for unit test only
 
     private static final String RSA_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n" +
         "MIIEpQIBAAKCAQEAx9GOO2vMP04Ir1eJsrYwUkf+RyLvj+fP794OoG2L8QvzVj8z" +
@@ -124,6 +128,8 @@ class AccessTokenRetrieverServiceImplTest {
         def clientConfiguration = mock(ClientConfiguration)
         def apiClient = mock(ApiClient)
 
+        // dummy private key generated and used for unit test only
+
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
 
@@ -144,6 +150,8 @@ class AccessTokenRetrieverServiceImplTest {
 
         def apiClient = mock(ApiClient)
         def clientConfiguration = mock(ClientConfiguration)
+
+        // dummy private key generated and used for unit test only
 
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
@@ -204,6 +212,8 @@ class AccessTokenRetrieverServiceImplTest {
         def clientConfig = mock(ClientConfiguration)
         def apiClient = mock(ApiClient)
 
+        // dummy private key generated and used for unit test only
+
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
 
@@ -263,6 +273,8 @@ class AccessTokenRetrieverServiceImplTest {
         def apiClient = mock(ApiClient)
         def clientConfig = mock(ClientConfiguration)
 
+        // dummy private key generated and used for unit test only
+
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
 
         String baseUrl = "https://sample.okta.com"
@@ -290,6 +302,8 @@ class AccessTokenRetrieverServiceImplTest {
 
         def tokenClient = mock(ApiClient)
         def clientConfig = mock(ClientConfiguration)
+
+        // dummy private key generated and used for unit test only
 
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
@@ -320,6 +334,8 @@ class AccessTokenRetrieverServiceImplTest {
 
         def apiClient = mock(ApiClient)
         def clientConfig = mock(ClientConfiguration)
+
+        // dummy private key generated and used for unit test only
 
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
@@ -367,7 +383,7 @@ class AccessTokenRetrieverServiceImplTest {
 
     // helper methods
 
-    // generates dummy private key used for unit test purpose only
+    // dummy private key generated and used for unit test only
 
     static PrivateKey generatePrivateKey(String algorithm, int keySize) {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm)
