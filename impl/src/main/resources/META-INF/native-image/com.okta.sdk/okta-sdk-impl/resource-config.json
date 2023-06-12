@@ -1,9 +1,0 @@
-{
-  "resources":[
-    {"pattern":"\\QMETA-INF/okta/version.properties\\E"},
-    {"pattern":"\\QMETA-INF/services/com.okta.sdk.impl.ds.ResourceFactoryConfig\\E"},
-    {"pattern":"\\QMETA-INF/services/com.okta.sdk.impl.http.RequestExecutorFactory\\E"},
-    {"pattern":"\\Qcom/okta/sdk/config/okta.properties\\E"},
-    {"pattern":"\\Qcom/okta/sdk/resource/discrimination.json\\E"}
-  ]
-}
