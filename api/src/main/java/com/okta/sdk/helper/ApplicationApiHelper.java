@@ -16,7 +16,6 @@
 package com.okta.sdk.helper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.core5.http.HttpStatus;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -28,21 +27,32 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static com.okta.sdk.helper.HelperConstants.*;
+import static com.okta.sdk.helper.HelperUtil.getApplicationType;
 
 /**
- * Helper class that enables working with sub-typed {@link Application} references.
+ * Helper class that enables working with subclassed {@link Application} references.
  */
-public class ApplicationApiHelper extends ApplicationApi {
+public final class ApplicationApiHelper<T extends Application> extends ApplicationApi {
 
-    private static final ObjectMapper objectMapper = getObjectMapper();
+    public ApplicationApiHelper(ApplicationApi applicationApi) {
+        super(applicationApi.getApiClient());
+    }
 
-    public static <T extends Application> T createApplication(Class<T> classType, ApplicationApi applicationApi, Application application, Boolean activate, String oktaAccessGatewayAgent) throws ApiException {
+    public ApplicationApiHelper(ApiClient apiClient) {
+        super(apiClient);
+    }
 
-        ApiClient apiClient = applicationApi.getApiClient();
+    public <T extends Application> T createApplicationOfType(Class<T> classType,
+                                                             Application application,
+                                                             Boolean activate,
+                                                             String oktaAccessGatewayAgent) throws ApiException {
+
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'application' is set
         if (application == null) {
-            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'application' when calling createApplication");
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST,
+                "Missing the required parameter 'application' when calling createApplication");
         }
 
         // create path and map variables
@@ -79,13 +89,15 @@ public class ApplicationApiHelper extends ApplicationApi {
         );
     }
 
-    public static <T extends Application> T getApplication(ApplicationApi applicationApi, String appId, String expand) throws ApiException {
+    @Override
+    public T getApplication(String appId, String expand) throws ApiException {
 
-        ApiClient apiClient = applicationApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'appId' is set
         if (appId == null) {
-            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'appId' when calling getApplication");
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST,
+                "Missing the required parameter 'appId' when calling getApplication");
         }
 
         // create path and map variables
@@ -95,6 +107,7 @@ public class ApplicationApiHelper extends ApplicationApi {
         List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("expand", expand));
 
         TypeReference<T> localVarReturnType = new TypeReference<T>() { };
+
         T application = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
@@ -111,40 +124,14 @@ public class ApplicationApiHelper extends ApplicationApi {
             localVarReturnType
         );
 
-        ApplicationSignOnMode applicationSignOnMode = application.getSignOnMode();
-
-        switch (Objects.requireNonNull(applicationSignOnMode)) {
-            case AUTO_LOGIN:
-                return (T) objectMapper.convertValue(application, AutoLoginApplication.class);
-            case BASIC_AUTH:
-                return (T) objectMapper.convertValue(application, BasicAuthApplication.class);
-            case BOOKMARK:
-                return (T) objectMapper.convertValue(application, BookmarkApplication.class);
-            case BROWSER_PLUGIN:
-                return (T) objectMapper.convertValue(application, BrowserPluginApplication.class);
-            case OPENID_CONNECT:
-                return (T) objectMapper.convertValue(application, OpenIdConnectApplication.class);
-            case SAML_1_1:
-            case SAML_2_0:
-                return (T) objectMapper.convertValue(application, SamlApplication.class);
-            case SECURE_PASSWORD_STORE:
-                return (T) objectMapper.convertValue(application, SecurePasswordStoreApplication.class);
-            case WS_FEDERATION:
-                return (T) objectMapper.convertValue(application, WsFederationApplication.class);
-        }
-
-        return application;
+        return (T) getObjectMapper().convertValue(application, getApplicationType(application));
     }
 
-    public static <T extends Application> T replaceApplication(Class<?> clazz, ApiClient apiClient, String appId, Application application) throws ApiException {
+    @Override
+    public List<Application> listApplications(String q, String after, Integer limit, String filter,
+                                              String expand, Boolean includeNonDeleted) throws ApiException {
 
-        ApplicationApi applicationApi = new ApplicationApi(apiClient);
-        return (T) getObjectMapper().convertValue(applicationApi.replaceApplication(appId, application), clazz);
-    }
-
-    public static List<Application> listApplications(ApplicationApi applicationApi, String q, String after, Integer limit, String filter, String expand, Boolean includeNonDeleted) throws ApiException {
-
-        ApiClient apiClient = applicationApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // create path and map variables
         String localVarPath = "/api/v1/apps";
@@ -177,36 +164,55 @@ public class ApplicationApiHelper extends ApplicationApi {
 
         List<Application> typedApplications = new ArrayList<>(applications.size());
 
-        for (Application application : applications) {
-            switch (Objects.requireNonNull(application.getSignOnMode())) {
-                case AUTO_LOGIN:
-                    typedApplications.add(objectMapper.convertValue(application, AutoLoginApplication.class));
-                    break;
-                case BASIC_AUTH:
-                    typedApplications.add(objectMapper.convertValue(application, BasicAuthApplication.class));
-                    break;
-                case BOOKMARK:
-                    typedApplications.add(objectMapper.convertValue(application, BookmarkApplication.class));
-                    break;
-                case BROWSER_PLUGIN:
-                    typedApplications.add(objectMapper.convertValue(application, BrowserPluginApplication.class));
-                    break;
-                case OPENID_CONNECT:
-                    typedApplications.add(objectMapper.convertValue(application, OpenIdConnectApplication.class));
-                    break;
-                case SAML_1_1:
-                case SAML_2_0:
-                    typedApplications.add(objectMapper.convertValue(application, SamlApplication.class));
-                    break;
-                case SECURE_PASSWORD_STORE:
-                    typedApplications.add(objectMapper.convertValue(application, SecurePasswordStoreApplication.class));
-                    break;
-                case WS_FEDERATION:
-                    typedApplications.add(objectMapper.convertValue(application, WsFederationApplication.class));
-                    break;
-            }
-        }
+        applications.forEach(application ->
+            typedApplications.add(getObjectMapper().convertValue(application, getApplicationType(application))));
 
         return typedApplications;
+    }
+
+    public <T extends Application> T replaceApplicationOfType(Class<T> classType,
+                                                              String appId,
+                                                              Application application) throws ApiException {
+
+        ApiClient apiClient = getApiClient();
+
+        // verify the required parameter 'appId' is set
+        if (appId == null) {
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'appId' when calling replaceApplication");
+        }
+
+        // verify the required parameter 'application' is set
+        if (application == null) {
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'application' when calling replaceApplication");
+        }
+
+        // create path and map variables
+        String localVarPath = "/api/v1/apps/{appId}"
+            .replaceAll("\\{" + "appId" + "\\}", apiClient.escapeString(appId));
+
+        TypeReference<T> localVarReturnType = new TypeReference<T>() {
+            @Override
+            public Type getType() {
+                return classType;
+            }
+        };
+
+        T app = apiClient.invokeAPI(
+            localVarPath,
+            HttpMethod.PUT.name(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
+            application,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(MEDIA_TYPE),
+            AUTH_NAMES,
+            localVarReturnType
+        );
+
+        return (T) getObjectMapper().convertValue(app, getApplicationType(app));
     }
 }

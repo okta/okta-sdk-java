@@ -102,7 +102,7 @@ public class ReadmeSnippets {
         List<User> users = userApi.listUsers(null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
 
         // filter parameter
-        users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
+        userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
     }
 
     private void createUser() throws ApiException {
@@ -184,13 +184,13 @@ public class ReadmeSnippets {
     }
 
     private void listUserFactors() throws ApiException {
-        UserFactorApi userFactorApi = new UserFactorApi(client);
+        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
 
-        List<UserFactor> userFactors = UserFactorApiHelper.listFactors(userFactorApi, "userId");
+        List<UserFactor> userFactors = userFactorApiHelper.listFactors("userId");
     }
 
     private void enrollUserInFactor() throws ApiException {
-        UserFactorApi userFactorApi = new UserFactorApi(client);
+        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
 
         SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
         smsUserFactorProfile.setPhoneNumber("555 867 5309");
@@ -200,48 +200,45 @@ public class ReadmeSnippets {
         smsUserFactor.setFactorType(FactorType.SMS);
         smsUserFactor.setProfile(smsUserFactorProfile);
 
-        UserFactorApiHelper.enrollFactor(SmsUserFactor.class, userFactorApi, "userId", smsUserFactor, true, "templateId", 30, true);
+        userFactorApiHelper.enrollFactorOfType(SmsUserFactor.class, "userId", smsUserFactor, true, "templateId", 30, true);
     }
 
     private void activateFactor() throws ApiException {
-        UserFactorApi userFactorApi = new UserFactorApi(client);
+        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
 
-        CallUserFactor userFactor = UserFactorApiHelper.getFactor(userFactorApi,"userId", "factorId");
+        CallUserFactor userFactor = (CallUserFactor) userFactorApiHelper.getFactor("userId", "factorId");
         ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
         activateFactorRequest.setPassCode("123456");
 
-        UserFactorApiHelper.activateFactor(CallUserFactor.class, userFactorApi, "userId", "factorId", activateFactorRequest);
+        userFactorApiHelper.activateFactorOfType(CallUserFactor.class, "userId", "factorId", activateFactorRequest);
     }
 
     private void verifyFactor() throws ApiException {
-        UserFactorApi userFactorApi = new UserFactorApi(client);
+        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
 
-        UserFactor userFactor = UserFactorApiHelper.getFactor(userFactorApi, "userId", "factorId");
+        UserFactor userFactor = userFactorApiHelper.getFactor( "userId", "factorId");
         VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
         verifyFactorRequest.setPassCode("123456");
 
         VerifyUserFactorResponse verifyUserFactorResponse =
-            userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
+            userFactorApiHelper.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
     }
 
     private void listApplications() throws ApiException {
-        ApplicationApi applicationApi = new ApplicationApi(client);
+        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
 
-        List<Application> applications = ApplicationApiHelper.listApplications(applicationApi, null, null, null, null, null, true);
+        List<Application> applications = applicationApiHelper.listApplications(null, null, null, null, null, true);
     }
 
     private void getApplication() throws ApiException {
-        ApplicationApi applicationApi = new ApplicationApi(client);
+        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
 
-        // get generic application type
-        Application genericApp = applicationApi.getApplication("app-id", null);
-
-        // get subclass application type
-        BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(applicationApi, "bookmark-app-id", null);
+        // get bookmarkApplication application type
+        BookmarkApplication bookmarkApp = (BookmarkApplication) applicationApiHelper.getApplication("bookmark-app-id", null);
     }
 
     private void createSwaApplication() throws ApiException {
-        ApplicationApi applicationApi = new ApplicationApi(client);
+        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
 
         SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
         swaApplicationSettingsApplication.buttonField("btn-login")
@@ -255,32 +252,31 @@ public class ReadmeSnippets {
         browserPluginApplication.label("Sample Plugin App");
         browserPluginApplication.settings(swaApplicationSettings);
 
-        // create
+        // create BrowserPluginApplication app type
         BrowserPluginApplication createdApp =
-            ApplicationApiHelper.createApplication(BrowserPluginApplication.class, applicationApi, browserPluginApplication, true, null);
+            applicationApiHelper.createApplicationOfType(BrowserPluginApplication.class, browserPluginApplication, true, null);
     }
 
     private void listPolicies() throws ApiException {
-        PolicyApi policyApi = new PolicyApi(client);
+        PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
 
-        List<Policy> policies = PolicyApiHelper.listPolicies(policyApi, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+        List<Policy> policies = policyPolicyApiHelper.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
     }
 
     private void getPolicy() throws ApiException {
-        PolicyApi policyApi = new PolicyApi(client);
+        PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
 
-        // get generic policy type
-        Policy genericPolicy = PolicyApiHelper.getPolicy(policyApi, "policy-id", null);
-
-        // get subclass policy type
-        MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(policyApi, "mfa-policy-id", null);
+        // get MultifactorEnrollmentPolicy policy type
+        MultifactorEnrollmentPolicy mfaPolicy =
+            (MultifactorEnrollmentPolicy) policyPolicyApiHelper.getPolicy("mfa-policy-id", null);
     }
 
     private void listSysLogs() throws ApiException {
         SystemLogApi systemLogApi = new SystemLogApi(client);
 
         // use a filter (start date, end date, filter, or query, sort order) all options are nullable
-        List<LogEvent> logEvents = systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
+        List<LogEvent> logEvents =
+            systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
     }
 
     private void callAnotherEndpoint() throws ApiException {

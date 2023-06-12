@@ -57,12 +57,9 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
     }
 
     @Override
-    public OktaSignOnPolicy buildAndCreate(PolicyApi client) {
-        try {
-            return PolicyApiHelper.createPolicy(OktaSignOnPolicy.class, client, build(), isActive);
-        } catch (ApiException e) {
-            throw new RuntimeException(e);
-        }
+    public OktaSignOnPolicy buildAndCreate(PolicyApi client) throws ApiException {
+        return new PolicyApiHelper<>(new PolicyApiHelper<>(client.getApiClient()))
+            .createPolicyOfType(OktaSignOnPolicy.class, build(), isActive);
     }
 
     private OktaSignOnPolicy build() {

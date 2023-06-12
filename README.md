@@ -207,7 +207,7 @@ UserApi userApi = new UserApi(client);
 List<User> users = userApi.listUsers(null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
 
 // filter parameter
-users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
+userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
 ```
 [//]: # (end: userSearch)
 
@@ -314,8 +314,8 @@ groupApi.assignUserToGroup(group.getId(), user.getId());
 
 [//]: # (method: listUserFactors)
 ```java
-UserFactorApi userFactorApi = new UserFactorApi(client);
-List<UserFactor> userFactors = UserFactorApiHelper.listFactors(userFactorApi, "userId");
+UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+List<UserFactor> userFactors = userFactorApiHelper.listFactors("userId");
 ```
 [//]: # (end: listUserFactors)
 
@@ -323,14 +323,14 @@ List<UserFactor> userFactors = UserFactorApiHelper.listFactors(userFactorApi, "u
 
 [//]: # (method: enrollUserInFactor)
 ```java
-UserFactorApi userFactorApi = new UserFactorApi(client);
+UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
 SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
 smsUserFactorProfile.setPhoneNumber("555 867 5309");
 SmsUserFactor smsUserFactor = new SmsUserFactor();
 smsUserFactor.setProvider(FactorProvider.OKTA);
 smsUserFactor.setFactorType(FactorType.SMS);
 smsUserFactor.setProfile(smsUserFactorProfile);
-UserFactorApiHelper.enrollFactor(SmsUserFactor.class, userFactorApi, "userId", smsUserFactor, true, "templateId", 30, true);
+userFactorApiHelper.enrollFactorOfType(SmsUserFactor.class, "userId", smsUserFactor, true, "templateId", 30, true);
 ```
 [//]: # (end: enrollUserInFactor)
 
@@ -338,11 +338,11 @@ UserFactorApiHelper.enrollFactor(SmsUserFactor.class, userFactorApi, "userId", s
 
 [//]: # (method: activateFactor)
 ```java
-UserFactorApi userFactorApi = new UserFactorApi(client);
-CallUserFactor userFactor = UserFactorApiHelper.getFactor(userFactorApi,"userId", "factorId");
+UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+CallUserFactor userFactor = (CallUserFactor) userFactorApiHelper.getFactor("userId", "factorId");
 ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
 activateFactorRequest.setPassCode("123456");
-UserFactorApiHelper.activateFactor(CallUserFactor.class, userFactorApi, "userId", "factorId", activateFactorRequest);
+userFactorApiHelper.activateFactorOfType(CallUserFactor.class, "userId", "factorId", activateFactorRequest);
 ```
 [//]: # (end: activateFactor)
 
@@ -350,43 +350,20 @@ UserFactorApiHelper.activateFactor(CallUserFactor.class, userFactorApi, "userId"
 
 [//]: # (method: verifyFactor)
 ```java
-UserFactorApi userFactorApi = new UserFactorApi(client);
-UserFactor userFactor = UserFactorApiHelper.getFactor(userFactorApi, "userId", "factorId");
+UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+UserFactor userFactor = userFactorApiHelper.getFactor( "userId", "factorId");
 VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
 verifyFactorRequest.setPassCode("123456");
 VerifyUserFactorResponse verifyUserFactorResponse =
-    userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
+    userFactorApiHelper.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
 ```
 [//]: # (end: verifyFactor)
-
-### List all Applications
-
-[//]: # (method: listApplications)
-```java
-ApplicationApi applicationApi = new ApplicationApi(client);
-List<Application> applications = ApplicationApiHelper.listApplications(applicationApi, null, null, null, null, null, true);
-```
-[//]: # (end: listApplications)
-
-### Get an Application
-
-[//]: # (method: getApplication)
-```java
-ApplicationApi applicationApi = new ApplicationApi(client);
-
-// get generic application type
-Application genericApp = applicationApi.getApplication("app-id", null);
-
-// get sub-class application type
-BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(applicationApi, "bookmark-app-id", null);
-```
-[//]: # (end: getApplication)
 
 ### Create a SWA Application
 
 [//]: # (method: createSwaApplication)
 ```java
-ApplicationApi applicationApi = new ApplicationApi(client);
+ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
 SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
 swaApplicationSettingsApplication.buttonField("btn-login")
     .passwordField("txtbox-password")
@@ -399,34 +376,52 @@ browserPluginApplication.name("template_swa");
 browserPluginApplication.label("Sample Plugin App");
 browserPluginApplication.settings(swaApplicationSettings);
 
-// create
+// create BrowserPluginApplication app type
 BrowserPluginApplication createdApp =
-    ApplicationApiHelper.createApplication(BrowserPluginApplication.class, applicationApi, browserPluginApplication, true, null);
+    applicationApiHelper.createApplicationOfType(BrowserPluginApplication.class, browserPluginApplication, true, null);
 ```
 [//]: # (end: createSwaApplication)
 
-### List Policies
+### Get an Application
 
-[//]: # (method: listPolicies)
+[//]: # (method: getApplication)
 ```java
-PolicyApi policyApi = new PolicyApi(client);
-List<Policy> policies = PolicyApiHelper.listPolicies(policyApi, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
+
+// get bookmarkApplication application type
+BookmarkApplication bookmarkApp = (BookmarkApplication) applicationApiHelper.getApplication("bookmark-app-id", null);
 ```
-[//]: # (end: listPolicies)
+[//]: # (end: getApplication)
+
+### List all Applications
+
+[//]: # (method: listApplications)
+```java
+ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
+List<Application> applications = applicationApiHelper.listApplications(null, null, null, null, null, true);
+```
+[//]: # (end: listApplications)
 
 ### Get a Policy
 
 [//]: # (method: getPolicy)
 ```java
-PolicyApi policyApi = new PolicyApi(client);
+PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
 
-// get generic policy type
-Policy genericPolicy = PolicyApiHelper.getPolicy(policyApi, "policy-id", null);
-
-// get sub-class policy type
-MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(policyApi, "mfa-policy-id", null);
+// get MultifactorEnrollmentPolicy policy type
+MultifactorEnrollmentPolicy mfaPolicy =
+    (MultifactorEnrollmentPolicy) policyPolicyApiHelper.getPolicy("mfa-policy-id", null);
 ```
 [//]: # (end: getPolicy)
+
+### List Policies
+
+[//]: # (method: listPolicies)
+```java
+PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
+List<Policy> policies = policyPolicyApiHelper.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+```
+[//]: # (end: listPolicies)
 
 ### List System Logs
 [//]: # (method: listSysLogs)
@@ -434,7 +429,8 @@ MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(policyApi, "mf
 SystemLogApi systemLogApi = new SystemLogApi(client);
 
 // use a filter (start date, end date, filter, or query, sort order) all options are nullable
-List<LogEvent> logEvents = systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
+List<LogEvent> logEvents =
+    systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
 ```
 [//]: # (end: listSysLogs)
 

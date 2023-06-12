@@ -16,7 +16,6 @@
 package com.okta.sdk.helper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.core5.http.HttpStatus;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -28,17 +27,26 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static com.okta.sdk.helper.HelperConstants.*;
+import static com.okta.sdk.helper.HelperUtil.getPolicyType;
 
 /**
  * Helper class that enables working with sub-typed {@link Policy} references.
  */
-public class PolicyApiHelper extends PolicyApi {
+public class PolicyApiHelper<T extends Policy> extends PolicyApi {
 
-    private static final ObjectMapper objectMapper = getObjectMapper();
+    public PolicyApiHelper(PolicyApi policyApi) {
+        super(policyApi.getApiClient());
+    }
 
-    public static <T extends Policy> T createPolicy(Class<T> classType, PolicyApi policyApi, Policy policy, Boolean activate) throws ApiException {
+    public PolicyApiHelper(ApiClient apiClient) {
+        super(apiClient);
+    }
 
-        ApiClient apiClient = policyApi.getApiClient();
+    public <T extends Policy> T createPolicyOfType(Class<T> classType,
+                                                   Policy policy,
+                                                   Boolean activate) throws ApiException {
+
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'policy' is set
         if (policy == null) {
@@ -77,9 +85,10 @@ public class PolicyApiHelper extends PolicyApi {
         );
     }
 
-    public static <T extends Policy> T getPolicy(PolicyApi policyApi, String policyId, String expand) throws ApiException {
+    @Override
+    public T getPolicy(String policyId, String expand) throws ApiException {
 
-        ApiClient apiClient = policyApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'policyId' is set
         if (policyId == null) {
@@ -114,31 +123,15 @@ public class PolicyApiHelper extends PolicyApi {
             localVarReturnType
         );
 
-        PolicyType policyType = policy.getType();
-
-        switch (Objects.requireNonNull(policyType)) {
-            case ACCESS_POLICY:
-                return (T) objectMapper.convertValue(policy, AccessPolicy.class);
-            case IDP_DISCOVERY:
-                return (T) objectMapper.convertValue(policy, IdentityProviderPolicy.class);
-            case MFA_ENROLL:
-                return (T) objectMapper.convertValue(policy, MultifactorEnrollmentPolicy.class);
-            case OAUTH_AUTHORIZATION_POLICY:
-                return (T) objectMapper.convertValue(policy, AuthorizationServerPolicy.class);
-            case OKTA_SIGN_ON:
-                return (T) objectMapper.convertValue(policy, OktaSignOnPolicy.class);
-            case PASSWORD:
-                return (T) objectMapper.convertValue(policy, PasswordPolicy.class);
-            case PROFILE_ENROLLMENT:
-                return (T) objectMapper.convertValue(policy, ProfileEnrollmentPolicy.class);
-        }
-
-        return policy;
+        return (T) getObjectMapper().convertValue(policy, getPolicyType(policy));
     }
 
-    public static List<Policy> listPolicies(PolicyApi policyApi, String type, String status, String expand) throws ApiException {
+    @Override
+    public List<Policy> listPolicies(String type,
+                                     String status,
+                                     String expand) throws ApiException {
 
-        ApiClient apiClient = policyApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'type' is set
         if (type == null) {
@@ -173,38 +166,17 @@ public class PolicyApiHelper extends PolicyApi {
 
         List<Policy> typedPolicies = new ArrayList<>(policies.size());
 
-        for (Policy policy : policies) {
-            switch (Objects.requireNonNull(policy.getType())) {
-                case ACCESS_POLICY:
-                    typedPolicies.add(objectMapper.convertValue(policy, AccessPolicy.class));
-                    break;
-                case IDP_DISCOVERY:
-                    typedPolicies.add(objectMapper.convertValue(policy, IdentityProviderPolicy.class));
-                    break;
-                case MFA_ENROLL:
-                    typedPolicies.add(objectMapper.convertValue(policy, MultifactorEnrollmentPolicy.class));
-                    break;
-                case OAUTH_AUTHORIZATION_POLICY:
-                    typedPolicies.add(objectMapper.convertValue(policy, AuthorizationServerPolicy.class));
-                    break;
-                case OKTA_SIGN_ON:
-                    typedPolicies.add(objectMapper.convertValue(policy, OktaSignOnPolicy.class));
-                    break;
-                case PASSWORD:
-                    typedPolicies.add(objectMapper.convertValue(policy, PasswordPolicy.class));
-                    break;
-                case PROFILE_ENROLLMENT:
-                    typedPolicies.add(objectMapper.convertValue(policy, ProfileEnrollmentPolicy.class));
-                    break;
-            }
-        }
+        policies.forEach(policy ->
+            typedPolicies.add(getObjectMapper().convertValue(policy, getPolicyType(policy))));
 
         return typedPolicies;
     }
 
-    public static <T extends PolicyRule> T createPolicyRule(Class<T> classType, PolicyApi policyApi, String policyId, PolicyRule policyRule) throws ApiException {
+    public <T extends PolicyRule> T createPolicyRuleOfType(Class<T> classType,
+                                                           String policyId,
+                                                           PolicyRule policyRule) throws ApiException {
 
-        ApiClient apiClient = policyApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'policyId' is set
         if (policyId == null) {

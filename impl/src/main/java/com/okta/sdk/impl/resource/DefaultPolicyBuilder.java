@@ -75,7 +75,7 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     }
 
     @Override
-    public Policy buildAndCreate(PolicyApi client) {
+    public Policy buildAndCreate(PolicyApi client) throws ApiException {
         try {
             return client.createPolicy(build(), isActive);
         } catch (ApiException e) {

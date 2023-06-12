@@ -16,7 +16,6 @@
 package com.okta.sdk.helper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.core5.http.HttpStatus;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -28,19 +27,26 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static com.okta.sdk.helper.HelperConstants.*;
+import static com.okta.sdk.helper.HelperUtil.*;
 
 /**
  * Helper class that enables working with sub-typed {@link UserFactor} references.
  */
-public class UserFactorApiHelper extends UserFactorApi {
+public class UserFactorApiHelper<T extends UserFactor> extends UserFactorApi {
 
-    private static final ObjectMapper objectMapper = getObjectMapper();
+    public UserFactorApiHelper(UserFactorApi userFactorApi) {
+        super(userFactorApi.getApiClient());
+    }
 
-    public static <T extends UserFactor> T activateFactor(Class<T> classType, UserFactorApi userFactorApi,
-                                                          String userId, String factorId,
-                                                          ActivateFactorRequest activateFactorRequest) throws ApiException {
+    public UserFactorApiHelper(ApiClient apiClient) {
+        super(apiClient);
+    }
+    public <T extends UserFactor> T activateFactorOfType(Class<T> classType,
+                                                         String userId,
+                                                         String factorId,
+                                                         ActivateFactorRequest activateFactorRequest) throws ApiException {
 
-        ApiClient apiClient = userFactorApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'userId' is set
         if (userId == null) {
@@ -81,11 +87,11 @@ public class UserFactorApiHelper extends UserFactorApi {
         );
     }
 
-    public static <T extends UserFactor> T enrollFactor(Class<T> classType, UserFactorApi userFactorApi, String userId,
-                                                        UserFactor userFactor, Boolean updatePhone, String templateId,
-                                                        Integer tokenLifetimeSeconds, Boolean activate) throws ApiException {
+    public <T extends UserFactor> T enrollFactorOfType(Class<T> classType, String userId, UserFactor userFactor,
+                                                       Boolean updatePhone, String templateId,
+                                                       Integer tokenLifetimeSeconds, Boolean activate) throws ApiException {
 
-        ApiClient apiClient = userFactorApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'userId' is set
         if (userId == null) {
@@ -114,7 +120,7 @@ public class UserFactorApiHelper extends UserFactorApi {
             }
         };
 
-        return apiClient.invokeAPI(
+        T usrFactor = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.POST.name(),
             localVarQueryParams,
@@ -129,12 +135,14 @@ public class UserFactorApiHelper extends UserFactorApi {
             AUTH_NAMES,
             localVarReturnType
         );
+
+        return (T) getObjectMapper().convertValue(usrFactor, getUserFactorType(userFactor));
     }
 
-    public static <T extends UserFactor> T getFactor(UserFactorApi userFactorApi,
-                                                     String userId, String factorId) throws ApiException {
+    @Override
+    public T getFactor(String userId, String factorId) throws ApiException {
 
-        ApiClient apiClient = userFactorApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'userId' is set
         if (userId == null) {
@@ -173,51 +181,13 @@ public class UserFactorApiHelper extends UserFactorApi {
             localVarReturnType
         );
 
-        ObjectMapper objectMapper = getObjectMapper();
-
-        FactorType factorType = userFactor.getFactorType();
-
-        switch (Objects.requireNonNull(factorType)) {
-            case CALL:
-                return (T) objectMapper.convertValue(userFactor, CallUserFactor.class);
-
-            case EMAIL:
-                return (T) objectMapper.convertValue(userFactor, EmailUserFactor.class);
-
-            case HOTP:
-                return (T) objectMapper.convertValue(userFactor, CustomHotpUserFactor.class);
-
-            case PUSH:
-                return (T) objectMapper.convertValue(userFactor, PushUserFactor.class);
-
-            case SMS:
-                return (T) objectMapper.convertValue(userFactor, SmsUserFactor.class);
-
-            case QUESTION:
-                return (T) objectMapper.convertValue(userFactor, SecurityQuestionUserFactor.class);
-
-            case TOKEN:
-            case TOKEN_HARDWARE:
-            case TOKEN_HOTP:
-            case TOKEN_SOFTWARE_TOTP:
-                return (T) objectMapper.convertValue(userFactor, TokenUserFactor.class);
-
-            case U2F:
-                return (T) objectMapper.convertValue(userFactor, U2fUserFactor.class);
-
-            case WEB:
-                return (T) objectMapper.convertValue(userFactor, WebUserFactor.class);
-
-            case WEBAUTHN:
-                return (T) objectMapper.convertValue(userFactor, WebAuthnUserFactor.class);
-        }
-
-        return userFactor;
+        return (T) getObjectMapper().convertValue(userFactor, getUserFactorType(userFactor));
     }
 
-    public static List<UserFactor> listFactors(UserFactorApi userFactorApi, String userId) throws ApiException {
+    @Override
+    public List<UserFactor> listFactors(String userId) throws ApiException {
 
-        ApiClient apiClient = userFactorApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'userId' is set
         if (userId == null) {
@@ -229,6 +199,7 @@ public class UserFactorApiHelper extends UserFactorApi {
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId));
 
         TypeReference<List<UserFactor>> localVarReturnType = new TypeReference<List<UserFactor>>() {};
+
         List<UserFactor> userFactors = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
@@ -250,46 +221,47 @@ public class UserFactorApiHelper extends UserFactorApi {
         for (UserFactor userFactor : userFactors) {
             switch (Objects.requireNonNull(userFactor.getFactorType())) {
                 case CALL:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, CallUserFactor.class));
+                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, CallUserFactor.class));
                     break;
                 case EMAIL:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, EmailUserFactor.class));
+                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, EmailUserFactor.class));
                     break;
                 case HOTP:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, CustomHotpUserFactor.class));
+                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, CustomHotpUserFactor.class));
                     break;
                 case PUSH:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, PushUserFactor.class));
+                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, PushUserFactor.class));
                     break;
                 case QUESTION:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, SecurityQuestionUserFactor.class));
+                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, SecurityQuestionUserFactor.class));
                     break;
                 case SMS:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, SmsUserFactor.class));
+                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, SmsUserFactor.class));
                     break;
                 case TOKEN:
                 case TOKEN_HARDWARE:
                 case TOKEN_HOTP:
                 case TOKEN_SOFTWARE_TOTP:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, TokenUserFactor.class));
+                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, TokenUserFactor.class));
                     break;
                 case U2F:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, U2fUserFactor.class));
+                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, U2fUserFactor.class));
                     break;
                 case WEB:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, WebUserFactor.class));
+                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, WebUserFactor.class));
                     break;
                 case WEBAUTHN:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, WebAuthnUserFactor.class));
+                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, WebAuthnUserFactor.class));
                     break;
             }
         }
         return typedUserFactors;
     }
 
-    public static List<UserFactor> listSupportedFactors(UserFactorApi userFactorApi, String userId) throws ApiException {
+    @Override
+    public List<UserFactor> listSupportedFactors(String userId) throws ApiException {
 
-        ApiClient apiClient = userFactorApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'userId' is set
         if (userId == null) {
@@ -301,6 +273,7 @@ public class UserFactorApiHelper extends UserFactorApi {
             .replaceAll("\\{" + "userId" + "\\}", apiClient.escapeString(userId));
 
         TypeReference<List<UserFactor>> localVarReturnType = new TypeReference<List<UserFactor>>() {};
+
         List<UserFactor> userFactors = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.GET.name(),
@@ -319,50 +292,16 @@ public class UserFactorApiHelper extends UserFactorApi {
 
         List<UserFactor> typedUserFactors = new ArrayList<>(userFactors.size());
 
-        for (UserFactor userFactor : userFactors) {
-            switch (Objects.requireNonNull(userFactor.getFactorType())) {
-                case CALL:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, CallUserFactor.class));
-                    break;
-                case EMAIL:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, EmailUserFactor.class));
-                    break;
-                case HOTP:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, CustomHotpUserFactor.class));
-                    break;
-                case PUSH:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, PushUserFactor.class));
-                    break;
-                case QUESTION:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, SecurityQuestionUserFactor.class));
-                    break;
-                case SMS:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, SmsUserFactor.class));
-                    break;
-                case TOKEN:
-                case TOKEN_HARDWARE:
-                case TOKEN_HOTP:
-                case TOKEN_SOFTWARE_TOTP:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, TokenUserFactor.class));
-                    break;
-                case U2F:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, U2fUserFactor.class));
-                    break;
-                case WEB:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, WebUserFactor.class));
-                    break;
-                case WEBAUTHN:
-                    typedUserFactors.add(objectMapper.convertValue(userFactor, WebAuthnUserFactor.class));
-                    break;
-            }
-        }
+        userFactors.forEach(userFactor ->
+            typedUserFactors.add(getObjectMapper().convertValue(userFactor, getUserFactorType(userFactor))));
+
         return typedUserFactors;
     }
 
-    public static <T extends UserFactor> T resendEnrollFactor(UserFactorApi userFactorApi, String userId, String factorId,
-                                                              UserFactor userFactor, String templateId) throws ApiException {
+    public <T extends UserFactor> T resendEnrollFactorOfType(Class<T> classType, String userId, String factorId,
+                                                             UserFactor userFactor, String templateId) throws ApiException {
 
-        ApiClient apiClient = userFactorApi.getApiClient();
+        ApiClient apiClient = getApiClient();
 
         // verify the required parameter 'userId' is set
         if (userId == null) {
@@ -386,8 +325,14 @@ public class UserFactorApiHelper extends UserFactorApi {
 
         List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("templateId", templateId));
 
-        TypeReference<T> localVarReturnType = new TypeReference<T>() {};
-        return apiClient.invokeAPI(
+        TypeReference<T> localVarReturnType = new TypeReference<T>() {
+            @Override
+            public Type getType() {
+                return classType;
+            }
+        };
+
+        T usrFactor = apiClient.invokeAPI(
             localVarPath,
             HttpMethod.POST.name(),
             localVarQueryParams,
@@ -402,5 +347,7 @@ public class UserFactorApiHelper extends UserFactorApi {
             AUTH_NAMES,
             localVarReturnType
         );
+
+        return (T) getObjectMapper().convertValue(usrFactor, getUserFactorType(usrFactor));
     }
 }
