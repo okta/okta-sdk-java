@@ -167,6 +167,9 @@ These examples will help you understand how to use this library. You can also br
 Once you initialize a `ApiClient` instance, you can pass this instance to the constructor of any API area clients (such as `UserApi`, `GroupApi`, `ApplicationApi` etc.).
 You can start using these clients to call management APIs relevant to the chosen API area.
 
+Note: For models that follow inheritance (e.g. Application, Policy, UserFactor), use the APIs found in their respective `ApiHelper` class (e.g. `ApplicationApiHelper`, `PolicyApiHelper`, `UserFactorApiHelper`)
+to ensure the responses are safely typed into their respective subclass types.
+
 ### Authenticate a User
 
 This library should be used with the Okta management API. For authentication, we recommend using an OAuth 2.0 or OpenID Connect library such as [Spring Security OAuth](https://spring.io/projects/spring-security-oauth) or [Okta's Spring Boot integration](https://github.com/okta/okta-spring-boot). For [Okta Authentication API](https://developer.okta.com/docs/api/resources/authn) you can use [Authentication SDK](https://github.com/okta/okta-auth-java).
