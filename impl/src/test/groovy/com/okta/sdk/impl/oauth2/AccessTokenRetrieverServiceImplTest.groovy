@@ -367,6 +367,8 @@ class AccessTokenRetrieverServiceImplTest {
 
     // helper methods
 
+    // generates dummy private key used for unit test purpose only
+
     static PrivateKey generatePrivateKey(String algorithm, int keySize) {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm)
         keyPairGenerator.initialize(keySize)
