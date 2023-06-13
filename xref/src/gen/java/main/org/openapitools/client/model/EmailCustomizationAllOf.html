@@ -16,7 +16,7 @@
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>      <strong class="jxr_keyword">import</strong> java.time.OffsetDateTime;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.EmailCustomizationAllOfLinks;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.LinksSelf;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> io.swagger.annotations.ApiModelProperty;
@@ -34,7 +34,7 @@
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>          EmailCustomizationAllOf.JSON_PROPERTY_LINKS
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>      })
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>          @JsonTypeName(<span class="jxr_string">"EmailCustomization_allOf"</span>)
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-04-19T09:13:33.853361-05:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-06-13T09:57:27.486-05:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> EmailCustomizationAllOf {
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  
@@ -54,7 +54,7 @@
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>              <strong class="jxr_keyword">private</strong> OffsetDateTime lastUpdated;
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_LINKS = <span class="jxr_string">"_links"</span>;
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>              <strong class="jxr_keyword">private</strong> EmailCustomizationAllOfLinks links;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>              <strong class="jxr_keyword">private</strong> LinksSelf links;
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  <strong class="jxr_keyword">public</strong> EmailCustomizationAllOf() { 
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  }
@@ -90,11 +90,11 @@
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>  
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">        * A unique identifier for this email customization.</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">        * A unique identifier for this email customization</em>
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">    * @return id</em>
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">    **/</em>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>          @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>        @ApiModelProperty(value = <span class="jxr_string">"A unique identifier for this email customization."</span>)
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>        @ApiModelProperty(value = <span class="jxr_string">"A unique identifier for this email customization"</span>)
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>        @JsonProperty(JSON_PROPERTY_ID)
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  
@@ -139,11 +139,11 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>         }
 <a class="jxr_linenumber" name="L132" href="#L132">132</a> 
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">        * The language specified as an [IETF BCP 47 language tag](<a href="https://datatracker.ietf.org/doc/html/rfc5646)." target="alexandria_uri">https://datatracker.ietf.org/doc/html/rfc5646).</a></em>
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">        * The language specified as an [IETF BCP 47 language tag](<a href="https://datatracker.ietf.org/doc/html/rfc5646)" target="alexandria_uri">https://datatracker.ietf.org/doc/html/rfc5646)</a></em>
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">    * @return language</em>
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment">    **/</em>
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>             @javax.annotation.Nonnull
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>       @ApiModelProperty(required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">"The language specified as an [IETF BCP 47 language tag](https://datatracker.ietf.org/doc/html/rfc5646)."</span>)
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>       @ApiModelProperty(required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">"The language specified as an [IETF BCP 47 language tag](https://datatracker.ietf.org/doc/html/rfc5646)"</span>)
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>       @JsonProperty(JSON_PROPERTY_LANGUAGE)
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L141" href="#L141">141</a> 
@@ -175,7 +175,7 @@
 <a class="jxr_linenumber" name="L167" href="#L167">167</a> 
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> 
 <a class="jxr_linenumber" name="L169" href="#L169">169</a> 
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>         <strong class="jxr_keyword">public</strong> EmailCustomizationAllOf links(EmailCustomizationAllOfLinks links) {
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>         <strong class="jxr_keyword">public</strong> EmailCustomizationAllOf links(LinksSelf links) {
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>         
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>         <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L173" href="#L173">173</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -190,14 +190,14 @@
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>       @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L184" href="#L184">184</a> 
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">public</strong> EmailCustomizationAllOfLinks getLinks() {
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">public</strong> LinksSelf getLinks() {
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>         <strong class="jxr_keyword">return</strong> links;
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>     }
 <a class="jxr_linenumber" name="L188" href="#L188">188</a> 
 <a class="jxr_linenumber" name="L189" href="#L189">189</a> 
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>           @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(EmailCustomizationAllOfLinks links) {
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(LinksSelf links) {
 <a class="jxr_linenumber" name="L193" href="#L193">193</a>             <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L194" href="#L194">194</a>         }
 <a class="jxr_linenumber" name="L195" href="#L195">195</a> 
