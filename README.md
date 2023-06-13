@@ -56,11 +56,12 @@ This library uses semantic versioning and follows Okta's [library version policy
 
 :heavy_check_mark: The latest stable major version series is: 10.x.x
 
-| Version                                                     | Status                                                                                                                                                                                                              |
-|-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 0.0.x, 1.x, 2.x.x, 3.x.x, 4.x.x, 5.x.x, 6.x.x, 7.x.x, 8.x.x | :warning: Retired                                                                                                                                                                                                   |
-| 9.x.x-beta, 10.x.x-beta                                     | :warning: Beta release (discontinued)                                                                                                                                                                               |
-| 10.x.x                                                      | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-8xx-to-10xx))                                                                            |
+| Version                                                     | Status                                                                                                                                   |
+|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| 0.0.x, 1.x, 2.x.x, 3.x.x, 4.x.x, 5.x.x, 6.x.x, 7.x.x, 8.x.x | :warning: Retired                                                                                                                        |
+| 9.x.x-beta, 10.x.x-beta                                     | :warning: Beta release (discontinued)                                                                                                    |
+| 10.x.x                                                      | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-8xx-to-10xx)) |
+| 11.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/blob/master/japicmp-11_0_0_vs_10_3_0.html))               |
 
 The latest release can always be found on the [releases page][github-releases].
  
@@ -75,7 +76,7 @@ If you run into problems using the SDK, you can:
 
 ### Prerequisites
 
-* JDK 8 or later
+* Java 8 or later
 
 To use this SDK, you will need to include the following dependencies:
 
@@ -484,24 +485,6 @@ BookmarkApplication createdApp = apiClient.invokeAPI(
 ### Thread Safety
 
 Every instance of the SDK `Client` is thread-safe. You **should** use the same instance throughout the entire lifecycle of your application. Each instance has its own Connection pool and Caching resources that are automatically released when the instance is garbage collected.
-
-## Paging
-
-[//]: # (method: paging)
-```java
-UserApi userApi = new UserApi(client);
-int limit = 2;
-PagedList<User> pagedUserList = userApi.listUsersWithPaginationInfo(null, null, limit, null, null, null, null);
-
-// loop through all of them
-for (User tmpUser : pagedUserList.getItems()) {
-    log.info("User: {}", tmpUser.getProfile().getEmail());
-}
-
-// or stream
-pagedUserList.getItems().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
-```
-[//]: # (end: paging)
 
 <a name="spring-support"></a>
 ## Inject the Okta Java SDK in Spring
