@@ -17,6 +17,7 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.policy.PolicyBuilder;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.PolicyApi;
 import org.openapitools.client.model.LifecycleStatus;
 import org.openapitools.client.model.Policy;
@@ -74,8 +75,12 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     }
 
     @Override
-    public Policy buildAndCreate(PolicyApi client) {
-        return client.createPolicy(build(), isActive);
+    public Policy buildAndCreate(PolicyApi client) throws ApiException {
+        try {
+            return client.createPolicy(build(), isActive);
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Policy build() {

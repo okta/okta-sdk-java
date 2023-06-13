@@ -14,11 +14,13 @@ limitations under the License.
 
 This project includes:
   A Jackson 2.x helper under The Apache Software License, Version 2.0
-  Apache Commons Codec under Apache License, Version 2.0
+  Apache Commons CLI under Apache License, Version 2.0
   Apache Commons IO under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
+  Apache Commons Text under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
-  Apache HttpCore under Apache License, Version 2.0
+  Apache HttpComponents Core HTTP/1.1 under Apache License, Version 2.0
+  Apache HttpComponents Core HTTP/2 under Apache License, Version 2.0
   Auto Common Libraries under Apache 2.0
   Automaton under BSD
   AutoService under Apache 2.0
@@ -37,6 +39,7 @@ This project includes:
   Guava InternalFutureFailureAccess and InternalFutures under The Apache Software License, Version 2.0
   Guava ListenableFuture only under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under Apache License, Version 2.0
+  Handlebars under The Apache Software License, Version 2.0
   J2ObjC Annotations under The Apache Software License, Version 2.0
   Jackson datatype: Guava under The Apache Software License, Version 2.0
   Jackson datatype: Joda under The Apache Software License, Version 2.0
@@ -77,14 +80,6 @@ This project includes:
   SLF4J API Module under MIT License
   SLF4J Extensions Module under MIT License
   SnakeYAML under Apache License, Version 2.0
-  Spring AOP under Apache License, Version 2.0
-  Spring Beans under Apache License, Version 2.0
-  Spring Commons Logging Bridge under Apache License, Version 2.0
-  Spring Context under Apache License, Version 2.0
-  Spring Core under Apache License, Version 2.0
-  Spring Expression Language (SpEL) under Apache License, Version 2.0
-  Spring Retry under Apache 2.0
-  Spring Web under Apache License, Version 2.0
   swagger-annotations under Apache License 2.0
   swagger-compat-spec-parser under Apache License 2.0
   swagger-core under Apache License 2.0

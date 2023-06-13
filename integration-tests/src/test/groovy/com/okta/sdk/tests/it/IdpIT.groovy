@@ -29,13 +29,14 @@ import static org.hamcrest.Matchers.*
  */
 class IdpIT extends ITSupport {
 
+    IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
+
     @Test (groups = "group2")
     void oidcIdpLifecycleTest() {
 
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
         // create oidc idp
-        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.OIDC)
@@ -273,7 +274,6 @@ class IdpIT extends ITSupport {
         // create oidc idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.OIDC)
@@ -407,7 +407,6 @@ class IdpIT extends ITSupport {
         // create Google idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.GOOGLE)
@@ -491,7 +490,6 @@ class IdpIT extends ITSupport {
         // create Facebook idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.FACEBOOK)
@@ -575,7 +573,6 @@ class IdpIT extends ITSupport {
         // create Microsoft idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.MICROSOFT)
@@ -659,7 +656,6 @@ class IdpIT extends ITSupport {
         // create LinkedIn idp
         String name = "java-sdk-it-" + UUID.randomUUID().toString()
 
-        IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.LINKEDIN)

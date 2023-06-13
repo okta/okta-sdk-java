@@ -16,6 +16,7 @@
 package com.okta.sdk.resource.user;
 
 import com.okta.commons.lang.Classes;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.UserApi;
 import org.openapitools.client.model.AuthenticationProvider;
 import org.openapitools.client.model.User;
@@ -130,5 +131,5 @@ public interface UserBuilder {
 
     UserBuilder setCustomProfileProperty(String key, Object value);
 
-    User buildAndCreate(UserApi client);
+    User buildAndCreate(UserApi client) throws ApiException;
 }

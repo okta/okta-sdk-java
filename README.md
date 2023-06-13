@@ -167,6 +167,9 @@ These examples will help you understand how to use this library. You can also br
 Once you initialize a `ApiClient` instance, you can pass this instance to the constructor of any API area clients (such as `UserApi`, `GroupApi`, `ApplicationApi` etc.).
 You can start using these clients to call management APIs relevant to the chosen API area.
 
+Note: For models that follow inheritance (e.g. Application, Policy, UserFactor), use the APIs found in their respective `ApiHelper` class (e.g. `ApplicationApiHelper`, `PolicyApiHelper`, `UserFactorApiHelper`)
+to ensure the responses are safely typed into their respective subclass types.
+
 ### Authenticate a User
 
 This library should be used with the Okta management API. For authentication, we recommend using an OAuth 2.0 or OpenID Connect library such as [Spring Security OAuth](https://spring.io/projects/spring-security-oauth) or [Okta's Spring Boot integration](https://github.com/okta/okta-spring-boot). For [Okta Authentication API](https://developer.okta.com/docs/api/resources/authn) you can use [Authentication SDK](https://github.com/okta/okta-auth-java).
@@ -207,7 +210,7 @@ UserApi userApi = new UserApi(client);
 List<User> users = userApi.listUsers(null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
 
 // filter parameter
-users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
+userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
 ```
 [//]: # (end: userSearch)
 
@@ -314,8 +317,8 @@ groupApi.assignUserToGroup(group.getId(), user.getId());
 
 [//]: # (method: listUserFactors)
 ```java
-UserFactorApi userFactorApi = new UserFactorApi(client);
-List<UserFactor> userFactors = userFactorApi.listFactors("userId");
+UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+List<UserFactor> userFactors = userFactorApiHelper.listFactors("userId");
 ```
 [//]: # (end: listUserFactors)
 
@@ -323,14 +326,14 @@ List<UserFactor> userFactors = userFactorApi.listFactors("userId");
 
 [//]: # (method: enrollUserInFactor)
 ```java
-UserFactorApi userFactorApi = new UserFactorApi(client);
+UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
 SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
 smsUserFactorProfile.setPhoneNumber("555 867 5309");
 SmsUserFactor smsUserFactor = new SmsUserFactor();
 smsUserFactor.setProvider(FactorProvider.OKTA);
 smsUserFactor.setFactorType(FactorType.SMS);
 smsUserFactor.setProfile(smsUserFactorProfile);
-UserFactor userFactor = userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
+userFactorApiHelper.enrollFactorOfType(SmsUserFactor.class, "userId", smsUserFactor, true, "templateId", 30, true);
 ```
 [//]: # (end: enrollUserInFactor)
 
@@ -338,11 +341,11 @@ UserFactor userFactor = userFactorApi.enrollFactor("userId", smsUserFactor, true
 
 [//]: # (method: activateFactor)
 ```java
-UserFactorApi userFactorApi = new UserFactorApi(client);
-UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+CallUserFactor userFactor = (CallUserFactor) userFactorApiHelper.getFactor("userId", "factorId");
 ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
 activateFactorRequest.setPassCode("123456");
-UserFactor activatedUserFactor = userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
+userFactorApiHelper.activateFactorOfType(CallUserFactor.class, "userId", "factorId", activateFactorRequest);
 ```
 [//]: # (end: activateFactor)
 
@@ -350,42 +353,20 @@ UserFactor activatedUserFactor = userFactorApi.activateFactor("userId", "factorI
 
 [//]: # (method: verifyFactor)
 ```java
-UserFactorApi userFactorApi = new UserFactorApi(client);
-UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+UserFactor userFactor = userFactorApiHelper.getFactor( "userId", "factorId");
 VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
 verifyFactorRequest.setPassCode("123456");
 VerifyUserFactorResponse verifyUserFactorResponse =
-    userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
+    userFactorApiHelper.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
 ```
 [//]: # (end: verifyFactor)
-
-### List all Applications
-
-[//]: # (method: listApplications)
-```java
-List<Application> applications = ApplicationApiHelper.listApplications(client, null, null, null, null, null, true);
-```
-[//]: # (end: listApplications)
-
-### Get an Application
-
-[//]: # (method: getApplication)
-```java
-ApplicationApi applicationApi = new ApplicationApi(client);
-
-// get generic application type
-Application genericApp = applicationApi.getApplication("app-id", null);
-
-// get sub-class application type
-BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
-```
-[//]: # (end: getApplication)
 
 ### Create a SWA Application
 
 [//]: # (method: createSwaApplication)
 ```java
-ApplicationApi applicationApi = new ApplicationApi(client);
+ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
 SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
 swaApplicationSettingsApplication.buttonField("btn-login")
     .passwordField("txtbox-password")
@@ -398,33 +379,52 @@ browserPluginApplication.name("template_swa");
 browserPluginApplication.label("Sample Plugin App");
 browserPluginApplication.settings(swaApplicationSettings);
 
-// create
+// create BrowserPluginApplication app type
 BrowserPluginApplication createdApp =
-    applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null);
+    applicationApiHelper.createApplicationOfType(BrowserPluginApplication.class, browserPluginApplication, true, null);
 ```
 [//]: # (end: createSwaApplication)
 
-### List Policies
+### Get an Application
 
-[//]: # (method: listPolicies)
+[//]: # (method: getApplication)
 ```java
-List<Policy> policies = PolicyApiHelper.listPolicies(client, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
+
+// get bookmarkApplication application type
+BookmarkApplication bookmarkApp = (BookmarkApplication) applicationApiHelper.getApplication("bookmark-app-id", null);
 ```
-[//]: # (end: listPolicies)
+[//]: # (end: getApplication)
+
+### List all Applications
+
+[//]: # (method: listApplications)
+```java
+ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
+List<Application> applications = applicationApiHelper.listApplications(null, null, null, null, null, true);
+```
+[//]: # (end: listApplications)
 
 ### Get a Policy
 
 [//]: # (method: getPolicy)
 ```java
-PolicyApi policyApi = new PolicyApi(client);
+PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
 
-// get generic policy type
-Policy genericPolicy = PolicyApiHelper.getPolicy(client, "policy-id", null);
-
-// get sub-class policy type
-MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(client, "mfa-policy-id", null);
+// get MultifactorEnrollmentPolicy policy type
+MultifactorEnrollmentPolicy mfaPolicy =
+    (MultifactorEnrollmentPolicy) policyPolicyApiHelper.getPolicy("mfa-policy-id", null);
 ```
 [//]: # (end: getPolicy)
+
+### List Policies
+
+[//]: # (method: listPolicies)
+```java
+PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
+List<Policy> policies = policyPolicyApiHelper.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+```
+[//]: # (end: listPolicies)
 
 ### List System Logs
 [//]: # (method: listSysLogs)
@@ -432,7 +432,8 @@ MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(client, "mfa-p
 SystemLogApi systemLogApi = new SystemLogApi(client);
 
 // use a filter (start date, end date, filter, or query, sort order) all options are nullable
-List<LogEvent> logEvents = systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
+List<LogEvent> logEvents =
+    systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
 ```
 [//]: # (end: listSysLogs)
 
@@ -456,19 +457,27 @@ bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm"
 bookmarkApplicationSettingsApplication.setRequestIntegration(false);
 bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
 bookmarkApplication.setSettings(bookmarkApplicationSettings);
-ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
-    HttpMethod.POST,
-    Collections.emptyMap(),
-    null,
-    bookmarkApplication,
-    new HttpHeaders(),
-    new LinkedMultiValueMap<>(),
-    null,
-    Collections.singletonList(MediaType.APPLICATION_JSON),
-    MediaType.APPLICATION_JSON,
-    new String[]{"API Token"},
-    new ParameterizedTypeReference<BookmarkApplication>() {});
-BookmarkApplication createdApp = responseEntity.getBody();
+StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+List<Pair> localVarQueryParams = new ArrayList<>();
+List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+Map<String, String> localVarHeaderParams = new HashMap<>();
+Map<String, String> localVarCookieParams = new HashMap<>();
+Map<String, Object> localVarFormParams = new HashMap<>();
+BookmarkApplication createdApp = apiClient.invokeAPI(
+    "/api/v1/apps",   // path
+    HttpMethod.POST.name(),   // http method
+    localVarQueryParams,   // query params
+    localVarCollectionQueryParams, // collection query params
+    localVarQueryStringJoiner.toString(),
+    bookmarkApplication,   // request body
+    localVarHeaderParams,   // header params
+    localVarCookieParams,   // cookie params
+    localVarFormParams,   // form params
+    MediaType.APPLICATION_JSON_VALUE,   // accept
+    MediaType.APPLICATION_JSON_VALUE,   // content type
+    new String[]{ "apiToken", "oauth2" },   // auth names
+    new TypeReference<BookmarkApplication>() { }  // return type
+);
 ```
 [//]: # (end: callAnotherEndpoint)
 
@@ -585,7 +594,7 @@ okta.client.requestTimeout = 10
 okta.client.rateLimit.maxRetries = 0
 ```
 
-or
+(or)
  
 ```java
 import com.okta.sdk.client.Client;
@@ -611,9 +620,8 @@ okta.client.requestTimeout = 30
 okta.client.rateLimit.maxRetries = 15
 ```
 
-To disable the retry functionality you need to set both variables to zero:
+To disable the retry functionality you need to set `maxRetries` to zero:
 ```properties
-okta.client.requestTimeout = 0
 okta.client.rateLimit.maxRetries = 0
 ```
 

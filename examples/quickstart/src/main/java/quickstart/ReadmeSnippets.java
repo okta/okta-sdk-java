@@ -15,31 +15,30 @@
  */
 package quickstart;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import com.okta.commons.http.MediaType;
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.cache.Caches;
+import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.helper.ApplicationApiHelper;
+import com.okta.sdk.helper.UserFactorApiHelper;
 import com.okta.sdk.helper.PolicyApiHelper;
-import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
+
 import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Pair;
 import org.openapitools.client.api.*;
 import org.openapitools.client.model.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.okta.sdk.cache.Caches.forResource;
@@ -80,13 +79,13 @@ public class ReadmeSnippets {
             .build();
     }
 
-    private void getUser() {
+    private void getUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 
         User user = userApi.getUser("userId");
     }
 
-    private void listAllUsers() {
+    private void listAllUsers() throws ApiException {
         UserApi userApi = new UserApi(client);
         List<User> users = userApi.listUsers(null, null, 5, null, null, null, null);
 
@@ -97,16 +96,16 @@ public class ReadmeSnippets {
             });
     }
 
-    private void userSearch() {
+    private void userSearch() throws ApiException {
         UserApi userApi = new UserApi(client);
         // search by email
         List<User> users = userApi.listUsers(null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
 
         // filter parameter
-        users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
+        userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
     }
 
-    private void createUser() {
+    private void createUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 
         User user = UserBuilder.instance()
@@ -116,7 +115,7 @@ public class ReadmeSnippets {
             .buildAndCreate(userApi);
     }
 
-    private void createUserWithGroups() {
+    private void createUserWithGroups() throws ApiException {
         UserApi userApi = new UserApi(client);
 
         User user = UserBuilder.instance()
@@ -127,7 +126,7 @@ public class ReadmeSnippets {
             .buildAndCreate(userApi);
     }
 
-    private void updateUser() {
+    private void updateUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 
         UpdateUserRequest updateUserRequest = new UpdateUserRequest();
@@ -138,7 +137,7 @@ public class ReadmeSnippets {
         userApi.updateUser(user.getId(), updateUserRequest, true);
     }
 
-    private void deleteUser() {
+    private void deleteUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 
         // deactivate first
@@ -147,12 +146,13 @@ public class ReadmeSnippets {
         userApi.deleteUser(user.getId(), false);
     }
 
-    private void listUsersGroup() {
+    private void listUsersGroup() throws ApiException {
         GroupApi groupApi = new GroupApi(client);
+
         List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null, null, null);
     }
 
-    private void createGroup() {
+    private void createGroup() throws ApiException {
         GroupApi groupApi = new GroupApi(client);
 
         Group group = GroupBuilder.instance()
@@ -161,7 +161,7 @@ public class ReadmeSnippets {
             .buildAndCreate(groupApi);
     }
 
-    private void assignUserToGroup() {
+    private void assignUserToGroup() throws ApiException {
         // create user
         UserApi userApi = new UserApi(client);
 
@@ -183,14 +183,14 @@ public class ReadmeSnippets {
         groupApi.assignUserToGroup(group.getId(), user.getId());
     }
 
-    private void listUserFactors() {
-        UserFactorApi userFactorApi = new UserFactorApi(client);
+    private void listUserFactors() throws ApiException {
+        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
 
-        List<UserFactor> userFactors = userFactorApi.listFactors("userId");
+        List<UserFactor> userFactors = userFactorApiHelper.listFactors("userId");
     }
 
-    private void enrollUserInFactor() {
-        UserFactorApi userFactorApi = new UserFactorApi(client);
+    private void enrollUserInFactor() throws ApiException {
+        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
 
         SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
         smsUserFactorProfile.setPhoneNumber("555 867 5309");
@@ -200,46 +200,45 @@ public class ReadmeSnippets {
         smsUserFactor.setFactorType(FactorType.SMS);
         smsUserFactor.setProfile(smsUserFactorProfile);
 
-        UserFactor userFactor = userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
+        userFactorApiHelper.enrollFactorOfType(SmsUserFactor.class, "userId", smsUserFactor, true, "templateId", 30, true);
     }
 
-    private void activateFactor() {
-        UserFactorApi userFactorApi = new UserFactorApi(client);
+    private void activateFactor() throws ApiException {
+        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
 
-        UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+        CallUserFactor userFactor = (CallUserFactor) userFactorApiHelper.getFactor("userId", "factorId");
         ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
         activateFactorRequest.setPassCode("123456");
 
-        UserFactor activatedUserFactor = userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
+        userFactorApiHelper.activateFactorOfType(CallUserFactor.class, "userId", "factorId", activateFactorRequest);
     }
 
-    private void verifyFactor() {
-        UserFactorApi userFactorApi = new UserFactorApi(client);
+    private void verifyFactor() throws ApiException {
+        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
 
-        UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+        UserFactor userFactor = userFactorApiHelper.getFactor( "userId", "factorId");
         VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
         verifyFactorRequest.setPassCode("123456");
 
         VerifyUserFactorResponse verifyUserFactorResponse =
-            userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
+            userFactorApiHelper.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
     }
 
-    private void listApplications() {
-        List<Application> applications = ApplicationApiHelper.listApplications(client, null, null, null, null, null, true);
+    private void listApplications() throws ApiException {
+        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
+
+        List<Application> applications = applicationApiHelper.listApplications(null, null, null, null, null, true);
     }
 
-    private void getApplication() {
-        ApplicationApi applicationApi = new ApplicationApi(client);
+    private void getApplication() throws ApiException {
+        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
 
-        // get generic application type
-        Application genericApp = applicationApi.getApplication("app-id", null);
-
-        // get sub-class application type
-        BookmarkApplication bookmarkApp = ApplicationApiHelper.getApplication(client, "bookmark-app-id", null);
+        // get bookmarkApplication application type
+        BookmarkApplication bookmarkApp = (BookmarkApplication) applicationApiHelper.getApplication("bookmark-app-id", null);
     }
 
-    private void createSwaApplication() {
-        ApplicationApi applicationApi = new ApplicationApi(client);
+    private void createSwaApplication() throws ApiException {
+        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
 
         SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
         swaApplicationSettingsApplication.buttonField("btn-login")
@@ -253,33 +252,34 @@ public class ReadmeSnippets {
         browserPluginApplication.label("Sample Plugin App");
         browserPluginApplication.settings(swaApplicationSettings);
 
-        // create
+        // create BrowserPluginApplication app type
         BrowserPluginApplication createdApp =
-            applicationApi.createApplication(BrowserPluginApplication.class, browserPluginApplication, true, null);
+            applicationApiHelper.createApplicationOfType(BrowserPluginApplication.class, browserPluginApplication, true, null);
     }
 
-    private void listPolicies() {
-        List<Policy> policies = PolicyApiHelper.listPolicies(client, PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+    private void listPolicies() throws ApiException {
+        PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
+
+        List<Policy> policies = policyPolicyApiHelper.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
     }
 
-    private void getPolicy() {
-        PolicyApi policyApi = new PolicyApi(client);
+    private void getPolicy() throws ApiException {
+        PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
 
-        // get generic policy type
-        Policy genericPolicy = PolicyApiHelper.getPolicy(client, "policy-id", null);
-
-        // get sub-class policy type
-        MultifactorEnrollmentPolicy mfaPolicy = PolicyApiHelper.getPolicy(client, "mfa-policy-id", null);
+        // get MultifactorEnrollmentPolicy policy type
+        MultifactorEnrollmentPolicy mfaPolicy =
+            (MultifactorEnrollmentPolicy) policyPolicyApiHelper.getPolicy("mfa-policy-id", null);
     }
 
-    private void listSysLogs() {
+    private void listSysLogs() throws ApiException {
         SystemLogApi systemLogApi = new SystemLogApi(client);
 
         // use a filter (start date, end date, filter, or query, sort order) all options are nullable
-        List<LogEvent> logEvents = systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
+        List<LogEvent> logEvents =
+            systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
     }
 
-    private void callAnotherEndpoint() {
+    private void callAnotherEndpoint() throws ApiException {
 
         ApiClient apiClient = buildApiClient("orgBaseUrl", "apiKey");
 
@@ -296,37 +296,28 @@ public class ReadmeSnippets {
         bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
         bookmarkApplication.setSettings(bookmarkApplicationSettings);
 
-        ResponseEntity<BookmarkApplication> responseEntity = apiClient.invokeAPI("/api/v1/apps",
-            HttpMethod.POST,
-            Collections.emptyMap(),
-            null,
-            bookmarkApplication,
-            new HttpHeaders(),
-            new LinkedMultiValueMap<>(),
-            null,
-            Collections.singletonList(MediaType.APPLICATION_JSON),
-            MediaType.APPLICATION_JSON,
-            new String[]{"API Token"},
-            new ParameterizedTypeReference<BookmarkApplication>() {});
+        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
+        Map<String, String> localVarHeaderParams = new HashMap<>();
+        Map<String, String> localVarCookieParams = new HashMap<>();
+        Map<String, Object> localVarFormParams = new HashMap<>();
 
-        BookmarkApplication createdApp = responseEntity.getBody();
-    }
-
-    private void paging() {
-
-        UserApi userApi = new UserApi(client);
-
-        int limit = 2;
-
-        PagedList<User> pagedUserList = userApi.listUsersWithPaginationInfo(null, null, limit, null, null, null, null);
-
-        // loop through all of them
-        for (User tmpUser : pagedUserList.getItems()) {
-            log.info("User: {}", tmpUser.getProfile().getEmail());
-        }
-
-        // or stream
-        pagedUserList.getItems().forEach(tmpUser -> log.info("User: {}", tmpUser.getProfile().getEmail()));
+        BookmarkApplication createdApp = apiClient.invokeAPI(
+            "/api/v1/apps",   // path
+            HttpMethod.POST.name(),   // http method
+            localVarQueryParams,   // query params
+            localVarCollectionQueryParams, // collection query params
+            localVarQueryStringJoiner.toString(),
+            bookmarkApplication,   // request body
+            localVarHeaderParams,   // header params
+            localVarCookieParams,   // cookie params
+            localVarFormParams,   // form params
+            MediaType.APPLICATION_JSON_VALUE,   // accept
+            MediaType.APPLICATION_JSON_VALUE,   // content type
+            new String[]{ "apiToken", "oauth2" },   // auth names
+            new TypeReference<BookmarkApplication>() { }  // return type
+        );
     }
 
     private void complexCaching() {
@@ -351,13 +342,9 @@ public class ReadmeSnippets {
     private static ApiClient buildApiClient(String orgBaseUrl, String apiKey) {
 
         ApiClient apiClient = new ApiClient();
-        // set your custom rest template and retry template,
-        // not setting it would use the default templates
-        //apiClient.setRestTemplate();
-        //apiClient.setRetryTemplate(retryTemplate(this.clientConfig));
         apiClient.setBasePath(orgBaseUrl);
         apiClient.setApiKey(apiKey);
-        apiClient.setApiKeyPrefix("SSWS");
+        apiClient.setApiKeyPrefix(AuthenticationScheme.SSWS.name());
         return apiClient;
     }
 }

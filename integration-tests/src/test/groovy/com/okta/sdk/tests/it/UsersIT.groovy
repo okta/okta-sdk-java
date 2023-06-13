@@ -15,15 +15,16 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.error.ResourceException
+import com.okta.sdk.helper.ApplicationApiHelper
+import com.okta.sdk.helper.PolicyApiHelper
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
-import com.okta.sdk.resource.common.PagedList
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.apache.commons.lang3.RandomStringUtils
 import org.apache.commons.lang3.StringUtils
+import org.openapitools.client.ApiException
 import org.openapitools.client.api.*
 import org.openapitools.client.model.*
 import org.testng.annotations.Test
@@ -41,14 +42,16 @@ import static org.hamcrest.Matchers.*
  */
 class UsersIT extends ITSupport {
 
+    GroupApi groupApi = new GroupApi(getClient())
+    PolicyApiHelper<Policy> policyApiHelper = new PolicyApiHelper<>(new PolicyApi(getClient()))
+    UserApi userApi = new UserApi(getClient())
+
     @Test
     void doCrudTest() {
 
         User user = randomUser()
         registerForCleanup(user)
         assertThat(user.getStatus(), equalTo(UserStatus.PROVISIONED))
-
-        UserApi userApi = new UserApi(getClient())
 
         // deactivate
         userApi.deactivateUser(user.getId(), false)
@@ -66,7 +69,6 @@ class UsersIT extends ITSupport {
         def lastName = 'Activate'
         def email = "john-activate=${uniqueTestName}@example.com"
 
-        UserApi userApi = new UserApi(getClient())
         UserTypeApi userTypeApi = new UserTypeApi(getClient())
 
         // 1. Create a User Type
@@ -115,8 +117,6 @@ class UsersIT extends ITSupport {
         def lastName = 'Activate'
         def email = "john-activate=${uniqueTestName}@example.com"
 
-        UserApi userApi = new UserApi(getClient())
-
         // 1. Create a user
         User user = UserBuilder.instance()
             .setEmail(email)
@@ -147,8 +147,6 @@ class UsersIT extends ITSupport {
         def lastName = 'hashtag'
         def email = "john-${uniqueTestName}#@example.com"
 
-        UserApi userApi = new UserApi(getClient())
-
         User user = UserBuilder.instance()
             .setEmail(email)
             .setFirstName(firstName)
@@ -171,8 +169,6 @@ class UsersIT extends ITSupport {
         def firstName = 'John'
         def lastName = 'hashtag'
         def email = "john+${uniqueTestName}@example.com"
-
-        UserApi userApi = new UserApi(getClient())
 
         User user = UserBuilder.instance()
             .setEmail(email)
@@ -199,7 +195,6 @@ class UsersIT extends ITSupport {
         def lastName = 'Role'
         def email = "john-${uniqueTestName}@example.com"
 
-        UserApi userApi = new UserApi(getClient())
         RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
 
         // 1. Create a user
@@ -245,8 +240,6 @@ class UsersIT extends ITSupport {
         def lastName = 'Change-Password'
         def email = "john-${uniqueTestName}@example.com"
 
-        UserApi userApi = new UserApi(getClient())
-
         // 1. Create a user
         User user = UserBuilder.instance()
             .setEmail(email)
@@ -275,18 +268,13 @@ class UsersIT extends ITSupport {
         userApi.getUser(user.getId())
     }
 
-    // TODO: enable it after fixing the inheritance issue
-    @Test(expectedExceptions = ResourceException, groups = "group2", enabled = false)
+    @Test(expectedExceptions = ApiException, groups = "group2")
     void changeStrictPasswordTest() {
 
         def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'Change-Password'
         def email = "john-${uniqueTestName}@example.com"
-
-        UserApi userApi = new UserApi(getClient())
-        GroupApi groupApi = new GroupApi(getClient())
-        PolicyApi policyApi = new PolicyApi(getClient())
 
         String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
@@ -313,7 +301,7 @@ class UsersIT extends ITSupport {
 
         policy.setSettings(passwordPolicySettings)
 
-        policy = policyApi.updatePolicy(policy.getId(), policy)
+        policy = policyApiHelper.replacePolicy(policy.getId(), policy)
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
 
@@ -339,8 +327,7 @@ class UsersIT extends ITSupport {
         passwordPolicyRule.setActions(passwordPolicyRuleActions)
         passwordPolicyRule.setName(policyRuleName)
 
-        PolicyRule policyRule = policyApi.createPolicyRule(policy.getId(), passwordPolicyRule)
-        registerForCleanup(policyRule)
+        policyApiHelper.createPolicyRuleOfType(PasswordPolicyRule.class, policy.getId(), passwordPolicyRule)
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -367,14 +354,14 @@ class UsersIT extends ITSupport {
         userApi.changePassword(user.getId(), changePasswordRequest, true)
 
         UserCredentials userCredentials = userApi.changePassword(user.getId(), changePasswordRequest, false)
-        assertThat userCredentials.getProvider().getType(), equalTo("OKTA")
+        assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
         // TODO: fix har file
         userApi.getUser(user.getId())
     }
 
-    @Test(expectedExceptions = ResourceException, groups = "group2")
+    @Test(expectedExceptions = ApiException, groups = "group2")
     @Scenario("user-change-recovery-question")
     void changeRecoveryQuestionTest() {
 
@@ -382,8 +369,6 @@ class UsersIT extends ITSupport {
         def firstName = 'John'
         def lastName = 'Change-Recovery-Question'
         def email = "john-${uniqueTestName}@example.com"
-
-        UserApi userApi = new UserApi(getClient())
 
         // 1. Create a user with password & recovery question
         User user = UserBuilder.instance()
@@ -432,8 +417,6 @@ class UsersIT extends ITSupport {
         def firstName = 'John'
         def lastName = 'Forgot-Password'
         def email = "john-${uniqueTestName}@example.com"
-
-        UserApi userApi = new UserApi(getClient())
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -487,8 +470,6 @@ class UsersIT extends ITSupport {
         def lastName = 'Get-Reset-Password-URL'
         def email = "john-${uniqueTestName}@example.com"
 
-        UserApi userApi = new UserApi(getClient())
-
         // 1. Create a user
         User user = UserBuilder.instance()
             .setEmail(email)
@@ -514,8 +495,6 @@ class UsersIT extends ITSupport {
         def lastName = 'Get-User'
         def email = "john-${uniqueTestName}@example.com"
 
-        UserApi userApi = new UserApi(getClient())
-
         // 1. Create a user
         User createdUser = UserBuilder.instance()
             .setEmail(email)
@@ -525,6 +504,7 @@ class UsersIT extends ITSupport {
             .setActive(false)
             .buildAndCreate(userApi)
         registerForCleanup(createdUser)
+
         validateUser(createdUser, firstName, lastName, email)
 
         // 2. Get the user by user ID
@@ -540,7 +520,7 @@ class UsersIT extends ITSupport {
         userApi.deleteUser(user.getId(), false)
 
         // 4. get user expect 404
-        expect(ResourceException) {
+        expect(ApiException) {
             userApi.getUser(email)
         }
     }
@@ -555,8 +535,6 @@ class UsersIT extends ITSupport {
         def email = "john-${uniqueTestName}@example.com"
         def groupName = "Group-Target Test Group ${uniqueTestName}"
 
-        UserApi userApi = new UserApi(getClient())
-        GroupApi groupApi = new GroupApi(getClient())
         RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
         RoleTargetApi roleTargetApi = new RoleTargetApi(getClient())
 
@@ -626,8 +604,6 @@ class UsersIT extends ITSupport {
         def preferredLanguage = 'en-US'
         def email = "john-${uniqueTestName}@example.com"
 
-        UserApi userApi = new UserApi(getClient())
-
         // 1. Create a user
         User user = UserBuilder.instance()
             .setEmail(email)
@@ -687,8 +663,6 @@ class UsersIT extends ITSupport {
         def lastName = 'Suspend'
         def email = "john-${uniqueTestName}@example.com"
 
-        UserApi userApi = new UserApi(getClient())
-
         // 1. Create a user
         User user = UserBuilder.instance()
             .setEmail(email)
@@ -721,8 +695,8 @@ class UsersIT extends ITSupport {
     @Test(groups = "group2")
     void getUserInvalidUserId() {
         def userId = "invalid-user-id-${uniqueTestName}@example.com"
-        UserApi userApi = new UserApi(getClient())
-        expect(ResourceException) {
+
+        expect(ApiException) {
             userApi.getUser(userId)
         }
     }
@@ -735,9 +709,6 @@ class UsersIT extends ITSupport {
         def firstName = 'John'
         def lastName = 'Create-User-With-Group'
         def email = "john-${uniqueTestName}@example.com"
-
-        UserApi userApi = new UserApi(getClient())
-        GroupApi groupApi = new GroupApi(getClient())
 
         // 1. Create group
         Group group = GroupBuilder.instance()
@@ -764,34 +735,12 @@ class UsersIT extends ITSupport {
         assertThat groups.get(1).getId(), equalTo(group.id)
     }
 
-//    @Test (groups = "group3")
-//    void setUserPasswordWithoutReset() {
-//
-//        def user = randomUser()
-//        def userId = user.getId()
-//
-//        Resource userPasswordRequest = client.instantiate(ExtensibleResource)
-//        userPasswordRequest.put("credentials", client.instantiate(ExtensibleResource)
-//            .put("password", client.instantiate(ExtensibleResource)
-//                .put("value", "aPassword1!".toCharArray())))
-//
-//        Resource result = client.getDataStore().http()
-//            .setBody(userPasswordRequest)
-//            .addQueryParameter("key1", "value1")
-//            .addQueryParameter("key2", "value2")
-//            .post("/api/v1/users/"+ userId, User.class)
-//
-//        assertThat(result, instanceOf(User))
-//    }
-
     @Test (groups = "group3")
     void importUserWithSha512Password() {
 
         def salt = "aSalt"
         def hashedPassword = hashPassword("aPassword", salt)
         def email = "joe.coder+${uniqueTestName}@example.com"
-
-        UserApi userApi = new UserApi(getClient())
 
         User user = UserBuilder.instance()
             .setEmail(email)
@@ -814,8 +763,6 @@ class UsersIT extends ITSupport {
         def middleName = 'Mark'
         def lastName = 'Forgot-Password'
         def email = "john-${uniqueTestName}@example.com"
-
-        UserApi userApi = new UserApi(getClient())
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -845,7 +792,6 @@ class UsersIT extends ITSupport {
         userCredentials = userApi.forgotPasswordSetNewPassword(user.getId(), userCredentials, false)
         assertThat userCredentials.getRecoveryQuestion().getQuestion(), equalTo("How many roads must a man walk down?")
         assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
-        assertThat userCredentials.getProvider().getName(), equalTo("OKTA")
     }
 
     @Test (groups = "group3")
@@ -855,10 +801,8 @@ class UsersIT extends ITSupport {
         def lastName = 'Forgot-Password'
         def email = "john-${uniqueTestName}@example.com"
 
-        UserApi userApi = new UserApi(getClient())
-
         AuthenticationProvider authenticationProvider = new AuthenticationProvider()
-        authenticationProvider.setName("FEDERATION")
+        authenticationProvider.setName(AuthenticationProviderType.FEDERATION.name())
         authenticationProvider.setType(AuthenticationProviderType.FEDERATION)
 
         // 1. Create a user
@@ -874,34 +818,13 @@ class UsersIT extends ITSupport {
 
         assertThat user.getCredentials(), notNullValue()
         assertThat user.getCredentials().getProvider().getType(), equalTo(AuthenticationProviderType.FEDERATION)
-        assertThat user.getCredentials().getProvider().getName(), equalTo("FEDERATION")
-    }
-
-    @Test (groups = "group3")
-    void testPagination() {
-        def user1 = randomUser()
-        def user2 = randomUser()
-        def user3 = randomUser()
-        registerForCleanup(user1)
-        registerForCleanup(user2)
-        registerForCleanup(user3)
-
-        UserApi userApi = new UserApi(getClient())
-
-        int limit = 2
-
-        PagedList usersPagedList = userApi.listUsersWithPaginationInfo(null, null, limit, null, null, null, null)
-
-        assertThat usersPagedList, notNullValue()
-        assertThat usersPagedList.self, notNullValue()
-        assertThat usersPagedList.items().size(), is(greaterThanOrEqualTo(3))
     }
 
     @Test (groups = "group3")
     void testListGroupAssignmentsWithExpand() {
-        GroupApi groupApi = new GroupApi(getClient())
 
-        //  Create more than 20 groups
+        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(getClient()))
+
         for (int i = 1; i < 30; i++) {
             registerForCleanup(new DefaultGroupBuilder().setName("test-group_" + i + "_${uniqueTestName}").buildAndCreate(groupApi))
         }
@@ -910,9 +833,12 @@ class UsersIT extends ITSupport {
 
         //  Fetch the GroupAssignment list in two requests
         def expandParameter = "group"
+
         List<Application> applicationList =
-            applicationApi.listApplications(null, null, null, null, null, null)
+            applicationApiHelper.listApplications( null, null, null, null, null, null)
+
         Application application = applicationList.first()
+
         List<ApplicationGroupAssignment> groupAssignments =
             applicationApi.listApplicationGroupAssignments(application.getId(), null, null, null, expandParameter)
 
@@ -932,5 +858,4 @@ class UsersIT extends ITSupport {
         def bytes = messageDigest.digest(StringUtils.getBytes(password, StandardCharsets.UTF_8))
         return Base64.getEncoder().encodeToString(bytes)
     }
-
 }

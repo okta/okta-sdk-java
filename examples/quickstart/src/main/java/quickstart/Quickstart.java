@@ -15,13 +15,13 @@
  */
 package quickstart;
 
-import com.okta.sdk.resource.common.PagedList;
 import org.openapitools.client.ApiClient;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
 
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.UserApi;
 import org.openapitools.client.api.GroupApi;
 
@@ -41,7 +41,7 @@ import java.util.UUID;
 @SuppressWarnings("PMD.UnusedLocalVariable")
 public class Quickstart {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ApiException {
 
         final String email = "joe.coder+" + UUID.randomUUID() + "@example.com";
         final String groupName = "java-sdk-quickstart-" + UUID.randomUUID();
@@ -98,9 +98,6 @@ public class Quickstart {
 
             // get the list of users
             List<User> users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"", null, null, null);
-
-            // get the paginated list of users
-            PagedList<User> pagedUserList = userApi.listUsersWithPaginationInfo(null, null, 5, "status eq \"ACTIVE\"", null, null, null);
 
             // get the first user in the collection
             println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());

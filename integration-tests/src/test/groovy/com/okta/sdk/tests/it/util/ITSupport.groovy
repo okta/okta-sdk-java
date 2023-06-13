@@ -15,17 +15,21 @@
  */
 package com.okta.sdk.tests.it.util
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.okta.commons.http.MediaType
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder
 import com.okta.sdk.resource.policy.PolicyBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
 import com.okta.sdk.tests.Scenario
+import org.openapitools.client.Pair
 import org.openapitools.client.api.GroupApi
 import org.openapitools.client.api.PolicyApi
 import org.openapitools.client.api.UserApi
 import org.openapitools.client.model.CreateUserRequest
 import org.openapitools.client.model.Group
+import org.openapitools.client.model.HttpMethod
 import org.openapitools.client.model.LifecycleStatus
 import org.openapitools.client.model.OktaSignOnPolicy
 import org.openapitools.client.model.PasswordPolicy
@@ -33,14 +37,10 @@ import org.openapitools.client.model.Policy
 import org.openapitools.client.model.PolicyType
 import org.openapitools.client.model.User
 import org.openapitools.client.model.UserProfile
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
-import org.springframework.util.LinkedMultiValueMap
+
 import org.testng.ITestContext
 import org.testng.ITestResult
 import org.testng.annotations.AfterMethod
@@ -133,6 +133,8 @@ abstract class ITSupport implements ClientProvider {
 
     User randomUser() {
 
+        UserApi userApi = new UserApi(getClient())
+
         def email = "joe.coder+" + UUID.randomUUID().toString() + "@example.com"
 
         UserProfile userProfile = new UserProfile()
@@ -145,8 +147,8 @@ abstract class ITSupport implements ClientProvider {
         CreateUserRequest createUserRequest = new CreateUserRequest()
             .profile(userProfile)
 
-        UserApi userApi = new UserApi(getClient())
         User createdUser = userApi.createUser(createUserRequest, true, null, null)
+
         return createdUser
     }
 
@@ -158,7 +160,6 @@ abstract class ITSupport implements ClientProvider {
             .setName(name)
             .setDescription(name)
             .buildAndCreate(groupApi)
-        registerForCleanup(group)
 
         return group
     }
@@ -173,28 +174,12 @@ abstract class ITSupport implements ClientProvider {
             .setDescription("IT created Policy")
             .setPriority(1)
             .addGroup(groupId)
-            .buildAndCreate(policyApi)
-        registerForCleanup(policy)
+            .buildAndCreate(policyApi) as PasswordPolicy
 
         return policy
     }
 
-    Policy randomPolicy() {
-
-        PolicyApi policyApi = new PolicyApi(getClient())
-
-        Policy policy = PolicyBuilder.instance()
-            .setName("java-sdk-it-" + UUID.randomUUID().toString())
-            .setStatus(LifecycleStatus.ACTIVE)
-            .setDescription("IT created Policy")
-            .setPriority(1)
-            .buildAndCreate(policyApi)
-        registerForCleanup(policy)
-
-        return policy
-    }
-
-    OktaSignOnPolicy randomSignOnPolicy(String groupId) {
+    OktaSignOnPolicy randomSignOnPolicy() {
 
         PolicyApi policyApi = new PolicyApi(getClient())
 
@@ -203,29 +188,30 @@ abstract class ITSupport implements ClientProvider {
             .setDescription("IT created Policy")
             .setStatus(LifecycleStatus.ACTIVE)
             .setType(PolicyType.OKTA_SIGN_ON)
-            .buildAndCreate(policyApi)
-        registerForCleanup(policy)
+            .buildAndCreate(policyApi) as OktaSignOnPolicy
 
         return policy
     }
 
     boolean isOIEEnvironment() {
 
-        ResponseEntity<Map<String, Object>> responseEntity = getClient().invokeAPI("/.well-known/okta-organization",
-            HttpMethod.GET,
-            Collections.emptyMap(),
+        Map<String, Object> response = getClient().invokeAPI(
+            "/.well-known/okta-organization",
+            HttpMethod.GET.name(),
+            new ArrayList<Pair>(),
+            new ArrayList<Pair>(),
             null,
             null,
-            new HttpHeaders(),
-            new LinkedMultiValueMap<String, String>(),
-            null,
-            Collections.singletonList(MediaType.APPLICATION_JSON),
+            new HashMap<String, String>(),
+            new HashMap<String, String>(),
+            new HashMap<String, Object>(),
+            MediaType.APPLICATION_JSON_VALUE,
             null,
             new String[]{ "apiToken" },
-            new ParameterizedTypeReference<Map<String, Object>>() {})
+            new TypeReference<Map<String, Object>>() {})
 
-        if (responseEntity != null && responseEntity.getBody() != null) {
-            String pipeline = responseEntity.getBody().get("pipeline")
+        if (response != null && response.containsKey("pipeline")) {
+            String pipeline = response.get("pipeline")
             if (Objects.equals(pipeline, "idx")) {
                 return true
             }

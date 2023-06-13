@@ -17,14 +17,11 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
+import com.okta.sdk.helper.PolicyApiHelper;
 import com.okta.sdk.resource.policy.*;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.PolicyApi;
-import org.openapitools.client.model.GroupCondition;
-import org.openapitools.client.model.OktaSignOnPolicy;
-import org.openapitools.client.model.OktaSignOnPolicyConditions;
-import org.openapitools.client.model.PolicyPeopleCondition;
-import org.openapitools.client.model.PolicyType;
-import org.openapitools.client.model.UserCondition;
+import org.openapitools.client.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +57,9 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
     }
 
     @Override
-    public OktaSignOnPolicy buildAndCreate(PolicyApi client) {
-        return client.createPolicy(OktaSignOnPolicy.class, build(), isActive);
+    public OktaSignOnPolicy buildAndCreate(PolicyApi client) throws ApiException {
+        return new PolicyApiHelper<>(new PolicyApiHelper<>(client.getApiClient()))
+            .createPolicyOfType(OktaSignOnPolicy.class, build(), isActive);
     }
 
     private OktaSignOnPolicy build() {

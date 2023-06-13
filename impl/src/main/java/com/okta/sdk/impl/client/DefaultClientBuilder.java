@@ -16,13 +16,11 @@
  */
 package com.okta.sdk.impl.client;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.commons.configcheck.ConfigurationValidator;
 import com.okta.commons.http.config.Proxy;
+import com.okta.commons.lang.ApplicationInfo;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Classes;
 import com.okta.commons.lang.Strings;
@@ -34,16 +32,8 @@ import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.ClientBuilder;
-import com.okta.sdk.error.ErrorHandler;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
-import com.okta.sdk.impl.config.ClientConfiguration;
-import com.okta.sdk.impl.config.EnvironmentVariablesPropertiesSource;
-import com.okta.sdk.impl.config.OptionalPropertiesSource;
-import com.okta.sdk.impl.config.PropertiesSource;
-import com.okta.sdk.impl.config.ResourcePropertiesSource;
-import com.okta.sdk.impl.config.SystemPropertiesSource;
-import com.okta.sdk.impl.config.YAMLPropertiesSource;
-import com.okta.sdk.impl.serializer.UserProfileSerializer;
+import com.okta.sdk.impl.config.*;
 import com.okta.sdk.impl.deserializer.UserProfileDeserializer;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
@@ -52,54 +42,42 @@ import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
+import com.okta.sdk.impl.serializer.UserProfileSerializer;
 import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.ProxyAuthenticationStrategy;
+
+import com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.DefaultAuthenticationStrategy;
+import org.apache.hc.client5.http.impl.DefaultConnectionKeepAliveStrategy;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.DefaultBackoffStrategy;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.*;
+import org.apache.hc.core5.http.impl.DefaultConnectionReuseStrategy;
+import org.apache.hc.core5.util.Timeout;
+
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+
 import org.openapitools.client.ApiClient;
+
 import org.openapitools.client.model.UserProfile;
-import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.BufferingClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.DefaultUriBuilderFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>The default {@link ClientBuilder} implementation. This looks for configuration files
@@ -121,21 +99,16 @@ import java.util.concurrent.TimeUnit;
  * @since 0.5.0
  */
 public class DefaultClientBuilder implements ClientBuilder {
-
     private static final Logger log = LoggerFactory.getLogger(DefaultClientBuilder.class);
-
     private static final String ENVVARS_TOKEN   = "envvars";
     private static final String SYSPROPS_TOKEN  = "sysprops";
     private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
-
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
-
     private ClientConfiguration clientConfig = new ClientConfiguration();
-
     private AccessTokenRetrieverService accessTokenRetrieverService;
 
     public DefaultClientBuilder() {
@@ -353,8 +326,49 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
-        ApiClient apiClient = new ApiClient(restTemplate(this.clientConfig), this.cacheManager, this.clientConfig);
+        HttpClientBuilder clientBuilder = HttpClients.custom();
+
+        RequestConfig requestConfig = RequestConfig.custom()
+            .setConnectTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
+            .setResponseTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
+            .setConnectionRequestTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
+            .build();
+
+        if (clientConfig.getProxy() != null) {
+            clientBuilder.useSystemProperties();
+            clientBuilder.setProxy(new HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
+            if (clientConfig.getProxyUsername() != null) {
+                final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
+                UsernamePasswordCredentials usernamePasswordCredentials =
+                    new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword().toCharArray());
+                credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
+                clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                clientBuilder.setProxyAuthenticationStrategy(new DefaultAuthenticationStrategy());
+            }
+        }
+
+        PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
+
+        CloseableHttpClient httpclient = clientBuilder
+            .setDefaultRequestConfig(requestConfig)
+            .setConnectionManager(poolingHttpClientConnectionManager)
+            .setRetryStrategy(new OktaHttpRequestRetryStrategy(this.clientConfig.getRetryMaxAttempts()))
+            .setConnectionBackoffStrategy(new DefaultBackoffStrategy())
+            .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
+            .setConnectionReuseStrategy(new DefaultConnectionReuseStrategy())
+            .disableCookieManagement()
+            .build();
+
+        ApiClient apiClient = new ApiClient(httpclient, this.cacheManager, this.clientConfig);
         apiClient.setBasePath(this.clientConfig.getBaseUrl());
+
+        String userAgentValue = ApplicationInfo.get().entrySet().stream()
+            .map(entry -> entry.getKey() + "/" + entry.getValue())
+            .collect(Collectors.joining(" "));
+        apiClient.setUserAgent(userAgentValue);
+
+        addCustomSerializerAndDeserializers(apiClient);
 
         if (!isOAuth2Flow()) {
             if (this.clientConfig.getClientCredentialsResolver() == null && this.clientCredentials != null) {
@@ -363,7 +377,7 @@ public class DefaultClientBuilder implements ClientBuilder {
                 this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(this.clientConfig));
             }
 
-            apiClient.setApiKeyPrefix("SSWS");
+            apiClient.setApiKeyPrefix(AuthenticationScheme.SSWS.name());
             apiClient.setApiKey((String) this.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
         } else {
             this.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
@@ -412,70 +426,12 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
     }
 
-    private RestTemplate restTemplate(ClientConfiguration clientConfig) {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.registerModule(new JsonNullableModule());
-
+    private void addCustomSerializerAndDeserializers(ApiClient apiClient) {
+        ObjectMapper mapper = apiClient.getObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addSerializer(UserProfile.class, new UserProfileSerializer());
         module.addDeserializer(UserProfile.class, new UserProfileDeserializer());
-        objectMapper.registerModule(module);
-
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter =
-            new MappingJackson2HttpMessageConverter(objectMapper);
-
-        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(
-            MediaType.APPLICATION_JSON,
-            MediaType.parseMediaType("application/x-pem-file"),
-            MediaType.parseMediaType("application/x-x509-ca-cert"),
-            MediaType.parseMediaType("application/pkix-cert")));
-
-        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-        messageConverters.add(mappingJackson2HttpMessageConverter);
-
-        RestTemplate restTemplate = new RestTemplate(messageConverters);
-        restTemplate.setErrorHandler(new ErrorHandler());
-        restTemplate.setRequestFactory(requestFactory(clientConfig));
-
-        DefaultUriBuilderFactory uriTemplateHandler = new DefaultUriBuilderFactory();
-        uriTemplateHandler.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
-        restTemplate.setUriTemplateHandler(uriTemplateHandler);
-
-        return restTemplate;
-    }
-
-    private BufferingClientHttpRequestFactory requestFactory(ClientConfiguration clientConfig) {
-
-        final HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-
-        if (clientConfig.getProxy() != null) {
-            clientBuilder.useSystemProperties();
-            clientBuilder.setProxy(new HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
-            if (clientConfig.getProxyUsername() != null) {
-                final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
-                UsernamePasswordCredentials usernamePasswordCredentials =
-                    new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword());
-                credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
-                clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                clientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
-            }
-        }
-
-        final CloseableHttpClient httpClient = clientBuilder.build();
-
-        final HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-        clientHttpRequestFactory.setHttpClient(httpClient);
-        clientHttpRequestFactory.setConnectionRequestTimeout(clientConfig.getConnectionTimeout() * 1000);
-        clientHttpRequestFactory.setConnectTimeout(clientConfig.getConnectionTimeout() * 1000);
-        clientHttpRequestFactory.setReadTimeout(clientConfig.getConnectionTimeout() * 1000);
-
-        return new BufferingClientHttpRequestFactory(clientHttpRequestFactory);
+        mapper.registerModule(module);
     }
 
     @Override

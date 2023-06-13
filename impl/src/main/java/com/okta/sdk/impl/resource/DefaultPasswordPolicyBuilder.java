@@ -17,31 +17,11 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
+import com.okta.sdk.helper.PolicyApiHelper;
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.PolicyApi;
-import org.openapitools.client.model.GroupCondition;
-import org.openapitools.client.model.PasswordDictionary;
-import org.openapitools.client.model.PasswordDictionaryCommon;
-import org.openapitools.client.model.PasswordPolicy;
-import org.openapitools.client.model.PasswordPolicyAuthenticationProviderCondition;
-import org.openapitools.client.model.PasswordPolicyAuthenticationProviderType;
-import org.openapitools.client.model.PasswordPolicyConditions;
-import org.openapitools.client.model.PasswordPolicyDelegationSettings;
-import org.openapitools.client.model.PasswordPolicyDelegationSettingsOptions;
-import org.openapitools.client.model.PasswordPolicyPasswordSettings;
-import org.openapitools.client.model.PasswordPolicyPasswordSettingsAge;
-import org.openapitools.client.model.PasswordPolicyPasswordSettingsComplexity;
-import org.openapitools.client.model.PasswordPolicyPasswordSettingsLockout;
-import org.openapitools.client.model.PasswordPolicyRecoveryEmail;
-import org.openapitools.client.model.PasswordPolicyRecoveryEmailProperties;
-import org.openapitools.client.model.PasswordPolicyRecoveryEmailRecoveryToken;
-import org.openapitools.client.model.PasswordPolicyRecoveryFactorSettings;
-import org.openapitools.client.model.PasswordPolicyRecoveryFactors;
-import org.openapitools.client.model.PasswordPolicyRecoverySettings;
-import org.openapitools.client.model.PasswordPolicySettings;
-import org.openapitools.client.model.PolicyPeopleCondition;
-import org.openapitools.client.model.PolicyType;
-import org.openapitools.client.model.UserCondition;
+import org.openapitools.client.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -221,8 +201,9 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
     }
 
     @Override
-    public PasswordPolicy buildAndCreate(PolicyApi client) {
-        return client.createPolicy(PasswordPolicy.class, build(), isActive);
+    public PasswordPolicy buildAndCreate(PolicyApi client) throws ApiException {
+        return new PolicyApiHelper<>(new PolicyApiHelper<>(client.getApiClient()))
+            .createPolicyOfType(PasswordPolicy.class, build(), false);
     }
 
     private PasswordPolicy build() {

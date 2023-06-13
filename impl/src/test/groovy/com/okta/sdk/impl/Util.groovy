@@ -27,7 +27,7 @@ class Util {
             if (!e.class.isAssignableFrom(catchMe)) {
                 throw e
             }
-            return e
+            return e as T
         }
     }
 }

@@ -19,9 +19,7 @@ import com.nimbusds.jose.jwk.RSAKey
 import com.okta.commons.http.config.BaseUrlResolver
 import com.okta.sdk.client.AuthorizationMode
 import com.okta.sdk.client.Clients
-import com.okta.sdk.error.Error
-import com.okta.sdk.error.ErrorCause
-import com.okta.sdk.error.ResourceException
+
 import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver
 import com.okta.sdk.impl.client.DefaultClientBuilder
@@ -33,13 +31,9 @@ import org.bouncycastle.openssl.PEMException
 import org.hamcrest.MatcherAssert
 import org.mockito.ArgumentMatchers
 import org.openapitools.client.ApiClient
-import org.springframework.core.ParameterizedTypeReference
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.util.MultiValueMap
+import org.openapitools.client.ApiException
+import org.openapitools.client.Pair
+import org.openapitools.client.model.HttpMethod
 import org.testng.annotations.Test
 
 import java.security.KeyPair
@@ -59,6 +53,8 @@ import static org.testng.Assert.assertEquals
  * @since 1.6.0
  */
 class AccessTokenRetrieverServiceImplTest {
+
+    // dummy private key generated and used for unit test only
 
     private static final String PRIVATE_KEY = "-----BEGIN PRIVATE KEY-----\n" +
         "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDH0Y47a8w/Tgiv" +
@@ -88,6 +84,8 @@ class AccessTokenRetrieverServiceImplTest {
         "8zZeebOsKqNB3Nlm8wNrYbJJvpTEyt6kpZi+YJ/S4mQ/0CzIpmq6014aKm16NJxv" +
         "AHYKHuDUvhiDFwadf8Q7kSK5KA==\n" +
         "-----END PRIVATE KEY-----"
+
+    // dummy private key generated and used for unit test only
 
     private static final String RSA_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n" +
         "MIIEpQIBAAKCAQEAx9GOO2vMP04Ir1eJsrYwUkf+RyLvj+fP794OoG2L8QvzVj8z" +
@@ -130,6 +128,8 @@ class AccessTokenRetrieverServiceImplTest {
         def clientConfiguration = mock(ClientConfiguration)
         def apiClient = mock(ApiClient)
 
+        // dummy private key generated and used for unit test only
+
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
 
@@ -150,6 +150,8 @@ class AccessTokenRetrieverServiceImplTest {
 
         def apiClient = mock(ApiClient)
         def clientConfiguration = mock(ClientConfiguration)
+
+        // dummy private key generated and used for unit test only
 
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
@@ -181,18 +183,20 @@ class AccessTokenRetrieverServiceImplTest {
         oAuth2AccessToken.setExpiresIn(3600)
         oAuth2AccessToken.setScope("openid")
 
-        when(apiClient.invokeAPI(contains("oauth2/v1/token"),
-            eq(HttpMethod.POST),
-            anyMap(),
-            any(MultiValueMap.class),
-            isNull(),
-            any(HttpHeaders.class),
-            any(LinkedMultiValueMap.class),
-            isNull(),
-            eq(Collections.singletonList(MediaType.APPLICATION_JSON)),
-            eq(MediaType.APPLICATION_FORM_URLENCODED),
-            any(),
-            any())).thenReturn(ResponseEntity.ok(oAuth2AccessToken))
+        when(apiClient.invokeAPI(
+            anyString(),
+            eq(HttpMethod.POST.name()) as String,
+            anyList() as List<Pair>,
+            anyList() as List<Pair>,
+            isNull() as String,
+            isNull() as String,
+            ArgumentMatchers.any() as Map<String, String>,
+            ArgumentMatchers.any() as Map<String, String>,
+            ArgumentMatchers.any() as Map<String, Object>,
+            anyString(),
+            anyString(),
+            ArgumentMatchers.any() as String[],
+            any())).thenReturn(oAuth2AccessToken)
 
         OAuth2AccessToken mockResponseAccessToken = accessTokenRetrievalService.getOAuth2AccessToken()
         assertEquals(mockResponseAccessToken.getAccessToken(), "accessToken")
@@ -207,6 +211,8 @@ class AccessTokenRetrieverServiceImplTest {
 
         def clientConfig = mock(ClientConfiguration)
         def apiClient = mock(ApiClient)
+
+        // dummy private key generated and used for unit test only
 
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
@@ -267,6 +273,8 @@ class AccessTokenRetrieverServiceImplTest {
         def apiClient = mock(ApiClient)
         def clientConfig = mock(ClientConfiguration)
 
+        // dummy private key generated and used for unit test only
+
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
 
         String baseUrl = "https://sample.okta.com"
@@ -294,6 +302,8 @@ class AccessTokenRetrieverServiceImplTest {
 
         def tokenClient = mock(ApiClient)
         def clientConfig = mock(ClientConfiguration)
+
+        // dummy private key generated and used for unit test only
 
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
@@ -325,6 +335,8 @@ class AccessTokenRetrieverServiceImplTest {
         def apiClient = mock(ApiClient)
         def clientConfig = mock(ClientConfiguration)
 
+        // dummy private key generated and used for unit test only
+
         PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
 
@@ -343,52 +355,25 @@ class AccessTokenRetrieverServiceImplTest {
         when(clientConfig.getClientCredentialsResolver()).thenReturn(
             new DefaultClientCredentialsResolver({ -> Optional.empty() }))
 
-        Error defaultError = new Error() {
-            @Override
-            int getStatus() {
-                return 401
-            }
+        ApiException apiException = new ApiException(401, "Unauthorized", null, "{\n" +
+            "    \"error\" : \"invalid_client\",\n" +
+            "    \"error_description\" : \"No client credentials found.\"\n" +
+            "}")
 
-            @Override
-            String getCode() {
-                return null
-            }
-
-            @Override
-            String getMessage() {
-                return "Unauthorized"
-            }
-
-            @Override
-            String getId() {
-                return null
-            }
-
-            @Override
-            List<ErrorCause> getCauses() {
-                return null
-            }
-
-            @Override
-            Map<String, List<String>> getHeaders() {
-                return null
-            }
-        }
-
-        ResourceException resourceException = new ResourceException(defaultError)
-
-        when(apiClient.invokeAPI(anyString(),
-            anyObject(),
+        when(apiClient.invokeAPI(
+            anyString(),
+            eq(HttpMethod.POST.name()),
+            anyList() as List<Pair>,
+            anyList() as List<Pair>,
+            isNull() as String,
+            isNull() as String,
+            ArgumentMatchers.any() as Map<String, String>,
+            ArgumentMatchers.any() as Map<String, String>,
             ArgumentMatchers.any() as Map<String, Object>,
-            ArgumentMatchers.any() as MultiValueMap<String, String>,
-            any(),
-            ArgumentMatchers.any() as HttpHeaders,
-            ArgumentMatchers.any() as MultiValueMap<String, String>,
-            ArgumentMatchers.any() as MultiValueMap<String, Object>,
-            ArgumentMatchers.any() as List<MediaType>,
-            ArgumentMatchers.any() as MediaType,
+            anyString(),
+            anyString(),
             ArgumentMatchers.any() as String[],
-            any())).thenThrow(resourceException)
+            any())).thenThrow(apiException)
 
         def accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig, apiClient)
         accessTokenRetrieverService.getOAuth2AccessToken()
@@ -398,7 +383,9 @@ class AccessTokenRetrieverServiceImplTest {
 
     // helper methods
 
-    PrivateKey generatePrivateKey(String algorithm, int keySize) {
+    // dummy private key generated and used for unit test only
+
+    static PrivateKey generatePrivateKey(String algorithm, int keySize) {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm)
         keyPairGenerator.initialize(keySize)
         KeyPair keyPair = keyPairGenerator.generateKeyPair()
@@ -406,20 +393,21 @@ class AccessTokenRetrieverServiceImplTest {
         return privateKey
     }
 
-    String createPemFileContent(PrivateKey privateKey) {
+    static String createPemFileContent(PrivateKey privateKey) {
         String encodedString = "-----BEGIN PRIVATE KEY-----\n"
         encodedString = encodedString + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
         encodedString = encodedString + "-----END PRIVATE KEY-----\n"
         return encodedString
 
     }
-    File writePrivateKeyToPemFile(PrivateKey privateKey, String fileNamePrefix) {
+
+    static File writePrivateKeyToPemFile(PrivateKey privateKey, String fileNamePrefix) {
         File privateKeyPemFile = File.createTempFile(fileNamePrefix,".pem")
         privateKeyPemFile.write(createPemFileContent(privateKey))
         return privateKeyPemFile
     }
 
-    AccessTokenRetrieverServiceImpl getAccessTokenRetrieverServiceInstance(ClientConfiguration clientConfiguration, ApiClient apiClient) {
+    static AccessTokenRetrieverServiceImpl getAccessTokenRetrieverServiceInstance(ClientConfiguration clientConfiguration, ApiClient apiClient) {
         if (clientConfiguration == null) {
             ClientConfiguration cc = new ClientConfiguration()
             cc.setBaseUrlResolver(new BaseUrlResolver() {

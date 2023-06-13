@@ -15,13 +15,10 @@
  */
 package com.okta.sdk.examples
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.testng.annotations.Test
 import quickstart.Quickstart
 
 import static org.testng.Assert.fail
-
 /**
  * This integration test validates that the example code in the JSDK Quickstart Guide (http://docs.stormpath.com/java/quickstart) works
  *
@@ -29,15 +26,12 @@ import static org.testng.Assert.fail
  */
 class QuickstartIT {
 
-    private static final Logger log = LoggerFactory.getLogger(QuickstartIT)
-
-
     @Test()
     void testCode() {
         try {
-            String[] args={}
+            String[] args = {}
             Quickstart.main(args)
-        } catch(Exception e){
+        } catch (Exception e) {
             fail("Quick start threw exception", e)
         }
     }

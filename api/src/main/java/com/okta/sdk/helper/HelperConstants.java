@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Okta
+ * Copyright 2023-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.error;
+package com.okta.sdk.helper;
 
-public class ErrorCause {
+import com.okta.commons.http.MediaType;
 
-    private final String summary;
+import java.util.StringJoiner;
 
-    public ErrorCause(String summary) {
-        this.summary = summary;
-    }
+public abstract class HelperConstants {
 
-    public String getSummary() {
-        return this.summary;
-    }
+    public static final StringJoiner QUERY_STRING_JOINER = new StringJoiner("&");
+    public static final String[] AUTH_NAMES = new String[] { "apiToken", "oauth2" };
+    public static final String[] MEDIA_TYPE = { MediaType.APPLICATION_JSON_VALUE };
 
-    @Override
-    public String toString() {
-        return "ErrorCause { summary='" + getSummary() + " }";
-    }
 }

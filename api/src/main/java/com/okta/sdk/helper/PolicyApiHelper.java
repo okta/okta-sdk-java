@@ -15,138 +15,207 @@
  */
 package com.okta.sdk.helper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.hc.core5.http.HttpStatus;
 import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Pair;
 import org.openapitools.client.api.PolicyApi;
 import org.openapitools.client.model.*;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
+import static com.okta.sdk.helper.HelperConstants.*;
+import static com.okta.sdk.helper.HelperUtil.getPolicyType;
+
 /**
- * Helper class that provide typed Policy references.
+ * Helper class that enables working with sub-typed {@link Policy} references.
  */
-public class PolicyApiHelper extends PolicyApi {
+public class PolicyApiHelper<T extends Policy> extends PolicyApi {
 
-    public static <T extends Policy> T getPolicy(ApiClient apiClient, String policyId, String expand) throws RestClientException {
+    public PolicyApiHelper(PolicyApi policyApi) {
+        super(policyApi.getApiClient());
+    }
 
-        // verify the required parameter 'policyId' is set ''
-        if (policyId == null) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'policyId' when calling getPolicy");
+    public PolicyApiHelper(ApiClient apiClient) {
+        super(apiClient);
+    }
+
+    public <T extends Policy> T createPolicyOfType(Class<T> classType,
+                                                   Policy policy,
+                                                   Boolean activate) throws ApiException {
+
+        ApiClient apiClient = getApiClient();
+
+        // verify the required parameter 'policy' is set
+        if (policy == null) {
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'policy' when calling createPolicy");
         }
 
         // create path and map variables
-        final Map<String, Object> uriVariables = new HashMap<String, Object>();
-        uriVariables.put("policyId", policyId);
+        String localVarPath = "/api/v1/policies";
 
-        final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<String, String>();
-        final HttpHeaders localVarHeaderParams = new HttpHeaders();
-        final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
-        final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();
+        List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("activate", activate));
 
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "expand", expand));
+        final String localVarAccept = apiClient.selectHeaderAccept(MEDIA_TYPE);
+        final String localVarContentType = apiClient.selectHeaderContentType(MEDIA_TYPE);
 
-        final String[] localVarAccepts = {
-            "application/json"
+        TypeReference<T> localVarReturnType = new TypeReference<T>() {
+            @Override
+            public Type getType() {
+                return classType;
+            }
         };
-        final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        final String[] localVarContentTypes = {  };
-        final MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
-
-        ParameterizedTypeReference<T> localReturnType = new ParameterizedTypeReference<T>() {};
-        ResponseEntity<T> respEntity = apiClient.invokeAPI("/api/v1/policies/{policyId}", HttpMethod.GET, uriVariables, localVarQueryParams, null, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
-        ObjectMapper objectMapper = getObjectMapper();
-        Policy policy = respEntity.getBody();
-        PolicyType policyType = policy.getType();
-
-        switch (Objects.requireNonNull(policyType)) {
-            case ACCESS_POLICY:
-                return (T) objectMapper.convertValue(policy, AccessPolicy.class);
-            case IDP_DISCOVERY:
-                return (T) objectMapper.convertValue(policy, IdentityProviderPolicy.class);
-            case MFA_ENROLL:
-                return (T) objectMapper.convertValue(policy, MultifactorEnrollmentPolicy.class);
-            case OAUTH_AUTHORIZATION_POLICY:
-                return (T) objectMapper.convertValue(policy, AuthorizationServerPolicy.class);
-            case OKTA_SIGN_ON:
-                return (T) objectMapper.convertValue(policy, OktaSignOnPolicy.class);
-            case PASSWORD:
-                return (T) objectMapper.convertValue(policy, PasswordPolicy.class);
-            case PROFILE_ENROLLMENT:
-                return (T) objectMapper.convertValue(policy, ProfileEnrollmentPolicy.class);
-        }
-
-        return (T) policy;
+        return apiClient.invokeAPI(
+            localVarPath,
+            HttpMethod.POST.name(),
+            localVarQueryParams,
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
+            policy,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            localVarAccept,
+            localVarContentType,
+            AUTH_NAMES,
+            localVarReturnType
+        );
     }
 
-    public static List<Policy> listPolicies(ApiClient apiClient, String type, String status, String expand) throws RestClientException {
+    @Override
+    public T getPolicy(String policyId, String expand) throws ApiException {
 
-        // verify the required parameter 'type' is set ''
-        if (type == null) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter 'type' when calling listPolicies");
+        ApiClient apiClient = getApiClient();
+
+        // verify the required parameter 'policyId' is set
+        if (policyId == null) {
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'policyId' when calling getPolicy");
         }
 
+        // create path and map variables
+        String localVarPath = "/api/v1/policies/{policyId}"
+            .replaceAll("\\{" + "policyId" + "\\}", apiClient.escapeString(policyId));
 
-        final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<String, String>();
-        final HttpHeaders localVarHeaderParams = new HttpHeaders();
-        final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
-        final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();
+        List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("expand", expand));
+        final String localVarAccept = apiClient.selectHeaderAccept(MEDIA_TYPE);
 
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "type", type));
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "status", status));
-        localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "expand", expand));
+        final String[] localVarContentTypes = { };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
-        final String[] localVarAccepts = {
-            "application/json"
-        };
-        final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        final String[] localVarContentTypes = {  };
-        final MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        TypeReference<T> localVarReturnType = new TypeReference<T>() { };
 
-        String[] localVarAuthNames = new String[] { "apiToken", "oauth2" };
+        T policy = apiClient.invokeAPI(
+            localVarPath,
+            HttpMethod.GET.name(),
+            localVarQueryParams,
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
+            null,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            localVarAccept,
+            localVarContentType,
+            AUTH_NAMES,
+            localVarReturnType
+        );
 
-        ParameterizedTypeReference<List<Policy>> localReturnType = new ParameterizedTypeReference<List<Policy>>() {};
-        List<Policy> policies = apiClient.invokeAPI("/api/v1/policies", HttpMethod.GET, Collections.<String, Object>emptyMap(),
-            localVarQueryParams, null, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept,
-            localVarContentType, localVarAuthNames, localReturnType).getBody();
-        ObjectMapper objectMapper = getObjectMapper();
+        return (T) getObjectMapper().convertValue(policy, getPolicyType(policy));
+    }
+
+    @Override
+    public List<Policy> listPolicies(String type,
+                                     String status,
+                                     String expand) throws ApiException {
+
+        ApiClient apiClient = getApiClient();
+
+        // verify the required parameter 'type' is set
+        if (type == null) {
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'type' when calling listPolicies");
+        }
+
+        // create path and map variables
+        String localVarPath = "/api/v1/policies";
+
+        List<Pair> localVarQueryParams = new ArrayList<>();
+        localVarQueryParams.addAll(apiClient.parameterToPair("type", type));
+        localVarQueryParams.addAll(apiClient.parameterToPair("status", status));
+        localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
+
+        TypeReference<List<Policy>> localVarReturnType = new TypeReference<List<Policy>>() { };
+
+        List<Policy> policies = apiClient.invokeAPI(
+            localVarPath,
+            HttpMethod.GET.name(),
+            localVarQueryParams,
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
+            null,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            apiClient.selectHeaderAccept(MEDIA_TYPE),
+            apiClient.selectHeaderContentType(new String[] { }),
+            AUTH_NAMES,
+            localVarReturnType
+        );
 
         List<Policy> typedPolicies = new ArrayList<>(policies.size());
 
-        for (Policy policy : policies) {
-            switch (Objects.requireNonNull(policy.getType())) {
-                case ACCESS_POLICY:
-                    typedPolicies.add(objectMapper.convertValue(policy, AccessPolicy.class));
-                    break;
-                case IDP_DISCOVERY:
-                    typedPolicies.add(objectMapper.convertValue(policy, IdentityProviderPolicy.class));
-                    break;
-                case MFA_ENROLL:
-                    typedPolicies.add(objectMapper.convertValue(policy, MultifactorEnrollmentPolicy.class));
-                    break;
-                case OAUTH_AUTHORIZATION_POLICY:
-                    typedPolicies.add(objectMapper.convertValue(policy, AuthorizationServerPolicy.class));
-                    break;
-                case OKTA_SIGN_ON:
-                    typedPolicies.add(objectMapper.convertValue(policy, OktaSignOnPolicy.class));
-                    break;
-                case PASSWORD:
-                    typedPolicies.add(objectMapper.convertValue(policy, PasswordPolicy.class));
-                    break;
-                case PROFILE_ENROLLMENT:
-                    typedPolicies.add(objectMapper.convertValue(policy, ProfileEnrollmentPolicy.class));
-                    break;
-            }
-        }
+        policies.forEach(policy ->
+            typedPolicies.add(getObjectMapper().convertValue(policy, getPolicyType(policy))));
 
         return typedPolicies;
+    }
+
+    public <T extends PolicyRule> T createPolicyRuleOfType(Class<T> classType,
+                                                           String policyId,
+                                                           PolicyRule policyRule) throws ApiException {
+
+        ApiClient apiClient = getApiClient();
+
+        // verify the required parameter 'policyId' is set
+        if (policyId == null) {
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'policyId' when calling createPolicyRule");
+        }
+
+        // verify the required parameter 'policyRule' is set
+        if (policyRule == null) {
+            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'policyRule' when calling createPolicyRule");
+        }
+
+        // create path and map variables
+        String localVarPath = "/api/v1/policies/{policyId}/rules"
+            .replaceAll("\\{" + "policyId" + "\\}", apiClient.escapeString(policyId));
+
+        final String localVarAccept = apiClient.selectHeaderAccept(MEDIA_TYPE);
+        final String localVarContentType = apiClient.selectHeaderContentType(MEDIA_TYPE);
+
+        TypeReference<T> localVarReturnType = new TypeReference<T>() {
+            @Override
+            public Type getType() {
+                return classType;
+            }
+        };
+
+        return apiClient.invokeAPI(
+            localVarPath,
+            HttpMethod.POST.name(),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            QUERY_STRING_JOINER.toString(),
+            policyRule,
+            new HashMap<>(),
+            new HashMap<>(),
+            new HashMap<>(),
+            localVarAccept,
+            localVarContentType,
+            AUTH_NAMES,
+            localVarReturnType
+        );
     }
 }

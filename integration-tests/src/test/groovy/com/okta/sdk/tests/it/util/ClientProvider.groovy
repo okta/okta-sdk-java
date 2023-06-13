@@ -120,12 +120,13 @@ trait ClientProvider implements IHookable {
     }
 
     void deleteApp(String id, ApiClient client) {
-        log.info("Deleting App: {}", id)
 
         ApplicationApi applicationApi = new ApplicationApi(client)
         Application appToDelete = applicationApi.getApplication(id, null)
 
         if (appToDelete != null) {
+            log.info("Deleting App: {} (id - {})", appToDelete.getLabel(), id)
+
             if (appToDelete.getStatus() == ApplicationLifecycleStatus.ACTIVE) {
                 // deactivate
                 applicationApi.deactivateApplication(appToDelete.getId())
@@ -136,11 +137,13 @@ trait ClientProvider implements IHookable {
     }
 
     void deleteUser(String id, ApiClient client) {
-        log.info("Deleting User: {}", id)
+
         UserApi userApi = new UserApi(client)
         User userToDelete = userApi.getUser(id)
 
         if (userToDelete != null) {
+            log.info("Deleting User: {} (id - {})", userToDelete.getProfile().getEmail(), id)
+
             if (userToDelete.getStatus() != UserStatus.DEPROVISIONED) {
                 // deactivate
                 userApi.deactivateUser(userToDelete.getId(), false)
@@ -151,41 +154,45 @@ trait ClientProvider implements IHookable {
     }
 
     void deleteUserType(String id, ApiClient client) {
-        log.info("Deleting UserType: {}", id)
+
         UserTypeApi userTypeApi= new UserTypeApi(client)
         UserType userTypeToDelete = userTypeApi.getUserType(id)
 
         if (userTypeToDelete != null) {
+            log.info("Deleting UserType: {} (id - {})", userTypeToDelete.getDisplayName(), id)
             userTypeApi.deleteUserType(userTypeToDelete.getId())
         }
     }
 
     void deleteGroup(String id, ApiClient client) {
-        log.info("Deleting Group: {}", id)
         GroupApi groupApi = new GroupApi(client)
         Group groupToDelete = groupApi.getGroup(id)
 
         if (groupToDelete != null) {
+            log.info("Deleting Group: {} (id - {})", groupToDelete.getProfile().getName(), id)
             groupApi.deleteGroup(groupToDelete.getId())
         }
     }
 
     void deleteGroupRule(String id, ApiClient client) {
-        log.info("Deleting GroupRule: {}", id)
+
         GroupApi groupApi = new GroupApi(client)
         GroupRule groupRuleToDelete = groupApi.getGroupRule(id, null)
 
         if (groupRuleToDelete != null) {
+            log.info("Deleting GroupRule: {} (id - {})", groupRuleToDelete.getName(), id)
             groupApi.deleteGroup(groupRuleToDelete.getId())
         }
     }
 
     void deleteIdp(String id, ApiClient client) {
-        log.info("Deleting IdP: {}", id)
+
         IdentityProviderApi idpApi = new IdentityProviderApi(client)
         IdentityProvider idpToDelete = idpApi.getIdentityProvider(id)
 
         if (idpToDelete != null) {
+            log.info("Deleting IdP: {} (id - {})", idpToDelete.getName(), id)
+
             if (idpToDelete.getStatus() == LifecycleStatus.ACTIVE) {
                 // deactivate
                 idpApi.deactivateIdentityProvider(idpToDelete.getId())
@@ -196,11 +203,13 @@ trait ClientProvider implements IHookable {
     }
 
     void deleteInlineHook(String id, ApiClient client) {
-        log.info("Deleting InlineHook: {}", id)
+
         InlineHookApi inlineHookApi = new InlineHookApi(client)
         InlineHook inlineHookToDelete = inlineHookApi.getInlineHook(id)
 
         if (inlineHookToDelete != null) {
+            log.info("Deleting InlineHook: {} (id - {})", inlineHookToDelete.getName(), id)
+
             if (inlineHookToDelete.getStatus() == InlineHookStatus.ACTIVE) {
                 // deactivate
                 inlineHookApi.deactivateInlineHook(inlineHookToDelete.getId())
@@ -211,11 +220,13 @@ trait ClientProvider implements IHookable {
     }
 
     void deletePolicy(String id, ApiClient client) {
-        log.info("Deleting Policy: {}", id)
+
         PolicyApi policyApi = new PolicyApi(client)
-        Policy policyToDelete = policyApi.getPolicy(id, "false")
+        Policy policyToDelete = policyApi.getPolicy(id, null)
 
         if (policyToDelete != null) {
+            log.info("Deleting Policy: {} (id - {})", policyToDelete.getName(), id)
+
             if (policyToDelete.getStatus() == LifecycleStatus.ACTIVE) {
                 // deactivate
                 policyApi.deactivatePolicy(policyToDelete.getId())
@@ -223,12 +234,6 @@ trait ClientProvider implements IHookable {
             // delete
             policyApi.deletePolicy(policyToDelete.getId())
         }
-    }
-
-    void deletePolicyRule(String policyId, String ruleId, ApiClient client) {
-        log.info("Deleting PolicyRule: policyId {}, ruleId: {}", policyId, ruleId)
-        PolicyApi policyApi = new PolicyApi(client)
-        policyApi.deletePolicyRule(policyId, ruleId)
     }
 
     @AfterMethod (groups = ["group1", "group2", "group3"])

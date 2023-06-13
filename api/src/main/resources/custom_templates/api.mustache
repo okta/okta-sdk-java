@@ -13,40 +13,26 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 }}
+{{>licenseInfo}}
 package {{package}};
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import {{invokerPackage}}.ApiException;
 import {{invokerPackage}}.ApiClient;
+import {{invokerPackage}}.Configuration;
+import {{modelPackage}}.*;
+import {{invokerPackage}}.Pair;
 
 {{#imports}}import {{import}};
 {{/imports}}
 
-{{^fullJavaUtil}}import java.util.Collections;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-import java.util.LinkedHashMap;
-import java.util.stream.Collectors;{{/fullJavaUtil}}
-
-import com.okta.sdk.resource.common.PagedList;
-
-import com.okta.commons.lang.Assert;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import java.util.StringJoiner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -56,16 +42,16 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 
 {{>generatedAnnotation}}
-@Component("{{package}}.{{classname}}")
 {{#operations}}
     public class {{classname}} {
+
+
     private ApiClient apiClient;
 
     public {{classname}}() {
-    this(new ApiClient());
+    this(Configuration.getDefaultApiClient());
     }
 
-    @Autowired
     public {{classname}}(ApiClient apiClient) {
     this.apiClient = apiClient;
     }
@@ -82,322 +68,161 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
         /**
         * {{summary}}
         * {{notes}}
-        {{#responses}}
-            * <p><b>{{code}}</b>{{#message}} - {{.}}{{/message}}
-        {{/responses}}
         {{#allParams}}
-                * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/required}}
+            * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{^isContainer}}{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/isContainer}}{{/required}}
         {{/allParams}}
         {{#returnType}}
-                * @return {{.}}
+            * @return {{returnType}}
         {{/returnType}}
-            * @throws RestClientException if an error occurs while attempting to invoke the API
+        * @throws ApiException if fails to make API call
+        {{#isDeprecated}}
+            * @deprecated
+        {{/isDeprecated}}
         {{#externalDocs}}
-                * {{description}}
-                * @see <a href="{{url}}">{{summary}} Documentation</a>
+            * {{description}}
+            * @see <a href="{{url}}">{{summary}} Documentation</a>
         {{/externalDocs}}
+        */
         {{#isDeprecated}}
-                * @deprecated
+            @Deprecated
         {{/isDeprecated}}
-            */
-        {{#isDeprecated}}
-                @Deprecated
-        {{/isDeprecated}}
-            public {{#returnType}}{{{.}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{#isFile}}{{#useAbstractionForFiles}}{{#collectionFormat}}java.util.Collection<org.springframework.core.io.Resource>{{/collectionFormat}}{{^collectionFormat}}org.springframework.core.io.Resource{{/collectionFormat}}{{/useAbstractionForFiles}}{{^useAbstractionForFiles}}{{{dataType}}}{{/useAbstractionForFiles}}{{/isFile}}{{^isFile}}{{{dataType}}}{{/isFile}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws RestClientException {
-        {{#returnType}}
-                return {{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}).getBody();
-        {{/returnType}}
-        {{^returnType}}
-            {{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
-        {{/returnType}}
-            }
-
-
-
-        {{#bodyParam}}
-
-            /**
-            * {{summary}}
-            * {{notes}}
-        {{#responses}}
-                * <p><b>{{code}}</b>{{#message}} - {{.}}{{/message}}
-        {{/responses}}
-                * @param T (required) - the assignable return type
-        {{#allParams}}
-                * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/required}}
-        {{/allParams}}
-        {{#returnType}}
-                * @return T instance
-        {{/returnType}}
-            * @throws RestClientException if an error occurs while attempting to invoke the API
-        {{#externalDocs}}
-                * {{description}}
-                * @see <a href="{{url}}">{{summary}} Documentation</a>
-        {{/externalDocs}}
-        {{#isDeprecated}}
-                * @deprecated
-        {{/isDeprecated}}
-            */
-        {{#isDeprecated}}
-                @Deprecated
-        {{/isDeprecated}}
-            public {{#returnType}}<T> T{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}(Class<?> T, {{#allParams}}{{#isFile}}{{#useAbstractionForFiles}}{{#collectionFormat}}java.util.Collection<org.springframework.core.io.Resource>{{/collectionFormat}}{{^collectionFormat}}org.springframework.core.io.Resource{{/collectionFormat}}{{/useAbstractionForFiles}}{{^useAbstractionForFiles}}{{{dataType}}}{{/useAbstractionForFiles}}{{/isFile}}{{^isFile}}{{{dataType}}}{{/isFile}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws RestClientException {
-        {{#returnType}}
-                return (T) getObjectMapper().convertValue({{operationId}}WithReturnType(T, {{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}).getBody(), T);
-        {{/returnType}}
-        {{^returnType}}
-            {{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
-        {{/returnType}}
-            }
-
-        {{/bodyParam}}
-
-
-
-            /**
-            * {{summary}}
-            * {{notes}}
-        {{#responses}}
-                * <p><b>{{code}}</b>{{#message}} - {{.}}{{/message}}
-        {{/responses}}
-        {{#allParams}}
-                * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/required}}
-        {{/allParams}}
-            * @return ResponseEntity&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;
-            * @throws RestClientException if an error occurs while attempting to invoke the API
-        {{#externalDocs}}
-                * {{description}}
-                * @see <a href="{{url}}">{{summary}} Documentation</a>
-        {{/externalDocs}}
-        {{#isDeprecated}}
-                * @deprecated
-        {{/isDeprecated}}
-            */
-        {{#isDeprecated}}
-                @Deprecated
-        {{/isDeprecated}}
-            public ResponseEntity<{{{returnType}}}{{^returnType}}Void{{/returnType}}> {{operationId}}WithHttpInfo({{#allParams}}{{#isFile}}{{#useAbstractionForFiles}}{{#collectionFormat}}java.util.Collection<org.springframework.core.io.Resource>{{/collectionFormat}}{{^collectionFormat}}org.springframework.core.io.Resource{{/collectionFormat}}{{/useAbstractionForFiles}}{{^useAbstractionForFiles}}{{{dataType}}}{{/useAbstractionForFiles}}{{/isFile}}{{^isFile}}{{{dataType}}}{{/isFile}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws RestClientException {
-            Object localVarPostBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
-        {{#allParams}}{{#required}}
-                // verify the required parameter '{{paramName}}' is set '{{paramType}}'
-                if ({{paramName}} == null) {
-                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter '{{paramName}}' when calling {{operationId}}");
-                }
-        {{/required}}{{/allParams}}{{#hasPathParams}}
-                // create path and map variables
-                final Map<String, Object> uriVariables = new HashMap<String, Object>();{{#pathParams}}
-                    uriVariables.put("{{baseName}}", {{#collectionFormat}}apiClient.collectionPathParameterToString(ApiClient.CollectionFormat.valueOf("{{{collectionFormat}}}".toUpperCase()), {{{paramName}}}){{/collectionFormat}}{{^collectionFormat}}{{{paramName}}}{{/collectionFormat}});{{/pathParams}}{{/hasPathParams}}
-
-            final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<String, String>();
-            final HttpHeaders localVarHeaderParams = new HttpHeaders();
-            final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
-            final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();{{#hasQueryParams}}
-
-            {{#queryParams}}localVarQueryParams.putAll(apiClient.parameterToMultiValueMap({{#collectionFormat}}ApiClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT)){{/collectionFormat}}{{^collectionFormat}}null{{/collectionFormat}}, "{{baseName}}", {{paramName}}));{{^-last}}
-            {{/-last}}{{/queryParams}}{{/hasQueryParams}}{{#hasHeaderParams}}
-
-            {{#headerParams}}if ({{paramName}} != null)
-                localVarHeaderParams.add("{{baseName}}", apiClient.parameterToString({{paramName}}));{{^-last}}
-            {{/-last}}{{/headerParams}}{{/hasHeaderParams}}{{#hasCookieParams}}
-
-            {{#cookieParams}}if ({{paramName}} != null)
-                localVarCookieParams.add("{{baseName}}", apiClient.parameterToString({{paramName}}));{{^-last}}
-            {{/-last}}{{/cookieParams}}{{/hasCookieParams}}{{#hasFormParams}}
-
-            {{#formParams}}if ({{paramName}} != null)
-                localVarFormParams.{{^collectionFormat}}add{{/collectionFormat}}{{#collectionFormat}}addAll{{/collectionFormat}}("{{baseName}}", {{#isFile}}{{^collectionFormat}}{{#useAbstractionForFiles}}{{paramName}}{{/useAbstractionForFiles}}{{^useAbstractionForFiles}}new FileSystemResource({{paramName}}){{/useAbstractionForFiles}}{{/collectionFormat}}{{/isFile}}{{#isFile}}{{#collectionFormat}}{{paramName}}.stream(){{^useAbstractionForFiles}}.map(FileSystemResource::new){{/useAbstractionForFiles}}.collect(Collectors.toList()){{/collectionFormat}}{{/isFile}}{{^isFile}}{{paramName}}{{/isFile}});{{^-last}}
-            {{/-last}}{{/formParams}}{{/hasFormParams}}
-
-            final String[] localVarAccepts = { {{#hasProduces}}
-            {{#produces}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/produces}}
-        {{/hasProduces}} };
-            final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-            final String[] localVarContentTypes = { {{#hasConsumes}}
-            {{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}
-        {{/hasConsumes}} };
-            final MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-            String[] localVarAuthNames = new String[] { {{#authMethods}}"{{name}}"{{^-last}}, {{/-last}}{{/authMethods}} };
-
-        {{#returnType}}ParameterizedTypeReference<{{{returnType}}}> localReturnType = new ParameterizedTypeReference<{{{returnType}}}>() {};{{/returnType}}{{^returnType}}ParameterizedTypeReference<Void> localReturnType = new ParameterizedTypeReference<Void>() {};{{/returnType}}
-            return apiClient.invokeAPI("{{{path}}}", HttpMethod.{{httpMethod}}, {{#hasPathParams}}uriVariables{{/hasPathParams}}{{^hasPathParams}}Collections.<String, Object>emptyMap(){{/hasPathParams}}, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
-            }
-
-
-
-        {{#bodyParam}}
-        {{#returnType}}
-
-            /**
-            * {{summary}}
-            * {{notes}}
-        {{#responses}}
-                * <p><b>{{code}}</b>{{#message}} - {{.}}{{/message}}
-        {{/responses}}
-        {{#allParams}}
-                * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/required}}
-        {{/allParams}}
-            * @return ResponseEntity&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;
-            * @throws RestClientException if an error occurs while attempting to invoke the API
-        {{#externalDocs}}
-                * {{description}}
-                * @see <a href="{{url}}">{{summary}} Documentation</a>
-        {{/externalDocs}}
-        {{#isDeprecated}}
-                * @deprecated
-        {{/isDeprecated}}
-            */
-        {{#isDeprecated}}
-                @Deprecated
-        {{/isDeprecated}}
-            private {{#returnType}}<T> ResponseEntity<T>{{/returnType}}{{^returnType}}ResponseEntity<Void>{{/returnType}} {{operationId}}WithReturnType(Class<?> T, {{#allParams}}{{#isFile}}{{#useAbstractionForFiles}}{{#collectionFormat}}java.util.Collection<org.springframework.core.io.Resource>{{/collectionFormat}}{{^collectionFormat}}org.springframework.core.io.Resource{{/collectionFormat}}{{/useAbstractionForFiles}}{{^useAbstractionForFiles}}{{{dataType}}}{{/useAbstractionForFiles}}{{/isFile}}{{^isFile}}{{{dataType}}}{{/isFile}} {{paramName}}{{^-last}},{{/-last}}{{/allParams}}) throws RestClientException {
-            Object localVarPostBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
-        {{#allParams}}{{#required}}
-                // verify the required parameter '{{paramName}}' is set
-                if ({{paramName}} == null) {
-                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter '{{paramName}}' when calling {{operationId}}");
-                }
-        {{/required}}{{/allParams}}{{#hasPathParams}}
-                // create path and map variables
-                final Map<String, Object> uriVariables = new HashMap<String, Object>();{{#pathParams}}
-                    uriVariables.put("{{baseName}}", {{#collectionFormat}}apiClient.collectionPathParameterToString(ApiClient.CollectionFormat.valueOf("{{{collectionFormat}}}".toUpperCase()), {{{paramName}}}){{/collectionFormat}}{{^collectionFormat}}{{{paramName}}}{{/collectionFormat}});{{/pathParams}}{{/hasPathParams}}
-
-            final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<String, String>();
-            final HttpHeaders localVarHeaderParams = new HttpHeaders();
-            final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
-            final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();{{#hasQueryParams}}
-
-            {{#queryParams}}localVarQueryParams.putAll(apiClient.parameterToMultiValueMap({{#collectionFormat}}ApiClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT)){{/collectionFormat}}{{^collectionFormat}}null{{/collectionFormat}}, "{{baseName}}", {{paramName}}));{{^-last}}
-            {{/-last}}{{/queryParams}}{{/hasQueryParams}}{{#hasHeaderParams}}
-
-            {{#headerParams}}if ({{paramName}} != null)
-                localVarHeaderParams.add("{{baseName}}", apiClient.parameterToString({{paramName}}));{{^-last}}
-            {{/-last}}{{/headerParams}}{{/hasHeaderParams}}{{#hasCookieParams}}
-
-            {{#cookieParams}}if ({{paramName}} != null)
-                localVarCookieParams.add("{{baseName}}", apiClient.parameterToString({{paramName}}));{{^-last}}
-            {{/-last}}{{/cookieParams}}{{/hasCookieParams}}{{#hasFormParams}}
-
-            {{#formParams}}if ({{paramName}} != null)
-                localVarFormParams.{{^collectionFormat}}add{{/collectionFormat}}{{#collectionFormat}}addAll{{/collectionFormat}}("{{baseName}}", {{#isFile}}{{^collectionFormat}}{{#useAbstractionForFiles}}{{paramName}}{{/useAbstractionForFiles}}{{^useAbstractionForFiles}}new FileSystemResource({{paramName}}){{/useAbstractionForFiles}}{{/collectionFormat}}{{/isFile}}{{#isFile}}{{#collectionFormat}}{{paramName}}.stream(){{^useAbstractionForFiles}}.map(FileSystemResource::new){{/useAbstractionForFiles}}.collect(Collectors.toList()){{/collectionFormat}}{{/isFile}}{{^isFile}}{{paramName}}{{/isFile}});{{^-last}}
-            {{/-last}}{{/formParams}}{{/hasFormParams}}
-
-            final String[] localVarAccepts = { {{#hasProduces}}
-            {{#produces}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/produces}}
-        {{/hasProduces}} };
-            final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-            final String[] localVarContentTypes = { {{#hasConsumes}}
-            {{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}
-        {{/hasConsumes}} };
-            final MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-            String[] localVarAuthNames = new String[] { {{#authMethods}}"{{name}}"{{^-last}}, {{/-last}}{{/authMethods}} };
-
-        {{#returnType}}ParameterizedTypeReference<T> localReturnType = new ParameterizedTypeReference<T>() {};{{/returnType}}{{^returnType}}ParameterizedTypeReference<Void> localReturnType = new ParameterizedTypeReference<Void>() {};{{/returnType}}
-            return apiClient.invokeAPI("{{{path}}}", HttpMethod.{{httpMethod}}, {{#hasPathParams}}uriVariables{{/hasPathParams}}{{^hasPathParams}}Collections.<String, Object>emptyMap(){{/hasPathParams}}, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
-            }
-        {{/returnType}}
-        {{/bodyParam}}
-
-
-
-        {{#returnType}}
-
-            /**
-            * {{summary}}
-            * {{notes}}
-        {{#responses}}
-                * <p><b>{{code}}</b>{{#message}} - {{.}}{{/message}}
-        {{/responses}}
-        {{#allParams}}
-                * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/required}}
-        {{/allParams}}
-            * @return ResponseEntity&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;
-            * @throws RestClientException if an error occurs while attempting to invoke the API
-        {{#externalDocs}}
-                * {{description}}
-                * @see <a href="{{url}}">{{summary}} Documentation</a>
-        {{/externalDocs}}
-        {{#isDeprecated}}
-                * @deprecated
-        {{/isDeprecated}}
-            */
-        {{#isDeprecated}}
-                @Deprecated
-        {{/isDeprecated}}
-            public {{#returnType}}PagedList{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}WithPaginationInfo({{#allParams}}{{#isFile}}{{#useAbstractionForFiles}}{{#collectionFormat}}java.util.Collection<org.springframework.core.io.Resource>{{/collectionFormat}}{{^collectionFormat}}org.springframework.core.io.Resource{{/collectionFormat}}{{/useAbstractionForFiles}}{{^useAbstractionForFiles}}{{{dataType}}}{{/useAbstractionForFiles}}{{/isFile}}{{^isFile}}{{{dataType}}}{{/isFile}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws RestClientException {
-            Object localVarPostBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
-        {{#allParams}}{{#required}}
-                // verify the required parameter '{{paramName}}' is set
-                if ({{paramName}} == null) {
-                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Missing the required parameter '{{paramName}}' when calling {{operationId}}");
-                }
-        {{/required}}{{/allParams}}{{#hasPathParams}}
-                // create path and map variables
-                final Map<String, Object> uriVariables = new HashMap<String, Object>();{{#pathParams}}
-                    uriVariables.put("{{baseName}}", {{#collectionFormat}}apiClient.collectionPathParameterToString(ApiClient.CollectionFormat.valueOf("{{{collectionFormat}}}".toUpperCase()), {{{paramName}}}){{/collectionFormat}}{{^collectionFormat}}{{{paramName}}}{{/collectionFormat}});{{/pathParams}}{{/hasPathParams}}
-
-            final MultiValueMap<String, String> localVarQueryParams = new LinkedMultiValueMap<String, String>();
-            final HttpHeaders localVarHeaderParams = new HttpHeaders();
-            final MultiValueMap<String, String> localVarCookieParams = new LinkedMultiValueMap<String, String>();
-            final MultiValueMap<String, Object> localVarFormParams = new LinkedMultiValueMap<String, Object>();{{#hasQueryParams}}
-
-            {{#queryParams}}localVarQueryParams.putAll(apiClient.parameterToMultiValueMap({{#collectionFormat}}ApiClient.CollectionFormat.valueOf("{{{.}}}".toUpperCase(Locale.ROOT)){{/collectionFormat}}{{^collectionFormat}}null{{/collectionFormat}}, "{{baseName}}", {{paramName}}));{{^-last}}
-            {{/-last}}{{/queryParams}}{{/hasQueryParams}}{{#hasHeaderParams}}
-
-            {{#headerParams}}if ({{paramName}} != null)
-                localVarHeaderParams.add("{{baseName}}", apiClient.parameterToString({{paramName}}));{{^-last}}
-            {{/-last}}{{/headerParams}}{{/hasHeaderParams}}{{#hasCookieParams}}
-
-            {{#cookieParams}}if ({{paramName}} != null)
-                localVarCookieParams.add("{{baseName}}", apiClient.parameterToString({{paramName}}));{{^-last}}
-            {{/-last}}{{/cookieParams}}{{/hasCookieParams}}{{#hasFormParams}}
-
-            {{#formParams}}if ({{paramName}} != null)
-                localVarFormParams.{{^collectionFormat}}add{{/collectionFormat}}{{#collectionFormat}}addAll{{/collectionFormat}}("{{baseName}}", {{#isFile}}{{^collectionFormat}}{{#useAbstractionForFiles}}{{paramName}}{{/useAbstractionForFiles}}{{^useAbstractionForFiles}}new FileSystemResource({{paramName}}){{/useAbstractionForFiles}}{{/collectionFormat}}{{/isFile}}{{#isFile}}{{#collectionFormat}}{{paramName}}.stream(){{^useAbstractionForFiles}}.map(FileSystemResource::new){{/useAbstractionForFiles}}.collect(Collectors.toList()){{/collectionFormat}}{{/isFile}}{{^isFile}}{{paramName}}{{/isFile}});{{^-last}}
-            {{/-last}}{{/formParams}}{{/hasFormParams}}
-
-            final String[] localVarAccepts = { {{#hasProduces}}
-            {{#produces}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/produces}}
-        {{/hasProduces}} };
-            final List<MediaType> localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-            final String[] localVarContentTypes = { {{#hasConsumes}}
-            {{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}
-        {{/hasConsumes}} };
-            final MediaType localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-            String[] localVarAuthNames = new String[] { {{#authMethods}}"{{name}}"{{^-last}}, {{/-last}}{{/authMethods}} };
-
-        {{#returnType}}ParameterizedTypeReference<{{{returnType}}}> localReturnType = new ParameterizedTypeReference<{{{returnType}}}>() {};{{/returnType}}{{^returnType}}ParameterizedTypeReference<Void> localReturnType = new ParameterizedTypeReference<Void>() {};{{/returnType}}
-            ResponseEntity<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}> responseEntity = apiClient.invokeAPI("{{{path}}}", HttpMethod.{{httpMethod}}, {{#hasPathParams}}uriVariables{{/hasPathParams}}{{^hasPathParams}}Collections.<String, Object>emptyMap(){{/hasPathParams}}, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
-            {{#returnType}}
-                    PagedList pagedList = PagedList.constructPagedList(responseEntity);
-
-                    String afterMarker = pagedList.getAfter(pagedList.getNextPage());
-
-                    if (afterMarker != null) {
-                    do {
-                    localVarQueryParams.putAll(apiClient.parameterToMultiValueMap(null, "after", afterMarker));
-
-                    ResponseEntity<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}Void{{/returnType}}> newResponseEntity = apiClient.invokeAPI("{{{path}}}", HttpMethod.{{httpMethod}}, {{#hasPathParams}}uriVariables{{/hasPathParams}}{{^hasPathParams}}Collections.<String, Object>emptyMap(){{/hasPathParams}}, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAccept, localVarContentType, localVarAuthNames, localReturnType);
-
-                    PagedList newPagedList = PagedList.constructPagedList(newResponseEntity);
-                    pagedList.getItems().addAll(newPagedList.getItems());
-                    pagedList.setNextPage(newPagedList.getNextPage());
-                    afterMarker = newPagedList.getAfter(newPagedList.getNextPage());
-                    } while (afterMarker != null);
-                    }
-                    return pagedList;
-            {{/returnType}}
-            {{^returnType}}
-                return;
-            {{/returnType}}
+        public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+        {{#returnType}}return {{/returnType}}this.{{operationId}}({{#allParams}}{{paramName}}, {{/allParams}}Collections.emptyMap());
         }
-    {{/returnType}}
+
+
+        /**
+        * {{summary}}
+        * {{notes}}
+        {{#allParams}}
+            * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{^isContainer}}{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/isContainer}}{{/required}}
+        {{/allParams}}
+        * @param additionalHeaders additionalHeaders for this call
+        {{#returnType}}
+            * @return {{returnType}}
+        {{/returnType}}
+        * @throws ApiException if fails to make API call
+        {{#isDeprecated}}
+            * @deprecated
+        {{/isDeprecated}}
+        {{#externalDocs}}
+            * {{description}}
+            * @see <a href="{{url}}">{{summary}} Documentation</a>
+        {{/externalDocs}}
+        */
+        {{#isDeprecated}}
+            @Deprecated
+        {{/isDeprecated}}
+        public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}, {{/allParams}}Map<String, String> additionalHeaders) throws ApiException {
+        Object localVarPostBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
+        {{#allParams}}{{#required}}
+            // verify the required parameter '{{paramName}}' is set
+            if ({{paramName}} == null) {
+            throw new ApiException(400, "Missing the required parameter '{{paramName}}' when calling {{operationId}}");
+            }
+        {{/required}}{{/allParams}}
+        // create path and map variables
+        String localVarPath = "{{{path}}}"{{#pathParams}}
+            .replaceAll("\\{" + "{{baseName}}" + "\\}", apiClient.escapeString({{{paramName}}}.toString())){{/pathParams}};
+
+        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+        String localVarQueryParameterBaseName;
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+            List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+            Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+            Map<String, String> localVarCookieParams = new HashMap<String, String>();
+            Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        {{#queryParams}}
+            {{#isDeepObject}}
+                    localVarQueryParameterBaseName = "{{{baseName}}}";
+                {{#isArray}}
+                        for (int i=0; i < {{paramName}}.size(); i++) {
+                        localVarQueryStringJoiner.add({{paramName}}.get(i).toUrlQueryString(String.format("{{baseName}}[%d]", i)));
+                        }
+                {{/isArray}}
+                {{^isArray}}
+                        localVarQueryStringJoiner.add({{paramName}}.toUrlQueryString("{{baseName}}"));
+                {{/isArray}}
+            {{/isDeepObject}}
+            {{^isDeepObject}}
+                {{#isExplode}}
+                    {{#hasVars}}
+                        {{#vars}}
+                            {{#isArray}}
+                                    localVarQueryParams.addAll(apiClient.parameterToPairs("multi", "{{baseName}}", {{paramName}}.{{getter}}()));
+                            {{/isArray}}
+                            {{^isArray}}
+                                    localVarQueryParams.addAll(apiClient.parameterToPair("{{baseName}}", {{paramName}}.{{getter}}()));
+                            {{/isArray}}
+                        {{/vars}}
+                    {{/hasVars}}
+                    {{^hasVars}}
+                        {{#isModel}}
+                                localVarQueryStringJoiner.add({{paramName}}.toUrlQueryString());
+                        {{/isModel}}
+                        {{^isModel}}
+                            {{#collectionFormat}}localVarCollectionQueryParams.addAll(apiClient.parameterToPairs("{{{collectionFormat}}}", {{/collectionFormat}}{{^collectionFormat}}localVarQueryParams.addAll(apiClient.parameterToPair({{/collectionFormat}}"{{baseName}}", {{paramName}}));
+                        {{/isModel}}
+                    {{/hasVars}}
+                {{/isExplode}}
+                {{^isExplode}}
+                    {{#collectionFormat}}localVarCollectionQueryParams.addAll(apiClient.parameterToPairs("{{{collectionFormat}}}", {{/collectionFormat}}{{^collectionFormat}}localVarQueryParams.addAll(apiClient.parameterToPair({{/collectionFormat}}"{{baseName}}", {{paramName}}));
+                {{/isExplode}}
+            {{/isDeepObject}}
+        {{/queryParams}}
+        {{#headerParams}}if ({{paramName}} != null)
+            localVarHeaderParams.put("{{baseName}}", apiClient.parameterToString({{paramName}}));
+        {{/headerParams}}
+
+            localVarHeaderParams.putAll(additionalHeaders);
+
+        {{#cookieParams}}if ({{paramName}} != null)
+            localVarCookieParams.put("{{baseName}}", apiClient.parameterToString({{paramName}}));
+        {{/cookieParams}}
+
+        {{#formParams}}if ({{paramName}} != null)
+            localVarFormParams.put("{{baseName}}", {{paramName}});
+        {{/formParams}}
+
+            final String[] localVarAccepts = {
+        {{#produces}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/produces}}
+            };
+            final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+
+            final String[] localVarContentTypes = {
+        {{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}
+            };
+            final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+
+            String[] localVarAuthNames = new String[] { {{#authMethods}}"{{name}}"{{^-last}}, {{/-last}}{{/authMethods}} };
+
+        {{#returnType}}
+                TypeReference<{{{returnType}}}> localVarReturnType = new TypeReference<{{{returnType}}}>() {};
+                return apiClient.invokeAPI(
+        {{/returnType}}
+        {{^returnType}}
+                apiClient.invokeAPI(
+        {{/returnType}}
+            localVarPath,
+            "{{httpMethod}}",
+            localVarQueryParams,
+            localVarCollectionQueryParams,
+            localVarQueryStringJoiner.toString(),
+            localVarPostBody,
+            localVarHeaderParams,
+            localVarCookieParams,
+            localVarFormParams,
+            localVarAccept,
+            localVarContentType,
+            localVarAuthNames,
+        {{#returnType}}localVarReturnType{{/returnType}}{{^returnType}}null{{/returnType}}
+            );
+            }
 
     {{/operation}}
 
-    protected static ObjectMapper getObjectMapper() {
+        protected static ObjectMapper getObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new JsonNullableModule());
@@ -405,6 +230,7 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
         return objectMapper;
-    }
+        }
+
         }
 {{/operations}}

@@ -36,13 +36,14 @@ import static com.okta.sdk.tests.it.util.Util.validateUser
  */
 class GroupsIT extends ITSupport {
 
+    GroupApi groupApi = new GroupApi(getClient())
+    UserApi userApi = new UserApi(getClient())
+
     @Test (groups = "group1")
     @Scenario("list-groups")
     void listGroupsTest() {
 
         String groupName = "sdk-java List Test Group ${uniqueTestName}"
-
-        GroupApi groupApi = new GroupApi(getClient())
 
         // 1. Create a new group
         Group createdGroup = GroupBuilder.instance()
@@ -62,8 +63,6 @@ class GroupsIT extends ITSupport {
 
         String groupName = "Search Test Group ${uniqueTestName}"
 
-        GroupApi groupApi = new GroupApi(getClient())
-
         // 1. Create a new group
         Group group = GroupBuilder.instance()
             .setName(groupName)
@@ -81,8 +80,6 @@ class GroupsIT extends ITSupport {
     void searchGroupsBySearchParameterTest() {
 
         String groupName = "Search Test Group ${uniqueTestName}"
-
-        GroupApi groupApi = new GroupApi(getClient())
 
         // 1. Create a new group
         Group group = GroupBuilder.instance()
@@ -103,8 +100,6 @@ class GroupsIT extends ITSupport {
 
         String groupName = "Update Test Group ${uniqueTestName}"
         String groupNameUpdated = "${groupName} - Updated"
-
-        GroupApi groupApi = new GroupApi(getClient())
 
         // 1. Create a new group
         Group group = GroupBuilder.instance()
@@ -130,9 +125,6 @@ class GroupsIT extends ITSupport {
         def firstName = 'John'
         def lastName = 'With-Group'
         def email = "john-with-group-${uniqueTestName}@example.com"
-
-        UserApi userApi = new UserApi(getClient())
-        GroupApi groupApi = new GroupApi(getClient())
 
         // 1. Create a user and a group
         def user = UserBuilder.instance()

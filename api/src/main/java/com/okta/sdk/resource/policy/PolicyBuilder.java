@@ -16,6 +16,7 @@
 package com.okta.sdk.resource.policy;
 
 import com.okta.commons.lang.Classes;
+import org.openapitools.client.ApiException;
 import org.openapitools.client.api.PolicyApi;
 import org.openapitools.client.model.LifecycleStatus;
 import org.openapitools.client.model.Policy;
@@ -37,5 +38,5 @@ public interface PolicyBuilder<T extends PolicyBuilder> {
 
     T setStatus(LifecycleStatus status);
 
-    Policy buildAndCreate(PolicyApi client);
+    Policy buildAndCreate(PolicyApi client) throws ApiException;
 }
