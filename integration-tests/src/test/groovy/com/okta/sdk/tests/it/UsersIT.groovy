@@ -858,5 +858,4 @@ class UsersIT extends ITSupport {
         def bytes = messageDigest.digest(StringUtils.getBytes(password, StandardCharsets.UTF_8))
         return Base64.getEncoder().encodeToString(bytes)
     }
-
 }
