@@ -169,7 +169,7 @@ Once you initialize a `ApiClient` instance, you can pass this instance to the co
 You can start using these clients to call management APIs relevant to the chosen API area.
 
 Note: For models that follow inheritance (e.g. Application, Policy, UserFactor), use the APIs found in their respective `ApiHelper` class (e.g. `ApplicationApiHelper`, `PolicyApiHelper`, `UserFactorApiHelper`)
-to ensure the responses are safely typed into their respective subclass types.
+to ensure safe type cast into their respective subclass types.
 
 ### Authenticate a User
 
