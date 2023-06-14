@@ -47,7 +47,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.Yaml.LoaderOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import java.io.File;
