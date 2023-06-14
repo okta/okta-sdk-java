@@ -47,6 +47,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.Yaml.LoaderOptions;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import java.io.File;
@@ -122,7 +123,7 @@ public abstract class AbstractOktaJavaClientCodegen extends AbstractJavaCodegen 
         }
 
         try (Reader reader = new InputStreamReader(new FileInputStream(apiFile), StandardCharsets.UTF_8.toString())) {
-            rawSwaggerConfig = new Yaml(new SafeConstructor()).load(reader);
+            rawSwaggerConfig = new Yaml(new SafeConstructor(new LoaderOptions())).load(reader);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to parse apiFile: "+ apiFile, e);
         }
