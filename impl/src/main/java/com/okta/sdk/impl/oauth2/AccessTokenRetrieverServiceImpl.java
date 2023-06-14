@@ -41,7 +41,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
@@ -87,7 +89,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             queryParams.add(new Pair("grant_type", "client_credentials"));
             queryParams.add(new Pair("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"));
             queryParams.add(new Pair("client_assertion", signedJwt));
-            queryParams.add(new Pair("scope", scope));
+            queryParams.add(new Pair("scope", URLEncoder.encode(scope, StandardCharsets.UTF_8.toString())));
 
             OAuth2AccessToken oAuth2AccessToken = apiClient.invokeAPI(
                 TOKEN_URI,

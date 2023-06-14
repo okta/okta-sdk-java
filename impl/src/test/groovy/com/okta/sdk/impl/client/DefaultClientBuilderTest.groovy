@@ -25,6 +25,7 @@ import com.okta.sdk.impl.Util
 import com.okta.sdk.impl.io.DefaultResourceFactory
 import com.okta.sdk.impl.io.Resource
 import com.okta.sdk.impl.io.ResourceFactory
+import com.okta.sdk.impl.oauth2.OAuth2HttpException
 import com.okta.sdk.impl.oauth2.OAuth2TokenRetrieverException
 import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import com.okta.sdk.impl.test.RestoreSystemProperties
@@ -248,7 +249,7 @@ class DefaultClientBuilderTest {
     @Test
     void testOAuth2InvalidPrivateKey_PemFileContent() {
         clearOktaEnvAndSysProps()
-        File privateKeyFile = File.createTempFile("tmp",".pem")
+        File privateKeyFile = File.createTempFile("tmp", ".pem")
         privateKeyFile.write("-----INVALID PEM CONTENT-----")
         Util.expect(IllegalArgumentException) {
             new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
@@ -283,103 +284,88 @@ class DefaultClientBuilderTest {
         privateKeyFile.delete()
     }
 
-    @Test
+    @Test(expectedExceptions = OAuth2HttpException.class)
     void testOAuth2SemanticallyValidInputParams_withPrivateKeyPemFilePath() {
         clearOktaEnvAndSysProps()
 
         File privateKeyFile = generatePrivateKey("RSA", 2048, "privateKey", ".pem")
 
-        // expected because the URL is not an actual endpoint
-        Util.expect(OAuth2TokenRetrieverException) {
-            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
-                .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-                .setClientId("client12345")
-                .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
-                .setPrivateKey(privateKeyFile.path)
-                .build()
-        }
+        new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+            .setOrgUrl("https://okta.example.com")
+            .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+            .setClientId("client12345")
+            .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
+            .setPrivateKey(privateKeyFile.path)
+            .build()
 
         privateKeyFile.delete()
     }
 
-    @Test
+    @Test(expectedExceptions = OAuth2HttpException.class)
     void testOAuth2SemanticallyValidInputParams_withPrivateKeyPemFileContent() {
         clearOktaEnvAndSysProps()
 
         File privateKeyFile = generatePrivateKey("RSA", 2048, "anotherPrivateKey", ".pem")
 
-        // expected because the URL is not an actual endpoint
-        Util.expect(OAuth2TokenRetrieverException) {
-            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
-                .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-                .setClientId("client12345")
-                .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
-                .setPrivateKey(privateKeyFile.text)
-                .build()
-        }
+        new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+            .setOrgUrl("https://okta.example.com")
+            .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+            .setClientId("client12345")
+            .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
+            .setPrivateKey(privateKeyFile.text)
+            .build()
 
         privateKeyFile.delete()
     }
 
-    @Test
+    @Test(expectedExceptions = OAuth2HttpException.class)
     void testOAuth2SemanticallyValidInputParams_withPrivateKeyPemPath() {
         clearOktaEnvAndSysProps()
 
         File privateKeyFile = generatePrivateKey("RSA", 2048, "anotherPrivateKey", ".pem")
 
-        // expected because the URL is not an actual endpoint
-        Util.expect(OAuth2TokenRetrieverException) {
-            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
-                .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-                .setClientId("client12345")
-                .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
-                .setPrivateKey(privateKeyFile.toPath())
-                .build()
-        }
+        new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+            .setOrgUrl("https://okta.example.com")
+            .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+            .setClientId("client12345")
+            .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
+            .setPrivateKey(privateKeyFile.toPath())
+            .build()
 
         privateKeyFile.delete()
     }
 
-    @Test
+    @Test(expectedExceptions = OAuth2HttpException.class)
     void testOAuth2SemanticallyValidInputParams_withPrivateKeyPemInputStream() {
         clearOktaEnvAndSysProps()
 
         File privateKeyFile = generatePrivateKey("RSA", 2048, "anotherPrivateKey", ".pem")
-        InputStream privateKeyFileInputStream = new FileInputStream(privateKeyFile);
+        InputStream privateKeyFileInputStream = new FileInputStream(privateKeyFile)
 
-        // expected because the URL is not an actual endpoint
-        Util.expect(OAuth2TokenRetrieverException) {
-            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
-                .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-                .setClientId("client12345")
-                .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
-                .setPrivateKey(privateKeyFileInputStream)
-                .build()
-        }
+        new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+            .setOrgUrl("https://okta.example.com")
+            .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+            .setClientId("client12345")
+            .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
+            .setPrivateKey(privateKeyFileInputStream)
+            .build()
 
         privateKeyFile.delete()
     }
 
-    @Test
+    @Test(expectedExceptions = OAuth2HttpException.class)
     void testOAuth2SemanticallyValidInputParams_withPrivateKeyRSA() {
         clearOktaEnvAndSysProps()
 
         PrivateKey privateKey = generatePrivateKey("RSA", 2048)
 
-        // expected because the URL is not an actual endpoint
-        Util.expect(OAuth2TokenRetrieverException) {
-            new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
-                .setOrgUrl("https://okta.example.com")
-                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-                .setClientId("client12345")
-                .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
-                .setPrivateKey(privateKey)
-                .build()
-        }
+        new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+            .setOrgUrl("https://okta.example.com")
+            .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+            .setClientId("client12345")
+            .setScopes(["okta.apps.read", "okta.apps.manage"] as Set)
+            .setPrivateKey(privateKey)
+            .build()
     }
 
     @Test
@@ -400,7 +386,7 @@ class DefaultClientBuilderTest {
         }
     }
 
-    @Test
+    @Test(expectedExceptions = OAuth2HttpException.class)
     void testOAuth2WithEnvVariables() {
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_ORGURL",
             "https://okta.example.com")
@@ -415,10 +401,7 @@ class DefaultClientBuilderTest {
 
         RestoreEnvironmentVariables.setEnvironmentVariable("OKTA_CLIENT_PRIVATEKEY", privateKeyFile.path)
 
-        // expected because the URL is not an actual endpoint
-        Util.expect(OAuth2TokenRetrieverException) {
-            new DefaultClientBuilder().build()
-        }
+        new DefaultClientBuilder().build()
 
         privateKeyFile.delete()
     }
@@ -449,7 +432,7 @@ class DefaultClientBuilderTest {
         String encodedString = "-----BEGIN PRIVATE KEY-----\n"
         encodedString = encodedString + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + "\n"
         encodedString = encodedString + "-----END PRIVATE KEY-----\n"
-        File file = File.createTempFile(fileNamePrefix,fileNameSuffix)
+        File file = File.createTempFile(fileNamePrefix, fileNameSuffix)
         file.write(encodedString)
         return file
     }
@@ -467,11 +450,10 @@ class DefaultClientBuilderTest {
         doAnswer(new Answer<Resource>() {
             @Override
             Resource answer(InvocationOnMock invocation) throws Throwable {
-                String arg = invocation.arguments[0].toString();
-                if (arg.endsWith("/.okta/okta.yaml") || arg.equals("classpath:okta.yaml")) {
+                String arg = invocation.arguments[0].toString()
+                if (arg.endsWith("/.okta/okta.yaml") || arg == "classpath:okta.yaml") {
                     return mock(Resource)
-                }
-                else {
+                } else {
                     return invocation.callRealMethod()
                 }
             }
@@ -488,8 +470,7 @@ class DefaultClientBuilderTest {
             Resource answer(InvocationOnMock invocation) throws Throwable {
                 if (invocation.arguments[0].toString().endsWith("/.okta/okta.yaml")) {
                     return mock(Resource)
-                }
-                else {
+                } else {
                     return invocation.callRealMethod()
                 }
             }
