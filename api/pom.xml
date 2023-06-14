@@ -206,6 +206,9 @@
                             <generateApiTests>false</generateApiTests>
                             <templateDirectory>src/main/resources/custom_templates</templateDirectory>
                             <library>apache-httpclient</library>
+                            <configOptions>
+                                <useRuntimeException>true</useRuntimeException>
+                            </configOptions>
                         </configuration>
                     </execution>
                 </executions>
