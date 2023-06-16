@@ -17,16 +17,21 @@ package com.okta.sdk.impl.oauth2;
 
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.authc.credentials.ClientCredentials;
+import org.openapitools.client.Pair;
+import org.openapitools.client.auth.OAuth;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This implementation represents client credentials specific to OAuth2 Authentication scheme.
  *
  * @since 1.6.0
  */
-public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessToken> {
+public class OAuth2ClientCredentials extends OAuth implements ClientCredentials<OAuth2AccessToken> {
 
     private OAuth2AccessToken oAuth2AccessToken;
     private AccessTokenRetrieverService accessTokenRetrieverService;
@@ -34,23 +39,30 @@ public class OAuth2ClientCredentials implements ClientCredentials<OAuth2AccessTo
     public OAuth2ClientCredentials(AccessTokenRetrieverService accessTokenRetrieverService) {
         Assert.notNull(accessTokenRetrieverService, "accessTokenRetrieverService must not be null.");
         this.accessTokenRetrieverService = accessTokenRetrieverService;
-        this.oAuth2AccessToken = eagerFetchOAuth2AccessToken();
     }
 
-    private OAuth2AccessToken eagerFetchOAuth2AccessToken() {
-        OAuth2AccessToken accessToken;
+    @Override
+    public synchronized void applyToParams(List<Pair> queryParams, Map<String, String> headerParams, Map<String, String> cookieParams) {
+        if (oAuth2AccessToken != null
+            //refresh 5 minutes before expiration
+            && oAuth2AccessToken.getExpiresAt().minusSeconds(300).isBefore(Instant.now())) {
+            oAuth2AccessToken = null;
+            setAccessToken(null);
+            refreshOAuth2AccessToken();
+        }
+        super.applyToParams(queryParams, headerParams, cookieParams);
+    }
 
+    public void refreshOAuth2AccessToken() {
         try {
-            accessToken = accessTokenRetrieverService.getOAuth2AccessToken();
+            oAuth2AccessToken = accessTokenRetrieverService.getOAuth2AccessToken();
         } catch (IOException | InvalidKeyException e) {
             throw new OAuth2TokenRetrieverException("Failed to fetch OAuth2 access token eagerly", e);
         }
 
-        if (accessToken == null) {
+        if (oAuth2AccessToken == null) {
             throw new OAuth2TokenRetrieverException("Failed to fetch OAuth2 access token eagerly");
         }
-
-        return accessToken;
     }
 
     public OAuth2AccessToken getCredentials() {

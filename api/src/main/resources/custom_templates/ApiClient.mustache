@@ -346,6 +346,25 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                         }
 
                         /**
+                         * Replaces authentication for the given name.
+                         *
+                         * @param authName The authentication name
+                         * @param authentication The new implementation (must be of the same type of the existing implementation)
+                         */
+                        public void replaceAuthentication(String authName, Authentication authentication) {
+                          Authentication previous = authentications.get(authName);
+                          if (previous == null) {
+                            throw new RuntimeException(authName + " authentication not configured!");
+                          }
+                          if (!previous.getClass().isAssignableFrom(authentication.getClass())) {
+                            throw new RuntimeException(authentication.getClass().getSimpleName() + " cannot replace authentication " + authName);
+                          }
+                          authentications = new HashMap<>(authentications);
+                          authentications.put(authName, authentication);
+                          authentications = Collections.unmodifiableMap(authentications);
+                        }
+
+                        /**
                         * The path of temporary folder used to store downloaded files from endpoints
                         * with file response. The default value is <code>null</code>, i.e. using
                         * the system's default temporary folder.

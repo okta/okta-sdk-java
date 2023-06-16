@@ -17,7 +17,6 @@ package com.okta.sdk.impl.oauth2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.Duration;
 import java.time.Instant;
 
 /**
@@ -96,8 +95,11 @@ public class OAuth2AccessToken {
     }
 
     public boolean hasExpired() {
-        Duration duration = Duration.between(this.getIssuedAt(), Instant.now());
-        return duration.getSeconds() >= this.getExpiresIn();
+        return getExpiresAt().isBefore(Instant.now());
+    }
+
+    public Instant getExpiresAt() {
+        return this.getIssuedAt().plusSeconds(this.getExpiresIn());
     }
 
     // for testing purposes
