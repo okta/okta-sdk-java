@@ -85,22 +85,22 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         String scope = String.join(" ", tokenClientConfiguration.getScopes());
 
         try {
-            List<Pair> queryParams = new LinkedList<>();
-            queryParams.add(new Pair("grant_type", "client_credentials"));
-            queryParams.add(new Pair("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"));
-            queryParams.add(new Pair("client_assertion", signedJwt));
-            queryParams.add(new Pair("scope", URLEncoder.encode(scope, StandardCharsets.UTF_8.toString())));
+            Map<String, Object> formParameters = new HashMap<>();
+            formParameters.put("grant_type", "client_credentials");
+            formParameters.put("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
+            formParameters.put("client_assertion", signedJwt);
+            formParameters.put("scope", scope);
 
             OAuth2AccessToken oAuth2AccessToken = apiClient.invokeAPI(
                 TOKEN_URI,
                 HttpMethod.POST.name(),
-                queryParams,
+                new LinkedList<>(),
                 new LinkedList<>(),
                 null,
                 null,
                 new LinkedHashMap<>(),
                 new LinkedHashMap<>(),
-                new LinkedHashMap<>(),
+                formParameters,
                 MediaType.APPLICATION_JSON_VALUE,
                 MediaType.APPLICATION_FORM_URLENCODED_VALUE,
                 new String[] { "oauth2" },
