@@ -172,38 +172,6 @@ public class PolicyApiHelper<T extends Policy> extends PolicyApi {
         return typedPolicies;
     }
 
-    public List<MultifactorEnrollmentPolicy> listMfaPolicies(String status,
-                                                             String expand) throws ApiException {
-
-        ApiClient apiClient = getApiClient();
-
-        // create path and map variables
-        String localVarPath = "/api/v1/policies";
-
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        localVarQueryParams.addAll(apiClient.parameterToPair("type", PolicyType.MFA_ENROLL.name()));
-        localVarQueryParams.addAll(apiClient.parameterToPair("status", status));
-        localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
-
-        TypeReference<List<MultifactorEnrollmentPolicy>> localVarReturnType = new TypeReference<List<MultifactorEnrollmentPolicy>>() { };
-
-        return apiClient.invokeAPI(
-            localVarPath,
-            HttpMethod.GET.name(),
-            localVarQueryParams,
-            new ArrayList<>(),
-            QUERY_STRING_JOINER.toString(),
-            null,
-            new HashMap<>(),
-            new HashMap<>(),
-            new HashMap<>(),
-            apiClient.selectHeaderAccept(MEDIA_TYPE),
-            apiClient.selectHeaderContentType(new String[] { }),
-            AUTH_NAMES,
-            localVarReturnType
-        );
-    }
-
     public <T extends PolicyRule> T createPolicyRuleOfType(Class<T> classType,
                                                            String policyId,
                                                            PolicyRule policyRule) throws ApiException {
