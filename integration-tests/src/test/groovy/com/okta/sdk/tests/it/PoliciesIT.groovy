@@ -337,4 +337,15 @@ class PoliciesIT extends ITSupport {
             assertThat(policyItem, instanceOf(Policy.class))
         })
     }
+
+    // disable running them in bacon
+    @Test (groups = "bacon")
+    @NonOIEEnvironmentOnly
+    void listMfaPolicies() {
+
+        List<MultifactorEnrollmentPolicy> mfaPolicies = policyApiHelper.listMfaPolicies(LifecycleStatus.ACTIVE.name(), null)
+
+        assertThat(mfaPolicies, notNullValue())
+        assertThat(mfaPolicies.size(), greaterThanOrEqualTo(0))
+    }
 }
