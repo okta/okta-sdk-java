@@ -340,6 +340,7 @@ class PoliciesIT extends ITSupport {
 
     // disable running them in bacon
     @Test (groups = "bacon")
+    @NonOIEEnvironmentOnly
     void listMfaPolicies() {
 
         List<MultifactorEnrollmentPolicy> mfaPolicies = policyApiHelper.listMfaPolicies(LifecycleStatus.ACTIVE.name(), null)
