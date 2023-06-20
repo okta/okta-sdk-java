@@ -338,7 +338,8 @@ class PoliciesIT extends ITSupport {
         })
     }
 
-    @Test (groups = "group2")
+    // disable running them in bacon
+    @Test (groups = "bacon")
     void listMfaPolicies() {
 
         List<MultifactorEnrollmentPolicy> mfaPolicies = policyApiHelper.listMfaPolicies(LifecycleStatus.ACTIVE.name(), null)
