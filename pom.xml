@@ -39,7 +39,7 @@
         <bouncycastle.version>1.70</bouncycastle.version>
         <jjwt.version>0.11.5</jjwt.version>
         <org.apache.httpcomponents.client5.version>5.2.1</org.apache.httpcomponents.client5.version>
-        <okta.sdk.previousVersion>11.0.0</okta.sdk.previousVersion>
+        <okta.sdk.previousVersion>11.0.3</okta.sdk.previousVersion>
         <okta.commons.version>1.3.3</okta.commons.version>
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
