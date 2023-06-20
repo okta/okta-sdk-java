@@ -337,4 +337,13 @@ class PoliciesIT extends ITSupport {
             assertThat(policyItem, instanceOf(Policy.class))
         })
     }
+
+    @Test (groups = "group2")
+    void listMfaPolicies() {
+
+        List<MultifactorEnrollmentPolicy> mfaPolicies = policyApiHelper.listMfaPolicies(LifecycleStatus.ACTIVE.name(), null)
+
+        assertThat(mfaPolicies, notNullValue())
+        assertThat(mfaPolicies.size(), greaterThanOrEqualTo(0))
+    }
 }
