@@ -37,7 +37,8 @@ class AppsIT extends ITSupport {
 
     String prefix = "java-sdk-it-"
 
-    ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(getClient()))
+    ApplicationApi applicationApi = new ApplicationApi(getClient())
+    ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(applicationApi)
 
     @Test
     void basicAuthAppTest() {
@@ -99,7 +100,7 @@ class AppsIT extends ITSupport {
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
         // retrieve
-        Application retrievedApp = applicationApiHelper.getApplication(createdApp.getId(), null)
+        BookmarkApplication retrievedApp = (BookmarkApplication) applicationApi.getApplication(createdApp.getId(), null)
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
@@ -142,7 +143,7 @@ class AppsIT extends ITSupport {
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
         // retrieve
-        Application retrievedApp = applicationApiHelper.getApplication(createdApp.getId(), null)
+        BrowserPluginApplication retrievedApp = (BrowserPluginApplication) applicationApi.getApplication(createdApp.getId(), null)
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
@@ -205,7 +206,7 @@ class AppsIT extends ITSupport {
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
         // retrieve
-        Application retrievedApp = applicationApiHelper.getApplication(createdApp.getId(), null)
+        OpenIdConnectApplication retrievedApp = (OpenIdConnectApplication) applicationApiHelper.getApplication(createdApp.getId(), null)
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
@@ -318,7 +319,7 @@ class AppsIT extends ITSupport {
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
         // retrieve
-        Application retrievedApp = applicationApiHelper.getApplication(createdApp.getId(), null)
+        SamlApplication retrievedApp = (SamlApplication) applicationApi.getApplication(createdApp.getId(), null)
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
@@ -385,7 +386,7 @@ class AppsIT extends ITSupport {
 
         // retrieve app (sub-typed)
         BookmarkApplication retrievedBookmarkApplication =
-            applicationApiHelper.getApplication(createdApp.getId(), null) as BookmarkApplication
+            (BookmarkApplication) applicationApi.getApplication(createdApp.getId(), null)
         assertThat(retrievedBookmarkApplication, notNullValue())
         assertThat(retrievedBookmarkApplication.getId(), equalTo(createdApp.getId()))
         assertThat(retrievedBookmarkApplication.getLabel(), equalTo(createdApp.getLabel()))
@@ -393,7 +394,7 @@ class AppsIT extends ITSupport {
         assertThat(retrievedBookmarkApplication.getStatus(), equalTo(createdApp.getStatus()))
 
         List<Application> retrievedApplications =
-            applicationApiHelper.listApplications(null, null, null, null, null, true)
+            applicationApi.listApplications(null, null, null, null, null, true)
         assertThat(retrievedApplications, notNullValue())
         assertThat(retrievedApplications, hasSize(greaterThanOrEqualTo(1)))
     }

@@ -146,7 +146,7 @@ public class ReadmeSnippets {
         userApi.deleteUser(user.getId(), false);
     }
 
-    private void listUsersGroup() throws ApiException {
+    private void listGroups() throws ApiException {
         GroupApi groupApi = new GroupApi(client);
 
         List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null, null, null);
@@ -184,9 +184,15 @@ public class ReadmeSnippets {
     }
 
     private void listUserFactors() throws ApiException {
-        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+        UserFactorApi userFactorApi = new UserFactorApi(client);
 
-        List<UserFactor> userFactors = userFactorApiHelper.listFactors("userId");
+        List<UserFactor> userFactors = userFactorApi.listFactors("userId");
+    }
+
+    private void getUserFactor() throws ApiException {
+        UserFactorApi userFactorApi = new UserFactorApi(client);
+
+        UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
     }
 
     private void enrollUserInFactor() throws ApiException {
@@ -225,16 +231,15 @@ public class ReadmeSnippets {
     }
 
     private void listApplications() throws ApiException {
-        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
+        ApplicationApi applicationApi = new ApplicationApi(client);
 
-        List<Application> applications = applicationApiHelper.listApplications(null, null, null, null, null, true);
+        List<Application> applications = applicationApi.listApplications(null, null, null, null, null, true);
     }
 
     private void getApplication() throws ApiException {
-        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
+        ApplicationApi applicationApi = new ApplicationApi(client);
 
-        // get bookmarkApplication application type
-        BookmarkApplication bookmarkApp = (BookmarkApplication) applicationApiHelper.getApplication("bookmark-app-id", null);
+        BookmarkApplication bookmarkApp = (BookmarkApplication) applicationApi.getApplication("bookmark-app-id", null);
     }
 
     private void createSwaApplication() throws ApiException {
@@ -258,17 +263,16 @@ public class ReadmeSnippets {
     }
 
     private void listPolicies() throws ApiException {
-        PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
+        PolicyApi policyApi = new PolicyApi(client);
 
-        List<Policy> policies = policyPolicyApiHelper.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+        List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
     }
 
     private void getPolicy() throws ApiException {
-        PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
+        PolicyApi policyApi = new PolicyApi(client);
 
-        // get MultifactorEnrollmentPolicy policy type
         MultifactorEnrollmentPolicy mfaPolicy =
-            (MultifactorEnrollmentPolicy) policyPolicyApiHelper.getPolicy("mfa-policy-id", null);
+            (MultifactorEnrollmentPolicy) policyApi.getPolicy("mfa-policy-id", null);
     }
 
     private void listSysLogs() throws ApiException {

@@ -34,7 +34,9 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.*;
+import com.okta.sdk.impl.deserializer.ApplicationDeserializer;
 import com.okta.sdk.impl.deserializer.PolicyDeserializer;
+import com.okta.sdk.impl.deserializer.UserFactorDeserializer;
 import com.okta.sdk.impl.deserializer.UserProfileDeserializer;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
@@ -68,7 +70,9 @@ import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 
 import org.openapitools.client.ApiClient;
 
+import org.openapitools.client.model.Application;
 import org.openapitools.client.model.Policy;
+import org.openapitools.client.model.UserFactor;
 import org.openapitools.client.model.UserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -433,7 +437,9 @@ public class DefaultClientBuilder implements ClientBuilder {
         SimpleModule module = new SimpleModule();
         module.addSerializer(UserProfile.class, new UserProfileSerializer());
         module.addDeserializer(UserProfile.class, new UserProfileDeserializer());
+        module.addDeserializer(Application.class, new ApplicationDeserializer());
         module.addDeserializer(Policy.class, new PolicyDeserializer());
+        module.addDeserializer(UserFactor.class, new UserFactorDeserializer());
         mapper.registerModule(module);
     }
 
