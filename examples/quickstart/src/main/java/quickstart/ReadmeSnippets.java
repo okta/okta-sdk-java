@@ -25,7 +25,6 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.helper.ApplicationApiHelper;
 import com.okta.sdk.helper.UserFactorApiHelper;
-import com.okta.sdk.helper.PolicyApiHelper;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
 
