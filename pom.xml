@@ -25,7 +25,7 @@
 
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-root</artifactId>
-    <version>11.0.3-SNAPSHOT</version>
+    <version>11.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Okta Java SDK</name>
@@ -39,7 +39,7 @@
         <bouncycastle.version>1.70</bouncycastle.version>
         <jjwt.version>0.11.5</jjwt.version>
         <org.apache.httpcomponents.client5.version>5.2.1</org.apache.httpcomponents.client5.version>
-        <okta.sdk.previousVersion>11.0.0</okta.sdk.previousVersion>
+        <okta.sdk.previousVersion>11.0.3</okta.sdk.previousVersion>
         <okta.commons.version>1.3.3</okta.commons.version>
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
@@ -67,12 +67,12 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-api</artifactId>
-                <version>11.0.3-SNAPSHOT</version>
+                <version>11.0.4-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-impl</artifactId>
-                <version>11.0.3-SNAPSHOT</version>
+                <version>11.0.4-SNAPSHOT</version>
             </dependency>
 
             <!-- Other Okta Projects -->
@@ -102,14 +102,14 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-integration-tests</artifactId>
-                <version>11.0.3-SNAPSHOT</version>
+                <version>11.0.4-SNAPSHOT</version>
             </dependency>
 
             <!-- Examples -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-examples-quickstart</artifactId>
-                <version>11.0.3-SNAPSHOT</version>
+                <version>11.0.4-SNAPSHOT</version>
             </dependency>
 
             <!-- Logging -->
