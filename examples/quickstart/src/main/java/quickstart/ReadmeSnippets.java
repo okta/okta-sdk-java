@@ -137,6 +137,19 @@ public class ReadmeSnippets {
         userApi.updateUser(user.getId(), updateUserRequest, true);
     }
 
+    private void updateUserWithCustomAttributes() throws ApiException {
+        UserApi userApi = new UserApi(client);
+
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+        UserProfile userProfile = new UserProfile();
+
+        userProfile.getAdditionalProperties().put("foo", "bar");
+
+        updateUserRequest.setProfile(userProfile);
+
+        userApi.updateUser(user.getId(), updateUserRequest, true);
+    }
+
     private void deleteUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 

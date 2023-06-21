@@ -254,6 +254,26 @@ updateUserRequest.setProfile(userProfile);
 userApi.updateUser(user.getId(), updateUserRequest, true);
 ```
 [//]: # (end: updateUser)
+
+### Get and set custom attributes
+
+Custom user profile attributes can be added with code like below, but
+the respective property must first be associated to the User schema.
+You can use the Profile Editor in your Org Administrator UI (Developer Console) or the Schemas API
+to manage schema extensions.
+
+Once you have created the custom attributes via UI, you can use the code below to get and set values:
+
+[//]: # (method: updateUserWithCustomAttributes)
+```java
+UserApi userApi = new UserApi(client);
+UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+UserProfile userProfile = new UserProfile();
+userProfile.getAdditionalProperties().put("foo", "bar");
+updateUserRequest.setProfile(userProfile);
+userApi.updateUser(user.getId(), updateUserRequest, true);
+```
+[//]: # (end: updateUserWithCustomAttributes)
  
 ### Remove a User
 
