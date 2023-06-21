@@ -257,5 +257,4 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
         return tokenClientConfiguration;
     }
-
 }
