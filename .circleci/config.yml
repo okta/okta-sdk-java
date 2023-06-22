@@ -36,7 +36,7 @@ jobs:
       - run:
           name: "Vault login"
           command: |
-            vault login -method=userpass username=$vault_username password=$vault_password > /dev/null 2>&1
+            vault login -method=userpass username=$VAULT_USERNAME password=$VAULT_PASSWORD > /dev/null 2>&1
       - platform-orb/save-dependencies
 
   jdk8:
