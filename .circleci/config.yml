@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  platform-orb: okta/general-platform-helpers@1.2.3
+  platform-orb: okta/general-platform-helpers@1.5
 
 aliases:
 
@@ -26,19 +26,6 @@ aliases:
         command: cat integration-tests/target/failsafe-reports/*dump*
 
 jobs:
-  cache-secrets:
-    machine: true
-    resource_class: okta/generic-linux-x86
-    environment:
-      VAULT_ADDR: https://vault.aue1e.saasure.net
-    steps:
-      - checkout
-      - run:
-          name: "Vault login"
-          command: |
-            vault login -method=userpass username=$vault_username password=$vault_password > /dev/null 2>&1
-      - platform-orb/save-dependencies
-
   jdk8:
     docker:
       - image: cimg/openjdk:8.0.362-node
@@ -69,7 +56,9 @@ jobs:
 workflows:
   "Circle CI Tests":
     jobs:
-      - cache-secrets
+      - platform-orb/job-secrets-obtain:
+          name: cache-secrets
+          secret-key: "OKTA_CLIENT_ORGURL;OKTA_CLIENT_TOKEN;OKTA_CLIENT_CONNECTIONTIMEOUT;OKTA_IT_OPERATION_DELAY"
       - jdk8:
           requires:
             - cache-secrets

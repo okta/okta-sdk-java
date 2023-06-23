@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
-        <version>11.0.4-SNAPSHOT</version>
+        <version>12.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>okta-sdk-api</artifactId>
@@ -201,6 +201,7 @@
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                             </configOptions>
+                            <additionalProperties>serializableModel=true</additionalProperties>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generateModelTests>false</generateModelTests>
                             <generateApiTests>false</generateApiTests>
