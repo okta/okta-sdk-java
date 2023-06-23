@@ -24,18 +24,18 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.sdk.helper.HelperUtil;
 import org.openapitools.client.ApiClient;
-import org.openapitools.client.model.Policy;
+import org.openapitools.client.model.Application;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 
 import java.io.IOException;
 
-public class PolicyDeserializer extends StdDeserializer<Policy> {
+public class ApplicationDeserializer extends StdDeserializer<Application> {
 
-    private static final long serialVersionUID = -5853722162964413892L;
+    private static final long serialVersionUID = 7913792877251441849L;
 
     private ObjectMapper objectMapper;
 
-    public PolicyDeserializer() {
+    public ApplicationDeserializer() {
         this(null);
         objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -46,15 +46,15 @@ public class PolicyDeserializer extends StdDeserializer<Policy> {
         objectMapper.setDateFormat(ApiClient.buildDefaultDateFormat());
     }
 
-    public PolicyDeserializer(Class<?> vc) {
+    public ApplicationDeserializer(Class<?> vc) {
         super(vc);
     }
 
     @Override
-    public Policy deserialize(JsonParser jp, DeserializationContext deserializationContext) throws IOException {
+    public Application deserialize(JsonParser jp, DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jp.getCodec().readTree(jp);
-        Policy policy = objectMapper.convertValue(node, Policy.class);
-        return objectMapper.convertValue(node, HelperUtil.getPolicyType(policy));
+        Application application = objectMapper.convertValue(node, Application.class);
+        return objectMapper.convertValue(node, HelperUtil.getApplicationType(application));
     }
 }
