@@ -507,6 +507,26 @@ BookmarkApplication createdApp = apiClient.invokeAPI(
 ```
 [//]: # (end: callAnotherEndpoint)
 
+# Pagination
+
+Pagination info would be available via `PagedList` when the API response is a collection of models.
+
+[//]: # (method: paginate)
+```java
+UserApi userApi = new UserApi(client);
+
+// max number of items per page
+int pageSize = 10;
+PagedList<User> pagedUserList = new PagedList<>();
+do {
+    pagedUserList = (PagedList<User>)
+        userApi.listUsers(null, pagedUserList.getAfter(), pageSize, null, null, null, null);
+
+    pagedUserList.forEach(usr -> log.info("User: {}", usr.getProfile().getEmail()));
+} while (pagedUserList.hasMoreItems());
+```
+[//]: # (end: paginate)
+
 ### Thread Safety
 
 Every instance of the SDK `Client` is thread-safe. You **should** use the same instance throughout the entire lifecycle of your application. Each instance has its own Connection pool and Caching resources that are automatically released when the instance is garbage collected.

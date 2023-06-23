@@ -25,6 +25,7 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.helper.ApplicationApiHelper;
 import com.okta.sdk.helper.UserFactorApiHelper;
+import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
 
@@ -334,6 +335,21 @@ public class ReadmeSnippets {
             new String[]{ "apiToken", "oauth2" },   // auth names
             new TypeReference<BookmarkApplication>() { }  // return type
         );
+    }
+
+    private void paginate() throws ApiException {
+        UserApi userApi = new UserApi(client);
+
+        int pageSize = 10; // max number of items per page
+
+        PagedList<User> pagedUserList = new PagedList<>();
+
+        do {
+            pagedUserList = (PagedList<User>)
+                userApi.listUsers(null, pagedUserList.getAfter(), pageSize, null, null, null, null);
+
+            pagedUserList.forEach(usr -> log.info("User: {}", usr.getProfile().getEmail()));
+        } while (pagedUserList.hasMoreItems());
     }
 
     private void complexCaching() {
