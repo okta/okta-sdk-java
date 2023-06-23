@@ -218,43 +218,9 @@ public class UserFactorApiHelper<T extends UserFactor> extends UserFactorApi {
 
         List<UserFactor> typedUserFactors = new ArrayList<>(userFactors.size());
 
-        for (UserFactor userFactor : userFactors) {
-            switch (Objects.requireNonNull(userFactor.getFactorType())) {
-                case CALL:
-                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, CallUserFactor.class));
-                    break;
-                case EMAIL:
-                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, EmailUserFactor.class));
-                    break;
-                case HOTP:
-                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, CustomHotpUserFactor.class));
-                    break;
-                case PUSH:
-                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, PushUserFactor.class));
-                    break;
-                case QUESTION:
-                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, SecurityQuestionUserFactor.class));
-                    break;
-                case SMS:
-                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, SmsUserFactor.class));
-                    break;
-                case TOKEN:
-                case TOKEN_HARDWARE:
-                case TOKEN_HOTP:
-                case TOKEN_SOFTWARE_TOTP:
-                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, TokenUserFactor.class));
-                    break;
-                case U2F:
-                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, U2fUserFactor.class));
-                    break;
-                case WEB:
-                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, WebUserFactor.class));
-                    break;
-                case WEBAUTHN:
-                    typedUserFactors.add(getObjectMapper().convertValue(userFactor, WebAuthnUserFactor.class));
-                    break;
-            }
-        }
+        userFactors.forEach(userFactor ->
+            typedUserFactors.add(getObjectMapper().convertValue(userFactor, getUserFactorType(userFactor))));
+
         return typedUserFactors;
     }
 
