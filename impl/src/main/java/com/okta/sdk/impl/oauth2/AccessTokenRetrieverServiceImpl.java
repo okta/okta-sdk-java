@@ -33,7 +33,6 @@ import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
-import org.openapitools.client.Pair;
 import org.openapitools.client.model.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +40,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
@@ -85,22 +82,22 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         String scope = String.join(" ", tokenClientConfiguration.getScopes());
 
         try {
-            List<Pair> queryParams = new LinkedList<>();
-            queryParams.add(new Pair("grant_type", "client_credentials"));
-            queryParams.add(new Pair("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"));
-            queryParams.add(new Pair("client_assertion", signedJwt));
-            queryParams.add(new Pair("scope", URLEncoder.encode(scope, StandardCharsets.UTF_8.toString())));
+            Map<String, Object> formParameters = new HashMap<>();
+            formParameters.put("grant_type", "client_credentials");
+            formParameters.put("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
+            formParameters.put("client_assertion", signedJwt);
+            formParameters.put("scope", scope);
 
             OAuth2AccessToken oAuth2AccessToken = apiClient.invokeAPI(
                 TOKEN_URI,
                 HttpMethod.POST.name(),
-                queryParams,
+                new LinkedList<>(),
                 new LinkedList<>(),
                 null,
                 null,
                 new LinkedHashMap<>(),
                 new LinkedHashMap<>(),
-                new LinkedHashMap<>(),
+                formParameters,
                 MediaType.APPLICATION_JSON_VALUE,
                 MediaType.APPLICATION_FORM_URLENCODED_VALUE,
                 new String[] { "oauth2" },
@@ -122,7 +119,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
     /**
      * Create signed JWT string with the supplied token client configuration details.
-     *
      * Expiration value should be not more than one hour in the future.
      * We use 50 minutes in order to have a 10 minutes leeway in case of clock skew.
      *
@@ -217,7 +213,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
     /**
      * Create token client config from the supplied API client config.
-     *
      * Token client needs to retry http 401 errors only once which is not the case with the API client.
      * We therefore effect this token client specific config by setting 'retryMaxElapsed'
      * & 'retryMaxAttempts' fields.
