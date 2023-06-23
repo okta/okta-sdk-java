@@ -90,6 +90,8 @@ import com.okta.commons.http.config.HttpClientConfiguration;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
 
+import com.okta.sdk.resource.common.PagedList;
+
 import org.openapitools.client.model.HttpMethod;
 
 import java.text.DateFormat;
@@ -881,7 +883,8 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                 return null;
                                                                 }
 
-                                                                return objectMapper.readValue(content, valueType);
+                                                                T value = objectMapper.readValue(content, valueType);
+                                                                return value instanceof List ? PagedList.constructPagedList(response, value) : value;
                                                                 } else if ("text/plain".equalsIgnoreCase(mimeType)) {
                                                                 // convert input stream to string
                                                                 java.util.Scanner s = new java.util.Scanner(entity.getContent()).useDelimiter("\\A");
