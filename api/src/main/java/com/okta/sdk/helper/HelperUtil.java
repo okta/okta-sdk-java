@@ -85,9 +85,6 @@ public class HelperUtil {
             case EMAIL:
                 return EmailUserFactor.class;
 
-            case HOTP:
-                return CustomHotpUserFactor.class;
-
             case PUSH:
                 return PushUserFactor.class;
 
@@ -98,10 +95,16 @@ public class HelperUtil {
                 return SecurityQuestionUserFactor.class;
 
             case TOKEN:
-            case TOKEN_HARDWARE:
-            case TOKEN_HOTP:
-            case TOKEN_SOFTWARE_TOTP:
                 return TokenUserFactor.class;
+
+            case TOKEN_HARDWARE:
+                return HardwareUserFactor.class;
+
+            case TOKEN_HOTP:
+                return CustomHotpUserFactor.class;
+
+            case TOKEN_SOFTWARE_TOTP:
+                return TotpUserFactor.class;
 
             case U2F:
                 return U2fUserFactor.class;
