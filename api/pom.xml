@@ -201,6 +201,7 @@
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                             </configOptions>
+                            <additionalProperties>serializableModel=true</additionalProperties>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generateModelTests>false</generateModelTests>
                             <generateApiTests>false</generateApiTests>
