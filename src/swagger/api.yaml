@@ -22242,7 +22242,6 @@ components:
       enum:
         - call
         - email
-        - hotp
         - push
         - question
         - sms
@@ -22253,6 +22252,7 @@ components:
         - u2f
         - web
         - webauthn
+        - signed_nonce
     Feature:
       type: object
       properties:
