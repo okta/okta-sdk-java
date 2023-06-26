@@ -199,7 +199,7 @@ users.stream()
 ```
 [//]: # (end: listAllUsers)
 
-For more examples of handling collections see the [paging](#paging) section below.
+For more examples of handling collections see the [pagination](#pagination) section below.
 
 ### Filter or search for Users
 
@@ -507,7 +507,7 @@ BookmarkApplication createdApp = apiClient.invokeAPI(
 ```
 [//]: # (end: callAnotherEndpoint)
 
-# Pagination
+### Pagination
 
 Pagination info would be available via `PagedList` when the API response is a collection of models.
 
