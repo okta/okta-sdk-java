@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.impl.retry;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.core5.util.TextUtils;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.ProtocolException;
@@ -76,6 +76,6 @@ public class RetryUtil {
 
     static long getRateLimitResetValue(HttpResponse response) {
         Header header = response.getFirstHeader("x-rate-limit-reset");
-        return header != null && StringUtils.isNotBlank(header.getValue()) ? Long.parseLong(header.getValue()) : -1L;
+        return header != null && !TextUtils.isBlank(header.getValue()) ? Long.parseLong(header.getValue()) : -1L;
     }
 }
