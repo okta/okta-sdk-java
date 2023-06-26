@@ -23,7 +23,7 @@
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> com.okta.sdk.impl.retry;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.apache.commons.lang3.StringUtils;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.core5.util.TextUtils;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.core5.http.Header;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.core5.http.HttpResponse;
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.core5.http.ProtocolException;
@@ -84,7 +84,7 @@
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>  
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">long</strong> getRateLimitResetValue(HttpResponse response) {
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>          Header header = response.getFirstHeader(<span class="jxr_string">"x-rate-limit-reset"</span>);
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>          <strong class="jxr_keyword">return</strong> header != <strong class="jxr_keyword">null</strong> &amp;&amp; StringUtils.isNotBlank(header.getValue()) ? Long.parseLong(header.getValue()) : -1L;
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          <strong class="jxr_keyword">return</strong> header != <strong class="jxr_keyword">null</strong> &amp;&amp; !TextUtils.isBlank(header.getValue()) ? Long.parseLong(header.getValue()) : -1L;
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  }
 </pre>
