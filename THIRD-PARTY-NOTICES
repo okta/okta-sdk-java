@@ -14,6 +14,7 @@ limitations under the License.
 
 This project includes:
   A Jackson 2.x helper under The Apache Software License, Version 2.0
+  Apache Commons IO under Apache-2.0
   Apache Commons Lang under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpComponents Core HTTP/1.1 under Apache License, Version 2.0

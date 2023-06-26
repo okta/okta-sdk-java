@@ -44,7 +44,7 @@
     </artifact>
     <artifact>
         <groupId>org.bouncycastle</groupId>
-        <artifactId>bcprov-jdk15on</artifactId>
+        <artifactId>bcprov-jdk18on</artifactId>
         <license>Bouncy Castle/MIT License</license>
     </artifact>
     <artifact>
