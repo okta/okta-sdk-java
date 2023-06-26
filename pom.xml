@@ -36,7 +36,7 @@
     <properties>
         <jackson.version>2.15.2</jackson.version>
         <snakeyaml.version>2.0</snakeyaml.version>
-        <bouncycastle.version>1.70</bouncycastle.version>
+        <bouncycastle.version>1.75</bouncycastle.version>
         <jjwt.version>0.11.5</jjwt.version>
         <org.apache.httpcomponents.client5.version>5.2.1</org.apache.httpcomponents.client5.version>
         <okta.sdk.previousVersion>11.0.3</okta.sdk.previousVersion>
@@ -132,13 +132,13 @@
             <!-- Bouncy Castle -->
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
+                <artifactId>bcprov-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15on</artifactId>
+                <artifactId>bcpkix-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
 
