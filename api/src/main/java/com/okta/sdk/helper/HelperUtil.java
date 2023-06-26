@@ -20,7 +20,7 @@ import org.openapitools.client.model.*;
 
 public class HelperUtil {
 
-    static Class<? extends Application> getApplicationType(Application application) {
+    public static Class<? extends Application> getApplicationType(Application application) {
 
         Assert.notNull(application);
         Assert.notNull(application.getSignOnMode());
@@ -48,7 +48,7 @@ public class HelperUtil {
         }
     }
 
-    static Class<? extends Policy> getPolicyType(Policy policy) {
+    public static Class<? extends Policy> getPolicyType(Policy policy) {
 
         Assert.notNull(policy);
         Assert.notNull(policy.getType());
@@ -73,7 +73,7 @@ public class HelperUtil {
         return Policy.class;
     }
 
-    static Class<? extends UserFactor> getUserFactorType(UserFactor userFactor) {
+    public static Class<? extends UserFactor> getUserFactorType(UserFactor userFactor) {
 
         Assert.notNull(userFactor);
         Assert.notNull(userFactor.getFactorType());
@@ -85,9 +85,6 @@ public class HelperUtil {
             case EMAIL:
                 return EmailUserFactor.class;
 
-            case HOTP:
-                return CustomHotpUserFactor.class;
-
             case PUSH:
                 return PushUserFactor.class;
 
@@ -98,10 +95,16 @@ public class HelperUtil {
                 return SecurityQuestionUserFactor.class;
 
             case TOKEN:
-            case TOKEN_HARDWARE:
-            case TOKEN_HOTP:
-            case TOKEN_SOFTWARE_TOTP:
                 return TokenUserFactor.class;
+
+            case TOKEN_HARDWARE:
+                return HardwareUserFactor.class;
+
+            case TOKEN_HOTP:
+                return CustomHotpUserFactor.class;
+
+            case TOKEN_SOFTWARE_TOTP:
+                return TotpUserFactor.class;
 
             case U2F:
                 return U2fUserFactor.class;
@@ -114,6 +117,32 @@ public class HelperUtil {
 
             default:
                 return UserFactor.class;
+        }
+    }
+
+    public static Class<? extends PolicyRule> getPolicyRuleType(PolicyRule policyRule) {
+
+        Assert.notNull(policyRule);
+        Assert.notNull(policyRule.getType());
+
+        switch (policyRule.getType()) {
+            case ACCESS_POLICY:
+                return AccessPolicyRule.class;
+
+            case IDP_DISCOVERY:
+                return AuthorizationServerPolicyRule.class;
+
+            case PASSWORD:
+                return PasswordPolicyRule.class;
+
+            case PROFILE_ENROLLMENT:
+                return ProfileEnrollmentPolicyRule.class;
+
+            case SIGN_ON:
+                return OktaSignOnPolicyRule.class;
+
+            default:
+                return PolicyRule.class;
         }
     }
 }

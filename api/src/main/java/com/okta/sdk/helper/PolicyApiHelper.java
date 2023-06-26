@@ -21,13 +21,16 @@ import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Pair;
 import org.openapitools.client.api.PolicyApi;
-import org.openapitools.client.model.*;
+import org.openapitools.client.model.HttpMethod;
+import org.openapitools.client.model.Policy;
+import org.openapitools.client.model.PolicyRule;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static com.okta.sdk.helper.HelperConstants.*;
-import static com.okta.sdk.helper.HelperUtil.getPolicyType;
 
 /**
  * Helper class that enables working with sub-typed {@link Policy} references.
@@ -83,93 +86,6 @@ public class PolicyApiHelper<T extends Policy> extends PolicyApi {
             AUTH_NAMES,
             localVarReturnType
         );
-    }
-
-    @Override
-    public T getPolicy(String policyId, String expand) throws ApiException {
-
-        ApiClient apiClient = getApiClient();
-
-        // verify the required parameter 'policyId' is set
-        if (policyId == null) {
-            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'policyId' when calling getPolicy");
-        }
-
-        // create path and map variables
-        String localVarPath = "/api/v1/policies/{policyId}"
-            .replaceAll("\\{" + "policyId" + "\\}", apiClient.escapeString(policyId));
-
-        List<Pair> localVarQueryParams = new ArrayList<>(apiClient.parameterToPair("expand", expand));
-        final String localVarAccept = apiClient.selectHeaderAccept(MEDIA_TYPE);
-
-        final String[] localVarContentTypes = { };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-
-        TypeReference<T> localVarReturnType = new TypeReference<T>() { };
-
-        T policy = apiClient.invokeAPI(
-            localVarPath,
-            HttpMethod.GET.name(),
-            localVarQueryParams,
-            new ArrayList<>(),
-            QUERY_STRING_JOINER.toString(),
-            null,
-            new HashMap<>(),
-            new HashMap<>(),
-            new HashMap<>(),
-            localVarAccept,
-            localVarContentType,
-            AUTH_NAMES,
-            localVarReturnType
-        );
-
-        return (T) getObjectMapper().convertValue(policy, getPolicyType(policy));
-    }
-
-    @Override
-    public List<Policy> listPolicies(String type,
-                                     String status,
-                                     String expand) throws ApiException {
-
-        ApiClient apiClient = getApiClient();
-
-        // verify the required parameter 'type' is set
-        if (type == null) {
-            throw new ApiException(HttpStatus.SC_BAD_REQUEST, "Missing the required parameter 'type' when calling listPolicies");
-        }
-
-        // create path and map variables
-        String localVarPath = "/api/v1/policies";
-
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        localVarQueryParams.addAll(apiClient.parameterToPair("type", type));
-        localVarQueryParams.addAll(apiClient.parameterToPair("status", status));
-        localVarQueryParams.addAll(apiClient.parameterToPair("expand", expand));
-
-        TypeReference<List<Policy>> localVarReturnType = new TypeReference<List<Policy>>() { };
-
-        List<Policy> policies = apiClient.invokeAPI(
-            localVarPath,
-            HttpMethod.GET.name(),
-            localVarQueryParams,
-            new ArrayList<>(),
-            QUERY_STRING_JOINER.toString(),
-            null,
-            new HashMap<>(),
-            new HashMap<>(),
-            new HashMap<>(),
-            apiClient.selectHeaderAccept(MEDIA_TYPE),
-            apiClient.selectHeaderContentType(new String[] { }),
-            AUTH_NAMES,
-            localVarReturnType
-        );
-
-        List<Policy> typedPolicies = new ArrayList<>(policies.size());
-
-        policies.forEach(policy ->
-            typedPolicies.add(getObjectMapper().convertValue(policy, getPolicyType(policy))));
-
-        return typedPolicies;
     }
 
     public <T extends PolicyRule> T createPolicyRuleOfType(Class<T> classType,

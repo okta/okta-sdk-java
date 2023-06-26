@@ -18,6 +18,7 @@ package com.okta.sdk.tests.it
 import com.okta.sdk.helper.ApplicationApiHelper
 import com.okta.sdk.helper.PolicyApiHelper
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
+import com.okta.sdk.resource.common.PagedList
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
@@ -43,8 +44,11 @@ import static org.hamcrest.Matchers.*
 class UsersIT extends ITSupport {
 
     GroupApi groupApi = new GroupApi(getClient())
+    ApplicationApi applicationApi = new ApplicationApi(getClient())
+    ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(getClient()))
     PolicyApiHelper<Policy> policyApiHelper = new PolicyApiHelper<>(new PolicyApi(getClient()))
     UserApi userApi = new UserApi(getClient())
+    RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
 
     @Test
     void doCrudTest() {
@@ -181,7 +185,8 @@ class UsersIT extends ITSupport {
 
         Thread.sleep(getTestOperationDelay())
 
-        List<User> users = userApi.listUsers(null, null, null, "profile.login eq \"${email}\"", null, null, null)
+        List<User> users =
+            userApi.listUsers(null, null, null, "profile.login eq \"${email}\"", null, null, null)
 
         assertUserPresent(users, user)
     }
@@ -194,8 +199,6 @@ class UsersIT extends ITSupport {
         def firstName = 'John'
         def lastName = 'Role'
         def email = "john-${uniqueTestName}@example.com"
-
-        RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -823,13 +826,9 @@ class UsersIT extends ITSupport {
     @Test (groups = "group3")
     void testListGroupAssignmentsWithExpand() {
 
-        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(getClient()))
-
         for (int i = 1; i < 30; i++) {
             registerForCleanup(new DefaultGroupBuilder().setName("test-group_" + i + "_${uniqueTestName}").buildAndCreate(groupApi))
         }
-
-        ApplicationApi applicationApi = new ApplicationApi(getClient())
 
         //  Fetch the GroupAssignment list in two requests
         def expandParameter = "group"
@@ -850,6 +849,43 @@ class UsersIT extends ITSupport {
             assertThat(embedded.get(expandParameter).get("type"), notNullValue())
             assertThat(embedded.get(expandParameter).get("profile"), notNullValue())
         }
+    }
+
+    @Test(groups = "group3")
+    void testPagination() {
+
+        int noOfUsersCreated = 10
+
+        // create users
+        for (int i = 1; i <= noOfUsersCreated; i++) {
+            registerForCleanup(randomUser())
+        }
+
+        int pageSize = 3 // max number of items per page
+        int pageCount = 0 // counter to track no. of pages
+
+        PagedList<User> pagedUserList = new PagedList<>()
+
+        do {
+            pagedUserList = (PagedList<User>) userApi.listUsers(
+                null, pagedUserList.getAfter(), pageSize, null, null, null, null)
+
+            assertThat(pagedUserList, notNullValue())
+            assertThat(pagedUserList.size(), lessThanOrEqualTo(pageSize))
+
+            pageCount++ // increment page
+
+            if (pagedUserList.hasMoreItems()) {
+                assertThat(pagedUserList.getAfter(), notNullValue())
+                assertThat(pagedUserList.getNextPage(), notNullValue())
+            } else {
+                // end of list
+                break
+            }
+        } while (true)
+
+        // there could be other existing users in addition to what we just created
+        assertThat(pageCount, greaterThanOrEqualTo(Math.ceil(noOfUsersCreated / pageSize) as Integer))
     }
 
     private static String hashPassword(String password, String salt) {

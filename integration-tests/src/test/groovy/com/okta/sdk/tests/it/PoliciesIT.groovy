@@ -22,12 +22,14 @@ import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder
 import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.it.util.ITSupport
+import org.openapitools.client.ApiException
 import org.openapitools.client.api.ApplicationApi
 import org.openapitools.client.api.GroupApi
 import org.openapitools.client.api.PolicyApi
 import org.openapitools.client.model.*
 import org.testng.annotations.Test
 
+import static com.okta.sdk.tests.it.util.Util.expect
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 /**
@@ -37,7 +39,8 @@ import static org.hamcrest.Matchers.*
 class PoliciesIT extends ITSupport {
 
     GroupApi groupApi = new GroupApi(getClient())
-    PolicyApiHelper<Policy> policyApiHelper = new PolicyApiHelper<>(new PolicyApi(getClient()))
+    PolicyApi policyApi = new PolicyApi(getClient())
+    PolicyApiHelper<Policy> policyApiHelper = new PolicyApiHelper<>(policyApi)
 
     @Test (groups = "group2")
     void signOnPolicyWithGroupConditions() {
@@ -61,6 +64,14 @@ class PoliciesIT extends ITSupport {
         assertThat(policy.getConditions(), notNullValue())
         assertThat(policy.getConditions().getPeople().getGroups().getInclude(), is(Collections.singletonList(group.getId())))
         assertThat(policy.getConditions().getPeople().getGroups().getExclude(), nullValue())
+
+        OktaSignOnPolicy retrievedPolicy = (OktaSignOnPolicy) policyApi.getPolicy(policy.getId(), null)
+
+        assertThat(retrievedPolicy, notNullValue())
+        assertThat(retrievedPolicy.getType(), is(PolicyType.OKTA_SIGN_ON))
+        assertThat(retrievedPolicy.getConditions(), notNullValue())
+        assertThat(retrievedPolicy.getConditions().getPeople().getGroups().getInclude(), is(Collections.singletonList(group.getId())))
+        assertThat(retrievedPolicy.getConditions().getPeople().getGroups().getExclude(), nullValue())
     }
 
     // disable running them in bacon
@@ -82,6 +93,13 @@ class PoliciesIT extends ITSupport {
         assertThat(createdProfileEnrollmentPolicy.getName(), notNullValue())
         assertThat(createdProfileEnrollmentPolicy.getType(), equalTo(PolicyType.PROFILE_ENROLLMENT))
         assertThat(createdProfileEnrollmentPolicy.getStatus(), equalTo(LifecycleStatus.ACTIVE))
+
+        ProfileEnrollmentPolicy retrievedPolicy = (ProfileEnrollmentPolicy) policyApi.getPolicy(createdProfileEnrollmentPolicy.getId(), null)
+
+        assertThat(retrievedPolicy, notNullValue())
+        assertThat(retrievedPolicy.getName(), notNullValue())
+        assertThat(retrievedPolicy.getType(), equalTo(PolicyType.PROFILE_ENROLLMENT))
+        assertThat(retrievedPolicy.getStatus(), equalTo(LifecycleStatus.ACTIVE))
     }
 
     // disable running them in bacon
@@ -120,7 +138,7 @@ class PoliciesIT extends ITSupport {
         // accessPolicy:[href:https://example.com/api/v1/policies/rst412ay22NkOdJJr0g7]
         String accessPolicyId = oidcApp.getLinks().getAccessPolicy().getHref().replaceAll("]", "").tokenize("/")[-1]
 
-        AccessPolicy accessPolicy = policyApiHelper.getPolicy(accessPolicyId, null) as AccessPolicy
+        AccessPolicy accessPolicy = (AccessPolicy) policyApi.getPolicy(accessPolicyId, null)
         assertThat(accessPolicy, notNullValue())
 
         AccessPolicyRule accessPolicyRule = new AccessPolicyRule()
@@ -153,6 +171,13 @@ class PoliciesIT extends ITSupport {
 
         policyApi.deactivatePolicyRule(accessPolicy.getId(), createdAccessPolicyRule.getId())
         policyApi.deletePolicyRule(accessPolicy.getId(), createdAccessPolicyRule.getId())
+
+        Thread.sleep(testOperationDelay)
+
+        // get policyrule expect 404
+        expect(ApiException) {
+            policyApi.getPolicyRule(accessPolicy.getId(), createdAccessPolicyRule.getId())
+        }
     }
 
     @Test
@@ -172,10 +197,10 @@ class PoliciesIT extends ITSupport {
         oktaSignOnPolicyRule.name(policyRuleName)
         oktaSignOnPolicyRule.type(PolicyRuleType.SIGN_ON)
         OktaSignOnPolicyRuleActions oktaSignOnPolicyRuleActions = new OktaSignOnPolicyRuleActions()
-        OktaSignOnPolicyRuleSignonActions oktaSignOnPolicyRuleSignonActions = new OktaSignOnPolicyRuleSignonActions()
-        oktaSignOnPolicyRuleSignonActions.setAccess(PolicyAccess.DENY)
-        oktaSignOnPolicyRuleSignonActions.setRequireFactor(false)
-        oktaSignOnPolicyRuleActions.setSignon(oktaSignOnPolicyRuleSignonActions)
+        OktaSignOnPolicyRuleSignonActions oktaSignOnPolicyRuleSignOnActions = new OktaSignOnPolicyRuleSignonActions()
+        oktaSignOnPolicyRuleSignOnActions.setAccess(PolicyAccess.DENY)
+        oktaSignOnPolicyRuleSignOnActions.setRequireFactor(false)
+        oktaSignOnPolicyRuleActions.setSignon(oktaSignOnPolicyRuleSignOnActions)
         oktaSignOnPolicyRule.actions(oktaSignOnPolicyRuleActions)
 
         OktaSignOnPolicyRule createdPolicyRule =
@@ -234,10 +259,10 @@ class PoliciesIT extends ITSupport {
         registerForCleanup(policy)
 
         // verify a regular get does NOT return the embedded map with "rules"
-        assertRulesNotExpanded(policyApiHelper.getPolicy(policy.getId(), null))
+        assertRulesNotExpanded(policyApi.getPolicy(policy.getId(), null))
 
         // verify a regular get DOES return the embedded map with "rules"
-        assertRulesExpanded(policyApiHelper.getPolicy(policy.getId(), "rules"))
+        assertRulesExpanded(policyApi.getPolicy(policy.getId(), "rules"))
     }
 
     @Test
@@ -253,14 +278,14 @@ class PoliciesIT extends ITSupport {
         registerForCleanup(policy)
 
         def policies=
-            policyApiHelper.listPolicies(PolicyType.OKTA_SIGN_ON.name(), LifecycleStatus.INACTIVE.name(), null)
+            policyApi.listPolicies(PolicyType.OKTA_SIGN_ON.name(), LifecycleStatus.INACTIVE.name(), null)
 
         assertThat(policies, not(empty()))
         policies.stream()
             .limit(5)
             .forEach { assertRulesNotExpanded(it) }
 
-        policies = policyApiHelper.listPolicies(PolicyType.OKTA_SIGN_ON.name(), LifecycleStatus.ACTIVE.name(), "rules")
+        policies = policyApi.listPolicies(PolicyType.OKTA_SIGN_ON.name(), LifecycleStatus.ACTIVE.name(), "rules")
 
         assertThat(policies, not(empty()))
         policies.stream()
@@ -299,19 +324,19 @@ class PoliciesIT extends ITSupport {
             .setType(PolicyType.PASSWORD)
             .setStatus(LifecycleStatus.ACTIVE)
             .setPriority(1)
-            .setDescription("Dummy policy for sdk test")
+            .setDescription("Dummy policy for Java SDK IT")
             .setName("SDK policy "+ UUID.randomUUID().toString())
             .buildAndCreate(policyApiHelper) as PasswordPolicy
         registerForCleanup(policy)
 
-        // get policy (sub-typed)
-        PasswordPolicy passwordPolicy = policyApiHelper.getPolicy(policy.getId(), null) as PasswordPolicy
+        // get policy
+        PasswordPolicy passwordPolicy = (PasswordPolicy) policyApi.getPolicy(policy.getId(), null)
         assertThat(passwordPolicy, notNullValue())
         assertThat(passwordPolicy.getType(), is(PolicyType.PASSWORD))
         assertThat(passwordPolicy.getStatus(), is(LifecycleStatus.ACTIVE))
 
         // list policies
-        def policies= policyApiHelper.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null)
+        def policies= policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null)
         assertThat(policies, not(empty()))
     }
 

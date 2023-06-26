@@ -168,8 +168,8 @@ These examples will help you understand how to use this library. You can also br
 Once you initialize a `ApiClient` instance, you can pass this instance to the constructor of any API area clients (such as `UserApi`, `GroupApi`, `ApplicationApi` etc.).
 You can start using these clients to call management APIs relevant to the chosen API area.
 
-Note: For models that follow inheritance (e.g. Application, Policy, UserFactor), use the APIs found in their respective `ApiHelper` class (e.g. `ApplicationApiHelper`, `PolicyApiHelper`, `UserFactorApiHelper`)
-to ensure safe type cast into their respective subclass types.
+Note: For creation (HTTP POST or PUT operation) of models that follow inheritance (e.g. Application, Policy | PolicyRule, UserFactor), use the APIs found in their respective `ApiHelper` class (e.g. `ApplicationApiHelper`, `PolicyApiHelper`, `UserFactorApiHelper`)
+to ensure safe type cast to their respective subclass types.
 
 ### Authenticate a User
 
@@ -254,6 +254,26 @@ updateUserRequest.setProfile(userProfile);
 userApi.updateUser(user.getId(), updateUserRequest, true);
 ```
 [//]: # (end: updateUser)
+
+### Get and set custom attributes
+
+Custom user profile attributes can be added with code like below, but
+the respective property must first be associated to the User schema.
+You can use the Profile Editor in your Org Administrator UI (Developer Console) or the Schemas API
+to manage schema extensions.
+
+Once you have created the custom attributes via UI, you can use the code below to get and set values:
+
+[//]: # (method: updateUserWithCustomAttributes)
+```java
+UserApi userApi = new UserApi(client);
+UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+UserProfile userProfile = new UserProfile();
+userProfile.getAdditionalProperties().put("foo", "bar");
+updateUserRequest.setProfile(userProfile);
+userApi.updateUser(user.getId(), updateUserRequest, true);
+```
+[//]: # (end: updateUserWithCustomAttributes)
  
 ### Remove a User
 
@@ -269,14 +289,14 @@ userApi.deleteUser(user.getId(), false);
 ```
 [//]: # (end: deleteUser)
 
-### List a User's Groups
+### List Groups
 
-[//]: # (method: listUsersGroup)
+[//]: # (method: listGroups)
 ```java
 GroupApi groupApi = new GroupApi(client);
 List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null, null, null);
 ```
-[//]: # (end: listUsersGroup)
+[//]: # (end: listGroups)
 
 ### Create a Group
 
@@ -318,10 +338,19 @@ groupApi.assignUserToGroup(group.getId(), user.getId());
 
 [//]: # (method: listUserFactors)
 ```java
-UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
-List<UserFactor> userFactors = userFactorApiHelper.listFactors("userId");
+UserFactorApi userFactorApi = new UserFactorApi(client);
+List<UserFactor> userFactors = userFactorApi.listFactors("userId");
 ```
 [//]: # (end: listUserFactors)
+
+### Get a User Factor
+
+[//]: # (method: getUserFactor)
+```java
+UserFactorApi userFactorApi = new UserFactorApi(client);
+UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
+```
+[//]: # (end: getUserFactor)
 
 ### Enroll a User in a new Factor
 
@@ -390,10 +419,8 @@ BrowserPluginApplication createdApp =
 
 [//]: # (method: getApplication)
 ```java
-ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
-
-// get bookmarkApplication application type
-BookmarkApplication bookmarkApp = (BookmarkApplication) applicationApiHelper.getApplication("bookmark-app-id", null);
+ApplicationApi applicationApi = new ApplicationApi(client);
+BookmarkApplication bookmarkApp = (BookmarkApplication) applicationApi.getApplication("bookmark-app-id", null);
 ```
 [//]: # (end: getApplication)
 
@@ -401,8 +428,8 @@ BookmarkApplication bookmarkApp = (BookmarkApplication) applicationApiHelper.get
 
 [//]: # (method: listApplications)
 ```java
-ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
-List<Application> applications = applicationApiHelper.listApplications(null, null, null, null, null, true);
+ApplicationApi applicationApi = new ApplicationApi(client);
+List<Application> applications = applicationApi.listApplications(null, null, null, null, null, true);
 ```
 [//]: # (end: listApplications)
 
@@ -410,11 +437,9 @@ List<Application> applications = applicationApiHelper.listApplications(null, nul
 
 [//]: # (method: getPolicy)
 ```java
-PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
-
-// get MultifactorEnrollmentPolicy policy type
+PolicyApi policyApi = new PolicyApi(client);
 MultifactorEnrollmentPolicy mfaPolicy =
-    (MultifactorEnrollmentPolicy) policyPolicyApiHelper.getPolicy("mfa-policy-id", null);
+    (MultifactorEnrollmentPolicy) policyApi.getPolicy("mfa-policy-id", null);
 ```
 [//]: # (end: getPolicy)
 
@@ -422,8 +447,8 @@ MultifactorEnrollmentPolicy mfaPolicy =
 
 [//]: # (method: listPolicies)
 ```java
-PolicyApiHelper<Policy> policyPolicyApiHelper = new PolicyApiHelper<>(new PolicyApi(client));
-List<Policy> policies = policyPolicyApiHelper.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+PolicyApi policyApi = new PolicyApi(client);
+List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
 ```
 [//]: # (end: listPolicies)
 
@@ -481,6 +506,26 @@ BookmarkApplication createdApp = apiClient.invokeAPI(
 );
 ```
 [//]: # (end: callAnotherEndpoint)
+
+# Pagination
+
+Pagination info would be available via `PagedList` when the API response is a collection of models.
+
+[//]: # (method: paginate)
+```java
+UserApi userApi = new UserApi(client);
+
+// max number of items per page
+int pageSize = 10;
+PagedList<User> pagedUserList = new PagedList<>();
+do {
+    pagedUserList = (PagedList<User>)
+        userApi.listUsers(null, pagedUserList.getAfter(), pageSize, null, null, null, null);
+
+    pagedUserList.forEach(usr -> log.info("User: {}", usr.getProfile().getEmail()));
+} while (pagedUserList.hasMoreItems());
+```
+[//]: # (end: paginate)
 
 ### Thread Safety
 
