@@ -44,8 +44,8 @@ import static org.hamcrest.Matchers.*
 class UsersIT extends ITSupport {
 
     GroupApi groupApi = new GroupApi(getClient())
-    ApplicationApi applicationApi = new ApplicationApi(getClient())
     ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(getClient()))
+    ApplicationGroupsApi applicationGroupsApi = new ApplicationGroupsApi(getClient())
     PolicyApiHelper<Policy> policyApiHelper = new PolicyApiHelper<>(new PolicyApi(getClient()))
     UserApi userApi = new UserApi(getClient())
     RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
@@ -322,7 +322,11 @@ class UsersIT extends ITSupport {
 
         PasswordPolicyRuleActions passwordPolicyRuleActions = new PasswordPolicyRuleActions()
         passwordPolicyRuleActions.setPasswordChange(passwordPolicyRuleActionAllow)
-        passwordPolicyRuleActions.setSelfServicePasswordReset(passwordPolicyRuleActionAllow)
+
+        SelfServicePasswordResetAction selfServicePasswordResetAction = new SelfServicePasswordResetAction()
+        selfServicePasswordResetAction.setAccess(PolicyAccess.ALLOW)
+
+        passwordPolicyRuleActions.setSelfServicePasswordReset(selfServicePasswordResetAction)
         passwordPolicyRuleActions.setSelfServiceUnlock(passwordPolicyRuleActionDeny)
 
         PasswordPolicyRule passwordPolicyRule = new PasswordPolicyRule()
@@ -839,7 +843,7 @@ class UsersIT extends ITSupport {
         Application application = applicationList.first()
 
         List<ApplicationGroupAssignment> groupAssignments =
-            applicationApi.listApplicationGroupAssignments(application.getId(), null, null, null, expandParameter)
+            applicationGroupsApi.listApplicationGroupAssignments(application.getId(), null, null, null, expandParameter)
 
         //  Make sure both pages (all resources) contain an expand parameter
         for (ApplicationGroupAssignment groupAssignment : groupAssignments) {
