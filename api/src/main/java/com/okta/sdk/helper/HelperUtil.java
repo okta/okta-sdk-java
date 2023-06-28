@@ -60,8 +60,6 @@ public class HelperUtil {
                 return IdentityProviderPolicy.class;
             case MFA_ENROLL:
                 return MultifactorEnrollmentPolicy.class;
-            case OAUTH_AUTHORIZATION_POLICY:
-                return AuthorizationServerPolicy.class;
             case OKTA_SIGN_ON:
                 return OktaSignOnPolicy.class;
             case PASSWORD:
