@@ -172,6 +172,7 @@
                             <generatorName>java</generatorName>
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
+                                <useRuntimeException>true</useRuntimeException>
                             </configOptions>
                             <additionalProperties>serializableModel=true</additionalProperties>
                             <skipValidateSpec>true</skipValidateSpec>
