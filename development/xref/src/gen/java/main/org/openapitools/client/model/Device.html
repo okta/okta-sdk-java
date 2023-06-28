@@ -17,9 +17,9 @@
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>      <strong class="jxr_keyword">import</strong> java.time.OffsetDateTime;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.DeviceDisplayName;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.DeviceLinks;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.DeviceProfile;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.DeviceStatus;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.DeviceProfile;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.DeviceStatus;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.LinksSelfAndFullUsersLifecycle;
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>      <strong class="jxr_keyword">import</strong> java.io.Serializable;
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
@@ -41,7 +41,7 @@
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>          Device.JSON_PROPERTY_STATUS,
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>          Device.JSON_PROPERTY_LINKS
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>      })
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-06-28T17:26:45.128Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-06-28T23:04:01.106Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> Device <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -75,7 +75,7 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>              <strong class="jxr_keyword">private</strong> <a name="DeviceStatus" href="../../../../org/openapitools/client/model/DeviceStatus.html#DeviceStatus">DeviceStatus</a> status;
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_LINKS = <span class="jxr_string">"_links"</span>;
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>              <strong class="jxr_keyword">private</strong> DeviceLinks links;
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>              <strong class="jxr_keyword">private</strong> LinksSelfAndFullUsersLifecycle links;
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  <strong class="jxr_keyword">public</strong> Device() { 
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>  }
@@ -277,7 +277,7 @@
 <a class="jxr_linenumber" name="L269" href="#L269">269</a>         }
 <a class="jxr_linenumber" name="L270" href="#L270">270</a> 
 <a class="jxr_linenumber" name="L271" href="#L271">271</a> 
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>         <strong class="jxr_keyword">public</strong> Device links(DeviceLinks links) {
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>         <strong class="jxr_keyword">public</strong> Device links(LinksSelfAndFullUsersLifecycle links) {
 <a class="jxr_linenumber" name="L273" href="#L273">273</a>         
 <a class="jxr_linenumber" name="L274" href="#L274">274</a>         <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L275" href="#L275">275</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -292,14 +292,14 @@
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>       @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L286" href="#L286">286</a> 
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <strong class="jxr_keyword">public</strong> DeviceLinks getLinks() {
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>     <strong class="jxr_keyword">public</strong> LinksSelfAndFullUsersLifecycle getLinks() {
 <a class="jxr_linenumber" name="L288" href="#L288">288</a>         <strong class="jxr_keyword">return</strong> links;
 <a class="jxr_linenumber" name="L289" href="#L289">289</a>     }
 <a class="jxr_linenumber" name="L290" href="#L290">290</a> 
 <a class="jxr_linenumber" name="L291" href="#L291">291</a> 
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>           @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L293" href="#L293">293</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(DeviceLinks links) {
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(LinksSelfAndFullUsersLifecycle links) {
 <a class="jxr_linenumber" name="L295" href="#L295">295</a>             <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L296" href="#L296">296</a>         }
 <a class="jxr_linenumber" name="L297" href="#L297">297</a> 

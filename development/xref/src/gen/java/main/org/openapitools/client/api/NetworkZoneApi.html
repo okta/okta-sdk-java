@@ -45,7 +45,7 @@
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.openapitools.jackson.nullable.JsonNullableModule;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-06-28T17:26:45.128Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-06-28T23:04:01.106Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="NetworkZoneApi" href="../../../../org/openapitools/client/api/NetworkZoneApi.html#NetworkZoneApi">NetworkZoneApi</a> {
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
@@ -443,7 +443,7 @@
 <a class="jxr_linenumber" name="L435" href="#L435">435</a> <em class="jxr_javadoccomment">        * Lists all network zones with pagination. A subset of zones can be returned that match a supported filter expression or query.  This operation requires URL encoding. For example, &amp;#x60;filter&amp;#x3D;(id eq \&amp;quot;nzoul0wf9jyb8xwZm0g3\&amp;quot; or id eq \&amp;quot;nzoul1MxmGN18NDQT0g3\&amp;quot;)&amp;#x60; is encoded as &amp;#x60;filter&amp;#x3D;%28id+eq+%22nzoul0wf9jyb8xwZm0g3%22+or+id+eq+%22nzoul1MxmGN18NDQT0g3%22%29&amp;#x60;.  Okta supports filtering on the &amp;#x60;id&amp;#x60; and &amp;#x60;usage&amp;#x60; properties. See [Filtering](<a href="https://developer.okta.com/docs/reference/core-okta-api/" target="alexandria_uri">https://developer.okta.com/docs/reference/core-okta-api/</a>#filter) for more information on the expressions that are used in filtering.</em>
 <a class="jxr_linenumber" name="L436" href="#L436">436</a> <em class="jxr_javadoccomment">            * @param after Specifies the pagination cursor for the next page of network zones (optional)</em>
 <a class="jxr_linenumber" name="L437" href="#L437">437</a> <em class="jxr_javadoccomment">            * @param limit Specifies the number of results for a page (optional, default to -1)</em>
-<a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">            * @param filter Filters zones by usage or id expression (optional)</em>
+<a class="jxr_linenumber" name="L438" href="#L438">438</a> <em class="jxr_javadoccomment">            * @param filter Filters zones by usage or ID expression (optional)</em>
 <a class="jxr_linenumber" name="L439" href="#L439">439</a> <em class="jxr_javadoccomment">            * @return List&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L440" href="#L440">440</a> <em class="jxr_javadoccomment">        * @throws ApiException if fails to make API call</em>
 <a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">        */</em>
@@ -457,7 +457,7 @@
 <a class="jxr_linenumber" name="L449" href="#L449">449</a> <em class="jxr_javadoccomment">        * Lists all network zones with pagination. A subset of zones can be returned that match a supported filter expression or query.  This operation requires URL encoding. For example, &amp;#x60;filter&amp;#x3D;(id eq \&amp;quot;nzoul0wf9jyb8xwZm0g3\&amp;quot; or id eq \&amp;quot;nzoul1MxmGN18NDQT0g3\&amp;quot;)&amp;#x60; is encoded as &amp;#x60;filter&amp;#x3D;%28id+eq+%22nzoul0wf9jyb8xwZm0g3%22+or+id+eq+%22nzoul1MxmGN18NDQT0g3%22%29&amp;#x60;.  Okta supports filtering on the &amp;#x60;id&amp;#x60; and &amp;#x60;usage&amp;#x60; properties. See [Filtering](<a href="https://developer.okta.com/docs/reference/core-okta-api/" target="alexandria_uri">https://developer.okta.com/docs/reference/core-okta-api/</a>#filter) for more information on the expressions that are used in filtering.</em>
 <a class="jxr_linenumber" name="L450" href="#L450">450</a> <em class="jxr_javadoccomment">            * @param after Specifies the pagination cursor for the next page of network zones (optional)</em>
 <a class="jxr_linenumber" name="L451" href="#L451">451</a> <em class="jxr_javadoccomment">            * @param limit Specifies the number of results for a page (optional, default to -1)</em>
-<a class="jxr_linenumber" name="L452" href="#L452">452</a> <em class="jxr_javadoccomment">            * @param filter Filters zones by usage or id expression (optional)</em>
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> <em class="jxr_javadoccomment">            * @param filter Filters zones by usage or ID expression (optional)</em>
 <a class="jxr_linenumber" name="L453" href="#L453">453</a> <em class="jxr_javadoccomment">        * @param additionalHeaders additionalHeaders for this call</em>
 <a class="jxr_linenumber" name="L454" href="#L454">454</a> <em class="jxr_javadoccomment">            * @return List&amp;lt;NetworkZone&amp;gt;</em>
 <a class="jxr_linenumber" name="L455" href="#L455">455</a> <em class="jxr_javadoccomment">        * @throws ApiException if fails to make API call</em>

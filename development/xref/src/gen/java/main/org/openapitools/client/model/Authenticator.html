@@ -16,11 +16,11 @@
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>      <strong class="jxr_keyword">import</strong> java.time.OffsetDateTime;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.AuthenticatorProvider;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.AuthenticatorSettings;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.AuthenticatorType;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.LifecycleStatus;
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.LinksSelf;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.AuthenticatorLinks;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.AuthenticatorProvider;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.AuthenticatorSettings;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.AuthenticatorType;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.LifecycleStatus;
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>      <strong class="jxr_keyword">import</strong> java.io.Serializable;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
@@ -42,7 +42,7 @@
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>          Authenticator.JSON_PROPERTY_TYPE,
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>          Authenticator.JSON_PROPERTY_LINKS
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>      })
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-06-28T17:26:45.128Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-06-28T23:04:01.106Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> Authenticator <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -76,7 +76,7 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>              <strong class="jxr_keyword">private</strong> <a name="AuthenticatorType" href="../../../../org/openapitools/client/model/AuthenticatorType.html#AuthenticatorType">AuthenticatorType</a> type;
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_LINKS = <span class="jxr_string">"_links"</span>;
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>              <strong class="jxr_keyword">private</strong> LinksSelf links;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>              <strong class="jxr_keyword">private</strong> AuthenticatorLinks links;
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>  <strong class="jxr_keyword">public</strong> Authenticator() { 
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  }
@@ -305,7 +305,7 @@
 <a class="jxr_linenumber" name="L297" href="#L297">297</a>         }
 <a class="jxr_linenumber" name="L298" href="#L298">298</a> 
 <a class="jxr_linenumber" name="L299" href="#L299">299</a> 
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>         <strong class="jxr_keyword">public</strong> Authenticator links(LinksSelf links) {
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>         <strong class="jxr_keyword">public</strong> Authenticator links(AuthenticatorLinks links) {
 <a class="jxr_linenumber" name="L301" href="#L301">301</a>         
 <a class="jxr_linenumber" name="L302" href="#L302">302</a>         <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L303" href="#L303">303</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -320,14 +320,14 @@
 <a class="jxr_linenumber" name="L312" href="#L312">312</a>       @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L313" href="#L313">313</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L314" href="#L314">314</a> 
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>     <strong class="jxr_keyword">public</strong> LinksSelf getLinks() {
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>     <strong class="jxr_keyword">public</strong> AuthenticatorLinks getLinks() {
 <a class="jxr_linenumber" name="L316" href="#L316">316</a>         <strong class="jxr_keyword">return</strong> links;
 <a class="jxr_linenumber" name="L317" href="#L317">317</a>     }
 <a class="jxr_linenumber" name="L318" href="#L318">318</a> 
 <a class="jxr_linenumber" name="L319" href="#L319">319</a> 
 <a class="jxr_linenumber" name="L320" href="#L320">320</a>           @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L321" href="#L321">321</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L322" href="#L322">322</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(LinksSelf links) {
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(AuthenticatorLinks links) {
 <a class="jxr_linenumber" name="L323" href="#L323">323</a>             <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L324" href="#L324">324</a>         }
 <a class="jxr_linenumber" name="L325" href="#L325">325</a> 

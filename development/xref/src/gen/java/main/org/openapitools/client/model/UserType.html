@@ -16,7 +16,7 @@
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>      <strong class="jxr_keyword">import</strong> java.time.OffsetDateTime;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.LinksSelf;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> org.openapitools.client.model.UserTypeLinks;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> java.io.Serializable;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
@@ -38,7 +38,7 @@
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>          UserType.JSON_PROPERTY_NAME,
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>          UserType.JSON_PROPERTY_LINKS
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      })
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-06-28T17:26:45.128Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-06-28T23:04:01.106Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> UserType <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -72,7 +72,7 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>              <strong class="jxr_keyword">private</strong> String name;
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_LINKS = <span class="jxr_string">"_links"</span>;
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>              <strong class="jxr_keyword">private</strong> LinksSelf links;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>              <strong class="jxr_keyword">private</strong> UserTypeLinks links;
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <strong class="jxr_keyword">public</strong> UserType() { 
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  }
@@ -180,10 +180,10 @@
 <a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">        * The human-readable name of the User Type</em>
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">    * @return displayName</em>
 <a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">    **/</em>
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>         @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>       @ApiModelProperty(value = <span class="jxr_string">"The human-readable name of the User Type"</span>)
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>             @javax.annotation.Nonnull
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>       @ApiModelProperty(required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">"The human-readable name of the User Type"</span>)
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>       @JsonProperty(JSON_PROPERTY_DISPLAY_NAME)
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L179" href="#L179">179</a> 
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>     <strong class="jxr_keyword">public</strong> String getDisplayName() {
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>         <strong class="jxr_keyword">return</strong> displayName;
@@ -191,7 +191,7 @@
 <a class="jxr_linenumber" name="L183" href="#L183">183</a> 
 <a class="jxr_linenumber" name="L184" href="#L184">184</a> 
 <a class="jxr_linenumber" name="L185" href="#L185">185</a>           @JsonProperty(JSON_PROPERTY_DISPLAY_NAME)
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDisplayName(String displayName) {
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>             <strong class="jxr_keyword">this</strong>.displayName = displayName;
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>         }
@@ -263,13 +263,13 @@
 <a class="jxr_linenumber" name="L255" href="#L255">255</a>         }
 <a class="jxr_linenumber" name="L256" href="#L256">256</a> 
 <a class="jxr_linenumber" name="L257" href="#L257">257</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">        * The name of the User Type</em>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> <em class="jxr_javadoccomment">        * The name of the User Type. The name must start with A-Z or a-z and contain only A-Z, a-z, 0-9, or underscore (_) characters.   This value becomes read-only after creation and can&amp;#39;t be updated.</em>
 <a class="jxr_linenumber" name="L259" href="#L259">259</a> <em class="jxr_javadoccomment">    * @return name</em>
 <a class="jxr_linenumber" name="L260" href="#L260">260</a> <em class="jxr_javadoccomment">    **/</em>
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>         @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>       @ApiModelProperty(value = <span class="jxr_string">"The name of the User Type"</span>)
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>             @javax.annotation.Nonnull
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>       @ApiModelProperty(required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">"The name of the User Type. The name must start with A-Z or a-z and contain only A-Z, a-z, 0-9, or underscore (_) characters.   This value becomes read-only after creation and can't be updated."</span>)
 <a class="jxr_linenumber" name="L263" href="#L263">263</a>       @JsonProperty(JSON_PROPERTY_NAME)
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L265" href="#L265">265</a> 
 <a class="jxr_linenumber" name="L266" href="#L266">266</a>     <strong class="jxr_keyword">public</strong> String getName() {
 <a class="jxr_linenumber" name="L267" href="#L267">267</a>         <strong class="jxr_keyword">return</strong> name;
@@ -277,13 +277,13 @@
 <a class="jxr_linenumber" name="L269" href="#L269">269</a> 
 <a class="jxr_linenumber" name="L270" href="#L270">270</a> 
 <a class="jxr_linenumber" name="L271" href="#L271">271</a>           @JsonProperty(JSON_PROPERTY_NAME)
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L273" href="#L273">273</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setName(String name) {
 <a class="jxr_linenumber" name="L274" href="#L274">274</a>             <strong class="jxr_keyword">this</strong>.name = name;
 <a class="jxr_linenumber" name="L275" href="#L275">275</a>         }
 <a class="jxr_linenumber" name="L276" href="#L276">276</a> 
 <a class="jxr_linenumber" name="L277" href="#L277">277</a> 
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>         <strong class="jxr_keyword">public</strong> UserType links(LinksSelf links) {
+<a class="jxr_linenumber" name="L278" href="#L278">278</a>         <strong class="jxr_keyword">public</strong> UserType links(UserTypeLinks links) {
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>         
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>         <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -298,14 +298,14 @@
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>       @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L291" href="#L291">291</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L292" href="#L292">292</a> 
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <strong class="jxr_keyword">public</strong> LinksSelf getLinks() {
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>     <strong class="jxr_keyword">public</strong> UserTypeLinks getLinks() {
 <a class="jxr_linenumber" name="L294" href="#L294">294</a>         <strong class="jxr_keyword">return</strong> links;
 <a class="jxr_linenumber" name="L295" href="#L295">295</a>     }
 <a class="jxr_linenumber" name="L296" href="#L296">296</a> 
 <a class="jxr_linenumber" name="L297" href="#L297">297</a> 
 <a class="jxr_linenumber" name="L298" href="#L298">298</a>           @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L299" href="#L299">299</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(LinksSelf links) {
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(UserTypeLinks links) {
 <a class="jxr_linenumber" name="L301" href="#L301">301</a>             <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L302" href="#L302">302</a>         }
 <a class="jxr_linenumber" name="L303" href="#L303">303</a> 
