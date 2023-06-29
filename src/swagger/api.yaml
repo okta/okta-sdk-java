@@ -25894,7 +25894,9 @@ components:
         type:
           $ref: '#/components/schemas/IdentityProviderType'
         _links:
-          $ref: '#/components/schemas/LinksSelf'
+          type: object
+          additionalProperties:
+              $ref: '#/components/schemas/HrefObjectAppLink'
     IdentityProviderApplicationUser:
       type: object
       properties:
