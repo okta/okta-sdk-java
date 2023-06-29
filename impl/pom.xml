@@ -87,12 +87,6 @@
             <artifactId>javax.annotation-api</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <!-- compile time annotation processor -->
-            <groupId>com.google.auto.service</groupId>
-            <artifactId>auto-service</artifactId>
-            <optional>true</optional>
-        </dependency>
 
         <!-- Test deps -->
         <dependency>
@@ -131,19 +125,11 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>**/version.properties</exclude>
-                </excludes>
-            </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -157,6 +143,19 @@
         </resources>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.auto.service</groupId>
+                            <artifactId>auto-service</artifactId>
+                            <version>${com.google.auto.service.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
