@@ -62,6 +62,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 9.x.x-beta, 10.x.x-beta                                     | :warning: Beta release (discontinued)                                                                                                    |
 | 10.x.x                                                      | :heavy_check_mark: Stable ([migration guide](https://github.com/okta/okta-sdk-java/blob/master/MIGRATING.md#migrating-from-8xx-to-10xx)) |
 | 11.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/blob/master/japicmp-11_0_0_vs_10_3_0.html))               |
+| 12.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-12.0.0))                       |
 
 The latest release can always be found on the [releases page][github-releases].
  
