@@ -136,6 +136,7 @@ class IdpIT extends ITSupport {
         assertThat(createdIdp.getId(), notNullValue())
         assertThat(createdIdp.getName(), equalTo(name))
         assertThat(createdIdp.getStatus(), equalTo(LifecycleStatus.ACTIVE))
+        assertThat(createdIdp.getLinks(), notNullValue())
 
         // retrieve
         IdentityProvider retrievedIdp = identityProviderApi.getIdentityProvider(createdIdp.getId())
@@ -256,6 +257,7 @@ class IdpIT extends ITSupport {
             equalTo("your-new-client-secret"))
         assertThat(retrievedUpdatedIdp.getProtocol().getIssuer().getUrl(),
             equalTo("https://idp.example.com/new"))
+        assertThat(retrievedUpdatedIdp.getLinks(), notNullValue())
 
         // deactivate
         identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
