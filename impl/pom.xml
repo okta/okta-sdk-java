@@ -27,7 +27,7 @@
     <artifactId>okta-sdk-impl</artifactId>
     <name>Okta Java SDK :: Impl</name>
     <description>
-        The Okta Java SDK core implemenation .jar is used at runtime to support API invocations.  This
+        The Okta Java SDK core implementation .jar is used at runtime to support API invocations.  This
         implementation jar should be a runtime dependency only and should NOT be depended on at compile time by
         your code.  The implementations within this jar can change at any time without warning - use it with runtime
         scope only.
@@ -61,11 +61,11 @@
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-           <artifactId>bcprov-jdk15on</artifactId>
+           <artifactId>bcprov-jdk18on</artifactId>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
+            <artifactId>bcpkix-jdk18on</artifactId>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

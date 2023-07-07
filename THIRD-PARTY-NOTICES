@@ -13,7 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 This project includes:
-  Animal Sniffer Annotations under MIT license
   Apache Commons Codec under Apache License, Version 2.0
   Apache Commons IO under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0

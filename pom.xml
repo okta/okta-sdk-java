@@ -37,7 +37,7 @@
         <swagger-annotations.version>1.5.8</swagger-annotations.version>
         <jackson.version>2.15.2</jackson.version>
         <snakeyaml.version>2.0</snakeyaml.version>
-        <bouncycastle.version>1.70</bouncycastle.version>
+        <bouncycastle.version>1.75</bouncycastle.version>
         <jjwt.version>0.11.5</jjwt.version>
         <okta.sdk.previousVersion>8.2.3</okta.sdk.previousVersion>
         <okta.commons.version>1.3.3</okta.commons.version>
@@ -162,13 +162,13 @@
             <!-- Bouncy Castle -->
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
+                <artifactId>bcprov-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15on</artifactId>
+                <artifactId>bcpkix-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
 
@@ -470,6 +470,6 @@
     </profiles>
 
   <scm>
-    <tag>okta-sdk-root-8.2.2</tag>
+    <tag>okta-sdk-root-8.2.5</tag>
   </scm>
 </project>

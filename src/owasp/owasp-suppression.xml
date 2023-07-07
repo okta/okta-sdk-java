@@ -35,54 +35,26 @@
         <cve>CVE-2022-25364</cve>
     </suppress>
 
-    <!-- this project does not use the offending method com.google.common.io.Files.createTempDir -->
-    <suppress>
-        <notes><![CDATA[ file name: guava-27.0.1-jre.jar ]]></notes>
-        <gav regex="true">^com\.google\.guava:.*$</gav>
-        <cve>CVE-2020-8908</cve>
-    </suppress>
-
-    <!-- build time dependency brought in by swagger codegen -->
-    <suppress>
-        <notes><![CDATA[ file name: commons-cli-1.2.jar]]></notes>
-        <cve>CVE-2021-38542</cve>
-        <cve>CVE-2021-40110</cve>
-        <cve>CVE-2021-40111</cve>
-        <cve>CVE-2021-40525</cve>
-    </suppress>
-
     <!-- build time dependency (related to npm validator.js which this project does NOT use)  -->
     <suppress>
         <notes><![CDATA[ file name: package.json ]]></notes>
         <cve>CVE-2021-3765</cve>
     </suppress>
 
-    <!-- False positive, see https://github.com/jeremylong/DependencyCheck/issues/4839 -->
-    <suppress base="true">
-        <notes><![CDATA[ FP per issue #4839 ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
-        <cve>CVE-2022-38752</cve>
+    <!-- False positive, see https://github.com/jeremylong/DependencyCheck/issues/5779 -->
+    <suppress>
+        <notes><![CDATA[ file name: jackson-databind-2.15.2.jar]]></notes>
+        <cve>CVE-2023-35116</cve>
     </suppress>
 
-    <!-- False positive, see https://github.com/jeremylong/DependencyCheck/issues/5212 -->
     <suppress>
-        <notes><![CDATA[FP per issue #5212]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.github\.fge/json-patch@.*$</packageUrl>
-        <cpe>cpe:/a:json-patch_project:json-patch</cpe>
+        <notes><![CDATA[ file name: jackson-databind-2.15.2.jar]]></notes>
+        <cve>CVE-2023-35116</cve>
     </suppress>
 
-    <!-- See https://bitbucket.org/snakeyaml/snakeyaml/issues/561/cve-2022-1471-vulnerability-in -->
     <suppress>
-        <notes><![CDATA[Ignored since it is deemed "won't fix" by the library authors.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml.*$</packageUrl>
-        <cve>CVE-2022-1471</cve>
-    </suppress>
-
-    <!-- False positive, see https://github.com/jeremylong/DependencyCheck/issues/5233 -->
-    <suppress>
-        <notes><![CDATA[FP per issue #5233]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
-        <cpe>cpe:/a:yaml_project:yaml</cpe>
+        <notes><![CDATA[ file name: wordwrap:1.0.0 ]]></notes>
+        <cve>CVE-2023-26115</cve>
     </suppress>
 
 </suppressions>
