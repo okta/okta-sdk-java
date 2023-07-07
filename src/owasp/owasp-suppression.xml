@@ -35,18 +35,7 @@
         <cve>CVE-2022-25364</cve>
     </suppress>
 
-    <!-- build time dependency (related to npm validator.js which this project does NOT use)  -->
-    <suppress>
-        <notes><![CDATA[ file name: package.json ]]></notes>
-        <cve>CVE-2021-3765</cve>
-    </suppress>
-
     <!-- False positive, see https://github.com/jeremylong/DependencyCheck/issues/5779 -->
-    <suppress>
-        <notes><![CDATA[ file name: jackson-databind-2.15.2.jar]]></notes>
-        <cve>CVE-2023-35116</cve>
-    </suppress>
-
     <suppress>
         <notes><![CDATA[ file name: jackson-databind-2.15.2.jar]]></notes>
         <cve>CVE-2023-35116</cve>
