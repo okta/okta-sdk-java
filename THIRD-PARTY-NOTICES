@@ -14,25 +14,15 @@ limitations under the License.
 
 This project includes:
   A Jackson 2.x helper under The Apache Software License, Version 2.0
-  Apache Commons IO under Apache-2.0
   Apache Commons Lang under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpComponents Core HTTP/1.1 under Apache License, Version 2.0
   Apache HttpComponents Core HTTP/2 under Apache License, Version 2.0
-  Auto Common Libraries under Apache 2.0
-  AutoService under Apache 2.0
-  AutoService Processor under Apache 2.0
   Bouncy Castle ASN.1 Extension and Utility APIs under Bouncy Castle Licence
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
-  Checker Qual under The MIT License
-  error-prone annotations under Apache 2.0
   FindBugs-jsr305 under The Apache Software License, Version 2.0
-  Guava InternalFutureFailureAccess and InternalFutures under The Apache Software License, Version 2.0
-  Guava ListenableFuture only under The Apache Software License, Version 2.0
-  Guava: Google Core Libraries for Java under Apache License, Version 2.0
   Handlebars under The Apache Software License, Version 2.0
-  J2ObjC Annotations under The Apache Software License, Version 2.0
   Jackson datatype: JSR310 under The Apache Software License, Version 2.0
   Jackson module: Old JAXB Annotations (javax.xml.bind) under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
