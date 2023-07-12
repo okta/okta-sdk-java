@@ -52,15 +52,15 @@ import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.DefaultAuthenticationStrategy;
 import org.apache.hc.client5.http.impl.DefaultConnectionKeepAliveStrategy;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.DefaultBackoffStrategy;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.core5.http.*;
 import org.apache.hc.core5.http.impl.DefaultConnectionReuseStrategy;
 import org.apache.hc.core5.util.Timeout;
@@ -114,7 +114,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
-    private ClientConfiguration clientConfig = new ClientConfiguration();
+    private final ClientConfiguration clientConfig = new ClientConfiguration();
     private AccessTokenRetrieverService accessTokenRetrieverService;
 
     public DefaultClientBuilder() {
@@ -332,41 +332,13 @@ public class DefaultClientBuilder implements ClientBuilder {
             this.clientConfig.setBaseUrlResolver(new DefaultBaseUrlResolver(this.clientConfig.getBaseUrl()));
         }
 
-        HttpClientBuilder clientBuilder = HttpClients.custom();
-
-        RequestConfig requestConfig = RequestConfig.custom()
-            .setConnectTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
-            .setResponseTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
-            .setConnectionRequestTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
-            .build();
+        HttpClientBuilder httpClientBuilder = createHttpClientBuilder(clientConfig);
 
         if (clientConfig.getProxy() != null) {
-            clientBuilder.useSystemProperties();
-            clientBuilder.setProxy(new HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
-            if (clientConfig.getProxyUsername() != null) {
-                final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
-                UsernamePasswordCredentials usernamePasswordCredentials =
-                    new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword().toCharArray());
-                credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
-                clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-                clientBuilder.setProxyAuthenticationStrategy(new DefaultAuthenticationStrategy());
-            }
+            setProxy(httpClientBuilder, clientConfig);
         }
 
-        PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
-
-        CloseableHttpClient httpclient = clientBuilder
-            .setDefaultRequestConfig(requestConfig)
-            .setConnectionManager(poolingHttpClientConnectionManager)
-            .setRetryStrategy(new OktaHttpRequestRetryStrategy(this.clientConfig.getRetryMaxAttempts()))
-            .setConnectionBackoffStrategy(new DefaultBackoffStrategy())
-            .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
-            .setConnectionReuseStrategy(new DefaultConnectionReuseStrategy())
-            .disableCookieManagement()
-            .build();
-
-        ApiClient apiClient = new ApiClient(httpclient, this.cacheManager, this.clientConfig);
+        ApiClient apiClient = new ApiClient(httpClientBuilder.build(), this.cacheManager, this.clientConfig);
         apiClient.setBasePath(this.clientConfig.getBaseUrl());
 
         String userAgentValue = ApplicationInfo.get().entrySet().stream()
@@ -409,6 +381,59 @@ public class DefaultClientBuilder implements ClientBuilder {
         }
 
         return apiClient;
+    }
+
+    /**
+     * Override to customize the client, for example by adding additional interceptors.
+     * @param clientConfig the current ClientConfiguration
+     * @return an {@link HttpClientBuilder} initialized with default configuration
+     */
+    protected HttpClientBuilder createHttpClientBuilder(ClientConfiguration clientConfig) {
+        return HttpClients.custom()
+            .setDefaultRequestConfig(createHttpRequestConfigBuilder(clientConfig).build())
+            .setConnectionManager(createHttpClientConnectionManagerBuilder(clientConfig).build())
+            .setRetryStrategy(new OktaHttpRequestRetryStrategy(clientConfig.getRetryMaxAttempts()))
+            .setConnectionBackoffStrategy(new DefaultBackoffStrategy())
+            .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
+            .setConnectionReuseStrategy(new DefaultConnectionReuseStrategy())
+            .disableCookieManagement();
+    }
+
+    /**
+     * Override to customize the request config
+     * @param clientConfig the current clientConfig
+     * @return a {@link RequestConfig.Builder} initialized with default configuration
+     */
+    protected RequestConfig.Builder createHttpRequestConfigBuilder(ClientConfiguration clientConfig) {
+        return RequestConfig.custom()
+            .setResponseTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
+            .setConnectionRequestTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()));
+    }
+
+    /**
+     * Override to customize the connection manager, for example with increased max connections
+     * @param clientConfig the current clientConfig
+     * @return a {@link PoolingHttpClientConnectionManagerBuilder} initialized with default configuration
+     */
+    protected PoolingHttpClientConnectionManagerBuilder createHttpClientConnectionManagerBuilder(ClientConfiguration clientConfig) {
+        return PoolingHttpClientConnectionManagerBuilder.create()
+            .setDefaultConnectionConfig(ConnectionConfig.custom()
+                .setConnectTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
+                .build());
+    }
+
+    private void setProxy(HttpClientBuilder clientBuilder, ClientConfiguration clientConfig) {
+        clientBuilder.useSystemProperties();
+        clientBuilder.setProxy(new HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
+        if (clientConfig.getProxyUsername() != null) {
+            final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            AuthScope authScope = new AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
+            UsernamePasswordCredentials usernamePasswordCredentials =
+                new UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword().toCharArray());
+            credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
+            clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+            clientBuilder.setProxyAuthenticationStrategy(new DefaultAuthenticationStrategy());
+        }
     }
 
     /**
