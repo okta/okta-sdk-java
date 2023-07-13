@@ -60,15 +60,15 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.auth.AuthScope;
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.config.RequestConfig;
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.DefaultAuthenticationStrategy;
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.DefaultConnectionKeepAliveStrategy;
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.config.ConnectionConfig;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.config.RequestConfig;
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.DefaultAuthenticationStrategy;
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.DefaultConnectionKeepAliveStrategy;
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.classic.DefaultBackoffStrategy;
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.classic.HttpClients;
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.core5.http.*;
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.core5.http.impl.DefaultConnectionReuseStrategy;
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  <strong class="jxr_keyword">import</strong> org.apache.hc.core5.util.Timeout;
@@ -122,7 +122,7 @@
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">private</strong> <a name="CacheManager" href="../../../../../com/okta/sdk/cache/CacheManager.html#CacheManager">CacheManager</a> cacheManager;
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">private</strong> <a name="ClientCredentials" href="../../../../../com/okta/sdk/authc/credentials/ClientCredentials.html#ClientCredentials">ClientCredentials</a> clientCredentials;
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> allowNonHttpsForTesting = false;
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <strong class="jxr_keyword">private</strong> <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> clientConfig = <strong class="jxr_keyword">new</strong> <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a>();
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> clientConfig = <strong class="jxr_keyword">new</strong> <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a>();
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>     <strong class="jxr_keyword">private</strong> <a name="AccessTokenRetrieverService" href="../../../../../com/okta/sdk/impl/oauth2/AccessTokenRetrieverService.html#AccessTokenRetrieverService">AccessTokenRetrieverService</a> accessTokenRetrieverService;
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> 
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>     <strong class="jxr_keyword">public</strong> <a name="DefaultClientBuilder" href="../../../../../com/okta/sdk/impl/client/DefaultClientBuilder.html#DefaultClientBuilder">DefaultClientBuilder</a>() {
@@ -340,267 +340,292 @@
 <a class="jxr_linenumber" name="L332" href="#L332">332</a>             <strong class="jxr_keyword">this</strong>.clientConfig.setBaseUrlResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultBaseUrlResolver" href="../../../../../com/okta/sdk/impl/util/DefaultBaseUrlResolver.html#DefaultBaseUrlResolver">DefaultBaseUrlResolver</a>(<strong class="jxr_keyword">this</strong>.clientConfig.getBaseUrl()));
 <a class="jxr_linenumber" name="L333" href="#L333">333</a>         }
 <a class="jxr_linenumber" name="L334" href="#L334">334</a> 
-<a class="jxr_linenumber" name="L335" href="#L335">335</a>         HttpClientBuilder clientBuilder = HttpClients.custom();
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>         HttpClientBuilder httpClientBuilder = createHttpClientBuilder(clientConfig);
 <a class="jxr_linenumber" name="L336" href="#L336">336</a> 
-<a class="jxr_linenumber" name="L337" href="#L337">337</a>         RequestConfig requestConfig = RequestConfig.custom()
-<a class="jxr_linenumber" name="L338" href="#L338">338</a>             .setConnectTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
-<a class="jxr_linenumber" name="L339" href="#L339">339</a>             .setResponseTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
-<a class="jxr_linenumber" name="L340" href="#L340">340</a>             .setConnectionRequestTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
-<a class="jxr_linenumber" name="L341" href="#L341">341</a>             .build();
-<a class="jxr_linenumber" name="L342" href="#L342">342</a> 
-<a class="jxr_linenumber" name="L343" href="#L343">343</a>         <strong class="jxr_keyword">if</strong> (clientConfig.getProxy() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L344" href="#L344">344</a>             clientBuilder.useSystemProperties();
-<a class="jxr_linenumber" name="L345" href="#L345">345</a>             clientBuilder.setProxy(<strong class="jxr_keyword">new</strong> HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
-<a class="jxr_linenumber" name="L346" href="#L346">346</a>             <strong class="jxr_keyword">if</strong> (clientConfig.getProxyUsername() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L347" href="#L347">347</a>                 <strong class="jxr_keyword">final</strong> BasicCredentialsProvider credentialsProvider = <strong class="jxr_keyword">new</strong> BasicCredentialsProvider();
-<a class="jxr_linenumber" name="L348" href="#L348">348</a>                 AuthScope authScope = <strong class="jxr_keyword">new</strong> AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
-<a class="jxr_linenumber" name="L349" href="#L349">349</a>                 UsernamePasswordCredentials usernamePasswordCredentials =
-<a class="jxr_linenumber" name="L350" href="#L350">350</a>                     <strong class="jxr_keyword">new</strong> UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword().toCharArray());
-<a class="jxr_linenumber" name="L351" href="#L351">351</a>                 credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
-<a class="jxr_linenumber" name="L352" href="#L352">352</a>                 clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-<a class="jxr_linenumber" name="L353" href="#L353">353</a>                 clientBuilder.setProxyAuthenticationStrategy(<strong class="jxr_keyword">new</strong> DefaultAuthenticationStrategy());
-<a class="jxr_linenumber" name="L354" href="#L354">354</a>             }
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>         }
-<a class="jxr_linenumber" name="L356" href="#L356">356</a> 
-<a class="jxr_linenumber" name="L357" href="#L357">357</a>         PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = <strong class="jxr_keyword">new</strong> PoolingHttpClientConnectionManager();
-<a class="jxr_linenumber" name="L358" href="#L358">358</a> 
-<a class="jxr_linenumber" name="L359" href="#L359">359</a>         CloseableHttpClient httpclient = clientBuilder
-<a class="jxr_linenumber" name="L360" href="#L360">360</a>             .setDefaultRequestConfig(requestConfig)
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>             .setConnectionManager(poolingHttpClientConnectionManager)
-<a class="jxr_linenumber" name="L362" href="#L362">362</a>             .setRetryStrategy(<strong class="jxr_keyword">new</strong> <a name="OktaHttpRequestRetryStrategy" href="../../../../../com/okta/sdk/impl/retry/OktaHttpRequestRetryStrategy.html#OktaHttpRequestRetryStrategy">OktaHttpRequestRetryStrategy</a>(<strong class="jxr_keyword">this</strong>.clientConfig.getRetryMaxAttempts()))
-<a class="jxr_linenumber" name="L363" href="#L363">363</a>             .setConnectionBackoffStrategy(<strong class="jxr_keyword">new</strong> DefaultBackoffStrategy())
-<a class="jxr_linenumber" name="L364" href="#L364">364</a>             .setKeepAliveStrategy(<strong class="jxr_keyword">new</strong> DefaultConnectionKeepAliveStrategy())
-<a class="jxr_linenumber" name="L365" href="#L365">365</a>             .setConnectionReuseStrategy(<strong class="jxr_keyword">new</strong> DefaultConnectionReuseStrategy())
-<a class="jxr_linenumber" name="L366" href="#L366">366</a>             .disableCookieManagement()
-<a class="jxr_linenumber" name="L367" href="#L367">367</a>             .build();
-<a class="jxr_linenumber" name="L368" href="#L368">368</a> 
-<a class="jxr_linenumber" name="L369" href="#L369">369</a>         <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient = <strong class="jxr_keyword">new</strong> <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a>(httpclient, <strong class="jxr_keyword">this</strong>.cacheManager, <strong class="jxr_keyword">this</strong>.clientConfig);
-<a class="jxr_linenumber" name="L370" href="#L370">370</a>         apiClient.setBasePath(<strong class="jxr_keyword">this</strong>.clientConfig.getBaseUrl());
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>         <strong class="jxr_keyword">if</strong> (clientConfig.getProxy() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>             setProxy(httpClientBuilder, clientConfig);
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>         }
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> 
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>         <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient = <strong class="jxr_keyword">new</strong> <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a>(httpClientBuilder.build(), <strong class="jxr_keyword">this</strong>.cacheManager, <strong class="jxr_keyword">this</strong>.clientConfig);
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>         apiClient.setBasePath(<strong class="jxr_keyword">this</strong>.clientConfig.getBaseUrl());
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> 
+<a class="jxr_linenumber" name="L344" href="#L344">344</a>         String userAgentValue = ApplicationInfo.get().entrySet().stream()
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>             .map(entry -&gt; entry.getKey() + <span class="jxr_string">"/"</span> + entry.getValue())
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>             .collect(Collectors.joining(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>         apiClient.setUserAgent(userAgentValue);
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> 
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>         addCustomSerializerAndDeserializers(apiClient);
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> 
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>         <strong class="jxr_keyword">if</strong> (!isOAuth2Flow()) {
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver() == <strong class="jxr_keyword">null</strong> &amp;&amp; <strong class="jxr_keyword">this</strong>.clientCredentials != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setClientCredentialsResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(<strong class="jxr_keyword">this</strong>.clientCredentials));
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver() == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setClientCredentialsResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(<strong class="jxr_keyword">this</strong>.clientConfig));
+<a class="jxr_linenumber" name="L356" href="#L356">356</a>             }
+<a class="jxr_linenumber" name="L357" href="#L357">357</a> 
+<a class="jxr_linenumber" name="L358" href="#L358">358</a>             apiClient.setApiKeyPrefix(AuthenticationScheme.SSWS.name());
+<a class="jxr_linenumber" name="L359" href="#L359">359</a>             apiClient.setApiKey((String) <strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
+<a class="jxr_linenumber" name="L360" href="#L360">360</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L361" href="#L361">361</a>             <strong class="jxr_keyword">this</strong>.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> 
+<a class="jxr_linenumber" name="L363" href="#L363">363</a>             validateOAuth2ClientConfig(<strong class="jxr_keyword">this</strong>.clientConfig);
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> 
+<a class="jxr_linenumber" name="L365" href="#L365">365</a>             <strong class="jxr_keyword">if</strong> (Strings.hasText(<strong class="jxr_keyword">this</strong>.clientConfig.getOAuth2AccessToken())) {
+<a class="jxr_linenumber" name="L366" href="#L366">366</a>                 log.debug(<span class="jxr_string">"Will use client provided Access token for OAuth2 authentication (private key, if supplied would be ignored)"</span>);
+<a class="jxr_linenumber" name="L367" href="#L367">367</a>                 apiClient.setAccessToken(<strong class="jxr_keyword">this</strong>.clientConfig.getOAuth2AccessToken());
+<a class="jxr_linenumber" name="L368" href="#L368">368</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L369" href="#L369">369</a>                 log.debug(<span class="jxr_string">"Will retrieve Access Token automatically from Okta for OAuth2 authentication"</span>);
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>                 accessTokenRetrieverService = <strong class="jxr_keyword">new</strong> <a name="AccessTokenRetrieverServiceImpl" href="../../../../../com/okta/sdk/impl/oauth2/AccessTokenRetrieverServiceImpl.html#AccessTokenRetrieverServiceImpl">AccessTokenRetrieverServiceImpl</a>(clientConfig, apiClient);
 <a class="jxr_linenumber" name="L371" href="#L371">371</a> 
-<a class="jxr_linenumber" name="L372" href="#L372">372</a>         String userAgentValue = ApplicationInfo.get().entrySet().stream()
-<a class="jxr_linenumber" name="L373" href="#L373">373</a>             .map(entry -&gt; entry.getKey() + <span class="jxr_string">"/"</span> + entry.getValue())
-<a class="jxr_linenumber" name="L374" href="#L374">374</a>             .collect(Collectors.joining(<span class="jxr_string">" "</span>));
-<a class="jxr_linenumber" name="L375" href="#L375">375</a>         apiClient.setUserAgent(userAgentValue);
-<a class="jxr_linenumber" name="L376" href="#L376">376</a> 
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>         addCustomSerializerAndDeserializers(apiClient);
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>                 <a name="OAuth2ClientCredentials" href="../../../../../com/okta/sdk/impl/oauth2/OAuth2ClientCredentials.html#OAuth2ClientCredentials">OAuth2ClientCredentials</a> oAuth2ClientCredentials =
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>                     <strong class="jxr_keyword">new</strong> <a name="OAuth2ClientCredentials" href="../../../../../com/okta/sdk/impl/oauth2/OAuth2ClientCredentials.html#OAuth2ClientCredentials">OAuth2ClientCredentials</a>(accessTokenRetrieverService);
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> 
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>                 <em class="jxr_comment">// replace the default OAuth authentication with an auto-refreshing one</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a>                 apiClient.replaceAuthentication(<span class="jxr_string">"oauth2"</span>, oAuth2ClientCredentials);
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>                 oAuth2ClientCredentials.refreshOAuth2AccessToken();
 <a class="jxr_linenumber" name="L378" href="#L378">378</a> 
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>         <strong class="jxr_keyword">if</strong> (!isOAuth2Flow()) {
-<a class="jxr_linenumber" name="L380" href="#L380">380</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver() == <strong class="jxr_keyword">null</strong> &amp;&amp; <strong class="jxr_keyword">this</strong>.clientCredentials != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setClientCredentialsResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(<strong class="jxr_keyword">this</strong>.clientCredentials));
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver() == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setClientCredentialsResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(<strong class="jxr_keyword">this</strong>.clientConfig));
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>             }
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setClientCredentialsResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(oAuth2ClientCredentials));
+<a class="jxr_linenumber" name="L380" href="#L380">380</a>             }
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>         }
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> 
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>         <strong class="jxr_keyword">return</strong> apiClient;
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>     }
 <a class="jxr_linenumber" name="L385" href="#L385">385</a> 
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>             apiClient.setApiKeyPrefix(AuthenticationScheme.SSWS.name());
-<a class="jxr_linenumber" name="L387" href="#L387">387</a>             apiClient.setApiKey((String) <strong class="jxr_keyword">this</strong>.clientConfig.getClientCredentialsResolver().getClientCredentials().getCredentials());
-<a class="jxr_linenumber" name="L388" href="#L388">388</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L389" href="#L389">389</a>             <strong class="jxr_keyword">this</strong>.clientConfig.setAuthenticationScheme(AuthenticationScheme.OAUTH2_PRIVATE_KEY);
-<a class="jxr_linenumber" name="L390" href="#L390">390</a> 
-<a class="jxr_linenumber" name="L391" href="#L391">391</a>             validateOAuth2ClientConfig(<strong class="jxr_keyword">this</strong>.clientConfig);
-<a class="jxr_linenumber" name="L392" href="#L392">392</a> 
-<a class="jxr_linenumber" name="L393" href="#L393">393</a>             <strong class="jxr_keyword">if</strong> (Strings.hasText(<strong class="jxr_keyword">this</strong>.clientConfig.getOAuth2AccessToken())) {
-<a class="jxr_linenumber" name="L394" href="#L394">394</a>                 log.debug(<span class="jxr_string">"Will use client provided Access token for OAuth2 authentication (private key, if supplied would be ignored)"</span>);
-<a class="jxr_linenumber" name="L395" href="#L395">395</a>                 apiClient.setAccessToken(<strong class="jxr_keyword">this</strong>.clientConfig.getOAuth2AccessToken());
-<a class="jxr_linenumber" name="L396" href="#L396">396</a>             } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>                 log.debug(<span class="jxr_string">"Will retrieve Access Token automatically from Okta for OAuth2 authentication"</span>);
-<a class="jxr_linenumber" name="L398" href="#L398">398</a>                 accessTokenRetrieverService = <strong class="jxr_keyword">new</strong> <a name="AccessTokenRetrieverServiceImpl" href="../../../../../com/okta/sdk/impl/oauth2/AccessTokenRetrieverServiceImpl.html#AccessTokenRetrieverServiceImpl">AccessTokenRetrieverServiceImpl</a>(clientConfig, apiClient);
-<a class="jxr_linenumber" name="L399" href="#L399">399</a> 
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>                 <a name="OAuth2ClientCredentials" href="../../../../../com/okta/sdk/impl/oauth2/OAuth2ClientCredentials.html#OAuth2ClientCredentials">OAuth2ClientCredentials</a> oAuth2ClientCredentials =
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>                     <strong class="jxr_keyword">new</strong> <a name="OAuth2ClientCredentials" href="../../../../../com/okta/sdk/impl/oauth2/OAuth2ClientCredentials.html#OAuth2ClientCredentials">OAuth2ClientCredentials</a>(accessTokenRetrieverService);
-<a class="jxr_linenumber" name="L402" href="#L402">402</a> 
-<a class="jxr_linenumber" name="L403" href="#L403">403</a>                 <em class="jxr_comment">// replace the default OAuth authentication with an auto-refreshing one</em>
-<a class="jxr_linenumber" name="L404" href="#L404">404</a>                 apiClient.replaceAuthentication(<span class="jxr_string">"oauth2"</span>, oAuth2ClientCredentials);
-<a class="jxr_linenumber" name="L405" href="#L405">405</a>                 oAuth2ClientCredentials.refreshOAuth2AccessToken();
-<a class="jxr_linenumber" name="L406" href="#L406">406</a> 
-<a class="jxr_linenumber" name="L407" href="#L407">407</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setClientCredentialsResolver(<strong class="jxr_keyword">new</strong> <a name="DefaultClientCredentialsResolver" href="../../../../../com/okta/sdk/impl/api/DefaultClientCredentialsResolver.html#DefaultClientCredentialsResolver">DefaultClientCredentialsResolver</a>(oAuth2ClientCredentials));
-<a class="jxr_linenumber" name="L408" href="#L408">408</a>             }
-<a class="jxr_linenumber" name="L409" href="#L409">409</a>         }
-<a class="jxr_linenumber" name="L410" href="#L410">410</a> 
-<a class="jxr_linenumber" name="L411" href="#L411">411</a>         <strong class="jxr_keyword">return</strong> apiClient;
-<a class="jxr_linenumber" name="L412" href="#L412">412</a>     }
-<a class="jxr_linenumber" name="L413" href="#L413">413</a> 
-<a class="jxr_linenumber" name="L414" href="#L414">414</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L415" href="#L415">415</a> <em class="jxr_javadoccomment">     * @since 1.6.0</em>
-<a class="jxr_linenumber" name="L416" href="#L416">416</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L417" href="#L417">417</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> validateOAuth2ClientConfig(<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> clientConfiguration) {
-<a class="jxr_linenumber" name="L418" href="#L418">418</a>         Assert.notNull(clientConfiguration.getClientId(), <span class="jxr_string">"clientId cannot be null"</span>);
-<a class="jxr_linenumber" name="L419" href="#L419">419</a>         Assert.isTrue(clientConfiguration.getScopes() != <strong class="jxr_keyword">null</strong> &amp;&amp; !clientConfiguration.getScopes().isEmpty(),
-<a class="jxr_linenumber" name="L420" href="#L420">420</a>             <span class="jxr_string">"At least one scope is required"</span>);
-<a class="jxr_linenumber" name="L421" href="#L421">421</a>         String privateKey = clientConfiguration.getPrivateKey();
-<a class="jxr_linenumber" name="L422" href="#L422">422</a>         String oAuth2AccessToken = clientConfiguration.getOAuth2AccessToken();
-<a class="jxr_linenumber" name="L423" href="#L423">423</a>         Assert.isTrue(Objects.nonNull(privateKey) || Objects.nonNull(oAuth2AccessToken),
-<a class="jxr_linenumber" name="L424" href="#L424">424</a>             <span class="jxr_string">"Either Private Key (or) Access Token must be supplied for OAuth2 Authentication mode"</span>);
-<a class="jxr_linenumber" name="L425" href="#L425">425</a> 
-<a class="jxr_linenumber" name="L426" href="#L426">426</a>         <strong class="jxr_keyword">if</strong> (Strings.hasText(privateKey) &amp;&amp; !ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
-<a class="jxr_linenumber" name="L427" href="#L427">427</a>             <em class="jxr_comment">// privateKey is a file path, check if the file exists</em>
-<a class="jxr_linenumber" name="L428" href="#L428">428</a>             Path privateKeyPemFilePath;
-<a class="jxr_linenumber" name="L429" href="#L429">429</a>             <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L430" href="#L430">430</a>                 privateKeyPemFilePath = Paths.get(privateKey);
-<a class="jxr_linenumber" name="L431" href="#L431">431</a>             } <strong class="jxr_keyword">catch</strong> (InvalidPathException ipe) {
-<a class="jxr_linenumber" name="L432" href="#L432">432</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Invalid privateKey file path"</span>, ipe);
-<a class="jxr_linenumber" name="L433" href="#L433">433</a>             }
-<a class="jxr_linenumber" name="L434" href="#L434">434</a>             <strong class="jxr_keyword">boolean</strong> privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, LinkOption.NOFOLLOW_LINKS);
-<a class="jxr_linenumber" name="L435" href="#L435">435</a>             Assert.isTrue(privateKeyPemFileExists, <span class="jxr_string">"privateKey file does not exist"</span>);
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> <em class="jxr_javadoccomment">     * Override to customize the client, allowing one to add additional interceptors.</em>
+<a class="jxr_linenumber" name="L388" href="#L388">388</a> <em class="jxr_javadoccomment">     * @param clientConfig the current ClientConfiguration</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> <em class="jxr_javadoccomment">     * @return an {@link HttpClientBuilder} initialized with default configuration</em>
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>     <strong class="jxr_keyword">protected</strong> HttpClientBuilder createHttpClientBuilder(<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> clientConfig) {
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>         <strong class="jxr_keyword">return</strong> HttpClients.custom()
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>             .setDefaultRequestConfig(createHttpRequestConfigBuilder(clientConfig).build())
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>             .setConnectionManager(createHttpClientConnectionManagerBuilder(clientConfig).build())
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>             .setRetryStrategy(<strong class="jxr_keyword">new</strong> <a name="OktaHttpRequestRetryStrategy" href="../../../../../com/okta/sdk/impl/retry/OktaHttpRequestRetryStrategy.html#OktaHttpRequestRetryStrategy">OktaHttpRequestRetryStrategy</a>(clientConfig.getRetryMaxAttempts()))
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>             .setConnectionBackoffStrategy(<strong class="jxr_keyword">new</strong> DefaultBackoffStrategy())
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>             .setKeepAliveStrategy(<strong class="jxr_keyword">new</strong> DefaultConnectionKeepAliveStrategy())
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>             .setConnectionReuseStrategy(<strong class="jxr_keyword">new</strong> DefaultConnectionReuseStrategy())
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>             .disableCookieManagement();
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     }
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> 
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> <em class="jxr_javadoccomment">     * Override to customize the request config</em>
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> <em class="jxr_javadoccomment">     * @param clientConfig the current clientConfig</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> <em class="jxr_javadoccomment">     * @return a {@link RequestConfig.Builder} initialized with default configuration</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a>     <strong class="jxr_keyword">protected</strong> RequestConfig.Builder createHttpRequestConfigBuilder(<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> clientConfig) {
+<a class="jxr_linenumber" name="L408" href="#L408">408</a>         <strong class="jxr_keyword">return</strong> RequestConfig.custom()
+<a class="jxr_linenumber" name="L409" href="#L409">409</a>             .setResponseTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>             .setConnectionRequestTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()));
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>     }
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> 
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L414" href="#L414">414</a> <em class="jxr_javadoccomment">     * Override to customize the connection manager, allowing the increase of max connections</em>
+<a class="jxr_linenumber" name="L415" href="#L415">415</a> <em class="jxr_javadoccomment">     * @param clientConfig the current clientConfig</em>
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> <em class="jxr_javadoccomment">     * @return a {@link PoolingHttpClientConnectionManagerBuilder} initialized with default configuration</em>
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>     <strong class="jxr_keyword">protected</strong> PoolingHttpClientConnectionManagerBuilder createHttpClientConnectionManagerBuilder(<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> clientConfig) {
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>         <strong class="jxr_keyword">return</strong> PoolingHttpClientConnectionManagerBuilder.create()
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>             .setDefaultConnectionConfig(ConnectionConfig.custom()
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>                 .setConnectTimeout(Timeout.ofSeconds(clientConfig.getConnectionTimeout()))
+<a class="jxr_linenumber" name="L422" href="#L422">422</a>                 .build());
+<a class="jxr_linenumber" name="L423" href="#L423">423</a>     }
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> 
+<a class="jxr_linenumber" name="L425" href="#L425">425</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setProxy(HttpClientBuilder clientBuilder, <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> clientConfig) {
+<a class="jxr_linenumber" name="L426" href="#L426">426</a>         clientBuilder.useSystemProperties();
+<a class="jxr_linenumber" name="L427" href="#L427">427</a>         clientBuilder.setProxy(<strong class="jxr_keyword">new</strong> HttpHost(clientConfig.getProxyHost(), clientConfig.getProxyPort()));
+<a class="jxr_linenumber" name="L428" href="#L428">428</a>         <strong class="jxr_keyword">if</strong> (clientConfig.getProxyUsername() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L429" href="#L429">429</a>             <strong class="jxr_keyword">final</strong> BasicCredentialsProvider credentialsProvider = <strong class="jxr_keyword">new</strong> BasicCredentialsProvider();
+<a class="jxr_linenumber" name="L430" href="#L430">430</a>             AuthScope authScope = <strong class="jxr_keyword">new</strong> AuthScope(clientConfig.getProxyHost(), clientConfig.getProxyPort());
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>             UsernamePasswordCredentials usernamePasswordCredentials =
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>                 <strong class="jxr_keyword">new</strong> UsernamePasswordCredentials(clientConfig.getProxyUsername(), clientConfig.getProxyPassword().toCharArray());
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>             credentialsProvider.setCredentials(authScope, usernamePasswordCredentials);
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>             clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>             clientBuilder.setProxyAuthenticationStrategy(<strong class="jxr_keyword">new</strong> DefaultAuthenticationStrategy());
 <a class="jxr_linenumber" name="L436" href="#L436">436</a>         }
 <a class="jxr_linenumber" name="L437" href="#L437">437</a>     }
 <a class="jxr_linenumber" name="L438" href="#L438">438</a> 
-<a class="jxr_linenumber" name="L439" href="#L439">439</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> addCustomSerializerAndDeserializers(<a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient) {
-<a class="jxr_linenumber" name="L440" href="#L440">440</a>         ObjectMapper mapper = apiClient.getObjectMapper();
-<a class="jxr_linenumber" name="L441" href="#L441">441</a>         SimpleModule module = <strong class="jxr_keyword">new</strong> SimpleModule();
-<a class="jxr_linenumber" name="L442" href="#L442">442</a>         module.addSerializer(UserProfile.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="UserProfileSerializer" href="../../../../../com/okta/sdk/impl/serializer/UserProfileSerializer.html#UserProfileSerializer">UserProfileSerializer</a>());
-<a class="jxr_linenumber" name="L443" href="#L443">443</a>         module.addDeserializer(UserProfile.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="UserProfileDeserializer" href="../../../../../com/okta/sdk/impl/deserializer/UserProfileDeserializer.html#UserProfileDeserializer">UserProfileDeserializer</a>());
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>         module.addDeserializer(Application.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="ApplicationDeserializer" href="../../../../../com/okta/sdk/impl/deserializer/ApplicationDeserializer.html#ApplicationDeserializer">ApplicationDeserializer</a>());
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>         module.addDeserializer(Policy.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="PolicyDeserializer" href="../../../../../com/okta/sdk/impl/deserializer/PolicyDeserializer.html#PolicyDeserializer">PolicyDeserializer</a>());
-<a class="jxr_linenumber" name="L446" href="#L446">446</a>         module.addDeserializer(UserFactor.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="UserFactorDeserializer" href="../../../../../com/okta/sdk/impl/deserializer/UserFactorDeserializer.html#UserFactorDeserializer">UserFactorDeserializer</a>());
-<a class="jxr_linenumber" name="L447" href="#L447">447</a>         mapper.registerModule(module);
-<a class="jxr_linenumber" name="L448" href="#L448">448</a>     }
-<a class="jxr_linenumber" name="L449" href="#L449">449</a> 
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>     @Override
-<a class="jxr_linenumber" name="L451" href="#L451">451</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setOrgUrl(String baseUrl) {
-<a class="jxr_linenumber" name="L452" href="#L452">452</a>         ConfigurationValidator.assertOrgUrl(baseUrl, allowNonHttpsForTesting);
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setBaseUrl(baseUrl);
-<a class="jxr_linenumber" name="L454" href="#L454">454</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L455" href="#L455">455</a>     }
-<a class="jxr_linenumber" name="L456" href="#L456">456</a> 
-<a class="jxr_linenumber" name="L457" href="#L457">457</a>     @Override
-<a class="jxr_linenumber" name="L458" href="#L458">458</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setAuthorizationMode(<a name="AuthorizationMode" href="../../../../../com/okta/sdk/client/AuthorizationMode.html#AuthorizationMode">AuthorizationMode</a> authorizationMode) {
-<a class="jxr_linenumber" name="L459" href="#L459">459</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setAuthorizationMode(authorizationMode);
-<a class="jxr_linenumber" name="L460" href="#L460">460</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setAuthenticationScheme(authorizationMode.getAuthenticationScheme());
-<a class="jxr_linenumber" name="L461" href="#L461">461</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> <em class="jxr_javadoccomment">     * @since 1.6.0</em>
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> validateOAuth2ClientConfig(<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> clientConfiguration) {
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>         Assert.notNull(clientConfiguration.getClientId(), <span class="jxr_string">"clientId cannot be null"</span>);
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>         Assert.isTrue(clientConfiguration.getScopes() != <strong class="jxr_keyword">null</strong> &amp;&amp; !clientConfiguration.getScopes().isEmpty(),
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>             <span class="jxr_string">"At least one scope is required"</span>);
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>         String privateKey = clientConfiguration.getPrivateKey();
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>         String oAuth2AccessToken = clientConfiguration.getOAuth2AccessToken();
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>         Assert.isTrue(Objects.nonNull(privateKey) || Objects.nonNull(oAuth2AccessToken),
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>             <span class="jxr_string">"Either Private Key (or) Access Token must be supplied for OAuth2 Authentication mode"</span>);
+<a class="jxr_linenumber" name="L450" href="#L450">450</a> 
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>         <strong class="jxr_keyword">if</strong> (Strings.hasText(privateKey) &amp;&amp; !ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>             <em class="jxr_comment">// privateKey is a file path, check if the file exists</em>
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>             Path privateKeyPemFilePath;
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>                 privateKeyPemFilePath = Paths.get(privateKey);
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>             } <strong class="jxr_keyword">catch</strong> (InvalidPathException ipe) {
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Invalid privateKey file path"</span>, ipe);
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>             }
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>             <strong class="jxr_keyword">boolean</strong> privateKeyPemFileExists = Files.exists(privateKeyPemFilePath, LinkOption.NOFOLLOW_LINKS);
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>             Assert.isTrue(privateKeyPemFileExists, <span class="jxr_string">"privateKey file does not exist"</span>);
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>         }
 <a class="jxr_linenumber" name="L462" href="#L462">462</a>     }
 <a class="jxr_linenumber" name="L463" href="#L463">463</a> 
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>     @Override
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setScopes(Set&lt;String&gt; scopes) {
-<a class="jxr_linenumber" name="L466" href="#L466">466</a>         Assert.isTrue(scopes != <strong class="jxr_keyword">null</strong> &amp;&amp; !scopes.isEmpty(), <span class="jxr_string">"At least one scope is required"</span>);
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setScopes(scopes);
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L469" href="#L469">469</a>     }
-<a class="jxr_linenumber" name="L470" href="#L470">470</a> 
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>     @Override
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setPrivateKey(String privateKey) {
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>         Assert.notNull(privateKey, <span class="jxr_string">"Missing privateKey"</span>);
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setPrivateKey(privateKey);
-<a class="jxr_linenumber" name="L475" href="#L475">475</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>     }
-<a class="jxr_linenumber" name="L477" href="#L477">477</a> 
-<a class="jxr_linenumber" name="L478" href="#L478">478</a>     @Override
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setPrivateKey(Path privateKeyPath) {
-<a class="jxr_linenumber" name="L480" href="#L480">480</a>         Assert.notNull(privateKeyPath, <span class="jxr_string">"Missing privateKeyPath"</span>);
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setPrivateKey(getFileContent(privateKeyPath));
-<a class="jxr_linenumber" name="L482" href="#L482">482</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L483" href="#L483">483</a>     }
-<a class="jxr_linenumber" name="L484" href="#L484">484</a> 
-<a class="jxr_linenumber" name="L485" href="#L485">485</a>     @Override
-<a class="jxr_linenumber" name="L486" href="#L486">486</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setPrivateKey(InputStream privateKeyStream) {
-<a class="jxr_linenumber" name="L487" href="#L487">487</a>         Assert.notNull(privateKeyStream, <span class="jxr_string">"Missing privateKeyStream"</span>);
-<a class="jxr_linenumber" name="L488" href="#L488">488</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setPrivateKey(getFileContent(privateKeyStream));
-<a class="jxr_linenumber" name="L489" href="#L489">489</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L490" href="#L490">490</a>     }
-<a class="jxr_linenumber" name="L491" href="#L491">491</a> 
-<a class="jxr_linenumber" name="L492" href="#L492">492</a>     @Override
-<a class="jxr_linenumber" name="L493" href="#L493">493</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setPrivateKey(PrivateKey privateKey) {
-<a class="jxr_linenumber" name="L494" href="#L494">494</a>         Assert.notNull(privateKey, <span class="jxr_string">"Missing privateKey"</span>);
-<a class="jxr_linenumber" name="L495" href="#L495">495</a>         String algorithm = privateKey.getAlgorithm();
-<a class="jxr_linenumber" name="L496" href="#L496">496</a>         <strong class="jxr_keyword">if</strong> (algorithm.equals(<span class="jxr_string">"RSA"</span>)) {
-<a class="jxr_linenumber" name="L497" href="#L497">497</a>             PrivateKeyInfo privateKeyInfo = PrivateKeyInfo.getInstance(privateKey.getEncoded());
-<a class="jxr_linenumber" name="L498" href="#L498">498</a>             <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L499" href="#L499">499</a>                 ASN1Primitive primitive = privateKeyInfo.parsePrivateKey().toASN1Primitive();
-<a class="jxr_linenumber" name="L500" href="#L500">500</a>                 String encodedString = ConfigUtil.RSA_PRIVATE_KEY_HEADER + <span class="jxr_string">"\n"</span>
-<a class="jxr_linenumber" name="L501" href="#L501">501</a>                     + Base64.getEncoder().encodeToString(primitive.getEncoded()) + <span class="jxr_string">"\n"</span>
-<a class="jxr_linenumber" name="L502" href="#L502">502</a>                     + ConfigUtil.RSA_PRIVATE_KEY_FOOTER;
-<a class="jxr_linenumber" name="L503" href="#L503">503</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setPrivateKey(encodedString);
-<a class="jxr_linenumber" name="L504" href="#L504">504</a>             } <strong class="jxr_keyword">catch</strong> (IOException e) {
-<a class="jxr_linenumber" name="L505" href="#L505">505</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Could not parse private key"</span>);
-<a class="jxr_linenumber" name="L506" href="#L506">506</a>             }
-<a class="jxr_linenumber" name="L507" href="#L507">507</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong>(algorithm.equals(<span class="jxr_string">"EC"</span>)) {
-<a class="jxr_linenumber" name="L508" href="#L508">508</a>             String encodedString = ConfigUtil.EC_PRIVATE_KEY_HEADER + <span class="jxr_string">"\n"</span>
-<a class="jxr_linenumber" name="L509" href="#L509">509</a>                 + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + <span class="jxr_string">"\n"</span>
-<a class="jxr_linenumber" name="L510" href="#L510">510</a>                 + ConfigUtil.EC_PRIVATE_KEY_FOOTER;
-<a class="jxr_linenumber" name="L511" href="#L511">511</a>             <strong class="jxr_keyword">this</strong>.clientConfig.setPrivateKey(encodedString);
-<a class="jxr_linenumber" name="L512" href="#L512">512</a>         } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L513" href="#L513">513</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Supplied privateKey is not an RSA or EC key - "</span> + algorithm);
-<a class="jxr_linenumber" name="L514" href="#L514">514</a>         }
-<a class="jxr_linenumber" name="L515" href="#L515">515</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L516" href="#L516">516</a>     }
-<a class="jxr_linenumber" name="L517" href="#L517">517</a> 
-<a class="jxr_linenumber" name="L518" href="#L518">518</a>     <strong class="jxr_keyword">private</strong> String getFileContent(File file) {
-<a class="jxr_linenumber" name="L519" href="#L519">519</a>         <strong class="jxr_keyword">try</strong> (InputStream inputStream = Files.newInputStream(file.toPath())) {
-<a class="jxr_linenumber" name="L520" href="#L520">520</a>             <strong class="jxr_keyword">return</strong> readFromInputStream(inputStream);
-<a class="jxr_linenumber" name="L521" href="#L521">521</a>         } <strong class="jxr_keyword">catch</strong> (IOException e) {
-<a class="jxr_linenumber" name="L522" href="#L522">522</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Could not read from supplied private key file"</span>);
-<a class="jxr_linenumber" name="L523" href="#L523">523</a>         }
-<a class="jxr_linenumber" name="L524" href="#L524">524</a>     }
-<a class="jxr_linenumber" name="L525" href="#L525">525</a> 
-<a class="jxr_linenumber" name="L526" href="#L526">526</a>     <strong class="jxr_keyword">private</strong> String getFileContent(Path path) {
-<a class="jxr_linenumber" name="L527" href="#L527">527</a>         Assert.notNull(path, <span class="jxr_string">"The path to the privateKey cannot be null."</span>);
-<a class="jxr_linenumber" name="L528" href="#L528">528</a>         <strong class="jxr_keyword">return</strong> getFileContent(path.toFile());
-<a class="jxr_linenumber" name="L529" href="#L529">529</a>     }
-<a class="jxr_linenumber" name="L530" href="#L530">530</a> 
-<a class="jxr_linenumber" name="L531" href="#L531">531</a>     <strong class="jxr_keyword">private</strong> String getFileContent(InputStream privateKeyStream) {
-<a class="jxr_linenumber" name="L532" href="#L532">532</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L533" href="#L533">533</a>             <strong class="jxr_keyword">return</strong> readFromInputStream(privateKeyStream);
-<a class="jxr_linenumber" name="L534" href="#L534">534</a>         } <strong class="jxr_keyword">catch</strong> (IOException e) {
-<a class="jxr_linenumber" name="L535" href="#L535">535</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Could not read from supplied privateKey input stream"</span>);
-<a class="jxr_linenumber" name="L536" href="#L536">536</a>         }
-<a class="jxr_linenumber" name="L537" href="#L537">537</a>     }
-<a class="jxr_linenumber" name="L538" href="#L538">538</a> 
-<a class="jxr_linenumber" name="L539" href="#L539">539</a>     <strong class="jxr_keyword">private</strong> String readFromInputStream(InputStream inputStream) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L540" href="#L540">540</a>         Assert.notNull(inputStream, <span class="jxr_string">"InputStream cannot be null."</span>);
-<a class="jxr_linenumber" name="L541" href="#L541">541</a>         StringBuilder resultStringBuilder = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L542" href="#L542">542</a>         <strong class="jxr_keyword">try</strong> (BufferedReader br = <strong class="jxr_keyword">new</strong> BufferedReader(<strong class="jxr_keyword">new</strong> InputStreamReader(
-<a class="jxr_linenumber" name="L543" href="#L543">543</a>             inputStream, StandardCharsets.UTF_8))) {
-<a class="jxr_linenumber" name="L544" href="#L544">544</a>             String line;
-<a class="jxr_linenumber" name="L545" href="#L545">545</a>             <strong class="jxr_keyword">while</strong> ((line = br.readLine()) != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L546" href="#L546">546</a>                 resultStringBuilder.append(line).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L547" href="#L547">547</a>             }
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> addCustomSerializerAndDeserializers(<a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient) {
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>         ObjectMapper mapper = apiClient.getObjectMapper();
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>         SimpleModule module = <strong class="jxr_keyword">new</strong> SimpleModule();
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         module.addSerializer(UserProfile.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="UserProfileSerializer" href="../../../../../com/okta/sdk/impl/serializer/UserProfileSerializer.html#UserProfileSerializer">UserProfileSerializer</a>());
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>         module.addDeserializer(UserProfile.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="UserProfileDeserializer" href="../../../../../com/okta/sdk/impl/deserializer/UserProfileDeserializer.html#UserProfileDeserializer">UserProfileDeserializer</a>());
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>         module.addDeserializer(Application.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="ApplicationDeserializer" href="../../../../../com/okta/sdk/impl/deserializer/ApplicationDeserializer.html#ApplicationDeserializer">ApplicationDeserializer</a>());
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>         module.addDeserializer(Policy.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="PolicyDeserializer" href="../../../../../com/okta/sdk/impl/deserializer/PolicyDeserializer.html#PolicyDeserializer">PolicyDeserializer</a>());
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>         module.addDeserializer(UserFactor.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="UserFactorDeserializer" href="../../../../../com/okta/sdk/impl/deserializer/UserFactorDeserializer.html#UserFactorDeserializer">UserFactorDeserializer</a>());
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>         mapper.registerModule(module);
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>     }
+<a class="jxr_linenumber" name="L474" href="#L474">474</a> 
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>     @Override
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setOrgUrl(String baseUrl) {
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>         ConfigurationValidator.assertOrgUrl(baseUrl, allowNonHttpsForTesting);
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setBaseUrl(baseUrl);
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>     }
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> 
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>     @Override
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setAuthorizationMode(<a name="AuthorizationMode" href="../../../../../com/okta/sdk/client/AuthorizationMode.html#AuthorizationMode">AuthorizationMode</a> authorizationMode) {
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setAuthorizationMode(authorizationMode);
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setAuthenticationScheme(authorizationMode.getAuthenticationScheme());
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>     }
+<a class="jxr_linenumber" name="L488" href="#L488">488</a> 
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>     @Override
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setScopes(Set&lt;String&gt; scopes) {
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>         Assert.isTrue(scopes != <strong class="jxr_keyword">null</strong> &amp;&amp; !scopes.isEmpty(), <span class="jxr_string">"At least one scope is required"</span>);
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setScopes(scopes);
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>     }
+<a class="jxr_linenumber" name="L495" href="#L495">495</a> 
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>     @Override
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setPrivateKey(String privateKey) {
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>         Assert.notNull(privateKey, <span class="jxr_string">"Missing privateKey"</span>);
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setPrivateKey(privateKey);
+<a class="jxr_linenumber" name="L500" href="#L500">500</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L501" href="#L501">501</a>     }
+<a class="jxr_linenumber" name="L502" href="#L502">502</a> 
+<a class="jxr_linenumber" name="L503" href="#L503">503</a>     @Override
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setPrivateKey(Path privateKeyPath) {
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>         Assert.notNull(privateKeyPath, <span class="jxr_string">"Missing privateKeyPath"</span>);
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setPrivateKey(getFileContent(privateKeyPath));
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>     }
+<a class="jxr_linenumber" name="L509" href="#L509">509</a> 
+<a class="jxr_linenumber" name="L510" href="#L510">510</a>     @Override
+<a class="jxr_linenumber" name="L511" href="#L511">511</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setPrivateKey(InputStream privateKeyStream) {
+<a class="jxr_linenumber" name="L512" href="#L512">512</a>         Assert.notNull(privateKeyStream, <span class="jxr_string">"Missing privateKeyStream"</span>);
+<a class="jxr_linenumber" name="L513" href="#L513">513</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setPrivateKey(getFileContent(privateKeyStream));
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L515" href="#L515">515</a>     }
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> 
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>     @Override
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setPrivateKey(PrivateKey privateKey) {
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>         Assert.notNull(privateKey, <span class="jxr_string">"Missing privateKey"</span>);
+<a class="jxr_linenumber" name="L520" href="#L520">520</a>         String algorithm = privateKey.getAlgorithm();
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>         <strong class="jxr_keyword">if</strong> (algorithm.equals(<span class="jxr_string">"RSA"</span>)) {
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>             PrivateKeyInfo privateKeyInfo = PrivateKeyInfo.getInstance(privateKey.getEncoded());
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>                 ASN1Primitive primitive = privateKeyInfo.parsePrivateKey().toASN1Primitive();
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>                 String encodedString = ConfigUtil.RSA_PRIVATE_KEY_HEADER + <span class="jxr_string">"\n"</span>
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>                     + Base64.getEncoder().encodeToString(primitive.getEncoded()) + <span class="jxr_string">"\n"</span>
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>                     + ConfigUtil.RSA_PRIVATE_KEY_FOOTER;
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>                 <strong class="jxr_keyword">this</strong>.clientConfig.setPrivateKey(encodedString);
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>             } <strong class="jxr_keyword">catch</strong> (IOException e) {
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Could not parse private key"</span>);
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>             }
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong>(algorithm.equals(<span class="jxr_string">"EC"</span>)) {
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>             String encodedString = ConfigUtil.EC_PRIVATE_KEY_HEADER + <span class="jxr_string">"\n"</span>
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>                 + Base64.getEncoder().encodeToString(privateKey.getEncoded()) + <span class="jxr_string">"\n"</span>
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>                 + ConfigUtil.EC_PRIVATE_KEY_FOOTER;
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>             <strong class="jxr_keyword">this</strong>.clientConfig.setPrivateKey(encodedString);
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Supplied privateKey is not an RSA or EC key - "</span> + algorithm);
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>         }
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>     }
+<a class="jxr_linenumber" name="L542" href="#L542">542</a> 
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>     <strong class="jxr_keyword">private</strong> String getFileContent(File file) {
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>         <strong class="jxr_keyword">try</strong> (InputStream inputStream = Files.newInputStream(file.toPath())) {
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>             <strong class="jxr_keyword">return</strong> readFromInputStream(inputStream);
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>         } <strong class="jxr_keyword">catch</strong> (IOException e) {
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Could not read from supplied private key file"</span>);
 <a class="jxr_linenumber" name="L548" href="#L548">548</a>         }
-<a class="jxr_linenumber" name="L549" href="#L549">549</a>         <strong class="jxr_keyword">return</strong> resultStringBuilder.toString();
-<a class="jxr_linenumber" name="L550" href="#L550">550</a>     }
-<a class="jxr_linenumber" name="L551" href="#L551">551</a> 
-<a class="jxr_linenumber" name="L552" href="#L552">552</a>     @Override
-<a class="jxr_linenumber" name="L553" href="#L553">553</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setClientId(String clientId) {
-<a class="jxr_linenumber" name="L554" href="#L554">554</a>         ConfigurationValidator.assertClientId(clientId);
-<a class="jxr_linenumber" name="L555" href="#L555">555</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setClientId(clientId);
-<a class="jxr_linenumber" name="L556" href="#L556">556</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L557" href="#L557">557</a>     }
-<a class="jxr_linenumber" name="L558" href="#L558">558</a> 
-<a class="jxr_linenumber" name="L559" href="#L559">559</a>     @Override
-<a class="jxr_linenumber" name="L560" href="#L560">560</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setOAuth2AccessToken(String oAuth2AccessToken) {
-<a class="jxr_linenumber" name="L561" href="#L561">561</a>         Assert.notNull(oAuth2AccessToken, <span class="jxr_string">"oAuth2AccessToken cannot be null."</span>);
-<a class="jxr_linenumber" name="L562" href="#L562">562</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setOAuth2AccessToken(oAuth2AccessToken);
-<a class="jxr_linenumber" name="L563" href="#L563">563</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L564" href="#L564">564</a>     }
-<a class="jxr_linenumber" name="L565" href="#L565">565</a> 
-<a class="jxr_linenumber" name="L566" href="#L566">566</a>     @Override
-<a class="jxr_linenumber" name="L567" href="#L567">567</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setKid(String kid) {
-<a class="jxr_linenumber" name="L568" href="#L568">568</a>         Assert.notNull(kid, <span class="jxr_string">"kid cannot be null."</span>);
-<a class="jxr_linenumber" name="L569" href="#L569">569</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setKid(kid);
-<a class="jxr_linenumber" name="L570" href="#L570">570</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L571" href="#L571">571</a>     }
-<a class="jxr_linenumber" name="L572" href="#L572">572</a> 
-<a class="jxr_linenumber" name="L573" href="#L573">573</a>     <strong class="jxr_keyword">boolean</strong> isOAuth2Flow() {
-<a class="jxr_linenumber" name="L574" href="#L574">574</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>     }
+<a class="jxr_linenumber" name="L550" href="#L550">550</a> 
+<a class="jxr_linenumber" name="L551" href="#L551">551</a>     <strong class="jxr_keyword">private</strong> String getFileContent(Path path) {
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>         Assert.notNull(path, <span class="jxr_string">"The path to the privateKey cannot be null."</span>);
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>         <strong class="jxr_keyword">return</strong> getFileContent(path.toFile());
+<a class="jxr_linenumber" name="L554" href="#L554">554</a>     }
+<a class="jxr_linenumber" name="L555" href="#L555">555</a> 
+<a class="jxr_linenumber" name="L556" href="#L556">556</a>     <strong class="jxr_keyword">private</strong> String getFileContent(InputStream privateKeyStream) {
+<a class="jxr_linenumber" name="L557" href="#L557">557</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>             <strong class="jxr_keyword">return</strong> readFromInputStream(privateKeyStream);
+<a class="jxr_linenumber" name="L559" href="#L559">559</a>         } <strong class="jxr_keyword">catch</strong> (IOException e) {
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Could not read from supplied privateKey input stream"</span>);
+<a class="jxr_linenumber" name="L561" href="#L561">561</a>         }
+<a class="jxr_linenumber" name="L562" href="#L562">562</a>     }
+<a class="jxr_linenumber" name="L563" href="#L563">563</a> 
+<a class="jxr_linenumber" name="L564" href="#L564">564</a>     <strong class="jxr_keyword">private</strong> String readFromInputStream(InputStream inputStream) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L565" href="#L565">565</a>         Assert.notNull(inputStream, <span class="jxr_string">"InputStream cannot be null."</span>);
+<a class="jxr_linenumber" name="L566" href="#L566">566</a>         StringBuilder resultStringBuilder = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L567" href="#L567">567</a>         <strong class="jxr_keyword">try</strong> (BufferedReader br = <strong class="jxr_keyword">new</strong> BufferedReader(<strong class="jxr_keyword">new</strong> InputStreamReader(
+<a class="jxr_linenumber" name="L568" href="#L568">568</a>             inputStream, StandardCharsets.UTF_8))) {
+<a class="jxr_linenumber" name="L569" href="#L569">569</a>             String line;
+<a class="jxr_linenumber" name="L570" href="#L570">570</a>             <strong class="jxr_keyword">while</strong> ((line = br.readLine()) != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L571" href="#L571">571</a>                 resultStringBuilder.append(line).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L572" href="#L572">572</a>             }
+<a class="jxr_linenumber" name="L573" href="#L573">573</a>         }
+<a class="jxr_linenumber" name="L574" href="#L574">574</a>         <strong class="jxr_keyword">return</strong> resultStringBuilder.toString();
 <a class="jxr_linenumber" name="L575" href="#L575">575</a>     }
 <a class="jxr_linenumber" name="L576" href="#L576">576</a> 
-<a class="jxr_linenumber" name="L577" href="#L577">577</a>     <strong class="jxr_keyword">public</strong> <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> getClientConfiguration() {
-<a class="jxr_linenumber" name="L578" href="#L578">578</a>         <strong class="jxr_keyword">return</strong> clientConfig;
-<a class="jxr_linenumber" name="L579" href="#L579">579</a>     }
-<a class="jxr_linenumber" name="L580" href="#L580">580</a> 
-<a class="jxr_linenumber" name="L581" href="#L581">581</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> String[] configSources() {
-<a class="jxr_linenumber" name="L582" href="#L582">582</a> 
-<a class="jxr_linenumber" name="L583" href="#L583">583</a>         <em class="jxr_comment">// lazy load the config sources as the user.home system prop could change for testing</em>
-<a class="jxr_linenumber" name="L584" href="#L584">584</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> String[] {
-<a class="jxr_linenumber" name="L585" href="#L585">585</a>             ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_PROPERTIES,
-<a class="jxr_linenumber" name="L586" href="#L586">586</a>             ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_YAML,
-<a class="jxr_linenumber" name="L587" href="#L587">587</a>             ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
-<a class="jxr_linenumber" name="L588" href="#L588">588</a>             ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
-<a class="jxr_linenumber" name="L589" href="#L589">589</a>             System.getProperty(<span class="jxr_string">"user.home"</span>) + File.separatorChar + <span class="jxr_string">".okta"</span> + File.separatorChar + OKTA_YAML,
-<a class="jxr_linenumber" name="L590" href="#L590">590</a>             ENVVARS_TOKEN,
-<a class="jxr_linenumber" name="L591" href="#L591">591</a>             SYSPROPS_TOKEN
-<a class="jxr_linenumber" name="L592" href="#L592">592</a>         };
-<a class="jxr_linenumber" name="L593" href="#L593">593</a>     }
-<a class="jxr_linenumber" name="L594" href="#L594">594</a> 
-<a class="jxr_linenumber" name="L595" href="#L595">595</a> }
+<a class="jxr_linenumber" name="L577" href="#L577">577</a>     @Override
+<a class="jxr_linenumber" name="L578" href="#L578">578</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setClientId(String clientId) {
+<a class="jxr_linenumber" name="L579" href="#L579">579</a>         ConfigurationValidator.assertClientId(clientId);
+<a class="jxr_linenumber" name="L580" href="#L580">580</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setClientId(clientId);
+<a class="jxr_linenumber" name="L581" href="#L581">581</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L582" href="#L582">582</a>     }
+<a class="jxr_linenumber" name="L583" href="#L583">583</a> 
+<a class="jxr_linenumber" name="L584" href="#L584">584</a>     @Override
+<a class="jxr_linenumber" name="L585" href="#L585">585</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setOAuth2AccessToken(String oAuth2AccessToken) {
+<a class="jxr_linenumber" name="L586" href="#L586">586</a>         Assert.notNull(oAuth2AccessToken, <span class="jxr_string">"oAuth2AccessToken cannot be null."</span>);
+<a class="jxr_linenumber" name="L587" href="#L587">587</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setOAuth2AccessToken(oAuth2AccessToken);
+<a class="jxr_linenumber" name="L588" href="#L588">588</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L589" href="#L589">589</a>     }
+<a class="jxr_linenumber" name="L590" href="#L590">590</a> 
+<a class="jxr_linenumber" name="L591" href="#L591">591</a>     @Override
+<a class="jxr_linenumber" name="L592" href="#L592">592</a>     <strong class="jxr_keyword">public</strong> <a name="ClientBuilder" href="../../../../../com/okta/sdk/client/ClientBuilder.html#ClientBuilder">ClientBuilder</a> setKid(String kid) {
+<a class="jxr_linenumber" name="L593" href="#L593">593</a>         Assert.notNull(kid, <span class="jxr_string">"kid cannot be null."</span>);
+<a class="jxr_linenumber" name="L594" href="#L594">594</a>         <strong class="jxr_keyword">this</strong>.clientConfig.setKid(kid);
+<a class="jxr_linenumber" name="L595" href="#L595">595</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L596" href="#L596">596</a>     }
+<a class="jxr_linenumber" name="L597" href="#L597">597</a> 
+<a class="jxr_linenumber" name="L598" href="#L598">598</a>     <strong class="jxr_keyword">boolean</strong> isOAuth2Flow() {
+<a class="jxr_linenumber" name="L599" href="#L599">599</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
+<a class="jxr_linenumber" name="L600" href="#L600">600</a>     }
+<a class="jxr_linenumber" name="L601" href="#L601">601</a> 
+<a class="jxr_linenumber" name="L602" href="#L602">602</a>     <strong class="jxr_keyword">public</strong> <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> getClientConfiguration() {
+<a class="jxr_linenumber" name="L603" href="#L603">603</a>         <strong class="jxr_keyword">return</strong> clientConfig;
+<a class="jxr_linenumber" name="L604" href="#L604">604</a>     }
+<a class="jxr_linenumber" name="L605" href="#L605">605</a> 
+<a class="jxr_linenumber" name="L606" href="#L606">606</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> String[] configSources() {
+<a class="jxr_linenumber" name="L607" href="#L607">607</a> 
+<a class="jxr_linenumber" name="L608" href="#L608">608</a>         <em class="jxr_comment">// lazy load the config sources as the user.home system prop could change for testing</em>
+<a class="jxr_linenumber" name="L609" href="#L609">609</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> String[] {
+<a class="jxr_linenumber" name="L610" href="#L610">610</a>             ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_PROPERTIES,
+<a class="jxr_linenumber" name="L611" href="#L611">611</a>             ClasspathResource.SCHEME_PREFIX + OKTA_CONFIG_CP + OKTA_YAML,
+<a class="jxr_linenumber" name="L612" href="#L612">612</a>             ClasspathResource.SCHEME_PREFIX + OKTA_PROPERTIES,
+<a class="jxr_linenumber" name="L613" href="#L613">613</a>             ClasspathResource.SCHEME_PREFIX + OKTA_YAML,
+<a class="jxr_linenumber" name="L614" href="#L614">614</a>             System.getProperty(<span class="jxr_string">"user.home"</span>) + File.separatorChar + <span class="jxr_string">".okta"</span> + File.separatorChar + OKTA_YAML,
+<a class="jxr_linenumber" name="L615" href="#L615">615</a>             ENVVARS_TOKEN,
+<a class="jxr_linenumber" name="L616" href="#L616">616</a>             SYSPROPS_TOKEN
+<a class="jxr_linenumber" name="L617" href="#L617">617</a>         };
+<a class="jxr_linenumber" name="L618" href="#L618">618</a>     }
+<a class="jxr_linenumber" name="L619" href="#L619">619</a> 
+<a class="jxr_linenumber" name="L620" href="#L620">620</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
