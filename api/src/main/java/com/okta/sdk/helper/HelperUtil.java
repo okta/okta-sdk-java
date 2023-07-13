@@ -16,7 +16,7 @@
 package com.okta.sdk.helper;
 
 import com.okta.commons.lang.Assert;
-import org.openapitools.client.model.*;
+import com.okta.sdk.resource.model.*;
 
 public class HelperUtil {
 

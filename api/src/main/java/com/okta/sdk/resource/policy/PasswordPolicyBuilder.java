@@ -16,8 +16,8 @@
 package com.okta.sdk.resource.policy;
 
 import com.okta.commons.lang.Classes;
-import org.openapitools.client.model.PasswordPolicyAuthenticationProviderType;
-import org.openapitools.client.model.PasswordPolicyRecoveryFactorSettings;
+import com.okta.sdk.resource.model.PasswordPolicyAuthenticationProviderType;
+import com.okta.sdk.resource.model.PasswordPolicyRecoveryFactorSettings;
 
 import java.util.Arrays;
 import java.util.List;

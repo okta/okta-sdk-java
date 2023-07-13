@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.okta.commons.lang.Strings;
-import org.openapitools.client.model.UserProfile;
+import com.okta.sdk.resource.model.UserProfile;
 
 import java.io.IOException;
 import java.util.Map;

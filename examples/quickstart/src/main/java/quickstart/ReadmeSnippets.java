@@ -16,7 +16,6 @@
 package quickstart;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import com.okta.commons.http.MediaType;
 import com.okta.sdk.authc.credentials.TokenClientCredentials;
 import com.okta.sdk.cache.Caches;
@@ -29,11 +28,11 @@ import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
 
-import org.openapitools.client.ApiClient;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.Pair;
-import org.openapitools.client.api.*;
-import org.openapitools.client.model.*;
+import com.okta.sdk.resource.handler.ApiClient;
+import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.handler.Pair;
+import com.okta.sdk.resource.api.*;
+import com.okta.sdk.resource.model.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

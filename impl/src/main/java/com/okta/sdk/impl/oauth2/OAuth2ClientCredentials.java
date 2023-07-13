@@ -17,8 +17,8 @@ package com.okta.sdk.impl.oauth2;
 
 import com.okta.commons.lang.Assert;
 import com.okta.sdk.authc.credentials.ClientCredentials;
-import org.openapitools.client.Pair;
-import org.openapitools.client.auth.OAuth;
+import com.okta.sdk.resource.handler.Pair;
+import com.okta.sdk.resource.handler.auth.OAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

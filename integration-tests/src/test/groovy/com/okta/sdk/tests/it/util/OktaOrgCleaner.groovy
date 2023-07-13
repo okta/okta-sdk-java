@@ -16,19 +16,19 @@
 package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Clients
-import org.openapitools.client.ApiClient
-import org.openapitools.client.api.ApplicationApi
-import org.openapitools.client.api.AuthorizationServerApi
-import org.openapitools.client.api.EventHookApi
-import org.openapitools.client.api.GroupApi
-import org.openapitools.client.api.IdentityProviderApi
-import org.openapitools.client.api.InlineHookApi
-import org.openapitools.client.api.LinkedObjectApi
-import org.openapitools.client.api.PolicyApi
-import org.openapitools.client.api.TemplateApi
-import org.openapitools.client.api.UserApi
-import org.openapitools.client.api.UserTypeApi
-import org.openapitools.client.model.GroupRule
+import com.okta.sdk.resource.handler.ApiClient
+import com.okta.sdk.resource.api.ApplicationApi
+import com.okta.sdk.resource.api.AuthorizationServerApi
+import com.okta.sdk.resource.api.EventHookApi
+import com.okta.sdk.resource.api.GroupApi
+import com.okta.sdk.resource.api.IdentityProviderApi
+import com.okta.sdk.resource.api.InlineHookApi
+import com.okta.sdk.resource.api.LinkedObjectApi
+import com.okta.sdk.resource.api.PolicyApi
+import com.okta.sdk.resource.api.TemplateApi
+import com.okta.sdk.resource.api.UserApi
+import com.okta.sdk.resource.api.UserTypeApi
+import com.okta.sdk.resource.model.GroupRule
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

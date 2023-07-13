@@ -16,12 +16,12 @@
 package com.okta.sdk.resource.application;
 
 import com.okta.commons.lang.Classes;
-import org.openapitools.client.model.JsonWebKey;
-import org.openapitools.client.model.OAuthEndpointAuthenticationMethod;
-import org.openapitools.client.model.OAuthGrantType;
-import org.openapitools.client.model.OAuthResponseType;
-import org.openapitools.client.model.OpenIdConnectApplicationConsentMethod;
-import org.openapitools.client.model.OpenIdConnectApplicationType;
+import com.okta.sdk.resource.model.JsonWebKey;
+import com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod;
+import com.okta.sdk.resource.model.OAuthGrantType;
+import com.okta.sdk.resource.model.OAuthResponseType;
+import com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod;
+import com.okta.sdk.resource.model.OpenIdConnectApplicationType;
 
 import java.util.List;
 

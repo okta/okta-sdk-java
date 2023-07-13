@@ -68,12 +68,12 @@ import org.apache.hc.core5.util.Timeout;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 
-import org.openapitools.client.ApiClient;
+import com.okta.sdk.resource.handler.ApiClient;
 
-import org.openapitools.client.model.Application;
-import org.openapitools.client.model.Policy;
-import org.openapitools.client.model.UserFactor;
-import org.openapitools.client.model.UserProfile;
+import com.okta.sdk.resource.model.Application;
+import com.okta.sdk.resource.model.Policy;
+import com.okta.sdk.resource.model.UserFactor;
+import com.okta.sdk.resource.model.UserProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,7 +114,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
-    private ClientConfiguration clientConfig = new ClientConfiguration();
+    private final ClientConfiguration clientConfig = new ClientConfiguration();
     private AccessTokenRetrieverService accessTokenRetrieverService;
 
     public DefaultClientBuilder() {

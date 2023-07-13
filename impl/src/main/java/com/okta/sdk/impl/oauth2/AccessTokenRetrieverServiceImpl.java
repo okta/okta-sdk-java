@@ -31,9 +31,9 @@ import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.openapitools.client.ApiClient;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.model.HttpMethod;
+import com.okta.sdk.resource.handler.ApiClient;
+import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.model.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

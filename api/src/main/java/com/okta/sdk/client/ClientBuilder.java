@@ -19,7 +19,7 @@ package com.okta.sdk.client;
 import com.okta.commons.http.config.Proxy;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
-import org.openapitools.client.ApiClient;
+import com.okta.sdk.resource.handler.ApiClient;
 
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -89,7 +89,6 @@ public interface ClientBuilder {
     /**
      * Allows specifying an {@code ApiKey} instance directly instead of relying on the
      * default location + override/fallback behavior defined in the {@link ClientBuilder documentation above}.
-     *
      * Currently, you should use a com.okta.sdk.impl.api.TokenClientCredentials (if you are NOT using an okta.yaml file)
      *
      * @param clientCredentials the token to use to authenticate requests to the Okta API server.
@@ -113,7 +112,6 @@ public interface ClientBuilder {
     /**
      * Sets the {@link CacheManager} that should be used to cache Okta REST resources, reducing round-trips to the
      * Okta API server and enhancing application performance.
-     *
      * <b>Single JVM Applications</b>
      *
      * <p>If your application runs on a single JVM-based applications, the
@@ -314,9 +312,9 @@ public interface ClientBuilder {
     ClientBuilder setRetryMaxAttempts(int maxAttempts);
 
     /**
-     * Constructs a new {@link org.openapitools.client.ApiClient} instance based on the ClientBuilder's current configuration state.
+     * Constructs a new {@link ApiClient} instance based on the ClientBuilder's current configuration state.
      *
-     * @return a new {@link org.openapitools.client.ApiClient} instance based on the ClientBuilder's current configuration state.
+     * @return a new {@link ApiClient} instance based on the ClientBuilder's current configuration state.
      */
     ApiClient build();
 }

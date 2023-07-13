@@ -17,13 +17,13 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.application.ApplicationBuilder;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.api.ApplicationApi;
-import org.openapitools.client.model.Application;
-import org.openapitools.client.model.ApplicationAccessibility;
-import org.openapitools.client.model.ApplicationSignOnMode;
-import org.openapitools.client.model.ApplicationVisibility;
-import org.openapitools.client.model.ApplicationVisibilityHide;
+import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.api.ApplicationApi;
+import com.okta.sdk.resource.model.Application;
+import com.okta.sdk.resource.model.ApplicationAccessibility;
+import com.okta.sdk.resource.model.ApplicationSignOnMode;
+import com.okta.sdk.resource.model.ApplicationVisibility;
+import com.okta.sdk.resource.model.ApplicationVisibilityHide;
 
 import java.util.Objects;
 

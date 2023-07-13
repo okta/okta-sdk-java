@@ -16,12 +16,12 @@
 package com.okta.sdk.resource.user;
 
 import com.okta.commons.lang.Classes;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.api.UserApi;
-import org.openapitools.client.model.AuthenticationProvider;
-import org.openapitools.client.model.User;
-import org.openapitools.client.model.UserNextLogin;
-import org.openapitools.client.model.UserType;
+import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.api.UserApi;
+import com.okta.sdk.resource.model.AuthenticationProvider;
+import com.okta.sdk.resource.model.User;
+import com.okta.sdk.resource.model.UserNextLogin;
+import com.okta.sdk.resource.model.UserType;
 
 import java.util.Arrays;
 import java.util.List;

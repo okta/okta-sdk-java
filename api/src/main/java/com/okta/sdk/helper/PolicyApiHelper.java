@@ -17,13 +17,13 @@ package com.okta.sdk.helper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.hc.core5.http.HttpStatus;
-import org.openapitools.client.ApiClient;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.Pair;
-import org.openapitools.client.api.PolicyApi;
-import org.openapitools.client.model.HttpMethod;
-import org.openapitools.client.model.Policy;
-import org.openapitools.client.model.PolicyRule;
+import com.okta.sdk.resource.handler.ApiClient;
+import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.handler.Pair;
+import com.okta.sdk.resource.api.PolicyApi;
+import com.okta.sdk.resource.model.HttpMethod;
+import com.okta.sdk.resource.model.Policy;
+import com.okta.sdk.resource.model.PolicyRule;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
