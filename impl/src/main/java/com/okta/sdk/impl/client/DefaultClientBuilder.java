@@ -384,7 +384,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     /**
-     * Override to customize the client, for example by adding additional interceptors.
+     * Override to customize the client, allowing one to add additional interceptors.
      * @param clientConfig the current ClientConfiguration
      * @return an {@link HttpClientBuilder} initialized with default configuration
      */
