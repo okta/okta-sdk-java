@@ -411,7 +411,7 @@ public class DefaultClientBuilder implements ClientBuilder {
     }
 
     /**
-     * Override to customize the connection manager, for example with increased max connections
+     * Override to customize the connection manager, allowing the increase of max connections
      * @param clientConfig the current clientConfig
      * @return a {@link PoolingHttpClientConnectionManagerBuilder} initialized with default configuration
      */
