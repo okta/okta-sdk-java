@@ -18,12 +18,17 @@ package com.okta.sdk.helper;
 import com.okta.commons.lang.Assert;
 import org.openapitools.client.model.*;
 
+import java.util.Objects;
+
 public class HelperUtil {
 
     public static Class<? extends Application> getApplicationType(Application application) {
 
         Assert.notNull(application);
-        Assert.notNull(application.getSignOnMode());
+
+        if (Objects.isNull(application.getSignOnMode())) {
+            return Application.class;
+        }
 
         switch (application.getSignOnMode()) {
             case AUTO_LOGIN:
@@ -51,7 +56,10 @@ public class HelperUtil {
     public static Class<? extends Policy> getPolicyType(Policy policy) {
 
         Assert.notNull(policy);
-        Assert.notNull(policy.getType());
+
+        if (Objects.isNull(policy.getType())) {
+            return Policy.class;
+        }
 
         switch (policy.getType()) {
             case ACCESS_POLICY:
@@ -74,7 +82,10 @@ public class HelperUtil {
     public static Class<? extends UserFactor> getUserFactorType(UserFactor userFactor) {
 
         Assert.notNull(userFactor);
-        Assert.notNull(userFactor.getFactorType());
+
+        if (Objects.isNull(userFactor.getFactorType())) {
+            return UserFactor.class;
+        }
 
         switch (userFactor.getFactorType()) {
             case CALL:
@@ -121,7 +132,10 @@ public class HelperUtil {
     public static Class<? extends PolicyRule> getPolicyRuleType(PolicyRule policyRule) {
 
         Assert.notNull(policyRule);
-        Assert.notNull(policyRule.getType());
+
+        if (Objects.isNull(policyRule.getType())) {
+            return PolicyRule.class;
+        }
 
         switch (policyRule.getType()) {
             case ACCESS_POLICY:
