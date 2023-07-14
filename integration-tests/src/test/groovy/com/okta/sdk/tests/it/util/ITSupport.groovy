@@ -22,7 +22,7 @@ import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder
 import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
 import com.okta.sdk.tests.Scenario
-import com.okta.sdk.resource.handler.Pair
+import com.okta.sdk.resource.client.Pair
 import com.okta.sdk.resource.api.GroupApi
 import com.okta.sdk.resource.api.PolicyApi
 import com.okta.sdk.resource.api.UserApi

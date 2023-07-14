@@ -173,7 +173,7 @@
                             <packageName>com.okta.sdk.resource</packageName>
                             <apiPackage>com.okta.sdk.resource.api</apiPackage>
                             <modelPackage>com.okta.sdk.resource.model</modelPackage>
-                            <invokerPackage>com.okta.sdk.resource.handler</invokerPackage>
+                            <invokerPackage>com.okta.sdk.resource.client</invokerPackage>
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                                 <useRuntimeException>true</useRuntimeException>

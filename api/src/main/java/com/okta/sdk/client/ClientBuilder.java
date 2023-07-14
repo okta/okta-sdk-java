@@ -19,7 +19,7 @@ package com.okta.sdk.client;
 import com.okta.commons.http.config.Proxy;
 import com.okta.sdk.authc.credentials.ClientCredentials;
 import com.okta.sdk.cache.CacheManager;
-import com.okta.sdk.resource.handler.ApiClient;
+import com.okta.sdk.resource.client.ApiClient;
 
 import java.io.InputStream;
 import java.nio.file.Path;

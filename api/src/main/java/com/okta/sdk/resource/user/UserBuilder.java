@@ -16,7 +16,7 @@
 package com.okta.sdk.resource.user;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.model.AuthenticationProvider;
 import com.okta.sdk.resource.model.User;

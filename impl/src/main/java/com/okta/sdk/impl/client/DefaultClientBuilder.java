@@ -68,7 +68,7 @@ import org.apache.hc.core5.util.Timeout;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 
-import com.okta.sdk.resource.handler.ApiClient;
+import com.okta.sdk.resource.client.ApiClient;
 
 import com.okta.sdk.resource.model.Application;
 import com.okta.sdk.resource.model.Policy;

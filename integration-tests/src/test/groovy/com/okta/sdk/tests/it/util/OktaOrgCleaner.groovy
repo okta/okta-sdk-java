@@ -16,7 +16,7 @@
 package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Clients
-import com.okta.sdk.resource.handler.ApiClient
+import com.okta.sdk.resource.client.ApiClient
 import com.okta.sdk.resource.api.ApplicationApi
 import com.okta.sdk.resource.api.AuthorizationServerApi
 import com.okta.sdk.resource.api.EventHookApi

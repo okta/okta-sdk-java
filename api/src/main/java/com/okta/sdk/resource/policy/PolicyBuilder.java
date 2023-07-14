@@ -16,7 +16,7 @@
 package com.okta.sdk.resource.policy;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.PolicyApi;
 import com.okta.sdk.resource.model.LifecycleStatus;
 import com.okta.sdk.resource.model.Policy;

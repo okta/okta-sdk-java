@@ -17,9 +17,9 @@ package com.okta.sdk.helper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.hc.core5.http.HttpStatus;
-import com.okta.sdk.resource.handler.ApiClient;
-import com.okta.sdk.resource.handler.ApiException;
-import com.okta.sdk.resource.handler.Pair;
+import com.okta.sdk.resource.client.ApiClient;
+import com.okta.sdk.resource.client.ApiException;
+import com.okta.sdk.resource.client.Pair;
 import com.okta.sdk.resource.api.UserFactorApi;
 import com.okta.sdk.resource.model.*;
 

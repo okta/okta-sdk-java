@@ -19,7 +19,7 @@ package com.okta.sdk.client;
 import com.okta.commons.lang.Classes;
 
 /**
- * Static utility/helper class for working with {@link com.okta.sdk.resource.handler.ApiClient} resources. For example:
+ * Static utility/helper class for working with {@link com.okta.sdk.resource.client.ApiClient} resources. For example:
  * <pre>
  * <b>Clients.builder()</b>
  *     // ... etc ...
@@ -35,9 +35,9 @@ import com.okta.commons.lang.Classes;
 public final class Clients {
 
     /**
-     * Returns new {@link ClientBuilder} instance, used to construct {@link com.okta.sdk.resource.handler.ApiClient} instances.
+     * Returns new {@link ClientBuilder} instance, used to construct {@link com.okta.sdk.resource.client.ApiClient} instances.
      *
-     * @return new {@link ClientBuilder} instance, used to construct {@link com.okta.sdk.resource.handler.ApiClient} instances.
+     * @return new {@link ClientBuilder} instance, used to construct {@link com.okta.sdk.resource.client.ApiClient} instances.
      */
     public static ClientBuilder builder() {
         return (ClientBuilder) Classes.newInstance("com.okta.sdk.impl.client.DefaultClientBuilder");

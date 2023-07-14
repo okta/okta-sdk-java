@@ -17,7 +17,7 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.application.ApplicationBuilder;
-import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.ApplicationApi;
 import com.okta.sdk.resource.model.Application;
 import com.okta.sdk.resource.model.ApplicationAccessibility;

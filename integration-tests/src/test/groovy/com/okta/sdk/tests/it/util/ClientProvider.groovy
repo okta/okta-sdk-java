@@ -19,7 +19,7 @@ import com.okta.commons.lang.Strings
 import com.okta.sdk.client.Clients
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
-import com.okta.sdk.resource.handler.ApiClient
+import com.okta.sdk.resource.client.ApiClient
 import com.okta.sdk.resource.api.*
 import com.okta.sdk.resource.model.*
 import org.slf4j.Logger

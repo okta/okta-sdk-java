@@ -18,7 +18,7 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.helper.PolicyApiHelper;
-import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.PolicyApi;
 import com.okta.sdk.resource.model.*;
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder;

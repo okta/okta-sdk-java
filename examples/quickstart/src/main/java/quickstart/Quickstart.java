@@ -15,16 +15,16 @@
  */
 package quickstart;
 
-import com.okta.sdk.resource.handler.ApiClient;
+import com.okta.sdk.resource.client.ApiClient;
+import com.okta.sdk.resource.client.ApiException;
+
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
 
-import com.okta.sdk.resource.handler.ApiException;
 import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.api.GroupApi;
-
 import com.okta.sdk.resource.model.*;
 
 import java.util.List;

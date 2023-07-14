@@ -16,7 +16,7 @@
 package com.okta.sdk.resource.application;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.ApplicationApi;
 import com.okta.sdk.resource.model.Application;
 import com.okta.sdk.resource.model.ApplicationSignOnMode;

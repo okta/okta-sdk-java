@@ -16,7 +16,7 @@
 package com.okta.sdk.resource.group;
 
 import com.okta.commons.lang.Classes;
-import com.okta.sdk.resource.handler.ApiException;
+import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.GroupApi;
 import com.okta.sdk.resource.model.Group;
 

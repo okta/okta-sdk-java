@@ -30,9 +30,9 @@ import io.jsonwebtoken.Jwts
 import org.bouncycastle.openssl.PEMException
 import org.hamcrest.MatcherAssert
 import org.mockito.ArgumentMatchers
-import com.okta.sdk.resource.handler.ApiClient
-import com.okta.sdk.resource.handler.ApiException
-import com.okta.sdk.resource.handler.Pair
+import com.okta.sdk.resource.client.ApiClient
+import com.okta.sdk.resource.client.ApiException
+import com.okta.sdk.resource.client.Pair
 import com.okta.sdk.resource.model.HttpMethod
 import org.testng.annotations.Test
 

@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.okta.sdk.helper.HelperUtil;
-import com.okta.sdk.resource.handler.ApiClient;
+import com.okta.sdk.resource.client.ApiClient;
 import com.okta.sdk.resource.model.Policy;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 
