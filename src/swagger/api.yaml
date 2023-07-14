@@ -23013,6 +23013,8 @@ components:
         - SAML_2_0
         - SECURE_PASSWORD_STORE
         - WS_FEDERATION
+        - MOBILE_NO_SIGNON
+        - RADIUS_FOR_GENERIC_APP
     ApplicationVisibility:
       type: object
       properties:
