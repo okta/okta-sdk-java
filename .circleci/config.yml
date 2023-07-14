@@ -1,13 +1,13 @@
 version: 2.1
 
 orbs:
-  platform-orb: okta/general-platform-helpers@1.5
+  platform-orb: okta/general-platform-helpers@1.6
 
 aliases:
 
   - &build_steps
     - checkout
-    - platform-orb/load-dependencies
+    - platform-orb/step-load-dependencies
     - run: java -version
     - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true
     - run: mvn test
