@@ -18,9 +18,9 @@ package com.okta.sdk.tests.it
 import com.google.common.net.HttpHeaders
 import com.okta.sdk.helper.ApplicationApiHelper
 import com.okta.sdk.tests.it.util.ITSupport
-import org.openapitools.client.api.ApplicationApi
-import org.openapitools.client.api.InlineHookApi
-import org.openapitools.client.model.*
+import com.okta.sdk.resource.api.ApplicationApi
+import com.okta.sdk.resource.api.InlineHookApi
+import com.okta.sdk.resource.model.*
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat

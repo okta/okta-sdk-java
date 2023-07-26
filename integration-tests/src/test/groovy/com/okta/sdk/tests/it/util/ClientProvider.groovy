@@ -19,9 +19,9 @@ import com.okta.commons.lang.Strings
 import com.okta.sdk.client.Clients
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
-import org.openapitools.client.ApiClient
-import org.openapitools.client.api.*
-import org.openapitools.client.model.*
+import com.okta.sdk.resource.client.ApiClient
+import com.okta.sdk.resource.api.*
+import com.okta.sdk.resource.model.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.testng.IHookCallBack

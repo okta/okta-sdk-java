@@ -18,8 +18,8 @@ package com.okta.sdk.helper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.model.Error;
+import com.okta.sdk.resource.client.ApiException;
+import com.okta.sdk.resource.model.Error;
 
 public class ApiExceptionHelper {
     private static final ObjectMapper MAPPER = new ObjectMapper()

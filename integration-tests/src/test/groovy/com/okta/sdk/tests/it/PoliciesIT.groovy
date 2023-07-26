@@ -22,11 +22,11 @@ import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder
 import com.okta.sdk.tests.NonOIEEnvironmentOnly
 import com.okta.sdk.tests.it.util.ITSupport
-import org.openapitools.client.ApiException
-import org.openapitools.client.api.ApplicationApi
-import org.openapitools.client.api.GroupApi
-import org.openapitools.client.api.PolicyApi
-import org.openapitools.client.model.*
+import com.okta.sdk.resource.client.ApiException
+import com.okta.sdk.resource.api.ApplicationApi
+import com.okta.sdk.resource.api.GroupApi
+import com.okta.sdk.resource.api.PolicyApi
+import com.okta.sdk.resource.model.*
 import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.expect

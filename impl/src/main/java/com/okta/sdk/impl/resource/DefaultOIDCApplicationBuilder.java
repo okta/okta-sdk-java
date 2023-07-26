@@ -17,9 +17,9 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.application.OIDCApplicationBuilder;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.api.ApplicationApi;
-import org.openapitools.client.model.*;
+import com.okta.sdk.resource.client.ApiException;
+import com.okta.sdk.resource.api.ApplicationApi;
+import com.okta.sdk.resource.model.*;
 import com.okta.sdk.helper.ApplicationApiHelper;
 
 import java.util.ArrayList;

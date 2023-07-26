@@ -19,8 +19,8 @@ import com.okta.commons.http.config.HttpClientConfiguration
 import com.okta.sdk.cache.CacheManager
 import com.okta.sdk.impl.config.ClientConfiguration
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
-import org.openapitools.client.ApiClient
-import org.openapitools.client.auth.ApiKeyAuth
+import com.okta.sdk.resource.client.ApiClient
+import com.okta.sdk.resource.client.auth.ApiKeyAuth
 import org.testng.annotations.Test
 
 import static org.mockito.Mockito.*

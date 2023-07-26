@@ -19,9 +19,9 @@ import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.helper.PolicyApiHelper;
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.api.PolicyApi;
-import org.openapitools.client.model.*;
+import com.okta.sdk.resource.client.ApiException;
+import com.okta.sdk.resource.api.PolicyApi;
+import com.okta.sdk.resource.model.*;
 
 import java.util.ArrayList;
 import java.util.List;

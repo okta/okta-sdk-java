@@ -19,9 +19,9 @@ import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.user.UserBuilder
-import org.openapitools.client.api.GroupApi
-import org.openapitools.client.api.UserApi
-import org.openapitools.client.model.Group
+import com.okta.sdk.resource.api.GroupApi
+import com.okta.sdk.resource.api.UserApi
+import com.okta.sdk.resource.model.Group
 import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.assertGroupPresent

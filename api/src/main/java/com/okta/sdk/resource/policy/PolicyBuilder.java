@@ -16,11 +16,11 @@
 package com.okta.sdk.resource.policy;
 
 import com.okta.commons.lang.Classes;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.api.PolicyApi;
-import org.openapitools.client.model.LifecycleStatus;
-import org.openapitools.client.model.Policy;
-import org.openapitools.client.model.PolicyType;
+import com.okta.sdk.resource.client.ApiException;
+import com.okta.sdk.resource.api.PolicyApi;
+import com.okta.sdk.resource.model.LifecycleStatus;
+import com.okta.sdk.resource.model.Policy;
+import com.okta.sdk.resource.model.PolicyType;
 
 public interface PolicyBuilder<T extends PolicyBuilder> {
 

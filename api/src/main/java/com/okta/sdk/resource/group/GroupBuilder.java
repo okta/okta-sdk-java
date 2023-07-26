@@ -16,9 +16,9 @@
 package com.okta.sdk.resource.group;
 
 import com.okta.commons.lang.Classes;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.api.GroupApi;
-import org.openapitools.client.model.Group;
+import com.okta.sdk.resource.client.ApiException;
+import com.okta.sdk.resource.api.GroupApi;
+import com.okta.sdk.resource.model.Group;
 
 public interface GroupBuilder {
 

@@ -25,9 +25,9 @@ import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.apache.commons.lang3.RandomStringUtils
 import org.apache.commons.lang3.StringUtils
-import org.openapitools.client.ApiException
-import org.openapitools.client.api.*
-import org.openapitools.client.model.*
+import com.okta.sdk.resource.client.ApiException
+import com.okta.sdk.resource.api.*
+import com.okta.sdk.resource.model.*
 import org.testng.annotations.Test
 
 import java.nio.charset.StandardCharsets

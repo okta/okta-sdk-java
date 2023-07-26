@@ -15,10 +15,10 @@
  */
 package com.okta.sdk.tests.it.util
 
-import org.openapitools.client.api.GroupApi
-import org.openapitools.client.model.Group
-import org.openapitools.client.model.GroupType
-import org.openapitools.client.model.User
+import com.okta.sdk.resource.api.GroupApi
+import com.okta.sdk.resource.model.Group
+import com.okta.sdk.resource.model.GroupType
+import com.okta.sdk.resource.model.User
 import org.testng.Assert
 
 import java.util.stream.Collectors

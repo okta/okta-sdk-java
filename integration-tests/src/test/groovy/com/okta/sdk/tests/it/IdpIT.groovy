@@ -16,8 +16,8 @@
 package com.okta.sdk.tests.it
 
 import com.okta.sdk.tests.it.util.ITSupport
-import org.openapitools.client.api.IdentityProviderApi
-import org.openapitools.client.model.*
+import com.okta.sdk.resource.api.IdentityProviderApi
+import com.okta.sdk.resource.model.*
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
