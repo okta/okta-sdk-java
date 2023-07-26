@@ -25,9 +25,9 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> com.okta.commons.lang.Strings;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.application.OIDCApplicationBuilder;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.ApiException;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.api.ApplicationApi;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.*;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.client.ApiException;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.api.ApplicationApi;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.*;
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.helper.ApplicationApiHelper;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
@@ -35,9 +35,9 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> java.util.Objects;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="DefaultOIDCApplicationBuilder" href="../../../../../com/okta/sdk/impl/resource/DefaultOIDCApplicationBuilder.html#DefaultOIDCApplicationBuilder">DefaultOIDCApplicationBuilder</a> <strong class="jxr_keyword">extends</strong> DefaultApplicationBuilder&lt;OIDCApplicationBuilder&gt; <strong class="jxr_keyword">implements</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> {
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> <a name="OpenIdConnectApplicationType" href="../../../../../org/openapitools/client/model/OpenIdConnectApplicationType.html#OpenIdConnectApplicationType">OpenIdConnectApplicationType</a> applicationType;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> <a name="OpenIdConnectApplicationType" href="../../../../../com/okta/sdk/resource/model/OpenIdConnectApplicationType.html#OpenIdConnectApplicationType">OpenIdConnectApplicationType</a> applicationType;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">private</strong> String clientUri;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">private</strong> <a name="OpenIdConnectApplicationConsentMethod" href="../../../../../org/openapitools/client/model/OpenIdConnectApplicationConsentMethod.html#OpenIdConnectApplicationConsentMethod">OpenIdConnectApplicationConsentMethod</a> consentMethod;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">private</strong> <a name="OpenIdConnectApplicationConsentMethod" href="../../../../../com/okta/sdk/resource/model/OpenIdConnectApplicationConsentMethod.html#OpenIdConnectApplicationConsentMethod">OpenIdConnectApplicationConsentMethod</a> consentMethod;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">private</strong> List&lt;OAuthGrantType&gt; grantTypes = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>      <strong class="jxr_keyword">private</strong> String logoUri;
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">private</strong> String policyUri;
@@ -48,13 +48,13 @@
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">private</strong> String clientId;
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">private</strong> String clientSecret;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">private</strong> Boolean autoKeyRotation;
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">private</strong> <a name="OAuthEndpointAuthenticationMethod" href="../../../../../org/openapitools/client/model/OAuthEndpointAuthenticationMethod.html#OAuthEndpointAuthenticationMethod">OAuthEndpointAuthenticationMethod</a> tokenEndpointAuthMethod;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">private</strong> <a name="OAuthEndpointAuthenticationMethod" href="../../../../../com/okta/sdk/resource/model/OAuthEndpointAuthenticationMethod.html#OAuthEndpointAuthenticationMethod">OAuthEndpointAuthenticationMethod</a> tokenEndpointAuthMethod;
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">private</strong> List&lt;JsonWebKey&gt; jsonWebKeyList = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">private</strong> Boolean isImplicitAssignment;
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">private</strong> String inlineHookId;
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      @Override
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">public</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> setApplicationType(<a name="OpenIdConnectApplicationType" href="../../../../../org/openapitools/client/model/OpenIdConnectApplicationType.html#OpenIdConnectApplicationType">OpenIdConnectApplicationType</a> applicationType) {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">public</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> setApplicationType(<a name="OpenIdConnectApplicationType" href="../../../../../com/okta/sdk/resource/model/OpenIdConnectApplicationType.html#OpenIdConnectApplicationType">OpenIdConnectApplicationType</a> applicationType) {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>          <strong class="jxr_keyword">this</strong>.applicationType = applicationType;
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      }
@@ -66,7 +66,7 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      }
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      @Override
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">public</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> setConsentMethod(<a name="OpenIdConnectApplicationConsentMethod" href="../../../../../org/openapitools/client/model/OpenIdConnectApplicationConsentMethod.html#OpenIdConnectApplicationConsentMethod">OpenIdConnectApplicationConsentMethod</a> consentMethod) {
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">public</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> setConsentMethod(<a name="OpenIdConnectApplicationConsentMethod" href="../../../../../com/okta/sdk/resource/model/OpenIdConnectApplicationConsentMethod.html#OpenIdConnectApplicationConsentMethod">OpenIdConnectApplicationConsentMethod</a> consentMethod) {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>          <strong class="jxr_keyword">this</strong>.consentMethod = consentMethod;
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      }
@@ -78,7 +78,7 @@
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      }
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      @Override
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">public</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> addGrantTypes(<a name="OAuthGrantType" href="../../../../../org/openapitools/client/model/OAuthGrantType.html#OAuthGrantType">OAuthGrantType</a> grantType) {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">public</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> addGrantTypes(<a name="OAuthGrantType" href="../../../../../com/okta/sdk/resource/model/OAuthGrantType.html#OAuthGrantType">OAuthGrantType</a> grantType) {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>          <strong class="jxr_keyword">this</strong>.grantTypes.add(grantType);
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
@@ -120,7 +120,7 @@
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>     }
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> 
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     @Override
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">public</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> addResponseTypes(<a name="OAuthResponseType" href="../../../../../org/openapitools/client/model/OAuthResponseType.html#OAuthResponseType">OAuthResponseType</a> responseType) {
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">public</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> addResponseTypes(<a name="OAuthResponseType" href="../../../../../com/okta/sdk/resource/model/OAuthResponseType.html#OAuthResponseType">OAuthResponseType</a> responseType) {
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>         <strong class="jxr_keyword">this</strong>.responseTypes.add(responseType);
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>     }
@@ -150,7 +150,7 @@
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>     }
 <a class="jxr_linenumber" name="L143" href="#L143">143</a> 
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>     @Override
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>     <strong class="jxr_keyword">public</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> setTokenEndpointAuthMethod(<a name="OAuthEndpointAuthenticationMethod" href="../../../../../org/openapitools/client/model/OAuthEndpointAuthenticationMethod.html#OAuthEndpointAuthenticationMethod">OAuthEndpointAuthenticationMethod</a> tokenEndpointAuthMethod) {
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>     <strong class="jxr_keyword">public</strong> <a name="OIDCApplicationBuilder" href="../../../../../com/okta/sdk/resource/application/OIDCApplicationBuilder.html#OIDCApplicationBuilder">OIDCApplicationBuilder</a> setTokenEndpointAuthMethod(<a name="OAuthEndpointAuthenticationMethod" href="../../../../../com/okta/sdk/resource/model/OAuthEndpointAuthenticationMethod.html#OAuthEndpointAuthenticationMethod">OAuthEndpointAuthenticationMethod</a> tokenEndpointAuthMethod) {
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>         <strong class="jxr_keyword">this</strong>.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>     }
@@ -174,8 +174,8 @@
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>     }
 <a class="jxr_linenumber" name="L167" href="#L167">167</a> 
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>     @Override
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>     <strong class="jxr_keyword">public</strong> OpenIdConnectApplication buildAndCreate(<a name="ApplicationApi" href="../../../../../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a> client) <strong class="jxr_keyword">throws</strong> <a name="ApiException" href="../../../../../org/openapitools/client/ApiException.html#ApiException">ApiException</a> {
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ApplicationApiHelper&lt;&gt;(<strong class="jxr_keyword">new</strong> <a name="ApplicationApi" href="../../../../../org/openapitools/client/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a>(client.getApiClient()))
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>     <strong class="jxr_keyword">public</strong> OpenIdConnectApplication buildAndCreate(<a name="ApplicationApi" href="../../../../../com/okta/sdk/resource/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a> client) <strong class="jxr_keyword">throws</strong> <a name="ApiException" href="../../../../../com/okta/sdk/resource/client/ApiException.html#ApiException">ApiException</a> {
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> ApplicationApiHelper&lt;&gt;(<strong class="jxr_keyword">new</strong> <a name="ApplicationApi" href="../../../../../com/okta/sdk/resource/api/ApplicationApi.html#ApplicationApi">ApplicationApi</a>(client.getApiClient()))
 <a class="jxr_linenumber" name="L171" href="#L171">171</a>                 .createApplicationOfType(OpenIdConnectApplication.<strong class="jxr_keyword">class</strong>, build(), false, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>     }
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> 

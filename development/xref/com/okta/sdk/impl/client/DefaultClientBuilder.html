@@ -76,12 +76,12 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>  <strong class="jxr_keyword">import</strong> org.bouncycastle.asn1.ASN1Primitive;
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <strong class="jxr_keyword">import</strong> org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.ApiClient;
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.client.ApiClient;
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.Application;
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.Policy;
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.UserFactor;
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.UserProfile;
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.Application;
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.Policy;
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.UserFactor;
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.UserProfile;
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>  <strong class="jxr_keyword">import</strong> org.slf4j.Logger;
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  <strong class="jxr_keyword">import</strong> org.slf4j.LoggerFactory;
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>  
@@ -315,7 +315,7 @@
 <a class="jxr_linenumber" name="L307" href="#L307">307</a>     }
 <a class="jxr_linenumber" name="L308" href="#L308">308</a> 
 <a class="jxr_linenumber" name="L309" href="#L309">309</a>     @Override
-<a class="jxr_linenumber" name="L310" href="#L310">310</a>     <strong class="jxr_keyword">public</strong> <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> build() {
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>     <strong class="jxr_keyword">public</strong> <a name="ApiClient" href="../../../../../com/okta/sdk/resource/client/ApiClient.html#ApiClient">ApiClient</a> build() {
 <a class="jxr_linenumber" name="L311" href="#L311">311</a> 
 <a class="jxr_linenumber" name="L312" href="#L312">312</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.clientConfig.isCacheManagerEnabled()) {
 <a class="jxr_linenumber" name="L313" href="#L313">313</a>             log.debug(<span class="jxr_string">"CacheManager disabled. Defaulting to DisabledCacheManager"</span>);
@@ -346,7 +346,7 @@
 <a class="jxr_linenumber" name="L338" href="#L338">338</a>             setProxy(httpClientBuilder, clientConfig);
 <a class="jxr_linenumber" name="L339" href="#L339">339</a>         }
 <a class="jxr_linenumber" name="L340" href="#L340">340</a> 
-<a class="jxr_linenumber" name="L341" href="#L341">341</a>         <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient = <strong class="jxr_keyword">new</strong> <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a>(httpClientBuilder.build(), <strong class="jxr_keyword">this</strong>.cacheManager, <strong class="jxr_keyword">this</strong>.clientConfig);
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>         <a name="ApiClient" href="../../../../../com/okta/sdk/resource/client/ApiClient.html#ApiClient">ApiClient</a> apiClient = <strong class="jxr_keyword">new</strong> <a name="ApiClient" href="../../../../../com/okta/sdk/resource/client/ApiClient.html#ApiClient">ApiClient</a>(httpClientBuilder.build(), <strong class="jxr_keyword">this</strong>.cacheManager, <strong class="jxr_keyword">this</strong>.clientConfig);
 <a class="jxr_linenumber" name="L342" href="#L342">342</a>         apiClient.setBasePath(<strong class="jxr_keyword">this</strong>.clientConfig.getBaseUrl());
 <a class="jxr_linenumber" name="L343" href="#L343">343</a> 
 <a class="jxr_linenumber" name="L344" href="#L344">344</a>         String userAgentValue = ApplicationInfo.get().entrySet().stream()
@@ -469,7 +469,7 @@
 <a class="jxr_linenumber" name="L461" href="#L461">461</a>         }
 <a class="jxr_linenumber" name="L462" href="#L462">462</a>     }
 <a class="jxr_linenumber" name="L463" href="#L463">463</a> 
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> addCustomSerializerAndDeserializers(<a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient) {
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> addCustomSerializerAndDeserializers(<a name="ApiClient" href="../../../../../com/okta/sdk/resource/client/ApiClient.html#ApiClient">ApiClient</a> apiClient) {
 <a class="jxr_linenumber" name="L465" href="#L465">465</a>         ObjectMapper mapper = apiClient.getObjectMapper();
 <a class="jxr_linenumber" name="L466" href="#L466">466</a>         SimpleModule module = <strong class="jxr_keyword">new</strong> SimpleModule();
 <a class="jxr_linenumber" name="L467" href="#L467">467</a>         module.addSerializer(UserProfile.<strong class="jxr_keyword">class</strong>, <strong class="jxr_keyword">new</strong> <a name="UserProfileSerializer" href="../../../../../com/okta/sdk/impl/serializer/UserProfileSerializer.html#UserProfileSerializer">UserProfileSerializer</a>());

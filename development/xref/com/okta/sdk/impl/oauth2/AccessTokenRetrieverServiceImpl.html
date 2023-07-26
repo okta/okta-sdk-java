@@ -39,9 +39,9 @@
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.bouncycastle.openssl.PEMKeyPair;
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.bouncycastle.openssl.PEMParser;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.ApiClient;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.ApiException;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.HttpMethod;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.client.ApiClient;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.client.ApiException;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HttpMethod;
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.slf4j.Logger;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.slf4j.LoggerFactory;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
@@ -69,9 +69,9 @@
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String TOKEN_URI  = <span class="jxr_string">"/oauth2/v1/token"</span>;
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> tokenClientConfiguration;
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="ApiClient" href="../../../../../com/okta/sdk/resource/client/ApiClient.html#ApiClient">ApiClient</a> apiClient;
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">public</strong> <a name="AccessTokenRetrieverServiceImpl" href="../../../../../com/okta/sdk/impl/oauth2/AccessTokenRetrieverServiceImpl.html#AccessTokenRetrieverServiceImpl">AccessTokenRetrieverServiceImpl</a>(<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> apiClientConfiguration, <a name="ApiClient" href="../../../../../org/openapitools/client/ApiClient.html#ApiClient">ApiClient</a> apiClient) {
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">public</strong> <a name="AccessTokenRetrieverServiceImpl" href="../../../../../com/okta/sdk/impl/oauth2/AccessTokenRetrieverServiceImpl.html#AccessTokenRetrieverServiceImpl">AccessTokenRetrieverServiceImpl</a>(<a name="ClientConfiguration" href="../../../../../com/okta/sdk/impl/config/ClientConfiguration.html#ClientConfiguration">ClientConfiguration</a> apiClientConfiguration, <a name="ApiClient" href="../../../../../com/okta/sdk/resource/client/ApiClient.html#ApiClient">ApiClient</a> apiClient) {
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          Assert.notNull(apiClientConfiguration, <span class="jxr_string">"apiClientConfiguration must not be null."</span>);
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>          Assert.notNull(apiClient, <span class="jxr_string">"apiClient must not be null."</span>);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          <strong class="jxr_keyword">this</strong>.apiClient = apiClient;
@@ -117,7 +117,7 @@
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>             apiClient.setAccessToken(oAuth2AccessToken.getAccessToken());
 <a class="jxr_linenumber" name="L110" href="#L110">110</a> 
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>             <strong class="jxr_keyword">return</strong> oAuth2AccessToken;
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>         } <strong class="jxr_keyword">catch</strong> (<a name="ApiException" href="../../../../../org/openapitools/client/ApiException.html#ApiException">ApiException</a> e) {
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>         } <strong class="jxr_keyword">catch</strong> (<a name="ApiException" href="../../../../../com/okta/sdk/resource/client/ApiException.html#ApiException">ApiException</a> e) {
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="OAuth2HttpException" href="../../../../../com/okta/sdk/impl/oauth2/OAuth2HttpException.html#OAuth2HttpException">OAuth2HttpException</a>(e.getMessage(), e, e.getCode() == 401);
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>         } <strong class="jxr_keyword">catch</strong> (Exception e) {
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="OAuth2TokenRetrieverException" href="../../../../../com/okta/sdk/impl/oauth2/OAuth2TokenRetrieverException.html#OAuth2TokenRetrieverException">OAuth2TokenRetrieverException</a>(<span class="jxr_string">"Exception while trying to get "</span> +

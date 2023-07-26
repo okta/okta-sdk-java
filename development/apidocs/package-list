@@ -13,13 +13,13 @@ com.okta.sdk.impl.resource
 com.okta.sdk.impl.retry
 com.okta.sdk.impl.serializer
 com.okta.sdk.impl.util
+com.okta.sdk.resource.api
 com.okta.sdk.resource.application
+com.okta.sdk.resource.client
+com.okta.sdk.resource.client.auth
 com.okta.sdk.resource.common
 com.okta.sdk.resource.group
+com.okta.sdk.resource.model
 com.okta.sdk.resource.policy
 com.okta.sdk.resource.user
-org.openapitools.client
-org.openapitools.client.api
-org.openapitools.client.auth
-org.openapitools.client.model
 quickstart

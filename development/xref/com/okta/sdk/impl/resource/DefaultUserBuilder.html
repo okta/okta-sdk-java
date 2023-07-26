@@ -26,20 +26,20 @@
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> com.okta.commons.lang.Collections;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> com.okta.commons.lang.Strings;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.user.UserBuilder;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.ApiException;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.api.UserApi;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.AuthenticationProvider;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.CreateUserRequest;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.PasswordCredential;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.PasswordCredentialHash;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.PasswordCredentialHashAlgorithm;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.PasswordCredentialHook;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.RecoveryQuestionCredential;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.User;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.UserCredentials;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.UserNextLogin;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.UserProfile;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.openapitools.client.model.UserType;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.client.ApiException;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.api.UserApi;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.AuthenticationProvider;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.CreateUserRequest;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.PasswordCredential;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.PasswordCredentialHash;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.PasswordCredentialHashAlgorithm;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.PasswordCredentialHook;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.RecoveryQuestionCredential;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.User;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.UserCredentials;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.UserNextLogin;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.UserProfile;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.UserType;
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
@@ -86,7 +86,7 @@
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">private</strong> AuthenticationProvider provider;
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>      <strong class="jxr_keyword">private</strong> UserType userType;
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">private</strong> String userTypeId;
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">private</strong> <a name="UserNextLogin" href="../../../../../org/openapitools/client/model/UserNextLogin.html#UserNextLogin">UserNextLogin</a> nextLogin;
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">private</strong> <a name="UserNextLogin" href="../../../../../com/okta/sdk/resource/model/UserNextLogin.html#UserNextLogin">UserNextLogin</a> nextLogin;
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">private</strong> List&lt;String&gt; groupIds = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">private</strong> Map&lt;String, Object&gt; passwordHashProperties;
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">private</strong> String passwordHookImportType;
@@ -319,7 +319,7 @@
 <a class="jxr_linenumber" name="L311" href="#L311">311</a>     }
 <a class="jxr_linenumber" name="L312" href="#L312">312</a> 
 <a class="jxr_linenumber" name="L313" href="#L313">313</a>     @Override
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>     <strong class="jxr_keyword">public</strong> <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setNextLogin(<a name="UserNextLogin" href="../../../../../org/openapitools/client/model/UserNextLogin.html#UserNextLogin">UserNextLogin</a> nextLogin) {
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>     <strong class="jxr_keyword">public</strong> <a name="UserBuilder" href="../../../../../com/okta/sdk/resource/user/UserBuilder.html#UserBuilder">UserBuilder</a> setNextLogin(<a name="UserNextLogin" href="../../../../../com/okta/sdk/resource/model/UserNextLogin.html#UserNextLogin">UserNextLogin</a> nextLogin) {
 <a class="jxr_linenumber" name="L315" href="#L315">315</a>         <strong class="jxr_keyword">this</strong>.nextLogin = nextLogin;
 <a class="jxr_linenumber" name="L316" href="#L316">316</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L317" href="#L317">317</a>     }
@@ -473,7 +473,7 @@
 <a class="jxr_linenumber" name="L465" href="#L465">465</a>     }
 <a class="jxr_linenumber" name="L466" href="#L466">466</a> 
 <a class="jxr_linenumber" name="L467" href="#L467">467</a>     @Override
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>     <strong class="jxr_keyword">public</strong> User buildAndCreate(<a name="UserApi" href="../../../../../org/openapitools/client/api/UserApi.html#UserApi">UserApi</a> client) <strong class="jxr_keyword">throws</strong> <a name="ApiException" href="../../../../../org/openapitools/client/ApiException.html#ApiException">ApiException</a> {
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>     <strong class="jxr_keyword">public</strong> User buildAndCreate(<a name="UserApi" href="../../../../../com/okta/sdk/resource/api/UserApi.html#UserApi">UserApi</a> client) <strong class="jxr_keyword">throws</strong> <a name="ApiException" href="../../../../../com/okta/sdk/resource/client/ApiException.html#ApiException">ApiException</a> {
 <a class="jxr_linenumber" name="L469" href="#L469">469</a>         <strong class="jxr_keyword">return</strong> client.createUser(build(), active, provider != <strong class="jxr_keyword">null</strong>, nextLogin);
 <a class="jxr_linenumber" name="L470" href="#L470">470</a>     }
 <a class="jxr_linenumber" name="L471" href="#L471">471</a> }
