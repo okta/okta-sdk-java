@@ -52,131 +52,131 @@ public class UserProfileDeserializer extends StdDeserializer<UserProfile> {
         for (Map.Entry<String, Object> entry : profileMap.entrySet()) {
 
             String key = entry.getKey();
-            String value = entry.getValue() == null ? null : String.valueOf(entry.getValue());
+            Object value = entry.getValue();
 
             switch (key) {
                 case UserProfile.JSON_PROPERTY_CITY:
-                    userProfile.setCity(value);
+                    userProfile.setCity((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_COST_CENTER:
-                    userProfile.setCostCenter(value);
+                    userProfile.setCostCenter((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_COUNTRY_CODE:
-                    userProfile.setCountryCode(value);
+                    userProfile.setCountryCode((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_DEPARTMENT:
-                    userProfile.setDepartment(value);
+                    userProfile.setDepartment((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_DISPLAY_NAME:
-                    userProfile.setDisplayName(value);
+                    userProfile.setDisplayName((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_DIVISION:
-                    userProfile.setDivision(value);
+                    userProfile.setDivision((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_EMAIL:
-                    userProfile.setEmail(value);
+                    userProfile.setEmail((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_EMPLOYEE_NUMBER:
-                    userProfile.setEmployeeNumber(value);
+                    userProfile.setEmployeeNumber((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_FIRST_NAME:
-                    userProfile.setFirstName(value);
+                    userProfile.setFirstName((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_HONORIFIC_PREFIX:
-                    userProfile.setHonorificPrefix(value);
+                    userProfile.setHonorificPrefix((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_HONORIFIC_SUFFIX:
-                    userProfile.setHonorificSuffix(value);
+                    userProfile.setHonorificSuffix((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_LAST_NAME:
-                    userProfile.setLastName(value);
+                    userProfile.setLastName((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_LOCALE:
-                    userProfile.setLocale(value);
+                    userProfile.setLocale((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_LOGIN:
-                    userProfile.setLogin(value);
+                    userProfile.setLogin((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_MANAGER:
-                    userProfile.setManager(value);
+                    userProfile.setManager((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_MANAGER_ID:
-                    userProfile.setManagerId(value);
+                    userProfile.setManagerId((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_MIDDLE_NAME:
-                    userProfile.setMiddleName(value);
+                    userProfile.setMiddleName((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_MOBILE_PHONE:
-                    userProfile.setMobilePhone(value);
+                    userProfile.setMobilePhone((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_NICK_NAME:
-                    userProfile.setNickName(value);
+                    userProfile.setNickName((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_ORGANIZATION:
-                    userProfile.setOrganization(value);
+                    userProfile.setOrganization((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_POSTAL_ADDRESS:
-                    userProfile.setPostalAddress(value);
+                    userProfile.setPostalAddress((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_PREFERRED_LANGUAGE:
-                    userProfile.setPreferredLanguage(value);
+                    userProfile.setPreferredLanguage((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_PRIMARY_PHONE:
-                    userProfile.setPrimaryPhone(value);
+                    userProfile.setPrimaryPhone((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_PROFILE_URL:
-                    userProfile.setProfileUrl(value);
+                    userProfile.setProfileUrl((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_SECOND_EMAIL:
-                    userProfile.setSecondEmail(value);
+                    userProfile.setSecondEmail((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_STATE:
-                    userProfile.setState(value);
+                    userProfile.setState((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_STREET_ADDRESS:
-                    userProfile.setStreetAddress(value);
+                    userProfile.setStreetAddress((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_TIMEZONE:
-                    userProfile.setTimezone(value);
+                    userProfile.setTimezone((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_TITLE:
-                    userProfile.setTitle(value);
+                    userProfile.setTitle((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_USER_TYPE:
-                    userProfile.setUserType(value);
+                    userProfile.setUserType((String) value);
                     break;
 
                 case UserProfile.JSON_PROPERTY_ZIP_CODE:
-                    userProfile.setZipCode(value);
+                    userProfile.setZipCode((String) value);
                     break;
 
                 default:
