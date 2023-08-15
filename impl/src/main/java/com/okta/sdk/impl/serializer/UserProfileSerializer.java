@@ -42,20 +42,35 @@ public class UserProfileSerializer extends StdSerializer<UserProfile> {
 
         jgen.writeStartObject();
 
+        if (Strings.hasText(userProfile.getEmail())) {
+            jgen.writeStringField(UserProfile.JSON_PROPERTY_EMAIL, userProfile.getEmail());
+        }
+
+        if (Strings.hasText(userProfile.getLogin())) {
+            jgen.writeStringField(UserProfile.JSON_PROPERTY_LOGIN, userProfile.getLogin());
+        }
+
+        if (Strings.hasText(userProfile.getFirstName())) {
+            jgen.writeStringField(UserProfile.JSON_PROPERTY_FIRST_NAME, userProfile.getFirstName());
+        }
+
+        if (Strings.hasText(userProfile.getLastName())) {
+            jgen.writeStringField(UserProfile.JSON_PROPERTY_LAST_NAME, userProfile.getLastName());
+        }
+
+        if (Strings.hasText(userProfile.getLocale())) {
+            jgen.writeStringField(UserProfile.JSON_PROPERTY_LOCALE, userProfile.getLocale());
+        }
+
         jgen.writeStringField(UserProfile.JSON_PROPERTY_CITY, userProfile.getCity());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_COST_CENTER, userProfile.getCostCenter());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_COUNTRY_CODE, userProfile.getCountryCode());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_DEPARTMENT, userProfile.getDepartment());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_DISPLAY_NAME, userProfile.getDisplayName());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_DIVISION, userProfile.getDivision());
-        jgen.writeStringField(UserProfile.JSON_PROPERTY_EMAIL, userProfile.getEmail());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_EMPLOYEE_NUMBER, userProfile.getEmployeeNumber());
-        jgen.writeStringField(UserProfile.JSON_PROPERTY_FIRST_NAME, userProfile.getFirstName());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_HONORIFIC_PREFIX, userProfile.getHonorificPrefix());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_HONORIFIC_SUFFIX, userProfile.getHonorificSuffix());
-        jgen.writeStringField(UserProfile.JSON_PROPERTY_LAST_NAME, userProfile.getLastName());
-        jgen.writeStringField(UserProfile.JSON_PROPERTY_LOCALE, userProfile.getLocale());
-        jgen.writeStringField(UserProfile.JSON_PROPERTY_LOGIN, userProfile.getLogin());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_MANAGER, userProfile.getManager());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_MANAGER_ID, userProfile.getManagerId());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_MIDDLE_NAME, userProfile.getMiddleName());
