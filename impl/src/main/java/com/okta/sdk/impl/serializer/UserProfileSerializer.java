@@ -42,6 +42,8 @@ public class UserProfileSerializer extends StdSerializer<UserProfile> {
 
         jgen.writeStartObject();
 
+        // non-nullable fields
+
         if (Strings.hasText(userProfile.getEmail())) {
             jgen.writeStringField(UserProfile.JSON_PROPERTY_EMAIL, userProfile.getEmail());
         }
@@ -61,6 +63,8 @@ public class UserProfileSerializer extends StdSerializer<UserProfile> {
         if (Strings.hasText(userProfile.getLocale())) {
             jgen.writeStringField(UserProfile.JSON_PROPERTY_LOCALE, userProfile.getLocale());
         }
+
+        // nullable fields
 
         jgen.writeStringField(UserProfile.JSON_PROPERTY_CITY, userProfile.getCity());
         jgen.writeStringField(UserProfile.JSON_PROPERTY_COST_CENTER, userProfile.getCostCenter());
