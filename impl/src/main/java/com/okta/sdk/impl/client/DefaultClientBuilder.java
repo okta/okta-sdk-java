@@ -38,6 +38,8 @@ import com.okta.sdk.impl.deserializer.ApplicationDeserializer;
 import com.okta.sdk.impl.deserializer.PolicyDeserializer;
 import com.okta.sdk.impl.deserializer.UserFactorDeserializer;
 import com.okta.sdk.impl.deserializer.UserProfileDeserializer;
+import com.okta.sdk.impl.deserializer.PolicyRuleDeserializer;
+import com.okta.sdk.impl.deserializer.PolymorphicMixIns;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
 import com.okta.sdk.impl.io.Resource;
@@ -72,6 +74,7 @@ import com.okta.sdk.resource.client.ApiClient;
 
 import com.okta.sdk.resource.model.Application;
 import com.okta.sdk.resource.model.Policy;
+import com.okta.sdk.resource.model.PolicyRule;
 import com.okta.sdk.resource.model.UserFactor;
 import com.okta.sdk.resource.model.UserProfile;
 import org.slf4j.Logger;
@@ -468,7 +471,9 @@ public class DefaultClientBuilder implements ClientBuilder {
         module.addDeserializer(UserProfile.class, new UserProfileDeserializer());
         module.addDeserializer(Application.class, new ApplicationDeserializer());
         module.addDeserializer(Policy.class, new PolicyDeserializer());
+        module.addDeserializer(PolicyRule.class, new PolicyRuleDeserializer());
         module.addDeserializer(UserFactor.class, new UserFactorDeserializer());
+        PolymorphicMixIns.MIX_INS.forEach(module::setMixInAnnotation);
         mapper.registerModule(module);
     }
 
