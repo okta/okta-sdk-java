@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.model.Error;
 
+import java.util.Objects;
+
 public class ApiExceptionHelper {
     private static final ObjectMapper MAPPER = new ObjectMapper()
         // ensure new fields added to API errors won't cause issues
@@ -32,6 +34,11 @@ public class ApiExceptionHelper {
      * @return the {@link Error} if present in the response body, null if not
      */
     public static Error getError(ApiException e) {
+
+        if (Objects.isNull(e.getResponseBody())) {
+            return null;
+        }
+
         try {
             return MAPPER.readValue(e.getResponseBody(), Error.class);
         } catch (JsonProcessingException jpe) {
