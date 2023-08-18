@@ -36,6 +36,7 @@ import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.*;
 import com.okta.sdk.impl.deserializer.ApplicationDeserializer;
 import com.okta.sdk.impl.deserializer.PolicyDeserializer;
+import com.okta.sdk.impl.deserializer.PolymorphicMixIns;
 import com.okta.sdk.impl.deserializer.UserFactorDeserializer;
 import com.okta.sdk.impl.deserializer.UserProfileDeserializer;
 import com.okta.sdk.impl.io.ClasspathResource;
@@ -469,6 +470,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         module.addDeserializer(Application.class, new ApplicationDeserializer());
         module.addDeserializer(Policy.class, new PolicyDeserializer());
         module.addDeserializer(UserFactor.class, new UserFactorDeserializer());
+        PolymorphicMixIns.MIX_INS.forEach(module::setMixInAnnotation);
         mapper.registerModule(module);
     }
 
