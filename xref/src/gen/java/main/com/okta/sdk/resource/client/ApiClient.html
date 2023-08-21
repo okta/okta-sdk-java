@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.client.auth.ApiKeyAuth;
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.client.auth.OAuth;
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-08-09T12:49:20.801-05:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-08-21T16:08:49.858-05:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ApiClient" href="../../../../../com/okta/sdk/resource/client/ApiClient.html#ApiClient">ApiClient</a> <strong class="jxr_keyword">extends</strong> <a name="JavaTimeFormatter" href="../../../../../com/okta/sdk/resource/client/JavaTimeFormatter.html#JavaTimeFormatter">JavaTimeFormatter</a> {
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger log = LoggerFactory.getLogger(ApiClient.<strong class="jxr_keyword">class</strong>);
@@ -736,7 +736,7 @@
 <a class="jxr_linenumber" name="L728" href="#L728">728</a>                                                     String mimeType = contentType.getMimeType();
 <a class="jxr_linenumber" name="L729" href="#L729">729</a>                                                     <strong class="jxr_keyword">if</strong> (isJsonMime(mimeType)) {
 <a class="jxr_linenumber" name="L730" href="#L730">730</a>                                                     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L731" href="#L731">731</a>                                                     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> StringEntity(objectMapper.writeValueAsString(obj), contentType);
+<a class="jxr_linenumber" name="L731" href="#L731">731</a>                                                     <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> StringEntity(objectMapper.writeValueAsString(obj), ContentType.APPLICATION_JSON);
 <a class="jxr_linenumber" name="L732" href="#L732">732</a>                                                     } <strong class="jxr_keyword">catch</strong> (JsonProcessingException e) {
 <a class="jxr_linenumber" name="L733" href="#L733">733</a>                                                     <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a name="ApiException" href="../../../../../com/okta/sdk/resource/client/ApiException.html#ApiException">ApiException</a>(e);
 <a class="jxr_linenumber" name="L734" href="#L734">734</a>                                                     }
