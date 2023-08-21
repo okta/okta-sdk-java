@@ -829,7 +829,7 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                     String mimeType = contentType.getMimeType();
                                                     if (isJsonMime(mimeType)) {
                                                     try {
-                                                    return new StringEntity(objectMapper.writeValueAsString(obj), contentType);
+                                                    return new StringEntity(objectMapper.writeValueAsString(obj), ContentType.APPLICATION_JSON);
                                                     } catch (JsonProcessingException e) {
                                                     throw new ApiException(e);
                                                     }
