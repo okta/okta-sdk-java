@@ -160,7 +160,7 @@ class UsersIT extends ITSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        Thread.sleep(getTestOperationDelay())
+        Thread.sleep(20000)
 
         User retrievedUser = userApi.getUser(email)
         assertThat(retrievedUser.id, equalTo(user.id))
