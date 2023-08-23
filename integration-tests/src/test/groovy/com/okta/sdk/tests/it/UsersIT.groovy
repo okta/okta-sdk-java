@@ -144,8 +144,8 @@ class UsersIT extends ITSupport {
     }
 
     @Test (groups = "group2")
-    @Scenario("user-with-special-character")
-    void userWithSpecialCharacterTest() {
+    @Scenario("user-with-special-character-in-email")
+    void userWithSpecialCharacterInEmailTest() {
         def password = 'Passw0rd!2@3#'
         def firstName = 'John'
         def lastName = 'hashtag'
@@ -164,6 +164,32 @@ class UsersIT extends ITSupport {
 
         User retrievedUser = userApi.getUser(email)
         assertThat(retrievedUser.id, equalTo(user.id))
+    }
+
+    @Test (groups = "group2")
+    @Scenario("user-with-special-character-in-name")
+    void userWithSpecialCharacterInNameTest() {
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'Árvíztűrő'
+        def lastName = 'Tükörfúrógép'
+        def displayName = firstName + ' ' + lastName
+        def email = "john-${uniqueTestName}@example.com"
+
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setDisplayName(displayName)
+            .setPassword(password.toCharArray())
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+        validateUser(user, firstName, lastName, email)
+
+        User retrievedUser = userApi.getUser(email)
+        assertThat(retrievedUser.id, equalTo(user.id))
+        assertThat(retrievedUser.profile.firstName, equalTo(firstName))
+        assertThat(retrievedUser.profile.lastName, equalTo(lastName))
+        assertThat(retrievedUser.profile.displayName, equalTo(displayName))
     }
 
     @Test (groups = "group2")
