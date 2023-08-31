@@ -59,10 +59,10 @@ jobs:
     steps:
       - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
           at: ~/project
-      - platform-helpers-general/step-load-dependencies
+      - platform-orb/step-load-dependencies
       - run: | # Install your projects dependencies here or in the build job. Note: Here if Python.
           pip install -r requirements.txt 
-      - platform-helpers-general/step-run-snyk-monitor:
+      - platform-orb/step-run-snyk-monitor:
           scan-all-projects: true
           skip-unresolved: false
 
@@ -81,7 +81,7 @@ workflows:
       - jdk17:
           requires:
             - cache-secrets
-      - platform-helpers-general/job-snyk-prepare:
+      - platform-orb/job-snyk-prepare:
           name: prepare-snyk
           requires:
             - build
