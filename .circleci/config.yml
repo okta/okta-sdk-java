@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  platform-orb: okta/general-platform-helpers@1.6
+  platform-orb: okta/general-platform-helpers@1.8
 
 aliases:
 
@@ -68,3 +68,12 @@ workflows:
       - jdk17:
           requires:
             - cache-secrets
+  # See OKTA-634437
+  semgrep:
+    jobs:
+      - platform-orb/job-semgrep-prepare:
+          name: semgrep-prepare
+      - platform-orb/job-semgrep-scan:
+          name: "Scan with Semgrep"
+          requires:
+            - semgrep-prepare
