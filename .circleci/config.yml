@@ -84,7 +84,9 @@ workflows:
       - platform-orb/job-snyk-prepare:
           name: prepare-snyk
           requires:
-            - build
+            - jdk8
+            - jdk11
+            - jdk17
       - snyk-scan:
           name: execute-snyk
           requires:
