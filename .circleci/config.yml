@@ -63,6 +63,7 @@ jobs:
       - platform-orb/step-run-snyk-monitor:
           scan-all-projects: true
           skip-unresolved: false
+          run-on-non-main: true
 
 workflows:
   "Circle CI Tests":
