@@ -52,7 +52,7 @@ jobs:
     resource_class: large
     parallelism: 3
     steps: *build_steps
-  
+
   snyk-scan:
     docker:
       - image: cimg/openjdk:13.0
@@ -60,8 +60,6 @@ jobs:
       - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
           at: ~/project
       - platform-orb/step-load-dependencies
-      - run: | # Install your projects dependencies here or in the build job. Note: Here if Python.
-          pip install -r requirements.txt 
       - platform-orb/step-run-snyk-monitor:
           scan-all-projects: true
           skip-unresolved: false
