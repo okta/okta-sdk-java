@@ -39,8 +39,7 @@ jobs:
       JVM_OPTS: -Xmx3200m
     resource_class: large
     parallelism: 3
-    steps:
-      - *build_steps
+    steps: *build_steps
 
   jdk11:
     docker:
