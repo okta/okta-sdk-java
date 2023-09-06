@@ -41,7 +41,6 @@ jobs:
     parallelism: 3
     steps:
       - *build_steps
-      - *save_workspace
 
   jdk11:
     docker:
@@ -65,8 +64,9 @@ jobs:
     docker:
       - image: cimg/openjdk:13.0
     steps:
-      - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
-          at: ~/project
+      # - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
+      #     at: ~/project
+      - checkout
       - platform-orb/step-load-dependencies
       - platform-orb/step-run-snyk-monitor:
           scan-all-projects: true
