@@ -84,8 +84,6 @@ workflows:
           name: prepare-snyk
           requires:
             - jdk8
-            - jdk11
-            - jdk17
       - snyk-scan:
           name: execute-snyk
           requires:
