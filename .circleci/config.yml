@@ -27,9 +27,9 @@ aliases:
 
   - &save_workspace
     - persist_to_workspace:
-      root: ~/project
-      paths:
-        - .
+        root: ~/project
+        paths:
+          - .
 
 jobs:
   jdk8:
