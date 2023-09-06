@@ -24,6 +24,13 @@ aliases:
     - run:
         when: on_fail
         command: cat integration-tests/target/failsafe-reports/*dump*
+    - when:
+        condition: << parameters.save_workspace >>
+        steps:
+          - persist_to_workspace:
+              root: ~/project
+              paths:
+                - .
 
 jobs:
   jdk8:
@@ -33,6 +40,10 @@ jobs:
       JVM_OPTS: -Xmx3200m
     resource_class: large
     parallelism: 3
+    parameters:
+      save_workspace:
+        type: boolean
+        default: true
     steps: *build_steps
 
   jdk11:
