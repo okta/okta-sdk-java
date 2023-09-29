@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  platform-orb: okta/general-platform-helpers@1.8
+  general-platform-helpers: okta/general-platform-helpers@1.8
 
 aliases:
 
@@ -69,7 +69,7 @@ jobs:
 workflows:
   "Circle CI Tests":
     jobs:
-      - platform-orb/job-secrets-obtain:
+      - general-platform-helpers/job-secrets-obtain:
           name: cache-secrets
           secret-key: "OKTA_CLIENT_ORGURL;OKTA_CLIENT_TOKEN;OKTA_CLIENT_CONNECTIONTIMEOUT;OKTA_IT_OPERATION_DELAY"
       - jdk8:
