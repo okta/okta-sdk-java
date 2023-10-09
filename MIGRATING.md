@@ -9,7 +9,7 @@ A new version of the Open API specification v3 has been released, and new well-k
 
 This revision will embrace the Open Source [openapi-generator](https://github.com/OpenAPITools/openapi-generator) to auto generate the code from Okta's reference specification (v3) of the Management APIs.
 
-`ExtensibleResource` is removed as the individual models no longer extend from this class. Client can directly serialize/deserialize API responses into the respective model classes. There should ideally be no need
+`ExtensibleResource` is removed as the individual models no longer extend from this class. This is also partly due to the way the code generator tooling works when it generates the model classes. Client can directly serialize/deserialize API responses into the respective model classes. There should ideally be no need
 for a workaround or replacement of `ExtensibleResource`. 
 
 ### Okta client vs API clients
