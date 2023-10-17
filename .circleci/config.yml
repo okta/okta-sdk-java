@@ -79,7 +79,7 @@ workflows:
       - jdk11:
           requires:
             - cache-secrets
-      - jdk17:
+      - jdk21:
           requires:
             - cache-secrets
       - general-platform-helpers/job-semgrep-prepare:
