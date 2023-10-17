@@ -37,16 +37,16 @@ jobs:
 
   jdk11:
     docker:
-      - image: cimg/openjdk:11.0.18-node
+      - image: cimg/openjdk:11.0.20-node
     environment:
       JVM_OPTS: -Xmx3200m
     resource_class: large
     parallelism: 3
     steps: *build_steps
 
-  jdk17:
+  jdk21:
     docker:
-      - image: cimg/openjdk:17.0.6-node
+      - image: cimg/openjdk:21.0.0-node
     environment:
       JVM_OPTS: -Xmx3200m
     resource_class: large
@@ -55,7 +55,7 @@ jobs:
 
   snyk-scan:
     docker:
-      - image: cimg/openjdk:17.0.6-node
+      - image: cimg/openjdk:21.0.0-node
     steps:
       - checkout
       - run: npm install
@@ -91,7 +91,7 @@ workflows:
       - general-platform-helpers/job-snyk-prepare:
           name: prepare-snyk
           requires:
-            - jdk17
+            - jdk21
       - snyk-scan:
           name: execute-snyk
           requires:
