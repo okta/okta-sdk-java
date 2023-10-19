@@ -12259,6 +12259,49 @@ paths:
             - okta.policies.manage
       tags:
         - Policy
+  /api/v1/policies/simulate:
+    parameters:
+      - $ref: '#/components/parameters/simulateParameter'
+    post:
+      summary: Create a Policy Simulation
+      description: |-
+        Creates a policy or policy rule simulation. The access simulation evaluates policy and policy rules based on the existing policy rule configuration.
+        The evaluation result simulates what the real-world authentication flow is and what policy rules have been applied or matched to the authentication flow.
+      operationId: createPolicySimulation
+      x-codegen-request-body-name: simulatePolicy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SimulatePolicyBody'
+            examples:
+              SimulatePolicy:
+                $ref: '#/components/examples/SimulatePolicyBody'
+        required: true
+      responses:
+        '204':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulatePolicyResponse'
+              examples:
+                SimulatePolicy:
+                  $ref: '#/components/examples/SimulatePolicyResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '404':
+          $ref: '#/components/responses/ErrorResourceNotFound404'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+        - apiToken: []
+        - oauth2:
+            - okta.policies.read
+      tags:
+        - Policy
   /api/v1/policies/{policyId}:
     parameters:
       - $ref: '#/components/parameters/pathPolicyId'
@@ -20643,6 +20686,123 @@ components:
         _links:
           next:
             href: https://{yourOktaDomain}/api/v1/iam/roles?after=cr0Fw7HKcWIroo88m3r1
+    SimulatePolicyBody:
+      summary: Simulate policy request body
+      description: Simulate policy request body
+      value:
+        policyType:
+          - OKTA_SIGN_ON
+          - MFA_ENROLL
+        appInstance: 0oa4eroj3nYCIJIW70g7
+        policyContext:
+          groups:
+            ids:
+              - 00g4eralvekR5RLuS0g7
+              - 00g4eralvekR5RLuS0g8
+        risk:
+          level: LOW
+        zones:
+          ids:
+            - nzo4eralxcRnbIHYJ0g7
+        device:
+          platform: IOS
+          registered: true
+          managed: true
+    SimulatePolicyResponse:
+      summary: Simulate policy response body
+      description: Simulate policy response body
+      value:
+        evaluation:
+          - status: null
+            policyType: OkTA_SIGN_ON
+            result:
+              policies:
+                - id: 00p4eromwukk6qUku0g7
+                - name: test policy
+                - status: MATCH
+                - conditions: []
+                - rules:
+                    - id: 0pr4erof85nGcyC7Y0g7
+                    - name: test rule
+                    - status: MATCH
+                    - conditions:
+                        - type: people.groups.include
+                        - status: MATCH
+            undefined:
+              policies: null
+            evaluated:
+              policies: null
+          - status: null
+            policyType: ACCESS_POLICY
+            result:
+              policies:
+                - id: rst4eram06ZKZewEe0g7
+                - name: Any two factors
+                - status: MATCH
+                - conditions: []
+                - rules:
+                    - id: rul4eram07VsWgybo0g7
+                    - name: Catch-all rule
+                    - status: MATCH
+                    - conditions: []
+            undefined:
+              policies: null
+            evaluated:
+              policies: null
+          - status: null
+            policyType: PROFILE_ENROLLMENT
+            result:
+              policies:
+                - id: rst4eram08ZSjPTOl0g7
+                - name: Default Policy
+                - status: MATCH
+                - conditions: []
+                - rules:
+                    - id: rul4eram094PrQ2BX0g7
+                    - name: Catch-all rule
+                    - status: MATCH
+                    - conditions: []
+            undefined:
+              policies: null
+            evaluated:
+              policies: null
+    ThreatInsightResponseExample:
+      summary: ThreatInsight response
+      value:
+        action: none
+        excludeZones: []
+        created: '2020-08-05T22:18:30.629Z'
+        lastUpdated: '2020-08-05T22:18:30.629Z'
+        _links:
+          self:
+            href: https://{yourOktaDomain}/api/v1/threats/configuration
+            hints:
+              allow:
+                - GET
+                - POST
+    ThreatInsightUpdateRequestExample:
+      summary: ThreatInsight update request
+      value:
+        action: audit
+        excludeZones:
+          - nzo1q7jEOsoCnoKcj0g4
+          - nzouagptWUz5DlLfM0g3
+    ThreatInsightUpdateResponseExample:
+      summary: ThreatInsight update response
+      value:
+        action: audit
+        excludeZones:
+          - nzo1q7jEOsoCnoKcj0g4
+          - nzouagptWUz5DlLfM0g3
+        created: '2020-08-05T22:18:30.629Z'
+        lastUpdated: '2020-10-13T21:23:10.178Z'
+        _links:
+          self:
+            href: https://{yourOktaDomain}/api/v1/threats/configuration
+            hints:
+              allow:
+                - GET
+                - POST
     TriggerSessionResponse:
       value:
         - id: uij4ri8ZLk0ywyqxB0g4
@@ -23013,8 +23173,6 @@ components:
         - SAML_2_0
         - SECURE_PASSWORD_STORE
         - WS_FEDERATION
-        - MOBILE_NO_SIGNON
-        - RADIUS_FOR_GENERIC_APP
     ApplicationVisibility:
       type: object
       properties:
@@ -25898,7 +26056,7 @@ components:
         _links:
           type: object
           additionalProperties:
-              $ref: '#/components/schemas/HrefObjectAppLink'
+              $ref: '#/components/schemas/HrefObjectSelfLink'
     IdentityProviderApplicationUser:
       type: object
       properties:
@@ -30121,6 +30279,121 @@ components:
         id:
           type: string
           readOnly: false
+    SimulatePolicyBody:
+      description: The request body required for a simulate policy operation.
+      type: object
+      properties:
+        appInstance:
+          type: string
+          description: The application instance ID for a simulate operation
+        policyContext:
+          $ref: '#/components/schemas/PolicyContext'
+        policyTypes:
+          type: string
+          description: Supported policy types for a simulate operation. The default value, `null`, returns all types.
+          enum:
+            - OKTA_SIGN_ON
+            - MFA_ENROLL
+            - PROFILE_ENROLLMENT
+            - ACCESS_POLICY
+            - null
+      required:
+        - appInstance
+    SimulatePolicyEvaluations:
+      type: object
+      properties:
+        evaluated:
+          type: object
+          description: A list of evaluated but not matched policies and rules
+          properties:
+            policies:
+              $ref: '#/components/schemas/SimulateResultPolicies'
+        policyType:
+          type: string
+          description: The policy type of the simulate operation
+          enum:
+            - OKTA_SIGN_ON
+            - MFA_ENROLL
+            - PROFILE_ENROLLMENT
+            - ACCESS_POLICY
+            - null
+        result:
+          $ref: '#/components/schemas/SimulatePolicyResult'
+        status:
+          type: string
+          description: The result of this entity evaluation
+          enum:
+            - MATCH
+            - NOT_MATCH
+            - UNDEFINED
+        undefined:
+          type: object
+          description: A list of undefined but not matched policies and rules
+          properties:
+            policies:
+              $ref: '#/components/schemas/SimulateResultPolicies'
+    SimulatePolicyResponse:
+      description: The response body returned for a simulate policy operation. An array of `evaluations`.
+      items:
+        $ref: '#/components/schemas/SimulatePolicyEvaluations'
+      type: array
+    SimulatePolicyResult:
+      description: The result of the policy evaluation
+      type: object
+      properties:
+        policies:
+          $ref: '#/components/schemas/SimulateResultPolicies'
+    SimulateResultConditions:
+      type: object
+      properties:
+        status:
+          type: string
+          description: The result of the entity evaluation
+          enum:
+            - MATCH
+            - UNMATCHED
+            - UNDEFINED
+        type:
+          type: string
+          description: The type of condition
+    SimulateResultPolicies:
+      items:
+        $ref: '#/components/schemas/SimulateResultPoliciesItems'
+      type: array
+    SimulateResultPoliciesItems:
+      type: object
+      properties:
+        conditions:
+          type: array
+          $ref: '#/components/schemas/SimulateResultConditions'
+        id:
+          type: string
+        name:
+          type: string
+        rules:
+          type: array
+          $ref: '#/components/schemas/SimulateResultRules'
+        status:
+          type: string
+    SimulateResultRules:
+      type: object
+      properties:
+        conditions:
+          type: array
+          $ref: '#/components/schemas/SimulateResultConditions'
+        id:
+          type: string
+          description: The unique ID number of the policy rule
+        name:
+          type: string
+          description: The name of the policy rule
+        status:
+          type: string
+          description: The result of the entity evaluation
+          enum:
+            - MATCH
+            - UNMATCHED
+            - UNDEFINED
     SingleLogout:
       type: object
       properties:
@@ -31438,7 +31711,9 @@ components:
             properties: {}
           readOnly: true
         _links:
-          $ref: '#/components/schemas/LinksSelf'
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/HrefObjectSelfLink'
     VerifyUserFactorResult:
       type: string
       enum:
