@@ -34,9 +34,9 @@
     <inceptionYear>2017</inceptionYear>
 
     <properties>
-        <jackson.version>2.15.2</jackson.version>
-        <snakeyaml.version>2.0</snakeyaml.version>
-        <bouncycastle.version>1.75</bouncycastle.version>
+        <jackson.version>2.15.3</jackson.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
+        <bouncycastle.version>1.76</bouncycastle.version>
         <jjwt.version>0.11.5</jjwt.version>
         <org.apache.httpcomponents.client5.version>5.2.1</org.apache.httpcomponents.client5.version>
         <okta.sdk.previousVersion>13.0.2</okta.sdk.previousVersion>
