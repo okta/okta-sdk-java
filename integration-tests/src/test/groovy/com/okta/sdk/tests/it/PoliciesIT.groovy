@@ -15,7 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.helper.PolicyApiHelper
+
 import com.okta.sdk.resource.application.OIDCApplicationBuilder
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
@@ -40,7 +40,6 @@ class PoliciesIT extends ITSupport {
 
     GroupApi groupApi = new GroupApi(getClient())
     PolicyApi policyApi = new PolicyApi(getClient())
-    PolicyApiHelper<Policy> policyApiHelper = new PolicyApiHelper<>(policyApi)
 
     @Test (groups = "group2")
     void signOnPolicyWithGroupConditions() {
@@ -56,7 +55,7 @@ class PoliciesIT extends ITSupport {
             .setDescription("IT created Policy - signOnPolicyWithGroupConditions")
             .setType(PolicyType.OKTA_SIGN_ON)
             .addGroup(group.getId())
-            .buildAndCreate(policyApiHelper) as OktaSignOnPolicy
+            .buildAndCreate(policyApi) as OktaSignOnPolicy
         registerForCleanup(policy)
 
         assertThat(policy, notNullValue())

@@ -16,7 +16,7 @@
 package com.okta.sdk.tests.it
 
 import com.google.common.net.HttpHeaders
-import com.okta.sdk.helper.ApplicationApiHelper
+
 import com.okta.sdk.tests.it.util.ITSupport
 import com.okta.sdk.resource.api.ApplicationApi
 import com.okta.sdk.resource.api.InlineHookApi
@@ -38,7 +38,6 @@ class AppsIT extends ITSupport {
     String prefix = "java-sdk-it-"
 
     ApplicationApi applicationApi = new ApplicationApi(getClient())
-    ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(applicationApi)
 
     @Test
     void basicAuthAppTest() {

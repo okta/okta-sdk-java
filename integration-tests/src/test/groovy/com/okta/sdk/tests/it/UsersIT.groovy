@@ -15,8 +15,7 @@
  */
 package com.okta.sdk.tests.it
 
-import com.okta.sdk.helper.ApplicationApiHelper
-import com.okta.sdk.helper.PolicyApiHelper
+
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
 import com.okta.sdk.resource.common.PagedList
 import com.okta.sdk.resource.group.GroupBuilder
@@ -44,9 +43,8 @@ import static org.hamcrest.Matchers.*
 class UsersIT extends ITSupport {
 
     GroupApi groupApi = new GroupApi(getClient())
-    ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(getClient()))
     ApplicationGroupsApi applicationGroupsApi = new ApplicationGroupsApi(getClient())
-    PolicyApiHelper<Policy> policyApiHelper = new PolicyApiHelper<>(new PolicyApi(getClient()))
+    PolicyApi policyApi = new PolicyApi(getClient())
     UserApi userApi = new UserApi(getClient())
     RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
 
@@ -330,7 +328,7 @@ class UsersIT extends ITSupport {
 
         policy.setSettings(passwordPolicySettings)
 
-        policy = policyApiHelper.replacePolicy(policy.getId(), policy)
+        policy = policyApi.replacePolicy(policy.getId(), policy)
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
 
@@ -360,7 +358,7 @@ class UsersIT extends ITSupport {
         passwordPolicyRule.setActions(passwordPolicyRuleActions)
         passwordPolicyRule.setName(policyRuleName)
 
-        policyApiHelper.createPolicyRuleOfType(PasswordPolicyRule.class, policy.getId(), passwordPolicyRule)
+        policyApi.createPolicyRule(policy.getId(), passwordPolicyRule)
 
         // 1. Create a user
         User user = UserBuilder.instance()

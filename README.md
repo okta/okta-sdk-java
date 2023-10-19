@@ -170,9 +170,6 @@ These examples will help you understand how to use this library. You can also br
 Once you initialize a `ApiClient` instance, you can pass this instance to the constructor of any API area clients (such as `UserApi`, `GroupApi`, `ApplicationApi` etc.).
 You can start using these clients to call management APIs relevant to the chosen API area.
 
-Note: For creation (HTTP POST or PUT operation) of models that follow inheritance (e.g. Application, Policy | PolicyRule, UserFactor), use the APIs found in their respective `ApiHelper` class (e.g. `ApplicationApiHelper`, `PolicyApiHelper`, `UserFactorApiHelper`)
-to ensure safe type cast to their respective subclass types.
-
 ### Authenticate a User
 
 This library should be used with the Okta management API. For authentication, we recommend using an OAuth 2.0 or OpenID Connect library such as [Spring Security OAuth](https://spring.io/projects/spring-security-oauth) or [Okta's Spring Boot integration](https://github.com/okta/okta-spring-boot). For [Okta Authentication API](https://developer.okta.com/docs/api/resources/authn) you can use [Authentication SDK](https://github.com/okta/okta-auth-java).
@@ -358,14 +355,14 @@ UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
 
 [//]: # (method: enrollUserInFactor)
 ```java
-UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+UserFactorApi userFactorApi = new UserFactorApi(client);
 SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
 smsUserFactorProfile.setPhoneNumber("555 867 5309");
 SmsUserFactor smsUserFactor = new SmsUserFactor();
 smsUserFactor.setProvider(FactorProvider.OKTA);
 smsUserFactor.setFactorType(FactorType.SMS);
 smsUserFactor.setProfile(smsUserFactorProfile);
-userFactorApiHelper.enrollFactorOfType(SmsUserFactor.class, "userId", smsUserFactor, true, "templateId", 30, true);
+userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
 ```
 [//]: # (end: enrollUserInFactor)
 
@@ -373,11 +370,11 @@ userFactorApiHelper.enrollFactorOfType(SmsUserFactor.class, "userId", smsUserFac
 
 [//]: # (method: activateFactor)
 ```java
-UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
-CallUserFactor userFactor = (CallUserFactor) userFactorApiHelper.getFactor("userId", "factorId");
+UserFactorApi userFactorApi = new UserFactorApi(client);
+CallUserFactor userFactor = (CallUserFactor) userFactorApi.getFactor("userId", "factorId");
 ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
 activateFactorRequest.setPassCode("123456");
-userFactorApiHelper.activateFactorOfType(CallUserFactor.class, "userId", "factorId", activateFactorRequest);
+userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
 ```
 [//]: # (end: activateFactor)
 
@@ -385,12 +382,12 @@ userFactorApiHelper.activateFactorOfType(CallUserFactor.class, "userId", "factor
 
 [//]: # (method: verifyFactor)
 ```java
-UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
-UserFactor userFactor = userFactorApiHelper.getFactor( "userId", "factorId");
+UserFactorApi userFactorApi = new UserFactorApi(client);
+UserFactor userFactor = userFactorApi.getFactor( "userId", "factorId");
 VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
 verifyFactorRequest.setPassCode("123456");
 VerifyUserFactorResponse verifyUserFactorResponse =
-    userFactorApiHelper.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
+    userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
 ```
 [//]: # (end: verifyFactor)
 
@@ -398,7 +395,7 @@ VerifyUserFactorResponse verifyUserFactorResponse =
 
 [//]: # (method: createSwaApplication)
 ```java
-ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
+ApplicationApi applicationApi = new ApplicationApi(client);
 SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
 swaApplicationSettingsApplication.buttonField("btn-login")
     .passwordField("txtbox-password")
@@ -413,7 +410,7 @@ browserPluginApplication.settings(swaApplicationSettings);
 
 // create BrowserPluginApplication app type
 BrowserPluginApplication createdApp =
-    applicationApiHelper.createApplicationOfType(BrowserPluginApplication.class, browserPluginApplication, true, null);
+        (BrowserPluginApplication) applicationApi.createApplication(browserPluginApplication, true, null);
 ```
 [//]: # (end: createSwaApplication)
 

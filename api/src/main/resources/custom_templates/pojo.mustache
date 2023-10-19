@@ -29,7 +29,7 @@
         @JsonTypeName("{{name}}")
     {{/isClassnameSanitized}}
 {{/jackson}}
-{{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{>xmlAnnotation}}
+{{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
 {{#vendorExtensions.x-class-extra-annotation}}
     {{{vendorExtensions.x-class-extra-annotation}}}
 {{/vendorExtensions.x-class-extra-annotation}}
