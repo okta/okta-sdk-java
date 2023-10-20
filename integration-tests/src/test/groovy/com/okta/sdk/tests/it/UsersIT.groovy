@@ -42,6 +42,7 @@ import static org.hamcrest.Matchers.*
  */
 class UsersIT extends ITSupport {
 
+    ApplicationApi applicationApi = new ApplicationApi(getClient())
     GroupApi groupApi = new GroupApi(getClient())
     ApplicationGroupsApi applicationGroupsApi = new ApplicationGroupsApi(getClient())
     PolicyApi policyApi = new PolicyApi(getClient())
@@ -862,7 +863,7 @@ class UsersIT extends ITSupport {
         def expandParameter = "group"
 
         List<Application> applicationList =
-            applicationApiHelper.listApplications( null, null, null, null, null, null)
+            applicationApi.listApplications( null, null, null, null, null, null)
 
         Application application = applicationList.first()
 

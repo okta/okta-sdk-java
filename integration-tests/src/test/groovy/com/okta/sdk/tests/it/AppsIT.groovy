@@ -55,7 +55,7 @@ class AppsIT extends ITSupport {
         basicAuthApplication.settings(basicApplicationSettings)
 
         BasicAuthApplication createdApp =
-            applicationApiHelper.createApplicationOfType(BasicAuthApplication.class, basicAuthApplication, true, null)
+            applicationApi.createApplication(basicAuthApplication, true, null) as BasicAuthApplication
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -82,7 +82,7 @@ class AppsIT extends ITSupport {
 
         // create
         BookmarkApplication createdApp =
-            applicationApiHelper.createApplicationOfType(BookmarkApplication.class, bookmarkApplication, true, null)
+            applicationApi.createApplication(bookmarkApplication, true, null)
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -94,7 +94,7 @@ class AppsIT extends ITSupport {
         // update
         Application toBeUpdatedApp = bookmarkApplication.label("updated-" + bookmarkApplication.getLabel())
         BookmarkApplication updatedApp =
-            applicationApiHelper.replaceApplicationOfType(BookmarkApplication.class, createdApp.getId(), toBeUpdatedApp) as BookmarkApplication
+            applicationApi.replaceApplication(createdApp.getId(), toBeUpdatedApp) as BookmarkApplication
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -125,7 +125,7 @@ class AppsIT extends ITSupport {
 
         // create
         BrowserPluginApplication createdApp =
-            applicationApiHelper.createApplicationOfType(BrowserPluginApplication.class, browserPluginApplication, true, null)
+            applicationApi.createApplication(browserPluginApplication, true, null) as BrowserPluginApplication
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -137,7 +137,7 @@ class AppsIT extends ITSupport {
         // update
         Application toBeUpdatedApp = browserPluginApplication.label("updated-" + browserPluginApplication.getLabel())
         BrowserPluginApplication updatedApp =
-            applicationApiHelper.replaceApplicationOfType(BrowserPluginApplication.class, createdApp.getId(), toBeUpdatedApp) as BrowserPluginApplication
+            applicationApi.replaceApplication(createdApp.getId(), toBeUpdatedApp) as BrowserPluginApplication
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -188,7 +188,7 @@ class AppsIT extends ITSupport {
 
         // create
         OpenIdConnectApplication createdApp =
-            applicationApiHelper.createApplicationOfType(OpenIdConnectApplication.class, openIdConnectApplication, true, null)
+            applicationApi.createApplication(openIdConnectApplication, true, null) as OpenIdConnectApplication
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -200,12 +200,12 @@ class AppsIT extends ITSupport {
         // update
         Application toBeUpdatedApp = openIdConnectApplication.label("updated-" + openIdConnectApplication.getLabel())
         OpenIdConnectApplication updatedApp =
-            applicationApiHelper.replaceApplicationOfType(OpenIdConnectApplication.class, createdApp.getId(), toBeUpdatedApp) as OpenIdConnectApplication
+            applicationApi.replaceApplication(createdApp.getId(), toBeUpdatedApp) as OpenIdConnectApplication
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
         // retrieve
-        OpenIdConnectApplication retrievedApp = (OpenIdConnectApplication) applicationApiHelper.getApplication(createdApp.getId(), null)
+        OpenIdConnectApplication retrievedApp = (OpenIdConnectApplication) applicationApi.getApplication(createdApp.getId(), null)
 
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getId(), equalTo(updatedApp.getId()))
@@ -301,7 +301,7 @@ class AppsIT extends ITSupport {
 
         // create
         SamlApplication createdApp =
-            applicationApiHelper.createApplicationOfType(SamlApplication.class, samlApplication, true, null)
+            applicationApi.createApplication(samlApplication, true, null) as SamlApplication
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
@@ -313,7 +313,7 @@ class AppsIT extends ITSupport {
         // update
         Application toBeUpdatedApp = samlApplication.label("updated-" + samlApplication.getLabel())
         SamlApplication updatedApp =
-            applicationApiHelper.replaceApplicationOfType(SamlApplication.class, createdApp.getId(), toBeUpdatedApp) as SamlApplication
+            applicationApi.replaceApplication(createdApp.getId(), toBeUpdatedApp) as SamlApplication
 
         assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
 
@@ -348,7 +348,7 @@ class AppsIT extends ITSupport {
         samlApplicationSettings.app(samlApplicationSettingsApplication)
         org2OrgApplication.settings(samlApplicationSettings)
 
-        SamlApplication createdApp = applicationApiHelper.createApplicationOfType(SamlApplication.class, org2OrgApplication, true, null)
+        Application createdApp = applicationApi.createApplication(org2OrgApplication, true, null)
         registerForCleanup(createdApp)
 
 //        File file = new File("/tmp/okta_logo_favicon.png")
@@ -357,6 +357,7 @@ class AppsIT extends ITSupport {
 //        applicationApi.uploadApplicationLogo(createdApp.getId(), file)
     }
 
+    //TODO: this test is unnecessary (helper is no more), remove it
     @Test
     void testApplicationApiHelper() {
 
@@ -374,7 +375,7 @@ class AppsIT extends ITSupport {
 
         // create
         BookmarkApplication createdApp =
-            applicationApiHelper.createApplicationOfType(BookmarkApplication.class, bookmarkApplication, true, null)
+            applicationApi.createApplication(bookmarkApplication, true, null) as BookmarkApplication
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())

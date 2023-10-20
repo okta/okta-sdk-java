@@ -84,7 +84,7 @@ class PoliciesIT extends ITSupport {
             .description("IT created Policy - createProfileEnrollmentPolicy")
 
         ProfileEnrollmentPolicy createdProfileEnrollmentPolicy =
-            policyApiHelper.createPolicyOfType(ProfileEnrollmentPolicy.class, profileEnrollmentPolicy, false)
+            policyApi.createPolicy(profileEnrollmentPolicy, false)
 
         registerForCleanup(createdProfileEnrollmentPolicy)
 
@@ -156,7 +156,7 @@ class PoliciesIT extends ITSupport {
         accessPolicyRule.actions(accessPolicyRuleActions)
 
         AccessPolicyRule createdAccessPolicyRule =
-            policyApiHelper.createPolicyRuleOfType(AccessPolicyRule.class, accessPolicy.getId(), accessPolicyRule)
+            policyApi.createPolicyRule(accessPolicy.getId(), accessPolicyRule) as AccessPolicyRule
 
         assertThat(createdAccessPolicyRule, notNullValue())
         assertThat(createdAccessPolicyRule.getName(), is(name))
@@ -173,7 +173,7 @@ class PoliciesIT extends ITSupport {
 
         Thread.sleep(testOperationDelay)
 
-        // get policyrule expect 404
+        // get policy rule expect 404
         expect(ApiException) {
             policyApi.getPolicyRule(accessPolicy.getId(), createdAccessPolicyRule.getId())
         }
@@ -187,7 +187,7 @@ class PoliciesIT extends ITSupport {
             .setDescription("IT created Policy - signOnActionsTest")
             .setType(PolicyType.OKTA_SIGN_ON)
             .setStatus(LifecycleStatus.ACTIVE)
-            .buildAndCreate(policyApiHelper) as OktaSignOnPolicy
+            .buildAndCreate(policyApi) as OktaSignOnPolicy
         registerForCleanup(policy)
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
@@ -203,14 +203,14 @@ class PoliciesIT extends ITSupport {
         oktaSignOnPolicyRule.actions(oktaSignOnPolicyRuleActions)
 
         OktaSignOnPolicyRule createdPolicyRule =
-            policyApiHelper.createPolicyRuleOfType(OktaSignOnPolicyRule.class, policy.getId(), oktaSignOnPolicyRule)
+            policyApi.createPolicyRule(policy.getId(), oktaSignOnPolicyRule) as OktaSignOnPolicyRule
 
         assertThat(createdPolicyRule.getId(), notNullValue())
         assertThat(createdPolicyRule.getName(), is(policyRuleName))
         assertThat(createdPolicyRule.getType(), is(PolicyRuleType.SIGN_ON))
 
-        policyApiHelper.deactivatePolicyRule(policy.getId(), createdPolicyRule.getId())
-        policyApiHelper.deletePolicyRule(policy.getId(), createdPolicyRule.getId())
+        policyApi.deactivatePolicyRule(policy.getId(), createdPolicyRule.getId())
+        policyApi.deletePolicyRule(policy.getId(), createdPolicyRule.getId())
     }
 
     @Test
@@ -254,7 +254,7 @@ class PoliciesIT extends ITSupport {
             .setDescription("IT created Policy - expandTest")
             .setType(PolicyType.OKTA_SIGN_ON)
             .setStatus(LifecycleStatus.INACTIVE)
-            .buildAndCreate(policyApiHelper)
+            .buildAndCreate(policyApi)
         registerForCleanup(policy)
 
         // verify a regular get does NOT return the embedded map with "rules"
@@ -273,7 +273,7 @@ class PoliciesIT extends ITSupport {
             .setDescription("IT created Policy - listPoliciesWithParams")
             .setType(PolicyType.OKTA_SIGN_ON)
             .setStatus(LifecycleStatus.INACTIVE)
-            .buildAndCreate(policyApiHelper)
+            .buildAndCreate(policyApi)
         registerForCleanup(policy)
 
         def policies=
@@ -292,6 +292,7 @@ class PoliciesIT extends ITSupport {
             .forEach { assertRulesExpanded(it) }
     }
 
+    //TODO: this test is unnecessary (helper is no more), remove it
     @Test
     void testPolicyApiHelper() {
 
@@ -325,7 +326,7 @@ class PoliciesIT extends ITSupport {
             .setPriority(1)
             .setDescription("Dummy policy for Java SDK IT")
             .setName("SDK policy "+ UUID.randomUUID().toString())
-            .buildAndCreate(policyApiHelper) as PasswordPolicy
+            .buildAndCreate(policyApi) as PasswordPolicy
         registerForCleanup(policy)
 
         // get policy
