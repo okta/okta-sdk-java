@@ -17,7 +17,6 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.helper.PolicyApiHelper;
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.PolicyApi;
@@ -202,8 +201,7 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
 
     @Override
     public PasswordPolicy buildAndCreate(PolicyApi client) throws ApiException {
-        return new PolicyApiHelper<>(new PolicyApiHelper<>(client.getApiClient()))
-            .createPolicyOfType(PasswordPolicy.class, build(), false);
+        return (PasswordPolicy) new PolicyApi(client.getApiClient()).createPolicy(build(), false);
     }
 
     private PasswordPolicy build() {

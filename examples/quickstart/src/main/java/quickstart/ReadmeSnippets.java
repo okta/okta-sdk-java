@@ -22,8 +22,6 @@ import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
-import com.okta.sdk.helper.ApplicationApiHelper;
-import com.okta.sdk.helper.UserFactorApiHelper;
 import com.okta.sdk.resource.common.PagedList;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
@@ -208,7 +206,7 @@ public class ReadmeSnippets {
     }
 
     private void enrollUserInFactor() throws ApiException {
-        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+        UserFactorApi userFactorApi = new UserFactorApi(client);
 
         SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
         smsUserFactorProfile.setPhoneNumber("555 867 5309");
@@ -218,28 +216,28 @@ public class ReadmeSnippets {
         smsUserFactor.setFactorType(FactorType.SMS);
         smsUserFactor.setProfile(smsUserFactorProfile);
 
-        userFactorApiHelper.enrollFactorOfType(SmsUserFactor.class, "userId", smsUserFactor, true, "templateId", 30, true);
+        userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
     }
 
     private void activateFactor() throws ApiException {
-        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+        UserFactorApi userFactorApi = new UserFactorApi(client);
 
-        CallUserFactor userFactor = (CallUserFactor) userFactorApiHelper.getFactor("userId", "factorId");
+        CallUserFactor userFactor = (CallUserFactor) userFactorApi.getFactor("userId", "factorId");
         ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
         activateFactorRequest.setPassCode("123456");
 
-        userFactorApiHelper.activateFactorOfType(CallUserFactor.class, "userId", "factorId", activateFactorRequest);
+        userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
     }
 
     private void verifyFactor() throws ApiException {
-        UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+        UserFactorApi userFactorApi = new UserFactorApi(client);
 
-        UserFactor userFactor = userFactorApiHelper.getFactor( "userId", "factorId");
+        UserFactor userFactor = userFactorApi.getFactor( "userId", "factorId");
         VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
         verifyFactorRequest.setPassCode("123456");
 
         VerifyUserFactorResponse verifyUserFactorResponse =
-            userFactorApiHelper.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
+            userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
     }
 
     private void listApplications() throws ApiException {
@@ -255,7 +253,7 @@ public class ReadmeSnippets {
     }
 
     private void createSwaApplication() throws ApiException {
-        ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
+        ApplicationApi applicationApi = new ApplicationApi(client);
 
         SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
         swaApplicationSettingsApplication.buttonField("btn-login")
@@ -271,7 +269,7 @@ public class ReadmeSnippets {
 
         // create BrowserPluginApplication app type
         BrowserPluginApplication createdApp =
-            applicationApiHelper.createApplicationOfType(BrowserPluginApplication.class, browserPluginApplication, true, null);
+                (BrowserPluginApplication) applicationApi.createApplication(browserPluginApplication, true, null);
     }
 
     private void listPolicies() throws ApiException {

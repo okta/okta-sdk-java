@@ -20,7 +20,6 @@ import com.okta.sdk.resource.application.OIDCApplicationBuilder;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.ApplicationApi;
 import com.okta.sdk.resource.model.*;
-import com.okta.sdk.helper.ApplicationApiHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,8 +166,8 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
 
     @Override
     public OpenIdConnectApplication buildAndCreate(ApplicationApi client) throws ApiException {
-        return new ApplicationApiHelper<>(new ApplicationApi(client.getApiClient()))
-                .createApplicationOfType(OpenIdConnectApplication.class, build(), false, null);
+        return (OpenIdConnectApplication) new ApplicationApi(client.getApiClient())
+                .createApplication(build(), false, null);
     }
 
     private OpenIdConnectApplication build(){

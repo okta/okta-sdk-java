@@ -366,14 +366,14 @@ UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
 
 [//]: # (method: enrollUserInFactor)
 ```java
-UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
+UserFactorApi userFactorApi = new UserFactorApi(client);
 SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
 smsUserFactorProfile.setPhoneNumber("555 867 5309");
 SmsUserFactor smsUserFactor = new SmsUserFactor();
 smsUserFactor.setProvider(FactorProvider.OKTA);
 smsUserFactor.setFactorType(FactorType.SMS);
 smsUserFactor.setProfile(smsUserFactorProfile);
-userFactorApiHelper.enrollFactorOfType(SmsUserFactor.class, "userId", smsUserFactor, true, "templateId", 30, true);
+userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
 ```
 [//]: # (end: enrollUserInFactor)
 
@@ -381,11 +381,11 @@ userFactorApiHelper.enrollFactorOfType(SmsUserFactor.class, "userId", smsUserFac
 
 [//]: # (method: activateFactor)
 ```java
-UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
-CallUserFactor userFactor = (CallUserFactor) userFactorApiHelper.getFactor("userId", "factorId");
+UserFactorApi userFactorApi = new UserFactorApi(client);
+CallUserFactor userFactor = (CallUserFactor) userFactorApi.getFactor("userId", "factorId");
 ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
 activateFactorRequest.setPassCode("123456");
-userFactorApiHelper.activateFactorOfType(CallUserFactor.class, "userId", "factorId", activateFactorRequest);
+userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
 ```
 [//]: # (end: activateFactor)
 
@@ -393,12 +393,12 @@ userFactorApiHelper.activateFactorOfType(CallUserFactor.class, "userId", "factor
 
 [//]: # (method: verifyFactor)
 ```java
-UserFactorApiHelper<UserFactor> userFactorApiHelper = new UserFactorApiHelper<>(new UserFactorApi(client));
-UserFactor userFactor = userFactorApiHelper.getFactor( "userId", "factorId");
+UserFactorApi userFactorApi = new UserFactorApi(client);
+UserFactor userFactor = userFactorApi.getFactor( "userId", "factorId");
 VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
 verifyFactorRequest.setPassCode("123456");
 VerifyUserFactorResponse verifyUserFactorResponse =
-    userFactorApiHelper.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
+    userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
 ```
 [//]: # (end: verifyFactor)
 
@@ -406,7 +406,7 @@ VerifyUserFactorResponse verifyUserFactorResponse =
 
 [//]: # (method: createSwaApplication)
 ```java
-ApplicationApiHelper<Application> applicationApiHelper = new ApplicationApiHelper<>(new ApplicationApi(client));
+ApplicationApi applicationApi = new ApplicationApi(client);
 SwaApplicationSettingsApplication swaApplicationSettingsApplication = new SwaApplicationSettingsApplication();
 swaApplicationSettingsApplication.buttonField("btn-login")
     .passwordField("txtbox-password")
@@ -421,7 +421,7 @@ browserPluginApplication.settings(swaApplicationSettings);
 
 // create BrowserPluginApplication app type
 BrowserPluginApplication createdApp =
-    applicationApiHelper.createApplicationOfType(BrowserPluginApplication.class, browserPluginApplication, true, null);
+        (BrowserPluginApplication) applicationApi.createApplication(browserPluginApplication, true, null);
 ```
 [//]: # (end: createSwaApplication)
 

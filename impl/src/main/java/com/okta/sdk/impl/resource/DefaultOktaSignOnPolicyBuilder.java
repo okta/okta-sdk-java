@@ -17,7 +17,6 @@ package com.okta.sdk.impl.resource;
 
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
-import com.okta.sdk.helper.PolicyApiHelper;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.PolicyApi;
 import com.okta.sdk.resource.model.*;
@@ -58,8 +57,7 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
 
     @Override
     public OktaSignOnPolicy buildAndCreate(PolicyApi client) throws ApiException {
-        return new PolicyApiHelper<>(new PolicyApiHelper<>(client.getApiClient()))
-            .createPolicyOfType(OktaSignOnPolicy.class, build(), isActive);
+        return (OktaSignOnPolicy) new PolicyApi(client.getApiClient()).createPolicy(build(), isActive);
     }
 
     private OktaSignOnPolicy build() {
