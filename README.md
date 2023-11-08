@@ -54,7 +54,7 @@ You can learn more on the [Okta + Java][lang-landing] page in our documentation.
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The latest stable major version series is: 13.x.x
+:heavy_check_mark: The latest stable major version series is: 14.x.x
 
 | Version                                                     | Status                                                                                                                                   |
 |-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
@@ -64,6 +64,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 11.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/blob/master/japicmp-11_0_0_vs_10_3_0.html))               |
 | 12.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-12.0.0))                       |
 | 13.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-13.0.0))                       |
+| 14.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-14.0.0))                       |
 
 The latest release can always be found on the [releases page][github-releases].
  
