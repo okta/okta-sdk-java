@@ -15,6 +15,7 @@
  */
 package com.okta.sdk.impl.resource;
 
+import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.user.UserBuilder;
@@ -426,6 +427,17 @@ public class DefaultUserBuilder implements UserBuilder {
             createUserRequest.setCredentials(credentials);
         }
         return createUserRequest.getCredentials();
+    }
+
+    public UserBuilder setBcryptPasswordHash(String value) {
+        Assert.notNull(value);
+        String[] tokenizedStr = value.split("\\$");
+        Assert.isTrue(tokenizedStr.length == 4);
+
+        int work = Integer.parseInt(tokenizedStr[2]);
+        String salt = tokenizedStr[3].substring(0, 22);
+        String hash = tokenizedStr[3].substring(22);
+        return setBcryptPasswordHash(hash, salt, work);
     }
 
     public UserBuilder setBcryptPasswordHash(String value, String salt, int workFactor) {
