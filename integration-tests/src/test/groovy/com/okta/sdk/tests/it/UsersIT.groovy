@@ -682,6 +682,7 @@ class UsersIT extends ITSupport {
         User updatedUser = userApi.getUser(user.getId())
 
         assertThat(updatedUser.lastUpdated, greaterThan(originalLastUpdated))
+        assertThat(updatedUser.getProfile(), not(user.getProfile()))
         assertThat(updatedUser.getProfile().getProperties().get("nickName"), equalTo("Batman"))
         //assertThat(userProfile.getAdditionalProperties().get("foo"), equalTo("bar"))
     }
