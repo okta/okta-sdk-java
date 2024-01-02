@@ -53,7 +53,7 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>          User.JSON_PROPERTY_EMBEDDED,
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>          User.JSON_PROPERTY_LINKS
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      })
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-12-01T00:28:21.397Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-02T14:59:53.009Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> User <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -519,62 +519,63 @@
 <a class="jxr_linenumber" name="L511" href="#L511">511</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.type, user.type) &amp;&amp;
 <a class="jxr_linenumber" name="L512" href="#L512">512</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.embedded, user.embedded) &amp;&amp;
 <a class="jxr_linenumber" name="L513" href="#L513">513</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.links, user.links);
-<a class="jxr_linenumber" name="L514" href="#L514">514</a> }
-<a class="jxr_linenumber" name="L515" href="#L515">515</a> 
-<a class="jxr_linenumber" name="L516" href="#L516">516</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; <strong class="jxr_keyword">boolean</strong> equalsNullable(JsonNullable&lt;T&gt; a, JsonNullable&lt;T&gt; b) {
-<a class="jxr_linenumber" name="L517" href="#L517">517</a>         <strong class="jxr_keyword">return</strong> a == b || (a != <strong class="jxr_keyword">null</strong> &amp;&amp; b != <strong class="jxr_keyword">null</strong> &amp;&amp; a.isPresent() &amp;&amp; b.isPresent() &amp;&amp; Objects.deepEquals(a.get(), b.get()));
-<a class="jxr_linenumber" name="L518" href="#L518">518</a>         }
-<a class="jxr_linenumber" name="L519" href="#L519">519</a> 
-<a class="jxr_linenumber" name="L520" href="#L520">520</a>     @Override
-<a class="jxr_linenumber" name="L521" href="#L521">521</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L522" href="#L522">522</a>         <strong class="jxr_keyword">return</strong> Objects.hash(hashCodeNullable(activated), created, credentials, id, hashCodeNullable(lastLogin), lastUpdated, hashCodeNullable(passwordChanged), profile, realmId, status, hashCodeNullable(statusChanged), transitioningToStatus, type, embedded, links);
-<a class="jxr_linenumber" name="L523" href="#L523">523</a>     }
-<a class="jxr_linenumber" name="L524" href="#L524">524</a> 
-<a class="jxr_linenumber" name="L525" href="#L525">525</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; <strong class="jxr_keyword">int</strong> hashCodeNullable(JsonNullable&lt;T&gt; a) {
-<a class="jxr_linenumber" name="L526" href="#L526">526</a>         <strong class="jxr_keyword">if</strong> (a == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L527" href="#L527">527</a>         <strong class="jxr_keyword">return</strong> 1;
-<a class="jxr_linenumber" name="L528" href="#L528">528</a>         }
-<a class="jxr_linenumber" name="L529" href="#L529">529</a>         <strong class="jxr_keyword">return</strong> a.isPresent() ? Arrays.deepHashCode(<strong class="jxr_keyword">new</strong> Object[]{a.get()}) : 31;
-<a class="jxr_linenumber" name="L530" href="#L530">530</a>         }
-<a class="jxr_linenumber" name="L531" href="#L531">531</a> 
-<a class="jxr_linenumber" name="L532" href="#L532">532</a>     @Override
-<a class="jxr_linenumber" name="L533" href="#L533">533</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L534" href="#L534">534</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L535" href="#L535">535</a>     sb.append(<span class="jxr_string">"class User {\n"</span>);
-<a class="jxr_linenumber" name="L536" href="#L536">536</a>         sb.append(<span class="jxr_string">"    activated: "</span>).append(toIndentedString(activated)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L537" href="#L537">537</a>         sb.append(<span class="jxr_string">"    created: "</span>).append(toIndentedString(created)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L538" href="#L538">538</a>         sb.append(<span class="jxr_string">"    credentials: "</span>).append(toIndentedString(credentials)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L539" href="#L539">539</a>         sb.append(<span class="jxr_string">"    id: "</span>).append(toIndentedString(id)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L540" href="#L540">540</a>         sb.append(<span class="jxr_string">"    lastLogin: "</span>).append(toIndentedString(lastLogin)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L541" href="#L541">541</a>         sb.append(<span class="jxr_string">"    lastUpdated: "</span>).append(toIndentedString(lastUpdated)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L542" href="#L542">542</a>         sb.append(<span class="jxr_string">"    passwordChanged: "</span>).append(toIndentedString(passwordChanged)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L543" href="#L543">543</a>         sb.append(<span class="jxr_string">"    profile: "</span>).append(toIndentedString(profile)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L544" href="#L544">544</a>         sb.append(<span class="jxr_string">"    realmId: "</span>).append(toIndentedString(realmId)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L545" href="#L545">545</a>         sb.append(<span class="jxr_string">"    status: "</span>).append(toIndentedString(status)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L546" href="#L546">546</a>         sb.append(<span class="jxr_string">"    statusChanged: "</span>).append(toIndentedString(statusChanged)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L547" href="#L547">547</a>         sb.append(<span class="jxr_string">"    transitioningToStatus: "</span>).append(toIndentedString(transitioningToStatus)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L548" href="#L548">548</a>         sb.append(<span class="jxr_string">"    type: "</span>).append(toIndentedString(type)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L549" href="#L549">549</a>         sb.append(<span class="jxr_string">"    embedded: "</span>).append(toIndentedString(embedded)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L550" href="#L550">550</a>         sb.append(<span class="jxr_string">"    links: "</span>).append(toIndentedString(links)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L551" href="#L551">551</a>     sb.append(<span class="jxr_string">"}"</span>);
-<a class="jxr_linenumber" name="L552" href="#L552">552</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L553" href="#L553">553</a>     }
-<a class="jxr_linenumber" name="L554" href="#L554">554</a> 
-<a class="jxr_linenumber" name="L555" href="#L555">555</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L556" href="#L556">556</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
-<a class="jxr_linenumber" name="L557" href="#L557">557</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
-<a class="jxr_linenumber" name="L558" href="#L558">558</a> <em class="jxr_javadoccomment">    */</em>
-<a class="jxr_linenumber" name="L559" href="#L559">559</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
-<a class="jxr_linenumber" name="L560" href="#L560">560</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L561" href="#L561">561</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
-<a class="jxr_linenumber" name="L562" href="#L562">562</a>     }
-<a class="jxr_linenumber" name="L563" href="#L563">563</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
-<a class="jxr_linenumber" name="L564" href="#L564">564</a>     }
-<a class="jxr_linenumber" name="L565" href="#L565">565</a> 
+<a class="jxr_linenumber" name="L514" href="#L514">514</a>         <em class="jxr_comment">//;</em>
+<a class="jxr_linenumber" name="L515" href="#L515">515</a> }
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> 
+<a class="jxr_linenumber" name="L517" href="#L517">517</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; <strong class="jxr_keyword">boolean</strong> equalsNullable(JsonNullable&lt;T&gt; a, JsonNullable&lt;T&gt; b) {
+<a class="jxr_linenumber" name="L518" href="#L518">518</a>         <strong class="jxr_keyword">return</strong> a == b || (a != <strong class="jxr_keyword">null</strong> &amp;&amp; b != <strong class="jxr_keyword">null</strong> &amp;&amp; a.isPresent() &amp;&amp; b.isPresent() &amp;&amp; Objects.deepEquals(a.get(), b.get()));
+<a class="jxr_linenumber" name="L519" href="#L519">519</a>         }
+<a class="jxr_linenumber" name="L520" href="#L520">520</a> 
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>     @Override
+<a class="jxr_linenumber" name="L522" href="#L522">522</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L523" href="#L523">523</a>         <strong class="jxr_keyword">return</strong> Objects.hash(hashCodeNullable(activated), created, credentials, id, hashCodeNullable(lastLogin), lastUpdated, hashCodeNullable(passwordChanged), profile, realmId, status, hashCodeNullable(statusChanged), transitioningToStatus, type, embedded, links);
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>     }
+<a class="jxr_linenumber" name="L525" href="#L525">525</a> 
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; <strong class="jxr_keyword">int</strong> hashCodeNullable(JsonNullable&lt;T&gt; a) {
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>         <strong class="jxr_keyword">if</strong> (a == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L528" href="#L528">528</a>         <strong class="jxr_keyword">return</strong> 1;
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>         }
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>         <strong class="jxr_keyword">return</strong> a.isPresent() ? Arrays.deepHashCode(<strong class="jxr_keyword">new</strong> Object[]{a.get()}) : 31;
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>         }
+<a class="jxr_linenumber" name="L532" href="#L532">532</a> 
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>     @Override
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>     sb.append(<span class="jxr_string">"class User {\n"</span>);
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>         sb.append(<span class="jxr_string">"    activated: "</span>).append(toIndentedString(activated)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>         sb.append(<span class="jxr_string">"    created: "</span>).append(toIndentedString(created)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>         sb.append(<span class="jxr_string">"    credentials: "</span>).append(toIndentedString(credentials)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>         sb.append(<span class="jxr_string">"    id: "</span>).append(toIndentedString(id)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>         sb.append(<span class="jxr_string">"    lastLogin: "</span>).append(toIndentedString(lastLogin)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>         sb.append(<span class="jxr_string">"    lastUpdated: "</span>).append(toIndentedString(lastUpdated)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>         sb.append(<span class="jxr_string">"    passwordChanged: "</span>).append(toIndentedString(passwordChanged)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>         sb.append(<span class="jxr_string">"    profile: "</span>).append(toIndentedString(profile)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>         sb.append(<span class="jxr_string">"    realmId: "</span>).append(toIndentedString(realmId)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>         sb.append(<span class="jxr_string">"    status: "</span>).append(toIndentedString(status)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>         sb.append(<span class="jxr_string">"    statusChanged: "</span>).append(toIndentedString(statusChanged)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>         sb.append(<span class="jxr_string">"    transitioningToStatus: "</span>).append(toIndentedString(transitioningToStatus)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>         sb.append(<span class="jxr_string">"    type: "</span>).append(toIndentedString(type)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>         sb.append(<span class="jxr_string">"    embedded: "</span>).append(toIndentedString(embedded)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L551" href="#L551">551</a>         sb.append(<span class="jxr_string">"    links: "</span>).append(toIndentedString(links)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>     sb.append(<span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L553" href="#L553">553</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L554" href="#L554">554</a>     }
+<a class="jxr_linenumber" name="L555" href="#L555">555</a> 
+<a class="jxr_linenumber" name="L556" href="#L556">556</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L557" href="#L557">557</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
+<a class="jxr_linenumber" name="L558" href="#L558">558</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
+<a class="jxr_linenumber" name="L559" href="#L559">559</a> <em class="jxr_javadoccomment">    */</em>
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
+<a class="jxr_linenumber" name="L561" href="#L561">561</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L562" href="#L562">562</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
+<a class="jxr_linenumber" name="L563" href="#L563">563</a>     }
+<a class="jxr_linenumber" name="L564" href="#L564">564</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
+<a class="jxr_linenumber" name="L565" href="#L565">565</a>     }
 <a class="jxr_linenumber" name="L566" href="#L566">566</a> 
-<a class="jxr_linenumber" name="L567" href="#L567">567</a>     }
+<a class="jxr_linenumber" name="L567" href="#L567">567</a> 
+<a class="jxr_linenumber" name="L568" href="#L568">568</a>     }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2024 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
 </body>
 </html>

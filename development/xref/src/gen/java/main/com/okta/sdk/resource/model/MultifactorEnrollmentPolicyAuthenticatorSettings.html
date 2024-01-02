@@ -36,7 +36,7 @@
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>          MultifactorEnrollmentPolicyAuthenticatorSettings.JSON_PROPERTY_ENROLL,
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>          MultifactorEnrollmentPolicyAuthenticatorSettings.JSON_PROPERTY_KEY
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>      })
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-12-01T00:28:21.397Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-02T14:59:53.009Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> MultifactorEnrollmentPolicyAuthenticatorSettings <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -155,50 +155,51 @@
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>         <strong class="jxr_keyword">return</strong> equalsNullable(<strong class="jxr_keyword">this</strong>.constraints, multifactorEnrollmentPolicyAuthenticatorSettings.constraints) &amp;&amp;
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.enroll, multifactorEnrollmentPolicyAuthenticatorSettings.enroll) &amp;&amp;
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.key, multifactorEnrollmentPolicyAuthenticatorSettings.key);
-<a class="jxr_linenumber" name="L150" href="#L150">150</a> }
-<a class="jxr_linenumber" name="L151" href="#L151">151</a> 
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; <strong class="jxr_keyword">boolean</strong> equalsNullable(JsonNullable&lt;T&gt; a, JsonNullable&lt;T&gt; b) {
-<a class="jxr_linenumber" name="L153" href="#L153">153</a>         <strong class="jxr_keyword">return</strong> a == b || (a != <strong class="jxr_keyword">null</strong> &amp;&amp; b != <strong class="jxr_keyword">null</strong> &amp;&amp; a.isPresent() &amp;&amp; b.isPresent() &amp;&amp; Objects.deepEquals(a.get(), b.get()));
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>         }
-<a class="jxr_linenumber" name="L155" href="#L155">155</a> 
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     @Override
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>         <strong class="jxr_keyword">return</strong> Objects.hash(hashCodeNullable(constraints), enroll, key);
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>     }
-<a class="jxr_linenumber" name="L160" href="#L160">160</a> 
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; <strong class="jxr_keyword">int</strong> hashCodeNullable(JsonNullable&lt;T&gt; a) {
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>         <strong class="jxr_keyword">if</strong> (a == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>         <strong class="jxr_keyword">return</strong> 1;
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>         }
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>         <strong class="jxr_keyword">return</strong> a.isPresent() ? Arrays.deepHashCode(<strong class="jxr_keyword">new</strong> Object[]{a.get()}) : 31;
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>         }
-<a class="jxr_linenumber" name="L167" href="#L167">167</a> 
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>     @Override
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>     sb.append(<span class="jxr_string">"class MultifactorEnrollmentPolicyAuthenticatorSettings {\n"</span>);
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>         sb.append(<span class="jxr_string">"    constraints: "</span>).append(toIndentedString(constraints)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>         sb.append(<span class="jxr_string">"    enroll: "</span>).append(toIndentedString(enroll)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>         sb.append(<span class="jxr_string">"    key: "</span>).append(toIndentedString(key)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>     sb.append(<span class="jxr_string">"}"</span>);
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>     }
-<a class="jxr_linenumber" name="L178" href="#L178">178</a> 
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
-<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
-<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment">    */</em>
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>     }
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
-<a class="jxr_linenumber" name="L188" href="#L188">188</a>     }
-<a class="jxr_linenumber" name="L189" href="#L189">189</a> 
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>         <em class="jxr_comment">//;</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; <strong class="jxr_keyword">boolean</strong> equalsNullable(JsonNullable&lt;T&gt; a, JsonNullable&lt;T&gt; b) {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>         <strong class="jxr_keyword">return</strong> a == b || (a != <strong class="jxr_keyword">null</strong> &amp;&amp; b != <strong class="jxr_keyword">null</strong> &amp;&amp; a.isPresent() &amp;&amp; b.isPresent() &amp;&amp; Objects.deepEquals(a.get(), b.get()));
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>         }
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> 
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>     @Override
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>         <strong class="jxr_keyword">return</strong> Objects.hash(hashCodeNullable(constraints), enroll, key);
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>     }
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> 
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> &lt;T&gt; <strong class="jxr_keyword">int</strong> hashCodeNullable(JsonNullable&lt;T&gt; a) {
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>         <strong class="jxr_keyword">if</strong> (a == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>         <strong class="jxr_keyword">return</strong> 1;
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>         }
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>         <strong class="jxr_keyword">return</strong> a.isPresent() ? Arrays.deepHashCode(<strong class="jxr_keyword">new</strong> Object[]{a.get()}) : 31;
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>         }
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> 
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>     @Override
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>     sb.append(<span class="jxr_string">"class MultifactorEnrollmentPolicyAuthenticatorSettings {\n"</span>);
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>         sb.append(<span class="jxr_string">"    constraints: "</span>).append(toIndentedString(constraints)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>         sb.append(<span class="jxr_string">"    enroll: "</span>).append(toIndentedString(enroll)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>         sb.append(<span class="jxr_string">"    key: "</span>).append(toIndentedString(key)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     sb.append(<span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     }
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> 
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">    */</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>     }
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>     }
 <a class="jxr_linenumber" name="L190" href="#L190">190</a> 
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>     }
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> 
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>     }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2024 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
 </body>
 </html>

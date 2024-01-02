@@ -60,7 +60,7 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>          SamlApplicationSettingsSignOn.JSON_PROPERTY_SUBJECT_NAME_ID_FORMAT,
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>          SamlApplicationSettingsSignOn.JSON_PROPERTY_SUBJECT_NAME_ID_TEMPLATE
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      })
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-12-01T00:28:21.397Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-02T14:59:53.009Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> SamlApplicationSettingsSignOn <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -947,63 +947,64 @@
 <a class="jxr_linenumber" name="L939" href="#L939">939</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.ssoAcsUrlOverride, samlApplicationSettingsSignOn.ssoAcsUrlOverride) &amp;&amp;
 <a class="jxr_linenumber" name="L940" href="#L940">940</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.subjectNameIdFormat, samlApplicationSettingsSignOn.subjectNameIdFormat) &amp;&amp;
 <a class="jxr_linenumber" name="L941" href="#L941">941</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.subjectNameIdTemplate, samlApplicationSettingsSignOn.subjectNameIdTemplate);
-<a class="jxr_linenumber" name="L942" href="#L942">942</a> }
-<a class="jxr_linenumber" name="L943" href="#L943">943</a> 
-<a class="jxr_linenumber" name="L944" href="#L944">944</a>     @Override
-<a class="jxr_linenumber" name="L945" href="#L945">945</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L946" href="#L946">946</a>         <strong class="jxr_keyword">return</strong> Objects.hash(acsEndpoints, allowMultipleAcsEndpoints, assertionSigned, attributeStatements, audience, audienceOverride, authnContextClassRef, configuredAttributeStatements, defaultRelayState, destination, destinationOverride, digestAlgorithm, honorForceAuthn, idpIssuer, inlineHooks, recipient, recipientOverride, requestCompressed, responseSigned, signatureAlgorithm, slo, spCertificate, spIssuer, ssoAcsUrl, ssoAcsUrlOverride, subjectNameIdFormat, subjectNameIdTemplate);
-<a class="jxr_linenumber" name="L947" href="#L947">947</a>     }
-<a class="jxr_linenumber" name="L948" href="#L948">948</a> 
-<a class="jxr_linenumber" name="L949" href="#L949">949</a>     @Override
-<a class="jxr_linenumber" name="L950" href="#L950">950</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L951" href="#L951">951</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L952" href="#L952">952</a>     sb.append(<span class="jxr_string">"class SamlApplicationSettingsSignOn {\n"</span>);
-<a class="jxr_linenumber" name="L953" href="#L953">953</a>         sb.append(<span class="jxr_string">"    acsEndpoints: "</span>).append(toIndentedString(acsEndpoints)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L954" href="#L954">954</a>         sb.append(<span class="jxr_string">"    allowMultipleAcsEndpoints: "</span>).append(toIndentedString(allowMultipleAcsEndpoints)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L955" href="#L955">955</a>         sb.append(<span class="jxr_string">"    assertionSigned: "</span>).append(toIndentedString(assertionSigned)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L956" href="#L956">956</a>         sb.append(<span class="jxr_string">"    attributeStatements: "</span>).append(toIndentedString(attributeStatements)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L957" href="#L957">957</a>         sb.append(<span class="jxr_string">"    audience: "</span>).append(toIndentedString(audience)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L958" href="#L958">958</a>         sb.append(<span class="jxr_string">"    audienceOverride: "</span>).append(toIndentedString(audienceOverride)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L959" href="#L959">959</a>         sb.append(<span class="jxr_string">"    authnContextClassRef: "</span>).append(toIndentedString(authnContextClassRef)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L960" href="#L960">960</a>         sb.append(<span class="jxr_string">"    configuredAttributeStatements: "</span>).append(toIndentedString(configuredAttributeStatements)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L961" href="#L961">961</a>         sb.append(<span class="jxr_string">"    defaultRelayState: "</span>).append(toIndentedString(defaultRelayState)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L962" href="#L962">962</a>         sb.append(<span class="jxr_string">"    destination: "</span>).append(toIndentedString(destination)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L963" href="#L963">963</a>         sb.append(<span class="jxr_string">"    destinationOverride: "</span>).append(toIndentedString(destinationOverride)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L964" href="#L964">964</a>         sb.append(<span class="jxr_string">"    digestAlgorithm: "</span>).append(toIndentedString(digestAlgorithm)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L965" href="#L965">965</a>         sb.append(<span class="jxr_string">"    honorForceAuthn: "</span>).append(toIndentedString(honorForceAuthn)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L966" href="#L966">966</a>         sb.append(<span class="jxr_string">"    idpIssuer: "</span>).append(toIndentedString(idpIssuer)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L967" href="#L967">967</a>         sb.append(<span class="jxr_string">"    inlineHooks: "</span>).append(toIndentedString(inlineHooks)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L968" href="#L968">968</a>         sb.append(<span class="jxr_string">"    recipient: "</span>).append(toIndentedString(recipient)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L969" href="#L969">969</a>         sb.append(<span class="jxr_string">"    recipientOverride: "</span>).append(toIndentedString(recipientOverride)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L970" href="#L970">970</a>         sb.append(<span class="jxr_string">"    requestCompressed: "</span>).append(toIndentedString(requestCompressed)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L971" href="#L971">971</a>         sb.append(<span class="jxr_string">"    responseSigned: "</span>).append(toIndentedString(responseSigned)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L972" href="#L972">972</a>         sb.append(<span class="jxr_string">"    signatureAlgorithm: "</span>).append(toIndentedString(signatureAlgorithm)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L973" href="#L973">973</a>         sb.append(<span class="jxr_string">"    slo: "</span>).append(toIndentedString(slo)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L974" href="#L974">974</a>         sb.append(<span class="jxr_string">"    spCertificate: "</span>).append(toIndentedString(spCertificate)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L975" href="#L975">975</a>         sb.append(<span class="jxr_string">"    spIssuer: "</span>).append(toIndentedString(spIssuer)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L976" href="#L976">976</a>         sb.append(<span class="jxr_string">"    ssoAcsUrl: "</span>).append(toIndentedString(ssoAcsUrl)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L977" href="#L977">977</a>         sb.append(<span class="jxr_string">"    ssoAcsUrlOverride: "</span>).append(toIndentedString(ssoAcsUrlOverride)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L978" href="#L978">978</a>         sb.append(<span class="jxr_string">"    subjectNameIdFormat: "</span>).append(toIndentedString(subjectNameIdFormat)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L979" href="#L979">979</a>         sb.append(<span class="jxr_string">"    subjectNameIdTemplate: "</span>).append(toIndentedString(subjectNameIdTemplate)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L980" href="#L980">980</a>     sb.append(<span class="jxr_string">"}"</span>);
-<a class="jxr_linenumber" name="L981" href="#L981">981</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L982" href="#L982">982</a>     }
-<a class="jxr_linenumber" name="L983" href="#L983">983</a> 
-<a class="jxr_linenumber" name="L984" href="#L984">984</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L985" href="#L985">985</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
-<a class="jxr_linenumber" name="L986" href="#L986">986</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
-<a class="jxr_linenumber" name="L987" href="#L987">987</a> <em class="jxr_javadoccomment">    */</em>
-<a class="jxr_linenumber" name="L988" href="#L988">988</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
-<a class="jxr_linenumber" name="L989" href="#L989">989</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L990" href="#L990">990</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
-<a class="jxr_linenumber" name="L991" href="#L991">991</a>     }
-<a class="jxr_linenumber" name="L992" href="#L992">992</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
-<a class="jxr_linenumber" name="L993" href="#L993">993</a>     }
-<a class="jxr_linenumber" name="L994" href="#L994">994</a> 
+<a class="jxr_linenumber" name="L942" href="#L942">942</a>         <em class="jxr_comment">//;</em>
+<a class="jxr_linenumber" name="L943" href="#L943">943</a> }
+<a class="jxr_linenumber" name="L944" href="#L944">944</a> 
+<a class="jxr_linenumber" name="L945" href="#L945">945</a>     @Override
+<a class="jxr_linenumber" name="L946" href="#L946">946</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L947" href="#L947">947</a>         <strong class="jxr_keyword">return</strong> Objects.hash(acsEndpoints, allowMultipleAcsEndpoints, assertionSigned, attributeStatements, audience, audienceOverride, authnContextClassRef, configuredAttributeStatements, defaultRelayState, destination, destinationOverride, digestAlgorithm, honorForceAuthn, idpIssuer, inlineHooks, recipient, recipientOverride, requestCompressed, responseSigned, signatureAlgorithm, slo, spCertificate, spIssuer, ssoAcsUrl, ssoAcsUrlOverride, subjectNameIdFormat, subjectNameIdTemplate);
+<a class="jxr_linenumber" name="L948" href="#L948">948</a>     }
+<a class="jxr_linenumber" name="L949" href="#L949">949</a> 
+<a class="jxr_linenumber" name="L950" href="#L950">950</a>     @Override
+<a class="jxr_linenumber" name="L951" href="#L951">951</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L952" href="#L952">952</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L953" href="#L953">953</a>     sb.append(<span class="jxr_string">"class SamlApplicationSettingsSignOn {\n"</span>);
+<a class="jxr_linenumber" name="L954" href="#L954">954</a>         sb.append(<span class="jxr_string">"    acsEndpoints: "</span>).append(toIndentedString(acsEndpoints)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L955" href="#L955">955</a>         sb.append(<span class="jxr_string">"    allowMultipleAcsEndpoints: "</span>).append(toIndentedString(allowMultipleAcsEndpoints)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L956" href="#L956">956</a>         sb.append(<span class="jxr_string">"    assertionSigned: "</span>).append(toIndentedString(assertionSigned)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L957" href="#L957">957</a>         sb.append(<span class="jxr_string">"    attributeStatements: "</span>).append(toIndentedString(attributeStatements)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L958" href="#L958">958</a>         sb.append(<span class="jxr_string">"    audience: "</span>).append(toIndentedString(audience)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L959" href="#L959">959</a>         sb.append(<span class="jxr_string">"    audienceOverride: "</span>).append(toIndentedString(audienceOverride)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L960" href="#L960">960</a>         sb.append(<span class="jxr_string">"    authnContextClassRef: "</span>).append(toIndentedString(authnContextClassRef)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L961" href="#L961">961</a>         sb.append(<span class="jxr_string">"    configuredAttributeStatements: "</span>).append(toIndentedString(configuredAttributeStatements)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L962" href="#L962">962</a>         sb.append(<span class="jxr_string">"    defaultRelayState: "</span>).append(toIndentedString(defaultRelayState)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L963" href="#L963">963</a>         sb.append(<span class="jxr_string">"    destination: "</span>).append(toIndentedString(destination)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L964" href="#L964">964</a>         sb.append(<span class="jxr_string">"    destinationOverride: "</span>).append(toIndentedString(destinationOverride)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L965" href="#L965">965</a>         sb.append(<span class="jxr_string">"    digestAlgorithm: "</span>).append(toIndentedString(digestAlgorithm)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L966" href="#L966">966</a>         sb.append(<span class="jxr_string">"    honorForceAuthn: "</span>).append(toIndentedString(honorForceAuthn)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L967" href="#L967">967</a>         sb.append(<span class="jxr_string">"    idpIssuer: "</span>).append(toIndentedString(idpIssuer)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L968" href="#L968">968</a>         sb.append(<span class="jxr_string">"    inlineHooks: "</span>).append(toIndentedString(inlineHooks)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L969" href="#L969">969</a>         sb.append(<span class="jxr_string">"    recipient: "</span>).append(toIndentedString(recipient)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L970" href="#L970">970</a>         sb.append(<span class="jxr_string">"    recipientOverride: "</span>).append(toIndentedString(recipientOverride)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L971" href="#L971">971</a>         sb.append(<span class="jxr_string">"    requestCompressed: "</span>).append(toIndentedString(requestCompressed)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L972" href="#L972">972</a>         sb.append(<span class="jxr_string">"    responseSigned: "</span>).append(toIndentedString(responseSigned)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L973" href="#L973">973</a>         sb.append(<span class="jxr_string">"    signatureAlgorithm: "</span>).append(toIndentedString(signatureAlgorithm)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L974" href="#L974">974</a>         sb.append(<span class="jxr_string">"    slo: "</span>).append(toIndentedString(slo)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L975" href="#L975">975</a>         sb.append(<span class="jxr_string">"    spCertificate: "</span>).append(toIndentedString(spCertificate)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L976" href="#L976">976</a>         sb.append(<span class="jxr_string">"    spIssuer: "</span>).append(toIndentedString(spIssuer)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L977" href="#L977">977</a>         sb.append(<span class="jxr_string">"    ssoAcsUrl: "</span>).append(toIndentedString(ssoAcsUrl)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L978" href="#L978">978</a>         sb.append(<span class="jxr_string">"    ssoAcsUrlOverride: "</span>).append(toIndentedString(ssoAcsUrlOverride)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L979" href="#L979">979</a>         sb.append(<span class="jxr_string">"    subjectNameIdFormat: "</span>).append(toIndentedString(subjectNameIdFormat)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L980" href="#L980">980</a>         sb.append(<span class="jxr_string">"    subjectNameIdTemplate: "</span>).append(toIndentedString(subjectNameIdTemplate)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L981" href="#L981">981</a>     sb.append(<span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L982" href="#L982">982</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L983" href="#L983">983</a>     }
+<a class="jxr_linenumber" name="L984" href="#L984">984</a> 
+<a class="jxr_linenumber" name="L985" href="#L985">985</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L986" href="#L986">986</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
+<a class="jxr_linenumber" name="L987" href="#L987">987</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
+<a class="jxr_linenumber" name="L988" href="#L988">988</a> <em class="jxr_javadoccomment">    */</em>
+<a class="jxr_linenumber" name="L989" href="#L989">989</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
+<a class="jxr_linenumber" name="L990" href="#L990">990</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L991" href="#L991">991</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
+<a class="jxr_linenumber" name="L992" href="#L992">992</a>     }
+<a class="jxr_linenumber" name="L993" href="#L993">993</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
+<a class="jxr_linenumber" name="L994" href="#L994">994</a>     }
 <a class="jxr_linenumber" name="L995" href="#L995">995</a> 
-<a class="jxr_linenumber" name="L996" href="#L996">996</a>     }
+<a class="jxr_linenumber" name="L996" href="#L996">996</a> 
+<a class="jxr_linenumber" name="L997" href="#L997">997</a>     }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2024 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
 </body>
 </html>

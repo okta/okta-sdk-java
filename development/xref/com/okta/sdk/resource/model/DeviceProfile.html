@@ -43,7 +43,7 @@
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>          DeviceProfile.JSON_PROPERTY_TPM_PUBLIC_KEY_HASH,
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>          DeviceProfile.JSON_PROPERTY_UDID
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>      })
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-12-01T00:28:21.397Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-02T14:59:53.009Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> DeviceProfile <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -526,51 +526,52 @@
 <a class="jxr_linenumber" name="L518" href="#L518">518</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.sid, deviceProfile.sid) &amp;&amp;
 <a class="jxr_linenumber" name="L519" href="#L519">519</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.tpmPublicKeyHash, deviceProfile.tpmPublicKeyHash) &amp;&amp;
 <a class="jxr_linenumber" name="L520" href="#L520">520</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.udid, deviceProfile.udid);
-<a class="jxr_linenumber" name="L521" href="#L521">521</a> }
-<a class="jxr_linenumber" name="L522" href="#L522">522</a> 
-<a class="jxr_linenumber" name="L523" href="#L523">523</a>     @Override
-<a class="jxr_linenumber" name="L524" href="#L524">524</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L525" href="#L525">525</a>         <strong class="jxr_keyword">return</strong> Objects.hash(diskEncryptionType, displayName, imei, integrityJailbreak, manufacturer, meid, model, osVersion, platform, registered, secureHardwarePresent, serialNumber, sid, tpmPublicKeyHash, udid);
-<a class="jxr_linenumber" name="L526" href="#L526">526</a>     }
-<a class="jxr_linenumber" name="L527" href="#L527">527</a> 
-<a class="jxr_linenumber" name="L528" href="#L528">528</a>     @Override
-<a class="jxr_linenumber" name="L529" href="#L529">529</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L530" href="#L530">530</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L531" href="#L531">531</a>     sb.append(<span class="jxr_string">"class DeviceProfile {\n"</span>);
-<a class="jxr_linenumber" name="L532" href="#L532">532</a>         sb.append(<span class="jxr_string">"    diskEncryptionType: "</span>).append(toIndentedString(diskEncryptionType)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L533" href="#L533">533</a>         sb.append(<span class="jxr_string">"    displayName: "</span>).append(toIndentedString(displayName)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L534" href="#L534">534</a>         sb.append(<span class="jxr_string">"    imei: "</span>).append(toIndentedString(imei)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L535" href="#L535">535</a>         sb.append(<span class="jxr_string">"    integrityJailbreak: "</span>).append(toIndentedString(integrityJailbreak)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L536" href="#L536">536</a>         sb.append(<span class="jxr_string">"    manufacturer: "</span>).append(toIndentedString(manufacturer)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L537" href="#L537">537</a>         sb.append(<span class="jxr_string">"    meid: "</span>).append(toIndentedString(meid)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L538" href="#L538">538</a>         sb.append(<span class="jxr_string">"    model: "</span>).append(toIndentedString(model)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L539" href="#L539">539</a>         sb.append(<span class="jxr_string">"    osVersion: "</span>).append(toIndentedString(osVersion)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L540" href="#L540">540</a>         sb.append(<span class="jxr_string">"    platform: "</span>).append(toIndentedString(platform)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L541" href="#L541">541</a>         sb.append(<span class="jxr_string">"    registered: "</span>).append(toIndentedString(registered)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L542" href="#L542">542</a>         sb.append(<span class="jxr_string">"    secureHardwarePresent: "</span>).append(toIndentedString(secureHardwarePresent)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L543" href="#L543">543</a>         sb.append(<span class="jxr_string">"    serialNumber: "</span>).append(toIndentedString(serialNumber)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L544" href="#L544">544</a>         sb.append(<span class="jxr_string">"    sid: "</span>).append(toIndentedString(sid)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L545" href="#L545">545</a>         sb.append(<span class="jxr_string">"    tpmPublicKeyHash: "</span>).append(toIndentedString(tpmPublicKeyHash)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L546" href="#L546">546</a>         sb.append(<span class="jxr_string">"    udid: "</span>).append(toIndentedString(udid)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L547" href="#L547">547</a>     sb.append(<span class="jxr_string">"}"</span>);
-<a class="jxr_linenumber" name="L548" href="#L548">548</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L549" href="#L549">549</a>     }
-<a class="jxr_linenumber" name="L550" href="#L550">550</a> 
-<a class="jxr_linenumber" name="L551" href="#L551">551</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L552" href="#L552">552</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
-<a class="jxr_linenumber" name="L553" href="#L553">553</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
-<a class="jxr_linenumber" name="L554" href="#L554">554</a> <em class="jxr_javadoccomment">    */</em>
-<a class="jxr_linenumber" name="L555" href="#L555">555</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
-<a class="jxr_linenumber" name="L556" href="#L556">556</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L557" href="#L557">557</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
-<a class="jxr_linenumber" name="L558" href="#L558">558</a>     }
-<a class="jxr_linenumber" name="L559" href="#L559">559</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
-<a class="jxr_linenumber" name="L560" href="#L560">560</a>     }
-<a class="jxr_linenumber" name="L561" href="#L561">561</a> 
+<a class="jxr_linenumber" name="L521" href="#L521">521</a>         <em class="jxr_comment">//;</em>
+<a class="jxr_linenumber" name="L522" href="#L522">522</a> }
+<a class="jxr_linenumber" name="L523" href="#L523">523</a> 
+<a class="jxr_linenumber" name="L524" href="#L524">524</a>     @Override
+<a class="jxr_linenumber" name="L525" href="#L525">525</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L526" href="#L526">526</a>         <strong class="jxr_keyword">return</strong> Objects.hash(diskEncryptionType, displayName, imei, integrityJailbreak, manufacturer, meid, model, osVersion, platform, registered, secureHardwarePresent, serialNumber, sid, tpmPublicKeyHash, udid);
+<a class="jxr_linenumber" name="L527" href="#L527">527</a>     }
+<a class="jxr_linenumber" name="L528" href="#L528">528</a> 
+<a class="jxr_linenumber" name="L529" href="#L529">529</a>     @Override
+<a class="jxr_linenumber" name="L530" href="#L530">530</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L531" href="#L531">531</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L532" href="#L532">532</a>     sb.append(<span class="jxr_string">"class DeviceProfile {\n"</span>);
+<a class="jxr_linenumber" name="L533" href="#L533">533</a>         sb.append(<span class="jxr_string">"    diskEncryptionType: "</span>).append(toIndentedString(diskEncryptionType)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L534" href="#L534">534</a>         sb.append(<span class="jxr_string">"    displayName: "</span>).append(toIndentedString(displayName)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L535" href="#L535">535</a>         sb.append(<span class="jxr_string">"    imei: "</span>).append(toIndentedString(imei)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L536" href="#L536">536</a>         sb.append(<span class="jxr_string">"    integrityJailbreak: "</span>).append(toIndentedString(integrityJailbreak)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L537" href="#L537">537</a>         sb.append(<span class="jxr_string">"    manufacturer: "</span>).append(toIndentedString(manufacturer)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L538" href="#L538">538</a>         sb.append(<span class="jxr_string">"    meid: "</span>).append(toIndentedString(meid)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L539" href="#L539">539</a>         sb.append(<span class="jxr_string">"    model: "</span>).append(toIndentedString(model)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L540" href="#L540">540</a>         sb.append(<span class="jxr_string">"    osVersion: "</span>).append(toIndentedString(osVersion)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L541" href="#L541">541</a>         sb.append(<span class="jxr_string">"    platform: "</span>).append(toIndentedString(platform)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L542" href="#L542">542</a>         sb.append(<span class="jxr_string">"    registered: "</span>).append(toIndentedString(registered)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L543" href="#L543">543</a>         sb.append(<span class="jxr_string">"    secureHardwarePresent: "</span>).append(toIndentedString(secureHardwarePresent)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L544" href="#L544">544</a>         sb.append(<span class="jxr_string">"    serialNumber: "</span>).append(toIndentedString(serialNumber)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L545" href="#L545">545</a>         sb.append(<span class="jxr_string">"    sid: "</span>).append(toIndentedString(sid)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L546" href="#L546">546</a>         sb.append(<span class="jxr_string">"    tpmPublicKeyHash: "</span>).append(toIndentedString(tpmPublicKeyHash)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L547" href="#L547">547</a>         sb.append(<span class="jxr_string">"    udid: "</span>).append(toIndentedString(udid)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L548" href="#L548">548</a>     sb.append(<span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L549" href="#L549">549</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L550" href="#L550">550</a>     }
+<a class="jxr_linenumber" name="L551" href="#L551">551</a> 
+<a class="jxr_linenumber" name="L552" href="#L552">552</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L553" href="#L553">553</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
+<a class="jxr_linenumber" name="L554" href="#L554">554</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
+<a class="jxr_linenumber" name="L555" href="#L555">555</a> <em class="jxr_javadoccomment">    */</em>
+<a class="jxr_linenumber" name="L556" href="#L556">556</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
+<a class="jxr_linenumber" name="L557" href="#L557">557</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L558" href="#L558">558</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
+<a class="jxr_linenumber" name="L559" href="#L559">559</a>     }
+<a class="jxr_linenumber" name="L560" href="#L560">560</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
+<a class="jxr_linenumber" name="L561" href="#L561">561</a>     }
 <a class="jxr_linenumber" name="L562" href="#L562">562</a> 
-<a class="jxr_linenumber" name="L563" href="#L563">563</a>     }
+<a class="jxr_linenumber" name="L563" href="#L563">563</a> 
+<a class="jxr_linenumber" name="L564" href="#L564">564</a>     }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2024 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
 </body>
 </html>

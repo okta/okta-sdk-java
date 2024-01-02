@@ -44,7 +44,7 @@
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>          BrandWithEmbedded.JSON_PROPERTY_NAME,
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>          BrandWithEmbedded.JSON_PROPERTY_REMOVE_POWERED_BY_OKTA
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>      })
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-12-01T00:28:21.397Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-02T14:59:53.009Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> BrandWithEmbedded <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -384,47 +384,48 @@
 <a class="jxr_linenumber" name="L376" href="#L376">376</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.locale, brandWithEmbedded.locale) &amp;&amp;
 <a class="jxr_linenumber" name="L377" href="#L377">377</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.name, brandWithEmbedded.name) &amp;&amp;
 <a class="jxr_linenumber" name="L378" href="#L378">378</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.removePoweredByOkta, brandWithEmbedded.removePoweredByOkta);
-<a class="jxr_linenumber" name="L379" href="#L379">379</a> }
-<a class="jxr_linenumber" name="L380" href="#L380">380</a> 
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>     @Override
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>         <strong class="jxr_keyword">return</strong> Objects.hash(embedded, links, agreeToCustomPrivacyPolicy, customPrivacyPolicyUrl, defaultApp, emailDomainId, id, isDefault, locale, name, removePoweredByOkta);
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>     }
-<a class="jxr_linenumber" name="L385" href="#L385">385</a> 
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>     @Override
-<a class="jxr_linenumber" name="L387" href="#L387">387</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L388" href="#L388">388</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L389" href="#L389">389</a>     sb.append(<span class="jxr_string">"class BrandWithEmbedded {\n"</span>);
-<a class="jxr_linenumber" name="L390" href="#L390">390</a>         sb.append(<span class="jxr_string">"    embedded: "</span>).append(toIndentedString(embedded)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L391" href="#L391">391</a>         sb.append(<span class="jxr_string">"    links: "</span>).append(toIndentedString(links)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L392" href="#L392">392</a>         sb.append(<span class="jxr_string">"    agreeToCustomPrivacyPolicy: "</span>).append(toIndentedString(agreeToCustomPrivacyPolicy)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L393" href="#L393">393</a>         sb.append(<span class="jxr_string">"    customPrivacyPolicyUrl: "</span>).append(toIndentedString(customPrivacyPolicyUrl)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L394" href="#L394">394</a>         sb.append(<span class="jxr_string">"    defaultApp: "</span>).append(toIndentedString(defaultApp)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L395" href="#L395">395</a>         sb.append(<span class="jxr_string">"    emailDomainId: "</span>).append(toIndentedString(emailDomainId)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L396" href="#L396">396</a>         sb.append(<span class="jxr_string">"    id: "</span>).append(toIndentedString(id)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>         sb.append(<span class="jxr_string">"    isDefault: "</span>).append(toIndentedString(isDefault)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L398" href="#L398">398</a>         sb.append(<span class="jxr_string">"    locale: "</span>).append(toIndentedString(locale)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L399" href="#L399">399</a>         sb.append(<span class="jxr_string">"    name: "</span>).append(toIndentedString(name)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>         sb.append(<span class="jxr_string">"    removePoweredByOkta: "</span>).append(toIndentedString(removePoweredByOkta)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>     sb.append(<span class="jxr_string">"}"</span>);
-<a class="jxr_linenumber" name="L402" href="#L402">402</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L403" href="#L403">403</a>     }
-<a class="jxr_linenumber" name="L404" href="#L404">404</a> 
-<a class="jxr_linenumber" name="L405" href="#L405">405</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
-<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
-<a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">    */</em>
-<a class="jxr_linenumber" name="L409" href="#L409">409</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
-<a class="jxr_linenumber" name="L410" href="#L410">410</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L411" href="#L411">411</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
-<a class="jxr_linenumber" name="L412" href="#L412">412</a>     }
-<a class="jxr_linenumber" name="L413" href="#L413">413</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
-<a class="jxr_linenumber" name="L414" href="#L414">414</a>     }
-<a class="jxr_linenumber" name="L415" href="#L415">415</a> 
+<a class="jxr_linenumber" name="L379" href="#L379">379</a>         <em class="jxr_comment">//;</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> }
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> 
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>     @Override
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>         <strong class="jxr_keyword">return</strong> Objects.hash(embedded, links, agreeToCustomPrivacyPolicy, customPrivacyPolicyUrl, defaultApp, emailDomainId, id, isDefault, locale, name, removePoweredByOkta);
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>     }
+<a class="jxr_linenumber" name="L386" href="#L386">386</a> 
+<a class="jxr_linenumber" name="L387" href="#L387">387</a>     @Override
+<a class="jxr_linenumber" name="L388" href="#L388">388</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L389" href="#L389">389</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L390" href="#L390">390</a>     sb.append(<span class="jxr_string">"class BrandWithEmbedded {\n"</span>);
+<a class="jxr_linenumber" name="L391" href="#L391">391</a>         sb.append(<span class="jxr_string">"    embedded: "</span>).append(toIndentedString(embedded)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L392" href="#L392">392</a>         sb.append(<span class="jxr_string">"    links: "</span>).append(toIndentedString(links)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>         sb.append(<span class="jxr_string">"    agreeToCustomPrivacyPolicy: "</span>).append(toIndentedString(agreeToCustomPrivacyPolicy)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>         sb.append(<span class="jxr_string">"    customPrivacyPolicyUrl: "</span>).append(toIndentedString(customPrivacyPolicyUrl)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>         sb.append(<span class="jxr_string">"    defaultApp: "</span>).append(toIndentedString(defaultApp)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>         sb.append(<span class="jxr_string">"    emailDomainId: "</span>).append(toIndentedString(emailDomainId)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>         sb.append(<span class="jxr_string">"    id: "</span>).append(toIndentedString(id)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>         sb.append(<span class="jxr_string">"    isDefault: "</span>).append(toIndentedString(isDefault)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>         sb.append(<span class="jxr_string">"    locale: "</span>).append(toIndentedString(locale)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>         sb.append(<span class="jxr_string">"    name: "</span>).append(toIndentedString(name)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L401" href="#L401">401</a>         sb.append(<span class="jxr_string">"    removePoweredByOkta: "</span>).append(toIndentedString(removePoweredByOkta)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     sb.append(<span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L403" href="#L403">403</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L404" href="#L404">404</a>     }
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> 
+<a class="jxr_linenumber" name="L406" href="#L406">406</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">    */</em>
+<a class="jxr_linenumber" name="L410" href="#L410">410</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
+<a class="jxr_linenumber" name="L411" href="#L411">411</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>     }
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>     }
 <a class="jxr_linenumber" name="L416" href="#L416">416</a> 
-<a class="jxr_linenumber" name="L417" href="#L417">417</a>     }
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> 
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>     }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2024 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
 </body>
 </html>

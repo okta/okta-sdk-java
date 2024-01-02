@@ -31,7 +31,7 @@
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>          AuthenticatorMethodWebAuthnAllOfSettings.JSON_PROPERTY_ATTACHMENT
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>      })
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>          @JsonTypeName(<span class="jxr_string">"AuthenticatorMethodWebAuthn_allOf_settings"</span>)
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-12-01T00:28:21.397Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-02T14:59:53.009Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> AuthenticatorMethodWebAuthnAllOfSettings <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -111,38 +111,39 @@
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>         AuthenticatorMethodWebAuthnAllOfSettings authenticatorMethodWebAuthnAllOfSettings = (AuthenticatorMethodWebAuthnAllOfSettings) o;
 <a class="jxr_linenumber" name="L104" href="#L104">104</a>         <strong class="jxr_keyword">return</strong> Objects.equals(<strong class="jxr_keyword">this</strong>.userVerification, authenticatorMethodWebAuthnAllOfSettings.userVerification) &amp;&amp;
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.attachment, authenticatorMethodWebAuthnAllOfSettings.attachment);
-<a class="jxr_linenumber" name="L106" href="#L106">106</a> }
-<a class="jxr_linenumber" name="L107" href="#L107">107</a> 
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     @Override
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>         <strong class="jxr_keyword">return</strong> Objects.hash(userVerification, attachment);
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>     }
-<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     @Override
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>     sb.append(<span class="jxr_string">"class AuthenticatorMethodWebAuthnAllOfSettings {\n"</span>);
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>         sb.append(<span class="jxr_string">"    userVerification: "</span>).append(toIndentedString(userVerification)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>         sb.append(<span class="jxr_string">"    attachment: "</span>).append(toIndentedString(attachment)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>     sb.append(<span class="jxr_string">"}"</span>);
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>     }
-<a class="jxr_linenumber" name="L122" href="#L122">122</a> 
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L124" href="#L124">124</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
-<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
-<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">    */</em>
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     }
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>     }
-<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>         <em class="jxr_comment">//;</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> }
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> 
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     @Override
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>         <strong class="jxr_keyword">return</strong> Objects.hash(userVerification, attachment);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     }
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     @Override
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     sb.append(<span class="jxr_string">"class AuthenticatorMethodWebAuthnAllOfSettings {\n"</span>);
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>         sb.append(<span class="jxr_string">"    userVerification: "</span>).append(toIndentedString(userVerification)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>         sb.append(<span class="jxr_string">"    attachment: "</span>).append(toIndentedString(attachment)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     sb.append(<span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     }
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">    */</em>
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     }
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     }
 <a class="jxr_linenumber" name="L134" href="#L134">134</a> 
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>     }
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2024 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
 </body>
 </html>

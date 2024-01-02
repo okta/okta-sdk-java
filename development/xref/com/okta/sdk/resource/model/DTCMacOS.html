@@ -45,7 +45,7 @@
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>          DTCMacOS.JSON_PROPERTY_SCREEN_LOCK_SECURED,
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>          DTCMacOS.JSON_PROPERTY_SITE_ISOLATION_ENABLED
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      })
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2023-12-01T00:28:21.397Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-02T14:59:53.009Z[Etc/UTC]"</span>)
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> DTCMacOS <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -466,49 +466,50 @@
 <a class="jxr_linenumber" name="L458" href="#L458">458</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.safeBrowsingProtectionLevel, dtCMacOS.safeBrowsingProtectionLevel) &amp;&amp;
 <a class="jxr_linenumber" name="L459" href="#L459">459</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.screenLockSecured, dtCMacOS.screenLockSecured) &amp;&amp;
 <a class="jxr_linenumber" name="L460" href="#L460">460</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.siteIsolationEnabled, dtCMacOS.siteIsolationEnabled);
-<a class="jxr_linenumber" name="L461" href="#L461">461</a> }
-<a class="jxr_linenumber" name="L462" href="#L462">462</a> 
-<a class="jxr_linenumber" name="L463" href="#L463">463</a>     @Override
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>         <strong class="jxr_keyword">return</strong> Objects.hash(browserVersion, builtInDnsClientEnabled, chromeRemoteDesktopAppBlocked, deviceEnrollmentDomain, diskEnrypted, keyTrustLevel, osFirewall, osVersion, passwordProtectionWarningTrigger, realtimeUrlCheckMode, safeBrowsingProtectionLevel, screenLockSecured, siteIsolationEnabled);
-<a class="jxr_linenumber" name="L466" href="#L466">466</a>     }
-<a class="jxr_linenumber" name="L467" href="#L467">467</a> 
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>     @Override
-<a class="jxr_linenumber" name="L469" href="#L469">469</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L470" href="#L470">470</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>     sb.append(<span class="jxr_string">"class DTCMacOS {\n"</span>);
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>         sb.append(<span class="jxr_string">"    browserVersion: "</span>).append(toIndentedString(browserVersion)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>         sb.append(<span class="jxr_string">"    builtInDnsClientEnabled: "</span>).append(toIndentedString(builtInDnsClientEnabled)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>         sb.append(<span class="jxr_string">"    chromeRemoteDesktopAppBlocked: "</span>).append(toIndentedString(chromeRemoteDesktopAppBlocked)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L475" href="#L475">475</a>         sb.append(<span class="jxr_string">"    deviceEnrollmentDomain: "</span>).append(toIndentedString(deviceEnrollmentDomain)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>         sb.append(<span class="jxr_string">"    diskEnrypted: "</span>).append(toIndentedString(diskEnrypted)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L477" href="#L477">477</a>         sb.append(<span class="jxr_string">"    keyTrustLevel: "</span>).append(toIndentedString(keyTrustLevel)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L478" href="#L478">478</a>         sb.append(<span class="jxr_string">"    osFirewall: "</span>).append(toIndentedString(osFirewall)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>         sb.append(<span class="jxr_string">"    osVersion: "</span>).append(toIndentedString(osVersion)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L480" href="#L480">480</a>         sb.append(<span class="jxr_string">"    passwordProtectionWarningTrigger: "</span>).append(toIndentedString(passwordProtectionWarningTrigger)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>         sb.append(<span class="jxr_string">"    realtimeUrlCheckMode: "</span>).append(toIndentedString(realtimeUrlCheckMode)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L482" href="#L482">482</a>         sb.append(<span class="jxr_string">"    safeBrowsingProtectionLevel: "</span>).append(toIndentedString(safeBrowsingProtectionLevel)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L483" href="#L483">483</a>         sb.append(<span class="jxr_string">"    screenLockSecured: "</span>).append(toIndentedString(screenLockSecured)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L484" href="#L484">484</a>         sb.append(<span class="jxr_string">"    siteIsolationEnabled: "</span>).append(toIndentedString(siteIsolationEnabled)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L485" href="#L485">485</a>     sb.append(<span class="jxr_string">"}"</span>);
-<a class="jxr_linenumber" name="L486" href="#L486">486</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L487" href="#L487">487</a>     }
-<a class="jxr_linenumber" name="L488" href="#L488">488</a> 
-<a class="jxr_linenumber" name="L489" href="#L489">489</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L490" href="#L490">490</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
-<a class="jxr_linenumber" name="L491" href="#L491">491</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
-<a class="jxr_linenumber" name="L492" href="#L492">492</a> <em class="jxr_javadoccomment">    */</em>
-<a class="jxr_linenumber" name="L493" href="#L493">493</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
-<a class="jxr_linenumber" name="L494" href="#L494">494</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L495" href="#L495">495</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
-<a class="jxr_linenumber" name="L496" href="#L496">496</a>     }
-<a class="jxr_linenumber" name="L497" href="#L497">497</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
-<a class="jxr_linenumber" name="L498" href="#L498">498</a>     }
-<a class="jxr_linenumber" name="L499" href="#L499">499</a> 
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>         <em class="jxr_comment">//;</em>
+<a class="jxr_linenumber" name="L462" href="#L462">462</a> }
+<a class="jxr_linenumber" name="L463" href="#L463">463</a> 
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>     @Override
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>         <strong class="jxr_keyword">return</strong> Objects.hash(browserVersion, builtInDnsClientEnabled, chromeRemoteDesktopAppBlocked, deviceEnrollmentDomain, diskEnrypted, keyTrustLevel, osFirewall, osVersion, passwordProtectionWarningTrigger, realtimeUrlCheckMode, safeBrowsingProtectionLevel, screenLockSecured, siteIsolationEnabled);
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>     }
+<a class="jxr_linenumber" name="L468" href="#L468">468</a> 
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>     @Override
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>     sb.append(<span class="jxr_string">"class DTCMacOS {\n"</span>);
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>         sb.append(<span class="jxr_string">"    browserVersion: "</span>).append(toIndentedString(browserVersion)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>         sb.append(<span class="jxr_string">"    builtInDnsClientEnabled: "</span>).append(toIndentedString(builtInDnsClientEnabled)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>         sb.append(<span class="jxr_string">"    chromeRemoteDesktopAppBlocked: "</span>).append(toIndentedString(chromeRemoteDesktopAppBlocked)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>         sb.append(<span class="jxr_string">"    deviceEnrollmentDomain: "</span>).append(toIndentedString(deviceEnrollmentDomain)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>         sb.append(<span class="jxr_string">"    diskEnrypted: "</span>).append(toIndentedString(diskEnrypted)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>         sb.append(<span class="jxr_string">"    keyTrustLevel: "</span>).append(toIndentedString(keyTrustLevel)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>         sb.append(<span class="jxr_string">"    osFirewall: "</span>).append(toIndentedString(osFirewall)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>         sb.append(<span class="jxr_string">"    osVersion: "</span>).append(toIndentedString(osVersion)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>         sb.append(<span class="jxr_string">"    passwordProtectionWarningTrigger: "</span>).append(toIndentedString(passwordProtectionWarningTrigger)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>         sb.append(<span class="jxr_string">"    realtimeUrlCheckMode: "</span>).append(toIndentedString(realtimeUrlCheckMode)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>         sb.append(<span class="jxr_string">"    safeBrowsingProtectionLevel: "</span>).append(toIndentedString(safeBrowsingProtectionLevel)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>         sb.append(<span class="jxr_string">"    screenLockSecured: "</span>).append(toIndentedString(screenLockSecured)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>         sb.append(<span class="jxr_string">"    siteIsolationEnabled: "</span>).append(toIndentedString(siteIsolationEnabled)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L486" href="#L486">486</a>     sb.append(<span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L487" href="#L487">487</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>     }
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> 
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L491" href="#L491">491</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
+<a class="jxr_linenumber" name="L492" href="#L492">492</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
+<a class="jxr_linenumber" name="L493" href="#L493">493</a> <em class="jxr_javadoccomment">    */</em>
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>     }
+<a class="jxr_linenumber" name="L498" href="#L498">498</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>     }
 <a class="jxr_linenumber" name="L500" href="#L500">500</a> 
-<a class="jxr_linenumber" name="L501" href="#L501">501</a>     }
+<a class="jxr_linenumber" name="L501" href="#L501">501</a> 
+<a class="jxr_linenumber" name="L502" href="#L502">502</a>     }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2017&#x2013;2023 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2017&#x2013;2024 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
 </body>
 </html>
