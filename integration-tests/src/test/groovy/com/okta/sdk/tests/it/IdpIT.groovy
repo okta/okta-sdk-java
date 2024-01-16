@@ -135,6 +135,9 @@ class IdpIT extends ITSupport {
         assertThat(createdIdp, notNullValue())
         assertThat(createdIdp.getId(), notNullValue())
         assertThat(createdIdp.getName(), equalTo(name))
+        assertThat(createdIdp.getPolicy(), notNullValue())
+        assertThat(createdIdp.getProtocol(), notNullValue())
+        assertThat(createdIdp.getType(), equalTo(IdentityProviderType.OIDC))
         assertThat(createdIdp.getStatus(), equalTo(LifecycleStatus.ACTIVE))
         assertThat(createdIdp.getLinks(), notNullValue())
 

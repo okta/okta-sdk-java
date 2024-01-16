@@ -26122,10 +26122,8 @@ components:
         - DELTA_CRL
         - OCSP
     IdentityProviderPolicy:
-      allOf:
-        - $ref: '#/components/schemas/Policy'
-        - type: object
-          properties:
+       type: object
+       properties:
             accountLink:
               $ref: '#/components/schemas/PolicyAccountLink'
             conditions:
