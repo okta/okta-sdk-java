@@ -28507,6 +28507,7 @@ components:
         propertyName: type
         mapping:
           ACCESS_POLICY: '#/components/schemas/AccessPolicy'
+          OAUTH_AUTHORIZATION_POLICY: '#/components/schemas/AuthorizationServerPolicy'
           IDP_DISCOVERY: '#/components/schemas/IdentityProviderPolicy'
           MFA_ENROLL: '#/components/schemas/MultifactorEnrollmentPolicy'
           OKTA_SIGN_ON: '#/components/schemas/OktaSignOnPolicy'
