@@ -28692,6 +28692,7 @@ components:
         propertyName: type
         mapping:
           ACCESS_POLICY: '#/components/schemas/AccessPolicyRule'
+          IDP_DISCOVERY: '#/components/schemas/AccessPolicyRule'
           PASSWORD: '#/components/schemas/PasswordPolicyRule'
           PROFILE_ENROLLMENT: '#/components/schemas/ProfileEnrollmentPolicyRule'
           RESOURCE_ACCESS: '#/components/schemas/AuthorizationServerPolicyRule'
