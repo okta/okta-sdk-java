@@ -26122,27 +26122,25 @@ components:
         - DELTA_CRL
         - OCSP
     IdentityProviderPolicy:
-      allOf:
-        - $ref: '#/components/schemas/Policy'
-        - type: object
-          properties:
-            accountLink:
-              $ref: '#/components/schemas/PolicyAccountLink'
-            conditions:
-              $ref: '#/components/schemas/PolicyRuleConditions'
-            mapAMRClaims:
-              type: boolean
-              description: Enable mapping AMR from IdP to Okta to downstream apps
-              default: false
-              x-okta-lifecycle:
-                features:
-                  - IDP_AMR_CLAIMS_MAPPING
-            maxClockSkew:
-              type: integer
-            provisioning:
-              $ref: '#/components/schemas/Provisioning'
-            subject:
-              $ref: '#/components/schemas/PolicySubject'
+      type: object
+      properties:
+        accountLink:
+          $ref: '#/components/schemas/PolicyAccountLink'
+        conditions:
+          $ref: '#/components/schemas/PolicyRuleConditions'
+        mapAMRClaims:
+          type: boolean
+          description: Enable mapping AMR from IdP to Okta to downstream apps
+          default: false
+          x-okta-lifecycle:
+            features:
+              - IDP_AMR_CLAIMS_MAPPING
+        maxClockSkew:
+          type: integer
+        provisioning:
+          $ref: '#/components/schemas/Provisioning'
+        subject:
+          $ref: '#/components/schemas/PolicySubject'
     IdentityProviderPolicyProvider:
       type: string
       enum:
@@ -28508,7 +28506,7 @@ components:
         mapping:
           ACCESS_POLICY: '#/components/schemas/AccessPolicy'
           OAUTH_AUTHORIZATION_POLICY: '#/components/schemas/AuthorizationServerPolicy'
-          IDP_DISCOVERY: '#/components/schemas/IdentityProviderPolicy'
+          IDP_DISCOVERY: '#/components/schemas/AccessPolicy'
           MFA_ENROLL: '#/components/schemas/MultifactorEnrollmentPolicy'
           OKTA_SIGN_ON: '#/components/schemas/OktaSignOnPolicy'
           PASSWORD: '#/components/schemas/PasswordPolicy'
