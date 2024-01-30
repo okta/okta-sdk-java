@@ -39,7 +39,7 @@
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>          SwaApplicationSettingsApplication.JSON_PROPERTY_USERNAME_FIELD,
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>          SwaApplicationSettingsApplication.JSON_PROPERTY_USER_NAME_SELECTOR
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      })
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-09T11:36:04.862830-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-30T09:30:21.540602-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> SwaApplicationSettingsApplication <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -460,47 +460,48 @@
 <a class="jxr_linenumber" name="L452" href="#L452">452</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.url, swaApplicationSettingsApplication.url) &amp;&amp;
 <a class="jxr_linenumber" name="L453" href="#L453">453</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.usernameField, swaApplicationSettingsApplication.usernameField) &amp;&amp;
 <a class="jxr_linenumber" name="L454" href="#L454">454</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.userNameSelector, swaApplicationSettingsApplication.userNameSelector);
-<a class="jxr_linenumber" name="L455" href="#L455">455</a> }
-<a class="jxr_linenumber" name="L456" href="#L456">456</a> 
-<a class="jxr_linenumber" name="L457" href="#L457">457</a>     @Override
-<a class="jxr_linenumber" name="L458" href="#L458">458</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L459" href="#L459">459</a>         <strong class="jxr_keyword">return</strong> Objects.hash(buttonField, buttonSelector, checkbox, extraFieldSelector, extraFieldValue, loginUrlRegex, passwordField, passwordSelector, redirectUrl, targetURL, url, usernameField, userNameSelector);
-<a class="jxr_linenumber" name="L460" href="#L460">460</a>     }
-<a class="jxr_linenumber" name="L461" href="#L461">461</a> 
-<a class="jxr_linenumber" name="L462" href="#L462">462</a>     @Override
-<a class="jxr_linenumber" name="L463" href="#L463">463</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>     sb.append(<span class="jxr_string">"class SwaApplicationSettingsApplication {\n"</span>);
-<a class="jxr_linenumber" name="L466" href="#L466">466</a>         sb.append(<span class="jxr_string">"    buttonField: "</span>).append(toIndentedString(buttonField)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>         sb.append(<span class="jxr_string">"    buttonSelector: "</span>).append(toIndentedString(buttonSelector)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L468" href="#L468">468</a>         sb.append(<span class="jxr_string">"    checkbox: "</span>).append(toIndentedString(checkbox)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L469" href="#L469">469</a>         sb.append(<span class="jxr_string">"    extraFieldSelector: "</span>).append(toIndentedString(extraFieldSelector)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L470" href="#L470">470</a>         sb.append(<span class="jxr_string">"    extraFieldValue: "</span>).append(toIndentedString(extraFieldValue)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L471" href="#L471">471</a>         sb.append(<span class="jxr_string">"    loginUrlRegex: "</span>).append(toIndentedString(loginUrlRegex)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L472" href="#L472">472</a>         sb.append(<span class="jxr_string">"    passwordField: "</span>).append(toIndentedString(passwordField)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>         sb.append(<span class="jxr_string">"    passwordSelector: "</span>).append(toIndentedString(passwordSelector)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>         sb.append(<span class="jxr_string">"    redirectUrl: "</span>).append(toIndentedString(redirectUrl)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L475" href="#L475">475</a>         sb.append(<span class="jxr_string">"    targetURL: "</span>).append(toIndentedString(targetURL)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>         sb.append(<span class="jxr_string">"    url: "</span>).append(toIndentedString(url)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L477" href="#L477">477</a>         sb.append(<span class="jxr_string">"    usernameField: "</span>).append(toIndentedString(usernameField)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L478" href="#L478">478</a>         sb.append(<span class="jxr_string">"    userNameSelector: "</span>).append(toIndentedString(userNameSelector)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>     sb.append(<span class="jxr_string">"}"</span>);
-<a class="jxr_linenumber" name="L480" href="#L480">480</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>     }
-<a class="jxr_linenumber" name="L482" href="#L482">482</a> 
-<a class="jxr_linenumber" name="L483" href="#L483">483</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L484" href="#L484">484</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
-<a class="jxr_linenumber" name="L485" href="#L485">485</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
-<a class="jxr_linenumber" name="L486" href="#L486">486</a> <em class="jxr_javadoccomment">    */</em>
-<a class="jxr_linenumber" name="L487" href="#L487">487</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
-<a class="jxr_linenumber" name="L488" href="#L488">488</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L489" href="#L489">489</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
-<a class="jxr_linenumber" name="L490" href="#L490">490</a>     }
-<a class="jxr_linenumber" name="L491" href="#L491">491</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
-<a class="jxr_linenumber" name="L492" href="#L492">492</a>     }
-<a class="jxr_linenumber" name="L493" href="#L493">493</a> 
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>         <em class="jxr_comment">//;</em>
+<a class="jxr_linenumber" name="L456" href="#L456">456</a> }
+<a class="jxr_linenumber" name="L457" href="#L457">457</a> 
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>     @Override
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>         <strong class="jxr_keyword">return</strong> Objects.hash(buttonField, buttonSelector, checkbox, extraFieldSelector, extraFieldValue, loginUrlRegex, passwordField, passwordSelector, redirectUrl, targetURL, url, usernameField, userNameSelector);
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>     }
+<a class="jxr_linenumber" name="L462" href="#L462">462</a> 
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>     @Override
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>     sb.append(<span class="jxr_string">"class SwaApplicationSettingsApplication {\n"</span>);
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         sb.append(<span class="jxr_string">"    buttonField: "</span>).append(toIndentedString(buttonField)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>         sb.append(<span class="jxr_string">"    buttonSelector: "</span>).append(toIndentedString(buttonSelector)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>         sb.append(<span class="jxr_string">"    checkbox: "</span>).append(toIndentedString(checkbox)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L470" href="#L470">470</a>         sb.append(<span class="jxr_string">"    extraFieldSelector: "</span>).append(toIndentedString(extraFieldSelector)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>         sb.append(<span class="jxr_string">"    extraFieldValue: "</span>).append(toIndentedString(extraFieldValue)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L472" href="#L472">472</a>         sb.append(<span class="jxr_string">"    loginUrlRegex: "</span>).append(toIndentedString(loginUrlRegex)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L473" href="#L473">473</a>         sb.append(<span class="jxr_string">"    passwordField: "</span>).append(toIndentedString(passwordField)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L474" href="#L474">474</a>         sb.append(<span class="jxr_string">"    passwordSelector: "</span>).append(toIndentedString(passwordSelector)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L475" href="#L475">475</a>         sb.append(<span class="jxr_string">"    redirectUrl: "</span>).append(toIndentedString(redirectUrl)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>         sb.append(<span class="jxr_string">"    targetURL: "</span>).append(toIndentedString(targetURL)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>         sb.append(<span class="jxr_string">"    url: "</span>).append(toIndentedString(url)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>         sb.append(<span class="jxr_string">"    usernameField: "</span>).append(toIndentedString(usernameField)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>         sb.append(<span class="jxr_string">"    userNameSelector: "</span>).append(toIndentedString(userNameSelector)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>     sb.append(<span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>     }
+<a class="jxr_linenumber" name="L483" href="#L483">483</a> 
+<a class="jxr_linenumber" name="L484" href="#L484">484</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
+<a class="jxr_linenumber" name="L487" href="#L487">487</a> <em class="jxr_javadoccomment">    */</em>
+<a class="jxr_linenumber" name="L488" href="#L488">488</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>     }
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>     }
 <a class="jxr_linenumber" name="L494" href="#L494">494</a> 
-<a class="jxr_linenumber" name="L495" href="#L495">495</a>     }
+<a class="jxr_linenumber" name="L495" href="#L495">495</a> 
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>     }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017&#x2013;2024 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>

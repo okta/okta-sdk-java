@@ -32,7 +32,7 @@
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>          EmailServerRequest.JSON_PROPERTY_USERNAME,
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>          EmailServerRequest.JSON_PROPERTY_PASSWORD
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>      })
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-09T11:36:04.862830-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-30T09:30:21.540602-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> EmailServerRequest <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -236,40 +236,41 @@
 <a class="jxr_linenumber" name="L228" href="#L228">228</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.port, emailServerRequest.port) &amp;&amp;
 <a class="jxr_linenumber" name="L229" href="#L229">229</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.username, emailServerRequest.username) &amp;&amp;
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.password, emailServerRequest.password);
-<a class="jxr_linenumber" name="L231" href="#L231">231</a> }
-<a class="jxr_linenumber" name="L232" href="#L232">232</a> 
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>     @Override
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>         <strong class="jxr_keyword">return</strong> Objects.hash(alias, enabled, host, port, username, password);
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>     }
-<a class="jxr_linenumber" name="L237" href="#L237">237</a> 
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>     @Override
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>     sb.append(<span class="jxr_string">"class EmailServerRequest {\n"</span>);
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>         sb.append(<span class="jxr_string">"    alias: "</span>).append(toIndentedString(alias)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>         sb.append(<span class="jxr_string">"    enabled: "</span>).append(toIndentedString(enabled)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>         sb.append(<span class="jxr_string">"    host: "</span>).append(toIndentedString(host)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>         sb.append(<span class="jxr_string">"    port: "</span>).append(toIndentedString(port)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>         sb.append(<span class="jxr_string">"    username: "</span>).append(toIndentedString(username)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>         sb.append(<span class="jxr_string">"    password: "</span>).append(toIndentedString(password)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>     sb.append(<span class="jxr_string">"}"</span>);
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>     }
-<a class="jxr_linenumber" name="L251" href="#L251">251</a> 
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L253" href="#L253">253</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
-<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
-<a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_javadoccomment">    */</em>
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>     }
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>     }
-<a class="jxr_linenumber" name="L262" href="#L262">262</a> 
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>         <em class="jxr_comment">//;</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> }
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> 
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>     @Override
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>         <strong class="jxr_keyword">return</strong> Objects.hash(alias, enabled, host, port, username, password);
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>     }
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> 
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>     @Override
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>     sb.append(<span class="jxr_string">"class EmailServerRequest {\n"</span>);
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>         sb.append(<span class="jxr_string">"    alias: "</span>).append(toIndentedString(alias)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>         sb.append(<span class="jxr_string">"    enabled: "</span>).append(toIndentedString(enabled)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>         sb.append(<span class="jxr_string">"    host: "</span>).append(toIndentedString(host)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>         sb.append(<span class="jxr_string">"    port: "</span>).append(toIndentedString(port)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>         sb.append(<span class="jxr_string">"    username: "</span>).append(toIndentedString(username)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         sb.append(<span class="jxr_string">"    password: "</span>).append(toIndentedString(password)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     sb.append(<span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>     }
+<a class="jxr_linenumber" name="L252" href="#L252">252</a> 
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> <em class="jxr_javadoccomment">    */</em>
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     }
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>     }
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> 
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>     }
+<a class="jxr_linenumber" name="L264" href="#L264">264</a> 
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017&#x2013;2024 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>

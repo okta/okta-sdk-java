@@ -35,7 +35,7 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>          UserSchemaPublic.JSON_PROPERTY_REQUIRED,
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>          UserSchemaPublic.JSON_PROPERTY_TYPE
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>      })
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-09T11:36:04.862830-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-30T09:30:21.540602-06:00[America/Chicago]"</span>)
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> UserSchemaPublic <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -193,38 +193,39 @@
 <a class="jxr_linenumber" name="L185" href="#L185">185</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.properties, userSchemaPublic.properties) &amp;&amp;
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.required, userSchemaPublic.required) &amp;&amp;
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>         Objects.equals(<strong class="jxr_keyword">this</strong>.type, userSchemaPublic.type);
-<a class="jxr_linenumber" name="L188" href="#L188">188</a> }
-<a class="jxr_linenumber" name="L189" href="#L189">189</a> 
-<a class="jxr_linenumber" name="L190" href="#L190">190</a>     @Override
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>         <strong class="jxr_keyword">return</strong> Objects.hash(id, properties, required, type);
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>     }
-<a class="jxr_linenumber" name="L194" href="#L194">194</a> 
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>     @Override
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>     <strong class="jxr_keyword">public</strong> String toString() {
-<a class="jxr_linenumber" name="L197" href="#L197">197</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>     sb.append(<span class="jxr_string">"class UserSchemaPublic {\n"</span>);
-<a class="jxr_linenumber" name="L199" href="#L199">199</a>         sb.append(<span class="jxr_string">"    id: "</span>).append(toIndentedString(id)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>         sb.append(<span class="jxr_string">"    properties: "</span>).append(toIndentedString(properties)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L201" href="#L201">201</a>         sb.append(<span class="jxr_string">"    required: "</span>).append(toIndentedString(required)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L202" href="#L202">202</a>         sb.append(<span class="jxr_string">"    type: "</span>).append(toIndentedString(type)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L203" href="#L203">203</a>     sb.append(<span class="jxr_string">"}"</span>);
-<a class="jxr_linenumber" name="L204" href="#L204">204</a>     <strong class="jxr_keyword">return</strong> sb.toString();
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>     }
-<a class="jxr_linenumber" name="L206" href="#L206">206</a> 
-<a class="jxr_linenumber" name="L207" href="#L207">207</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
-<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
-<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">    */</em>
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
-<a class="jxr_linenumber" name="L214" href="#L214">214</a>     }
-<a class="jxr_linenumber" name="L215" href="#L215">215</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>     }
-<a class="jxr_linenumber" name="L217" href="#L217">217</a> 
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>         <em class="jxr_comment">//;</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> }
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> 
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     @Override
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>         <strong class="jxr_keyword">return</strong> Objects.hash(id, properties, required, type);
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>     }
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> 
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>     @Override
+<a class="jxr_linenumber" name="L197" href="#L197">197</a>     <strong class="jxr_keyword">public</strong> String toString() {
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>     StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>     sb.append(<span class="jxr_string">"class UserSchemaPublic {\n"</span>);
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>         sb.append(<span class="jxr_string">"    id: "</span>).append(toIndentedString(id)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>         sb.append(<span class="jxr_string">"    properties: "</span>).append(toIndentedString(properties)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>         sb.append(<span class="jxr_string">"    required: "</span>).append(toIndentedString(required)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>         sb.append(<span class="jxr_string">"    type: "</span>).append(toIndentedString(type)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>     sb.append(<span class="jxr_string">"}"</span>);
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>     <strong class="jxr_keyword">return</strong> sb.toString();
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>     }
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> 
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">    * Convert the given object to string with each line indented by 4 spaces</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">    * (except the first line).</em>
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> <em class="jxr_javadoccomment">    */</em>
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>     <strong class="jxr_keyword">private</strong> String toIndentedString(Object o) {
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     <strong class="jxr_keyword">if</strong> (o == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>     <strong class="jxr_keyword">return</strong> <span class="jxr_string">"null"</span>;
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>     }
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     <strong class="jxr_keyword">return</strong> o.toString().replace(<span class="jxr_string">"\n"</span>, <span class="jxr_string">"\n    "</span>);
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>     }
 <a class="jxr_linenumber" name="L218" href="#L218">218</a> 
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>     }
+<a class="jxr_linenumber" name="L219" href="#L219">219</a> 
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>     }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2017&#x2013;2024 <a href="http://developer.okta.com/">Okta</a>. All rights reserved.</div>
