@@ -3503,6 +3503,7 @@ paths:
             - okta.authorizationServers.manage
       tags:
         - AuthorizationServer
+
   /api/v1/authorizationServers/{authServerId}/policies/{policyId}/lifecycle/activate:
     parameters:
       - $ref: '#/components/parameters/pathAuthServerId'
@@ -31114,6 +31115,7 @@ components:
           email: '#/components/schemas/EmailUserFactor'
           push: '#/components/schemas/PushUserFactor'
           question: '#/components/schemas/SecurityQuestionUserFactor'
+          signed_nonce: '#/components/schemas/PushUserFactor'
           sms: '#/components/schemas/SmsUserFactor'
           token: '#/components/schemas/TokenUserFactor'
           token:hardware: '#/components/schemas/HardwareUserFactor'
