@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.okta.sdk.resource.model.GroupProfile;
-import com.okta.sdk.resource.model.UserProfile;
 
 import java.io.IOException;
 import java.util.Map;
