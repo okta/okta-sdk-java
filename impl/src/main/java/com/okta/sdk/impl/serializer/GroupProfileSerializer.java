@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-Present Okta, Inc.
+ * Copyright 2024-Present Okta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.model.GroupProfile;
-import com.okta.sdk.resource.model.UserProfile;
 
 import java.io.IOException;
 import java.util.Map;
@@ -42,8 +41,6 @@ public class GroupProfileSerializer extends StdSerializer<GroupProfile> {
     public void serialize(GroupProfile groupProfile, JsonGenerator jgen, SerializerProvider provider) throws IOException {
 
         jgen.writeStartObject();
-
-        // non-nullable fields
 
         if (Strings.hasText(groupProfile.getName())) {
             jgen.writeStringField(GroupProfile.JSON_PROPERTY_NAME, groupProfile.getName());
