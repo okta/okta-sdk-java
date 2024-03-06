@@ -29773,6 +29773,10 @@ components:
           readOnly: true
         status:
           $ref: '#/components/schemas/LifecycleStatus'
+        resource-set:
+          type: string
+        role:
+          type: string
         type:
           $ref: '#/components/schemas/RoleType'
         _embedded:
