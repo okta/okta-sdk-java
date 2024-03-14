@@ -37056,6 +37056,24 @@ components:
       properties:
         status:
           $ref: '#/components/schemas/ProvisioningConnectionStatus'
+        baseUrl:
+          type: string
+          description: Base URL
+        authScheme:
+          $ref: '#/components/schemas/ProvisioningConnectionTokenAuthScheme'
+        profile:
+          $ref: '#/components/schemas/ProvisioningConnectionResponseProfile'
+      required:
+        - profile
+        - status
+    ProvisioningConnectionResponseProfile:
+      properties:
+        authScheme:
+          $ref: '#/components/schemas/ProvisioningConnectionAuthScheme'
+        _links:
+          $ref: '#/components/schemas/LinksSelfLifecycleAndAuthorize'
+      required:
+        - authScheme
     ProvisioningConnectionStatus:
       description: Provisioning connection status
       default: DISABLED
