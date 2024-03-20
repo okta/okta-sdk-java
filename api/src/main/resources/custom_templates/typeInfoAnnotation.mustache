@@ -1,0 +1,18 @@
+{{!
+Based on https://github.com/OpenAPITools/openapi-generator/blob/v6.6.0/modules/openapi-generator/src/main/resources/Java/typeInfoAnnotation.mustache
+- Add defaultImpl to deserialize to base type if discriminator is null or unknown
+- Remove @JsonIgnoreProperties on discriminator field and set include to JsonTypeInfo.As.EXISTING_PROPERTY
+}}
+{{#jackson}}
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "{{{discriminator.propertyBaseName}}}", visible = true, defaultImpl = {{classname}}.class)
+{{#discriminator.mappedModels}}
+{{#-first}}
+@JsonSubTypes({
+{{/-first}}
+  @JsonSubTypes.Type(value = {{modelName}}.class, name = "{{^vendorExtensions.x-discriminator-value}}{{mappingName}}{{/vendorExtensions.x-discriminator-value}}{{#vendorExtensions.x-discriminator-value}}{{{vendorExtensions.x-discriminator-value}}}{{/vendorExtensions.x-discriminator-value}}"),
+{{#-last}}
+})
+{{/-last}}
+{{/discriminator.mappedModels}}
+{{/jackson}}
