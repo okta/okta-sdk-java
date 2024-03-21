@@ -18,21 +18,10 @@ package com.okta.sdk.impl.resource;
 import com.okta.commons.lang.Assert;
 import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
+import com.okta.sdk.resource.model.*;
 import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.UserApi;
-import com.okta.sdk.resource.model.AuthenticationProvider;
-import com.okta.sdk.resource.model.CreateUserRequest;
-import com.okta.sdk.resource.model.PasswordCredential;
-import com.okta.sdk.resource.model.PasswordCredentialHash;
-import com.okta.sdk.resource.model.PasswordCredentialHashAlgorithm;
-import com.okta.sdk.resource.model.PasswordCredentialHook;
-import com.okta.sdk.resource.model.RecoveryQuestionCredential;
-import com.okta.sdk.resource.model.User;
-import com.okta.sdk.resource.model.UserCredentials;
-import com.okta.sdk.resource.model.UserNextLogin;
-import com.okta.sdk.resource.model.UserProfile;
-import com.okta.sdk.resource.model.UserType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -359,13 +348,15 @@ public class DefaultUserBuilder implements UserBuilder {
             userProfile.setLogin(email);
         }
 
+        CreateUserRequestType createUserRequestType = new CreateUserRequestType();
+
         if (Strings.hasText(userTypeId)) {
-            UserType userType = new UserType();
-            userType.setId(userTypeId);
-            createUserRequest.setType(userType);
+            createUserRequestType.setId(userTypeId);
         } else if (userType != null) {
-            createUserRequest.setType(userType);
+            createUserRequestType.setId(userType.getId());
         }
+
+        createUserRequest.setType(createUserRequestType);
 
         if (!Collections.isEmpty(groupIds)) {
             createUserRequest.setGroupIds(groupIds);
