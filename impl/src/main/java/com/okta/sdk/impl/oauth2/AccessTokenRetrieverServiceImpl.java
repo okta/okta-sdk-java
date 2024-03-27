@@ -132,16 +132,16 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         Instant now = Instant.now();
 
         JwtBuilder builder = Jwts.builder()
-            .setAudience(tokenClientConfiguration.getBaseUrl() + TOKEN_URI)
-            .setIssuedAt(Date.from(now))
-            .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))             // see Javadoc
-            .setIssuer(clientId)
-            .setSubject(clientId)
+            .audience().add(tokenClientConfiguration.getBaseUrl() + TOKEN_URI).and()
+            .issuedAt(Date.from(now))
+            .expiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))             // see Javadoc
+            .issuer(clientId)
+            .subject(clientId)
             .claim("jti", UUID.randomUUID().toString())
             .signWith(privateKey);
 
         if (Strings.hasText(tokenClientConfiguration.getKid())) {
-            builder.setHeaderParam("kid", tokenClientConfiguration.getKid());
+            builder.header().add("kid", tokenClientConfiguration.getKid());
         }
 
         return builder.compact();

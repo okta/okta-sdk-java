@@ -39,8 +39,10 @@ import org.testng.annotations.Test
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
+import java.security.PublicKey
 
 import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.hasItem
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static org.mockito.ArgumentMatchers.*
@@ -130,7 +132,7 @@ class AccessTokenRetrieverServiceImplTest {
 
         // dummy private key generated and used for unit test only
 
-        PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
+        PrivateKey generatedPrivateKey = generateKeyPair("RSA", 2048).getPrivate()
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
 
         // Now test the pem -> private key conversion function of getPrivateKeyFromPem method
@@ -153,7 +155,7 @@ class AccessTokenRetrieverServiceImplTest {
 
         // dummy private key generated and used for unit test only
 
-        PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
+        PrivateKey generatedPrivateKey = generateKeyPair("RSA", 2048).getPrivate()
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
         Reader reader = new BufferedReader(new FileReader(privateKeyPemFile))
 
@@ -214,7 +216,9 @@ class AccessTokenRetrieverServiceImplTest {
 
         // dummy private key generated and used for unit test only
 
-        PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
+        KeyPair generatedKeyPair = generateKeyPair("RSA", 2048)
+        PrivateKey generatedPrivateKey = generatedKeyPair.getPrivate()
+        PublicKey generatedPublicKey = generatedKeyPair.getPublic()
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
 
         String baseUrl = "https://sample.okta.com"
@@ -240,14 +244,14 @@ class AccessTokenRetrieverServiceImplTest {
         assertThat(signedJwt, notNullValue())
 
         // decode the signed jwt and verify
-        Claims claims = Jwts.parserBuilder()
-            .setSigningKey(generatedPrivateKey)
+        Claims claims = Jwts.parser()
+            .verifyWith(generatedPublicKey)
             .build()
-            .parseClaimsJws(signedJwt).getBody()
+            .parseSignedClaims(signedJwt).getPayload()
 
         assertThat(claims, notNullValue())
 
-        assertEquals(claims.get("aud"), clientConfig.getBaseUrl() + "/oauth2/v1/token")
+        assertThat(claims.get("aud"), hasItem(clientConfig.getBaseUrl() + "/oauth2/v1/token"))
         assertThat(claims.get("iat"), notNullValue())
         assertThat(claims.get("exp"), notNullValue())
         assertEquals(Integer.valueOf(claims.get("exp") as String) - Integer.valueOf(claims.get("iat") as String), 3000,
@@ -259,8 +263,9 @@ class AccessTokenRetrieverServiceImplTest {
         assertThat(claims.get("jti"), notNullValue())
 
         Header header = Jwts.parser()
-            .setSigningKey(generatedPrivateKey)
-            .parseClaimsJws(signedJwt)
+            .verifyWith(generatedPublicKey)
+            .build()
+            .parseSignedClaims(signedJwt)
             .getHeader()
 
         assertThat(header.get("kid"), notNullValue())
@@ -275,7 +280,7 @@ class AccessTokenRetrieverServiceImplTest {
 
         // dummy private key generated and used for unit test only
 
-        PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
+        PrivateKey generatedPrivateKey = generateKeyPair("RSA", 2048).getPrivate()
 
         String baseUrl = "https://sample.okta.com"
         BaseUrlResolver baseUrlResolver = new BaseUrlResolver() {
@@ -305,7 +310,7 @@ class AccessTokenRetrieverServiceImplTest {
 
         // dummy private key generated and used for unit test only
 
-        PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
+        PrivateKey generatedPrivateKey = generateKeyPair("RSA", 2048).getPrivate()
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
 
         String baseUrl = "https://sample.okta.com"
@@ -337,7 +342,7 @@ class AccessTokenRetrieverServiceImplTest {
 
         // dummy private key generated and used for unit test only
 
-        PrivateKey generatedPrivateKey = generatePrivateKey("RSA", 2048)
+        PrivateKey generatedPrivateKey = generateKeyPair("RSA", 2048).getPrivate()
         File privateKeyPemFile = writePrivateKeyToPemFile(generatedPrivateKey, "privateKey")
 
         String baseUrl = "https://sample.okta.com"
@@ -378,19 +383,17 @@ class AccessTokenRetrieverServiceImplTest {
         def accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(clientConfig, apiClient)
         accessTokenRetrieverService.getOAuth2AccessToken()
 
-        verify(apiClient, times(1)).invokeAPI()
+        verify(apiClient, times(1))
     }
 
     // helper methods
 
     // dummy private key generated and used for unit test only
 
-    static PrivateKey generatePrivateKey(String algorithm, int keySize) {
+    static KeyPair generateKeyPair(String algorithm, int keySize) {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm)
         keyPairGenerator.initialize(keySize)
-        KeyPair keyPair = keyPairGenerator.generateKeyPair()
-        PrivateKey privateKey = keyPair.getPrivate()
-        return privateKey
+        return keyPairGenerator.generateKeyPair()
     }
 
     static String createPemFileContent(PrivateKey privateKey) {

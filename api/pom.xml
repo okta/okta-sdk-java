@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
-        <version>15.0.1-SNAPSHOT</version>
+        <version>16.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>okta-sdk-api</artifactId>
@@ -36,14 +36,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <swagger-annotations.version>1.6.8</swagger-annotations.version>
-        <openapi-generator.version>6.6.0</openapi-generator.version>
-        <spring-web.version>5.3.23</spring-web.version>
-        <spring-retry.version>1.3.3</spring-retry.version>
+        <openapi-generator.version>7.4.0</openapi-generator.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
         <jsr305.version>3.0.2</jsr305.version>
         <junit.version>4.13.2</junit.version>
-        <com.github.jknack.handlebars.version>4.3.1</com.github.jknack.handlebars.version>
+        <com.github.jknack.handlebars.version>4.4.0</com.github.jknack.handlebars.version>
     </properties>
 
     <dependencies>
@@ -135,7 +133,7 @@
         <dependency>
             <groupId>com.github.jknack</groupId>
             <artifactId>handlebars-jackson2</artifactId>
-            <version>${com.github.jknack.handlebars.version}</version>
+            <version>4.3.1</version>
         </dependency>
     </dependencies>
 
@@ -174,6 +172,7 @@
                             <apiPackage>com.okta.sdk.resource.api</apiPackage>
                             <modelPackage>com.okta.sdk.resource.model</modelPackage>
                             <invokerPackage>com.okta.sdk.resource.client</invokerPackage>
+                            <enumUnknownDefaultCase>true</enumUnknownDefaultCase>
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                                 <useRuntimeException>true</useRuntimeException>
