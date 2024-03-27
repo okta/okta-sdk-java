@@ -34,13 +34,13 @@
     <inceptionYear>2017</inceptionYear>
 
     <properties>
-        <jackson.version>2.15.3</jackson.version>
+        <jackson.version>2.17.0</jackson.version>
         <snakeyaml.version>2.2</snakeyaml.version>
-        <bouncycastle.version>1.76</bouncycastle.version>
-        <jjwt.version>0.11.5</jjwt.version>
-        <org.apache.httpcomponents.client5.version>5.2.1</org.apache.httpcomponents.client5.version>
+        <bouncycastle.version>1.77</bouncycastle.version>
+        <jjwt.version>0.12.5</jjwt.version>
+        <org.apache.httpcomponents.client5.version>5.3.1</org.apache.httpcomponents.client5.version>
         <okta.sdk.previousVersion>15.0.0</okta.sdk.previousVersion>
-        <okta.commons.version>1.3.3</okta.commons.version>
+        <okta.commons.version>1.3.5</okta.commons.version>
         <com.google.auto.service.version>1.1.1</com.google.auto.service.version>
         <github.slug>okta/okta-sdk-java</github.slug>
     </properties>
