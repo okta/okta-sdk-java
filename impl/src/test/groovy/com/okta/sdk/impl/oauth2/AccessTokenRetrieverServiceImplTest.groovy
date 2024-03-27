@@ -42,12 +42,7 @@ import java.security.PrivateKey
 import java.security.PublicKey
 
 import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.contains
-import static org.hamcrest.Matchers.containsInAnyOrder
-import static org.hamcrest.Matchers.containsString
-import static org.hamcrest.Matchers.hasEntry
 import static org.hamcrest.Matchers.hasItem
-import static org.hamcrest.Matchers.hasValue
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static org.mockito.ArgumentMatchers.*
