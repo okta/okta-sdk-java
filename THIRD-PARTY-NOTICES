@@ -14,13 +14,20 @@ limitations under the License.
 
 This project includes:
   A Jackson 2.x helper under The Apache Software License, Version 2.0
-  Apache Commons Lang under Apache License, Version 2.0
+  Apache Commons Lang under Apache-2.0
+  Apache Commons Text under Apache-2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpComponents Core HTTP/1.1 under Apache License, Version 2.0
   Apache HttpComponents Core HTTP/2 under Apache License, Version 2.0
+  asm under BSD-3-Clause
+  asm-analysis under BSD-3-Clause
+  asm-commons under BSD-3-Clause
+  asm-tree under BSD-3-Clause
+  asm-util under BSD-3-Clause
   Bouncy Castle ASN.1 Extension and Utility APIs under Bouncy Castle Licence
   Bouncy Castle PKIX, CMS, EAC, TSP, PKCS, OCSP, CMP, and CRMF APIs under Bouncy Castle Licence
   Bouncy Castle Provider under Bouncy Castle Licence
+  Byte Buddy (without dependencies) under Apache License, Version 2.0
   FindBugs-jsr305 under The Apache Software License, Version 2.0
   Handlebars under The Apache Software License, Version 2.0
   Jackson datatype: JSR310 under The Apache Software License, Version 2.0
@@ -38,6 +45,7 @@ This project includes:
   Okta Commons :: Config Check under The Apache License, Version 2.0
   Okta Commons :: HTTP :: API under The Apache License, Version 2.0
   Okta Commons :: Lang under The Apache License, Version 2.0
+  OpenJDK Nashorn under GPL v2 with the Classpath exception
   SLF4J API Module under MIT License
   SnakeYAML under Apache License, Version 2.0
   swagger-annotations under Apache License 2.0
