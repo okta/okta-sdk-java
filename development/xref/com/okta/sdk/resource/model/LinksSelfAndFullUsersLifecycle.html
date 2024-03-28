@@ -15,12 +15,12 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonCreator;
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectActivateLink;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectDeactivateLink;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectSelfLink;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectSuspendLink;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectUnsuspendLink;
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.LinksSelfAndFullUsersLifecycleAllOfUsers;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObject;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectActivateLink;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectDeactivateLink;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectSelfLink;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectSuspendLink;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectUnsuspendLink;
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>      <strong class="jxr_keyword">import</strong> java.io.Serializable;
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
@@ -38,7 +38,7 @@
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>          LinksSelfAndFullUsersLifecycle.JSON_PROPERTY_UNSUSPEND,
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>          LinksSelfAndFullUsersLifecycle.JSON_PROPERTY_USERS
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      })
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-03-18T19:36:17.795Z[Etc/UTC]"</span>)
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-03-28T21:19:46.671403505Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.4.0"</span>)
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> LinksSelfAndFullUsersLifecycle <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -60,7 +60,7 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>              <strong class="jxr_keyword">private</strong> HrefObjectUnsuspendLink unsuspend;
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_USERS = <span class="jxr_string">"users"</span>;
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>              <strong class="jxr_keyword">private</strong> LinksSelfAndFullUsersLifecycleAllOfUsers users;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>              <strong class="jxr_keyword">private</strong> HrefObject users;
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  <strong class="jxr_keyword">public</strong> LinksSelfAndFullUsersLifecycle() { 
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  }
@@ -200,29 +200,29 @@
 <a class="jxr_linenumber" name="L192" href="#L192">192</a>         }
 <a class="jxr_linenumber" name="L193" href="#L193">193</a> 
 <a class="jxr_linenumber" name="L194" href="#L194">194</a> 
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>         <strong class="jxr_keyword">public</strong> LinksSelfAndFullUsersLifecycle users(LinksSelfAndFullUsersLifecycleAllOfUsers users) {
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>         <strong class="jxr_keyword">public</strong> LinksSelfAndFullUsersLifecycle users(HrefObject users) {
 <a class="jxr_linenumber" name="L196" href="#L196">196</a>         
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>         <strong class="jxr_keyword">this</strong>.users = users;
 <a class="jxr_linenumber" name="L198" href="#L198">198</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>         }
 <a class="jxr_linenumber" name="L200" href="#L200">200</a> 
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">        * Get users</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">        * Link to Device users</em>
 <a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">    * @return users</em>
 <a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">    **/</em>
 <a class="jxr_linenumber" name="L205" href="#L205">205</a>         @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>       @ApiModelProperty(value = <span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>       @ApiModelProperty(value = <span class="jxr_string">"Link to Device users"</span>)
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>       @JsonProperty(JSON_PROPERTY_USERS)
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L209" href="#L209">209</a> 
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>     <strong class="jxr_keyword">public</strong> LinksSelfAndFullUsersLifecycleAllOfUsers getUsers() {
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>     <strong class="jxr_keyword">public</strong> HrefObject getUsers() {
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>         <strong class="jxr_keyword">return</strong> users;
 <a class="jxr_linenumber" name="L212" href="#L212">212</a>     }
 <a class="jxr_linenumber" name="L213" href="#L213">213</a> 
 <a class="jxr_linenumber" name="L214" href="#L214">214</a> 
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>           @JsonProperty(JSON_PROPERTY_USERS)
 <a class="jxr_linenumber" name="L216" href="#L216">216</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUsers(LinksSelfAndFullUsersLifecycleAllOfUsers users) {
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUsers(HrefObject users) {
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>             <strong class="jxr_keyword">this</strong>.users = users;
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>         }
 <a class="jxr_linenumber" name="L220" href="#L220">220</a> 

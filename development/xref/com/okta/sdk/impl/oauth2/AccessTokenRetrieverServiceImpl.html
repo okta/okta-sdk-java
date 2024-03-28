@@ -140,16 +140,16 @@
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>         Instant now = Instant.now();
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> 
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>         JwtBuilder builder = Jwts.builder()
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>             .setAudience(tokenClientConfiguration.getBaseUrl() + TOKEN_URI)
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>             .setIssuedAt(Date.from(now))
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>             .setExpiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))             <em class="jxr_comment">// see Javadoc</em>
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>             .setIssuer(clientId)
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>             .setSubject(clientId)
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>             .audience().add(tokenClientConfiguration.getBaseUrl() + TOKEN_URI).and()
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>             .issuedAt(Date.from(now))
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>             .expiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))             <em class="jxr_comment">// see Javadoc</em>
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>             .issuer(clientId)
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>             .subject(clientId)
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>             .claim(<span class="jxr_string">"jti"</span>, UUID.randomUUID().toString())
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>             .signWith(privateKey);
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> 
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">if</strong> (Strings.hasText(tokenClientConfiguration.getKid())) {
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>             builder.setHeaderParam(<span class="jxr_string">"kid"</span>, tokenClientConfiguration.getKid());
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>             builder.header().add(<span class="jxr_string">"kid"</span>, tokenClientConfiguration.getKid());
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>         }
 <a class="jxr_linenumber" name="L146" href="#L146">146</a> 
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>         <strong class="jxr_keyword">return</strong> builder.compact();
