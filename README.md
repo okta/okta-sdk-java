@@ -80,7 +80,7 @@ If you run into problems using the SDK, you can:
 
 ### Prerequisites
 
-* Java 8 or later
+* Java 11 or later
 
 To use this SDK, you will need to include the following dependencies:
 
