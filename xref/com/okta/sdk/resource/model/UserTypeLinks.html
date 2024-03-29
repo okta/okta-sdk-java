@@ -16,7 +16,7 @@
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectSelfLink;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.SourceLinksAllOfSchema;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.UserTypeLinksAllOfSchema;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> java.io.Serializable;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
@@ -30,7 +30,7 @@
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>          UserTypeLinks.JSON_PROPERTY_SELF,
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>          UserTypeLinks.JSON_PROPERTY_SCHEMA
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>      })
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-30T09:30:21.540602-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-03-29T16:46:47.656897-05:00[America/Chicago]"</span>, comments = <span class="jxr_string">"Generator version: 7.4.0"</span>)
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> UserTypeLinks <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -40,7 +40,7 @@
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>              <strong class="jxr_keyword">private</strong> HrefObjectSelfLink self;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_SCHEMA = <span class="jxr_string">"schema"</span>;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>              <strong class="jxr_keyword">private</strong> SourceLinksAllOfSchema schema;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>              <strong class="jxr_keyword">private</strong> UserTypeLinksAllOfSchema schema;
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">public</strong> UserTypeLinks() { 
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  }
@@ -72,7 +72,7 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>          }
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>          <strong class="jxr_keyword">public</strong> UserTypeLinks schema(SourceLinksAllOfSchema schema) {
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          <strong class="jxr_keyword">public</strong> UserTypeLinks schema(UserTypeLinksAllOfSchema schema) {
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>          
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          <strong class="jxr_keyword">this</strong>.schema = schema;
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -87,14 +87,14 @@
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>        @JsonProperty(JSON_PROPERTY_SCHEMA)
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">public</strong> SourceLinksAllOfSchema getSchema() {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">public</strong> UserTypeLinksAllOfSchema getSchema() {
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>          <strong class="jxr_keyword">return</strong> schema;
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      }
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>            @JsonProperty(JSON_PROPERTY_SCHEMA)
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setSchema(SourceLinksAllOfSchema schema) {
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setSchema(UserTypeLinksAllOfSchema schema) {
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>              <strong class="jxr_keyword">this</strong>.schema = schema;
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>          }
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>  

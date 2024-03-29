@@ -15,8 +15,8 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonCreator;
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.ApplicationFeatureCapabilities;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.ApplicationFeatureLinks;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.ApplicationFeatureLinks;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.CapabilitiesObject;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.EnabledStatus;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>      <strong class="jxr_keyword">import</strong> java.io.Serializable;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>      <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -35,14 +35,14 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>          ApplicationFeature.JSON_PROPERTY_STATUS,
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>          ApplicationFeature.JSON_PROPERTY_LINKS
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>      })
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-01-30T09:30:21.540602-06:00[America/Chicago]"</span>)
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-03-29T16:46:47.656897-05:00[America/Chicago]"</span>, comments = <span class="jxr_string">"Generator version: 7.4.0"</span>)
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> ApplicationFeature <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_CAPABILITIES = <span class="jxr_string">"capabilities"</span>;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>              <strong class="jxr_keyword">private</strong> ApplicationFeatureCapabilities capabilities;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>              <strong class="jxr_keyword">private</strong> CapabilitiesObject capabilities;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_DESCRIPTION = <span class="jxr_string">"description"</span>;
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>              <strong class="jxr_keyword">private</strong> String description;
@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_comment">    }*/</em>
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>          <strong class="jxr_keyword">public</strong> ApplicationFeature capabilities(ApplicationFeatureCapabilities capabilities) {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          <strong class="jxr_keyword">public</strong> ApplicationFeature capabilities(CapabilitiesObject capabilities) {
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>         
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>         <strong class="jxr_keyword">this</strong>.capabilities = capabilities;
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -119,14 +119,14 @@
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>       @JsonProperty(JSON_PROPERTY_CAPABILITIES)
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> 
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">public</strong> ApplicationFeatureCapabilities getCapabilities() {
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">public</strong> CapabilitiesObject getCapabilities() {
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>         <strong class="jxr_keyword">return</strong> capabilities;
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>     }
 <a class="jxr_linenumber" name="L117" href="#L117">117</a> 
 <a class="jxr_linenumber" name="L118" href="#L118">118</a> 
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>           @JsonProperty(JSON_PROPERTY_CAPABILITIES)
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setCapabilities(ApplicationFeatureCapabilities capabilities) {
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setCapabilities(CapabilitiesObject capabilities) {
 <a class="jxr_linenumber" name="L122" href="#L122">122</a>             <strong class="jxr_keyword">this</strong>.capabilities = capabilities;
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>         }
 <a class="jxr_linenumber" name="L124" href="#L124">124</a> 
