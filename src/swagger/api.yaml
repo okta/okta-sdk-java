@@ -26251,6 +26251,34 @@ components:
         userName:
           type: string
           maxLength: 100
+    IdpDiscoveryPolicy:
+      allOf:
+        - $ref: '#/components/schemas/Policy'
+        - type: object
+          properties:
+            conditions:
+              $ref: '#/components/schemas/IdpDiscoveryPolicyRuleCondition'
+    IdpDiscoveryPolicyRule:
+      allOf:
+        - $ref: '#/components/schemas/PolicyRule'
+        - type: object
+          properties:
+            actions:
+              $ref: '#/components/schemas/IdpPolicyRuleAction'
+            conditions:
+              $ref: '#/components/schemas/IdpDiscoveryPolicyRuleCondition'
+    IdpDiscoveryPolicyRuleCondition:
+      allOf:
+        - type: object
+          properties:
+            app:
+              $ref: '#/components/schemas/AppAndInstancePolicyRuleCondition'
+            network:
+              $ref: '#/components/schemas/PolicyNetworkCondition'
+            userIdentifier:
+              $ref: '#/components/schemas/UserIdentifierPolicyRuleCondition'
+            platform:
+              $ref: '#/components/schemas/PlatformPolicyRuleCondition'
     IdpPolicyRuleAction:
       type: object
       properties:
@@ -28692,11 +28720,11 @@ components:
         propertyName: type
         mapping:
           ACCESS_POLICY: '#/components/schemas/AccessPolicyRule'
-          IDP_DISCOVERY: '#/components/schemas/AccessPolicyRule'
           PASSWORD: '#/components/schemas/PasswordPolicyRule'
           PROFILE_ENROLLMENT: '#/components/schemas/ProfileEnrollmentPolicyRule'
           RESOURCE_ACCESS: '#/components/schemas/AuthorizationServerPolicyRule'
           SIGN_ON: '#/components/schemas/OktaSignOnPolicyRule'
+          IDP_DISCOVERY: '#/components/schemas/IdpDiscoveryPolicyRule'
     PolicyRuleActions:
       type: object
     PolicyRuleActionsEnroll:
