@@ -172,10 +172,10 @@
                             <apiPackage>com.okta.sdk.resource.api</apiPackage>
                             <modelPackage>com.okta.sdk.resource.model</modelPackage>
                             <invokerPackage>com.okta.sdk.resource.client</invokerPackage>
-                            <enumUnknownDefaultCase>true</enumUnknownDefaultCase>
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                                 <useRuntimeException>true</useRuntimeException>
+                                <enumUnknownDefaultCase>true</enumUnknownDefaultCase>
                             </configOptions>
                             <additionalProperties>serializableModel=true</additionalProperties>
                             <skipValidateSpec>true</skipValidateSpec>
