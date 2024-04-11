@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.security.PrivateKey;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 /**
  *
@@ -240,6 +241,16 @@ public interface ClientBuilder {
      * @since 3.0.0
      */
     ClientBuilder setPrivateKey(PrivateKey privateKey);
+
+    /**
+     * Allows specifying a custom signer for signing JWT token, instead of using a locally stored private key.
+     *
+     * @param jwtSigner the JWT signer instance.
+     * @return the ClientBuilder instance for method chaining.
+     *
+     * @since 16.x.x
+     */
+    ClientBuilder setCustomJwtSigner(UnaryOperator<byte[]> jwtSigner, String algorithm);
 
     /**
      * Allows specifying the user obtained OAuth2 access token to be used by the SDK.
