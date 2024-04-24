@@ -42,6 +42,7 @@ import com.okta.sdk.impl.io.Resource;
 import com.okta.sdk.impl.io.ResourceFactory;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
+import com.okta.sdk.impl.oauth2.DPoPInterceptor;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.serializer.GroupProfileSerializer;
 import com.okta.sdk.impl.serializer.UserProfileSerializer;
@@ -359,7 +360,7 @@ public class DefaultClientBuilder implements ClientBuilder {
 
             validateOAuth2ClientConfig(this.clientConfig);
 
-            if (Strings.hasText(this.clientConfig.getOAuth2AccessToken())) {
+            if (hasAccessToken()) {
                 log.debug("Will use client provided Access token for OAuth2 authentication (private key, if supplied would be ignored)");
                 apiClient.setAccessToken(this.clientConfig.getOAuth2AccessToken());
             } else {
@@ -386,7 +387,7 @@ public class DefaultClientBuilder implements ClientBuilder {
      * @return an {@link HttpClientBuilder} initialized with default configuration
      */
     protected HttpClientBuilder createHttpClientBuilder(ClientConfiguration clientConfig) {
-        return HttpClients.custom()
+        HttpClientBuilder httpClientBuilder = HttpClients.custom()
             .setDefaultRequestConfig(createHttpRequestConfigBuilder(clientConfig).build())
             .setConnectionManager(createHttpClientConnectionManagerBuilder(clientConfig).build())
             .setRetryStrategy(new OktaHttpRequestRetryStrategy(clientConfig.getRetryMaxAttempts()))
@@ -394,6 +395,10 @@ public class DefaultClientBuilder implements ClientBuilder {
             .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
             .setConnectionReuseStrategy(new DefaultConnectionReuseStrategy())
             .disableCookieManagement();
+        if (isOAuth2Flow() && !hasAccessToken()) {
+            httpClientBuilder.addExecInterceptorLast("dpop", new DPoPInterceptor());
+        }
+        return httpClientBuilder;
     }
 
     /**
@@ -593,6 +598,10 @@ public class DefaultClientBuilder implements ClientBuilder {
 
     boolean isOAuth2Flow() {
         return this.getClientConfiguration().getAuthorizationMode() == AuthorizationMode.PRIVATE_KEY;
+    }
+
+    private boolean hasAccessToken() {
+        return Strings.hasText(this.clientConfig.getOAuth2AccessToken());
     }
 
     public ClientConfiguration getClientConfiguration() {
