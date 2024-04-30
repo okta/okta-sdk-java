@@ -86,7 +86,7 @@ import java.nio.file.Paths;
 import java.lang.reflect.Type;
 import java.net.URI;
 
-import com.okta.commons.http.config.HttpClientConfiguration;
+import com.okta.sdk.cache.Caches;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
 
@@ -156,10 +156,6 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
     private Cache<String, Object> cache;
 
-    private CacheManager cacheManager;
-
-    private HttpClientConfiguration httpClientConfiguration;
-
     private int statusCode;
     private Map<String, List<String>> responseHeaders;
 
@@ -168,7 +164,10 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
         // Methods that can have a request body
         private static List<String> bodyMethods = Arrays.asList("POST", "PUT", "DELETE", "PATCH");
 
-            public ApiClient(CloseableHttpClient httpClient, CacheManager cacheManager, HttpClientConfiguration httpClientConfiguration) {
+            public ApiClient(CloseableHttpClient httpClient, CacheManager cacheManager) {
+            if (httpClient == null) throw new IllegalArgumentException("httpClient cannot be null");
+            if (cacheManager == null) throw new IllegalArgumentException("cacheManager cannot be null");
+
             objectMapper = new ObjectMapper();
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
@@ -201,13 +200,11 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
             this.httpClient = httpClient;
 
-            this.cacheManager = cacheManager;
-            this.httpClientConfiguration = httpClientConfiguration;
             this.cache = cacheManager.getCache("default");
             }
 
             public ApiClient() {
-            this(HttpClients.createDefault(), null, null);
+                this(HttpClients.createDefault(), Caches.newDisabledCacheManager());
             }
 
             public static DateFormat buildDefaultDateFormat() {

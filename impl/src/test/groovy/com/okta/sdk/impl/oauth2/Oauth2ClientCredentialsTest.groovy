@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.impl.oauth2
 
-import com.okta.commons.http.config.HttpClientConfiguration
 import com.okta.sdk.cache.CacheManager
 import com.okta.sdk.impl.config.ClientConfiguration
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
@@ -68,7 +67,7 @@ class Oauth2ClientCredentialsTest {
 
     @Test
     void testReplaceAuthentication() {
-        def apiClient = new ApiClient(mock(CloseableHttpClient), mock(CacheManager), mock(HttpClientConfiguration))
+        def apiClient = new ApiClient(mock(CloseableHttpClient), mock(CacheManager))
         def accessTokenRetrieverService = new AccessTokenRetrieverServiceImpl(mock(ClientConfiguration), apiClient)
         def credentials = new OAuth2ClientCredentials(accessTokenRetrieverService)
         apiClient.replaceAuthentication("oauth2", credentials)
@@ -78,7 +77,7 @@ class Oauth2ClientCredentialsTest {
 
     @Test
     void testReplaceAuthentication2WrongName() {
-        def apiClient = new ApiClient(mock(CloseableHttpClient), mock(CacheManager), mock(HttpClientConfiguration))
+        def apiClient = new ApiClient(mock(CloseableHttpClient), mock(CacheManager))
         def credentials = new OAuth2ClientCredentials(mock(AccessTokenRetrieverServiceImpl))
         def exception = expectThrows(RuntimeException.class) {
             apiClient.replaceAuthentication("oauth", credentials)
@@ -88,7 +87,7 @@ class Oauth2ClientCredentialsTest {
 
     @Test
     void testReplaceAuthenticationWrongType() {
-        def apiClient = new ApiClient(mock(CloseableHttpClient), mock(CacheManager), mock(HttpClientConfiguration))
+        def apiClient = new ApiClient(mock(CloseableHttpClient), mock(CacheManager))
         def exception = expectThrows(RuntimeException.class) {
             apiClient.replaceAuthentication("oauth2", new ApiKeyAuth("", ""))
         }

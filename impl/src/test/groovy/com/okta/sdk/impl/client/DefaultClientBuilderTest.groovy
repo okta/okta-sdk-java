@@ -17,6 +17,7 @@
 package com.okta.sdk.impl.client
 
 import com.okta.sdk.authc.credentials.TokenClientCredentials
+import com.okta.sdk.cache.Caches
 import com.okta.sdk.client.AuthenticationScheme
 import com.okta.sdk.client.AuthorizationMode
 import com.okta.sdk.client.ClientBuilder
@@ -29,6 +30,9 @@ import com.okta.sdk.impl.oauth2.OAuth2HttpException
 import com.okta.sdk.impl.oauth2.OAuth2TokenRetrieverException
 import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import com.okta.sdk.impl.test.RestoreSystemProperties
+import com.okta.sdk.resource.client.ApiClient
+import com.okta.sdk.resource.client.Configuration
+import org.apache.hc.client5.http.impl.classic.HttpClients
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.testng.annotations.Listeners
@@ -80,6 +84,21 @@ class DefaultClientBuilderTest {
     @Test
     void testBuilder() {
         assertTrue(Clients.builder() instanceof DefaultClientBuilder)
+    }
+
+    @Test
+    void testDefaultApiClient() {
+        Configuration.getDefaultApiClient()
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    void testIncorrectApiClient_nullHttpClient() {
+        new ApiClient(null, Caches.newDisabledCacheManager())
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    void testIncorrectApiClient_nullCacheManager() {
+        new ApiClient(HttpClients.createDefault(), null)
     }
 
     @Test

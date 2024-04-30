@@ -335,7 +335,7 @@ public class DefaultClientBuilder implements ClientBuilder {
             setProxy(httpClientBuilder, clientConfig);
         }
 
-        ApiClient apiClient = new ApiClient(httpClientBuilder.build(), this.cacheManager, this.clientConfig);
+        ApiClient apiClient = new ApiClient(httpClientBuilder.build(), this.cacheManager);
         apiClient.setBasePath(this.clientConfig.getBaseUrl());
 
         String userAgentValue = ApplicationInfo.get().entrySet().stream()
