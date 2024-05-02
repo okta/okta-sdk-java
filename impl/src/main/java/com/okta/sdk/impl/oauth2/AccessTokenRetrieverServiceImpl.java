@@ -58,7 +58,7 @@ import java.util.*;
 public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverService {
     private static final Logger log = LoggerFactory.getLogger(AccessTokenRetrieverServiceImpl.class);
 
-    private static final String TOKEN_URI  = "/oauth2/v1/token";
+    static final String TOKEN_URI  = "/oauth2/v1/token";
 
     private final ClientConfiguration tokenClientConfiguration;
     private final ApiClient apiClient;
@@ -109,6 +109,11 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             apiClient.setAccessToken(oAuth2AccessToken.getAccessToken());
 
             return oAuth2AccessToken;
+        } catch (DPoPHandshakeException e) {
+            if (e.continueHandshake) {
+                return getOAuth2AccessToken();
+            }
+            throw new OAuth2HttpException(e.getMessage(), e, false);
         } catch (ApiException e) {
             throw new OAuth2HttpException(e.getMessage(), e, e.getCode() == 401);
         } catch (Exception e) {
