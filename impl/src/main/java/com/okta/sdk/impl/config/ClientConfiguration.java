@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 /**
  * This class holds the default configuration properties.
@@ -54,6 +55,8 @@ public class ClientConfiguration extends HttpClientConfiguration {
     private String privateKey;
     private String oAuth2AccessToken;
     private String kid;
+    private UnaryOperator<byte[]> jwtSigner;
+    private String jwtSigningAlgorithm;
 
     public String getApiToken() {
         return apiToken;
@@ -149,6 +152,23 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
     public void setKid(String kid) {
         this.kid = kid;
+    }
+
+    public UnaryOperator<byte[]> getJwtSigner() {
+        return jwtSigner;
+    }
+
+    public void setJwtSigner(UnaryOperator<byte[]> jwtSigner, String algorithm) {
+        this.jwtSigner = jwtSigner;
+        this.jwtSigningAlgorithm = algorithm;
+    }
+
+    public String getJwtSigningAlgorithm() {
+        return jwtSigningAlgorithm;
+    }
+
+    public boolean hasCustomJwtSigner() {
+        return jwtSigner != null && jwtSigningAlgorithm != null;
     }
 
     /**

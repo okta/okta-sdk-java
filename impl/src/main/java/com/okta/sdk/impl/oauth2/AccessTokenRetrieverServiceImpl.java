@@ -25,25 +25,32 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.ClientConfiguration;
 import com.okta.sdk.impl.util.ConfigUtil;
+import com.okta.sdk.resource.client.ApiClient;
+import com.okta.sdk.resource.client.ApiException;
+import com.okta.sdk.resource.model.HttpMethod;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.SecureDigestAlgorithm;
+import io.jsonwebtoken.security.SecureRequest;
+import io.jsonwebtoken.security.SecurityException;
+import io.jsonwebtoken.security.VerifySecureDigestRequest;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import com.okta.sdk.resource.client.ApiClient;
-import com.okta.sdk.resource.client.ApiException;
-import com.okta.sdk.resource.model.HttpMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.time.Instant;
@@ -60,8 +67,48 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
 
     static final String TOKEN_URI  = "/oauth2/v1/token";
 
+    private static final KeyPair DUMMY_KEY_PAIR = Jwts.SIG.RS256.keyPair().build();
+
+    /**
+     * Custom SecureDigestAlgorithm that delegates signature to the jwtSigner in tokenClientConfiguration
+     */
+    private class CustomJwtSigningAlgorithm implements SecureDigestAlgorithm<PrivateKey, Key> {
+        @Override
+        public byte[] digest(SecureRequest<InputStream, PrivateKey> request) throws SecurityException {
+            try {
+                byte[] bytes = readAllBytes(request.getPayload());
+                return tokenClientConfiguration.getJwtSigner().apply(bytes);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        //to replace with InputStream.readAllBytes after migrating to Java 9+
+        private byte[] readAllBytes(InputStream payload) throws IOException {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[16384];
+            while ((nRead = payload.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            return buffer.toByteArray();
+        }
+
+        @Override
+        public boolean verify(VerifySecureDigestRequest<Key> request) throws SecurityException {
+            //no need to verify JWTs
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String getId() {
+            return tokenClientConfiguration.getJwtSigningAlgorithm();
+        }
+    }
+
     private final ClientConfiguration tokenClientConfiguration;
     private final ApiClient apiClient;
+    private final CustomJwtSigningAlgorithm customJwtSigningAlgorithm = new CustomJwtSigningAlgorithm();
 
     public AccessTokenRetrieverServiceImpl(ClientConfiguration apiClientConfiguration, ApiClient apiClient) {
         Assert.notNull(apiClientConfiguration, "apiClientConfiguration must not be null.");
@@ -133,7 +180,6 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
      */
     String createSignedJWT() throws InvalidKeyException, IOException {
         String clientId = tokenClientConfiguration.getClientId();
-        PrivateKey privateKey = parsePrivateKey(getPemReader());
         Instant now = Instant.now();
 
         JwtBuilder builder = Jwts.builder()
@@ -142,8 +188,14 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
             .expiration(Date.from(now.plus(50, ChronoUnit.MINUTES)))             // see Javadoc
             .issuer(clientId)
             .subject(clientId)
-            .claim("jti", UUID.randomUUID().toString())
-            .signWith(privateKey);
+            .claim("jti", UUID.randomUUID().toString());
+
+        if (tokenClientConfiguration.hasCustomJwtSigner()) {
+            //JwtBuilder requires a key to be passed, even if it's actually not used by the algorithm
+            builder.signWith(DUMMY_KEY_PAIR.getPrivate(), customJwtSigningAlgorithm);
+        } else {
+            builder = builder.signWith(parsePrivateKey(getPemReader()));
+        }
 
         if (Strings.hasText(tokenClientConfiguration.getKid())) {
             builder.header().add("kid", tokenClientConfiguration.getKid());
@@ -248,6 +300,7 @@ public class AccessTokenRetrieverServiceImpl implements AccessTokenRetrieverServ
         tokenClientConfiguration.setClientId(apiClientConfiguration.getClientId());
         tokenClientConfiguration.setScopes(apiClientConfiguration.getScopes());
         tokenClientConfiguration.setPrivateKey(apiClientConfiguration.getPrivateKey());
+        tokenClientConfiguration.setJwtSigner(apiClientConfiguration.getJwtSigner(), apiClientConfiguration.getJwtSigningAlgorithm());
         tokenClientConfiguration.setKid(apiClientConfiguration.getKid());
 
         // setting this to '0' will disable this check and only 'retryMaxAttempts' will be effective

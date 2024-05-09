@@ -51,6 +51,7 @@ import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 
 import com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
 import com.okta.sdk.resource.model.GroupProfile;
+import io.jsonwebtoken.security.SecureDigestAlgorithm;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.config.ConnectionConfig;
@@ -81,6 +82,7 @@ import java.nio.file.*;
 import java.security.PrivateKey;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -447,8 +449,12 @@ public class DefaultClientBuilder implements ClientBuilder {
             "At least one scope is required");
         String privateKey = clientConfiguration.getPrivateKey();
         String oAuth2AccessToken = clientConfiguration.getOAuth2AccessToken();
-        Assert.isTrue(Objects.nonNull(privateKey) || Objects.nonNull(oAuth2AccessToken),
-            "Either Private Key (or) Access Token must be supplied for OAuth2 Authentication mode");
+        UnaryOperator<byte[]> jwtSigner = clientConfiguration.getJwtSigner();
+        String jwtSigningAlgorithm = clientConfiguration.getJwtSigningAlgorithm();
+        Assert.isTrue(Objects.nonNull(privateKey) || Objects.nonNull(oAuth2AccessToken)
+                      || Objects.nonNull(jwtSigner) && Objects.nonNull(jwtSigningAlgorithm),
+                          "Either Private Key (or) Access Token (or) JWT Signer + Algorithm" +
+                          " must be supplied for OAuth2 Authentication mode");
 
         if (Strings.hasText(privateKey) && !ConfigUtil.hasPrivateKeyContentWrapper(privateKey)) {
             // privateKey is a file path, check if the file exists
@@ -573,6 +579,14 @@ public class DefaultClientBuilder implements ClientBuilder {
             }
         }
         return resultStringBuilder.toString();
+    }
+
+    @Override
+    public ClientBuilder setCustomJwtSigner(UnaryOperator<byte[]> jwtSigner, String algorithm) {
+        Assert.notNull(jwtSigner, "jwtSigner cannot be null.");
+        Assert.notNull(algorithm, "algorithm cannot be null.");
+        clientConfig.setJwtSigner(jwtSigner, algorithm);
+        return this;
     }
 
     @Override
