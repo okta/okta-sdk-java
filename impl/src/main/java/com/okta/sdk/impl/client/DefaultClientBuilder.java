@@ -51,7 +51,6 @@ import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 
 import com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
 import com.okta.sdk.resource.model.GroupProfile;
-import io.jsonwebtoken.security.SecureDigestAlgorithm;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.config.ConnectionConfig;
