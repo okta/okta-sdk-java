@@ -44,6 +44,8 @@ import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.DPoPInterceptor;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
+import com.okta.sdk.impl.openapivalidation.OpenApiValidationRequestInterceptor;
+import com.okta.sdk.impl.openapivalidation.OpenApiValidationResponseInterceptor;
 import com.okta.sdk.impl.serializer.GroupProfileSerializer;
 import com.okta.sdk.impl.serializer.UserProfileSerializer;
 import com.okta.sdk.impl.util.ConfigUtil;
@@ -398,6 +400,10 @@ public class DefaultClientBuilder implements ClientBuilder {
         if (isOAuth2Flow() && !hasAccessToken()) {
             httpClientBuilder.addExecInterceptorLast("dpop", new DPoPInterceptor());
         }
+
+        httpClientBuilder.addRequestInterceptorLast(new OpenApiValidationRequestInterceptor());
+        httpClientBuilder.addResponseInterceptorLast(new OpenApiValidationResponseInterceptor());
+
         return httpClientBuilder;
     }
 
