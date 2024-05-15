@@ -111,6 +111,9 @@ public class DefaultClientBuilder implements ClientBuilder {
     private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
+
+    private static final String API_SPEC_PATH = "./../src/swagger/api.yaml";
+
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
@@ -401,8 +404,8 @@ public class DefaultClientBuilder implements ClientBuilder {
             httpClientBuilder.addExecInterceptorLast("dpop", new DPoPInterceptor());
         }
 
-        httpClientBuilder.addRequestInterceptorLast(new OpenApiValidationRequestInterceptor());
-        httpClientBuilder.addResponseInterceptorLast(new OpenApiValidationResponseInterceptor());
+        httpClientBuilder.addRequestInterceptorLast(new OpenApiValidationRequestInterceptor(API_SPEC_PATH));
+        httpClientBuilder.addResponseInterceptorLast(new OpenApiValidationResponseInterceptor(API_SPEC_PATH));
 
         return httpClientBuilder;
     }

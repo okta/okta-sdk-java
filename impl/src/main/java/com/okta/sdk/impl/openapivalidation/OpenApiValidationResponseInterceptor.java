@@ -21,40 +21,67 @@ import com.atlassian.oai.validator.model.Response;
 import com.atlassian.oai.validator.model.SimpleResponse;
 import com.atlassian.oai.validator.report.SimpleValidationReportFormat;
 import com.atlassian.oai.validator.report.ValidationReport;
+import org.apache.commons.codec.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.apache.hc.core5.http.*;
+import org.apache.hc.core5.http.io.entity.HttpEntities;
 import org.apache.hc.core5.http.protocol.HttpContext;
 import org.apache.hc.core5.http.protocol.HttpCoreContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
 
 public class OpenApiValidationResponseInterceptor implements HttpResponseInterceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(OpenApiValidationResponseInterceptor.class);
 
-    final OpenApiInteractionValidator validator = OpenApiInteractionValidator
-        .createForSpecificationUrl("./../src/swagger/api.yaml")
-        .build();
+    private final OpenApiInteractionValidator validator;
+
+    public OpenApiValidationResponseInterceptor(final String specPath) {
+        validator = OpenApiInteractionValidator
+            .createForSpecificationUrl(specPath)
+            .build();
+    }
 
     @Override
     public void process(HttpResponse httpResponse, EntityDetails entityDetails, HttpContext httpContext) throws IOException {
 
-        logger.info("OpenApiValidationResponseInterceptor invoked");
+        logger.debug("OpenApiValidationResponseInterceptor invoked");
 
         ClassicHttpResponse classicHttpResponse = (ClassicHttpResponse) httpResponse;
-        HttpCoreContext httpCoreContext = (HttpCoreContext) httpContext;
 
         if (Objects.nonNull(classicHttpResponse.getEntity())) {
 
-            final Response resp = SimpleResponse.Builder.ok()
+            String payload;
+
+            if (Objects.isNull(classicHttpResponse.getEntity().getContentEncoding())) {
+                payload = IOUtils.toString(classicHttpResponse.getEntity().getContent(), Charsets.UTF_8);
+            } else {
+                GZIPInputStream gis =
+                    new GZIPInputStream(new ByteArrayInputStream(IOUtils.toByteArray(classicHttpResponse.getEntity().getContent())));
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(gis, Charsets.ISO_8859_1));
+                payload = bufferedReader.lines().collect(Collectors.joining());
+            }
+
+            classicHttpResponse.setEntity(HttpEntities.create(payload));
+
+            final Response response = SimpleResponse.Builder.ok()
                 .withContentType(ContentType.APPLICATION_JSON.toString())
-                .withBody(classicHttpResponse.getEntity().getContent())
+                .withBody(payload)
                 .build();
 
+            HttpCoreContext httpCoreContext = (HttpCoreContext) httpContext;
+
             ValidationReport responseValidationReport = validator.validateResponse(
-                httpCoreContext.getRequest().getRequestUri(), Request.Method.valueOf(httpCoreContext.getRequest().getMethod()), resp);
+                httpCoreContext.getRequest().getRequestUri(), Request.Method.valueOf(httpCoreContext.getRequest().getMethod()), response);
+
             if (responseValidationReport.hasErrors()) {
                 logger.error(SimpleValidationReportFormat.getInstance().apply(responseValidationReport));
             }

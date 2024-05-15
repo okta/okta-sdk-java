@@ -21,7 +21,10 @@ import com.atlassian.oai.validator.report.SimpleValidationReportFormat;
 import com.atlassian.oai.validator.report.ValidationReport;
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.IOUtils;
-import org.apache.hc.core5.http.*;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.EntityDetails;
+import org.apache.hc.core5.http.HttpRequest;
+import org.apache.hc.core5.http.HttpRequestInterceptor;
 import org.apache.hc.core5.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,23 +36,31 @@ public class OpenApiValidationRequestInterceptor implements HttpRequestIntercept
 
     private static final Logger logger = LoggerFactory.getLogger(OpenApiValidationRequestInterceptor.class);
 
-    final OpenApiInteractionValidator validator = OpenApiInteractionValidator
-        .createForSpecificationUrl("./../src/swagger/api.yaml")
-        .build();
+    private final OpenApiInteractionValidator validator;
+
+    public OpenApiValidationRequestInterceptor(final String specPath) {
+        validator = OpenApiInteractionValidator
+            .createForSpecificationUrl(specPath)
+            .build();
+    }
 
     @Override
     public void process(HttpRequest httpRequest, EntityDetails entityDetails, HttpContext httpContext) throws IOException {
-        logger.info("OpenApiValidationRequestInterceptor invoked");
+
+        logger.debug("OpenApiValidationRequestInterceptor invoked");
 
         ClassicHttpRequest classicHttpRequest = (ClassicHttpRequest) httpRequest;
 
-        SimpleRequest.Builder builder = new SimpleRequest.Builder(classicHttpRequest.getMethod(), classicHttpRequest.getRequestUri(), false);
+        SimpleRequest.Builder builder =
+            new SimpleRequest.Builder(classicHttpRequest.getMethod(), classicHttpRequest.getRequestUri(), false);
+
         if (Objects.nonNull(classicHttpRequest.getEntity().getContent())) {
             String jsonRequest = IOUtils.toString(classicHttpRequest.getEntity().getContent(), Charsets.UTF_8);
             builder.withBody(jsonRequest);
         }
 
         final ValidationReport requestValidationReport = validator.validateRequest(builder.build());
+
         if (requestValidationReport.hasErrors()) {
             logger.error(SimpleValidationReportFormat.getInstance().apply(requestValidationReport));
         }
