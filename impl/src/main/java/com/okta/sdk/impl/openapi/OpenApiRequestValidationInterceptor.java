@@ -18,7 +18,6 @@ package com.okta.sdk.impl.openapi;
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.SimpleRequest;
 import com.atlassian.oai.validator.report.JsonValidationReportFormat;
-import com.atlassian.oai.validator.report.SimpleValidationReportFormat;
 import com.atlassian.oai.validator.report.ValidationReport;
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.IOUtils;
