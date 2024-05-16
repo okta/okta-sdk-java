@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.impl.openapivalidation;
+package com.okta.sdk.impl.openapi;
 
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.SimpleRequest;
+import com.atlassian.oai.validator.report.JsonValidationReportFormat;
 import com.atlassian.oai.validator.report.SimpleValidationReportFormat;
 import com.atlassian.oai.validator.report.ValidationReport;
 import org.apache.commons.codec.Charsets;
@@ -32,13 +33,13 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Objects;
 
-public class OpenApiValidationRequestInterceptor implements HttpRequestInterceptor {
+public class OpenApiRequestValidationInterceptor implements HttpRequestInterceptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(OpenApiValidationRequestInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(OpenApiRequestValidationInterceptor.class);
 
     private final OpenApiInteractionValidator validator;
 
-    public OpenApiValidationRequestInterceptor(final String specPath) {
+    public OpenApiRequestValidationInterceptor(final String specPath) {
         validator = OpenApiInteractionValidator
             .createForSpecificationUrl(specPath)
             .build();
@@ -62,7 +63,7 @@ public class OpenApiValidationRequestInterceptor implements HttpRequestIntercept
         final ValidationReport requestValidationReport = validator.validateRequest(builder.build());
 
         if (requestValidationReport.hasErrors()) {
-            logger.error(SimpleValidationReportFormat.getInstance().apply(requestValidationReport));
+            logger.error(JsonValidationReportFormat.getInstance().apply(requestValidationReport));
         }
     }
 }

@@ -15,7 +15,6 @@
  */
 package quickstart;
 
-import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.resource.client.ApiClient;
 import com.okta.sdk.resource.client.ApiException;
 
@@ -28,7 +27,9 @@ import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.api.GroupApi;
 import com.okta.sdk.resource.model.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * This class demonstrates the code found in the Okta Java SDK QuickStart Guide
@@ -54,33 +55,20 @@ public class Quickstart {
 
         try {
             // Instantiate a builder for your Client. If needed, settings like Proxy and Caching can be defined here.
-            //builder = Clients.builder();
-            client = Clients.builder()
-                .setOrgUrl("https://java-oie-sdk.oktapreview.com")  // e.g. https://dev-123456.okta.com
-                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
-                .setClientId("0oaedk3stcxBo3BaH1d7")
-                //.setKid("{kid}") // optional
-                .setScopes(new HashSet<>(Arrays.asList("okta.users.manage", "okta.apps.manage", "okta.groups.manage", "okta.groups.read")))
-                .setPrivateKey("/Users/arvindkrishnakumar/Downloads/privateKey.pem")
-                // (or) .setPrivateKey("full PEM payload")
-                // (or) .setPrivateKey(Paths.get("/path/to/yourPrivateKey.pem"))
-                // (or) .setPrivateKey(inputStream)
-                // (or) .setPrivateKey(privateKey)
-                // (or) .setOAuth2AccessToken("access token string") // if set, private key (if supplied) will be ignored
-                .build();
+            builder = Clients.builder();
 
             // No need to define anything else; build the Client instance. The ClientCredential information will be automatically found
             // in pre-defined locations: i.e. ~/.okta/okta.yaml
-            //client = builder.build();
+            client = builder.build();
 
             userApi = new UserApi(client);
             groupApi = new GroupApi(client);
 
             // Create a group
             group = GroupBuilder.instance()
-                    .setName(groupName)
-                    .setDescription("Quickstart created Group")
-                    .buildAndCreate(groupApi);
+                .setName(groupName)
+                .setDescription("Quickstart created Group")
+                .buildAndCreate(groupApi);
 
             println("Group: '" + group.getId() + "' was last updated on: " + group.getLastUpdated());
 

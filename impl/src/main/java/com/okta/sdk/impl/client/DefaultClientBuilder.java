@@ -44,8 +44,8 @@ import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.DPoPInterceptor;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
-import com.okta.sdk.impl.openapivalidation.OpenApiValidationRequestInterceptor;
-import com.okta.sdk.impl.openapivalidation.OpenApiValidationResponseInterceptor;
+import com.okta.sdk.impl.openapi.OpenApiRequestValidationInterceptor;
+import com.okta.sdk.impl.openapi.OpenApiResponseValidationInterceptor;
 import com.okta.sdk.impl.serializer.GroupProfileSerializer;
 import com.okta.sdk.impl.serializer.UserProfileSerializer;
 import com.okta.sdk.impl.util.ConfigUtil;
@@ -404,8 +404,8 @@ public class DefaultClientBuilder implements ClientBuilder {
             httpClientBuilder.addExecInterceptorLast("dpop", new DPoPInterceptor());
         }
 
-        httpClientBuilder.addRequestInterceptorLast(new OpenApiValidationRequestInterceptor(API_SPEC_PATH));
-        httpClientBuilder.addResponseInterceptorLast(new OpenApiValidationResponseInterceptor(API_SPEC_PATH));
+        httpClientBuilder.addRequestInterceptorLast(new OpenApiRequestValidationInterceptor(API_SPEC_PATH));
+        httpClientBuilder.addResponseInterceptorLast(new OpenApiResponseValidationInterceptor(API_SPEC_PATH));
 
         return httpClientBuilder;
     }

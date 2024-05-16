@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.okta.sdk.impl.openapivalidation;
+package com.okta.sdk.impl.openapi;
 
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.Request;
 import com.atlassian.oai.validator.model.Response;
 import com.atlassian.oai.validator.model.SimpleResponse;
+import com.atlassian.oai.validator.report.JsonValidationReportFormat;
 import com.atlassian.oai.validator.report.SimpleValidationReportFormat;
 import com.atlassian.oai.validator.report.ValidationReport;
 import org.apache.commons.codec.Charsets;
@@ -38,13 +39,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
-public class OpenApiValidationResponseInterceptor implements HttpResponseInterceptor {
+public class OpenApiResponseValidationInterceptor implements HttpResponseInterceptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(OpenApiValidationResponseInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(OpenApiResponseValidationInterceptor.class);
 
     private final OpenApiInteractionValidator validator;
 
-    public OpenApiValidationResponseInterceptor(final String specPath) {
+    public OpenApiResponseValidationInterceptor(final String specPath) {
         validator = OpenApiInteractionValidator
             .createForSpecificationUrl(specPath)
             .build();
@@ -83,7 +84,7 @@ public class OpenApiValidationResponseInterceptor implements HttpResponseInterce
                 httpCoreContext.getRequest().getRequestUri(), Request.Method.valueOf(httpCoreContext.getRequest().getMethod()), response);
 
             if (responseValidationReport.hasErrors()) {
-                logger.error(SimpleValidationReportFormat.getInstance().apply(responseValidationReport));
+                logger.error(JsonValidationReportFormat.getInstance().apply(responseValidationReport));
             }
         }
     }
