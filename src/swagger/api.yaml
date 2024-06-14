@@ -20695,11 +20695,11 @@ components:
           - OKTA_SIGN_ON
           - MFA_ENROLL
         appInstance: 0oa4eroj3nYCIJIW70g7
-        policyContext:
-          groups:
-            ids:
-              - 00g4eralvekR5RLuS0g7
-              - 00g4eralvekR5RLuS0g8
+#        policyContext:
+#          groups:
+#            ids:
+#              - 00g4eralvekR5RLuS0g7
+#              - 00g4eralvekR5RLuS0g8
         risk:
           level: LOW
         zones:
@@ -28569,62 +28569,62 @@ components:
           type: array
           items:
             type: string
-    PolicyContext:
-      type: object
-      properties:
-        device:
-          type: object
-          properties:
-            platform:
-              type: string
-              description: The platform of the device, for example, IOS.
-            registered:
-              type: boolean
-              description: If the device is registered
-            managed:
-              type: boolean
-              description: If the device is managed
-        groups:
-          type: array
-          description: An array of Group IDs for the simulate operation. Only user IDs or Group IDs are allowed, not both.
-          properties:
-            ids:
-              type: array
-          required:
-            - ids
-        ip:
-          type: string
-          description: The network rule condition, zone, or IP address
-        risk:
-          type: object
-          description: The risk rule condition level
-          properties:
-            level:
-              type: string
-              enum:
-                - LOW
-                - MEDIUM
-                - HIGH
-        user:
-          type: object
-          description: The user ID for the simulate operation. Only user IDs or Group IDs are allowed, not both.
-          properties:
-            id:
-              type: string
-              description: The unique ID number for the user.
-          required:
-            - id
-        zones:
-          type: object
-          properties:
-            ids:
-              type: array
-              properties:
-                ids:
-                  type: string
-      required:
-        - user
-        - groups
+#    PolicyContext:
+#      type: object
+#      properties:
+#        device:
+#          type: object
+#          properties:
+#            platform:
+#              type: string
+#              description: The platform of the device, for example, IOS.
+#            registered:
+#              type: boolean
+#              description: If the device is registered
+#            managed:
+#              type: boolean
+#              description: If the device is managed
+#        groups:
+#          type: array
+#          description: An array of Group IDs for the simulate operation. Only user IDs or Group IDs are allowed, not both.
+#          properties:
+#            ids:
+#              type: array
+#          required:
+#            - ids
+#        ip:
+#          type: string
+#          description: The network rule condition, zone, or IP address
+#        risk:
+#          type: object
+#          description: The risk rule condition level
+#          properties:
+#            level:
+#              type: string
+#              enum:
+#                - LOW
+#                - MEDIUM
+#                - HIGH
+#        user:
+#          type: object
+#          description: The user ID for the simulate operation. Only user IDs or Group IDs are allowed, not both.
+#          properties:
+#            id:
+#              type: string
+#              description: The unique ID number for the user.
+#          required:
+#            - id
+#        zones:
+#          type: object
+#          properties:
+#            ids:
+#              type: array
+#              properties:
+#                ids:
+#                  type: string
+#      required:
+#        - user
+#        - groups
     PolicyMapping:
       type: object
       properties:
@@ -30319,8 +30319,8 @@ components:
         appInstance:
           type: string
           description: The application instance ID for a simulate operation
-        policyContext:
-          $ref: '#/components/schemas/PolicyContext'
+#        policyContext:
+#          $ref: '#/components/schemas/PolicyContext'
         policyTypes:
           type: string
           description: Supported policy types for a simulate operation. The default value, `null`, returns all types.

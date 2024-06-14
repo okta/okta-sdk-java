@@ -66,9 +66,9 @@ public class Quickstart {
 
             // Create a group
             group = GroupBuilder.instance()
-                    .setName(groupName)
-                    .setDescription("Quickstart created Group")
-                    .buildAndCreate(groupApi);
+                .setName(groupName)
+                .setDescription("Quickstart created Group")
+                .buildAndCreate(groupApi);
 
             println("Group: '" + group.getId() + "' was last updated on: " + group.getLastUpdated());
 

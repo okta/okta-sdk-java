@@ -44,6 +44,8 @@ import com.okta.sdk.impl.oauth2.AccessTokenRetrieverService;
 import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.DPoPInterceptor;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
+import com.okta.sdk.impl.openapi.OpenApiRequestValidationInterceptor;
+import com.okta.sdk.impl.openapi.OpenApiResponseValidationInterceptor;
 import com.okta.sdk.impl.serializer.GroupProfileSerializer;
 import com.okta.sdk.impl.serializer.UserProfileSerializer;
 import com.okta.sdk.impl.util.ConfigUtil;
@@ -110,6 +112,9 @@ public class DefaultClientBuilder implements ClientBuilder {
     private static final String OKTA_CONFIG_CP  = "com/okta/sdk/config/";
     private static final String OKTA_YAML       = "okta.yaml";
     private static final String OKTA_PROPERTIES = "okta.properties";
+
+    private static final String API_SPEC_PATH = "./../src/swagger/api.yaml";
+
     private CacheManager cacheManager;
     private ClientCredentials clientCredentials;
     private boolean allowNonHttpsForTesting = false;
@@ -399,6 +404,10 @@ public class DefaultClientBuilder implements ClientBuilder {
         if (isOAuth2Flow() && !hasAccessToken()) {
             httpClientBuilder.addExecInterceptorLast("dpop", new DPoPInterceptor());
         }
+
+        httpClientBuilder.addRequestInterceptorLast(new OpenApiRequestValidationInterceptor(API_SPEC_PATH));
+        httpClientBuilder.addResponseInterceptorLast(new OpenApiResponseValidationInterceptor(API_SPEC_PATH));
+
         return httpClientBuilder;
     }
 

@@ -28,6 +28,26 @@
         <appender-ref ref="STDOUT"/>
     </root>
     <logger name="com.okta.sdk" level="DEBUG"/>
+    <logger name="com.okta.sdk.impl.openapi.OpenApiRequestValidationInterceptor" level="INFO">
+        <appender-ref ref="REQ_FILE_APPENDER" />
+    </logger>
+    <logger name="com.okta.sdk.impl.openapi.OpenApiResponseValidationInterceptor" level="INFO">
+        <appender-ref ref="RESP_FILE_APPENDER" />
+    </logger>
     <!--<logger name="org.apache.hc.client5.http.wire" level="DEBUG"/>-->
+
+    <appender name="REQ_FILE_APPENDER" class="ch.qos.logback.core.FileAppender">
+        <file>target/openapi_req_validation_results.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RESP_FILE_APPENDER" class="ch.qos.logback.core.FileAppender">
+        <file>target/openapi_resp_validation_results.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
 </configuration>
