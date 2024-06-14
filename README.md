@@ -522,21 +522,17 @@ BookmarkApplication createdApp = apiClient.invokeAPI(
 
 ### Pagination
 
-Pagination info would be available via `PagedList` when the API response is a collection of models.
+Collections can be fetched with manually controlled Pagination.
 
 [//]: # (method: paginate)
 ```java
 UserApi userApi = new UserApi(client);
-
-// max number of items per page
-int pageSize = 10;
-PagedList<User> pagedUserList = new PagedList<>();
+List<User> users = new ArrayList<>();
+String after = null;
 do {
-    pagedUserList = (PagedList<User>)
-        userApi.listUsers(null, pagedUserList.getAfter(), pageSize, null, null, null, null);
-
-    pagedUserList.forEach(usr -> log.info("User: {}", usr.getProfile().getEmail()));
-} while (pagedUserList.hasMoreItems());
+    users.addAll(userApi.listUsers(null, after, 200, null, null, null, null));
+    after = PaginationUtil.getAfter(userApi.getApiClient());
+} while (StringUtils.isNotBlank(after));
 ```
 [//]: # (end: paginate)
 
