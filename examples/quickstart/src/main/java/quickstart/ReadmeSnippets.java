@@ -22,7 +22,7 @@ import com.okta.sdk.cache.Caches;
 import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
-import com.okta.sdk.resource.common.PagedList;
+import com.okta.sdk.helper.PaginationUtil;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
 
@@ -32,6 +32,7 @@ import com.okta.sdk.resource.client.Pair;
 import com.okta.sdk.resource.api.*;
 import com.okta.sdk.resource.model.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -337,16 +338,13 @@ public class ReadmeSnippets {
     private void paginate() throws ApiException {
         UserApi userApi = new UserApi(client);
 
-        int pageSize = 10; // max number of items per page
-
-        PagedList<User> pagedUserList = new PagedList<>();
+        List<User> users = new ArrayList<>();
+        String after = null;
 
         do {
-            pagedUserList = (PagedList<User>)
-                userApi.listUsers(null, pagedUserList.getAfter(), pageSize, null, null, null, null);
-
-            pagedUserList.forEach(usr -> log.info("User: {}", usr.getProfile().getEmail()));
-        } while (pagedUserList.hasMoreItems());
+            users.addAll(userApi.listUsers(null, after, 200, null, null, null, null));
+            after = PaginationUtil.getAfter(userApi.getApiClient());
+        } while (StringUtils.isNotBlank(after));
     }
 
     private void complexCaching() {
