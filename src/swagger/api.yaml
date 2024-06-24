@@ -26055,8 +26055,42 @@ components:
           $ref: '#/components/schemas/IdentityProviderType'
         _links:
           type: object
-          additionalProperties:
-              $ref: '#/components/schemas/HrefObjectSelfLink'
+          additionalProperties: true
+          allOf:
+            - $ref: '#/components/schemas/LinksSelf'
+            - properties:
+                acs:
+                  description: SAML 2.0 Assertion Consumer Service URL for the Okta SP
+                  allOf:
+                    - $ref: '#/components/schemas/HrefObject'
+                authorize:
+                  description: OAuth 2.0 authorization endpoint for the IdP OAuth 2.0 Authorization Code flow
+                  allOf:
+                    - $ref: '#/components/schemas/HrefObject'
+                clientRedirectUri:
+                  description: Redirect URI for the OAuth 2.0 Authorization Code flow
+                  allOf:
+                    - $ref: '#/components/schemas/HrefObject'
+                metadata:
+                  description: 'Federation metadata document for the IdP (for example: SAML 2.0 Metadata)'
+                  allOf:
+                    - $ref: '#/components/schemas/HrefObject'
+                users:
+                  description: IdP users
+                  allOf:
+                    - $ref: '#/components/schemas/HrefObject'
+                deactivate:
+                  description: Deactivate IdP
+                  allOf:
+                    - $ref: '#/components/schemas/HrefObject'
+                activate:
+                  description: Activate IdP
+                  allOf:
+                    - $ref: '#/components/schemas/HrefObject'
+                keys:
+                  description: IdP keys
+                  allOf:
+                    - $ref: '#/components/schemas/HrefObject'
     IdentityProviderApplicationUser:
       type: object
       properties:
@@ -26217,40 +26251,13 @@ components:
           type: string
           maxLength: 512
     IdentitySourceUserProfileForUpsert:
-      additionalProperties: {}
       type: object
       properties:
-        email:
+        externalId:
           type: string
-          format: email
-          minLength: 5
-          maxLength: 100
-        firstName:
-          type: string
-          minLength: 1
-          maxLength: 50
-          nullable: true
-        homeAddress:
-          type: string
-          maxLength: 4096
-          nullable: true
-        lastName:
-          type: string
-          minLength: 1
-          maxLength: 50
-          nullable: true
-        mobilePhone:
-          type: string
-          maxLength: 100
-          nullable: true
-        secondEmail:
-          type: string
-          format: email
-          minLength: 5
-          maxLength: 100
-        userName:
-          type: string
-          maxLength: 100
+          maxLength: 512
+        profile:
+          $ref: '#/components/schemas/UserProfile'
     IdpDiscoveryPolicy:
       allOf:
         - $ref: '#/components/schemas/Policy'

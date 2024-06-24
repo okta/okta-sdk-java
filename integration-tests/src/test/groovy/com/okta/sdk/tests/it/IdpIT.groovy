@@ -141,6 +141,13 @@ class IdpIT extends ITSupport {
         // retrieve
         IdentityProvider retrievedIdp = identityProviderApi.getIdentityProvider(createdIdp.getId())
         assertThat(retrievedIdp.getId(), equalTo(createdIdp.getId()))
+        assertThat(retrievedIdp.getLinks(), notNullValue())
+        assertThat(retrievedIdp.getLinks().getAuthorize(), notNullValue())
+        assertThat(retrievedIdp.getLinks().getAuthorize().getHints(), notNullValue())
+        assertThat(retrievedIdp.getLinks().getAuthorize().getHref(), notNullValue())
+        assertThat(retrievedIdp.getLinks().getClientRedirectUri(), notNullValue())
+        assertThat(retrievedIdp.getLinks().getClientRedirectUri().getHints(), notNullValue())
+        assertThat(retrievedIdp.getLinks().getClientRedirectUri().getHref(), notNullValue())
 
         // update
         String newName = "java-sdk-it-" + UUID.randomUUID().toString()
