@@ -26251,13 +26251,40 @@ components:
           type: string
           maxLength: 512
     IdentitySourceUserProfileForUpsert:
+      additionalProperties: {}
       type: object
       properties:
-        externalId:
+        email:
           type: string
-          maxLength: 512
-        profile:
-          $ref: '#/components/schemas/UserProfile'
+          format: email
+          minLength: 5
+          maxLength: 100
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          nullable: true
+        homeAddress:
+          type: string
+          maxLength: 4096
+          nullable: true
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          nullable: true
+        mobilePhone:
+          type: string
+          maxLength: 100
+          nullable: true
+        secondEmail:
+          type: string
+          format: email
+          minLength: 5
+          maxLength: 100
+        userName:
+          type: string
+          maxLength: 100
     IdpDiscoveryPolicy:
       allOf:
         - $ref: '#/components/schemas/Policy'
