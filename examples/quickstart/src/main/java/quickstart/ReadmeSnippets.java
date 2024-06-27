@@ -52,7 +52,7 @@ public class ReadmeSnippets {
     private static final Logger log = LoggerFactory.getLogger(ReadmeSnippets.class);
 
     private final ApiClient client = Clients.builder().build();
-    private final User user = null;
+    private static final User user = null;
 
     private void createClient() {
         ApiClient client = Clients.builder()
