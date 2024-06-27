@@ -33,7 +33,7 @@ public enum AuthorizationMode {
     private static final Map<AuthenticationScheme, AuthorizationMode> lookup = new HashMap<>();
 
     static {
-        for (AuthorizationMode authorizationMode : AuthorizationMode.values()) {
+        for (AuthorizationMode authorizationMode : values()) {
             lookup.put(authorizationMode.getAuthenticationScheme(), authorizationMode);
         }
     }
