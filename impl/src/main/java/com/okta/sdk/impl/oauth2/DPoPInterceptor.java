@@ -159,6 +159,8 @@ public class DPoPInterceptor implements ExecChainHandler {
                     this.nonceValidUntil = Instant.now().plusSeconds(NONCE_VALID_SECONDS);
                     return DPopHandshakeState.FIRST_USE_DPOP_NONCE;
                 }
+                default:
+                    return DPopHandshakeState.UNEXPECTED_STATE;
             }
         }
         return DPopHandshakeState.UNEXPECTED_STATE;
