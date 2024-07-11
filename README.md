@@ -193,7 +193,7 @@ This library should be used with the Okta management API. For authentication, we
 [//]: # (method: getUser)
 ```java
 UserApi userApi = new UserApi(client);
-User user = userApi.getUser("userId");
+userApi.getUser("userId", "true");
 ```
 [//]: # (end: getUser)
 
@@ -370,13 +370,13 @@ UserFactor userFactor = userFactorApi.getFactor("userId", "factorId");
 [//]: # (method: enrollUserInFactor)
 ```java
 UserFactorApi userFactorApi = new UserFactorApi(client);
-SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
-smsUserFactorProfile.setPhoneNumber("555 867 5309");
-SmsUserFactor smsUserFactor = new SmsUserFactor();
-smsUserFactor.setProvider(FactorProvider.OKTA);
-smsUserFactor.setFactorType(FactorType.SMS);
-smsUserFactor.setProfile(smsUserFactorProfile);
-userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
+UserFactorSMSProfile UserFactorSMSProfile = new UserFactorSMSProfile();
+UserFactorSMSProfile.setPhoneNumber("555 867 5309");
+UserFactorSMS UserFactorSMS = new UserFactorSMS();
+UserFactorSMS.setProvider(UserFactorProvider.OKTA);
+UserFactorSMS.setFactorType(UserFactorType.SMS);
+UserFactorSMS.setProfile(UserFactorSMSProfile);
+userFactorApi.enrollFactor("userId", UserFactorSMS, true, "templateId", 30, true, null);
 ```
 [//]: # (end: enrollUserInFactor)
 
@@ -385,10 +385,10 @@ userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true
 [//]: # (method: activateFactor)
 ```java
 UserFactorApi userFactorApi = new UserFactorApi(client);
-CallUserFactor userFactor = (CallUserFactor) userFactorApi.getFactor("userId", "factorId");
-ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
-activateFactorRequest.setPassCode("123456");
-userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
+UserFactorCall userFactor = (UserFactorCall) userFactorApi.getFactor("userId", "factorId");
+UserFactorActivateRequest userFactorActivateRequest = new UserFactorActivateRequest();
+userFactorActivateRequest.setPassCode("123456");
+userFactorApi.activateFactor("userId", "factorId", userFactorActivateRequest);
 ```
 [//]: # (end: activateFactor)
 
@@ -398,10 +398,10 @@ userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
 ```java
 UserFactorApi userFactorApi = new UserFactorApi(client);
 UserFactor userFactor = userFactorApi.getFactor( "userId", "factorId");
-VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
-verifyFactorRequest.setPassCode("123456");
-VerifyUserFactorResponse verifyUserFactorResponse =
-    userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
+UserFactorVerifyRequest userFactorVerifyRequest = new UserFactorVerifyRequest();
+userFactorVerifyRequest.setPassCode("123456");
+UserFactorVerifyResponse verifyUserFactorResponse =
+    userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", userFactorVerifyRequest);
 ```
 [//]: # (end: verifyFactor)
 
@@ -461,7 +461,7 @@ MultifactorEnrollmentPolicy mfaPolicy =
 [//]: # (method: listPolicies)
 ```java
 PolicyApi policyApi = new PolicyApi(client);
-List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null, null, null, null);
 ```
 [//]: # (end: listPolicies)
 
