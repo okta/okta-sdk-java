@@ -102,7 +102,7 @@ class OktaOrgCleaner {
         PolicyApi policyApi = new PolicyApi(client)
 
         log.info("Deleting Policies:")
-        policyApi.listPolicies("OKTA_SIGN_ON", null, null).stream()
+        policyApi.listPolicies("OKTA_SIGN_ON", null, null, null, null, null).stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getName()}")
