@@ -321,7 +321,6 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>9.2.0</version>
                     <configuration>
                         <!-- no js is used in this project -->
                         <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
