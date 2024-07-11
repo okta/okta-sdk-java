@@ -24,6 +24,7 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.helper.PaginationUtil;
 import com.okta.sdk.resource.group.GroupBuilder;
+import com.okta.sdk.resource.model.UserFactorType;
 import com.okta.sdk.resource.user.UserBuilder;
 
 import com.okta.sdk.resource.client.ApiClient;
@@ -80,7 +81,7 @@ public class ReadmeSnippets {
     private void getUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 
-        User user = userApi.getUser("userId");
+        userApi.getUser("userId", "true");
     }
 
     private void listAllUsers() throws ApiException {
@@ -209,36 +210,36 @@ public class ReadmeSnippets {
     private void enrollUserInFactor() throws ApiException {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
-        SmsUserFactorProfile smsUserFactorProfile = new SmsUserFactorProfile();
-        smsUserFactorProfile.setPhoneNumber("555 867 5309");
+        UserFactorSMSProfile UserFactorSMSProfile = new UserFactorSMSProfile();
+        UserFactorSMSProfile.setPhoneNumber("555 867 5309");
 
-        SmsUserFactor smsUserFactor = new SmsUserFactor();
-        smsUserFactor.setProvider(FactorProvider.OKTA);
-        smsUserFactor.setFactorType(FactorType.SMS);
-        smsUserFactor.setProfile(smsUserFactorProfile);
+        UserFactorSMS UserFactorSMS = new UserFactorSMS();
+        UserFactorSMS.setProvider(UserFactorProvider.OKTA);
+        UserFactorSMS.setFactorType(UserFactorType.SMS);
+        UserFactorSMS.setProfile(UserFactorSMSProfile);
 
-        userFactorApi.enrollFactor("userId", smsUserFactor, true, "templateId", 30, true);
+        userFactorApi.enrollFactor("userId", UserFactorSMS, true, "templateId", 30, true, null);
     }
 
     private void activateFactor() throws ApiException {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
-        CallUserFactor userFactor = (CallUserFactor) userFactorApi.getFactor("userId", "factorId");
-        ActivateFactorRequest activateFactorRequest = new ActivateFactorRequest();
-        activateFactorRequest.setPassCode("123456");
+        UserFactorCall userFactor = (UserFactorCall) userFactorApi.getFactor("userId", "factorId");
+        UserFactorActivateRequest userFactorActivateRequest = new UserFactorActivateRequest();
+        userFactorActivateRequest.setPassCode("123456");
 
-        userFactorApi.activateFactor("userId", "factorId", activateFactorRequest);
+        userFactorApi.activateFactor("userId", "factorId", userFactorActivateRequest);
     }
 
     private void verifyFactor() throws ApiException {
         UserFactorApi userFactorApi = new UserFactorApi(client);
 
         UserFactor userFactor = userFactorApi.getFactor( "userId", "factorId");
-        VerifyFactorRequest verifyFactorRequest = new VerifyFactorRequest();
-        verifyFactorRequest.setPassCode("123456");
+        UserFactorVerifyRequest userFactorVerifyRequest = new UserFactorVerifyRequest();
+        userFactorVerifyRequest.setPassCode("123456");
 
-        VerifyUserFactorResponse verifyUserFactorResponse =
-            userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", verifyFactorRequest);
+        UserFactorVerifyResponse verifyUserFactorResponse =
+            userFactorApi.verifyFactor("userId", "factorId", "templateId", 10, "xForwardedFor", "userAgent", "acceptLanguage", userFactorVerifyRequest);
     }
 
     private void listApplications() throws ApiException {
@@ -276,7 +277,7 @@ public class ReadmeSnippets {
     private void listPolicies() throws ApiException {
         PolicyApi policyApi = new PolicyApi(client);
 
-        List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null);
+        List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null, null, null, null);
     }
 
     private void getPolicy() throws ApiException {

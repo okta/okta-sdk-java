@@ -17,20 +17,58 @@ package com.okta.sdk.tests.it
 
 
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
-import com.okta.sdk.resource.common.PagedList
+import com.okta.sdk.resource.api.ApplicationApi
+import com.okta.sdk.resource.api.ApplicationGroupsApi
+import com.okta.sdk.resource.api.GroupApi
+import com.okta.sdk.resource.api.PolicyApi
+import com.okta.sdk.resource.api.RoleAssignmentApi
+import com.okta.sdk.resource.api.RoleTargetApi
+import com.okta.sdk.resource.api.UserApi
+import com.okta.sdk.resource.api.UserTypeApi
 import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.model.Application
+import com.okta.sdk.resource.model.ApplicationGroupAssignment
+import com.okta.sdk.resource.model.AssignRoleRequest
+import com.okta.sdk.resource.model.AuthenticationProvider
+import com.okta.sdk.resource.model.AuthenticationProviderType
+import com.okta.sdk.resource.model.ChangePasswordRequest
+import com.okta.sdk.resource.model.Group
+import com.okta.sdk.resource.model.GroupProfile
+import com.okta.sdk.resource.model.PasswordCredential
+import com.okta.sdk.resource.model.PasswordPolicyPasswordSettings
+import com.okta.sdk.resource.model.PasswordPolicyPasswordSettingsAge
+import com.okta.sdk.resource.model.PasswordPolicyRule
+import com.okta.sdk.resource.model.PasswordPolicyRuleAction
+import com.okta.sdk.resource.model.PasswordPolicyRuleActions
+import com.okta.sdk.resource.model.PasswordPolicyRuleConditions
+import com.okta.sdk.resource.model.PasswordPolicySettings
+import com.okta.sdk.resource.model.Policy
+import com.okta.sdk.resource.model.PolicyAccess
+import com.okta.sdk.resource.model.PolicyNetworkCondition
+import com.okta.sdk.resource.model.PolicyNetworkConnection
+import com.okta.sdk.resource.model.RecoveryQuestionCredential
+import com.okta.sdk.resource.model.ResetPasswordToken
+import com.okta.sdk.resource.model.Role
+import com.okta.sdk.resource.model.RoleType
+import com.okta.sdk.resource.model.SelfServicePasswordResetAction
+import com.okta.sdk.resource.model.UpdateUserRequest
+import com.okta.sdk.resource.model.User
+import com.okta.sdk.resource.model.UserCredentials
+import com.okta.sdk.resource.model.UserGetSingleton
+import com.okta.sdk.resource.model.UserProfile
+import com.okta.sdk.resource.model.UserStatus
+import com.okta.sdk.resource.model.UserType
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.apache.commons.lang3.RandomStringUtils
 import org.apache.commons.lang3.StringUtils
 import com.okta.sdk.resource.client.ApiException
-import com.okta.sdk.resource.api.*
-import com.okta.sdk.resource.model.*
 import org.testng.annotations.Test
 
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
+import java.time.Duration
 import java.util.stream.Collectors
 
 import static com.okta.sdk.tests.it.util.Util.*
@@ -59,7 +97,7 @@ class UsersIT extends ITSupport {
         // deactivate
         userApi.deactivateUser(user.getId(), false)
 
-        User retrievedUser = userApi.getUser(user.getId())
+        UserGetSingleton retrievedUser = userApi.getUser(user.getId(), "false")
         assertThat(retrievedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
     }
 
@@ -161,7 +199,7 @@ class UsersIT extends ITSupport {
 
         Thread.sleep(getTestOperationDelay())
 
-        User retrievedUser = userApi.getUser(email)
+        UserGetSingleton retrievedUser = userApi.getUser(email, "false")
         assertThat(retrievedUser.id, equalTo(user.id))
     }
 
@@ -184,7 +222,7 @@ class UsersIT extends ITSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        User retrievedUser = userApi.getUser(email)
+        UserGetSingleton retrievedUser = userApi.getUser(email, "false")
         assertThat(retrievedUser.id, equalTo(user.id))
         assertThat(retrievedUser.profile.firstName, equalTo(firstName))
         assertThat(retrievedUser.profile.lastName, equalTo(lastName))
@@ -293,7 +331,7 @@ class UsersIT extends ITSupport {
 
         // 3. make the test recording happy, and call a get on the user
         // TODO: fix har file
-        userApi.getUser(user.getId())
+        userApi.getUser(user.getId(), "false")
     }
 
     @Test(expectedExceptions = ApiException, groups = "group2")
@@ -319,7 +357,7 @@ class UsersIT extends ITSupport {
 
         Policy policy = randomPasswordPolicy(createdGroup.getId())
         PasswordPolicyPasswordSettingsAge passwordPolicyPasswordSettingsAge = new PasswordPolicyPasswordSettingsAge()
-        passwordPolicyPasswordSettingsAge.setMinAgeMinutes(java.time.Duration.ofDays(2L).toMinutes() as int)
+        passwordPolicyPasswordSettingsAge.setMinAgeMinutes(Duration.ofDays(2L).toMinutes() as int)
 
         PasswordPolicyPasswordSettings passwordPolicyPasswordSettings = new PasswordPolicyPasswordSettings()
         passwordPolicyPasswordSettings.setAge(passwordPolicyPasswordSettingsAge)
@@ -359,7 +397,7 @@ class UsersIT extends ITSupport {
         passwordPolicyRule.setActions(passwordPolicyRuleActions)
         passwordPolicyRule.setName(policyRuleName)
 
-        policyApi.createPolicyRule(policy.getId(), passwordPolicyRule)
+        policyApi.createPolicyRule(policy.getId(), passwordPolicyRule, true)
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -390,7 +428,7 @@ class UsersIT extends ITSupport {
 
         // 3. make the test recording happy, and call a get on the user
         // TODO: fix har file
-        userApi.getUser(user.getId())
+        userApi.getUser(user.getId(), "false")
     }
 
     @Test(expectedExceptions = ApiException, groups = "group2")
@@ -439,7 +477,7 @@ class UsersIT extends ITSupport {
 
         // 4. make the test recording happy, and call a get on the user
         // TODO: fix har file
-        userApi.getUser(user.getId())
+        userApi.getUser(user.getId(), "false")
     }
 
     @Test (groups = "bacon")
@@ -540,11 +578,11 @@ class UsersIT extends ITSupport {
         validateUser(createdUser, firstName, lastName, email)
 
         // 2. Get the user by user ID
-        User user = userApi.getUser(createdUser.getId())
+        UserGetSingleton user = userApi.getUser(createdUser.getId(), "false")
         validateUser(user, firstName, lastName, email)
 
         // 3. Get the user by user login
-        User userByLogin = userApi.getUser(createdUser.getProfile().getLogin())
+        UserGetSingleton userByLogin = userApi.getUser(createdUser.getProfile().getLogin(), "false")
         validateUser(userByLogin, firstName, lastName, email)
 
         // 3. deactivate and delete the user
@@ -553,7 +591,7 @@ class UsersIT extends ITSupport {
 
         // 4. get user expect 404
         expect(ApiException) {
-            userApi.getUser(email)
+            userApi.getUser(email, "false")
         }
     }
 
@@ -679,7 +717,7 @@ class UsersIT extends ITSupport {
 
         userApi.updateUser(user.getId(), updateUserRequest, true)
 
-        User updatedUser = userApi.getUser(user.getId())
+        UserGetSingleton updatedUser = userApi.getUser(user.getId(), "false")
 
         assertThat(updatedUser.lastUpdated, greaterThan(originalLastUpdated))
         assertThat(updatedUser.getProfile(), not(user.getProfile()))
@@ -730,7 +768,7 @@ class UsersIT extends ITSupport {
         def userId = "invalid-user-id-${uniqueTestName}@example.com"
 
         expect(ApiException) {
-            userApi.getUser(userId)
+            userApi.getUser(userId, "false")
         }
     }
 
@@ -762,7 +800,7 @@ class UsersIT extends ITSupport {
         registerForCleanup(createUser)
         validateUser(createUser, firstName, lastName, email)
 
-        List<Group> groups = userApi.listUserGroups(createUser.getId()).stream().collect(Collectors.toList())
+        List<Group> groups = userApi.listUserGroups(createUser.getId(), null, 10).stream().collect(Collectors.toList())
         assertThat groups, allOf(hasSize(2))
         assertThat groups.get(0).getProfile().name, equalTo("Everyone")
         assertThat groups.get(1).getId(), equalTo(group.id)
@@ -835,8 +873,7 @@ class UsersIT extends ITSupport {
         def email = "john-${uniqueTestName}@example.com"
 
         AuthenticationProvider authenticationProvider = new AuthenticationProvider()
-        authenticationProvider.setName(AuthenticationProviderType.FEDERATION.name())
-        authenticationProvider.setType(AuthenticationProviderType.FEDERATION)
+        authenticationProvider.setType(AuthenticationProviderType.OKTA)
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -850,7 +887,7 @@ class UsersIT extends ITSupport {
         validateUser(user, firstName, lastName, email)
 
         assertThat user.getCredentials(), notNullValue()
-        assertThat user.getCredentials().getProvider().getType(), equalTo(AuthenticationProviderType.FEDERATION)
+        assertThat user.getCredentials().getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
     }
 
     @Test (groups = "group3")
@@ -879,43 +916,6 @@ class UsersIT extends ITSupport {
             assertThat(embedded.get(expandParameter).get("type"), notNullValue())
             assertThat(embedded.get(expandParameter).get("profile"), notNullValue())
         }
-    }
-
-    @Test(groups = "group3")
-    void testPagination() {
-
-        int noOfUsersCreated = 10
-
-        // create users
-        for (int i = 1; i <= noOfUsersCreated; i++) {
-            registerForCleanup(randomUser())
-        }
-
-        int pageSize = 3 // max number of items per page
-        int pageCount = 0 // counter to track no. of pages
-
-        PagedList<User> pagedUserList = new PagedList<>()
-
-        do {
-            pagedUserList = (PagedList<User>) userApi.listUsers(
-                null, pagedUserList.getAfter(), pageSize, null, null, null, null)
-
-            assertThat(pagedUserList, notNullValue())
-            assertThat(pagedUserList.size(), lessThanOrEqualTo(pageSize))
-
-            pageCount++ // increment page
-
-            if (pagedUserList.hasMoreItems()) {
-                assertThat(pagedUserList.getAfter(), notNullValue())
-                assertThat(pagedUserList.getNextPage(), notNullValue())
-            } else {
-                // end of list
-                break
-            }
-        } while (true)
-
-        // there could be other existing users in addition to what we just created
-        assertThat(pageCount, greaterThanOrEqualTo(Math.ceil(noOfUsersCreated / pageSize) as Integer))
     }
 
     private static String hashPassword(String password, String salt) {

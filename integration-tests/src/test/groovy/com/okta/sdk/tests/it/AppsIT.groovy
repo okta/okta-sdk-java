@@ -16,7 +16,44 @@
 package com.okta.sdk.tests.it
 
 import com.google.common.net.HttpHeaders
-
+import com.okta.sdk.resource.model.Application
+import com.okta.sdk.resource.model.ApplicationCredentialsOAuthClient
+import com.okta.sdk.resource.model.ApplicationLifecycleStatus
+import com.okta.sdk.resource.model.ApplicationSignOnMode
+import com.okta.sdk.resource.model.ApplicationVisibility
+import com.okta.sdk.resource.model.ApplicationVisibilityHide
+import com.okta.sdk.resource.model.BasicApplicationSettings
+import com.okta.sdk.resource.model.BasicApplicationSettingsApplication
+import com.okta.sdk.resource.model.BasicAuthApplication
+import com.okta.sdk.resource.model.BookmarkApplication
+import com.okta.sdk.resource.model.BookmarkApplicationSettings
+import com.okta.sdk.resource.model.BookmarkApplicationSettingsApplication
+import com.okta.sdk.resource.model.BrowserPluginApplication
+import com.okta.sdk.resource.model.InlineHook
+import com.okta.sdk.resource.model.InlineHookChannelConfig
+import com.okta.sdk.resource.model.InlineHookChannelConfigAuthScheme
+import com.okta.sdk.resource.model.InlineHookChannelConfigHeaders
+import com.okta.sdk.resource.model.InlineHookChannelHttp
+import com.okta.sdk.resource.model.InlineHookChannelType
+import com.okta.sdk.resource.model.InlineHookType
+import com.okta.sdk.resource.model.OAuthApplicationCredentials
+import com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod
+import com.okta.sdk.resource.model.OAuthGrantType
+import com.okta.sdk.resource.model.OAuthResponseType
+import com.okta.sdk.resource.model.OpenIdConnectApplication
+import com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod
+import com.okta.sdk.resource.model.OpenIdConnectApplicationIssuerMode
+import com.okta.sdk.resource.model.OpenIdConnectApplicationSettings
+import com.okta.sdk.resource.model.OpenIdConnectApplicationSettingsClient
+import com.okta.sdk.resource.model.OpenIdConnectApplicationType
+import com.okta.sdk.resource.model.SamlApplication
+import com.okta.sdk.resource.model.SamlApplicationSettings
+import com.okta.sdk.resource.model.SamlApplicationSettingsApplication
+import com.okta.sdk.resource.model.SamlApplicationSettingsSignOn
+import com.okta.sdk.resource.model.SamlAttributeStatement
+import com.okta.sdk.resource.model.SignOnInlineHook
+import com.okta.sdk.resource.model.SwaApplicationSettings
+import com.okta.sdk.resource.model.SwaApplicationSettingsApplication
 import com.okta.sdk.tests.it.util.ITSupport
 import com.okta.sdk.resource.api.ApplicationApi
 import com.okta.sdk.resource.api.InlineHookApi
@@ -82,7 +119,7 @@ class AppsIT extends ITSupport {
 
         // create
         BookmarkApplication createdApp =
-            applicationApi.createApplication(bookmarkApplication, true, null)
+            applicationApi.createApplication(bookmarkApplication, true, null) as BookmarkApplication
         registerForCleanup(createdApp)
 
         assertThat(createdApp, notNullValue())
