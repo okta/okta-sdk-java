@@ -97,10 +97,10 @@
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>              println(<span class="jxr_string">"User created with ID: "</span> + userId);
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>              <em class="jxr_comment">// You can look up user by ID</em>
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>              println(<span class="jxr_string">"User lookup by ID: "</span>+ Objects.requireNonNull(userApi.getUser(userId).getProfile()).getLogin());
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>              println(<span class="jxr_string">"User lookup by ID: "</span>+ Objects.requireNonNull(userApi.getUser(userId, <span class="jxr_string">"false"</span>).getProfile()).getLogin());
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>              <em class="jxr_comment">// or by Email</em>
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>              println(<span class="jxr_string">"User lookup by Email: "</span>+ Objects.requireNonNull(userApi.getUser(email).getProfile()).getLogin());
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>              println(<span class="jxr_string">"User lookup by Email: "</span>+ Objects.requireNonNull(userApi.getUser(email, <span class="jxr_string">"false"</span>).getProfile()).getLogin());
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>              <em class="jxr_comment">// get the list of users</em>
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>              List&lt;User&gt; users = userApi.listUsers(<strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <span class="jxr_string">"status eq \&quot;ACTIVE\&quot;"</span>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>);
