@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.okta</groupId>
         <artifactId>okta-parent</artifactId>
-        <version>32</version>
+        <version>33</version>
     </parent>
 
     <groupId>com.okta.sdk</groupId>
@@ -34,7 +34,7 @@
     <inceptionYear>2017</inceptionYear>
 
     <properties>
-        <jackson.version>2.17.1</jackson.version>
+        <jackson.version>2.17.2</jackson.version>
         <snakeyaml.version>2.2</snakeyaml.version>
         <bouncycastle.version>1.78.1</bouncycastle.version>
         <jjwt.version>0.12.6</jjwt.version>
@@ -321,7 +321,6 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>9.2.0</version>
                     <configuration>
                         <!-- no js is used in this project -->
                         <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>

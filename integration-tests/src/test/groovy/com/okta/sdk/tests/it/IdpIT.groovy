@@ -379,7 +379,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), hasSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), hasSize(0))
 
         // link user
         UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
@@ -387,13 +387,13 @@ class IdpIT extends ITSupport {
         identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), hasSize(1))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), hasSize(1))
 
         // unlink user
         identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), hasSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), hasSize(0))
 
         // list social auth tokens
         List<SocialAuthToken> socialAuthTokenList = identityProviderApi.listSocialAuthTokens(createdIdp.getId(), createdUser.getId())
@@ -466,7 +466,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // link user
         UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
@@ -474,13 +474,13 @@ class IdpIT extends ITSupport {
         identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
 
         // unlink user
         identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // deactivate
         identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
@@ -549,7 +549,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // link user
         UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
@@ -557,13 +557,13 @@ class IdpIT extends ITSupport {
         identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
 
         // unlink user
         identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // deactivate
         identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
@@ -632,7 +632,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // link user
         UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
@@ -640,13 +640,13 @@ class IdpIT extends ITSupport {
         identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
 
         // unlink user
         identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // deactivate
         identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
@@ -715,7 +715,7 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // link user
         UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
@@ -723,13 +723,13 @@ class IdpIT extends ITSupport {
         identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(1))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
 
         // unlink user
         identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId()), iterableWithSize(0))
+        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // deactivate
         identityProviderApi.deactivateIdentityProvider(createdIdp.getId())

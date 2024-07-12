@@ -154,7 +154,7 @@ class PoliciesIT extends ITSupport {
         accessPolicyRule.actions(accessPolicyRuleActions)
 
         AccessPolicyRule createdAccessPolicyRule =
-            policyApi.createPolicyRule(accessPolicy.getId(), accessPolicyRule) as AccessPolicyRule
+            policyApi.createPolicyRule(accessPolicy.getId(), accessPolicyRule, true) as AccessPolicyRule
 
         assertThat(createdAccessPolicyRule, notNullValue())
         assertThat(createdAccessPolicyRule.getName(), is(name))
@@ -201,7 +201,7 @@ class PoliciesIT extends ITSupport {
         oktaSignOnPolicyRule.actions(oktaSignOnPolicyRuleActions)
 
         OktaSignOnPolicyRule createdPolicyRule =
-            policyApi.createPolicyRule(policy.getId(), oktaSignOnPolicyRule) as OktaSignOnPolicyRule
+            policyApi.createPolicyRule(policy.getId(), oktaSignOnPolicyRule, true) as OktaSignOnPolicyRule
 
         assertThat(createdPolicyRule.getId(), notNullValue())
         assertThat(createdPolicyRule.getName(), is(policyRuleName))

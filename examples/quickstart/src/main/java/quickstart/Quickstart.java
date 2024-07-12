@@ -89,10 +89,10 @@ public class Quickstart {
             println("User created with ID: " + userId);
 
             // You can look up user by ID
-            println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId).getProfile()).getLogin());
+            println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId, "false").getProfile()).getLogin());
 
             // or by Email
-            println("User lookup by Email: "+ Objects.requireNonNull(userApi.getUser(email).getProfile()).getLogin());
+            println("User lookup by Email: "+ Objects.requireNonNull(userApi.getUser(email, "false").getProfile()).getLogin());
 
             // get the list of users
             List<User> users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"", null, null, null);

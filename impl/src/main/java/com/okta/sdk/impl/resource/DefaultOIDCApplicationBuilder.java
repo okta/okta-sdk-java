@@ -19,33 +19,32 @@ import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.application.OIDCApplicationBuilder;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.ApplicationApi;
-import com.okta.sdk.resource.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OIDCApplicationBuilder> implements OIDCApplicationBuilder {
-    private OpenIdConnectApplicationType applicationType;
+    private com.okta.sdk.resource.model.OpenIdConnectApplicationType applicationType;
     private String clientUri;
-    private OpenIdConnectApplicationConsentMethod consentMethod;
-    private List<OAuthGrantType> grantTypes = new ArrayList<>();
+    private com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod consentMethod;
+    private List<com.okta.sdk.resource.model.OAuthGrantType> grantTypes = new ArrayList<>();
     private String logoUri;
     private String policyUri;
     private List<String> postLogoutRedirectUris = new ArrayList<>();
     private List<String> redirectUris = new ArrayList<>();
-    private List<OAuthResponseType> responseTypes = new ArrayList<>();
+    private List<com.okta.sdk.resource.model.OAuthResponseType> responseTypes = new ArrayList<>();
     private String tosUri;
     private String clientId;
     private String clientSecret;
     private Boolean autoKeyRotation;
-    private OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
-    private List<JsonWebKey> jsonWebKeyList = new ArrayList<>();
+    private com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
+    private List<com.okta.sdk.resource.model.SchemasJsonWebKey> schemasJsonWebKeys = new ArrayList<>();
     private Boolean isImplicitAssignment;
     private String inlineHookId;
 
     @Override
-    public OIDCApplicationBuilder setApplicationType(OpenIdConnectApplicationType applicationType) {
+    public OIDCApplicationBuilder setApplicationType(com.okta.sdk.resource.model.OpenIdConnectApplicationType applicationType) {
         this.applicationType = applicationType;
         return this;
     }
@@ -57,19 +56,19 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setConsentMethod(OpenIdConnectApplicationConsentMethod consentMethod) {
+    public OIDCApplicationBuilder setConsentMethod(com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod consentMethod) {
         this.consentMethod = consentMethod;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder setGrantTypes(List<OAuthGrantType> grantTypes) {
+    public OIDCApplicationBuilder setGrantTypes(List<com.okta.sdk.resource.model.OAuthGrantType> grantTypes) {
         this.grantTypes = grantTypes;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder addGrantTypes(OAuthGrantType grantType) {
+    public OIDCApplicationBuilder addGrantTypes(com.okta.sdk.resource.model.OAuthGrantType grantType) {
         this.grantTypes.add(grantType);
         return this;
     }
@@ -105,13 +104,13 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setResponseTypes(List<OAuthResponseType> responseTypes) {
+    public OIDCApplicationBuilder setResponseTypes(List<com.okta.sdk.resource.model.OAuthResponseType> responseTypes) {
         this.responseTypes = responseTypes;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder addResponseTypes(OAuthResponseType responseType) {
+    public OIDCApplicationBuilder addResponseTypes(com.okta.sdk.resource.model.OAuthResponseType responseType) {
         this.responseTypes.add(responseType);
         return this;
     }
@@ -141,14 +140,14 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod) {
+    public OIDCApplicationBuilder setTokenEndpointAuthMethod(com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod) {
         this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder setJwks(List<JsonWebKey> jsonWebKeyList) {
-        this.jsonWebKeyList = jsonWebKeyList;
+    public OIDCApplicationBuilder setJwks(List<com.okta.sdk.resource.model.SchemasJsonWebKey> schemasJsonWebKeys) {
+        this.schemasJsonWebKeys = schemasJsonWebKeys;
         return this;
     }
 
@@ -165,20 +164,20 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OpenIdConnectApplication buildAndCreate(ApplicationApi client) throws ApiException {
-        return (OpenIdConnectApplication) new ApplicationApi(client.getApiClient())
+    public com.okta.sdk.resource.model.OpenIdConnectApplication buildAndCreate(ApplicationApi client) throws ApiException {
+        return (com.okta.sdk.resource.model.OpenIdConnectApplication) new ApplicationApi(client.getApiClient())
                 .createApplication(build(), false, null);
     }
 
-    private OpenIdConnectApplication build(){
-        OpenIdConnectApplication application = new OpenIdConnectApplication();
+    private com.okta.sdk.resource.model.OpenIdConnectApplication build() {
+        com.okta.sdk.resource.model.OpenIdConnectApplication application = new com.okta.sdk.resource.model.OpenIdConnectApplication();
 
         if (Strings.hasText(label)) application.setLabel(label);
 
-        application.setSignOnMode(ApplicationSignOnMode.OPENID_CONNECT);
+        application.setSignOnMode(com.okta.sdk.resource.model.ApplicationSignOnMode.OPENID_CONNECT);
 
         // Accessibility
-        ApplicationAccessibility applicationAccessibility = new ApplicationAccessibility();
+        com.okta.sdk.resource.model.ApplicationAccessibility applicationAccessibility = new com.okta.sdk.resource.model.ApplicationAccessibility();
 
         if (Strings.hasText(errorRedirectUrl))
             applicationAccessibility.setErrorRedirectUrl(errorRedirectUrl);
@@ -189,9 +188,9 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         application.setAccessibility(applicationAccessibility);
 
         // Visibility
-        ApplicationVisibility applicationVisibility = new ApplicationVisibility();
+        com.okta.sdk.resource.model.ApplicationVisibility applicationVisibility = new com.okta.sdk.resource.model.ApplicationVisibility();
 
-        ApplicationVisibilityHide applicationVisibilityHide = new ApplicationVisibilityHide();
+        com.okta.sdk.resource.model.ApplicationVisibilityHide applicationVisibilityHide = new com.okta.sdk.resource.model.ApplicationVisibilityHide();
 
         if (Objects.nonNull(iOS))
             applicationVisibilityHide.setiOS(iOS);
@@ -204,9 +203,9 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         application.setVisibility(applicationVisibility);
 
         // Settings
-        OpenIdConnectApplicationSettings openIdConnectApplicationSettings = new OpenIdConnectApplicationSettings();
+        com.okta.sdk.resource.model.OpenIdConnectApplicationSettings openIdConnectApplicationSettings = new com.okta.sdk.resource.model.OpenIdConnectApplicationSettings();
 
-        OpenIdConnectApplicationSettingsClient openIdConnectApplicationSettingsClient = new OpenIdConnectApplicationSettingsClient();
+        com.okta.sdk.resource.model.OpenIdConnectApplicationSettingsClient openIdConnectApplicationSettingsClient = new com.okta.sdk.resource.model.OpenIdConnectApplicationSettingsClient();
 
         if (Strings.hasText(clientUri))
             openIdConnectApplicationSettingsClient.setClientUri(clientUri);
@@ -226,12 +225,12 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         if (Objects.nonNull(redirectUris))
             openIdConnectApplicationSettingsClient.setRedirectUris(redirectUris);
 
-        if (Objects.nonNull(responseTypes) && responseTypes.size()>0)
+        if (Objects.nonNull(responseTypes) && !responseTypes.isEmpty())
             openIdConnectApplicationSettingsClient.setResponseTypes(responseTypes);
         else
             throw new IllegalArgumentException("Response Type cannot be null, value should be of type OAuthResponseType");
 
-        if (Objects.nonNull(grantTypes) && grantTypes.size() > 0)
+        if (Objects.nonNull(grantTypes) && !grantTypes.isEmpty())
             openIdConnectApplicationSettingsClient.setGrantTypes(grantTypes);
         else
             throw new IllegalArgumentException("Grant Type cannot be null, value should be of type OAuthGrantType");
@@ -251,8 +250,8 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
             openIdConnectApplicationSettings.setInlineHookId(inlineHookId);
 
         // Credentials
-        OAuthApplicationCredentials oAuthApplicationCredentials = new OAuthApplicationCredentials();
-        ApplicationCredentialsOAuthClient applicationCredentialsOAuthClient = new ApplicationCredentialsOAuthClient();
+        com.okta.sdk.resource.model.OAuthApplicationCredentials oAuthApplicationCredentials = new com.okta.sdk.resource.model.OAuthApplicationCredentials();
+        com.okta.sdk.resource.model.ApplicationCredentialsOAuthClient applicationCredentialsOAuthClient = new com.okta.sdk.resource.model.ApplicationCredentialsOAuthClient();
 
         if (Strings.hasText(clientId))
             applicationCredentialsOAuthClient.setClientId(clientId);
@@ -274,9 +273,9 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
 
         openIdConnectApplicationSettings.setOauthClient(openIdConnectApplicationSettingsClient);
 
-        if (jsonWebKeyList.size() > 0) {
-            OpenIdConnectApplicationSettingsClientKeys openIdConnectApplicationSettingsClientKeys = new OpenIdConnectApplicationSettingsClientKeys();
-            openIdConnectApplicationSettingsClientKeys.setKeys(this.jsonWebKeyList);
+        if (!schemasJsonWebKeys.isEmpty()) {
+            com.okta.sdk.resource.model.OpenIdConnectApplicationSettingsClientKeys openIdConnectApplicationSettingsClientKeys = new com.okta.sdk.resource.model.OpenIdConnectApplicationSettingsClientKeys();
+            openIdConnectApplicationSettingsClientKeys.setKeys(schemasJsonWebKeys);
             openIdConnectApplicationSettings.getOauthClient().setJwks(openIdConnectApplicationSettingsClientKeys);
         }
 

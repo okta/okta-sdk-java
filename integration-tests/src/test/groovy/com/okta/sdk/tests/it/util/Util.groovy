@@ -19,6 +19,7 @@ import com.okta.sdk.resource.api.GroupApi
 import com.okta.sdk.resource.model.Group
 import com.okta.sdk.resource.model.GroupType
 import com.okta.sdk.resource.model.User
+import com.okta.sdk.resource.model.UserGetSingleton
 import org.testng.Assert
 
 import java.util.stream.Collectors
@@ -32,6 +33,15 @@ import static org.hamcrest.Matchers.notNullValue
 class Util {
 
     static void validateUser(User user, String firstName, String lastName, String email, String login=email) {
+
+        assertThat(user.profile, notNullValue())
+        assertThat(user.profile.firstName, equalTo(firstName))
+        assertThat(user.profile.lastName, equalTo(lastName))
+        assertThat(user.profile.email, equalTo(email))
+        assertThat(user.profile.login, equalTo(login))
+    }
+
+    static void validateUser(UserGetSingleton user, String firstName, String lastName, String email, String login=email) {
 
         assertThat(user.profile, notNullValue())
         assertThat(user.profile.firstName, equalTo(firstName))
@@ -86,7 +96,7 @@ class Util {
     }
 
     static void assertUserInGroup(User user, Group group, GroupApi groupApi) {
-        assertThat "User was not found in group.", StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
+        assertThat "User was not found in group.", StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null, null, null, null).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()
     }
@@ -96,7 +106,7 @@ class Util {
 
             sleep(delayInMilliseconds)
 
-            if (present == StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
+            if (present == StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null, null, null, null).spliterator(), false)
                     .filter{ listUser -> listUser.id == user.id}
                     .findFirst().isPresent()) {
                 return
@@ -108,7 +118,7 @@ class Util {
     }
 
     static void assertUserNotInGroup(User user, Group group, GroupApi groupApi) {
-        assertThat "User was found in group.", !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
+        assertThat "User was found in group.", !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null, null, null, null).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()
     }
@@ -118,7 +128,7 @@ class Util {
 
             sleep(delayInMilliseconds)
 
-            if (present == !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
+            if (present == !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null, null, null, null).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()) {
                 return
