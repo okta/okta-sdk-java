@@ -34,8 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -130,8 +128,13 @@ public class DPoPInterceptor implements ExecChainHandler {
 
     private String getUriWithoutQueryString(HttpRequest request) {
         try {
-            return URLDecoder.decode(StringUtils.substringBefore(request.getUri().toString(), "?"), StandardCharsets.UTF_8.name());
-        } catch (URISyntaxException | UnsupportedEncodingException e) {
+            String urlWithoutQueryString = StringUtils.substringBefore(request.getUri().toString(), "?");
+            return URLDecoder.decode(urlWithoutQueryString, StandardCharsets.UTF_8.name())
+                .replace("%", "%25") //must be replaced first
+                .replace(" ", "%20")
+                .replace("\"", "%22")
+                .replace("#", "%23");
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
