@@ -35056,7 +35056,14 @@ components:
         profiles:
           type: array
           items:
-            $ref: '#/components/schemas/IdentitySourceUserProfileForUpsert'
+            type: object
+            properties:
+              externalId:
+                type: string
+                description: The external ID of the entity that needs to be created or updated in Okta
+                maxLength: 512
+              profile:
+                $ref: '#/components/schemas/IdentitySourceUserProfileForUpsert'
     BundleEntitlement:
       type: object
       properties:
