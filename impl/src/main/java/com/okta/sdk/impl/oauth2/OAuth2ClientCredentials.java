@@ -49,11 +49,15 @@ public class OAuth2ClientCredentials extends OAuth implements ClientCredentials<
 
     @Override
     public synchronized void applyToParams(List<Pair> queryParams, Map<String, String> headerParams, Map<String, String> cookieParams) {
+        if (oAuth2AccessToken != null) {
+            log.debug("Access Token ExpiresIn {}, ExpiresAt {}", oAuth2AccessToken.getExpiresIn(), oAuth2AccessToken.getExpiresAt());
+        }
         if (oAuth2AccessToken != null &&
             // refresh 5 minutes before token expiration
             oAuth2AccessToken.getExpiresAt().minus(5, ChronoUnit.MINUTES).isBefore(Instant.now())) {
             oAuth2AccessToken = null;
             setAccessToken(null);
+            log.debug("=== will refresh token now ===");
             refreshOAuth2AccessToken();
         }
         super.applyToParams(queryParams, headerParams, cookieParams);
@@ -64,6 +68,7 @@ public class OAuth2ClientCredentials extends OAuth implements ClientCredentials<
 
         try {
             oAuth2AccessToken = accessTokenRetrieverService.getOAuth2AccessToken();
+            oAuth2AccessToken.setExpiresIn(360);
         } catch (IOException | InvalidKeyException e) {
             throw new OAuth2TokenRetrieverException("Failed to get OAuth2 access token", e);
         }

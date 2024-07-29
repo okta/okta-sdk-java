@@ -15,6 +15,7 @@
  */
 package quickstart;
 
+import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.resource.client.ApiClient;
 import com.okta.sdk.resource.client.ApiException;
 
@@ -27,9 +28,7 @@ import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.api.GroupApi;
 import com.okta.sdk.resource.model.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This class demonstrates the code found in the Okta Java SDK QuickStart Guide
@@ -59,7 +58,14 @@ public class Quickstart {
 
             // No need to define anything else; build the Client instance. The ClientCredential information will be automatically found
             // in pre-defined locations: i.e. ~/.okta/okta.yaml
-            client = builder.build();
+            //client = builder.build();
+            client = Clients.builder()
+                .setOrgUrl("https://java-oie-sdk.oktapreview.com")  // e.g. https://dev-123456.okta.com
+                .setAuthorizationMode(AuthorizationMode.PRIVATE_KEY)
+                .setClientId("0oag1mlt0tS1f4cQs1d7")
+                .setScopes(new HashSet<>(Arrays.asList("okta.users.manage", "okta.apps.manage", "okta.groups.manage")))
+                .setPrivateKey("/Users/arvindkrishnakumar/Downloads/oauth_privateKey.pem")
+                .build();
 
             userApi = new UserApi(client);
             groupApi = new GroupApi(client);

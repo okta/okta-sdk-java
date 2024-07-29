@@ -317,7 +317,7 @@ public class DefaultClientBuilder implements ClientBuilder {
             CacheManagerBuilder cacheManagerBuilder = Caches.newCacheManager()
                 .withDefaultTimeToIdle(this.clientConfig.getCacheManagerTti(), TimeUnit.SECONDS)
                 .withDefaultTimeToLive(this.clientConfig.getCacheManagerTtl(), TimeUnit.SECONDS);
-            if (this.clientConfig.getCacheManagerCaches().size() > 0) {
+            if (!this.clientConfig.getCacheManagerCaches().isEmpty()) {
                 for (CacheConfigurationBuilder builder : this.clientConfig.getCacheManagerCaches().values()) {
                     cacheManagerBuilder.withCache(builder);
                 }
