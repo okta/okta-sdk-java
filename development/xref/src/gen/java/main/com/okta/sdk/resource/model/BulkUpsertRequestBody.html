@@ -15,7 +15,7 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonCreator;
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.IdentitySourceUserProfileForUpsert;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.BulkUpsertRequestBodyProfilesInner;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.util.ArrayList;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> java.util.List;
@@ -29,7 +29,7 @@
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> * BulkUpsertRequestBody</em>
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  @JsonPropertyOrder({ BulkUpsertRequestBody.JSON_PROPERTY_ENTITY_TYPE, BulkUpsertRequestBody.JSON_PROPERTY_PROFILES })
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-07-29T15:41:44.295481847Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-07-30T15:07:29.022028299Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> BulkUpsertRequestBody <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -73,7 +73,7 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">private</strong> EntityTypeEnum entityType;
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_PROFILES = <span class="jxr_string">"profiles"</span>;
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">private</strong> List&lt;IdentitySourceUserProfileForUpsert&gt; profiles = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">private</strong> List&lt;BulkUpsertRequestBodyProfilesInner&gt; profiles = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">public</strong> BulkUpsertRequestBody() {
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      }
@@ -104,13 +104,13 @@
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>          <strong class="jxr_keyword">this</strong>.entityType = entityType;
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      }
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>      <strong class="jxr_keyword">public</strong> BulkUpsertRequestBody profiles(List&lt;IdentitySourceUserProfileForUpsert&gt; profiles) {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>      <strong class="jxr_keyword">public</strong> BulkUpsertRequestBody profiles(List&lt;BulkUpsertRequestBodyProfilesInner&gt; profiles) {
 <a class="jxr_linenumber" name="L100" href="#L100">100</a> 
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>         <strong class="jxr_keyword">this</strong>.profiles = profiles;
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>     }
 <a class="jxr_linenumber" name="L104" href="#L104">104</a> 
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     <strong class="jxr_keyword">public</strong> BulkUpsertRequestBody addprofilesItem(IdentitySourceUserProfileForUpsert profilesItem) {
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     <strong class="jxr_keyword">public</strong> BulkUpsertRequestBody addprofilesItem(BulkUpsertRequestBodyProfilesInner profilesItem) {
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.profiles == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>             <strong class="jxr_keyword">this</strong>.profiles = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>         }
@@ -128,13 +128,13 @@
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>     @JsonProperty(JSON_PROPERTY_PROFILES)
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L122" href="#L122">122</a> 
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">public</strong> List&lt;IdentitySourceUserProfileForUpsert&gt; getProfiles() {
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">public</strong> List&lt;BulkUpsertRequestBodyProfilesInner&gt; getProfiles() {
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>         <strong class="jxr_keyword">return</strong> profiles;
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>     }
 <a class="jxr_linenumber" name="L126" href="#L126">126</a> 
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>     @JsonProperty(JSON_PROPERTY_PROFILES)
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setProfiles(List&lt;IdentitySourceUserProfileForUpsert&gt; profiles) {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setProfiles(List&lt;BulkUpsertRequestBodyProfilesInner&gt; profiles) {
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>         <strong class="jxr_keyword">this</strong>.profiles = profiles;
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>     }
 <a class="jxr_linenumber" name="L132" href="#L132">132</a> 
