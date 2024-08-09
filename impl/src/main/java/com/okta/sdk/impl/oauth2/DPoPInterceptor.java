@@ -115,7 +115,8 @@ public class DPoPInterceptor implements ExecChainHandler {
         Header authorization = request.getFirstHeader("Authorization");
         if (authorization != null) {
             //already authenticated, need to replace Authorization header prefix and set ath claim
-            String token = authorization.getValue().replaceFirst("^Bearer ", "");
+            //the DPoP prefix might already be set if the request is retried
+            String token = StringUtils.substringAfter(authorization.getValue(), " ");
             request.setHeader("Authorization", DPOP_HEADER + " " + token);
             byte[] ath = SHA256.digest(token.getBytes(StandardCharsets.US_ASCII));
             builder.claim("ath", Encoders.BASE64URL.encode(ath));
