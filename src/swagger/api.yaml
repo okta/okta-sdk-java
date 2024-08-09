@@ -38533,6 +38533,7 @@ components:
     IdentityProviderType:
       type: string
       enum:
+        - APPLE
         - AgentlessDSSO
         - FACEBOOK
         - GOOGLE
