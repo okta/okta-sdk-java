@@ -62,26 +62,15 @@ jobs:
 workflows:
   "Circle CI Tests":
     jobs:
-      - general-platform-helpers/job-secrets-obtain:
-          name: cache-secrets
-          secret-key: "OKTA_CLIENT_ORGURL;OKTA_CLIENT_TOKEN;OKTA_CLIENT_CONNECTIONTIMEOUT;OKTA_IT_OPERATION_DELAY"
-      - jdk11:
-          requires:
-            - cache-secrets
-      - jdk21:
-          requires:
-            - cache-secrets
-      - general-platform-helpers/job-semgrep-prepare:
-          name: semgrep-prepare
+      - jdk11
+      - jdk21
       - general-platform-helpers/job-semgrep-scan:
           name: "Scan with Semgrep"
-          requires:
-            - semgrep-prepare
-      - general-platform-helpers/job-snyk-prepare:
-          name: prepare-snyk
-          requires:
-            - jdk21
+          context:
+            - static-analysis
       - snyk-scan:
           name: execute-snyk
           requires:
-            - prepare-snyk
+            - jdk21
+          context:
+            - static-analysis
