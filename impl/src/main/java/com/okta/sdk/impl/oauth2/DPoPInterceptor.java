@@ -60,15 +60,14 @@ public class DPoPInterceptor implements ExecChainHandler {
     private static final String DPOP_HEADER = "DPoP";
     //nonce is valid for 24 hours, but can only refresh it when doing a token request => start refreshing after 22 hours
     private static final int NONCE_VALID_SECONDS = 60 * 60 * 22;
-    private static final MessageDigest SHA256; //required to sign ath claim
-
-    static {
+    //MessageDigest is not thread-safe, need one per thread
+    private static final ThreadLocal<MessageDigest> SHA256 = ThreadLocal.withInitial(() -> {
         try {
-            SHA256 = MessageDigest.getInstance("SHA-256");
+            return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-    }
+    });
 
     //if null, means dpop is not enabled yet
     private PrivateJwk<PrivateKey, PublicKey, ?> jwk;
@@ -117,7 +116,7 @@ public class DPoPInterceptor implements ExecChainHandler {
             //already authenticated, need to replace Authorization header prefix and set ath claim
             String token = authorization.getValue().replaceFirst("^Bearer ", "");
             request.setHeader("Authorization", DPOP_HEADER + " " + token);
-            byte[] ath = SHA256.digest(token.getBytes(StandardCharsets.US_ASCII));
+            byte[] ath = SHA256.get().digest(token.getBytes(StandardCharsets.US_ASCII));
             builder.claim("ath", Encoders.BASE64URL.encode(ath));
         } else if (tokenRequest && nonce != null) {
             //still in handshake, need to set nonce
