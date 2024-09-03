@@ -11537,12 +11537,18 @@ paths:
       summary: Create an X.509 Certificate Public Key
       description: Creates a new X.509 certificate credential to the IdP key store.
       operationId: createIdentityProviderKey
-      x-codegen-request-body-name: jsonWebKey
+      x-codegen-request-body-name: x5c
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JsonWebKey'
+              type: object
+              properties:
+                x5c:
+                  description: X.509 certificate chain that contains a chain of one or more certificates
+                  type: array
+                  items:
+                    type: string
         required: true
       responses:
         '200':
