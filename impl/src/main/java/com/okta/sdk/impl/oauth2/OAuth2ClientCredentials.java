@@ -52,8 +52,6 @@ public class OAuth2ClientCredentials extends OAuth implements ClientCredentials<
         if (oAuth2AccessToken != null &&
             // refresh 5 minutes before token expiration
             oAuth2AccessToken.getExpiresAt().minus(5, ChronoUnit.MINUTES).isBefore(Instant.now())) {
-            oAuth2AccessToken = null;
-            setAccessToken(null);
             refreshOAuth2AccessToken();
         }
         super.applyToParams(queryParams, headerParams, cookieParams);
