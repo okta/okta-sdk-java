@@ -54,7 +54,7 @@ You can learn more on the [Okta + Java][lang-landing] page in our documentation.
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The latest stable major version series is: 16.x.x
+:heavy_check_mark: The latest stable major version series is: 18.x.x
 
 | Version                                                     | Status                                                                                                                                   |
 |-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
@@ -67,6 +67,8 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 14.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-14.0.0))                       |
 | 15.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-15.0.0))                       |
 | 16.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-16.0.0))                       |
+| 17.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-17.0.0))                       |
+| 18.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-18.0.0))                       |
 
 The latest release can always be found on the [releases page][github-releases].
  
