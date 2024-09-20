@@ -302,41 +302,48 @@ public class ReadmeSnippets {
 
         ApiClient apiClient = buildApiClient("orgBaseUrl", "apiKey");
 
-        // Create a BookmarkApplication
-        BookmarkApplication bookmarkApplication = new BookmarkApplication();
-        bookmarkApplication.setName(BookmarkApplication.NameEnum.BOOKMARK);
-        bookmarkApplication.setLabel("Sample Bookmark App");
-        bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
-        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
-        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
-            new BookmarkApplicationSettingsApplication();
-        bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
-        bookmarkApplicationSettingsApplication.setRequestIntegration(false);
-        bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
-        bookmarkApplication.setSettings(bookmarkApplicationSettings);
+        // Create a User
+        String email = "joe.coder+" + UUID.randomUUID() + "@example.com";
 
-        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-        List<Pair> localVarQueryParams = new ArrayList<>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-        Map<String, String> localVarHeaderParams = new HashMap<>();
-        Map<String, String> localVarCookieParams = new HashMap<>();
-        Map<String, Object> localVarFormParams = new HashMap<>();
+        UserProfile userProfile = new com.okta.sdk.resource.model.UserProfile()
+            .firstName("Joe")
+            .lastName("Coder")
+            .email(email)
+            .mobilePhone("1234567890")
+            .login(email);
 
-        BookmarkApplication createdApp = apiClient.invokeAPI(
-            "/api/v1/apps",   // path
-            HttpMethod.POST.name(),   // http method
-            localVarQueryParams,   // query params
-            localVarCollectionQueryParams, // collection query params
-            localVarQueryStringJoiner.toString(),
-            bookmarkApplication,   // request body
-            localVarHeaderParams,   // header params
-            localVarCookieParams,   // cookie params
-            localVarFormParams,   // form params
-            MediaType.APPLICATION_JSON_VALUE,   // accept
-            MediaType.APPLICATION_JSON_VALUE,   // content type
-            new String[]{ "apiToken", "oauth2" },   // auth names
-            new TypeReference<BookmarkApplication>() { }  // return type
-        );
+        com.okta.sdk.resource.model.CreateUserRequest createUserRequest = new com.okta.sdk.resource.model.CreateUserRequest();
+        createUserRequest.setProfile(userProfile);
+
+        List<com.okta.sdk.resource.client.Pair> queryParams = new ArrayList<com.okta.sdk.resource.client.Pair>();
+        queryParams.addAll(client.parameterToPair("activate", "true"));
+        queryParams.addAll(client.parameterToPair("provider", null));
+        queryParams.addAll(client.parameterToPair("nextLogin", null));
+
+        List<com.okta.sdk.resource.client.Pair> collectionQueryParams = new ArrayList<com.okta.sdk.resource.client.Pair>();
+
+        Map<String, String> headerParams = new HashMap<String, String>();
+        Map<String, String> cookieParams = new HashMap<String, String>();
+        Map<String, Object> formParams = new HashMap<String, Object>();
+
+        TypeReference<com.okta.sdk.resource.model.User> returnType = new TypeReference<com.okta.sdk.resource.model.User>() {
+        };
+
+        com.okta.sdk.resource.model.User user = client.invokeAPI(
+            "/api/v1/users",
+            "POST",
+            queryParams,
+            collectionQueryParams,
+            new StringJoiner("&").toString(),
+            createUserRequest,
+            headerParams,
+            cookieParams,
+            formParams,
+            "application/json",
+            "application/json",
+            new String[] { "apiToken", "oauth2" },
+            returnType);
+
     }
 
     private void paginate() throws ApiException {
