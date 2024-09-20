@@ -15,6 +15,45 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.api.IdentityProviderUsersApi
+import com.okta.sdk.resource.model.IdentityProvider
+import com.okta.sdk.resource.model.IdentityProviderApplicationUser
+import com.okta.sdk.resource.model.IdentityProviderCredentials
+import com.okta.sdk.resource.model.IdentityProviderCredentialsClient
+import com.okta.sdk.resource.model.IdentityProviderIssuerMode
+import com.okta.sdk.resource.model.IdentityProviderPolicy
+import com.okta.sdk.resource.model.IdentityProviderType
+import com.okta.sdk.resource.model.IssuerMode
+import com.okta.sdk.resource.model.LifecycleStatus
+import com.okta.sdk.resource.model.OidcAlgorithms
+import com.okta.sdk.resource.model.OidcRequestAlgorithm
+import com.okta.sdk.resource.model.PolicyAccountLink
+import com.okta.sdk.resource.model.PolicyAccountLinkAction
+import com.okta.sdk.resource.model.PolicySubject
+import com.okta.sdk.resource.model.PolicySubjectMatchType
+import com.okta.sdk.resource.model.PolicyUserNameTemplate
+import com.okta.sdk.resource.model.Protocol
+import com.okta.sdk.resource.model.ProtocolAlgorithmType
+import com.okta.sdk.resource.model.ProtocolAlgorithmTypeSignature
+import com.okta.sdk.resource.model.ProtocolAlgorithmTypeSignatureScope
+import com.okta.sdk.resource.model.ProtocolAlgorithms
+import com.okta.sdk.resource.model.ProtocolEndpoint
+import com.okta.sdk.resource.model.ProtocolEndpointBinding
+import com.okta.sdk.resource.model.ProtocolEndpointType
+import com.okta.sdk.resource.model.ProtocolEndpoints
+import com.okta.sdk.resource.model.ProtocolType
+import com.okta.sdk.resource.model.Provisioning
+import com.okta.sdk.resource.model.ProvisioningAction
+import com.okta.sdk.resource.model.ProvisioningConditions
+import com.okta.sdk.resource.model.ProvisioningDeprovisionedAction
+import com.okta.sdk.resource.model.ProvisioningDeprovisionedCondition
+import com.okta.sdk.resource.model.ProvisioningGroups
+import com.okta.sdk.resource.model.ProvisioningGroupsAction
+import com.okta.sdk.resource.model.ProvisioningSuspendedAction
+import com.okta.sdk.resource.model.ProvisioningSuspendedCondition
+import com.okta.sdk.resource.model.SocialAuthToken
+import com.okta.sdk.resource.model.User
+import com.okta.sdk.resource.model.UserIdentityProviderLinkRequest
 import com.okta.sdk.tests.it.util.ITSupport
 import com.okta.sdk.resource.api.IdentityProviderApi
 import com.okta.sdk.resource.model.*
@@ -30,6 +69,7 @@ import static org.hamcrest.Matchers.*
 class IdpIT extends ITSupport {
 
     IdentityProviderApi identityProviderApi = new IdentityProviderApi(getClient())
+    IdentityProviderUsersApi identityProviderUsersApi = new IdentityProviderUsersApi(getClient())
 
     @Test (groups = "group2")
     void oidcIdpLifecycleTest() {
@@ -40,7 +80,7 @@ class IdpIT extends ITSupport {
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.OIDC)
-        idp.setIssuerMode(IssuerMode.ORG_URL)
+        idp.setIssuerMode(IdentityProviderIssuerMode.ORG_URL)
         Protocol protocol = new Protocol()
 
         ProtocolAlgorithmType protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
@@ -155,7 +195,7 @@ class IdpIT extends ITSupport {
         IdentityProvider newIdp = new IdentityProvider()
         newIdp.setName(newName)
         newIdp.setType(IdentityProviderType.OIDC)
-        newIdp.setIssuerMode(IssuerMode.ORG_URL)
+        newIdp.setIssuerMode(IdentityProviderIssuerMode.ORG_URL)
         protocol = new Protocol()
 
         protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
@@ -286,7 +326,7 @@ class IdpIT extends ITSupport {
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.OIDC)
-        idp.setIssuerMode(IssuerMode.ORG_URL)
+        idp.setIssuerMode(IdentityProviderIssuerMode.ORG_URL)
         Protocol protocol = new Protocol()
 
         ProtocolAlgorithmType protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
@@ -379,24 +419,24 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), hasSize(0))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), hasSize(0))
 
         // link user
         UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
         userIdentityProviderLinkRequest.setExternalId("external-id")
-        identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
+        identityProviderUsersApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), hasSize(1))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), hasSize(1))
 
         // unlink user
-        identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
+        identityProviderUsersApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), hasSize(0))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), hasSize(0))
 
         // list social auth tokens
-        List<SocialAuthToken> socialAuthTokenList = identityProviderApi.listSocialAuthTokens(createdIdp.getId(), createdUser.getId())
+        List<SocialAuthToken> socialAuthTokenList = identityProviderUsersApi.listSocialAuthTokens(createdIdp.getId(), createdUser.getId())
         assertThat(socialAuthTokenList, iterableWithSize(0))
 
         // deactivate
@@ -466,21 +506,21 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // link user
         UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
         userIdentityProviderLinkRequest.setExternalId("external-id")
-        identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
+        identityProviderUsersApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
 
         // unlink user
-        identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
+        identityProviderUsersApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // deactivate
         identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
@@ -549,21 +589,21 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // link user
         UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
         userIdentityProviderLinkRequest.setExternalId("external-id")
-        identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
+        identityProviderUsersApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
 
         // unlink user
-        identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
+        identityProviderUsersApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // deactivate
         identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
@@ -632,21 +672,21 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // link user
         UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
         userIdentityProviderLinkRequest.setExternalId("external-id")
-        identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
+        identityProviderUsersApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
 
         // unlink user
-        identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
+        identityProviderUsersApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // deactivate
         identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
@@ -715,21 +755,21 @@ class IdpIT extends ITSupport {
         registerForCleanup(createdIdp)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // link user
         UserIdentityProviderLinkRequest userIdentityProviderLinkRequest = new UserIdentityProviderLinkRequest()
         userIdentityProviderLinkRequest.setExternalId("external-id")
-        identityProviderApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
+        identityProviderUsersApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
 
         // unlink user
-        identityProviderApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
+        identityProviderUsersApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
         // list linked idp users
-        assertThat(identityProviderApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
+        assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // deactivate
         identityProviderApi.deactivateIdentityProvider(createdIdp.getId())

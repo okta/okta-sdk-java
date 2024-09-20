@@ -58,6 +58,10 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
 
     OIDCApplicationBuilder setClientId(String clientId);
 
+    OIDCApplicationBuilder setLoginUrl(String loginUrl);
+
+    OIDCApplicationBuilder setRedirectUrl(String redirectUrl);
+
     OIDCApplicationBuilder setClientSecret(String clientSecret);
 
     OIDCApplicationBuilder setAutoKeyRotation(Boolean autoKeyRotation);

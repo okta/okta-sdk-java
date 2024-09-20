@@ -22,8 +22,6 @@ import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.model.GroupProfile;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Objects;
 
 public class GroupProfileSerializer extends StdSerializer<GroupProfile> {
 
@@ -48,14 +46,6 @@ public class GroupProfileSerializer extends StdSerializer<GroupProfile> {
 
         if (Strings.hasText(groupProfile.getDescription())) {
             jgen.writeStringField(GroupProfile.JSON_PROPERTY_DESCRIPTION, groupProfile.getDescription());
-        }
-
-        Map<String, Object> additionalProperties = groupProfile.getAdditionalProperties();
-
-        if (Objects.nonNull(additionalProperties) && !additionalProperties.isEmpty()) {
-            for (Map.Entry<String, Object> entry : additionalProperties.entrySet()) {
-                jgen.writeObjectField(entry.getKey(), entry.getValue());
-            }
         }
 
         jgen.writeEndObject();

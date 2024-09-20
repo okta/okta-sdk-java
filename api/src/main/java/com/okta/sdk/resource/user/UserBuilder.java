@@ -21,7 +21,6 @@ import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.model.AuthenticationProvider;
 import com.okta.sdk.resource.model.User;
 import com.okta.sdk.resource.model.UserNextLogin;
-import com.okta.sdk.resource.model.UserType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -106,8 +105,6 @@ public interface UserBuilder {
     UserBuilder setActive(Boolean active);
 
     UserBuilder setProvider(AuthenticationProvider provider);
-
-    UserBuilder setType(UserType userType);
 
     UserBuilder setType(String userTypeId);
 

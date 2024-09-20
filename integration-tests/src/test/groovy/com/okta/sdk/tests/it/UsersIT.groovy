@@ -15,25 +15,37 @@
  */
 package com.okta.sdk.tests.it
 
-
 import com.okta.sdk.impl.resource.DefaultGroupBuilder
 import com.okta.sdk.resource.api.ApplicationApi
 import com.okta.sdk.resource.api.ApplicationGroupsApi
 import com.okta.sdk.resource.api.GroupApi
 import com.okta.sdk.resource.api.PolicyApi
-import com.okta.sdk.resource.api.RoleAssignmentApi
-import com.okta.sdk.resource.api.RoleTargetApi
+import com.okta.sdk.resource.api.RoleAssignmentAUserApi
+import com.okta.sdk.resource.api.RoleAssignmentClientApi
+import com.okta.sdk.resource.api.RoleBTargetAdminApi
+import com.okta.sdk.resource.api.RoleBTargetBGroupApi
 import com.okta.sdk.resource.api.UserApi
+import com.okta.sdk.resource.api.UserCredApi
+import com.okta.sdk.resource.api.UserLifecycleApi
+import com.okta.sdk.resource.api.UserResourcesApi
 import com.okta.sdk.resource.api.UserTypeApi
 import com.okta.sdk.resource.group.GroupBuilder
+import com.okta.sdk.resource.model.AddGroupRequest
 import com.okta.sdk.resource.model.Application
 import com.okta.sdk.resource.model.ApplicationGroupAssignment
 import com.okta.sdk.resource.model.AssignRoleRequest
+import com.okta.sdk.resource.model.AssignRoleToUser201Response
+import com.okta.sdk.resource.model.AssignRoleToUserRequest
 import com.okta.sdk.resource.model.AuthenticationProvider
 import com.okta.sdk.resource.model.AuthenticationProviderType
 import com.okta.sdk.resource.model.ChangePasswordRequest
+import com.okta.sdk.resource.model.CreateUserRequestType
+import com.okta.sdk.resource.model.CreateUserTypeRequest
+import com.okta.sdk.resource.model.ForgotPasswordResponse
 import com.okta.sdk.resource.model.Group
 import com.okta.sdk.resource.model.GroupProfile
+import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner
+import com.okta.sdk.resource.model.OktaUserGroupProfile
 import com.okta.sdk.resource.model.PasswordCredential
 import com.okta.sdk.resource.model.PasswordPolicyPasswordSettings
 import com.okta.sdk.resource.model.PasswordPolicyPasswordSettingsAge
@@ -58,6 +70,8 @@ import com.okta.sdk.resource.model.UserGetSingleton
 import com.okta.sdk.resource.model.UserProfile
 import com.okta.sdk.resource.model.UserStatus
 import com.okta.sdk.resource.model.UserType
+import com.okta.sdk.resource.model.UserTypePostRequest
+import com.okta.sdk.resource.model.UserTypePutRequest
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
@@ -85,7 +99,8 @@ class UsersIT extends ITSupport {
     ApplicationGroupsApi applicationGroupsApi = new ApplicationGroupsApi(getClient())
     PolicyApi policyApi = new PolicyApi(getClient())
     UserApi userApi = new UserApi(getClient())
-    RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
+    UserCredApi userCredApi = new UserCredApi(getClient())
+    RoleAssignmentAUserApi roleAssignmentApi = new RoleAssignmentAUserApi(getClient())
 
     @Test
     void doCrudTest() {
@@ -95,9 +110,9 @@ class UsersIT extends ITSupport {
         assertThat(user.getStatus(), equalTo(UserStatus.PROVISIONED))
 
         // deactivate
-        userApi.deactivateUser(user.getId(), false)
+        userApi.deleteUser(user.getId(), false, null)
 
-        UserGetSingleton retrievedUser = userApi.getUser(user.getId(), "false")
+        UserGetSingleton retrievedUser = userApi.getUser(user.getId(), null, "false")
         assertThat(retrievedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
     }
 
@@ -115,7 +130,7 @@ class UsersIT extends ITSupport {
         // 1. Create a User Type
         String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
 
-        UserType userType = new UserType()
+        CreateUserTypeRequest userType = new CreateUserTypeRequest()
             .name(name)
             .displayName(name)
             .description(name + "_test_description")
@@ -144,7 +159,7 @@ class UsersIT extends ITSupport {
         Thread.sleep(getTestOperationDelay())
 
         // 4.Verify user in list of active users
-        List<User> users = userApi.listUsers(null, null, null, 'status eq \"ACTIVE\"', null, null, null)
+        List<User> users = userApi.listUsers(null, null, null, 200, 'status eq \"ACTIVE\"', null, null, null)
         assertThat(users, hasSize(greaterThan(0)))
         //assertPresent(users, user)
     }
@@ -170,12 +185,16 @@ class UsersIT extends ITSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Activate the user and verify user in list of active users
-        userApi.activateUser(user.getId(), false)
+        UserLifecycleApi userLifecycleApi = new UserLifecycleApi(getClient())
+        userLifecycleApi.activateUser(user.getId(), false)
 
         // fix flakiness seen in PDV tests
         Thread.sleep(getTestOperationDelay())
 
-        List<User> users = userApi.listUsers(null, null, null, 'status eq \"ACTIVE\"', null, null, null)
+        List<User> users = userApi.listUsers(null, null, null, null, 'status eq \"ACTIVE\"', null, null, null)
+
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestOperationDelay())
 
         assertUserPresent(users, user)
     }
@@ -199,7 +218,7 @@ class UsersIT extends ITSupport {
 
         Thread.sleep(getTestOperationDelay())
 
-        UserGetSingleton retrievedUser = userApi.getUser(email, "false")
+        UserGetSingleton retrievedUser = userApi.getUser(email,null, "false")
         assertThat(retrievedUser.id, equalTo(user.id))
     }
 
@@ -222,7 +241,7 @@ class UsersIT extends ITSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        UserGetSingleton retrievedUser = userApi.getUser(email, "false")
+        UserGetSingleton retrievedUser = userApi.getUser(email,null, "false")
         assertThat(retrievedUser.id, equalTo(user.id))
         assertThat(retrievedUser.profile.firstName, equalTo(firstName))
         assertThat(retrievedUser.profile.lastName, equalTo(lastName))
@@ -249,7 +268,7 @@ class UsersIT extends ITSupport {
         Thread.sleep(getTestOperationDelay())
 
         List<User> users =
-            userApi.listUsers(null, null, null, "profile.login eq \"${email}\"", null, null, null)
+            userApi.listUsers(null, null, null, null, "profile.login eq \"${email}\"", null, null, null)
 
         assertUserPresent(users, user)
     }
@@ -275,14 +294,14 @@ class UsersIT extends ITSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Assign USER_ADMIN role to the user
-        AssignRoleRequest assignRoleRequest = new AssignRoleRequest()
-        assignRoleRequest.setType(RoleType.USER_ADMIN)
+        AssignRoleToUserRequest assignRoleToUserRequest = new AssignRoleToUserRequest()
+        assignRoleToUserRequest.setType(RoleType.USER_ADMIN.name())
 
-        Role role = roleAssignmentApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
+        AssignRoleToUser201Response role = roleAssignmentApi.assignRoleToUser(user.getId(), assignRoleToUserRequest, true)
 
         // 3. List roles for the user and verify added role
-        List<Role> roles = roleAssignmentApi.listAssignedRolesForUser(user.getId(), null)
-        Optional<Role> match = roles.stream().filter(r -> r.getId() == role.getId()).findAny()
+        List<ListGroupAssignedRoles200ResponseInner> roles = roleAssignmentApi.listAssignedRolesForUser(user.getId(), null)
+        Optional<ListGroupAssignedRoles200ResponseInner> match = roles.stream().filter(r -> r.getId() == role.getId()).findAny()
         assertThat(match.isPresent(), is(true))
 
         // 4. Verify added role
@@ -326,12 +345,12 @@ class UsersIT extends ITSupport {
         passwordCredentialNew.setValue("!2@3#Passw0rd")
         changePasswordRequest.setNewPassword(passwordCredentialNew)
 
-        UserCredentials userCredentials = userApi.changePassword(user.getId(), changePasswordRequest, true)
+        UserCredentials userCredentials = userCredApi.changePassword(user.getId(), changePasswordRequest, true)
         assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
         // TODO: fix har file
-        userApi.getUser(user.getId(), "false")
+        userApi.getUser(user.getId(),null,"false")
     }
 
     @Test(expectedExceptions = ApiException, groups = "group2")
@@ -344,12 +363,12 @@ class UsersIT extends ITSupport {
 
         String name = "java-sdk-it-${UUID.randomUUID().toString()}"
 
-        Group group = new Group()
-        GroupProfile groupProfile = new GroupProfile()
-        groupProfile.setName(name)
-        groupProfile.setDescription(name)
-        group.setProfile(groupProfile)
-        Group createdGroup = groupApi.createGroup(group)
+        OktaUserGroupProfile oktaUserGroupProfile = new OktaUserGroupProfile()
+        oktaUserGroupProfile.setName(name)
+        oktaUserGroupProfile.setDescription(name)
+        AddGroupRequest addGroupRequest = new AddGroupRequest()
+        addGroupRequest.setProfile(oktaUserGroupProfile)
+        Group createdGroup = groupApi.addGroup(addGroupRequest)
         registerForCleanup(createdGroup)
 
         assertThat createdGroup, notNullValue()
@@ -397,7 +416,7 @@ class UsersIT extends ITSupport {
         passwordPolicyRule.setActions(passwordPolicyRuleActions)
         passwordPolicyRule.setName(policyRuleName)
 
-        policyApi.createPolicyRule(policy.getId(), passwordPolicyRule, true)
+        policyApi.createPolicyRule(policy.getId(), passwordPolicyRule, null, true)
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -421,14 +440,14 @@ class UsersIT extends ITSupport {
             .newPassword(passwordCredentialNew)
 
         // would throw a HTTP 403
-        userApi.changePassword(user.getId(), changePasswordRequest, true)
+        userCredApi.changePassword(user.getId(), changePasswordRequest, true)
 
-        UserCredentials userCredentials = userApi.changePassword(user.getId(), changePasswordRequest, false)
+        UserCredentials userCredentials = userCredApi.changePassword(user.getId(), changePasswordRequest, false)
         assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
 
         // 3. make the test recording happy, and call a get on the user
         // TODO: fix har file
-        userApi.getUser(user.getId(), "false")
+        userApi.getUser(user.getId(), null, "false")
     }
 
     @Test(expectedExceptions = ApiException, groups = "group2")
@@ -463,7 +482,7 @@ class UsersIT extends ITSupport {
         userCredentials.setPassword(passwordCredential)
         userCredentials.setRecoveryQuestion(recoveryQuestionCredential)
 
-        userCredentials = userApi.changeRecoveryQuestion(user.getId(), userCredentials)
+        userCredentials = userCredApi.changeRecoveryQuestion(user.getId(), userCredentials)
 
         assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
         assertThat userCredentials.getRecoveryQuestion().question, equalTo('How many roads must a man walk down?')
@@ -473,11 +492,11 @@ class UsersIT extends ITSupport {
         userCredentials.getRecoveryQuestion().answer = 'forty two'
 
         // below would throw HTTP 403 exception
-        userApi.changeRecoveryQuestion(user.getId(), userCredentials)
+        userCredApi.changeRecoveryQuestion(user.getId(), userCredentials)
 
         // 4. make the test recording happy, and call a get on the user
         // TODO: fix har file
-        userApi.getUser(user.getId(), "false")
+        userApi.getUser(user.getId(), null, "false")
     }
 
     @Test (groups = "bacon")
@@ -499,8 +518,8 @@ class UsersIT extends ITSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        ResetPasswordToken response = userApi.generateResetPasswordToken(user.getId(), false, false)
-        assertThat response.getResetPasswordUrl(), containsString("/reset_password/")
+        ForgotPasswordResponse forgotPasswordResponse = userCredApi.forgotPassword(user.getId(), false)
+        assertThat forgotPasswordResponse.getResetPasswordUrl(), containsString("/reset-password/")
     }
 
     @Test (groups = "group2")
@@ -526,7 +545,7 @@ class UsersIT extends ITSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Expire the user's password
-        User updatedUser = userApi.expirePassword(user.getId())
+        User updatedUser = userCredApi.expirePassword(user.getId())
         assertThat updatedUser, notNullValue()
         assertThat updatedUser.getStatus().name(), equalTo("PASSWORD_EXPIRED")
     }
@@ -552,8 +571,8 @@ class UsersIT extends ITSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Get the reset password link
-        ResetPasswordToken token = userApi.generateResetPasswordToken(user.getId(), false, false)
-        assertThat token.getResetPasswordUrl(), notNullValue()
+        ForgotPasswordResponse forgotPasswordResponse = userCredApi.forgotPassword(user.getId(), false)
+        assertThat forgotPasswordResponse.getResetPasswordUrl(), notNullValue()
     }
 
     @Test (groups = "group2")
@@ -578,20 +597,26 @@ class UsersIT extends ITSupport {
         validateUser(createdUser, firstName, lastName, email)
 
         // 2. Get the user by user ID
-        UserGetSingleton user = userApi.getUser(createdUser.getId(), "false")
+        UserGetSingleton user = userApi.getUser(createdUser.getId(), null, "false")
         validateUser(user, firstName, lastName, email)
 
         // 3. Get the user by user login
-        UserGetSingleton userByLogin = userApi.getUser(createdUser.getProfile().getLogin(), "false")
+        UserGetSingleton userByLogin = userApi.getUser(createdUser.getProfile().getLogin(), null, "false")
         validateUser(userByLogin, firstName, lastName, email)
 
-        // 3. deactivate and delete the user
-        userApi.deactivateUser(user.getId(), false)
-        userApi.deleteUser(user.getId(), false)
+        // 3. deactivate the user
+        userApi.deleteUser(user.getId(), false, null)
+
+        // 4. delete the user
+        // Second delete API call is required to delete the user
+        // Ref: https://developer.okta.com/docs/api/openapi/okta-management/management/tag/User/#tag/User/operation/deleteUser
+        userApi.deleteUser(user.getId(), false, null)
+
+        Thread.sleep(getTestOperationDelay())
 
         // 4. get user expect 404
         expect(ApiException) {
-            userApi.getUser(email, "false")
+            userApi.getUser(email, null, "false")
         }
     }
 
@@ -605,8 +630,11 @@ class UsersIT extends ITSupport {
         def email = "john-${uniqueTestName}@example.com"
         def groupName = "Group-Target Test Group ${uniqueTestName}"
 
-        RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
-        RoleTargetApi roleTargetApi = new RoleTargetApi(getClient())
+        RoleAssignmentAUserApi roleAssignmentApi = new RoleAssignmentAUserApi(getClient())
+        RoleBTargetAdminApi roleTargetApi = new RoleBTargetAdminApi(getClient())
+
+        //RoleAssignmentApi roleAssignmentApi = new RoleAssignmentApi(getClient())
+        //RoleTargetApi roleTargetApi = new RoleTargetApi(getClient())
 
         // 1. Create a user
         User user = UserBuilder.instance()
@@ -626,10 +654,10 @@ class UsersIT extends ITSupport {
         validateGroup(group, groupName)
 
         // 2. Assign USER_ADMIN role to the user
-        AssignRoleRequest assignRoleRequest = new AssignRoleRequest()
-        assignRoleRequest.setType(RoleType.USER_ADMIN)
+        AssignRoleToUserRequest assignRoleRequest = new AssignRoleToUserRequest()
+        assignRoleRequest.setType(RoleType.USER_ADMIN.name())
 
-        Role role = roleAssignmentApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
+        AssignRoleToUser201Response role = roleAssignmentApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
 
         // 3. Add Group Target to User Admin Role
         roleTargetApi.assignGroupTargetToUserRole(user.getId(), role.getId(), group.getId())
@@ -717,7 +745,7 @@ class UsersIT extends ITSupport {
 
         userApi.updateUser(user.getId(), updateUserRequest, true)
 
-        UserGetSingleton updatedUser = userApi.getUser(user.getId(), "false")
+        UserGetSingleton updatedUser = userApi.getUser(user.getId(), null, "false")
 
         assertThat(updatedUser.lastUpdated, greaterThan(originalLastUpdated))
         assertThat(updatedUser.getProfile(), not(user.getProfile()))
@@ -746,19 +774,23 @@ class UsersIT extends ITSupport {
         validateUser(user, firstName, lastName, email)
 
         // 2. Suspend the user and verify user in list of suspended users
-        userApi.suspendUser(user.getId())
+        UserLifecycleApi userLifecycleApi = new UserLifecycleApi(getClient())
+        userLifecycleApi.suspendUser(user.getId())
 
         // fix flakiness seen in PDV tests
         Thread.sleep(getTestOperationDelay())
 
-        List<User> users = userApi.listUsers(null, null, null, 'status eq \"SUSPENDED\"',null, null, null)
+        List<User> users = userApi.listUsers(null, null, null, null, 'status eq \"SUSPENDED\"',null, null, null)
         Optional<User> match = users.stream().filter(u -> u.getId() == user.getId()).findAny()
         assertThat(match.isPresent(), is(true))
 
         // 3. Unsuspend the user and verify user in list of active users
-        userApi.unsuspendUser(user.getId())
+        userLifecycleApi.unsuspendUser(user.getId())
 
-        users = userApi.listUsers(null, null, null, 'status eq \"ACTIVE\"',null, null, null)
+        // fix flakiness seen in PDV tests
+        Thread.sleep(getTestOperationDelay())
+
+        users = userApi.listUsers(null, null, null, null, 'status eq \"ACTIVE\"',null, null, null)
         match = users.stream().filter(u -> u.getId() == user.getId()).findAny()
         assertThat(match.isPresent(), is(true))
     }
@@ -768,7 +800,7 @@ class UsersIT extends ITSupport {
         def userId = "invalid-user-id-${uniqueTestName}@example.com"
 
         expect(ApiException) {
-            userApi.getUser(userId, "false")
+            userApi.getUser(userId, null, "false")
         }
     }
 
@@ -800,7 +832,9 @@ class UsersIT extends ITSupport {
         registerForCleanup(createUser)
         validateUser(createUser, firstName, lastName, email)
 
-        List<Group> groups = userApi.listUserGroups(createUser.getId(), null, 10).stream().collect(Collectors.toList())
+        UserResourcesApi userResourcesApi = new UserResourcesApi(getClient())
+\
+        List<Group> groups = userResourcesApi.listUserGroups(createUser.getId()).stream().collect(Collectors.toList())
         assertThat groups, allOf(hasSize(2))
         assertThat groups.get(0).getProfile().name, equalTo("Everyone")
         assertThat groups.get(1).getId(), equalTo(group.id)
@@ -860,7 +894,7 @@ class UsersIT extends ITSupport {
         userCredentials.setPassword(passwordCredential)
         userCredentials.setRecoveryQuestion(recoveryQuestionCredential)
 
-        userCredentials = userApi.forgotPasswordSetNewPassword(user.getId(), userCredentials, false)
+        userCredentials = userCredApi.forgotPasswordSetNewPassword(user.getId(), userCredentials, false)
         assertThat userCredentials.getRecoveryQuestion().getQuestion(), equalTo("How many roads must a man walk down?")
         assertThat userCredentials.getProvider().getType(), equalTo(AuthenticationProviderType.OKTA)
     }
@@ -901,7 +935,7 @@ class UsersIT extends ITSupport {
         def expandParameter = "group"
 
         List<Application> applicationList =
-            applicationApi.listApplications( null, null, null, null, null, null)
+            applicationApi.listApplications( null, null, null, null, null, null, null)
 
         Application application = applicationList.first()
 

@@ -15,7 +15,6 @@
  */
 package com.okta.sdk.impl.resource;
 
-import com.okta.commons.lang.Collections;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.PolicyApi;
@@ -76,6 +75,8 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
         if (Objects.nonNull(status))
             policy.setStatus(status);
 
+        // https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Policy/#tag/Policy/operation/createPolicy!path=0/conditions&t=request
+        /*
         policy.setConditions( new OktaSignOnPolicyConditions());
         OktaSignOnPolicyConditions oktaSignOnPolicyConditions = policy.getConditions();
 
@@ -94,6 +95,7 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
             policyPeopleCondition.setUsers(userCondition);
             oktaSignOnPolicyConditions.setPeople(policyPeopleCondition);
         }
+        */
 
         return policy;
     }

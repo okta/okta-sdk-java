@@ -173,9 +173,6 @@ These examples will help you understand how to use this library. You can also br
 Once you initialize a `ApiClient` instance, you can pass this instance to the constructor of any API area clients (such as `UserApi`, `GroupApi`, `ApplicationApi` etc.).
 You can start using these clients to call management APIs relevant to the chosen API area.
 
-Note: For creation (HTTP POST or PUT operation) of models that follow inheritance (e.g. Application, Policy | PolicyRule, UserFactor), use the APIs found in their respective `ApiHelper` class (e.g. `ApplicationApiHelper`, `PolicyApiHelper`, `UserFactorApiHelper`)
-to ensure safe type cast to their respective subclass types.
-
 ### Non-Admin users
 
 Non-admin users will require to be granted specific permissions to perform certain tasks and access resources.
@@ -193,7 +190,7 @@ This library should be used with the Okta management API. For authentication, we
 [//]: # (method: getUser)
 ```java
 UserApi userApi = new UserApi(client);
-userApi.getUser("userId", "true");
+userApi.getUser("userId", "application/json", "true");
 ```
 [//]: # (end: getUser)
 
@@ -202,7 +199,7 @@ userApi.getUser("userId", "true");
 [//]: # (method: listAllUsers)
 ```java
 UserApi userApi = new UserApi(client);
-List<User> users = userApi.listUsers(null, null, 5, null, null, null, null);
+List<User> users = userApi.listUsers("application/json", null, null, 5, null, null, null, null);
 
 // stream
 users.stream()
@@ -221,10 +218,10 @@ For more examples of handling collections see the [pagination](#pagination) sect
 UserApi userApi = new UserApi(client);
 
 // search by email
-List<User> users = userApi.listUsers(null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
+List<User> users = userApi.listUsers("application/json", null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
 
 // filter parameter
-userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
+userApi.listUsers("application/json",null, null, null, "status eq \"ACTIVE\"",null, null, null);
 ```
 [//]: # (end: userSearch)
 
@@ -295,10 +292,10 @@ userApi.updateUser(user.getId(), updateUserRequest, true);
 UserApi userApi = new UserApi(client);
 
 // deactivate first
-userApi.deactivateUser(user.getId(), false);
+userApi.deleteUser(user.getId(), false, null);
 
-// then delete
-userApi.deleteUser(user.getId(), false);
+// see https://developer.okta.com/docs/api/openapi/okta-management/management/tag/User/#tag/User/operation/deleteUser
+userApi.deleteUser(user.getId(), false, null);
 ```
 [//]: # (end: deleteUser)
 
@@ -418,7 +415,7 @@ swaApplicationSettingsApplication.buttonField("btn-login")
 SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings();
 swaApplicationSettings.app(swaApplicationSettingsApplication);
 BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication();
-browserPluginApplication.name("template_swa");
+browserPluginApplication.name(BrowserPluginApplication.NameEnum.SWA);
 browserPluginApplication.label("Sample Plugin App");
 browserPluginApplication.settings(swaApplicationSettings);
 
@@ -442,7 +439,7 @@ BookmarkApplication bookmarkApp = (BookmarkApplication) applicationApi.getApplic
 [//]: # (method: listApplications)
 ```java
 ApplicationApi applicationApi = new ApplicationApi(client);
-List<Application> applications = applicationApi.listApplications(null, null, null, null, null, true);
+List<Application> applications = applicationApi.listApplications(null, null, true, null, null, null, true);
 ```
 [//]: # (end: listApplications)
 
@@ -451,8 +448,8 @@ List<Application> applications = applicationApi.listApplications(null, null, nul
 [//]: # (method: getPolicy)
 ```java
 PolicyApi policyApi = new PolicyApi(client);
-MultifactorEnrollmentPolicy mfaPolicy =
-    (MultifactorEnrollmentPolicy) policyApi.getPolicy("mfa-policy-id", null);
+Policy policy =
+    policyApi.getPolicy("policy-id", null);
 ```
 [//]: # (end: getPolicy)
 
@@ -461,7 +458,7 @@ MultifactorEnrollmentPolicy mfaPolicy =
 [//]: # (method: listPolicies)
 ```java
 PolicyApi policyApi = new PolicyApi(client);
-List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null, null, null, null);
+List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null, null, null, null, null, null);
 ```
 [//]: # (end: listPolicies)
 
@@ -472,7 +469,7 @@ SystemLogApi systemLogApi = new SystemLogApi(client);
 
 // use a filter (start date, end date, filter, or query, sort order) all options are nullable
 List<LogEvent> logEvents =
-    systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
+    systemLogApi.listLogEvents(null, null, null, "interestingURI.com", null, 100, "ASCENDING");
 ```
 [//]: # (end: listSysLogs)
 
@@ -484,39 +481,41 @@ Not every API endpoint is represented by a method in this library. You can call 
 ```java
 ApiClient apiClient = buildApiClient("orgBaseUrl", "apiKey");
 
-// Create a BookmarkApplication
-BookmarkApplication bookmarkApplication = new BookmarkApplication();
-bookmarkApplication.setName("bookmark");
-bookmarkApplication.setLabel("Sample Bookmark App");
-bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
-BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
-BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
-    new BookmarkApplicationSettingsApplication();
-bookmarkApplicationSettingsApplication.setUrl("https://example.com/bookmark.htm");
-bookmarkApplicationSettingsApplication.setRequestIntegration(false);
-bookmarkApplicationSettings.setApp(bookmarkApplicationSettingsApplication);
-bookmarkApplication.setSettings(bookmarkApplicationSettings);
-StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
-List<Pair> localVarQueryParams = new ArrayList<>();
-List<Pair> localVarCollectionQueryParams = new ArrayList<>();
-Map<String, String> localVarHeaderParams = new HashMap<>();
-Map<String, String> localVarCookieParams = new HashMap<>();
-Map<String, Object> localVarFormParams = new HashMap<>();
-BookmarkApplication createdApp = apiClient.invokeAPI(
-    "/api/v1/apps",   // path
-    HttpMethod.POST.name(),   // http method
-    localVarQueryParams,   // query params
-    localVarCollectionQueryParams, // collection query params
-    localVarQueryStringJoiner.toString(),
-    bookmarkApplication,   // request body
-    localVarHeaderParams,   // header params
-    localVarCookieParams,   // cookie params
-    localVarFormParams,   // form params
-    MediaType.APPLICATION_JSON_VALUE,   // accept
-    MediaType.APPLICATION_JSON_VALUE,   // content type
-    new String[]{ "apiToken", "oauth2" },   // auth names
-    new TypeReference<BookmarkApplication>() { }  // return type
-);
+// Create a User
+String email = "joe.coder+" + UUID.randomUUID() + "@example.com";
+UserProfile userProfile = new com.okta.sdk.resource.model.UserProfile()
+    .firstName("Joe")
+    .lastName("Coder")
+    .email(email)
+    .mobilePhone("1234567890")
+    .login(email);
+com.okta.sdk.resource.model.CreateUserRequest createUserRequest = new com.okta.sdk.resource.model.CreateUserRequest();
+createUserRequest.setProfile(userProfile);
+List<com.okta.sdk.resource.client.Pair> queryParams = new ArrayList<com.okta.sdk.resource.client.Pair>();
+queryParams.addAll(client.parameterToPair("activate", "true"));
+queryParams.addAll(client.parameterToPair("provider", null));
+queryParams.addAll(client.parameterToPair("nextLogin", null));
+List<com.okta.sdk.resource.client.Pair> collectionQueryParams = new ArrayList<com.okta.sdk.resource.client.Pair>();
+Map<String, String> headerParams = new HashMap<String, String>();
+Map<String, String> cookieParams = new HashMap<String, String>();
+Map<String, Object> formParams = new HashMap<String, Object>();
+TypeReference<com.okta.sdk.resource.model.User> returnType = new TypeReference<com.okta.sdk.resource.model.User>() {
+};
+
+com.okta.sdk.resource.model.User user = client.invokeAPI(
+    "/api/v1/users",
+    "POST",
+    queryParams,
+    collectionQueryParams,
+    new StringJoiner("&").toString(),
+    createUserRequest,
+    headerParams,
+    cookieParams,
+    formParams,
+    "application/json",
+    "application/json",
+    new String[] { "apiToken", "oauth2" },
+    returnType);
 ```
 [//]: # (end: callAnotherEndpoint)
 
@@ -530,7 +529,7 @@ UserApi userApi = new UserApi(client);
 List<User> users = new ArrayList<>();
 String after = null;
 do {
-    users.addAll(userApi.listUsers(null, after, 200, null, null, null, null));
+    users.addAll(userApi.listUsers("application/json",null, after, 200, null, null, null, null));
     after = PaginationUtil.getAfter(userApi.getApiClient());
 } while (StringUtils.isNotBlank(after));
 ```

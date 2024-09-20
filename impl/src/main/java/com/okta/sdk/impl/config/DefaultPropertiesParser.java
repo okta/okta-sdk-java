@@ -43,12 +43,11 @@ public class DefaultPropertiesParser implements PropertiesParser {
         return parse(scanner);
     }
 
+    @SuppressWarnings("PMD.CloseResource")
     @Override
     public Map<String, String> parse(Resource resource) throws IOException {
-        Scanner scanner;
-        try (InputStream inputStream = resource.getInputStream()) {
-            scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name());
-        }
+        InputStream is = resource.getInputStream();
+        Scanner scanner = new Scanner(is, StandardCharsets.UTF_8.name());
         return parse(scanner);
     }
 

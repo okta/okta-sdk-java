@@ -16,6 +16,7 @@
 package com.okta.sdk.tests.it.util
 
 import com.okta.sdk.client.Clients
+import com.okta.sdk.resource.api.GroupRuleApi
 import com.okta.sdk.resource.client.ApiClient
 import com.okta.sdk.resource.api.ApplicationApi
 import com.okta.sdk.resource.api.AuthorizationServerApi
@@ -49,27 +50,29 @@ class OktaOrgCleaner {
         UserApi userApi = new UserApi(client)
 
         log.info("Deleting Active Users:")
-        userApi.listUsers(null, null, null, 'status eq \"ACTIVE\"', null, null, null)
+        userApi.listUsers(null, null, null, null,'status eq \"ACTIVE\"', null, null, null)
             .stream()
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
             .forEach {
                 log.info("\t ${it.getProfile().getEmail()}")
                 // deactivate
-                userApi.deactivateUser(it.getId(),false)
+                userApi.deleteUser(it.getId(), false, null)
                 // delete
-                userApi.deleteUser(it.getId(), false)
+                // second delete API call is required
+                // see https://developer.okta.com/docs/api/openapi/okta-management/management/tag/User/#tag/User/operation/deleteUser
+                userApi.deleteUser(it.getId(), false, null)
             }
 
-        userApi.listUsers(null, null, null, 'status eq \"DEPROVISIONED\"', null, null, null)
+        userApi.listUsers(null, null, null, null, 'status eq \"DEPROVISIONED\"', null, null, null)
             .forEach {
                 log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
-                userApi.deleteUser(it.getId(), false)
+                userApi.deleteUser(it.getId(), false, null)
             }
 
         ApplicationApi applicationApi = new ApplicationApi(client)
 
         log.info("Deleting Applications:")
-        applicationApi.listApplications(null, null, 100, null, null, true).stream()
+        applicationApi.listApplications(null, null, true, 100, null, null, true).stream()
             .filter { it.getLabel().startsWith(prefix) && it.getLabel().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getLabel()}")
@@ -87,8 +90,10 @@ class OktaOrgCleaner {
                 groupApi.deleteGroup(it.getId())
             }
 
+        GroupRuleApi groupRuleApi = new GroupRuleApi(client)
+
         log.info("Deleting Group Rules:")
-        groupApi.listGroupRules(1000, null, null, null).stream()
+        groupRuleApi.listGroupRules(1000, null, null, null).stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 GroupRule rule = it
@@ -102,7 +107,7 @@ class OktaOrgCleaner {
         PolicyApi policyApi = new PolicyApi(client)
 
         log.info("Deleting Policies:")
-        policyApi.listPolicies("OKTA_SIGN_ON", null, null, null, null, null).stream()
+        policyApi.listPolicies("OKTA_SIGN_ON", null, null, null, null, null, null, null).stream()
             .filter { it.getName().startsWith(prefix) && it.getName().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getName()}")

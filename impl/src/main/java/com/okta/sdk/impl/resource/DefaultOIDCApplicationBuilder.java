@@ -19,6 +19,7 @@ import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.application.OIDCApplicationBuilder;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.ApplicationApi;
+import com.okta.sdk.resource.model.AutoLoginApplicationSettingsSignOn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,8 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     private List<com.okta.sdk.resource.model.OAuthGrantType> grantTypes = new ArrayList<>();
     private String logoUri;
     private String policyUri;
+    private String loginUrl;
+    private String redirectUrl;
     private List<String> postLogoutRedirectUris = new ArrayList<>();
     private List<String> redirectUris = new ArrayList<>();
     private List<com.okta.sdk.resource.model.OAuthResponseType> responseTypes = new ArrayList<>();
@@ -128,6 +131,18 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
+    public OIDCApplicationBuilder setLoginUrl(String loginUrl) {
+        this.loginUrl = loginUrl;
+        return this;
+    }
+
+    @Override
+    public OIDCApplicationBuilder setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+        return this;
+    }
+
+    @Override
     public OIDCApplicationBuilder setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
         return this;
@@ -173,6 +188,8 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         com.okta.sdk.resource.model.OpenIdConnectApplication application = new com.okta.sdk.resource.model.OpenIdConnectApplication();
 
         if (Strings.hasText(label)) application.setLabel(label);
+
+        if (Strings.hasText(name)) application.setName(name);
 
         application.setSignOnMode(com.okta.sdk.resource.model.ApplicationSignOnMode.OPENID_CONNECT);
 
@@ -272,6 +289,16 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
         application.setCredentials(oAuthApplicationCredentials);
 
         openIdConnectApplicationSettings.setOauthClient(openIdConnectApplicationSettingsClient);
+
+        AutoLoginApplicationSettingsSignOn autoLoginApplicationSettingsSignOn = new AutoLoginApplicationSettingsSignOn();
+        if (Strings.hasText(loginUrl))
+            autoLoginApplicationSettingsSignOn.setLoginUrl(loginUrl);
+
+        if (Strings.hasText(redirectUrl))
+            autoLoginApplicationSettingsSignOn.setRedirectUrl(redirectUrl);
+
+        if (Strings.hasText(autoLoginApplicationSettingsSignOn.getLoginUrl()))
+            openIdConnectApplicationSettings.setSignOn(autoLoginApplicationSettingsSignOn);
 
         if (!schemasJsonWebKeys.isEmpty()) {
             com.okta.sdk.resource.model.OpenIdConnectApplicationSettingsClientKeys openIdConnectApplicationSettingsClientKeys = new com.okta.sdk.resource.model.OpenIdConnectApplicationSettingsClientKeys();

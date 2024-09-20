@@ -172,7 +172,7 @@ public {{classname}}() { {{#parent}}{{#parcelableModel}}
             public {{classname}} put{{nameInCamelCase}}Item(String key, {{{items.datatypeWithEnum}}} {{name}}Item) {
             {{#vendorExtensions.x-is-jackson-optional-nullable}}
                 if (this.{{name}} == null || !this.{{name}}.isPresent()) {
-                this.{{name}} = JsonNullable.<{{{datatypeWithEnum}}}>of({{{defaultValue}}});
+                this.{{name}} = JsonNullable.<{{{datatypeWithEnum}}}>of(null);
                 }
                 try {
                 this.{{name}}.get().put(key, {{name}}Item);

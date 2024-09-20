@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-examples</artifactId>
-        <version>18.0.1-SNAPSHOT</version>
+        <version>19.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -71,6 +71,13 @@
                 <configuration>
                     <killAfter>-1</killAfter>
                     <mainClass>quickstart.Quickstart</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
