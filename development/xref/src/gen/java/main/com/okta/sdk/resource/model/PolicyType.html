@@ -21,27 +21,27 @@
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> * All Okta orgs contain only one IdP Discovery Policy with an immutable default Rule routing to your org&amp;#39;s sign-in</em>
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment"> * page. Creating or replacing a policy with &amp;#x60;IDP_DISCOVERY&amp;#x60; type isn&amp;#39;t supported. The following policy</em>
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> * types are available with the Okta Identity Engine: &amp;#x60;ACCESS_POLICY&amp;#x60;, &amp;#x60;PROFILE_ENROLLMENT&amp;#x60;,</em>
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * &amp;#x60;CONTINUOUS_ACCESS&amp;#x60;, and &amp;#x60;ENTITY_RISK&amp;#x60;. The &amp;#x60;CONTINUOUS_ACCESS&amp;#x60;, and</em>
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * &amp;#x60;ENTITY_RISK&amp;#x60; policy types are in Early Access (EA). Contact your Okta account team to enable these</em>
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * features.</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment"> * page. Creating or replacing a policy with the &amp;#x60;IDP_DISCOVERY&amp;#x60; type isn&amp;#39;t supported. The following</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> * policy types are available with Identity Engine: &amp;#x60;ACCESS_POLICY&amp;#x60;, &amp;#x60;PROFILE_ENROLLMENT&amp;#x60;,</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * &amp;#x60;POST_AUTH_SESSION&amp;#x60;, and &amp;#x60;ENTITY_RISK&amp;#x60;. The &amp;#x60;POST_AUTH_SESSION&amp;#x60;, and</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * &amp;#x60;ENTITY_RISK&amp;#x60; policy types are in &amp;lt;x-lifecycle class&amp;#x3D;\&amp;quot;ea\&amp;quot;&amp;gt;&amp;lt;/x-lifecycle&amp;gt;.</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * Contact your Okta account team to enable these features.</em>
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">public</strong> enum <a name="PolicyType" href="../../../../../com/okta/sdk/resource/model/PolicyType.html#PolicyType">PolicyType</a> {
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>      ACCESS_POLICY(<span class="jxr_string">"ACCESS_POLICY"</span>),
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>      CONTINUOUS_ACCESS(<span class="jxr_string">"CONTINUOUS_ACCESS"</span>),
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>      ENTITY_RISK(<span class="jxr_string">"ENTITY_RISK"</span>),
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>      ENTITY_RISK(<span class="jxr_string">"ENTITY_RISK"</span>),
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      IDP_DISCOVERY(<span class="jxr_string">"IDP_DISCOVERY"</span>),
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      IDP_DISCOVERY(<span class="jxr_string">"IDP_DISCOVERY"</span>),
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      MFA_ENROLL(<span class="jxr_string">"MFA_ENROLL"</span>),
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>      MFA_ENROLL(<span class="jxr_string">"MFA_ENROLL"</span>),
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      OKTA_SIGN_ON(<span class="jxr_string">"OKTA_SIGN_ON"</span>),
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>      OKTA_SIGN_ON(<span class="jxr_string">"OKTA_SIGN_ON"</span>),
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      PASSWORD(<span class="jxr_string">"PASSWORD"</span>),
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      PASSWORD(<span class="jxr_string">"PASSWORD"</span>),
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      POST_AUTH_SESSION(<span class="jxr_string">"POST_AUTH_SESSION"</span>),
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>      PROFILE_ENROLLMENT(<span class="jxr_string">"PROFILE_ENROLLMENT"</span>),
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  

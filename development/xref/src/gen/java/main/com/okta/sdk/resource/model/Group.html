@@ -36,7 +36,7 @@
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  @JsonPropertyOrder({ Group.JSON_PROPERTY_CREATED, Group.JSON_PROPERTY_ID, Group.JSON_PROPERTY_LAST_MEMBERSHIP_UPDATED,
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>          Group.JSON_PROPERTY_LAST_UPDATED, Group.JSON_PROPERTY_OBJECT_CLASS, Group.JSON_PROPERTY_PROFILE,
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>          Group.JSON_PROPERTY_TYPE, Group.JSON_PROPERTY_EMBEDDED, Group.JSON_PROPERTY_LINKS })
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-09T22:35:57.174287274Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-20T19:00:09.677595799Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.8.0"</span>)
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> Group <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -90,12 +90,12 @@
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_comment">     */</em>
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>  
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">     * Get created</em>
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  <em class="jxr_javadoccomment">     * Timestamp when the Group was created</em>
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">     * @return created</em>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>      @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      @ApiModelProperty(value = <span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the Group was created"</span>)
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>      @JsonProperty(JSON_PROPERTY_CREATED)
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  
@@ -104,12 +104,12 @@
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      }
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment">     * Get id</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment">     * Unique ID for the Group</em>
 <a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment">     * @return id</em>
 <a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>     @ApiModelProperty(value = <span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     @ApiModelProperty(example = <span class="jxr_string">"0gabcd1234"</span>, value = <span class="jxr_string">"Unique ID for the Group"</span>)
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>     @JsonProperty(JSON_PROPERTY_ID)
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> 
@@ -118,12 +118,12 @@
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>     }
 <a class="jxr_linenumber" name="L111" href="#L111">111</a> 
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">     * Get lastMembershipUpdated</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">     * Timestamp when the Groups memberships were last updated</em>
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     * @return lastMembershipUpdated</em>
 <a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>     @ApiModelProperty(value = <span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the Groups memberships were last updated"</span>)
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>     @JsonProperty(JSON_PROPERTY_LAST_MEMBERSHIP_UPDATED)
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L121" href="#L121">121</a> 
@@ -132,12 +132,12 @@
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>     }
 <a class="jxr_linenumber" name="L125" href="#L125">125</a> 
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     * Get lastUpdated</em>
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> <em class="jxr_javadoccomment">     * Timestamp when the Group&amp;#39;s Profile was last updated</em>
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> <em class="jxr_javadoccomment">     * @return lastUpdated</em>
 <a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>     @ApiModelProperty(value = <span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the Group's Profile was last updated"</span>)
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>     @JsonProperty(JSON_PROPERTY_LAST_UPDATED)
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> 
@@ -146,12 +146,12 @@
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>     }
 <a class="jxr_linenumber" name="L139" href="#L139">139</a> 
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">     * Get objectClass</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">     * Determines the Group&amp;#39;s &amp;#x60;profile&amp;#x60;</em>
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">     * @return objectClass</em>
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>     @ApiModelProperty(value = <span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     @ApiModelProperty(value = <span class="jxr_string">"Determines the Group's `profile`"</span>)
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>     @JsonProperty(JSON_PROPERTY_OBJECT_CLASS)
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L149" href="#L149">149</a> 
@@ -212,12 +212,12 @@
 <a class="jxr_linenumber" name="L204" href="#L204">204</a>     }
 <a class="jxr_linenumber" name="L205" href="#L205">205</a> 
 <a class="jxr_linenumber" name="L206" href="#L206">206</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     * Get embedded</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">     * Embedded resources related to the Group</em>
 <a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">     * @return embedded</em>
 <a class="jxr_linenumber" name="L210" href="#L210">210</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>     @ApiModelProperty(value = <span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>     @ApiModelProperty(value = <span class="jxr_string">"Embedded resources related to the Group"</span>)
 <a class="jxr_linenumber" name="L213" href="#L213">213</a>     @JsonProperty(JSON_PROPERTY_EMBEDDED)
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L215" href="#L215">215</a> 

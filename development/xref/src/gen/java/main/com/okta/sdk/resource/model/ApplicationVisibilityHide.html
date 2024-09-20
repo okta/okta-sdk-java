@@ -26,16 +26,16 @@
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  @ApiModel(description = <span class="jxr_string">"Hides the app for specific end-user apps"</span>)
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  @JsonPropertyOrder({ ApplicationVisibilityHide.JSON_PROPERTY_I_O_S, ApplicationVisibilityHide.JSON_PROPERTY_WEB })
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-09T22:35:57.174287274Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-20T19:00:09.677595799Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.8.0"</span>)
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> ApplicationVisibilityHide <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_I_O_S = <span class="jxr_string">"iOS"</span>;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">private</strong> Boolean iOS;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">private</strong> Boolean iOS = false;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_WEB = <span class="jxr_string">"web"</span>;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> Boolean web;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> Boolean web = false;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">public</strong> ApplicationVisibilityHide() {
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      }
@@ -47,12 +47,12 @@
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>      }
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">     * Get iOS</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">     * Okta Mobile for iOS or Android (pre-dates Android)</em>
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">     * @return iOS</em>
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      @ApiModelProperty(value = <span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      @ApiModelProperty(example = <span class="jxr_string">"false"</span>, value = <span class="jxr_string">"Okta Mobile for iOS or Android (pre-dates Android)"</span>)
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      @JsonProperty(JSON_PROPERTY_I_O_S)
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
@@ -73,12 +73,12 @@
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      }
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">     * Get web</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">     * Okta End-User Dashboard on a web browser</em>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">     * @return web</em>
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      @ApiModelProperty(value = <span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      @ApiModelProperty(example = <span class="jxr_string">"true"</span>, value = <span class="jxr_string">"Okta End-User Dashboard on a web browser"</span>)
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      @JsonProperty(JSON_PROPERTY_WEB)
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>  

@@ -15,7 +15,7 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonCreator;
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObject;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectRoleLink;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.HrefObjectSelfLink;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> java.io.Serializable;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -27,7 +27,7 @@
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * LinksSelfAndRoles</em>
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  @JsonPropertyOrder({ LinksSelfAndRoles.JSON_PROPERTY_SELF, LinksSelfAndRoles.JSON_PROPERTY_ROLES })
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-09T22:35:57.174287274Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-20T19:00:09.677595799Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.8.0"</span>)
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> LinksSelfAndRoles <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -36,7 +36,7 @@
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">private</strong> HrefObjectSelfLink self;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_ROLES = <span class="jxr_string">"roles"</span>;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">private</strong> HrefObject roles;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">private</strong> HrefObjectRoleLink roles;
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">public</strong> LinksSelfAndRoles() {
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>      }
@@ -67,7 +67,7 @@
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">this</strong>.self = self;
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      }
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">public</strong> LinksSelfAndRoles roles(HrefObject roles) {
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">public</strong> LinksSelfAndRoles roles(HrefObjectRoleLink roles) {
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>          <strong class="jxr_keyword">this</strong>.roles = roles;
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -83,13 +83,13 @@
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      @JsonProperty(JSON_PROPERTY_ROLES)
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>  
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">public</strong> HrefObject getRoles() {
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">public</strong> HrefObjectRoleLink getRoles() {
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>          <strong class="jxr_keyword">return</strong> roles;
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      @JsonProperty(JSON_PROPERTY_ROLES)
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setRoles(HrefObject roles) {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setRoles(HrefObjectRoleLink roles) {
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">this</strong>.roles = roles;
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>      }
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  

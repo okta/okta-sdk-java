@@ -37,7 +37,7 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>          OAuth2RefreshToken.JSON_PROPERTY_SCOPES, OAuth2RefreshToken.JSON_PROPERTY_STATUS,
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>          OAuth2RefreshToken.JSON_PROPERTY_USER_ID, OAuth2RefreshToken.JSON_PROPERTY_EMBEDDED,
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>          OAuth2RefreshToken.JSON_PROPERTY_LINKS })
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-09T22:35:57.174287274Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-20T19:00:09.677595799Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.8.0"</span>)
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> OAuth2RefreshToken <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -123,7 +123,7 @@
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     * @return created</em>
 <a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>     @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the object was created"</span>)
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     @ApiModelProperty(example = <span class="jxr_string">"2017-03-28T01:11:10Z"</span>, value = <span class="jxr_string">"Timestamp when the object was created"</span>)
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>     @JsonProperty(JSON_PROPERTY_CREATED)
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L121" href="#L121">121</a> 
@@ -151,7 +151,7 @@
 <a class="jxr_linenumber" name="L143" href="#L143">143</a> <em class="jxr_javadoccomment">     * @return id</em>
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>     @ApiModelProperty(value = <span class="jxr_string">"ID of the Token object"</span>)
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     @ApiModelProperty(example = <span class="jxr_string">"oar579Mcp7OUsNTlo0g3"</span>, value = <span class="jxr_string">"ID of the Token object"</span>)
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>     @JsonProperty(JSON_PROPERTY_ID)
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L149" href="#L149">149</a> 
@@ -171,7 +171,7 @@
 <a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">     * @return issuer</em>
 <a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>     @ApiModelProperty(value = <span class="jxr_string">"The complete URL of the authorization server that issued the Token"</span>)
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     @ApiModelProperty(example = <span class="jxr_string">"https://{yourOktaDomain}/oauth2/ausain6z9zIedDCxB0h7"</span>, value = <span class="jxr_string">"The complete URL of the authorization server that issued the Token"</span>)
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>     @JsonProperty(JSON_PROPERTY_ISSUER)
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L169" href="#L169">169</a> 
@@ -271,7 +271,7 @@
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> <em class="jxr_javadoccomment">     * @return userId</em>
 <a class="jxr_linenumber" name="L264" href="#L264">264</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L265" href="#L265">265</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>     @ApiModelProperty(value = <span class="jxr_string">"The ID of the user associated with the Token"</span>)
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     @ApiModelProperty(example = <span class="jxr_string">"00u5t60iloOHN9pBi0h7"</span>, value = <span class="jxr_string">"The ID of the user associated with the Token"</span>)
 <a class="jxr_linenumber" name="L267" href="#L267">267</a>     @JsonProperty(JSON_PROPERTY_USER_ID)
 <a class="jxr_linenumber" name="L268" href="#L268">268</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L269" href="#L269">269</a> 

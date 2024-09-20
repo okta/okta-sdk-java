@@ -37,15 +37,15 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>          Policy.JSON_PROPERTY_LAST_UPDATED, Policy.JSON_PROPERTY_NAME, Policy.JSON_PROPERTY_PRIORITY,
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>          Policy.JSON_PROPERTY_STATUS, Policy.JSON_PROPERTY_SYSTEM, Policy.JSON_PROPERTY_TYPE,
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>          Policy.JSON_PROPERTY_EMBEDDED, Policy.JSON_PROPERTY_LINKS })
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-09T22:35:57.174287274Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-20T19:00:09.677595799Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.8.0"</span>)
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = <span class="jxr_string">"type"</span>, visible = <strong class="jxr_keyword">true</strong>, defaultImpl = Policy.<strong class="jxr_keyword">class</strong>)
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  @JsonSubTypes({ @JsonSubTypes.Type(value = AccessPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"ACCESS_POLICY"</span>),
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>          @JsonSubTypes.Type(value = ContinuousAccessPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"CONTINUOUS_ACCESS"</span>),
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>          @JsonSubTypes.Type(value = EntityRiskPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"ENTITY_RISK"</span>),
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>          @JsonSubTypes.Type(value = IdpDiscoveryPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"IDP_DISCOVERY"</span>),
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>          @JsonSubTypes.Type(value = MultifactorEnrollmentPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"MFA_ENROLL"</span>),
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>          @JsonSubTypes.Type(value = OktaSignOnPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"OKTA_SIGN_ON"</span>),
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>          @JsonSubTypes.Type(value = PasswordPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"PASSWORD"</span>),
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>          @JsonSubTypes.Type(value = EntityRiskPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"ENTITY_RISK"</span>),
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>          @JsonSubTypes.Type(value = IdpDiscoveryPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"IDP_DISCOVERY"</span>),
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>          @JsonSubTypes.Type(value = AuthenticatorEnrollmentPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"MFA_ENROLL"</span>),
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>          @JsonSubTypes.Type(value = OktaSignOnPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"OKTA_SIGN_ON"</span>),
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>          @JsonSubTypes.Type(value = PasswordPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"PASSWORD"</span>),
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>          @JsonSubTypes.Type(value = PostAuthSessionPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"POST_AUTH_SESSION"</span>),
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>          @JsonSubTypes.Type(value = ProfileEnrollmentPolicy.<strong class="jxr_keyword">class</strong>, name = <span class="jxr_string">"PROFILE_ENROLLMENT"</span>), })
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> Policy <strong class="jxr_keyword">implements</strong> Serializable {
@@ -59,7 +59,7 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">private</strong> String description;
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_ID = <span class="jxr_string">"id"</span>;
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">private</strong> String id;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">private</strong> String id = <span class="jxr_string">"Assigned"</span>;
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_LAST_UPDATED = <span class="jxr_string">"lastUpdated"</span>;
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">private</strong> OffsetDateTime lastUpdated;
@@ -74,7 +74,7 @@
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">private</strong> <a name="LifecycleStatus" href="../../../../../com/okta/sdk/resource/model/LifecycleStatus.html#LifecycleStatus">LifecycleStatus</a> status;
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_SYSTEM = <span class="jxr_string">"system"</span>;
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">private</strong> Boolean system;
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">private</strong> Boolean system = false;
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_TYPE = <span class="jxr_string">"type"</span>;
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">protected</strong> <a name="PolicyType" href="../../../../../com/okta/sdk/resource/model/PolicyType.html#PolicyType">PolicyType</a> type;
@@ -122,12 +122,12 @@
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     }
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> 
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">     * Policy description</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> <em class="jxr_javadoccomment">     * Description of the Policy</em>
 <a class="jxr_linenumber" name="L118" href="#L118">118</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> <em class="jxr_javadoccomment">     * @return description</em>
 <a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>     @ApiModelProperty(value = <span class="jxr_string">"Policy description"</span>)
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     @ApiModelProperty(value = <span class="jxr_string">"Description of the Policy"</span>)
 <a class="jxr_linenumber" name="L123" href="#L123">123</a>     @JsonProperty(JSON_PROPERTY_DESCRIPTION)
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L125" href="#L125">125</a> 
@@ -142,12 +142,12 @@
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>     }
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> 
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     * Policy ID</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment">     * Identifier of the Policy</em>
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">     * @return id</em>
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>     @ApiModelProperty(value = <span class="jxr_string">"Policy ID"</span>)
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     @ApiModelProperty(value = <span class="jxr_string">"Identifier of the Policy"</span>)
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>     @JsonProperty(JSON_PROPERTY_ID)
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L145" href="#L145">145</a> 
@@ -156,12 +156,12 @@
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>     }
 <a class="jxr_linenumber" name="L149" href="#L149">149</a> 
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     * Timestamp when the Policy was last updated</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> <em class="jxr_javadoccomment">     * Timestamp when the Policy was last modified</em>
 <a class="jxr_linenumber" name="L152" href="#L152">152</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L153" href="#L153">153</a> <em class="jxr_javadoccomment">     * @return lastUpdated</em>
 <a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the Policy was last updated"</span>)
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the Policy was last modified"</span>)
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>     @JsonProperty(JSON_PROPERTY_LAST_UPDATED)
 <a class="jxr_linenumber" name="L158" href="#L158">158</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L159" href="#L159">159</a> 
@@ -176,21 +176,21 @@
 <a class="jxr_linenumber" name="L168" href="#L168">168</a>     }
 <a class="jxr_linenumber" name="L169" href="#L169">169</a> 
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * Policy name</em>
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> <em class="jxr_javadoccomment">     * Name of the Policy</em>
 <a class="jxr_linenumber" name="L172" href="#L172">172</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> <em class="jxr_javadoccomment">     * @return name</em>
 <a class="jxr_linenumber" name="L174" href="#L174">174</a> <em class="jxr_javadoccomment">     **/</em>
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>     @ApiModelProperty(value = <span class="jxr_string">"Policy name"</span>)
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>     @javax.annotation.Nonnull
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     @ApiModelProperty(required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">"Name of the Policy"</span>)
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>     @JsonProperty(JSON_PROPERTY_NAME)
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L179" href="#L179">179</a> 
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>     <strong class="jxr_keyword">public</strong> String getName() {
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>         <strong class="jxr_keyword">return</strong> name;
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>     }
 <a class="jxr_linenumber" name="L183" href="#L183">183</a> 
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>     @JsonProperty(JSON_PROPERTY_NAME)
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setName(String name) {
 <a class="jxr_linenumber" name="L187" href="#L187">187</a>         <strong class="jxr_keyword">this</strong>.name = name;
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>     }
@@ -284,17 +284,17 @@
 <a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">     * @return type</em>
 <a class="jxr_linenumber" name="L278" href="#L278">278</a> <em class="jxr_javadoccomment">     **/</em>
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>     @ApiModelProperty(value = <span class="jxr_string">""</span>)
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>     @javax.annotation.Nonnull
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>     @ApiModelProperty(required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">""</span>)
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>     @JsonProperty(JSON_PROPERTY_TYPE)
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>     @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L283" href="#L283">283</a> 
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>     <strong class="jxr_keyword">public</strong> <a name="PolicyType" href="../../../../../com/okta/sdk/resource/model/PolicyType.html#PolicyType">PolicyType</a> getType() {
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>         <strong class="jxr_keyword">return</strong> type;
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>     }
 <a class="jxr_linenumber" name="L287" href="#L287">287</a> 
 <a class="jxr_linenumber" name="L288" href="#L288">288</a>     @JsonProperty(JSON_PROPERTY_TYPE)
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setType(<a name="PolicyType" href="../../../../../com/okta/sdk/resource/model/PolicyType.html#PolicyType">PolicyType</a> type) {
 <a class="jxr_linenumber" name="L291" href="#L291">291</a>         <strong class="jxr_keyword">this</strong>.type = type;
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>     }

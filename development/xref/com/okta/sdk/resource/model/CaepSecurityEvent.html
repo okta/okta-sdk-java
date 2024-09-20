@@ -29,8 +29,8 @@
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  @JsonPropertyOrder({ CaepSecurityEvent.JSON_PROPERTY_EVENT_TIMESTAMP, CaepSecurityEvent.JSON_PROPERTY_INITIATING_ENTITY,
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>          CaepSecurityEvent.JSON_PROPERTY_REASON_ADMIN, CaepSecurityEvent.JSON_PROPERTY_REASON_USER,
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>          CaepSecurityEvent.JSON_PROPERTY_SUBJECTS })
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-09T22:35:57.174287274Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>          CaepSecurityEvent.JSON_PROPERTY_SUBJECT })
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-20T19:00:09.677595799Z[Etc/UTC]"</span>, comments = <span class="jxr_string">"Generator version: 7.8.0"</span>)
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> CaepSecurityEvent <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -88,8 +88,8 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_REASON_USER = <span class="jxr_string">"reason_user"</span>;
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">private</strong> CaepDeviceComplianceChangeEventReasonUser reasonUser;
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_SUBJECTS = <span class="jxr_string">"subjects"</span>;
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">private</strong> SecurityEventSubject subjects;
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_SUBJECT = <span class="jxr_string">"subject"</span>;
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">private</strong> SecurityEventSubject subject;
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">public</strong> CaepSecurityEvent() {
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>      }
@@ -198,30 +198,30 @@
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>         <strong class="jxr_keyword">this</strong>.reasonUser = reasonUser;
 <a class="jxr_linenumber" name="L191" href="#L191">191</a>     }
 <a class="jxr_linenumber" name="L192" href="#L192">192</a> 
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>     <strong class="jxr_keyword">public</strong> CaepSecurityEvent subjects(SecurityEventSubject subjects) {
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>     <strong class="jxr_keyword">public</strong> CaepSecurityEvent subject(SecurityEventSubject subject) {
 <a class="jxr_linenumber" name="L194" href="#L194">194</a> 
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>         <strong class="jxr_keyword">this</strong>.subjects = subjects;
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>         <strong class="jxr_keyword">this</strong>.subject = subject;
 <a class="jxr_linenumber" name="L196" href="#L196">196</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>     }
 <a class="jxr_linenumber" name="L198" href="#L198">198</a> 
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">     * Get subjects</em>
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">     * Get subject</em>
 <a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">     * @return subjects</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">     * @return subject</em>
 <a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L204" href="#L204">204</a>     @javax.annotation.Nonnull
 <a class="jxr_linenumber" name="L205" href="#L205">205</a>     @ApiModelProperty(required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">""</span>)
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>     @JsonProperty(JSON_PROPERTY_SUBJECTS)
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>     @JsonProperty(JSON_PROPERTY_SUBJECT)
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>     @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L208" href="#L208">208</a> 
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>     <strong class="jxr_keyword">public</strong> SecurityEventSubject getSubjects() {
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>         <strong class="jxr_keyword">return</strong> subjects;
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>     <strong class="jxr_keyword">public</strong> SecurityEventSubject getSubject() {
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>         <strong class="jxr_keyword">return</strong> subject;
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>     }
 <a class="jxr_linenumber" name="L212" href="#L212">212</a> 
-<a class="jxr_linenumber" name="L213" href="#L213">213</a>     @JsonProperty(JSON_PROPERTY_SUBJECTS)
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>     @JsonProperty(JSON_PROPERTY_SUBJECT)
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>     @JsonInclude(value = JsonInclude.Include.ALWAYS)
-<a class="jxr_linenumber" name="L215" href="#L215">215</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setSubjects(SecurityEventSubject subjects) {
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>         <strong class="jxr_keyword">this</strong>.subjects = subjects;
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setSubject(SecurityEventSubject subject) {
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>         <strong class="jxr_keyword">this</strong>.subject = subject;
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>     }
 <a class="jxr_linenumber" name="L218" href="#L218">218</a> 
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>     @Override
@@ -237,13 +237,13 @@
 <a class="jxr_linenumber" name="L229" href="#L229">229</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.initiatingEntity, caepSecurityEvent.initiatingEntity)
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.reasonAdmin, caepSecurityEvent.reasonAdmin)
 <a class="jxr_linenumber" name="L231" href="#L231">231</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.reasonUser, caepSecurityEvent.reasonUser)
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.subjects, caepSecurityEvent.subjects);
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.subject, caepSecurityEvent.subject);
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>         <em class="jxr_comment">// ;</em>
 <a class="jxr_linenumber" name="L234" href="#L234">234</a>     }
 <a class="jxr_linenumber" name="L235" href="#L235">235</a> 
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>     @Override
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <strong class="jxr_keyword">return</strong> Objects.hash(eventTimestamp, initiatingEntity, reasonAdmin, reasonUser, subjects);
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <strong class="jxr_keyword">return</strong> Objects.hash(eventTimestamp, initiatingEntity, reasonAdmin, reasonUser, subject);
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>     }
 <a class="jxr_linenumber" name="L240" href="#L240">240</a> 
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>     @Override
@@ -254,7 +254,7 @@
 <a class="jxr_linenumber" name="L246" href="#L246">246</a>         sb.append(<span class="jxr_string">"    initiatingEntity: "</span>).append(toIndentedString(initiatingEntity)).append(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>         sb.append(<span class="jxr_string">"    reasonAdmin: "</span>).append(toIndentedString(reasonAdmin)).append(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>         sb.append(<span class="jxr_string">"    reasonUser: "</span>).append(toIndentedString(reasonUser)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>         sb.append(<span class="jxr_string">"    subjects: "</span>).append(toIndentedString(subjects)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         sb.append(<span class="jxr_string">"    subject: "</span>).append(toIndentedString(subject)).append(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>         sb.append(<span class="jxr_string">"}"</span>);
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>         <strong class="jxr_keyword">return</strong> sb.toString();
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>     }
