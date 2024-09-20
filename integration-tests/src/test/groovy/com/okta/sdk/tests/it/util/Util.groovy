@@ -96,7 +96,7 @@ class Util {
     }
 
     static void assertUserInGroup(User user, Group group, GroupApi groupApi) {
-        assertThat "User was not found in group.", StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null, null, null, null).spliterator(), false)
+        assertThat "User was not found in group.", StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()
     }
@@ -106,7 +106,7 @@ class Util {
 
             sleep(delayInMilliseconds)
 
-            if (present == StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null, null, null, null).spliterator(), false)
+            if (present == StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
                     .filter{ listUser -> listUser.id == user.id}
                     .findFirst().isPresent()) {
                 return
@@ -118,7 +118,7 @@ class Util {
     }
 
     static void assertUserNotInGroup(User user, Group group, GroupApi groupApi) {
-        assertThat "User was found in group.", !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null, null, null, null).spliterator(), false)
+        assertThat "User was found in group.", !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()
     }
@@ -128,7 +128,7 @@ class Util {
 
             sleep(delayInMilliseconds)
 
-            if (present == !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null, null, null, null).spliterator(), false)
+            if (present == !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
                 .filter{ listUser -> listUser.id == user.id}
                 .findFirst().isPresent()) {
                 return

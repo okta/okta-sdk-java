@@ -17,6 +17,27 @@ package com.okta.sdk.tests.it.util
 
 import com.okta.commons.lang.Strings
 import com.okta.sdk.client.Clients
+import com.okta.sdk.resource.api.ApplicationApi
+import com.okta.sdk.resource.api.GroupApi
+import com.okta.sdk.resource.api.GroupRuleApi
+import com.okta.sdk.resource.api.IdentityProviderApi
+import com.okta.sdk.resource.api.InlineHookApi
+import com.okta.sdk.resource.api.PolicyApi
+import com.okta.sdk.resource.api.UserApi
+import com.okta.sdk.resource.api.UserTypeApi
+import com.okta.sdk.resource.model.Application
+import com.okta.sdk.resource.model.ApplicationLifecycleStatus
+import com.okta.sdk.resource.model.Group
+import com.okta.sdk.resource.model.GroupRule
+import com.okta.sdk.resource.model.IdentityProvider
+import com.okta.sdk.resource.model.InlineHook
+import com.okta.sdk.resource.model.InlineHookStatus
+import com.okta.sdk.resource.model.LifecycleStatus
+import com.okta.sdk.resource.model.Policy
+import com.okta.sdk.resource.model.User
+import com.okta.sdk.resource.model.UserGetSingleton
+import com.okta.sdk.resource.model.UserStatus
+import com.okta.sdk.resource.model.UserType
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.TestResources
 import com.okta.sdk.resource.client.ApiClient
@@ -139,17 +160,17 @@ trait ClientProvider implements IHookable {
     void deleteUser(String id, ApiClient client) {
 
         UserApi userApi = new UserApi(client)
-        User userToDelete = userApi.getUser(id)
+        UserGetSingleton userToDelete = userApi.getUser(id, null, "false")
 
         if (userToDelete != null) {
             log.info("Deleting User: {} (id - {})", userToDelete.getProfile().getEmail(), id)
 
             if (userToDelete.getStatus() != UserStatus.DEPROVISIONED) {
                 // deactivate
-                userApi.deactivateUser(userToDelete.getId(), false)
+                userApi.deleteUser(userToDelete.getId(), false, null)
             }
             // delete
-            userApi.deleteUser(userToDelete.getId(), false)
+            userApi.deleteUser(userToDelete.getId(), false, null)
         }
     }
 
@@ -177,7 +198,9 @@ trait ClientProvider implements IHookable {
     void deleteGroupRule(String id, ApiClient client) {
 
         GroupApi groupApi = new GroupApi(client)
-        GroupRule groupRuleToDelete = groupApi.getGroupRule(id, null)
+        GroupRuleApi groupRuleApi = new GroupRuleApi(client)
+
+        GroupRule groupRuleToDelete = groupRuleApi.getGroupRule(id, null)
 
         if (groupRuleToDelete != null) {
             log.info("Deleting GroupRule: {} (id - {})", groupRuleToDelete.getName(), id)

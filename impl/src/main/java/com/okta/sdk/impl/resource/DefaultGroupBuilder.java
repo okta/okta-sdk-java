@@ -19,8 +19,9 @@ import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.GroupApi;
+import com.okta.sdk.resource.model.AddGroupRequest;
 import com.okta.sdk.resource.model.Group;
-import com.okta.sdk.resource.model.GroupProfile;
+import com.okta.sdk.resource.model.OktaUserGroupProfile;
 
 public class DefaultGroupBuilder implements GroupBuilder {
 
@@ -42,12 +43,15 @@ public class DefaultGroupBuilder implements GroupBuilder {
     @Override
     public Group buildAndCreate(GroupApi client) throws ApiException {
 
-        Group group = new Group();
-        GroupProfile groupProfile = new GroupProfile();
-        groupProfile.setName(name);
-        if (Strings.hasText(description)) groupProfile.setDescription(description);
-        group.setProfile(groupProfile);
+        OktaUserGroupProfile oktaUserGroupProfile = new OktaUserGroupProfile();
+        oktaUserGroupProfile.setName(name);
+        if (Strings.hasText(description)) {
+            oktaUserGroupProfile.setDescription(description);
+        }
 
-        return client.createGroup(group);
+        AddGroupRequest addGroupRequest = new AddGroupRequest();
+        addGroupRequest.setProfile(oktaUserGroupProfile);
+
+        return client.addGroup(addGroupRequest);
     }
 }

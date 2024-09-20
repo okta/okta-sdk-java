@@ -64,7 +64,7 @@ public class GroupProfileDeserializer extends StdDeserializer<GroupProfile> {
                     break;
 
                 default:
-                    groupProfile.getAdditionalProperties().put(key, value);
+                    break;
             }
         }
 

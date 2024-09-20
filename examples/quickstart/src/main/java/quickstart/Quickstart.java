@@ -47,8 +47,8 @@ public class Quickstart {
 
         ClientBuilder builder;
         ApiClient client;
-        Group group = null;
-        User user = null;
+        com.okta.sdk.resource.model.Group group = null;
+        com.okta.sdk.resource.model.User user = null;
 
         UserApi userApi = null;
         GroupApi groupApi = null;
@@ -89,13 +89,13 @@ public class Quickstart {
             println("User created with ID: " + userId);
 
             // You can look up user by ID
-            println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId, "false").getProfile()).getLogin());
+            println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId, null,"false").getProfile()).getLogin());
 
             // or by Email
-            println("User lookup by Email: "+ Objects.requireNonNull(userApi.getUser(email, "false").getProfile()).getLogin());
+            println("User lookup by Email: "+ Objects.requireNonNull(userApi.getUser(email, null,"false").getProfile()).getLogin());
 
             // get the list of users
-            List<User> users = userApi.listUsers(null, null, null, "status eq \"ACTIVE\"", null, null, null);
+            List<com.okta.sdk.resource.model.User> users = userApi.listUsers(null, null, null, null, "status eq \"ACTIVE\"", null, null, null);
 
             // get the first user in the collection
             println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());
@@ -111,10 +111,12 @@ public class Quickstart {
 
             // deactivate (if de-provisioned) and delete user
             if (user != null) {
-                if (!Objects.equals(user.getStatus(), UserStatus.DEPROVISIONED)) {
-                    userApi.deactivateUser(user.getId(), false);
+                if (!Objects.equals(user.getStatus(), com.okta.sdk.resource.model.UserStatus.DEPROVISIONED)) {
+                    // This operation on a User that has not been deactivated/deprovisioned causes that User to be deactivated.
+                    userApi.deleteUser(user.getId(), false, null);
                 }
-                userApi.deleteUser(user.getId(), false);
+                // A second delete operation is required to delete the User.
+                userApi.deleteUser(user.getId(), false, null);
             }
 
             // delete group

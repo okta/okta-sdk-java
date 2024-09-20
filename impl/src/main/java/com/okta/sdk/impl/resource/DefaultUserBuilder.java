@@ -23,6 +23,7 @@ import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.model.AuthenticationProvider;
 import com.okta.sdk.resource.model.CreateUserRequest;
+import com.okta.sdk.resource.model.CreateUserRequestType;
 import com.okta.sdk.resource.model.PasswordCredential;
 import com.okta.sdk.resource.model.PasswordCredentialHash;
 import com.okta.sdk.resource.model.PasswordCredentialHashAlgorithm;
@@ -32,7 +33,6 @@ import com.okta.sdk.resource.model.User;
 import com.okta.sdk.resource.model.UserCredentials;
 import com.okta.sdk.resource.model.UserNextLogin;
 import com.okta.sdk.resource.model.UserProfile;
-import com.okta.sdk.resource.model.UserType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,7 +77,6 @@ public class DefaultUserBuilder implements UserBuilder {
     private String mobilePhone;
     private Boolean active;
     private AuthenticationProvider provider;
-    private UserType userType;
     private String userTypeId;
     private UserNextLogin nextLogin;
     private List<String> groupIds = new ArrayList<>();
@@ -290,12 +289,6 @@ public class DefaultUserBuilder implements UserBuilder {
     }
 
     @Override
-    public UserBuilder setType(UserType userType) {
-        this.userType = userType;
-        return this;
-    }
-
-    @Override
     public UserBuilder setType(String userTypeId) {
         this.userTypeId = userTypeId;
         return this;
@@ -360,11 +353,9 @@ public class DefaultUserBuilder implements UserBuilder {
         }
 
         if (Strings.hasText(userTypeId)) {
-            UserType userType = new UserType();
-            userType.setId(userTypeId);
-            createUserRequest.setType(userType);
-        } else if (userType != null) {
-            createUserRequest.setType(userType);
+            CreateUserRequestType createUserRequestType = new CreateUserRequestType();
+            createUserRequestType.setId(userTypeId);
+            createUserRequest.setType(createUserRequestType);
         }
 
         if (!Collections.isEmpty(groupIds)) {

@@ -48,7 +48,6 @@ import com.okta.sdk.resource.model.OpenIdConnectApplicationSettingsClient
 import com.okta.sdk.resource.model.OpenIdConnectApplicationType
 import com.okta.sdk.resource.model.SamlApplication
 import com.okta.sdk.resource.model.SamlApplicationSettings
-import com.okta.sdk.resource.model.SamlApplicationSettingsApplication
 import com.okta.sdk.resource.model.SamlApplicationSettingsSignOn
 import com.okta.sdk.resource.model.SamlAttributeStatement
 import com.okta.sdk.resource.model.SignOnInlineHook
@@ -62,8 +61,6 @@ import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
-import static org.hamcrest.Matchers.greaterThanOrEqualTo
-import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.notNullValue
 
 /**
@@ -80,7 +77,7 @@ class AppsIT extends ITSupport {
     void basicAuthAppTest() {
 
         BasicAuthApplication basicAuthApplication = new BasicAuthApplication()
-        basicAuthApplication.name("template_basic_auth")
+        basicAuthApplication.name(BasicAuthApplication.NameEnum.TEMPLATE_BASIC_AUTH)
             .label(prefix + UUID.randomUUID().toString())
             .signOnMode(ApplicationSignOnMode.BASIC_AUTH)
         BasicApplicationSettingsApplication basicApplicationSettingsApplication =
@@ -106,7 +103,7 @@ class AppsIT extends ITSupport {
     void bookmarkAppTest() {
 
         BookmarkApplication bookmarkApplication = new BookmarkApplication()
-        bookmarkApplication.name("bookmark")
+        bookmarkApplication.name(BookmarkApplication.NameEnum.BOOKMARK)
             .label(prefix + UUID.randomUUID().toString())
             .signOnMode(ApplicationSignOnMode.BOOKMARK)
         BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
@@ -156,7 +153,7 @@ class AppsIT extends ITSupport {
         SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings()
         swaApplicationSettings.app(swaApplicationSettingsApplication)
         BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication()
-        browserPluginApplication.name("template_swa")
+        browserPluginApplication.name(BrowserPluginApplication.NameEnum.SWA)
         browserPluginApplication.label(prefix + UUID.randomUUID().toString())
         browserPluginApplication.settings(swaApplicationSettings)
 
@@ -362,77 +359,5 @@ class AppsIT extends ITSupport {
         assertThat(retrievedApp.getLabel(), equalTo(updatedApp.getLabel()))
         assertThat(retrievedApp.getSignOnMode(), equalTo(ApplicationSignOnMode.SAML_2_0))
         assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
-    }
-
-    //TODO: fix me
-    @Test
-    void testUploadApplicationLogo() {
-        /**
-         * Currently there is no way to check the logo.
-         * Just make sure that no exception was thrown during the upload.
-         */
-
-        SamlApplication org2OrgApplication = new SamlApplication()
-        org2OrgApplication.name("okta_org2org")
-            .label(prefix + UUID.randomUUID().toString())
-            .signOnMode(ApplicationSignOnMode.SAML_2_0)
-
-        SamlApplicationSettingsApplication samlApplicationSettingsApplication = new SamlApplicationSettingsApplication()
-        samlApplicationSettingsApplication.setAcsUrl("https://example.com/acs.html")
-        samlApplicationSettingsApplication.setAudRestriction("https://example.com/login.html")
-        samlApplicationSettingsApplication.setBaseUrl("https://example.com/home.html")
-        SamlApplicationSettings samlApplicationSettings = new SamlApplicationSettings()
-        samlApplicationSettings.app(samlApplicationSettingsApplication)
-        org2OrgApplication.settings(samlApplicationSettings)
-
-        Application createdApp = applicationApi.createApplication(org2OrgApplication, true, null)
-        registerForCleanup(createdApp)
-
-//        File file = new File("/tmp/okta_logo_favicon.png")
-//        println("Uploading logo file " + file.getName() + " of size: " + file.size())
-//
-//        applicationApi.uploadApplicationLogo(createdApp.getId(), file)
-    }
-
-    //TODO: this test is unnecessary (helper is no more), remove it
-    @Test
-    void testApplicationApiHelper() {
-
-        BookmarkApplication bookmarkApplication = new BookmarkApplication()
-        bookmarkApplication.name("bookmark")
-            .label(prefix + UUID.randomUUID().toString())
-            .signOnMode(ApplicationSignOnMode.BOOKMARK)
-        BookmarkApplicationSettingsApplication bookmarkApplicationSettingsApplication =
-            new BookmarkApplicationSettingsApplication()
-        bookmarkApplicationSettingsApplication.url("https://example.com/bookmark.htm")
-            .requestIntegration(false)
-        BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings()
-        bookmarkApplicationSettings.app(bookmarkApplicationSettingsApplication)
-        bookmarkApplication.settings(bookmarkApplicationSettings)
-
-        // create
-        BookmarkApplication createdApp =
-            applicationApi.createApplication(bookmarkApplication, true, null) as BookmarkApplication
-        registerForCleanup(createdApp)
-
-        assertThat(createdApp, notNullValue())
-        assertThat(createdApp.getId(), notNullValue())
-        assertThat(createdApp.getLabel(), equalTo(bookmarkApplication.getLabel()))
-        assertThat(createdApp.getSignOnMode(), equalTo(ApplicationSignOnMode.BOOKMARK))
-        assertThat(createdApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
-
-        // retrieve app (sub-typed)
-        BookmarkApplication retrievedBookmarkApplication =
-            (BookmarkApplication) applicationApi.getApplication(createdApp.getId(), null)
-        assertThat(retrievedBookmarkApplication, notNullValue())
-        assertThat(retrievedBookmarkApplication.getId(), equalTo(createdApp.getId()))
-        assertThat(retrievedBookmarkApplication.getLabel(), equalTo(createdApp.getLabel()))
-        assertThat(retrievedBookmarkApplication.getSignOnMode(), equalTo(createdApp.getSignOnMode()))
-        assertThat(retrievedBookmarkApplication.getStatus(), equalTo(createdApp.getStatus()))
-
-        List<Application> retrievedApplications =
-            applicationApi.listApplications(null, null, null, null, null, true)
-        assertThat(retrievedApplications, notNullValue())
-        assertThat(retrievedApplications, hasSize(greaterThanOrEqualTo(1)))
     }
 }

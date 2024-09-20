@@ -23,8 +23,9 @@ import com.okta.sdk.client.AuthenticationScheme;
 import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.Clients;
 import com.okta.sdk.helper.PaginationUtil;
+import com.okta.sdk.resource.api.GroupApi;
+import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.group.GroupBuilder;
-import com.okta.sdk.resource.model.UserFactorType;
 import com.okta.sdk.resource.user.UserBuilder;
 
 import com.okta.sdk.resource.client.ApiClient;
@@ -81,12 +82,12 @@ public class ReadmeSnippets {
     private void getUser() throws ApiException {
         UserApi userApi = new UserApi(client);
 
-        userApi.getUser("userId", "true");
+        userApi.getUser("userId", "application/json", "true");
     }
 
     private void listAllUsers() throws ApiException {
         UserApi userApi = new UserApi(client);
-        List<User> users = userApi.listUsers(null, null, 5, null, null, null, null);
+        List<User> users = userApi.listUsers("application/json", null, null, 5, null, null, null, null);
 
         // stream
         users.stream()
@@ -98,10 +99,10 @@ public class ReadmeSnippets {
     private void userSearch() throws ApiException {
         UserApi userApi = new UserApi(client);
         // search by email
-        List<User> users = userApi.listUsers(null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
+        List<User> users = userApi.listUsers("application/json", null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
 
         // filter parameter
-        userApi.listUsers(null, null, null, "status eq \"ACTIVE\"",null, null, null);
+        userApi.listUsers("application/json",null, null, null, "status eq \"ACTIVE\"",null, null, null);
     }
 
     private void createUser() throws ApiException {
@@ -153,9 +154,11 @@ public class ReadmeSnippets {
         UserApi userApi = new UserApi(client);
 
         // deactivate first
-        userApi.deactivateUser(user.getId(), false);
+        userApi.deleteUser(user.getId(), false, null);
+
         // then delete
-        userApi.deleteUser(user.getId(), false);
+        // see https://developer.okta.com/docs/api/openapi/okta-management/management/tag/User/#tag/User/operation/deleteUser
+        userApi.deleteUser(user.getId(), false, null);
     }
 
     private void listGroups() throws ApiException {
@@ -245,7 +248,7 @@ public class ReadmeSnippets {
     private void listApplications() throws ApiException {
         ApplicationApi applicationApi = new ApplicationApi(client);
 
-        List<Application> applications = applicationApi.listApplications(null, null, null, null, null, true);
+        List<Application> applications = applicationApi.listApplications(null, null, true, null, null, null, true);
     }
 
     private void getApplication() throws ApiException {
@@ -265,7 +268,7 @@ public class ReadmeSnippets {
         SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings();
         swaApplicationSettings.app(swaApplicationSettingsApplication);
         BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication();
-        browserPluginApplication.name("template_swa");
+        browserPluginApplication.name(BrowserPluginApplication.NameEnum.SWA);
         browserPluginApplication.label("Sample Plugin App");
         browserPluginApplication.settings(swaApplicationSettings);
 
@@ -277,14 +280,14 @@ public class ReadmeSnippets {
     private void listPolicies() throws ApiException {
         PolicyApi policyApi = new PolicyApi(client);
 
-        List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null, null, null, null);
+        List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null, null, null, null, null, null);
     }
 
     private void getPolicy() throws ApiException {
         PolicyApi policyApi = new PolicyApi(client);
 
-        MultifactorEnrollmentPolicy mfaPolicy =
-            (MultifactorEnrollmentPolicy) policyApi.getPolicy("mfa-policy-id", null);
+        Policy policy =
+            policyApi.getPolicy("policy-id", null);
     }
 
     private void listSysLogs() throws ApiException {
@@ -292,7 +295,7 @@ public class ReadmeSnippets {
 
         // use a filter (start date, end date, filter, or query, sort order) all options are nullable
         List<LogEvent> logEvents =
-            systemLogApi.listLogEvents(null, null, null, "interestingURI.com", 100, "ASCENDING", null);
+            systemLogApi.listLogEvents(null, null, null, "interestingURI.com", null, 100, "ASCENDING");
     }
 
     private void callAnotherEndpoint() throws ApiException {
@@ -301,7 +304,7 @@ public class ReadmeSnippets {
 
         // Create a BookmarkApplication
         BookmarkApplication bookmarkApplication = new BookmarkApplication();
-        bookmarkApplication.setName("bookmark");
+        bookmarkApplication.setName(BookmarkApplication.NameEnum.BOOKMARK);
         bookmarkApplication.setLabel("Sample Bookmark App");
         bookmarkApplication.setSignOnMode(ApplicationSignOnMode.BOOKMARK);
         BookmarkApplicationSettings bookmarkApplicationSettings = new BookmarkApplicationSettings();
@@ -343,7 +346,7 @@ public class ReadmeSnippets {
         String after = null;
 
         do {
-            users.addAll(userApi.listUsers(null, after, 200, null, null, null, null));
+            users.addAll(userApi.listUsers("application/json",null, after, 200, null, null, null, null));
             after = PaginationUtil.getAfter(userApi.getApiClient());
         } while (StringUtils.isNotBlank(after));
     }

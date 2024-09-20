@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.tests.it
 
+import com.okta.sdk.resource.model.AddGroupRequest
+import com.okta.sdk.resource.model.OktaUserGroupProfile
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import com.okta.sdk.resource.group.GroupBuilder
@@ -109,10 +111,12 @@ class GroupsIT extends ITSupport {
         validateGroup(group, groupName)
 
         // 2. Update the group name and description
-        group.getProfile().name = groupNameUpdated
-        group.getProfile().description = 'Description updated'
-
-        groupApi.replaceGroup(group.getId(), group)
+        OktaUserGroupProfile oktaUserGroupProfile = new OktaUserGroupProfile()
+        oktaUserGroupProfile.setName(groupNameUpdated)
+        oktaUserGroupProfile.setDescription('Description updated')
+        AddGroupRequest addGroupRequest = new AddGroupRequest()
+        addGroupRequest.setProfile(oktaUserGroupProfile)
+        group = groupApi.replaceGroup(group.getId(), addGroupRequest)
 
         validateGroup(group, groupNameUpdated, 'Description updated')
     }
