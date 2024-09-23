@@ -26,7 +26,7 @@
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  @JsonPropertyOrder({ CustomRoleAssignmentSchema.JSON_PROPERTY_RESOURCE_SET,
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>          CustomRoleAssignmentSchema.JSON_PROPERTY_ROLE, CustomRoleAssignmentSchema.JSON_PROPERTY_TYPE })
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-08-09T14:20:02.220962-05:00[America/Chicago]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-23T08:36:32.230490-05:00[America/Chicago]"</span>, comments = <span class="jxr_string">"Generator version: 7.8.0"</span>)
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> CustomRoleAssignmentSchema <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -38,7 +38,7 @@
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> String role;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment">     * Standard role type</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment">     * The type of role. Specify &amp;#x60;CUSTOM&amp;#x60; for a custom role.</em>
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">public</strong> enum TypeEnum {
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>          CUSTOM(<span class="jxr_string">"CUSTOM"</span>),
@@ -137,12 +137,12 @@
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>     }
 <a class="jxr_linenumber" name="L130" href="#L130">130</a> 
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">     * Standard role type</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">     * The type of role. Specify &amp;#x60;CUSTOM&amp;#x60; for a custom role.</em>
 <a class="jxr_linenumber" name="L133" href="#L133">133</a> <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment">     * @return type</em>
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>     @ApiModelProperty(value = <span class="jxr_string">"Standard role type"</span>)
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     @ApiModelProperty(value = <span class="jxr_string">"The type of role. Specify `CUSTOM` for a custom role."</span>)
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>     @JsonProperty(JSON_PROPERTY_TYPE)
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> 

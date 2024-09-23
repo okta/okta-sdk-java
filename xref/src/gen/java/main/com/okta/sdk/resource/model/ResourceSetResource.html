@@ -15,7 +15,7 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonCreator;
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.LinksSelf;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.ResourceSetResourceLinks;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.time.OffsetDateTime;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> java.io.Serializable;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -26,10 +26,10 @@
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * ResourceSetResource</em>
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  @JsonPropertyOrder({ ResourceSetResource.JSON_PROPERTY_CREATED, ResourceSetResource.JSON_PROPERTY_DESCRIPTION,
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>          ResourceSetResource.JSON_PROPERTY_ID, ResourceSetResource.JSON_PROPERTY_LAST_UPDATED,
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  @JsonPropertyOrder({ ResourceSetResource.JSON_PROPERTY_CREATED, ResourceSetResource.JSON_PROPERTY_ID,
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>          ResourceSetResource.JSON_PROPERTY_LAST_UPDATED, ResourceSetResource.JSON_PROPERTY_ORN,
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>          ResourceSetResource.JSON_PROPERTY_LINKS })
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-08-09T14:20:02.220962-05:00[America/Chicago]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-23T08:36:32.230490-05:00[America/Chicago]"</span>, comments = <span class="jxr_string">"Generator version: 7.8.0"</span>)
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> ResourceSetResource <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -37,17 +37,17 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_CREATED = <span class="jxr_string">"created"</span>;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> OffsetDateTime created;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_DESCRIPTION = <span class="jxr_string">"description"</span>;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">private</strong> String description;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_ID = <span class="jxr_string">"id"</span>;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">private</strong> String id;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_ID = <span class="jxr_string">"id"</span>;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">private</strong> String id;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_LAST_UPDATED = <span class="jxr_string">"lastUpdated"</span>;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">private</strong> OffsetDateTime lastUpdated;
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_LAST_UPDATED = <span class="jxr_string">"lastUpdated"</span>;
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">private</strong> OffsetDateTime lastUpdated;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_ORN = <span class="jxr_string">"orn"</span>;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">private</strong> String orn;
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_LINKS = <span class="jxr_string">"_links"</span>;
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">private</strong> LinksSelf links;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">private</strong> ResourceSetResourceLinks links;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">public</strong> ResourceSetResource() {
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      }
@@ -64,12 +64,12 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_comment">     */</em>
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">     * Timestamp when the role was created</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">     * Timestamp when the Resource Set Resource object was created</em>
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment">     * @return created</em>
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment">     **/</em>
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the role was created"</span>)
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the Resource Set Resource object was created"</span>)
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      @JsonProperty(JSON_PROPERTY_CREATED)
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
@@ -77,61 +77,61 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>          <strong class="jxr_keyword">return</strong> created;
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      }
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">public</strong> ResourceSetResource description(String description) {
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>          <strong class="jxr_keyword">this</strong>.description = description;
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">     * Description of the Resource Set</em>
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">     * @return description</em>
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">     **/</em>
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      @ApiModelProperty(value = <span class="jxr_string">"Description of the Resource Set"</span>)
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      @JsonProperty(JSON_PROPERTY_DESCRIPTION)
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>  
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">public</strong> String getDescription() {
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">return</strong> description;
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      }
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      @JsonProperty(JSON_PROPERTY_DESCRIPTION)
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setDescription(String description) {
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">this</strong>.description = description;
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>      }
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment">     * Unique key for the role</em>
-<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_javadoccomment">     * @return id</em>
-<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_javadoccomment">     **/</em>
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>     @ApiModelProperty(value = <span class="jxr_string">"Unique key for the role"</span>)
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>     @JsonProperty(JSON_PROPERTY_ID)
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L107" href="#L107">107</a> 
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <strong class="jxr_keyword">public</strong> String getId() {
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>         <strong class="jxr_keyword">return</strong> id;
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>     }
-<a class="jxr_linenumber" name="L111" href="#L111">111</a> 
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L113" href="#L113">113</a> <em class="jxr_javadoccomment">     * Timestamp when the role was last updated</em>
-<a class="jxr_linenumber" name="L114" href="#L114">114</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L115" href="#L115">115</a> <em class="jxr_javadoccomment">     * @return lastUpdated</em>
-<a class="jxr_linenumber" name="L116" href="#L116">116</a> <em class="jxr_javadoccomment">     **/</em>
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>     @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>     @ApiModelProperty(value = <span class="jxr_string">"Timestamp when the role was last updated"</span>)
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>     @JsonProperty(JSON_PROPERTY_LAST_UPDATED)
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L121" href="#L121">121</a> 
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>     <strong class="jxr_keyword">public</strong> OffsetDateTime getLastUpdated() {
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>         <strong class="jxr_keyword">return</strong> lastUpdated;
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">     * Unique ID of the Resource Set Resource object</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">     * @return id</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">     **/</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      @javax.annotation.Nullable
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      @ApiModelProperty(value = <span class="jxr_string">"Unique ID of the Resource Set Resource object"</span>)
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      @JsonProperty(JSON_PROPERTY_ID)
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">public</strong> String getId() {
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>          <strong class="jxr_keyword">return</strong> id;
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      }
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">     * Timestamp when this object was last updated</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  <em class="jxr_javadoccomment">     * @return lastUpdated</em>
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  <em class="jxr_javadoccomment">     **/</em>
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      @javax.annotation.Nullable
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      @ApiModelProperty(value = <span class="jxr_string">"Timestamp when this object was last updated"</span>)
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      @JsonProperty(JSON_PROPERTY_LAST_UPDATED)
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>      <strong class="jxr_keyword">public</strong> OffsetDateTime getLastUpdated() {
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>          <strong class="jxr_keyword">return</strong> lastUpdated;
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>      }
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>     <strong class="jxr_keyword">public</strong> ResourceSetResource orn(String orn) {
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>         <strong class="jxr_keyword">this</strong>.orn = orn;
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     }
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> 
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> <em class="jxr_javadoccomment">     * The Okta Resource Name (ORN) of the resource</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> <em class="jxr_javadoccomment">     * @return orn</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_javadoccomment">     **/</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     @javax.annotation.Nullable
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     @ApiModelProperty(value = <span class="jxr_string">"The Okta Resource Name (ORN) of the resource"</span>)
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     @JsonProperty(JSON_PROPERTY_ORN)
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <strong class="jxr_keyword">public</strong> String getOrn() {
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>         <strong class="jxr_keyword">return</strong> orn;
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     }
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> 
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>     @JsonProperty(JSON_PROPERTY_ORN)
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setOrn(String orn) {
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>         <strong class="jxr_keyword">this</strong>.orn = orn;
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>     }
 <a class="jxr_linenumber" name="L125" href="#L125">125</a> 
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>     <strong class="jxr_keyword">public</strong> ResourceSetResource links(LinksSelf links) {
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     <strong class="jxr_keyword">public</strong> ResourceSetResource links(ResourceSetResourceLinks links) {
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>         <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -147,13 +147,13 @@
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>     @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L141" href="#L141">141</a> 
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">public</strong> LinksSelf getLinks() {
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     <strong class="jxr_keyword">public</strong> ResourceSetResourceLinks getLinks() {
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>         <strong class="jxr_keyword">return</strong> links;
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>     }
 <a class="jxr_linenumber" name="L145" href="#L145">145</a> 
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>     @JsonProperty(JSON_PROPERTY_LINKS)
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(LinksSelf links) {
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setLinks(ResourceSetResourceLinks links) {
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>         <strong class="jxr_keyword">this</strong>.links = links;
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>     }
 <a class="jxr_linenumber" name="L151" href="#L151">151</a> 
@@ -167,16 +167,16 @@
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>         }
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>         ResourceSetResource resourceSetResource = (ResourceSetResource) o;
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>         <strong class="jxr_keyword">return</strong> Objects.equals(<strong class="jxr_keyword">this</strong>.created, resourceSetResource.created)
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.description, resourceSetResource.description)
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.id, resourceSetResource.id)
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.lastUpdated, resourceSetResource.lastUpdated)
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.id, resourceSetResource.id)
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.lastUpdated, resourceSetResource.lastUpdated)
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.orn, resourceSetResource.orn)
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>                 &amp;&amp; Objects.equals(<strong class="jxr_keyword">this</strong>.links, resourceSetResource.links);
 <a class="jxr_linenumber" name="L166" href="#L166">166</a>         <em class="jxr_comment">// ;</em>
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>     }
 <a class="jxr_linenumber" name="L168" href="#L168">168</a> 
 <a class="jxr_linenumber" name="L169" href="#L169">169</a>     @Override
 <a class="jxr_linenumber" name="L170" href="#L170">170</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> hashCode() {
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>         <strong class="jxr_keyword">return</strong> Objects.hash(created, description, id, lastUpdated, links);
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>         <strong class="jxr_keyword">return</strong> Objects.hash(created, id, lastUpdated, orn, links);
 <a class="jxr_linenumber" name="L172" href="#L172">172</a>     }
 <a class="jxr_linenumber" name="L173" href="#L173">173</a> 
 <a class="jxr_linenumber" name="L174" href="#L174">174</a>     @Override
@@ -184,9 +184,9 @@
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>         StringBuilder sb = <strong class="jxr_keyword">new</strong> StringBuilder();
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>         sb.append(<span class="jxr_string">"class ResourceSetResource {\n"</span>);
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>         sb.append(<span class="jxr_string">"    created: "</span>).append(toIndentedString(created)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>         sb.append(<span class="jxr_string">"    description: "</span>).append(toIndentedString(description)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>         sb.append(<span class="jxr_string">"    id: "</span>).append(toIndentedString(id)).append(<span class="jxr_string">"\n"</span>);
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>         sb.append(<span class="jxr_string">"    lastUpdated: "</span>).append(toIndentedString(lastUpdated)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>         sb.append(<span class="jxr_string">"    id: "</span>).append(toIndentedString(id)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>         sb.append(<span class="jxr_string">"    lastUpdated: "</span>).append(toIndentedString(lastUpdated)).append(<span class="jxr_string">"\n"</span>);
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>         sb.append(<span class="jxr_string">"    orn: "</span>).append(toIndentedString(orn)).append(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>         sb.append(<span class="jxr_string">"    links: "</span>).append(toIndentedString(links)).append(<span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>         sb.append(<span class="jxr_string">"}"</span>);
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>         <strong class="jxr_keyword">return</strong> sb.toString();

@@ -25,7 +25,7 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> * AuthenticationMethodObject</em>
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  @JsonPropertyOrder({ AuthenticationMethodObject.JSON_PROPERTY_KEY, AuthenticationMethodObject.JSON_PROPERTY_METHOD })
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-08-09T14:20:02.220962-05:00[America/Chicago]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-23T08:36:32.230490-05:00[America/Chicago]"</span>, comments = <span class="jxr_string">"Generator version: 7.8.0"</span>)
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> AuthenticationMethodObject <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -50,17 +50,17 @@
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">     *</em>
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">     * @return key</em>
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">     **/</em>
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>      @javax.annotation.Nullable
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      @ApiModelProperty(value = <span class="jxr_string">"A label that identifies the authenticator"</span>)
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      @javax.annotation.Nonnull
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      @ApiModelProperty(required = <strong class="jxr_keyword">true</strong>, value = <span class="jxr_string">"A label that identifies the authenticator"</span>)
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>      @JsonProperty(JSON_PROPERTY_KEY)
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">public</strong> String getKey() {
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>          <strong class="jxr_keyword">return</strong> key;
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      }
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      @JsonProperty(JSON_PROPERTY_KEY)
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>      @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      @JsonInclude(value = JsonInclude.Include.ALWAYS)
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setKey(String key) {
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>          <strong class="jxr_keyword">this</strong>.key = key;
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>      }

@@ -15,7 +15,7 @@
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonCreator;
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonValue;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.ContinuousAccessPolicyRuleRunWorkflowWorkflow;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> com.okta.sdk.resource.model.EntityRiskPolicyRuleActionRunWorkflowWorkflow;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.io.Serializable;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonPropertyOrder;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.annotation.JsonTypeName;
@@ -27,7 +27,7 @@
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  @JsonPropertyOrder({ EntityRiskPolicyRuleActionRunWorkflow.JSON_PROPERTY_ACTION,
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>          EntityRiskPolicyRuleActionRunWorkflow.JSON_PROPERTY_WORKFLOW })
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-08-09T14:20:02.220962-05:00[America/Chicago]"</span>, comments = <span class="jxr_string">"Generator version: 7.7.0"</span>)
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  @javax.annotation.Generated(value = <span class="jxr_string">"org.openapitools.codegen.languages.JavaClientCodegen"</span>, date = <span class="jxr_string">"2024-09-23T08:36:32.230490-05:00[America/Chicago]"</span>, comments = <span class="jxr_string">"Generator version: 7.8.0"</span>)
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> EntityRiskPolicyRuleActionRunWorkflow <strong class="jxr_keyword">implements</strong> Serializable {
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
@@ -71,7 +71,7 @@
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      <strong class="jxr_keyword">private</strong> ActionEnum action;
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>  
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JSON_PROPERTY_WORKFLOW = <span class="jxr_string">"workflow"</span>;
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">private</strong> ContinuousAccessPolicyRuleRunWorkflowWorkflow workflow;
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">private</strong> EntityRiskPolicyRuleActionRunWorkflowWorkflow workflow;
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">public</strong> EntityRiskPolicyRuleActionRunWorkflow() {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      }
@@ -102,7 +102,7 @@
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>          <strong class="jxr_keyword">this</strong>.action = action;
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>      }
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>  
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">public</strong> EntityRiskPolicyRuleActionRunWorkflow workflow(ContinuousAccessPolicyRuleRunWorkflowWorkflow workflow) {
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>      <strong class="jxr_keyword">public</strong> EntityRiskPolicyRuleActionRunWorkflow workflow(EntityRiskPolicyRuleActionRunWorkflowWorkflow workflow) {
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>  
 <a class="jxr_linenumber" name="L99" href="#L99">99</a>          <strong class="jxr_keyword">this</strong>.workflow = workflow;
 <a class="jxr_linenumber" name="L100" href="#L100">100</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -118,13 +118,13 @@
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>     @JsonProperty(JSON_PROPERTY_WORKFLOW)
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 <a class="jxr_linenumber" name="L112" href="#L112">112</a> 
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">public</strong> ContinuousAccessPolicyRuleRunWorkflowWorkflow getWorkflow() {
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">public</strong> EntityRiskPolicyRuleActionRunWorkflowWorkflow getWorkflow() {
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>         <strong class="jxr_keyword">return</strong> workflow;
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>     }
 <a class="jxr_linenumber" name="L116" href="#L116">116</a> 
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>     @JsonProperty(JSON_PROPERTY_WORKFLOW)
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setWorkflow(ContinuousAccessPolicyRuleRunWorkflowWorkflow workflow) {
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setWorkflow(EntityRiskPolicyRuleActionRunWorkflowWorkflow workflow) {
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>         <strong class="jxr_keyword">this</strong>.workflow = workflow;
 <a class="jxr_linenumber" name="L121" href="#L121">121</a>     }
 <a class="jxr_linenumber" name="L122" href="#L122">122</a> 
