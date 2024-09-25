@@ -40,7 +40,7 @@ This repository contains the Okta management SDK for Java. This SDK can be used 
 * Manage user types with the [User Types API](https://developer.okta.com/docs/reference/api/user-types/).
 * Manage custom domains with the [Domains API](https://developer.okta.com/docs/reference/api/domains/).
 * Manage network zones with the [Zones API](https://developer.okta.com/docs/reference/api/zones/).
-* Much more!
+* ... and much more!
  
 We also publish these libraries for Java:
  
