@@ -178,6 +178,7 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
             objectMapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+            objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
             {{#joda}}
                 objectMapper.registerModule(new JodaModule());
             {{/joda}}
@@ -898,6 +899,16 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
                                                                 if ("".equals(content)) { // returns null for empty body
                                                                 return null;
+                                                                }
+
+                                                                // some responses of list type contain a root element that need to be stripped before passing to ObjectMapper
+                                                                if (valueRawType.getTypeName().contains("java.util.List")) {
+                                                                if (content.startsWith("{\"")) {
+                                                                // remove leading {"blahblah":
+                                                                content = content.substring(content.indexOf(":") + 1);
+                                                                // remove trailing }
+                                                                content = content.substring(0, content.length() - 1);
+                                                                }
                                                                 }
 
                                                                 T value = objectMapper.readValue(content, valueType);
