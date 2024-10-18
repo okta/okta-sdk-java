@@ -47637,11 +47637,8 @@ components:
         name:
           type: string
           description: The name of the authentication provider
-          readOnly: true
-          example: OKTA
         type:
           $ref: '#/components/schemas/AuthenticationProviderType'
-      readOnly: true
     AuthenticationProviderType:
       description: The type of authentication provider
       type: string
@@ -47659,7 +47656,6 @@ components:
         LDAP: Specifies the directory instance name as the `name` property
         OKTA: Specifies the Okta Identity Provider
         SOCIAL: Doesn't support a `password` or `recovery question` credential and must authenticate through a trusted Identity Provider
-      readOnly: true
     AuthenticatorBase:
       type: object
       properties:
@@ -65680,10 +65676,8 @@ components:
             Enumerated value of the property.
 
             The value of the property is limited to one of the values specified in the enum definition. The list of values for the enum must consist of unique elements.
-          items:
-            anyOf:
-              - type: string
-              - type: integer
+        items:
+          $ref: '#/components/schemas/UserSchemaAttributeItems'
         externalName:
           type: string
           description: |-
