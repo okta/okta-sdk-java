@@ -62,6 +62,8 @@ jobs:
           additional-arguments: "--maven-aggregate-project"
 
   reversing-labs:
+    docker:
+      - image: cimg/openjdk:21.0.2-node
     steps:
       - checkout
       - run: npm install
