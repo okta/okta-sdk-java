@@ -66,11 +66,6 @@ jobs:
       - image: cimg/python:3.10
     steps:
       - checkout
-
-      - run:
-          name: Install Dependencies
-          command: pip wheel -r requirements.txt -w _vendor/
-
       - run:
           name: Download Reverse Labs Scanner
           command: |
