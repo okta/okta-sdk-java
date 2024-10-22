@@ -53,7 +53,7 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true
+      - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true -DskipITs
       - general-platform-helpers/step-load-dependencies
       - general-platform-helpers/step-run-snyk-monitor:
           scan-all-projects: false
@@ -67,7 +67,7 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true
+      - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true -DskipITs
       # Necessary to Install rl wrapper
       - run:
           name: Install Python
