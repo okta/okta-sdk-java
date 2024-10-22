@@ -64,6 +64,8 @@ jobs:
   reversing-labs:
     steps:
       - checkout
+      - run: npm install
+      - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true
       # Necessary to Install rl wrapper
       - run:
           name: Install Python
