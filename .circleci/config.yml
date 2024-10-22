@@ -62,10 +62,16 @@ jobs:
           additional-arguments: "--maven-aggregate-project"
 
   reversing-labs:
-    docker:
-      - image: cimg/python:3.10
     steps:
       - checkout
+      # Necessary to Install rl wrapper
+      - run:
+          name: Install Python
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y python3 python3-pip
+            sudo pip install --upgrade pip
+      # Download the scanner from Okta Security
       - run:
           name: Download Reverse Labs Scanner
           command: |
