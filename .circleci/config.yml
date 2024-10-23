@@ -110,7 +110,7 @@ jobs:
               --suppress_output
             echo "Scanning " ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/impl
             rl-wrapper \
-              --artifact ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/api \
+              --artifact ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/impl \
               --name $CIRCLE_PROJECT_REPONAME\
               --version $CIRCLE_SHA1\
               --repository $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME \
