@@ -52559,9 +52559,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/UserSchemaAttributeType'
         unique:
-          description: Determines whether property values must be unique
-          type: boolean
-          nullable: true
+          type: string
     GroupSchemaBase:
       type: object
       properties:
@@ -65764,9 +65762,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/UserSchemaAttributeType'
         unique:
-          description: Determines whether property values must be unique
-          type: boolean
-          nullable: true
+          type: string
       x-okta-allow-null-property-value-for-updates: true
     UserSchemaAttributeEnum:
       type: object
