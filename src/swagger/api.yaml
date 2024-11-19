@@ -14187,15 +14187,13 @@ paths:
           in: query
           schema:
             type: string
-            format: ISO 8601 compliant timestamp
-            default: 7 days prior to until
+            format: date-time
         - name: until
           description: Filters the upper time bound of the log events `published` property for bounded queries or persistence time for polling queries.
           in: query
           schema:
             type: string
-            format: ISO 8601 compliant timestamp
-            default: current time
+            format: date-time
         - name: after
           description: Retrieves the next page of results. Okta returns a link in the HTTP Header (`rel=next`) that includes the after query parameter
           in: query
