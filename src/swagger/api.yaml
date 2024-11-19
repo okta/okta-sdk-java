@@ -46641,12 +46641,7 @@ components:
         profile:
           $ref: '#/components/schemas/AppUserProfile'
         scope:
-          type: string
-          description: Indicates if the assignment is direct (`USER`) or by group membership (`GROUP`).
-          enum:
-            - USER
-            - GROUP
-          example: USER
+          $ref: '#/components/schemas/AppUserAssignmentType'
         status:
           $ref: '#/components/schemas/AppUserStatus'
         statusChanged:
@@ -46671,6 +46666,13 @@ components:
         - $ref: '#/components/schemas/AppUser'
         - required:
             - id
+    AppUserAssignmentType:
+      type: string
+      description: Indicates if the assignment is direct (`USER`) or by group membership (`GROUP`).
+      enum:
+        - USER
+        - GROUP
+      example: USER
     AppUserCredentials:
       description: |
         Specifies a user's credentials for the app.
@@ -46723,6 +46725,13 @@ components:
       properties:
         profile:
           $ref: '#/components/schemas/AppUserProfile'
+    AppUserScopeRequestPayload:
+      title: Scope
+      description: Updates the assigned user scope
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/AppUserAssignmentType'
     AppUserStatus:
       description: Status of an Application User
       example: ACTIVE
@@ -46781,6 +46790,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/AppUserCredentialsRequestPayload'
         - $ref: '#/components/schemas/AppUserProfileRequestPayload'
+        - $ref: '#/components/schemas/AppUserScopeRequestPayload'
     AppleClientSigning:
       description: |-
         Information used to generate the secret JSON Web Token for the token requests to Apple IdP
