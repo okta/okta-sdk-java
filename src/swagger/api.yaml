@@ -50933,9 +50933,7 @@ components:
         - type: object
           properties:
             asns:
-              allOf:
-                - $ref: '#/components/schemas/NetworkZoneAsns'
-                - description: An array of ASNs for a Network Zone
+              $ref: '#/components/schemas/NetworkZoneAsns'
             proxyType:
               type: string
               description: The proxy type used for a Dynamic Network Zone
@@ -50950,9 +50948,7 @@ components:
                 Tor: Use Tor Anonymizer proxy for the Dynamic Zone.
                 NotTorAnonymizer: Use a non Tor Anonymizer proxy for the Dynamic Zone.
             locations:
-              allOf:
-                - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                - description: An array of geolocations for a Dynamic Network Zone
+              $ref: '#/components/schemas/NetworkZoneLocationArray'
     ECKeyJWK:
       description: Elliptic Curve Key in JWK format, currently used during enrollment to encrypt fulfillment requests to Yubico, or during activation to verify Yubico's JWS objects in fulfillment responses. The currently agreed protocol uses P-384.
       type: object
@@ -51321,9 +51317,7 @@ components:
               description: <div class="x-lifecycle-container"><x-lifecycle class="ea"></x-lifecycle></div>The list of ASNs associated with an Enhanced Dynamic Network Zone
               properties:
                 include:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneAsns'
-                    - description: An array of ASNs to include for an Enhanced Dynamic Network Zone
+                  $ref: '#/components/schemas/NetworkZoneAsns'
             locations:
               x-okta-lifecycle:
                 lifecycle: EA
@@ -51333,13 +51327,9 @@ components:
               description: <div class="x-lifecycle-container"><x-lifecycle class="ea"></x-lifecycle></div>The list of geolocations to include or exclude for an Enhanced Dynamic Network Zone
               properties:
                 include:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                    - description: An array of geolocations to include for an Enhanced Dynamic Network Zone
+                  $ref: '#/components/schemas/NetworkZoneLocationArray'
                 exclude:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                    - description: An array of geolocations to exclude for an Enhanced Dynamic Network Zone
+                  $ref: '#/components/schemas/NetworkZoneLocationArray'
             ipServiceCategories:
               x-okta-lifecycle:
                 lifecycle: EA
