@@ -58188,7 +58188,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         description:
           description: Description of the Policy
           type: string
@@ -58203,7 +58202,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         name:
           description: Name of the Policy
           type: string
