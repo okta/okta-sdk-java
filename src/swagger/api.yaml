@@ -65701,8 +65701,8 @@ components:
             Enumerated value of the property.
 
             The value of the property is limited to one of the values specified in the enum definition. The list of values for the enum must consist of unique elements.
-        items:
-          $ref: '#/components/schemas/UserSchemaAttributeItems'
+          items:
+            $ref: '#/components/schemas/UserSchemaAttributeItems'
         externalName:
           type: string
           description: |-
