@@ -2317,7 +2317,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/OAuth2ClientJsonWebKey'
               examples:
                 OAuthClientJsonWebKeyResponseExample:
@@ -2735,7 +2734,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/OAuth2ClientSecret'
               examples:
                 OAuthClientSecretResponseExample:
