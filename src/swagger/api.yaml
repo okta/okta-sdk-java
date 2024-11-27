@@ -58102,13 +58102,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Permission'
-    PersonalAppsBlockList:
-      description: Defines a list of email domains with a subset of the properties for each domain
-      type: object
-      properties:
-        domains:
-          type: array
-          description: List of blocked email domains
     PinRequest:
       description: Pin Request
       type: object
@@ -60055,11 +60048,6 @@ components:
       enum:
         - progressive.profile
         - self.service.registration
-    RegistrationInlineHookResponse:
-      type: object
-      properties:
-        commands:
-          type: array
     RegistrationInlineHookSSRData:
       allOf:
         - $ref: '#/components/schemas/InlineHookBasePayload'
