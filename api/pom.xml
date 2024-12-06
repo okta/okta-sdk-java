@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
-        <version>23.0.0</version>
+        <version>20.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>okta-sdk-api</artifactId>
@@ -188,6 +188,7 @@
                                 <useRuntimeException>true</useRuntimeException>
                                 <enumUnknownDefaultCase>true</enumUnknownDefaultCase>
                                 <useJakartaEe>true</useJakartaEe>
+                                <useEnumCaseInsensitive>true</useEnumCaseInsensitive>
                             </configOptions>
                             <additionalProperties>serializableModel=true</additionalProperties>
                             <skipValidateSpec>true</skipValidateSpec>
