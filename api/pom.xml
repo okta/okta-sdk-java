@@ -193,6 +193,7 @@
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                                 <useRuntimeException>true</useRuntimeException>
                                 <enumUnknownDefaultCase>true</enumUnknownDefaultCase>
+                                <useEnumCaseInsensitive>true</useEnumCaseInsensitive>
                             </configOptions>
                             <additionalProperties>serializableModel=true</additionalProperties>
                             <skipValidateSpec>true</skipValidateSpec>
