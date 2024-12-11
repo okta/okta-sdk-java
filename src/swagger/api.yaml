@@ -50939,7 +50939,7 @@ components:
               enum:
                 - 'null'
                 - Any
-                - Tor
+                - TorAnonymizer
                 - NotTorAnonymizer
               x-enumDescriptions:
                 'null': (Or `""`) No proxy used
