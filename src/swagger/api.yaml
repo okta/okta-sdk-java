@@ -2317,7 +2317,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/OAuth2ClientJsonWebKey'
               examples:
                 OAuthClientJsonWebKeyResponseExample:
@@ -2735,7 +2734,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/OAuth2ClientSecret'
               examples:
                 OAuthClientSecretResponseExample:
@@ -11289,6 +11287,7 @@ paths:
       operationId: getHookKey
       parameters:
         - name: id
+          required: true
           description: A valid key ID
           in: path
           schema:
@@ -14186,15 +14185,13 @@ paths:
           in: query
           schema:
             type: string
-            format: ISO 8601 compliant timestamp
-            default: 7 days prior to until
+            format: date-time
         - name: until
           description: Filters the upper time bound of the log events `published` property for bounded queries or persistence time for polling queries.
           in: query
           schema:
             type: string
-            format: ISO 8601 compliant timestamp
-            default: current time
+            format: date-time
         - name: after
           description: Retrieves the next page of results. Okta returns a link in the HTTP Header (`rel=next`) that includes the after query parameter
           in: query
@@ -46664,12 +46661,7 @@ components:
         profile:
           $ref: '#/components/schemas/AppUserProfile'
         scope:
-          type: string
-          description: Indicates if the assignment is direct (`USER`) or by group membership (`GROUP`).
-          enum:
-            - USER
-            - GROUP
-          example: USER
+          $ref: '#/components/schemas/AppUserAssignmentType'
         status:
           $ref: '#/components/schemas/AppUserStatus'
         statusChanged:
@@ -46694,6 +46686,13 @@ components:
         - $ref: '#/components/schemas/AppUser'
         - required:
             - id
+    AppUserAssignmentType:
+      type: string
+      description: Indicates if the assignment is direct (`USER`) or by group membership (`GROUP`).
+      enum:
+        - USER
+        - GROUP
+      example: USER
     AppUserCredentials:
       description: |
         Specifies a user's credentials for the app.
@@ -46746,6 +46745,13 @@ components:
       properties:
         profile:
           $ref: '#/components/schemas/AppUserProfile'
+    AppUserScopeRequestPayload:
+      title: Scope
+      description: Updates the assigned user scope
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/AppUserAssignmentType'
     AppUserStatus:
       description: Status of an Application User
       example: ACTIVE
@@ -46804,6 +46810,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/AppUserCredentialsRequestPayload'
         - $ref: '#/components/schemas/AppUserProfileRequestPayload'
+        - $ref: '#/components/schemas/AppUserScopeRequestPayload'
     AppleClientSigning:
       description: |-
         Information used to generate the secret JSON Web Token for the token requests to Apple IdP
@@ -50946,16 +50953,14 @@ components:
         - type: object
           properties:
             asns:
-              allOf:
-                - $ref: '#/components/schemas/NetworkZoneAsns'
-                - description: An array of ASNs for a Network Zone
+              $ref: '#/components/schemas/NetworkZoneAsns'
             proxyType:
               type: string
               description: The proxy type used for a Dynamic Network Zone
               enum:
                 - 'null'
                 - Any
-                - Tor
+                - TorAnonymizer
                 - NotTorAnonymizer
               x-enumDescriptions:
                 'null': (Or `""`) No proxy used
@@ -50963,9 +50968,7 @@ components:
                 Tor: Use Tor Anonymizer proxy for the Dynamic Zone.
                 NotTorAnonymizer: Use a non Tor Anonymizer proxy for the Dynamic Zone.
             locations:
-              allOf:
-                - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                - description: An array of geolocations for a Dynamic Network Zone
+              $ref: '#/components/schemas/NetworkZoneLocationArray'
     ECKeyJWK:
       description: Elliptic Curve Key in JWK format, currently used during enrollment to encrypt fulfillment requests to Yubico, or during activation to verify Yubico's JWS objects in fulfillment responses. The currently agreed protocol uses P-384.
       type: object
@@ -51334,9 +51337,7 @@ components:
               description: <div class="x-lifecycle-container"><x-lifecycle class="ea"></x-lifecycle></div>The list of ASNs associated with an Enhanced Dynamic Network Zone
               properties:
                 include:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneAsns'
-                    - description: An array of ASNs to include for an Enhanced Dynamic Network Zone
+                  $ref: '#/components/schemas/NetworkZoneAsns'
             locations:
               x-okta-lifecycle:
                 lifecycle: EA
@@ -51346,13 +51347,9 @@ components:
               description: <div class="x-lifecycle-container"><x-lifecycle class="ea"></x-lifecycle></div>The list of geolocations to include or exclude for an Enhanced Dynamic Network Zone
               properties:
                 include:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                    - description: An array of geolocations to include for an Enhanced Dynamic Network Zone
+                  $ref: '#/components/schemas/NetworkZoneLocationArray'
                 exclude:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                    - description: An array of geolocations to exclude for an Enhanced Dynamic Network Zone
+                  $ref: '#/components/schemas/NetworkZoneLocationArray'
             ipServiceCategories:
               x-okta-lifecycle:
                 lifecycle: EA
@@ -58106,13 +58103,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Permission'
-    PersonalAppsBlockList:
-      description: Defines a list of email domains with a subset of the properties for each domain
-      type: object
-      properties:
-        domains:
-          type: array
-          description: List of blocked email domains
     PinRequest:
       description: Pin Request
       type: object
@@ -58192,7 +58182,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         description:
           description: Description of the Policy
           type: string
@@ -58207,7 +58196,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         name:
           description: Name of the Policy
           type: string
@@ -59387,26 +59375,18 @@ components:
             - example: DISABLED
             - default: DISABLED
     Protocol:
+      description: IdP-specific protocol settings for endpoints, bindings, and algorithms used to connect with the IdP and validate messages
       type: object
       properties:
-        algorithms:
-          $ref: '#/components/schemas/ProtocolAlgorithms'
-        credentials:
-          $ref: '#/components/schemas/IdentityProviderCredentials'
-        endpoints:
-          $ref: '#/components/schemas/ProtocolEndpoints'
-        issuer:
-          $ref: '#/components/schemas/ProtocolEndpoint'
-        relayState:
-          $ref: '#/components/schemas/ProtocolRelayState'
-        scopes:
-          type: array
-          items:
-            type: string
-        settings:
-          $ref: '#/components/schemas/ProtocolSettings'
         type:
           $ref: '#/components/schemas/ProtocolType'
+      discriminator:
+        propertyName: type
+        mapping:
+          SAML2: '#/components/schemas/ProtocolSaml'
+          OAUTH2: '#/components/schemas/ProtocolOAuth'
+          OIDC: '#/components/schemas/ProtocolOidc'
+          MTLS: '#/components/schemas/ProtocolMtls'
     ProtocolAlgorithmRequestScope:
       description: Specifies whether to digitally sign authorization requests to the IdP
       example: REQUEST
@@ -59434,83 +59414,71 @@ components:
     ProtocolMtls:
       title: Mutual TLS Protocol
       description: Protocol settings for the [MTLS Protocol](https://tools.ietf.org/html/rfc5246#section-7.4.4)
-      type: object
-      properties:
-        credentials:
-          $ref: '#/components/schemas/MtlsCredentials'
-        endpoints:
-          $ref: '#/components/schemas/MtlsEndpoints'
-        type:
-          type: string
-          description: Mutual TLS
-          enum:
-            - MTLS
+      allOf:
+        - $ref: '#/components/schemas/Protocol'
+        - type: object
+          properties:
+            credentials:
+              $ref: '#/components/schemas/MtlsCredentials'
+            endpoints:
+              $ref: '#/components/schemas/MtlsEndpoints'
     ProtocolOAuth:
       title: OAuth 2.0 Protocol
       description: Protocol settings for authentication using the [OAuth 2.0 Authorization Code flow](https://tools.ietf.org/html/rfc6749#section-4.1)
-      type: object
-      properties:
-        credentials:
-          $ref: '#/components/schemas/OAuthCredentials'
-        endpoints:
-          $ref: '#/components/schemas/OAuthEndpoints'
-        scopes:
-          type: array
-          description: |-
-            IdP-defined permission bundles to request delegated access from the User
-            > **Note:** The [Identity Provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each Identity Provider.
-          items:
-            type: string
-            example: public_profile
-        type:
-          type: string
-          description: OAuth 2.0 Authorization Code flow
-          enum:
-            - OAUTH2
+      allOf:
+        - $ref: '#/components/schemas/Protocol'
+        - type: object
+          properties:
+            credentials:
+              $ref: '#/components/schemas/OAuthCredentials'
+            endpoints:
+              $ref: '#/components/schemas/OAuthEndpoints'
+            scopes:
+              type: array
+              description: |-
+                IdP-defined permission bundles to request delegated access from the User
+                > **Note:** The [Identity Provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each Identity Provider.
+              items:
+                type: string
+                example: public_profile
     ProtocolOidc:
       title: OpenID Connect Protocol
       description: Protocol settings for authentication using the [OpenID Connect Protocol](http://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth)
-      type: object
-      properties:
-        algorithms:
-          $ref: '#/components/schemas/OidcAlgorithms'
-        credentials:
-          $ref: '#/components/schemas/OAuthCredentials'
-        endpoints:
-          $ref: '#/components/schemas/OAuthEndpoints'
-        scopes:
-          type: array
-          description: |-
-            OpenID Connect and IdP-defined permission bundles to request delegated access from the User
-            > **Note:** The [Identity Provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each Identity Provider.
-          items:
-            type: string
-            example: openid
-        type:
-          type: string
-          description: OpenID Connect Authorization Code flow
-          enum:
-            - OIDC
+      allOf:
+        - $ref: '#/components/schemas/Protocol'
+        - type: object
+          properties:
+            algorithms:
+              $ref: '#/components/schemas/OidcAlgorithms'
+            credentials:
+              $ref: '#/components/schemas/OAuthCredentials'
+            endpoints:
+              $ref: '#/components/schemas/OAuthEndpoints'
+            scopes:
+              type: array
+              description: |-
+                OpenID Connect and IdP-defined permission bundles to request delegated access from the User
+                > **Note:** The [Identity Provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each Identity Provider.
+              items:
+                type: string
+                example: openid
     ProtocolSaml:
       title: SAML 2.0 Protocol
       description: Protocol settings for the [SAML 2.0 Authentication Request Protocol](http://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)
-      type: object
-      properties:
-        algorithms:
-          $ref: '#/components/schemas/SamlAlgorithms'
-        credentials:
-          $ref: '#/components/schemas/SamlCredentials'
-        endpoints:
-          $ref: '#/components/schemas/SamlEndpoints'
-        relayState:
-          $ref: '#/components/schemas/SamlRelayState'
-        settings:
-          $ref: '#/components/schemas/SamlSettings'
-        type:
-          type: string
-          description: SAML 2.0 protocol
-          enum:
-            - SAML2
+      allOf:
+       - $ref: '#/components/schemas/Protocol'
+       - type: object
+         properties:
+           algorithms:
+             $ref: '#/components/schemas/SamlAlgorithms'
+           credentials:
+             $ref: '#/components/schemas/SamlCredentials'
+           endpoints:
+             $ref: '#/components/schemas/SamlEndpoints'
+           relayState:
+             $ref: '#/components/schemas/SamlRelayState'
+           settings:
+             $ref: '#/components/schemas/SamlSettings'
     ProtocolAlgorithmType:
       type: object
       properties:
@@ -60061,11 +60029,6 @@ components:
       enum:
         - progressive.profile
         - self.service.registration
-    RegistrationInlineHookResponse:
-      type: object
-      properties:
-        commands:
-          type: array
     RegistrationInlineHookSSRData:
       allOf:
         - $ref: '#/components/schemas/InlineHookBasePayload'
@@ -62493,7 +62456,7 @@ components:
       type: string
     SplunkToken:
       description: The HEC token for your Splunk Cloud HTTP Event Collector. The token value is set at object creation, but isn't returned.
-      example: 11111111-1111-2222-2222-222222222222
+      example: a747a818-a4c4-4446-8a87-704216495a08
       writeOnly: true
       type: string
       pattern: (?i)^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
@@ -64075,7 +64038,9 @@ components:
           description: Specifies the button label for the `Submit` button at the bottom of the enrollment form
           default: Submit
         elements:
-          $ref: '#/components/schemas/UIElement'
+          type: array
+          items:
+            $ref: '#/components/schemas/UIElement'
         label:
           type: string
           description: Specifies the label at the top of the enrollment form under the logo
@@ -65674,8 +65639,8 @@ components:
             Enumerated value of the property.
 
             The value of the property is limited to one of the values specified in the enum definition. The list of values for the enum must consist of unique elements.
-        items:
-          $ref: '#/components/schemas/UserSchemaAttributeItems'
+          items:
+            $ref: '#/components/schemas/UserSchemaAttributeItems'
         externalName:
           type: string
           description: |-
