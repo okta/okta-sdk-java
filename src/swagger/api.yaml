@@ -13620,14 +13620,22 @@ paths:
         isGenerallyAvailable: true
   /api/v1/inlineHooks:
     get:
-      summary: List all Inline Hooks
-      description: Lists all inline hooks
+      summary: List all inline hooks
+      description: |-
+        Lists all inline hooks or all inline hooks of a specific type.
+
+        When listing a specific inline hook, you need to specify its type. The following types are currently supported:
+          | Type Value                         | Name                                                           |
+          |------------------------------------|----------------------------------------------------------------|
+          | `com.okta.import.transform`        | [User import inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/createUserImportInlineHook)       |
+          | `com.okta.oauth2.tokens.transform` | [Token inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/createTokenInlineHook)               |
+          | `com.okta.saml.tokens.transform`   | [SAML assertion inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/createSAMLAssertionInlineHook)       |
+          | `com.okta.telephony.provider`      | [Telephony inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/createTelephonyInlineHook) |
+          | `com.okta.user.credential.password.import` | [Password import inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/createPasswordImportInlineHook)|
+          | `com.okta.user.pre-registration`   | [Registration inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/create-registration-hook) |
       operationId: listInlineHooks
       parameters:
-        - name: type
-          in: query
-          schema:
-            type: string
+      - $ref: '#/components/parameters/inlineHookType'
       responses:
         '200':
           description: Success
@@ -13638,31 +13646,58 @@ paths:
                 items:
                   $ref: '#/components/schemas/InlineHook'
               examples:
-                AuthenticatorConfiguration:
-                  $ref: '#/components/examples/InlineHookTelephony'
+                InlineHooktMgmtListAllexample:
+                  $ref: '#/components/examples/InlineHooktMgmtListAllexample'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.read
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.read
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
     post:
-      summary: Create an Inline Hook
-      description: Creates an inline hook
+      summary: Create an inline hook
+      description: "Creates an inline hook\n\nThis endpoint creates an inline hook\
+        \ for your org in an `ACTIVE` status. You need to pass an inline hooks object\
+        \ in the JSON payload of your request. \nThat object represents the set of\
+        \ required information about the inline hook that you're registering, including:\n\
+        \n* The URI of your external service endpoint\n* The type of inline hook you're\
+        \ registering\n* The type of authentication you're registering\n\nThere are\
+        \ two authentication options that you can configure for your inline hook:\
+        \ HTTP headers and OAuth 2.0 tokens.\n\nHTTP headers let you specify a secret\
+        \ API key that you want Okta to pass to your external service endpoint (so\
+        \ that your external service can check for its presence as a security measure).\n\
+        \n>**Note:** The API key that you set here is unrelated to the Okta API token\
+        \ you must supply when making calls to Okta APIs.\n\nYou can also optionally\
+        \ specify extra headers that you want Okta to pass to your external service\
+        \ with each call.\n\nTo configure HTTP header authentication, see parameters\
+        \ for the `config` object.\n\nOAuth 2.0 tokens provide enhanced security between\
+        \ Okta and your external service. You can configure these tokens for the following\
+        \ types&mdash;client secret and private key.\n\n>**Note:** Your external service's\
+        \ endpoint needs to be a valid HTTPS endpoint. The URI you specify should\
+        \ always begin with `https://`.\n\nThe total number of inline hooks that you\
+        \ can create in an Okta org is limited to 50, which is a combined total for\
+        \ any combination of inline hook types."
       operationId: createInlineHook
-      x-codegen-request-body-name: inlineHook
+      x-codegen-request-body-name: inlineHookCreate
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InlineHook'
+              $ref: '#/components/schemas/InlineHookCreate'
+            examples:
+              CreateInlineHookHTTP:
+                $ref: '#/components/examples/InlineHookMgmtCreateHTTPRequest'
+              CreateInlineHookOAuthClientSecret:
+                $ref: '#/components/examples/InlineHookMgmtCreateOAuthClientSecretRequest'
+              CreateInlineHookOAuthPrivateKey:
+                $ref: '#/components/examples/InlineHookMgmtCreateOAuthPrivateKeyRequest'
         required: true
       responses:
         '200':
@@ -13670,7 +13705,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InlineHook'
+                $ref: '#/components/schemas/InlineHookCreateResponse'
+              examples:
+                CreateInlineHookHTTP:
+                  $ref: '#/components/examples/InlineHookMgmtCreateHTTPResponse'
+                CreateInlineHookOAuthClientSecret:
+                  $ref: '#/components/examples/InlineHookMgmtCreateOAuthClientSecretResponse'
+                CreateInlineHookOAuthPrivateKey:
+                  $ref: '#/components/examples/InlineHookMgmtCreateOAuthPrivateKeyResponse'
         '400':
           $ref: '#/components/responses/ErrorApiValidationFailed400'
         '403':
@@ -13678,19 +13720,19 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
   /api/v1/inlineHooks/{inlineHookId}:
     parameters:
-      - $ref: '#/components/parameters/pathInlineHookId'
+    - $ref: '#/components/parameters/pathInlineHookId'
     get:
-      summary: Retrieve an Inline Hook
+      summary: Retrieve an inline hook
       description: Retrieves an inline hook by `inlineHookId`
       operationId: getInlineHook
       responses:
@@ -13701,8 +13743,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/InlineHook'
               examples:
-                AuthenticatorConfiguration:
-                  $ref: '#/components/examples/InlineHookTelephony'
+                InlineHookHTTP:
+                  $ref: '#/components/examples/InlineHookMgmtHTTPexample'
+                InlineHookOAuthClientSecret:
+                  $ref: '#/components/examples/InlineHookMgmtOAuthCSPexample'
+                InlineHookOAuthPrivateKey:
+                  $ref: '#/components/examples/InlineHookMgmtOauthPKJexample'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '404':
@@ -13710,16 +13756,16 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.read
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.read
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
     post:
-      summary: Update an Inline Hook
+      summary: Update an inline hook
       description: Updates an inline hook by `inlineHookId`
       operationId: updateInlineHook
       x-codegen-request-body-name: inlineHook
@@ -13727,7 +13773,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InlineHook'
+              $ref: '#/components/schemas/InlineHookReplace'
+            examples:
+              UpdateInlineHookHTTP:
+                $ref: '#/components/examples/InlineHookMgmtPutHTTPRequest'
         required: true
       responses:
         '200':
@@ -13736,6 +13785,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InlineHook'
+              examples:
+                UpdateInlineHookHTTP:
+                  $ref: '#/components/examples/InlineHookMgmtPutResponse'
         '400':
           $ref: '#/components/responses/ErrorApiValidationFailed400'
         '403':
@@ -13745,24 +13797,30 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
     put:
-      summary: Replace an Inline Hook
-      description: Replaces an inline hook by `inlineHookId`
+      summary: Replace an inline hook
+      description: |-
+        Replaces an inline hook by `inlineHookId`. The submitted inline hook properties replace the existing properties after passing validation.
+
+        >**Note:** Some properties are immutable and can't be updated.
       operationId: replaceInlineHook
       x-codegen-request-body-name: inlineHook
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InlineHook'
+              $ref: '#/components/schemas/InlineHookReplace'
+            examples:
+              UpdateInlineHookHTTP:
+                $ref: '#/components/examples/InlineHookMgmtPutHTTPRequest'
         required: true
       responses:
         '200':
@@ -13771,6 +13829,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InlineHook'
+              examples:
+                UpdateInlineHookHTTP:
+                  $ref: '#/components/examples/InlineHookMgmtPutResponse'
         '400':
           $ref: '#/components/responses/ErrorApiValidationFailed400'
         '403':
@@ -13780,17 +13841,19 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
     delete:
-      summary: Delete an Inline Hook
-      description: Deletes an inline hook by `inlineHookId`. Once deleted, the Inline Hook is unrecoverable. As a safety precaution, only Inline Hooks with a status of INACTIVE are eligible for deletion.
+      summary: Delete an inline hook
+      description: Deletes an inline hook by `inlineHookId`. After it's deleted, the
+        inline hook is unrecoverable. As a safety precaution, only inline hooks with
+        a status of `INACTIVE` are eligible for deletion.
       operationId: deleteInlineHook
       responses:
         '204':
@@ -13803,27 +13866,56 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
   /api/v1/inlineHooks/{inlineHookId}/execute:
     parameters:
-      - $ref: '#/components/parameters/pathInlineHookId'
+    - $ref: '#/components/parameters/pathInlineHookId'
     post:
       summary: Execute an Inline Hook
-      description: Executes the inline hook by `inlineHookId` using the request body as the input. This will send the provided data through the Channel and return a response if it matches the correct data contract. This execution endpoint should only be used for testing purposes.
+      description: "Executes the inline hook that matches the provided `inlineHookId`\
+        \ by using the request body as the input. This inline hook sends the provided\
+        \ \ndata through the `channel` object and returns a response if it matches\
+        \ the correct data contract. Otherwise it returns an error. You need to \n\
+        construct a JSON payload that matches the payloads that Okta would send to\
+        \ your external service for this inline hook type.\n\nA timeout of three seconds\
+        \ is enforced on all outbound requests, with one retry in the event of a timeout\
+        \ or an error response from the remote system. \nIf a successful response\
+        \ isn't received after the request, a 400 error is returned with more information\
+        \ about what failed.\n\n>**Note:** This execution endpoint isn't tied to any\
+        \ other functionality in Okta, and you should only use it for testing purposes."
       operationId: executeInlineHook
       x-codegen-request-body-name: payloadData
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InlineHookPayload'
+              oneOf:
+              - $ref: '#/components/schemas/PasswordImportRequestExecute'
+              - $ref: '#/components/schemas/TelephonyRequestExecute'
+              - $ref: '#/components/schemas/RegistrationInlineHookRequest'
+              - $ref: '#/components/schemas/TokenRequest'
+              - $ref: '#/components/schemas/SAMLPayloadExecute'
+              - $ref: '#/components/schemas/UserImportRequestExecute'
+            examples:
+              PasswordImportPayloadExample:
+                $ref: '#/components/examples/PasswordImportPayloadExample'
+              TelephonyPayloadExample:
+                $ref: '#/components/examples/TelephonyPayloadExample'
+              ProfileEnrollmentRequest:
+                $ref: '#/components/examples/ProfileEnrollmentRequest'
+              TokenPayLoadExample:
+                $ref: '#/components/examples/TokenPayLoadExample'
+              SAMLPayloadExample:
+                $ref: '#/components/examples/SAMLPayLoadExample'
+              UserImportPayloadExample:
+                $ref: '#/components/examples/UserImportPayloadExample'
         required: true
       responses:
         '200':
@@ -13831,7 +13923,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InlineHookResponse'
+                oneOf:
+                - $ref: '#/components/schemas/PasswordImportResponse'
+                - $ref: '#/components/schemas/TelephonyResponse'
+                - $ref: '#/components/schemas/RegistrationInlineHookResponse'
+                - $ref: '#/components/schemas/TokenHookResponse'
+                - $ref: '#/components/schemas/SAMLHookResponse'
+                - $ref: '#/components/schemas/UserImportResponse'
+              examples:
+                PasswordImportPayloadExample:
+                  $ref: '#/components/examples/PasswordImportVerifiedResponse'
+                TelephonyPayloadExample:
+                  $ref: '#/components/examples/TelephonySuccessResponse'
+                ProfileEnrollmentRequest:
+                  $ref: '#/components/examples/ProfileEnrollmentResponse'
+                TokenPayLoadExample:
+                  $ref: '#/components/examples/TokenHookResponse'
+                SAMLPayloadExample:
+                  $ref: '#/components/examples/SAMLHookResponseExample'
+                UserImportPayloadExample:
+                  $ref: '#/components/examples/UserImportChangeAppUserProfileExample'
         '400':
           $ref: '#/components/responses/ErrorApiValidationFailed400'
         '403':
@@ -13841,19 +13952,19 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
   /api/v1/inlineHooks/{inlineHookId}/lifecycle/activate:
     parameters:
-      - $ref: '#/components/parameters/pathInlineHookId'
+    - $ref: '#/components/parameters/pathInlineHookId'
     post:
-      summary: Activate an Inline Hook
+      summary: Activate an inline hook
       description: Activates the inline hook by `inlineHookId`
       operationId: activateInlineHook
       responses:
@@ -13863,6 +13974,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InlineHook'
+              examples:
+                ActivateAnInlineHook:
+                  $ref: '#/components/examples/InlineHookMgmtOAuthCSPexample'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '404':
@@ -13870,19 +13984,19 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
   /api/v1/inlineHooks/{inlineHookId}/lifecycle/deactivate:
     parameters:
-      - $ref: '#/components/parameters/pathInlineHookId'
+    - $ref: '#/components/parameters/pathInlineHookId'
     post:
-      summary: Deactivate an Inline Hook
+      summary: Deactivate an inline hook
       description: Deactivates the inline hook by `inlineHookId`
       operationId: deactivateInlineHook
       responses:
@@ -13892,6 +14006,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InlineHook'
+              examples:
+                DeactivateAnInlineHook:
+                  $ref: '#/components/examples/InlineHookMgmtHTTPexampleDeactivate'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '404':
@@ -13899,11 +14016,11 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
@@ -44653,6 +44770,19 @@ components:
       required: true
       schema:
         type: string
+    inlineHookType:
+      name: type
+      description: One of the supported inline hook types
+      in: query
+      schema:
+        type: string
+        enum:
+        - com.okta.import.transform
+        - com.okta.oauth2.tokens.transform
+        - com.okta.saml.tokens.transform
+        - com.okta.user.credential.password.import
+        - com.okta.user.pre-registration
+        - com.okta.telephony.provider
     limitParameter:
       name: limit
       in: query
@@ -53584,6 +53714,8 @@ components:
             capabilities:
               $ref: '#/components/schemas/CapabilitiesInboundProvisioningObject'
     InlineHook:
+      description: An inline hook object that specifies the details of the inline
+        hook
       type: object
       properties:
         channel:
@@ -53592,28 +53724,32 @@ components:
           type: string
           format: date-time
           readOnly: true
+          description: Date of the inline hook creation
         id:
           type: string
           readOnly: true
+          description: The unique identifier for the inline hook
         lastUpdated:
           type: string
           format: date-time
           readOnly: true
-        metadata:
-          type: object
-          description: Specific properties for the inline hook configuration, for example, `optOutServiceProtectionRateLimit` to opt-out of Telephony Service Protection Rate Limits when using the Telephony inline hook.
-          additionalProperties:
-            type: string
+          description: Date of the last inline hook update
         name:
           type: string
+          description: The display name of the inline hook
+          maximum: 255
+          minimum: 1
         status:
           $ref: '#/components/schemas/InlineHookStatus'
         type:
           $ref: '#/components/schemas/InlineHookType'
         version:
           type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
+          readOnly: true
         _links:
-          $ref: '#/components/schemas/LinksSelf'
+          $ref: '#/components/schemas/InlineHookLinks'
     InlineHookBasePayload:
       type: object
       properties:
@@ -53632,7 +53768,7 @@ components:
         eventTime:
           type: string
           description: The time the inline hook request was sent
-          example: '2020-01-17T21:23:56.000Z'
+          example: 2020-01-17T21:23:56.000Z
         eventTypeVersion:
           description: The inline hook version
           example: 1
@@ -53644,47 +53780,116 @@ components:
           $ref: '#/components/schemas/InlineHookChannelType'
         version:
           type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
       discriminator:
         propertyName: type
         mapping:
           HTTP: '#/components/schemas/InlineHookChannelHttp'
           OAUTH: '#/components/schemas/InlineHookChannelOAuth'
     InlineHookChannelConfig:
+      description: Properties of the communications channel that are used to contact
+        your external service
       type: object
       properties:
-        authScheme:
-          $ref: '#/components/schemas/InlineHookChannelConfigAuthScheme'
         headers:
           type: array
+          description: An optional list of key/value pairs for headers that you can
+            send with the request to the external service
           items:
             $ref: '#/components/schemas/InlineHookChannelConfigHeaders'
         method:
           type: string
+          description: The method of the Okta inline hook request
         uri:
           type: string
-    InlineHookChannelConfigAuthScheme:
+          description: The external service endpoint that executes the inline hook
+            handler. It must begin with `https://` and be reachable by Okta. No white
+            space is allowed in the URI.
+          maximum: 1024
+    InlineHookChannelConfigAuthSchemeBody:
+      description: The authentication scheme to use for this request
+      nullable: true
       type: object
       properties:
         key:
           type: string
+          description: The header name for the authorization server
         type:
           type: string
+          description: The authentication scheme type. Supported type&mdash;`HEADER`.
         value:
           type: string
+          description: The header value. This secret value is passed to your external
+            service endpoint. Your external service can check it as a security measure.
+    InlineHookChannelConfigAuthSchemeResponse:
+      description: The authentication scheme to use for this request
+      nullable: true
+      type: object
+      properties:
+        key:
+          type: string
+          description: The header name for the authorization server
+        type:
+          type: string
+          description: The authentication scheme type. Supported type&mdash;`HEADER`
+    InlineHookChannelConfigCreate:
+      description: Properties of the communications channel that are used to contact
+        your external service
+      type: object
+      properties:
+        headers:
+          type: array
+          description: An optional list of key/value pairs for headers that you can
+            send with the request to the external service.
+          items:
+            $ref: '#/components/schemas/InlineHookChannelConfigHeaders'
+        method:
+          type: string
+          description: The method of the Okta inline hook request
+        uri:
+          type: string
+          description: The external service endpoint that executes the inline hook
+            handler. It must begin with `https://` and be reachable by Okta. No white
+            space is allowed in the URI.
+          maximum: 1024
     InlineHookChannelConfigHeaders:
       type: object
       properties:
         key:
           type: string
+          description: The optional field or header name
         value:
           type: string
+          description: The value for the key
+    InlineHookChannelCreate:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/InlineHookChannelType'
+        version:
+          type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
+      discriminator:
+        propertyName: type
+        mapping:
+          HTTP: '#/components/schemas/InlineHookChannelHttpCreate'
+          OAUTH: '#/components/schemas/InlineHookChannelOAuthCreate'
     InlineHookChannelHttp:
       allOf:
         - $ref: '#/components/schemas/InlineHookChannel'
         - type: object
           properties:
             config:
-              $ref: '#/components/schemas/InlineHookChannelConfig'
+              $ref: '#/components/schemas/InlineHookHttpConfig'
+    InlineHookChannelHttpCreate:
+      allOf:
+        - $ref: '#/components/schemas/InlineHookChannelCreate'
+        - type: object
+          properties:
+            config:
+              $ref: '#/components/schemas/InlineHookHttpConfigCreate'
     InlineHookChannelOAuth:
       allOf:
         - $ref: '#/components/schemas/InlineHookChannel'
@@ -53692,51 +53897,221 @@ components:
           properties:
             config:
               $ref: '#/components/schemas/InlineHookOAuthChannelConfig'
+    InlineHookChannelOAuthCreate:
+      allOf:
+        - $ref: '#/components/schemas/InlineHookChannelCreate'
+        - type: object
+          properties:
+            config:
+              $ref: '#/components/schemas/InlineHookOAuthChannelConfigCreate'
     InlineHookChannelType:
       type: string
       enum:
-        - HTTP
-        - OAUTH
+      - HTTP
+      - OAUTH
+    InlineHookCreate:
+      description: An inline hook object that specifies the details of the inline
+        hook
+      type: object
+      properties:
+        channel:
+          $ref: '#/components/schemas/InlineHookChannelCreate'
+        name:
+          type: string
+          description: The display name of the inline hook
+          maximum: 255
+          minimum: 1
+        type:
+          $ref: '#/components/schemas/InlineHookType'
+        version:
+          type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
+    InlineHookCreateResponse:
+      description: An inline hook object that specifies the details of the inline
+        hook
+      type: object
+      properties:
+        channel:
+          $ref: '#/components/schemas/InlineHookChannel'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Date of the inline hook creation
+        id:
+          type: string
+          readOnly: true
+          description: The unique identifier for the inline hook
+        lastUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Date of the last inline hook update
+        name:
+          type: string
+          description: The display name of the inline hook
+          maximum: 255
+          minimum: 1
+        status:
+          $ref: '#/components/schemas/InlineHookStatus'
+        type:
+          $ref: '#/components/schemas/InlineHookType'
+        version:
+          type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
+          readOnly: true
+        _links:
+          $ref: '#/components/schemas/InlineHookLinksCreate'
+    InlineHookHttpConfig:
+        allOf:
+        - $ref: '#/components/schemas/InlineHookChannelConfig'
+        - type: object
+          properties:
+            authScheme:
+              $ref: '#/components/schemas/InlineHookChannelConfigAuthSchemeResponse'
+    InlineHookHttpConfigCreate:
+      allOf:
+        - $ref: '#/components/schemas/InlineHookChannelConfigCreate'
+        - type: object
+          properties:
+            authScheme:
+              $ref: '#/components/schemas/InlineHookChannelConfigAuthSchemeBody'
+    InlineHookLinks:
+      allOf:
+        - $ref: '#/components/schemas/LinksSelf'
+        - type: object
+          properties:
+            activate:
+              description: URL to activate the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
+            deactivate:
+              description: URL to deactivate the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
+            delete:
+              description: URL to delete the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
+            execute:
+              description: URL to test the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
+    InlineHookLinksCreate:
+      allOf:
+        - $ref: '#/components/schemas/LinksSelf'
+        - type: object
+          properties:
+            deactivate:
+              description: URL to deactivate the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
+            execute:
+              description: URL to test the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
     InlineHookOAuthBasicConfig:
       allOf:
         - $ref: '#/components/schemas/InlineHookChannelConfig'
-      type: object
-      properties:
-        authType:
-          type: string
-        clientId:
-          type: string
-        scope:
-          type: string
-        tokenUrl:
-          type: string
+        - type: object
+          properties:
+            clientId:
+              type: string
+              description: A publicly exposed string provided by the service that's used
+                to identify the OAuth app and build authorization URLs
+            scope:
+              type: string
+              description: Include the scopes that allow you to perform the actions on
+                the hook endpoint that you want to access
+            tokenUrl:
+              type: string
+              description: The URI where inline hooks can exchange an authorization code
+                for access and refresh tokens
     InlineHookOAuthChannelConfig:
       type: object
       properties:
         authType:
           type: string
+          description: The authentication method for the token endpoint
       discriminator:
         propertyName: authType
         mapping:
           client_secret_post: '#/components/schemas/InlineHookOAuthClientSecretConfig'
           private_key_jwt: '#/components/schemas/InlineHookOAuthPrivateKeyJwtConfig'
+    InlineHookOAuthChannelConfigCreate:
+      type: object
+      properties:
+        authType:
+          type: string
+          description: The authentication method for the token endpoint
+      discriminator:
+        propertyName: authType
+        mapping:
+          client_secret_post: '#/components/schemas/InlineHookOAuthClientSecretConfigCreate'
+          private_key_jwt: '#/components/schemas/InlineHookOAuthPrivateKeyJwtConfig'
     InlineHookOAuthClientSecretConfig:
       allOf:
         - $ref: '#/components/schemas/InlineHookOAuthBasicConfig'
-      type: object
-      properties:
-        clientSecret:
-          type: string
+        - $ref: '#/components/schemas/InlineHookOAuthChannelConfig'
+        - type: object
+          properties:
+            authScheme:
+              type: string
+              description: Not applicable. Must be `null`.
+              nullable: true
+    InlineHookOAuthClientSecretConfigCreate:
+      allOf:
+        - $ref: '#/components/schemas/InlineHookOAuthBasicConfig'
+        - $ref: '#/components/schemas/InlineHookOAuthChannelConfigCreate'
+        - type: object
+          properties:
+            clientSecret:
+              type: string
+              description: A private value provided by the service used to authenticate
+                the identity of the app to the service
+            method:
+              type: string
+              description: The method of the Okta inline hook request. Only accepts `POST`.
     InlineHookOAuthPrivateKeyJwtConfig:
       allOf:
         - $ref: '#/components/schemas/InlineHookOAuthBasicConfig'
-      type: object
-      properties:
-        hookKeyId:
-          type: string
+        - $ref: '#/components/schemas/InlineHookOAuthChannelConfig'
+        - type: object
+          properties:
+            authType:
+                type: string
+            authScheme:
+              type: string
+              description: Not applicable. Must be `null`.
+              nullable: true
+            hookKeyId:
+              type: string
+              description: An ID value of the hook key pair generated from the [Hook Keys
+                API](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/HookKey/#tag/HookKey)
+            method:
+              type: string
+              description: The method of the Okta inline hook request. Only accepts `POST`.
     InlineHookPayload:
       type: object
       x-okta-extensible: true
+    InlineHookReplace:
+      description: An inline hook object that specifies the details of the inline
+        hook
+      type: object
+      properties:
+        channel:
+          $ref: '#/components/schemas/InlineHookChannelCreate'
+        name:
+          type: string
+          description: The display name of the inline hook
+          maximum: 255
+          minimum: 1
+        version:
+          type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
     InlineHookRequestObject:
       description: The API request that triggered the inline hook
       type: object
@@ -53785,17 +54160,18 @@ components:
     InlineHookStatus:
       type: string
       enum:
-        - ACTIVE
-        - INACTIVE
+      - ACTIVE
+      - INACTIVE
     InlineHookType:
+      description: One of the inline hook types
       type: string
       enum:
-        - com.okta.import.transform
-        - com.okta.oauth2.tokens.transform
-        - com.okta.saml.tokens.transform
-        - com.okta.telephony.provider
-        - com.okta.user.credential.password.import
-        - com.okta.user.pre-registration
+      - com.okta.import.transform
+      - com.okta.oauth2.tokens.transform
+      - com.okta.saml.tokens.transform
+      - com.okta.telephony.provider
+      - com.okta.user.credential.password.import
+      - com.okta.user.pre-registration
     IssuerMode:
       type: string
       enum:
