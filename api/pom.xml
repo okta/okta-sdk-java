@@ -62,12 +62,6 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.3.2</version>
-        </dependency>
-
         <!-- Swagger annotations -->
         <dependency>
             <groupId>io.swagger</groupId>
@@ -193,6 +187,7 @@
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                                 <useRuntimeException>true</useRuntimeException>
                                 <enumUnknownDefaultCase>true</enumUnknownDefaultCase>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <additionalProperties>serializableModel=true</additionalProperties>
                             <skipValidateSpec>true</skipValidateSpec>
