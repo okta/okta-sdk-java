@@ -3472,7 +3472,7 @@ paths:
           in: query
           required: true
           schema:
-            type: string
+            type: integer
             example: mXtzOtml09Dg1ZCeKxTRBo3KrQuBWFkJ5oxhVagjTzo
       responses:
         '200':
@@ -56662,6 +56662,7 @@ components:
           type: boolean
           default: false
     OktaUserGroupProfile:
+      additionalProperties: true
       description: |-
         Profile for any Group that is not imported from Active Directory. Specifies the standard
         and custom profile properties for a Group.
