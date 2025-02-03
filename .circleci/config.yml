@@ -9,7 +9,7 @@ aliases:
 
   - &build_steps
     - checkout
-    - general-platform-helpers/step-load-dependencies
+    - platform-helpers/step-load-dependencies
     - run: java -version
     - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true
     - run: mvn test
@@ -54,8 +54,8 @@ jobs:
       - checkout
       - run: npm install
       - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true -DskipITs
-      - general-platform-helpers/step-load-dependencies
-      - general-platform-helpers/step-run-snyk-monitor:
+      - platform-helpers/step-load-dependencies
+      - platform-helpers/step-run-snyk-monitor:
           scan-all-projects: false
           skip-unresolved: false
           run-on-non-main: true
