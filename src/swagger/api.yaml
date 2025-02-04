@@ -56960,6 +56960,10 @@ components:
               $ref: '#/components/schemas/PolicyPeopleCondition'
             identityProvider:
               $ref: '#/components/schemas/IdentityProviderPolicyRuleCondition'
+            risk:
+              $ref: '#/components/schemas/RiskPolicyRuleCondition'
+            riskScore:
+              $ref: '#/components/schemas/RiskScorePolicyRuleCondition'
     OktaSignOnPolicyRuleSignonActions:
       type: object
       properties:
