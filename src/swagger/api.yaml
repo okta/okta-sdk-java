@@ -54181,8 +54181,7 @@ components:
       type: object
       properties:
         resend:
-          allOf:
-            - description: Resends the factor enrollment challenge. See [Resend a Factor enrollment](/openapi/okta-management/management/tag/UserFactor/#tag/UserFactor/operation/resendEnrollFactor).
+          items:
             - $ref: '#/components/schemas/HrefObject'
       readOnly: true
     LinksSelf:
@@ -64648,7 +64647,7 @@ components:
           description: Result of the verification transaction
           type: string
           enum:
-            - WAITING
+            - WAITING (With blah)
             - SUCCESS
             - REJECTED
             - TIMEOUT
