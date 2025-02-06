@@ -54181,7 +54181,7 @@ components:
       type: object
       properties:
         resend:
-          allOf:
+          items:
             - description: Resends the factor enrollment challenge. See [Resend a Factor enrollment](/openapi/okta-management/management/tag/UserFactor/#tag/UserFactor/operation/resendEnrollFactor).
             - $ref: '#/components/schemas/HrefObject'
       readOnly: true
