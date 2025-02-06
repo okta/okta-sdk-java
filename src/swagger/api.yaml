@@ -64647,7 +64647,7 @@ components:
           description: Result of the verification transaction
           type: string
           enum:
-            - WAITING (With blah)
+            - WAITING
             - SUCCESS
             - REJECTED
             - TIMEOUT
