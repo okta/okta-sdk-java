@@ -268,7 +268,7 @@ public class ReadmeSnippets {
         SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings();
         swaApplicationSettings.app(swaApplicationSettingsApplication);
         BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication();
-        browserPluginApplication.name(BrowserPluginApplication.NameEnum.SWA);
+        browserPluginApplication.name(BrowserPluginApplication.NameEnum.TEMPLATE_SWA);
         browserPluginApplication.label("Sample Plugin App");
         browserPluginApplication.settings(swaApplicationSettings);
 

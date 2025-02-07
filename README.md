@@ -419,7 +419,7 @@ swaApplicationSettingsApplication.buttonField("btn-login")
 SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings();
 swaApplicationSettings.app(swaApplicationSettingsApplication);
 BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication();
-browserPluginApplication.name(BrowserPluginApplication.NameEnum.SWA);
+browserPluginApplication.name(BrowserPluginApplication.NameEnum.TEMPLATE_SWA);
 browserPluginApplication.label("Sample Plugin App");
 browserPluginApplication.settings(swaApplicationSettings);
 
@@ -505,7 +505,6 @@ Map<String, String> cookieParams = new HashMap<String, String>();
 Map<String, Object> formParams = new HashMap<String, Object>();
 TypeReference<com.okta.sdk.resource.model.User> returnType = new TypeReference<com.okta.sdk.resource.model.User>() {
 };
-
 com.okta.sdk.resource.model.User user = client.invokeAPI(
     "/api/v1/users",
     "POST",

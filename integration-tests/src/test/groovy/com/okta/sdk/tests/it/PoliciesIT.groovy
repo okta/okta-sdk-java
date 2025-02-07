@@ -34,7 +34,6 @@ import com.okta.sdk.resource.model.OktaSignOnPolicyRuleActions
 import com.okta.sdk.resource.model.OktaSignOnPolicyRuleSignonActions
 import com.okta.sdk.resource.model.OpenIdConnectApplicationType
 import com.okta.sdk.resource.model.Policy
-import com.okta.sdk.resource.model.PolicyAccess
 import com.okta.sdk.resource.model.PolicyRuleType
 import com.okta.sdk.resource.model.PolicyRuleVerificationMethodType
 import com.okta.sdk.resource.model.PolicyType
@@ -47,7 +46,6 @@ import com.okta.sdk.resource.client.ApiException
 import com.okta.sdk.resource.api.ApplicationApi
 import com.okta.sdk.resource.api.GroupApi
 import com.okta.sdk.resource.api.PolicyApi
-import com.okta.sdk.resource.model.*
 import org.testng.annotations.Test
 
 import static com.okta.sdk.tests.it.util.Util.expect

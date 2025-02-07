@@ -56,7 +56,6 @@ import com.okta.sdk.resource.model.SwaApplicationSettingsApplication
 import com.okta.sdk.tests.it.util.ITSupport
 import com.okta.sdk.resource.api.ApplicationApi
 import com.okta.sdk.resource.api.InlineHookApi
-import com.okta.sdk.resource.model.*
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
@@ -153,7 +152,7 @@ class AppsIT extends ITSupport {
         SwaApplicationSettings swaApplicationSettings = new SwaApplicationSettings()
         swaApplicationSettings.app(swaApplicationSettingsApplication)
         BrowserPluginApplication browserPluginApplication = new BrowserPluginApplication()
-        browserPluginApplication.name(BrowserPluginApplication.NameEnum.SWA)
+        browserPluginApplication.name(BrowserPluginApplication.NameEnum.TEMPLATE_SWA)
         browserPluginApplication.label(prefix + UUID.randomUUID().toString())
         browserPluginApplication.settings(swaApplicationSettings)
 
@@ -279,7 +278,7 @@ class AppsIT extends ITSupport {
         InlineHookApi inlineHookApi = new InlineHookApi(getClient())
         InlineHook inlineHook = new InlineHook()
         inlineHook.name(name)
-        inlineHook.type(InlineHookType.SAML_TOKENS_TRANSFORM)
+        inlineHook.type(InlineHookType.COM_OKTA_SAML_TOKENS_TRANSFORM)
         inlineHook.version(version)
         inlineHook.channel(inlineHookChannel)
 
