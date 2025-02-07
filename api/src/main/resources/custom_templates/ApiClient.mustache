@@ -1155,23 +1155,24 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             cacheKey = cacheKey.split("\\?")[0];
                                                                                             }
 
-                                                                                            if (method == HttpMethod.DELETE.name()) {
+                                                                                            if (method.equals(HttpMethod.DELETE.name())) {
                                                                                             cache.remove(cacheKey);
                                                                                             }
 
                                                                                             String[] uriSegments = path.split("/");
 
-                                                                                            if (uriSegments != null && uriSegments.length >= 6) {
+                                                                                            if (uriSegments.length >= 6) {
                                                                                             String key = getBasePath() + "/" + uriSegments[1] + "/" + uriSegments[2] + "/" + uriSegments[3] + "/" + uriSegments[4];
                                                                                             if (cache.get(key) != null) {
                                                                                             cache.remove(key);
                                                                                             }
                                                                                             }
 
-                                                                                            if (method == HttpMethod.GET.name() &&
+                                                                                            if (method.equals(HttpMethod.GET.name()) &&
                                                                                             !returnType.getType().getTypeName().contains("List") &&
                                                                                             !(url.contains("expand")) &&
-                                                                                            !(url.contains(".well-known/okta-organization"))) {
+                                                                                            !(url.contains(".well-known/okta-organization"))
+                                                                                            && !(String.join("/", uriSegments)).matches("/api/v1/users/[A-Za-z0-9]+/factors/[A-Za-z0-9]+/transactions/[A-Za-z0-9]+")) {
 
                                                                                             T cacheData = (T) cache.get(cacheKey);
 
@@ -1180,7 +1181,7 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             try (CloseableHttpResponse response = httpClient.execute(builder.build(), context)) {
                                                                                             T t = processResponse(response, returnType);
 
-                                                                                            if (method.equals(HttpMethod.GET.name()) && Objects.nonNull(t)) {
+                                                                                            if (Objects.nonNull(t)) {
 
                                                                                             Map<String, ?> map = getObjectMapper().convertValue(t, LinkedHashMap.class);
 
@@ -1191,7 +1192,7 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             if (Objects.nonNull(links)) {
                                                                                             LinkedHashMap<String, String> self = links.get("self");
                                                                                             if (Objects.nonNull(self)) {
-                                                                                            href = (String) self.get("href");
+                                                                                            href = self.get("href");
                                                                                             }
                                                                                             }
                                                                                             }
