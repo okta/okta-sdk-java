@@ -17,16 +17,12 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.api.IdentityProviderUsersApi
 import com.okta.sdk.resource.model.IdentityProvider
-import com.okta.sdk.resource.model.IdentityProviderApplicationUser
 import com.okta.sdk.resource.model.IdentityProviderCredentials
 import com.okta.sdk.resource.model.IdentityProviderCredentialsClient
 import com.okta.sdk.resource.model.IdentityProviderIssuerMode
 import com.okta.sdk.resource.model.IdentityProviderPolicy
 import com.okta.sdk.resource.model.IdentityProviderType
-import com.okta.sdk.resource.model.IssuerMode
 import com.okta.sdk.resource.model.LifecycleStatus
-import com.okta.sdk.resource.model.OidcAlgorithms
-import com.okta.sdk.resource.model.OidcRequestAlgorithm
 import com.okta.sdk.resource.model.PolicyAccountLink
 import com.okta.sdk.resource.model.PolicyAccountLinkAction
 import com.okta.sdk.resource.model.PolicySubject
@@ -56,7 +52,6 @@ import com.okta.sdk.resource.model.User
 import com.okta.sdk.resource.model.UserIdentityProviderLinkRequest
 import com.okta.sdk.tests.it.util.ITSupport
 import com.okta.sdk.resource.api.IdentityProviderApi
-import com.okta.sdk.resource.model.*
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
@@ -114,23 +109,23 @@ class IdpIT extends ITSupport {
 
         ProtocolEndpoints protocolEndpoints = new ProtocolEndpoints()
         ProtocolEndpoint protocolEndpointAcs = new ProtocolEndpoint()
-        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.HTTP_POST)
         protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
 
         ProtocolEndpoint protocolEndpointAuthorization = new ProtocolEndpoint()
-        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.HTTP_POST)
         protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize")
 
         ProtocolEndpoint protocolEndpointToken = new ProtocolEndpoint()
-        protocolEndpointToken.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointToken.setBinding(ProtocolEndpointBinding.HTTP_POST)
         protocolEndpointToken.setUrl("https://idp.example.com/token")
 
         ProtocolEndpoint protocolEndpointUserInfo = new ProtocolEndpoint()
-        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
         protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo")
 
         ProtocolEndpoint protocolEndpointJwks = new ProtocolEndpoint()
-        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
         protocolEndpointJwks.setUrl("https://idp.example.com/keys")
 
         protocolEndpoints.setAcs(protocolEndpointAcs)
@@ -228,23 +223,23 @@ class IdpIT extends ITSupport {
 
         protocolEndpoints = new ProtocolEndpoints()
         protocolEndpointAcs = new ProtocolEndpoint()
-        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.HTTP_POST)
         protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
 
         protocolEndpointAuthorization = new ProtocolEndpoint()
-        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.HTTP_POST)
         protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize_new")
 
         protocolEndpointToken = new ProtocolEndpoint()
-        protocolEndpointToken.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointToken.setBinding(ProtocolEndpointBinding.HTTP_POST)
         protocolEndpointToken.setUrl("https://idp.example.com/token_new")
 
         protocolEndpointUserInfo = new ProtocolEndpoint()
-        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
         protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo_new")
 
         protocolEndpointJwks = new ProtocolEndpoint()
-        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
         protocolEndpointJwks.setUrl("https://idp.example.com/keys_new")
 
         protocolEndpoints.setAcs(protocolEndpointAcs)
@@ -360,23 +355,23 @@ class IdpIT extends ITSupport {
 
         ProtocolEndpoints protocolEndpoints = new ProtocolEndpoints()
         ProtocolEndpoint protocolEndpointAcs = new ProtocolEndpoint()
-        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.HTTP_POST)
         protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
 
         ProtocolEndpoint protocolEndpointAuthorization = new ProtocolEndpoint()
-        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.HTTP_POST)
         protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize")
 
         ProtocolEndpoint protocolEndpointToken = new ProtocolEndpoint()
-        protocolEndpointToken.setBinding(ProtocolEndpointBinding.POST)
+        protocolEndpointToken.setBinding(ProtocolEndpointBinding.HTTP_POST)
         protocolEndpointToken.setUrl("https://idp.example.com/token")
 
         ProtocolEndpoint protocolEndpointUserInfo = new ProtocolEndpoint()
-        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
         protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo")
 
         ProtocolEndpoint protocolEndpointJwks = new ProtocolEndpoint()
-        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.REDIRECT)
+        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
         protocolEndpointJwks.setUrl("https://idp.example.com/keys")
 
         protocolEndpoints.setAcs(protocolEndpointAcs)

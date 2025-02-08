@@ -21,9 +21,7 @@ import com.okta.sdk.resource.api.ApplicationGroupsApi
 import com.okta.sdk.resource.api.GroupApi
 import com.okta.sdk.resource.api.PolicyApi
 import com.okta.sdk.resource.api.RoleAssignmentAUserApi
-import com.okta.sdk.resource.api.RoleAssignmentClientApi
 import com.okta.sdk.resource.api.RoleBTargetAdminApi
-import com.okta.sdk.resource.api.RoleBTargetBGroupApi
 import com.okta.sdk.resource.api.UserApi
 import com.okta.sdk.resource.api.UserCredApi
 import com.okta.sdk.resource.api.UserLifecycleApi
@@ -33,17 +31,14 @@ import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.model.AddGroupRequest
 import com.okta.sdk.resource.model.Application
 import com.okta.sdk.resource.model.ApplicationGroupAssignment
-import com.okta.sdk.resource.model.AssignRoleRequest
 import com.okta.sdk.resource.model.AssignRoleToUser201Response
 import com.okta.sdk.resource.model.AssignRoleToUserRequest
 import com.okta.sdk.resource.model.AuthenticationProvider
 import com.okta.sdk.resource.model.AuthenticationProviderType
 import com.okta.sdk.resource.model.ChangePasswordRequest
-import com.okta.sdk.resource.model.CreateUserRequestType
 import com.okta.sdk.resource.model.CreateUserTypeRequest
 import com.okta.sdk.resource.model.ForgotPasswordResponse
 import com.okta.sdk.resource.model.Group
-import com.okta.sdk.resource.model.GroupProfile
 import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner
 import com.okta.sdk.resource.model.OktaUserGroupProfile
 import com.okta.sdk.resource.model.PasswordCredential
@@ -59,8 +54,6 @@ import com.okta.sdk.resource.model.PolicyAccess
 import com.okta.sdk.resource.model.PolicyNetworkCondition
 import com.okta.sdk.resource.model.PolicyNetworkConnection
 import com.okta.sdk.resource.model.RecoveryQuestionCredential
-import com.okta.sdk.resource.model.ResetPasswordToken
-import com.okta.sdk.resource.model.Role
 import com.okta.sdk.resource.model.RoleType
 import com.okta.sdk.resource.model.SelfServicePasswordResetAction
 import com.okta.sdk.resource.model.UpdateUserRequest
@@ -70,9 +63,9 @@ import com.okta.sdk.resource.model.UserGetSingleton
 import com.okta.sdk.resource.model.UserProfile
 import com.okta.sdk.resource.model.UserStatus
 import com.okta.sdk.resource.model.UserType
-import com.okta.sdk.resource.model.UserTypePostRequest
-import com.okta.sdk.resource.model.UserTypePutRequest
+
 import com.okta.sdk.resource.user.UserBuilder
+
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.tests.it.util.ITSupport
 import org.apache.commons.lang3.RandomStringUtils
