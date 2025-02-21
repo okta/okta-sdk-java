@@ -21696,7 +21696,56 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserFactorActivateResponse'
+                type: object
+                properties:
+                  id:
+                    type: string
+                  factorType:
+                    type: string
+                  provider:
+                    type: string
+                  vendorName:
+                    type: string
+                  status:
+                    type: string
+                  created:
+                    type: string
+                    format: date-time
+                  lastUpdated:
+                    type: string
+                    format: date-time
+                  profile:
+                    type: object
+                    properties:
+                      credentialId:
+                        type: string
+                  _links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                          hints:
+                            type: object
+                            properties:
+                              allow:
+                                type: array
+                                items:
+                                  type: string
+                      user:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                          hints:
+                            type: object
+                            properties:
+                              allow:
+                                type: array
+                                items:
+                                  type: string
               examples:
                 token:software:totp:
                   $ref: '#/components/examples/ActivateFactorTotpResponse'
