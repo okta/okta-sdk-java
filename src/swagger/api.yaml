@@ -21696,6 +21696,7 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/UserFactorActivateResponse'
                 type: object
                 properties:
                   id:
