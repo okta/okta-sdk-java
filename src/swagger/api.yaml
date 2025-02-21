@@ -21697,56 +21697,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserFactorActivateResponse'
-                type: object
-                properties:
-                  id:
-                    type: string
-                  factorType:
-                    type: string
-                  provider:
-                    type: string
-                  vendorName:
-                    type: string
-                  status:
-                    type: string
-                  created:
-                    type: string
-                    format: date-time
-                  lastUpdated:
-                    type: string
-                    format: date-time
-                  profile:
-                    type: object
-                    properties:
-                      credentialId:
-                        type: string
-                  _links:
-                    type: object
-                    properties:
-                      self:
-                        type: object
-                        properties:
-                          href:
-                            type: string
-                          hints:
-                            type: object
-                            properties:
-                              allow:
-                                type: array
-                                items:
-                                  type: string
-                      user:
-                        type: object
-                        properties:
-                          href:
-                            type: string
-                          hints:
-                            type: object
-                            properties:
-                              allow:
-                                type: array
-                                items:
-                                  type: string
               examples:
                 token:software:totp:
                   $ref: '#/components/examples/ActivateFactorTotpResponse'
@@ -64559,6 +64509,10 @@ components:
     UserFactorActivateResponse:
       type: object
       properties:
+      profile:
+      $ref: '#/components/schemas/UserFactorPushProfile'
+        id:
+            type: string
         factorType:
           description: Type of the Factor
           type: string
@@ -64570,6 +64524,27 @@ components:
             - token:software:totp
             - u2f
             - webauthn
+        provider:
+          type: string
+          example: OKTA
+        vendorName:
+          type: string
+          example: OKTA
+        status:
+          type: string
+          example: ACTIVE
+        created:
+          type: string
+          example: 2014-07-16T16:13:56.000Z
+        lastUpdated:
+          type: string
+          example: 2014-08-06T00:31:07.000Z
+        profile:
+          type: object
+          properties:
+            credentialId:
+              type: string
+              example: dade.murphy@example.com
         _links:
           allOf:
             - $ref: '#/components/schemas/LinksSelf'
