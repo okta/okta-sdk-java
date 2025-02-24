@@ -64509,6 +64509,8 @@ components:
     UserFactorActivateResponse:
       type: object
       properties:
+        id:
+          type: string
         factorType:
           description: Type of the Factor
           type: string
@@ -64520,6 +64522,40 @@ components:
             - token:software:totp
             - u2f
             - webauthn
+        provider:
+          type: string
+          example: OKTA
+        vendorName:
+          type: string
+          example: OKTA
+        status:
+          type: string
+          example: ACTIVE
+        created:
+          type: string
+          example: 2014-07-16T16:13:56.000Z
+        lastUpdated:
+          type: string
+          example: 2014-08-06T00:31:07.000Z
+        profile:
+          phoneNumber:
+            type: string
+          phoneExtension:
+            type: string
+          email:
+            type: string
+          credentialId:
+            type: string
+          deviceType:
+            type: string
+          name:
+            type: string
+          platform:
+            type: string
+          version:
+            type: string
+          authenticatorName:
+            type: string
         _links:
           allOf:
             - $ref: '#/components/schemas/LinksSelf'
