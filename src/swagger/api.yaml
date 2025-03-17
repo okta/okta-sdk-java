@@ -33185,8 +33185,8 @@ components:
         properties:
           profile:
             allOf:
-              - $ref: '#/definitions/base'
               - $ref: '#/definitions/custom'
+              - $ref: '#/definitions/base'
         title: Okta group
         type: object
     IAMStandardRoleResponseClient:
@@ -54187,8 +54187,7 @@ components:
             description:
                type: string
                description: Resends the factor enrollment challenge. See [Resend a Factor enrollment](/openapi/okta-management/management/tag/UserFactor/#tag/UserFactor/operation/resendEnrollFactor).
-            $ref:
-              type: string
+            href:
               $ref: '#/components/schemas/HrefObject'
       readOnly: true
     LinksSelf:
