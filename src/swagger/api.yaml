@@ -54459,7 +54459,7 @@ components:
       description: The entity that describes a device enrolled with passwordless authentication using Okta Verify.
       example:
         LogDeviceObject:
-          $ref: '#/components/schemas/LogDeviceObject'
+          $ref: '#/components/examples/LogDeviceObject'
       type: object
       properties:
         device_integrator:
