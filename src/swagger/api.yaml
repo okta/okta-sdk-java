@@ -11291,6 +11291,7 @@ paths:
         - name: id
           description: A valid key ID
           in: path
+          required: true
           schema:
             type: string
       responses:
@@ -33184,8 +33185,8 @@ components:
         properties:
           profile:
             allOf:
-              - $ref: '#/definitions/custom'
               - $ref: '#/definitions/base'
+              - $ref: '#/definitions/custom'
         title: Okta group
         type: object
     IAMStandardRoleResponseClient:
@@ -40313,7 +40314,7 @@ components:
     TrustedOriginBodyWithIframeEmbedding:
       summary: Trusted origin request body with iFrame embedding (Okta End-User Dashboard and Okta sign-in page)
       description: |
-        Creates a new Trusted Origin for iFrame embedding of an Okta resource within that origin. In this example, the type 
+        Creates a new Trusted Origin for iFrame embedding of an Okta resource within that origin. In this example, the type
         of Okta resource is both the Okta End-User Dashboard and the Okta sign-in page.
       value:
         name: New Trusted Origin
@@ -40325,7 +40326,7 @@ components:
     TrustedOriginBodyWithIframeEmbeddingSignIn:
       summary: Trusted origin request body with iFrame embedding (Okta sign-in page)
       description: |
-        Creates a new Trusted Origin for iFrame embedding of an Okta resource within that origin. In this example, the Okta 
+        Creates a new Trusted Origin for iFrame embedding of an Okta resource within that origin. In this example, the Okta
         resource is the Okta sign-in page.
       value:
         name: New Trusted Origin
@@ -45617,8 +45618,8 @@ components:
       name: expand
       in: query
       description: |-
-        An optional query parameter to return the corresponding assigned [Group](/openapi/okta-management/management/tag/Group/) or 
-        the group assignment metadata details in the `_embedded` property. 
+        An optional query parameter to return the corresponding assigned [Group](/openapi/okta-management/management/tag/Group/) or
+        the group assignment metadata details in the `_embedded` property.
       schema:
         type: string
         example: group
@@ -45633,8 +45634,8 @@ components:
       name: expand
       in: query
       description: |-
-        An optional query parameter to return the corresponding assigned [Group](/openapi/okta-management/management/tag/Group/) or 
-        the group assignment metadata details in the `_embedded` property. 
+        An optional query parameter to return the corresponding assigned [Group](/openapi/okta-management/management/tag/Group/) or
+        the group assignment metadata details in the `_embedded` property.
       schema:
         type: string
         example: metadata
@@ -47206,7 +47207,7 @@ components:
           type: object
           description: |-
             Embedded resource related to the Application Group using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification.
-            If the `expand=group` query parameter is specified, then the [Group](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Group/) object is embedded. 
+            If the `expand=group` query parameter is specified, then the [Group](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Group/) object is embedded.
             If the `expand=metadata` query parameter is specified, then the group assignment metadata is embedded.
           additionalProperties:
             type: object
@@ -47597,7 +47598,7 @@ components:
         reauthenticateIn:
           type: string
           description: |-
-            Specifies how often the user should be prompted for authentication using duration format for the time period. 
+            Specifies how often the user should be prompted for authentication using duration format for the time period.
             For example, `PT2H30M` for two and a half hours. This parameter can't be set at the same time as the `reauthenticateIn` property on the `verificationMethod`.
     AuthenticationMethodChainMethod:
       x-okta-lifecycle:
@@ -47614,7 +47615,7 @@ components:
               description: Authentication method chains. Only supports 5 items in the array. Each chain can support maximum 3 steps.
             reauthenticateIn:
               description: |-
-                Specifies how often the user should be prompted for authentication using duration format for the time period. 
+                Specifies how often the user should be prompted for authentication using duration format for the time period.
                 For example, `PT2H30M` for two and a half hours. Don't set this parameter if you're setting the `reauthenticateIn` parameter in `chains`.
               type: string
     AuthenticationMethodObject:
@@ -54181,9 +54182,14 @@ components:
       type: object
       properties:
         resend:
-          items:
-            - description: Resends the factor enrollment challenge. See [Resend a Factor enrollment](/openapi/okta-management/management/tag/UserFactor/#tag/UserFactor/operation/resendEnrollFactor).
-            - $ref: '#/components/schemas/HrefObject'
+           type: object
+           properties:
+            description:
+               type: string
+               description: Resends the factor enrollment challenge. See [Resend a Factor enrollment](/openapi/okta-management/management/tag/UserFactor/#tag/UserFactor/operation/resendEnrollFactor).
+            $ref:
+              type: string
+              $ref: '#/components/schemas/HrefObject'
       readOnly: true
     LinksSelf:
       description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification. This object is used for dynamic discovery of related resources and lifecycle operations.
@@ -54454,7 +54460,7 @@ components:
       description: The entity that describes a device enrolled with passwordless authentication using Okta Verify.
       example:
         LogDeviceObject:
-          $ref: '#/components/examples/LogDeviceObject'
+          $ref: '#/components/schemas/LogDeviceObject'
       type: object
       properties:
         device_integrator:
@@ -58114,6 +58120,8 @@ components:
       properties:
         domains:
           type: array
+          items:
+            type: string
           description: List of blocked email domains
     PinRequest:
       description: Pin Request
@@ -58841,8 +58849,7 @@ components:
           example: This is for accessing AWS Prod-5
         id:
           description: The UUID of the Privileged Account
-          format: regex
-          pattern: (?i)^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+          pattern: "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
           readOnly: true
           type: string
           example: a747a818-a4c4-4446-8a87-704216495a08
@@ -60068,6 +60075,8 @@ components:
       properties:
         commands:
           type: array
+          items:
+            type: string
     RegistrationInlineHookSSRData:
       allOf:
         - $ref: '#/components/schemas/InlineHookBasePayload'
@@ -62498,7 +62507,7 @@ components:
       example: 11111111-1111-2222-2222-222222222222
       writeOnly: true
       type: string
-      pattern: (?i)^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+      pattern: "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
     Sso:
       description: 'Supported SSO protocol configurations. You must configure at least one protocol: `oidc` or `saml`'
       type: object
@@ -64506,6 +64515,27 @@ components:
           type: string
           description: Base64-encoded client data from the WebAuthn authenticator
           example: eyJjaGFsbGVuZ2UiOiJVSk5wYW9sVWt0dF9vcEZPNXJMYyIsIm9yaWdpbiI6Imh0dHBzOi8vcmFpbi5va3RhMS5jb20iLCJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIn0
+    UserFactorProfile:
+       type: object
+       properties:
+         phoneNumber:
+          type: string
+         phoneExtension:
+          type: string
+         email:
+          type: string
+         credentialId:
+          type: string
+         deviceType:
+          type: string
+         name:
+          type: string
+         platform:
+          type: string
+         version:
+          type: string
+         authenticatorName:
+          type: string
     UserFactorActivateResponse:
       type: object
       properties:
@@ -64538,24 +64568,7 @@ components:
           type: string
           example: 2014-08-06T00:31:07.000Z
         profile:
-          phoneNumber:
-            type: string
-          phoneExtension:
-            type: string
-          email:
-            type: string
-          credentialId:
-            type: string
-          deviceType:
-            type: string
-          name:
-            type: string
-          platform:
-            type: string
-          version:
-            type: string
-          authenticatorName:
-            type: string
+           $ref: '#/components/schemas/UserFactorProfile'
         _links:
           allOf:
             - $ref: '#/components/schemas/LinksSelf'
@@ -65707,6 +65720,8 @@ components:
           description: Description of the property
         enum:
           type: array
+          items:
+            type: string
           nullable: true
           description: |-
             Enumerated value of the property.
