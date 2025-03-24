@@ -47919,6 +47919,7 @@ components:
             - CHALLENGE
             - LOGIN
             - NEVER
+            - NEVER_INCLUDING_RECOVERY
     AuthenticatorEnrollmentPolicyRuleActions:
       allOf:
         - $ref: '#/components/schemas/PolicyRuleActions'
@@ -47931,13 +47932,15 @@ components:
       properties:
         network:
           $ref: '#/components/schemas/PolicyNetworkCondition'
+        app:
+          $ref: '#/components/schemas/AppAndInstancePolicyRuleCondition'
         people:
           type: object
           description: Identifies Users and Groups that are used together
           properties:
             users:
               type: object
-              description: Specifies a set of Users to be included or excluded
+              description: Specifies a set of Uers to be included or excluded
               properties:
                 exclude:
                   type: array
