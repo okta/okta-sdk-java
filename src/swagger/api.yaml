@@ -58787,6 +58787,7 @@ components:
         - ANY
         - IOS
         - OSX
+        - CHROMEOS
         - OTHER
         - WINDOWS
     PolicyPlatformType:
