@@ -374,8 +374,6 @@ public class DefaultClientBuilder implements ClientBuilder {
                 // replace the default OAuth authentication with an auto-refreshing one
                 apiClient.replaceAuthentication("oauth2", oAuth2ClientCredentials);
                 oAuth2ClientCredentials.refreshOAuth2AccessToken();
-
-                this.clientConfig.setClientCredentialsResolver(new DefaultClientCredentialsResolver(oAuth2ClientCredentials));
             }
         }
 
