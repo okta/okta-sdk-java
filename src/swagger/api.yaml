@@ -11290,6 +11290,7 @@ paths:
       parameters:
         - name: id
           description: A valid key ID
+          required: true
           in: path
           schema:
             type: string
@@ -26515,38 +26516,31 @@ components:
         title: Example App User
         lastUpdated: '2017-07-18T23:18:43.000Z'
         created: '2017-07-18T22:35:30.000Z'
-        definitions:
-          base:
-            id: '#base'
-            type: object
-            properties:
-              userName:
-                title: Username
-                type: string
-                required: true
-                scope: NONE
-                maxLength: 100
-            required:
-              - userName
-          custom:
-            id: '#custom'
-            type: object
-            properties:
-              twitterUserName:
-                title: Twitter username
-                externalName: twitterUserName
-                description: User's username for twitter.com
-                type: string
-                scope: NONE
-                minLength: 1
-                maxLength: 20
-            required: []
         type: object
         properties:
           profile:
             allOf:
-              - $ref: '#/definitions/base'
-              - $ref: '#/definitions/custom'
+              - type: object
+                properties:
+                  userName:
+                    title: Username
+                    type: string
+                    required: true
+                    scope: NONE
+                    maxLength: 100
+                required:
+                  - userName
+              - type: object
+                properties:
+                  twitterUserName:
+                    title: Twitter username
+                    externalName: twitterUserName
+                    description: User's username for twitter.com
+                    type: string
+                    scope: NONE
+                    minLength: 1
+                    maxLength: 20
+                required: []
     AppUserUpdateCredRequest:
       summary: Application User credentials update
       value:
@@ -33154,29 +33148,6 @@ components:
             method: GET
             rel: self
         created: '2021-01-30T00:18:24.000Z'
-        definitions:
-          base:
-            id: '#base'
-            properties: {}
-            required:
-              - name
-            type: object
-          custom:
-            id: '#custom'
-            properties:
-              groupContact:
-                description: Group administrative contact
-                master:
-                  type: PROFILE_MASTER
-                mutability: READ_WRITE
-                permissions:
-                  - action: READ_WRITE
-                    principal: SELF
-                scope: NONE
-                title: Group administrative contact
-                type: string
-            required: []
-            type: object
         description: Okta group profile template
         id: https://{yourOktaDomain}/meta/schemas/group/default
         lastUpdated: '2021-02-25T23:05:31.000Z'
@@ -33184,8 +33155,24 @@ components:
         properties:
           profile:
             allOf:
-              - $ref: '#/definitions/custom'
-              - $ref: '#/definitions/base'
+              - type: object
+                properties: {}
+                required:
+                  - name
+              - type: object
+                properties:
+                  groupContact:
+                    description: Group administrative contact
+                    master:
+                      type: PROFILE_MASTER
+                    mutability: READ_WRITE
+                    permissions:
+                      - action: READ_WRITE
+                        principal: SELF
+                    scope: NONE
+                    title: Group administrative contact
+                    type: string
+                required: []
         title: Okta group
         type: object
     IAMStandardRoleResponseClient:
@@ -41459,72 +41446,64 @@ components:
         title: Default Okta User
         lastUpdated: '2015-09-05T10:40:45.000Z'
         created: '2015-02-02T10:27:36.000Z'
-        definitions:
-          base:
-            id: '#base'
-            type: object
-            properties:
-              login:
-                title: Username
-                type: string
-                required: true
-                minLength: 5
-                maxLength: 100
-                permissions:
-                  - principal: SELF
-                    action: READ_WRITE
-              firstName:
-                title: First name
-                type: string
-                required: true
-                minLength: 1
-                maxLength: 50
-                permissions:
-                  - principal: SELF
-                    action: READ_WRITE
-              lastName:
-                title: Last name
-                type: string
-                required: true
-                minLength: 1
-                maxLength: 50
-                permissions:
-                  - principal: SELF
-                    action: READ_WRITE
-              email:
-                title: Primary email
-                type: string
-                required: true
-                format: email
-                permissions:
-                  - principal: SELF
-                    action: READ_WRITE
-            required:
-              - login
-              - firstName
-              - lastName
-              - email
-          custom:
-            id: '#custom'
-            type: object
-            properties:
-              twitterUserName:
-                title: Twitter username
-                description: User's username for twitter.com
-                type: string
-                required: false
-                minLength: 1
-                maxLength: 20
-                permissions:
-                  - principal: SELF
-                    action: READ_WRITE
-            required: []
-        type: object
         properties:
           profile:
             allOf:
-              - $ref: '#/definitions/base'
-              - $ref: '#/definitions/custom'
+              - type: object
+                properties:
+                  login:
+                    title: Username
+                    type: string
+                    required: true
+                    minLength: 5
+                    maxLength: 100
+                    permissions:
+                      - principal: SELF
+                        action: READ_WRITE
+                  firstName:
+                    title: First name
+                    type: string
+                    required: true
+                    minLength: 1
+                    maxLength: 50
+                    permissions:
+                      - principal: SELF
+                        action: READ_WRITE
+                  lastName:
+                    title: Last name
+                    type: string
+                    required: true
+                    minLength: 1
+                    maxLength: 50
+                    permissions:
+                      - principal: SELF
+                        action: READ_WRITE
+                  email:
+                    title: Primary email
+                    type: string
+                    required: true
+                    format: email
+                    permissions:
+                      - principal: SELF
+                        action: READ_WRITE
+                required:
+                  - login
+                  - firstName
+                  - lastName
+                  - email
+              - type: object
+                properties:
+                  twitterUserName:
+                    title: Twitter username
+                    description: User's username for twitter.com
+                    type: string
+                    required: false
+                    minLength: 1
+                    maxLength: 20
+                    permissions:
+                      - principal: SELF
+                        action: READ_WRITE
+                required: []
     VerifiedEmailDomainResponse:
       value:
         id: OeD114iNkrcN6aR680g4
@@ -54181,8 +54160,11 @@ components:
       type: object
       properties:
         resend:
+          type: array
+          description: Resends the factor enrollment challenge. See [Resend a Factor enrollment](/openapi/okta-management/management/tag/UserFactor/#tag/UserFactor/operation/resendEnrollFactor).
           items:
-            - description: Resends the factor enrollment challenge. See [Resend a Factor enrollment](/openapi/okta-management/management/tag/UserFactor/#tag/UserFactor/operation/resendEnrollFactor).
+            oneOf:
+            - type: string
             - $ref: '#/components/schemas/HrefObject'
       readOnly: true
     LinksSelf:
@@ -54452,9 +54434,6 @@ components:
           readOnly: true
     LogDevice:
       description: The entity that describes a device enrolled with passwordless authentication using Okta Verify.
-      example:
-        LogDeviceObject:
-          $ref: '#/components/examples/LogDeviceObject'
       type: object
       properties:
         device_integrator:
@@ -58115,6 +58094,8 @@ components:
         domains:
           type: array
           description: List of blocked email domains
+          items:
+            type: string
     PinRequest:
       description: Pin Request
       type: object
@@ -58842,7 +58823,7 @@ components:
         id:
           description: The UUID of the Privileged Account
           format: regex
-          pattern: (?i)^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+          pattern: "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
           readOnly: true
           type: string
           example: a747a818-a4c4-4446-8a87-704216495a08
@@ -60068,6 +60049,8 @@ components:
       properties:
         commands:
           type: array
+          items:
+            type: string
     RegistrationInlineHookSSRData:
       allOf:
         - $ref: '#/components/schemas/InlineHookBasePayload'
@@ -62498,7 +62481,7 @@ components:
       example: 11111111-1111-2222-2222-222222222222
       writeOnly: true
       type: string
-      pattern: (?i)^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+      pattern: "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
     Sso:
       description: 'Supported SSO protocol configurations. You must configure at least one protocol: `oidc` or `saml`'
       type: object
@@ -64506,6 +64489,27 @@ components:
           type: string
           description: Base64-encoded client data from the WebAuthn authenticator
           example: eyJjaGFsbGVuZ2UiOiJVSk5wYW9sVWt0dF9vcEZPNXJMYyIsIm9yaWdpbiI6Imh0dHBzOi8vcmFpbi5va3RhMS5jb20iLCJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIn0
+    UserFactorProfile:
+       type: object
+       properties:
+         phoneNumber:
+          type: string
+         phoneExtension:
+          type: string
+         email:
+          type: string
+         credentialId:
+          type: string
+         deviceType:
+          type: string
+         name:
+          type: string
+         platform:
+          type: string
+         version:
+          type: string
+         authenticatorName:
+          type: string
     UserFactorActivateResponse:
       type: object
       properties:
@@ -64538,24 +64542,7 @@ components:
           type: string
           example: 2014-08-06T00:31:07.000Z
         profile:
-          phoneNumber:
-            type: string
-          phoneExtension:
-            type: string
-          email:
-            type: string
-          credentialId:
-            type: string
-          deviceType:
-            type: string
-          name:
-            type: string
-          platform:
-            type: string
-          version:
-            type: string
-          authenticatorName:
-            type: string
+            $ref: '#/components/schemas/UserFactorProfile'
         _links:
           allOf:
             - $ref: '#/components/schemas/LinksSelf'
@@ -65708,6 +65695,8 @@ components:
         enum:
           type: array
           nullable: true
+          items:
+            type: string
           description: |-
             Enumerated value of the property.
 
