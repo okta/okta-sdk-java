@@ -66632,7 +66632,36 @@ components:
           $ref: '#/components/schemas/HrefObjectAppLink'
         logo:
           $ref: '#/components/schemas/HrefObjectLogoLink'
-      readOnly: true
+        appAssignmentId:
+          type: string
+          readOnly: true
+        appInstanceId:
+          type: string
+          readOnly: true
+        appName:
+          type: string
+          readOnly: true
+        credentialsSetup:
+          type: boolean
+          readOnly: true
+        hidden:
+          type: boolean
+          readOnly: true
+        id:
+          type: string
+          readOnly: true
+        label:
+          type: string
+          readOnly: true
+        linkUrl:
+          type: string
+          readOnly: true
+        logoUrl:
+          type: string
+          readOnly: true
+        sortOrder:
+          type: integer
+          readOnly: true
     createdProperty:
       description: Timestamp when the object was created
       format: date-time
