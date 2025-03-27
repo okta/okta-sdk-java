@@ -58300,7 +58300,6 @@ components:
         minLength:
           description: Minimum length of the password recovery question answer
           type: integer
-          readOnly: true
           default: 4
     PasswordPolicyRecoveryQuestionProperties:
       type: object
