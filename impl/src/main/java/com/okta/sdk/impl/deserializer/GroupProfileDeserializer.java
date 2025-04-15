@@ -63,6 +63,22 @@ public class GroupProfileDeserializer extends StdDeserializer<GroupProfile> {
                     groupProfile.setDescription((String) value);
                     break;
 
+                case GroupProfile.JSON_PROPERTY_WINDOWS_DOMAIN_QUALIFIED_NAME:
+                    groupProfile.setWindowsDomainQualifiedName((String) value);
+                    break;
+
+                case GroupProfile.JSON_PROPERTY_DN:
+                    groupProfile.setDn((String) value);
+                    break;
+
+                case GroupProfile.JSON_PROPERTY_EXTERNAL_ID:
+                    groupProfile.setExternalId((String) value);
+                    break;
+
+                case GroupProfile.JSON_PROPERTY_SAM_ACCOUNT_NAME:
+                    groupProfile.setSamAccountName((String) value);
+                    break;
+
                 default:
                     break;
             }
