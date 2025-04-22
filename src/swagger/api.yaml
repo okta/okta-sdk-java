@@ -61150,6 +61150,8 @@ components:
       description: Permission type
       type: string
       enum:
+        - okta.agents.manage
+        - okta.agents.register
         - okta.apps.assignment.manage
         - okta.apps.manage
         - okta.apps.manageFirstPartyApps
@@ -61166,6 +61168,7 @@ components:
         - okta.devices.lifecycle.unsuspend
         - okta.devices.manage
         - okta.devices.read
+        - okta.directories.manage
         - okta.governance.accessCertifications.manage
         - okta.governance.accessRequests.manage
         - okta.groups.appAssignment.manage
@@ -61173,10 +61176,13 @@ components:
         - okta.groups.manage
         - okta.groups.members.manage
         - okta.groups.read
+        - okta.iam.read
         - okta.identityProviders.manage
         - okta.identityProviders.read
         - okta.profilesources.import.run
+        - okta.realms.manage
         - okta.support.cases.manage
+        - okta.users.apitokens.manage
         - okta.users.appAssignment.manage
         - okta.users.create
         - okta.users.credentials.expirePassword
@@ -61195,6 +61201,10 @@ components:
         - okta.users.manage
         - okta.users.read
         - okta.users.userprofile.manage
+        - okta.workflows.flows.read
+        - okta.workflows.flows.invoke
+        - okta.workflows.invoke
+        - okta.workflows.read
     RoleType:
       description: Standard role type
       type: string
