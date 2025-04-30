@@ -99,6 +99,7 @@ public class Quickstart {
 
             // get the first user in the collection
             println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());
+
         }
         catch (Exception e) {
 

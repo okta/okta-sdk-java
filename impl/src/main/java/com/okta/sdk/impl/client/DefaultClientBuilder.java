@@ -35,6 +35,7 @@ import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.*;
 import com.okta.sdk.impl.deserializer.GroupProfileDeserializer;
+import com.okta.sdk.impl.deserializer.OktaUserGroupProfileDeserializer;
 import com.okta.sdk.impl.deserializer.UserProfileDeserializer;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
@@ -45,12 +46,14 @@ import com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl;
 import com.okta.sdk.impl.oauth2.DPoPInterceptor;
 import com.okta.sdk.impl.oauth2.OAuth2ClientCredentials;
 import com.okta.sdk.impl.serializer.GroupProfileSerializer;
+import com.okta.sdk.impl.serializer.OktaUserGroupProfileSerializer;
 import com.okta.sdk.impl.serializer.UserProfileSerializer;
 import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 
 import com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
 import com.okta.sdk.resource.model.GroupProfile;
+import com.okta.sdk.resource.model.OktaUserGroupProfile;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.config.ConnectionConfig;
@@ -473,6 +476,8 @@ public class DefaultClientBuilder implements ClientBuilder {
         module.addDeserializer(UserProfile.class, new UserProfileDeserializer());
         module.addSerializer(GroupProfile.class, new GroupProfileSerializer());
         module.addDeserializer(GroupProfile.class, new GroupProfileDeserializer());
+        module.addSerializer(OktaUserGroupProfile.class, new OktaUserGroupProfileSerializer());
+        module.addDeserializer(OktaUserGroupProfile.class, new OktaUserGroupProfileDeserializer());
         mapper.registerModule(module);
     }
 
