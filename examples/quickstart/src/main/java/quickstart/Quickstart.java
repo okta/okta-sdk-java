@@ -110,6 +110,7 @@ public class Quickstart {
 
             final Group createdGroup = groupApi.addGroup(addGroupRequest);
 
+
         }
         catch (Exception e) {
 
