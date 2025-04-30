@@ -99,6 +99,17 @@ public class Quickstart {
 
             // get the first user in the collection
             println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());
+
+            final OktaUserGroupProfile oktaUserGroupProfile = new OktaUserGroupProfile();
+            oktaUserGroupProfile.setName("NewGroupName");
+            oktaUserGroupProfile.setDescription("My new groups description");
+            oktaUserGroupProfile.getAdditionalProperties().put("myAdditionalProperty", "myValue");
+
+            final AddGroupRequest addGroupRequest = new AddGroupRequest();
+            addGroupRequest.setProfile(oktaUserGroupProfile);
+
+            final Group createdGroup = groupApi.addGroup(addGroupRequest);
+
         }
         catch (Exception e) {
 
