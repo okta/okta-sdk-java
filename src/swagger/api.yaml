@@ -3472,7 +3472,7 @@ paths:
           in: query
           required: true
           schema:
-            type: integer
+            type: string
             example: mXtzOtml09Dg1ZCeKxTRBo3KrQuBWFkJ5oxhVagjTzo
       responses:
         '200':
