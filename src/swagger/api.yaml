@@ -11434,6 +11434,318 @@ paths:
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
+  /api/v1/iam/governance/bundles:
+    x-okta-lifecycle:
+      lifecycle: GA
+      isGenerallyAvailable: false
+      SKUs: []
+    get:
+      summary: List all governance bundles for the Admin Console
+      description: Lists all Governance Bundles for the Admin Console in your
+        org
+      operationId: listGovernanceBundles
+      parameters:
+      - $ref: '#/components/parameters/queryAfter'
+      - $ref: '#/components/parameters/queryLimit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GovernanceBundlesResponse'
+              examples:
+                GovernanceBundlesResponse:
+                  $ref: '#/components/examples/GovernanceBundlesResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.read
+      tags:
+      - GovernanceBundle
+    post:
+      summary: Create a governance bundle for the Admin Console in RAMP
+      description: Creates a Governance Bundle for the Admin Console in RAMP
+      operationId: createGovernanceBundle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GovernanceBundleCreateRequest'
+            examples:
+              GovernanceBundleCreateRequestStandardRole:
+                $ref: '#/components/examples/GovernanceBundleCreateRequestStandardRole'
+              GovernanceBundleCreateRequestScopedStandardRole:
+                $ref: '#/components/examples/GovernanceBundleCreateRequestScopedStandardRole'
+              GovernanceBundleCreateRequestCustomRole:
+                $ref: '#/components/examples/GovernanceBundleCreateRequestCustomRole'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GovernanceBundle'
+              examples:
+                createGovernanceBundleResponse:
+                  $ref: '#/components/examples/GovernanceBundle'
+        '400':
+          $ref: '#/components/responses/ErrorApiValidationFailed400'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.manage
+      tags:
+      - GovernanceBundle
+  /api/v1/iam/governance/bundles/{bundleId}:
+    x-okta-lifecycle:
+      lifecycle: GA
+      isGenerallyAvailable: false
+      SKUs: []
+    parameters:
+    - $ref: '#/components/parameters/pathBundleId'
+    get:
+      summary: Retrieve a governance bundle from RAMP
+      description: Retrieves a Governance Bundle from RAMP
+      operationId: getGovernanceBundle
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GovernanceBundle'
+              examples:
+                GovernanceBundle:
+                  $ref: '#/components/examples/GovernanceBundle'
+        '400':
+          $ref: '#/components/responses/ErrorApiValidationFailed400'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.read
+      tags:
+      - GovernanceBundle
+    put:
+      summary: Replace a governance bundle in RAMP
+      description: Replaces a Governance Bundle in RAMP
+      operationId: replaceGovernanceBundle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GovernanceBundleUpdateRequest'
+            examples:
+              GovernanceBundleUpdateRequestStandardRole:
+                $ref: '#/components/examples/GovernanceBundleUpdateRequestStandardRole'
+              GovernanceBundleUpdateRequestScopedStandardRole:
+                $ref: '#/components/examples/GovernanceBundleUpdateRequestScopedStandardRole'
+              GovernanceBundleUpdateRequestCustomRole:
+                $ref: '#/components/examples/GovernanceBundleUpdateRequestCustomRole'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GovernanceBundle'
+              examples:
+                GovernanceBundle:
+                  $ref: '#/components/examples/GovernanceBundle'
+        '400':
+          $ref: '#/components/responses/ErrorApiValidationFailed400'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.manage
+      tags:
+      - GovernanceBundle
+    delete:
+      summary: Delete a governance bundle from RAMP
+      description: Deletes a Governance Bundle from RAMP
+      operationId: deleteGovernanceBundle
+      responses:
+        '204':
+          description: No Content
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.manage
+      tags:
+      - GovernanceBundle
+  /api/v1/iam/governance/bundles/{bundleId}/entitlements:
+    x-okta-lifecycle:
+      lifecycle: GA
+      isGenerallyAvailable: false
+      SKUs: []
+    parameters:
+    - $ref: '#/components/parameters/pathBundleId'
+    get:
+      summary: List all entitlements for a governance bundle
+      description: Lists all Entitlements specific to a Governance Bundle
+      operationId: listBundleEntitlements
+      parameters:
+      - $ref: '#/components/parameters/queryAfter'
+      - $ref: '#/components/parameters/queryLimit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BundleEntitlementsResponse'
+              examples:
+                BundleEntitlementsResponse:
+                  $ref: '#/components/examples/BundleEntitlementsResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.read
+      tags:
+      - GovernanceBundle
+  /api/v1/iam/governance/bundles/{bundleId}/entitlements/{entitlementId}/values:
+    x-okta-lifecycle:
+      lifecycle: GA
+      isGenerallyAvailable: false
+      SKUs: []
+    parameters:
+    - $ref: '#/components/parameters/pathBundleId'
+    - $ref: '#/components/parameters/pathEntitlementId'
+    get:
+      summary: List all entitlement values for a bundle entitlement
+      description: Lists all Entitlement Values specific to a Bundle Entitlement
+      operationId: listBundleEntitlementValues
+      parameters:
+      - $ref: '#/components/parameters/queryAfter'
+      - $ref: '#/components/parameters/queryLimit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitlementValuesResponse'
+              examples:
+                EntitlementValuesResponse:
+                  $ref: '#/components/examples/EntitlementValuesResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.read
+      tags:
+      - GovernanceBundle
+  /api/v1/iam/governance/optIn:
+    x-okta-lifecycle:
+      lifecycle: GA
+      isGenerallyAvailable: false
+      SKUs: []
+    get:
+      summary: Retrieve the opt-in status from RAMP
+      description: Retrieves the opt-in status of the Admin Console from RAMP
+      operationId: getOptInStatus
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptInStatusResponse'
+              examples:
+                OptInStatusResponse:
+                  $ref: '#/components/examples/OptInStatusResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.read
+      tags:
+      - GovernanceBundle
+    post:
+      summary: Opt in the Admin Console to RAMP
+      description: Opts in the Admin Console to RAMP
+      operationId: optIn
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptInStatusResponse'
+              examples:
+                OptInStatusResponse:
+                  $ref: '#/components/examples/OptInStatusResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.manage
+      tags:
+      - GovernanceBundle
+  /api/v1/iam/governance/optOut:
+    post:
+      summary: Opt out the Admin Console from RAMP
+      description: Opts out the Admin Console from RAMP
+      operationId: optOut
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptInStatusResponse'
+              examples:
+                OptOutStatusResponse:
+                  $ref: '#/components/examples/OptOutStatusResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.manage
+      tags:
+      - GovernanceBundle
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: false
+        SKUs: []
   /api/v1/iam/resource-sets:
     get:
       summary: List all Resource Sets
