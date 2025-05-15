@@ -25,7 +25,7 @@
 
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-root</artifactId>
-    <version>23.0.1</version>
+    <version>23.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Okta Java SDK</name>
@@ -376,7 +376,7 @@
     </profiles>
 
   <scm>
-    <tag>okta-sdk-root-23.0.1</tag>
+    <tag>okta-sdk-root-23.0.0</tag>
   </scm>
 </project>
 
