@@ -119,16 +119,6 @@
             <version>${jakarta-annotation.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.github.jknack</groupId>
-            <artifactId>handlebars</artifactId>
-            <version>${com.github.jknack.handlebars.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.jknack</groupId>
-            <artifactId>handlebars-jackson2</artifactId>
-            <version>4.3.1</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -169,6 +159,16 @@
                                 <artifactId>httpclient</artifactId>
                             </exclusion>
                         </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.github.jknack</groupId>
+                        <artifactId>handlebars</artifactId>
+                        <version>${com.github.jknack.handlebars.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.github.jknack</groupId>
+                        <artifactId>handlebars-jackson2</artifactId>
+                        <version>4.3.1</version>
                     </dependency>
                 </dependencies>
                 <executions>
