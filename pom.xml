@@ -68,12 +68,12 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-api</artifactId>
-                <version>22.0.0</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-impl</artifactId>
-                <version>22.0.0</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- Other Okta Projects -->
@@ -103,14 +103,14 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-integration-tests</artifactId>
-                <version>22.0.0</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- Examples -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-examples-quickstart</artifactId>
-                <version>22.0.0</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- Logging -->
