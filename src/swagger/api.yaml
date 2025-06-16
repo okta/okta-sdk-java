@@ -53789,6 +53789,7 @@ components:
         - XERO
         - YAHOO
         - YAHOOJP
+        - OKTA
     IdentitySourceSession:
       type: object
       properties:
