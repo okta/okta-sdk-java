@@ -66473,6 +66473,14 @@ components:
             - $ref: '#/components/schemas/UserSchemaAttributeType'
         unique:
           type: string
+        items:
+          type: object
+          nullable: true
+          properties:
+            type:
+              description: Type of property of the main type is an Array
+              allOf:
+                - $ref: '#/components/schemas/UserSchemaAttributeType'
       x-okta-allow-null-property-value-for-updates: true
     UserSchemaAttributeEnum:
       type: object
