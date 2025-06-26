@@ -48,6 +48,11 @@
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.okta.sdk</groupId>
+            <artifactId>okta-sdk-api</artifactId>
+            <version>23.0.2-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

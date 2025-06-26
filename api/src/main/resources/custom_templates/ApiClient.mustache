@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.JavaType;
     import org.openapitools.jackson.nullable.JsonNullableModule;
 {{/openApiNullable}}
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.cookie.BasicCookieStore;
 import org.apache.hc.client5.http.cookie.Cookie;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
@@ -73,6 +74,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 import java.net.URLEncoder;
 
@@ -748,12 +750,8 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                         if (accepts.length == 0) {
                                         return null;
                                         }
-                                        for (String accept : accepts) {
-                                        if (isJsonMime(accept)) {
-                                        return accept;
-                                        }
-                                        }
-                                        return StringUtil.join(accepts, ",");
+
+                                        return StringUtils.join(accepts, ",");
                                         }
 
                                         /**
@@ -934,7 +932,12 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                 } else if ("text/plain".equalsIgnoreCase(mimeType)) {
                                                                 // convert input stream to string
                                                                 return (T) EntityUtils.toString(entity);
+                                                                } else if ("text/xml".equalsIgnoreCase(mimeType)) {
+
+                                                                return (T) EntityUtils.toString(entity);
+
                                                                 } else {
+
                                                                 Map<String, List<String>> responseHeaders = transformResponseHeaders(response.getHeaders());
                                                                     throw new ApiException(
                                                                     "Deserialization for content type '" + mimeType + "' not supported for type '" + valueType + "'",
@@ -1214,7 +1217,12 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
                                                                                             if (Objects.nonNull(t)) {
 
-                                                                                            Map<String, ?> map = getObjectMapper().convertValue(t, LinkedHashMap.class);
+                                                                                                    if (t instanceof String && accept != null && accept.contains("xml")) {
+                                                                                                         return t;
+                                                                                                    }
+
+
+                                                                                                    Map<String, ?> map = getObjectMapper().convertValue(t, LinkedHashMap.class);
 
                                                                                             String href = null;
 
