@@ -746,13 +746,28 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                         * @return The Accept header to use. If the given array is empty,
                                         *   null will be returned (not to set the Accept header explicitly).
                                         */
-                                        public String selectHeaderAccept(String[] accepts) {
+                                        public String selectHeaderAccept(String[] accepts, String path) {
+                                        if (path != null && path.contains("/sso/saml/metadata")) {
+                                        for (String accept : accepts) {
+                                        if ("text/xml".equalsIgnoreCase(accept)) {
+                                        return accept;
+                                        }
+                                        }
+                                        }
+
                                         if (accepts.length == 0) {
                                         return null;
                                         }
 
+                                        for (String accept : accepts) {
+                                        if (isJsonMime(accept)) {
+                                        return accept;
+                                        }
+                                        }
+
                                         return StringUtils.join(accepts, ",");
                                         }
+
 
                                         /**
                                         * Select the Content-Type header's value from the given array:
