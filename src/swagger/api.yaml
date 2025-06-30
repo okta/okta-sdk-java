@@ -46364,7 +46364,7 @@ components:
         createdAt:
           type: string
           description: Timestamp when the API Service Integration instance was created
-          example: '2023-02-21T20:08:24.000Z'
+          example: 2023-02-21T20:08:24.000Z
           readOnly: true
         createdBy:
           type: string
@@ -46373,11 +46373,12 @@ components:
           readOnly: true
         grantedScopes:
           type: array
-          description: The list of Okta management scopes granted to the API Service Integration instance. See [Okta management OAuth 2.0 scopes](/oauth2/#okta-admin-management).
+          description: The list of Okta management scopes granted to the API Service
+            Integration instance. See [Okta management OAuth 2.0 scopes](/oauth2/#okta-admin-management).
           items:
             type: string
           example:
-            - okta.logs.read
+          - okta.logs.read
         id:
           type: string
           description: The ID of the API Service Integration instance
@@ -46385,12 +46386,18 @@ components:
           example: 0oa72lrepvp4WqEET1d9
         name:
           type: string
-          description: The name of the API service integration that corresponds with the `type` property. This is the full name of the API service integration listed in the Okta Integration Network (OIN) catalog.
+          description: The name of the API service integration that corresponds with
+            the `type` property. This is the full name of the API service integration
+            listed in the Okta Integration Network (OIN) catalog.
           readOnly: true
           example: My App Cloud Identity Engine
+        properties:
+          $ref: '#/components/schemas/AppProperties'
         type:
           type: string
-          description: The type of the API service integration. This string is an underscore-concatenated, lowercased API service integration name. For example, `my_api_log_integration`.
+          description: The type of the API service integration. This string is an
+            underscore-concatenated, lowercased API service integration name. For
+            example, `my_api_log_integration`.
           example: my_app_cie
         _links:
           $ref: '#/components/schemas/APIServiceIntegrationLinks'
@@ -46400,13 +46407,17 @@ components:
       properties:
         client_secret:
           type: string
-          description: The OAuth 2.0 client secret string. The client secret string is returned in the response of a Secret creation request. In other responses (such as list, activate, or deactivate requests), the client secret is returned as an undisclosed hashed value.
+          description: The OAuth 2.0 client secret string. The client secret string
+            is returned in the response of a Secret creation request. In other responses
+            (such as list, activate, or deactivate requests), the client secret is
+            returned as an undisclosed hashed value.
           example: DRUFXGF9XbLnS9k-Sla3x3POBiIxDreBCdZuFs5B
           readOnly: true
         created:
           type: string
-          description: Timestamp when the API Service Integration instance Secret was created
-          example: '2023-02-21T20:08:24.000Z'
+          description: Timestamp when the API Service Integration instance Secret
+            was created
+          example: 2023-02-21T20:08:24.000Z
           readOnly: true
         id:
           type: string
@@ -46415,8 +46426,9 @@ components:
           readOnly: true
         lastUpdated:
           type: string
-          description: Timestamp when the API Service Integration instance Secret was updated
-          example: '2023-02-21T20:08:24.000Z'
+          description: Timestamp when the API Service Integration instance Secret
+            was updated
+          example: 2023-02-21T20:08:24.000Z
           readOnly: true
         secret_hash:
           type: string
@@ -46426,23 +46438,27 @@ components:
         status:
           type: string
           enum:
-            - ACTIVE
-            - INACTIVE
+          - ACTIVE
+          - INACTIVE
           description: Status of the API Service Integration instance Secret
           example: ACTIVE
         _links:
           $ref: '#/components/schemas/APIServiceIntegrationSecretLinks'
           readOnly: true
       required:
-        - id
-        - status
-        - client_secret
-        - created
-        - lastUpdated
-        - secret_hash
-        - _links
+      - id
+      - status
+      - client_secret
+      - created
+      - lastUpdated
+      - secret_hash
+      - _links
     APIServiceIntegrationLinks:
-      description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available for the current status of an application using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification. This object is used for dynamic discovery of related resources and lifecycle operations.
+      description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288))
+        available for the current status of an application using the [JSON Hypertext
+        Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06)
+        specification. This object is used for dynamic discovery of related resources
+        and lifecycle operations.
       properties:
         client:
           $ref: '#/components/schemas/HrefObjectClientLink'
@@ -46452,7 +46468,11 @@ components:
           $ref: '#/components/schemas/HrefObjectSelfLink'
       readOnly: true
     APIServiceIntegrationSecretLinks:
-      description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available for the current status of an application using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification. This object is used for dynamic discovery of related resources and lifecycle operations.
+      description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288))
+        available for the current status of an application using the [JSON Hypertext
+        Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06)
+        specification. This object is used for dynamic discovery of related resources
+        and lifecycle operations.
       properties:
         activate:
           $ref: '#/components/schemas/HrefObjectActivateLink'
@@ -46993,6 +47013,23 @@ components:
           type: array
           items:
             type: string
+    AppProperties:
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: true
+      description: App instance properties
+      additionalProperties:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Name of the property
+            example: baseUrl
+          value:
+            type: string
+            description: Value of the property
+            example: https://example.com
+      type: object
     AppLink:
       type: object
       properties:
@@ -67448,18 +67485,23 @@ components:
       properties:
         grantedScopes:
           type: array
-          description: The list of Okta management scopes granted to the API Service Integration instance. See [Okta management OAuth 2.0 scopes](/oauth2/#okta-admin-management).
+          description: The list of Okta management scopes granted to the API Service
+            Integration instance. See [Okta management OAuth 2.0 scopes](/oauth2/#okta-admin-management).
           items:
             type: string
           example:
-            - okta.logs.read
+          - okta.logs.read
+        properties:
+          $ref: '#/components/schemas/AppProperties'
         type:
           type: string
-          description: The type of the API service integration. This string is an underscore-concatenated, lowercased API service integration name. For example, `my_api_log_integration`.
+          description: The type of the API service integration. This string is an
+            underscore-concatenated, lowercased API service integration name. For
+            example, `my_api_log_integration`.
           example: my_app_cie
       required:
-        - type
-        - grantedScopes
+      - type
+      - grantedScopes
     profile:
       description: Specific profile properties for the privileged account
       additionalProperties:
