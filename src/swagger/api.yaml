@@ -24103,11 +24103,11 @@ paths:
           - Okta Identity Engine
   /integrations/api/v1/api-services:
     get:
-      summary: List all API Service Integration instances
+      summary: List all API service integration instances
       description: Lists all API Service Integration instances with a pagination option
       operationId: listApiServiceIntegrationInstances
       parameters:
-        - $ref: '#/components/parameters/queryAfter'
+      - $ref: '#/components/parameters/queryAfter'
       responses:
         '200':
           description: OK
@@ -24127,16 +24127,16 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.oauthIntegrations.read
+      - apiToken: []
+      - oauth2:
+        - okta.oauthIntegrations.read
       tags:
-        - ApiServiceIntegrations
+      - ApiServiceIntegrations
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
     post:
-      summary: Create an API Service Integration instance
+      summary: Create an API service integration instance
       description: Creates and authorizes an API Service Integration instance
       operationId: createApiServiceIntegrationInstance
       requestBody:
@@ -24147,6 +24147,8 @@ paths:
             examples:
               postAPIServiceIntegrationRequestExample:
                 $ref: '#/components/examples/postAPIServiceIntegrationRequest'
+              postAPIServiceWithPropertiesIntegrationRequestExample:
+                $ref: '#/components/examples/postAPIServiceWithPropertiesIntegrationRequest'
         required: true
       responses:
         '201':
@@ -24158,6 +24160,8 @@ paths:
               examples:
                 APIServiceIntegrationResponseExample:
                   $ref: '#/components/examples/postAPIServiceIntegrationResponse'
+                APIServiceWithPropertiesIntegrationResponseExample:
+                  $ref: '#/components/examples/postAPIServiceWithPropertiesIntegrationResponse'
         '400':
           $ref: '#/components/responses/ErrorApiValidationFailed400'
         '401':
@@ -24167,9 +24171,11 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
+      - apiToken: []
+      - oauth2:
+        - okta.oauthIntegrations.manage
       tags:
-        - ApiServiceIntegrations
+      - ApiServiceIntegrations
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
