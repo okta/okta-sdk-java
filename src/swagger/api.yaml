@@ -66380,9 +66380,6 @@ components:
           type: string
           readOnly: true
           description: Timestamp when the Schema was created
-        description:
-          type: string
-          description: The description of the Schema
         definitions:
           allOf:
             - $ref: '#/components/schemas/UserSchemaDefinitions'
