@@ -188,6 +188,7 @@
                                 <useRuntimeException>true</useRuntimeException>
                                 <enumUnknownDefaultCase>true</enumUnknownDefaultCase>
                                 <useJakartaEe>true</useJakartaEe>
+                                <useEnumCaseInsensitive>true</useEnumCaseInsensitive>
                             </configOptions>
                             <additionalProperties>serializableModel=true</additionalProperties>
                             <skipValidateSpec>true</skipValidateSpec>

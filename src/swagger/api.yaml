@@ -2317,7 +2317,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/OAuth2ClientJsonWebKey'
               examples:
                 OAuthClientJsonWebKeyResponseExample:
@@ -2735,7 +2734,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/OAuth2ClientSecret'
               examples:
                 OAuthClientSecretResponseExample:
@@ -11289,6 +11287,7 @@ paths:
       operationId: getHookKey
       parameters:
         - name: id
+          required: true
           description: A valid key ID
           required: true
           in: path
@@ -11435,6 +11434,318 @@ paths:
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
+  /api/v1/iam/governance/bundles:
+    x-okta-lifecycle:
+      lifecycle: GA
+      isGenerallyAvailable: false
+      SKUs: []
+    get:
+      summary: List all governance bundles for the Admin Console
+      description: Lists all Governance Bundles for the Admin Console in your
+        org
+      operationId: listGovernanceBundles
+      parameters:
+      - $ref: '#/components/parameters/queryAfter'
+      - $ref: '#/components/parameters/queryLimit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GovernanceBundlesResponse'
+              examples:
+                GovernanceBundlesResponse:
+                  $ref: '#/components/examples/GovernanceBundlesResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.read
+      tags:
+      - GovernanceBundle
+    post:
+      summary: Create a governance bundle for the Admin Console in RAMP
+      description: Creates a Governance Bundle for the Admin Console in RAMP
+      operationId: createGovernanceBundle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GovernanceBundleCreateRequest'
+            examples:
+              GovernanceBundleCreateRequestStandardRole:
+                $ref: '#/components/examples/GovernanceBundleCreateRequestStandardRole'
+              GovernanceBundleCreateRequestScopedStandardRole:
+                $ref: '#/components/examples/GovernanceBundleCreateRequestScopedStandardRole'
+              GovernanceBundleCreateRequestCustomRole:
+                $ref: '#/components/examples/GovernanceBundleCreateRequestCustomRole'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GovernanceBundle'
+              examples:
+                createGovernanceBundleResponse:
+                  $ref: '#/components/examples/GovernanceBundle'
+        '400':
+          $ref: '#/components/responses/ErrorApiValidationFailed400'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.manage
+      tags:
+      - GovernanceBundle
+  /api/v1/iam/governance/bundles/{bundleId}:
+    x-okta-lifecycle:
+      lifecycle: GA
+      isGenerallyAvailable: false
+      SKUs: []
+    parameters:
+    - $ref: '#/components/parameters/pathBundleId'
+    get:
+      summary: Retrieve a governance bundle from RAMP
+      description: Retrieves a Governance Bundle from RAMP
+      operationId: getGovernanceBundle
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GovernanceBundle'
+              examples:
+                GovernanceBundle:
+                  $ref: '#/components/examples/GovernanceBundle'
+        '400':
+          $ref: '#/components/responses/ErrorApiValidationFailed400'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.read
+      tags:
+      - GovernanceBundle
+    put:
+      summary: Replace a governance bundle in RAMP
+      description: Replaces a Governance Bundle in RAMP
+      operationId: replaceGovernanceBundle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GovernanceBundleUpdateRequest'
+            examples:
+              GovernanceBundleUpdateRequestStandardRole:
+                $ref: '#/components/examples/GovernanceBundleUpdateRequestStandardRole'
+              GovernanceBundleUpdateRequestScopedStandardRole:
+                $ref: '#/components/examples/GovernanceBundleUpdateRequestScopedStandardRole'
+              GovernanceBundleUpdateRequestCustomRole:
+                $ref: '#/components/examples/GovernanceBundleUpdateRequestCustomRole'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GovernanceBundle'
+              examples:
+                GovernanceBundle:
+                  $ref: '#/components/examples/GovernanceBundle'
+        '400':
+          $ref: '#/components/responses/ErrorApiValidationFailed400'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.manage
+      tags:
+      - GovernanceBundle
+    delete:
+      summary: Delete a governance bundle from RAMP
+      description: Deletes a Governance Bundle from RAMP
+      operationId: deleteGovernanceBundle
+      responses:
+        '204':
+          description: No Content
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.manage
+      tags:
+      - GovernanceBundle
+  /api/v1/iam/governance/bundles/{bundleId}/entitlements:
+    x-okta-lifecycle:
+      lifecycle: GA
+      isGenerallyAvailable: false
+      SKUs: []
+    parameters:
+    - $ref: '#/components/parameters/pathBundleId'
+    get:
+      summary: List all entitlements for a governance bundle
+      description: Lists all Entitlements specific to a Governance Bundle
+      operationId: listBundleEntitlements
+      parameters:
+      - $ref: '#/components/parameters/queryAfter'
+      - $ref: '#/components/parameters/queryLimit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BundleEntitlementsResponse'
+              examples:
+                BundleEntitlementsResponse:
+                  $ref: '#/components/examples/BundleEntitlementsResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.read
+      tags:
+      - GovernanceBundle
+  /api/v1/iam/governance/bundles/{bundleId}/entitlements/{entitlementId}/values:
+    x-okta-lifecycle:
+      lifecycle: GA
+      isGenerallyAvailable: false
+      SKUs: []
+    parameters:
+    - $ref: '#/components/parameters/pathBundleId'
+    - $ref: '#/components/parameters/pathEntitlementId'
+    get:
+      summary: List all entitlement values for a bundle entitlement
+      description: Lists all Entitlement Values specific to a Bundle Entitlement
+      operationId: listBundleEntitlementValues
+      parameters:
+      - $ref: '#/components/parameters/queryAfter'
+      - $ref: '#/components/parameters/queryLimit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitlementValuesResponse'
+              examples:
+                EntitlementValuesResponse:
+                  $ref: '#/components/examples/EntitlementValuesResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.read
+      tags:
+      - GovernanceBundle
+  /api/v1/iam/governance/optIn:
+    x-okta-lifecycle:
+      lifecycle: GA
+      isGenerallyAvailable: false
+      SKUs: []
+    get:
+      summary: Retrieve the opt-in status from RAMP
+      description: Retrieves the opt-in status of the Admin Console from RAMP
+      operationId: getOptInStatus
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptInStatusResponse'
+              examples:
+                OptInStatusResponse:
+                  $ref: '#/components/examples/OptInStatusResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.read
+      tags:
+      - GovernanceBundle
+    post:
+      summary: Opt in the Admin Console to RAMP
+      description: Opts in the Admin Console to RAMP
+      operationId: optIn
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptInStatusResponse'
+              examples:
+                OptInStatusResponse:
+                  $ref: '#/components/examples/OptInStatusResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.manage
+      tags:
+      - GovernanceBundle
+  /api/v1/iam/governance/optOut:
+    post:
+      summary: Opt out the Admin Console from RAMP
+      description: Opts out the Admin Console from RAMP
+      operationId: optOut
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptInStatusResponse'
+              examples:
+                OptOutStatusResponse:
+                  $ref: '#/components/examples/OptOutStatusResponse'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+      - apiToken: []
+      - oauth2:
+        - okta.roles.manage
+      tags:
+      - GovernanceBundle
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: false
+        SKUs: []
   /api/v1/iam/resource-sets:
     get:
       summary: List all Resource Sets
@@ -13621,14 +13932,22 @@ paths:
         isGenerallyAvailable: true
   /api/v1/inlineHooks:
     get:
-      summary: List all Inline Hooks
-      description: Lists all inline hooks
+      summary: List all inline hooks
+      description: |-
+        Lists all inline hooks or all inline hooks of a specific type.
+
+        When listing a specific inline hook, you need to specify its type. The following types are currently supported:
+          | Type Value                         | Name                                                           |
+          |------------------------------------|----------------------------------------------------------------|
+          | `com.okta.import.transform`        | [User import inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/createUserImportInlineHook)       |
+          | `com.okta.oauth2.tokens.transform` | [Token inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/createTokenInlineHook)               |
+          | `com.okta.saml.tokens.transform`   | [SAML assertion inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/createSAMLAssertionInlineHook)       |
+          | `com.okta.telephony.provider`      | [Telephony inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/createTelephonyInlineHook) |
+          | `com.okta.user.credential.password.import` | [Password import inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/createPasswordImportInlineHook)|
+          | `com.okta.user.pre-registration`   | [Registration inline hook](/openapi/okta-management/management/tag/InlineHook/#tag/InlineHook/operation/create-registration-hook) |
       operationId: listInlineHooks
       parameters:
-        - name: type
-          in: query
-          schema:
-            type: string
+      - $ref: '#/components/parameters/inlineHookType'
       responses:
         '200':
           description: Success
@@ -13639,31 +13958,58 @@ paths:
                 items:
                   $ref: '#/components/schemas/InlineHook'
               examples:
-                AuthenticatorConfiguration:
-                  $ref: '#/components/examples/InlineHookTelephony'
+                InlineHooktMgmtListAllexample:
+                  $ref: '#/components/examples/InlineHooktMgmtListAllexample'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.read
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.read
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
     post:
-      summary: Create an Inline Hook
-      description: Creates an inline hook
+      summary: Create an inline hook
+      description: "Creates an inline hook\n\nThis endpoint creates an inline hook\
+        \ for your org in an `ACTIVE` status. You need to pass an inline hooks object\
+        \ in the JSON payload of your request. \nThat object represents the set of\
+        \ required information about the inline hook that you're registering, including:\n\
+        \n* The URI of your external service endpoint\n* The type of inline hook you're\
+        \ registering\n* The type of authentication you're registering\n\nThere are\
+        \ two authentication options that you can configure for your inline hook:\
+        \ HTTP headers and OAuth 2.0 tokens.\n\nHTTP headers let you specify a secret\
+        \ API key that you want Okta to pass to your external service endpoint (so\
+        \ that your external service can check for its presence as a security measure).\n\
+        \n>**Note:** The API key that you set here is unrelated to the Okta API token\
+        \ you must supply when making calls to Okta APIs.\n\nYou can also optionally\
+        \ specify extra headers that you want Okta to pass to your external service\
+        \ with each call.\n\nTo configure HTTP header authentication, see parameters\
+        \ for the `config` object.\n\nOAuth 2.0 tokens provide enhanced security between\
+        \ Okta and your external service. You can configure these tokens for the following\
+        \ types&mdash;client secret and private key.\n\n>**Note:** Your external service's\
+        \ endpoint needs to be a valid HTTPS endpoint. The URI you specify should\
+        \ always begin with `https://`.\n\nThe total number of inline hooks that you\
+        \ can create in an Okta org is limited to 50, which is a combined total for\
+        \ any combination of inline hook types."
       operationId: createInlineHook
-      x-codegen-request-body-name: inlineHook
+      x-codegen-request-body-name: inlineHookCreate
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InlineHook'
+              $ref: '#/components/schemas/InlineHookCreate'
+            examples:
+              CreateInlineHookHTTP:
+                $ref: '#/components/examples/InlineHookMgmtCreateHTTPRequest'
+              CreateInlineHookOAuthClientSecret:
+                $ref: '#/components/examples/InlineHookMgmtCreateOAuthClientSecretRequest'
+              CreateInlineHookOAuthPrivateKey:
+                $ref: '#/components/examples/InlineHookMgmtCreateOAuthPrivateKeyRequest'
         required: true
       responses:
         '200':
@@ -13671,7 +14017,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InlineHook'
+                $ref: '#/components/schemas/InlineHookCreateResponse'
+              examples:
+                CreateInlineHookHTTP:
+                  $ref: '#/components/examples/InlineHookMgmtCreateHTTPResponse'
+                CreateInlineHookOAuthClientSecret:
+                  $ref: '#/components/examples/InlineHookMgmtCreateOAuthClientSecretResponse'
+                CreateInlineHookOAuthPrivateKey:
+                  $ref: '#/components/examples/InlineHookMgmtCreateOAuthPrivateKeyResponse'
         '400':
           $ref: '#/components/responses/ErrorApiValidationFailed400'
         '403':
@@ -13679,19 +14032,19 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
   /api/v1/inlineHooks/{inlineHookId}:
     parameters:
-      - $ref: '#/components/parameters/pathInlineHookId'
+    - $ref: '#/components/parameters/pathInlineHookId'
     get:
-      summary: Retrieve an Inline Hook
+      summary: Retrieve an inline hook
       description: Retrieves an inline hook by `inlineHookId`
       operationId: getInlineHook
       responses:
@@ -13702,8 +14055,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/InlineHook'
               examples:
-                AuthenticatorConfiguration:
-                  $ref: '#/components/examples/InlineHookTelephony'
+                InlineHookHTTP:
+                  $ref: '#/components/examples/InlineHookMgmtHTTPexample'
+                InlineHookOAuthClientSecret:
+                  $ref: '#/components/examples/InlineHookMgmtOAuthCSPexample'
+                InlineHookOAuthPrivateKey:
+                  $ref: '#/components/examples/InlineHookMgmtOauthPKJexample'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '404':
@@ -13711,16 +14068,16 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.read
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.read
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
     post:
-      summary: Update an Inline Hook
+      summary: Update an inline hook
       description: Updates an inline hook by `inlineHookId`
       operationId: updateInlineHook
       x-codegen-request-body-name: inlineHook
@@ -13728,7 +14085,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InlineHook'
+              $ref: '#/components/schemas/InlineHookReplace'
+            examples:
+              UpdateInlineHookHTTP:
+                $ref: '#/components/examples/InlineHookMgmtPutHTTPRequest'
         required: true
       responses:
         '200':
@@ -13737,6 +14097,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InlineHook'
+              examples:
+                UpdateInlineHookHTTP:
+                  $ref: '#/components/examples/InlineHookMgmtPutResponse'
         '400':
           $ref: '#/components/responses/ErrorApiValidationFailed400'
         '403':
@@ -13746,24 +14109,30 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
     put:
-      summary: Replace an Inline Hook
-      description: Replaces an inline hook by `inlineHookId`
+      summary: Replace an inline hook
+      description: |-
+        Replaces an inline hook by `inlineHookId`. The submitted inline hook properties replace the existing properties after passing validation.
+
+        >**Note:** Some properties are immutable and can't be updated.
       operationId: replaceInlineHook
       x-codegen-request-body-name: inlineHook
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InlineHook'
+              $ref: '#/components/schemas/InlineHookReplace'
+            examples:
+              UpdateInlineHookHTTP:
+                $ref: '#/components/examples/InlineHookMgmtPutHTTPRequest'
         required: true
       responses:
         '200':
@@ -13772,6 +14141,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InlineHook'
+              examples:
+                UpdateInlineHookHTTP:
+                  $ref: '#/components/examples/InlineHookMgmtPutResponse'
         '400':
           $ref: '#/components/responses/ErrorApiValidationFailed400'
         '403':
@@ -13781,17 +14153,19 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
     delete:
-      summary: Delete an Inline Hook
-      description: Deletes an inline hook by `inlineHookId`. Once deleted, the Inline Hook is unrecoverable. As a safety precaution, only Inline Hooks with a status of INACTIVE are eligible for deletion.
+      summary: Delete an inline hook
+      description: Deletes an inline hook by `inlineHookId`. After it's deleted, the
+        inline hook is unrecoverable. As a safety precaution, only inline hooks with
+        a status of `INACTIVE` are eligible for deletion.
       operationId: deleteInlineHook
       responses:
         '204':
@@ -13804,27 +14178,56 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
   /api/v1/inlineHooks/{inlineHookId}/execute:
     parameters:
-      - $ref: '#/components/parameters/pathInlineHookId'
+    - $ref: '#/components/parameters/pathInlineHookId'
     post:
       summary: Execute an Inline Hook
-      description: Executes the inline hook by `inlineHookId` using the request body as the input. This will send the provided data through the Channel and return a response if it matches the correct data contract. This execution endpoint should only be used for testing purposes.
+      description: "Executes the inline hook that matches the provided `inlineHookId`\
+        \ by using the request body as the input. This inline hook sends the provided\
+        \ \ndata through the `channel` object and returns a response if it matches\
+        \ the correct data contract. Otherwise it returns an error. You need to \n\
+        construct a JSON payload that matches the payloads that Okta would send to\
+        \ your external service for this inline hook type.\n\nA timeout of three seconds\
+        \ is enforced on all outbound requests, with one retry in the event of a timeout\
+        \ or an error response from the remote system. \nIf a successful response\
+        \ isn't received after the request, a 400 error is returned with more information\
+        \ about what failed.\n\n>**Note:** This execution endpoint isn't tied to any\
+        \ other functionality in Okta, and you should only use it for testing purposes."
       operationId: executeInlineHook
       x-codegen-request-body-name: payloadData
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InlineHookPayload'
+              oneOf:
+              - $ref: '#/components/schemas/PasswordImportRequestExecute'
+              - $ref: '#/components/schemas/TelephonyRequestExecute'
+              - $ref: '#/components/schemas/RegistrationInlineHookRequest'
+              - $ref: '#/components/schemas/TokenRequest'
+              - $ref: '#/components/schemas/SAMLPayloadExecute'
+              - $ref: '#/components/schemas/UserImportRequestExecute'
+            examples:
+              PasswordImportPayloadExample:
+                $ref: '#/components/examples/PasswordImportPayloadExample'
+              TelephonyPayloadExample:
+                $ref: '#/components/examples/TelephonyPayloadExample'
+              ProfileEnrollmentRequest:
+                $ref: '#/components/examples/ProfileEnrollmentRequest'
+              TokenPayLoadExample:
+                $ref: '#/components/examples/TokenPayLoadExample'
+              SAMLPayloadExample:
+                $ref: '#/components/examples/SAMLPayLoadExample'
+              UserImportPayloadExample:
+                $ref: '#/components/examples/UserImportPayloadExample'
         required: true
       responses:
         '200':
@@ -13832,7 +14235,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InlineHookResponse'
+                oneOf:
+                - $ref: '#/components/schemas/PasswordImportResponse'
+                - $ref: '#/components/schemas/TelephonyResponse'
+                - $ref: '#/components/schemas/RegistrationInlineHookResponse'
+                - $ref: '#/components/schemas/TokenHookResponse'
+                - $ref: '#/components/schemas/SAMLHookResponse'
+                - $ref: '#/components/schemas/UserImportResponse'
+              examples:
+                PasswordImportPayloadExample:
+                  $ref: '#/components/examples/PasswordImportVerifiedResponse'
+                TelephonyPayloadExample:
+                  $ref: '#/components/examples/TelephonySuccessResponse'
+                ProfileEnrollmentRequest:
+                  $ref: '#/components/examples/ProfileEnrollmentResponse'
+                TokenPayLoadExample:
+                  $ref: '#/components/examples/TokenHookResponse'
+                SAMLPayloadExample:
+                  $ref: '#/components/examples/SAMLHookResponseExample'
+                UserImportPayloadExample:
+                  $ref: '#/components/examples/UserImportChangeAppUserProfileExample'
         '400':
           $ref: '#/components/responses/ErrorApiValidationFailed400'
         '403':
@@ -13842,19 +14264,19 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
   /api/v1/inlineHooks/{inlineHookId}/lifecycle/activate:
     parameters:
-      - $ref: '#/components/parameters/pathInlineHookId'
+    - $ref: '#/components/parameters/pathInlineHookId'
     post:
-      summary: Activate an Inline Hook
+      summary: Activate an inline hook
       description: Activates the inline hook by `inlineHookId`
       operationId: activateInlineHook
       responses:
@@ -13864,6 +14286,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InlineHook'
+              examples:
+                ActivateAnInlineHook:
+                  $ref: '#/components/examples/InlineHookMgmtOAuthCSPexample'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '404':
@@ -13871,19 +14296,19 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
   /api/v1/inlineHooks/{inlineHookId}/lifecycle/deactivate:
     parameters:
-      - $ref: '#/components/parameters/pathInlineHookId'
+    - $ref: '#/components/parameters/pathInlineHookId'
     post:
-      summary: Deactivate an Inline Hook
+      summary: Deactivate an inline hook
       description: Deactivates the inline hook by `inlineHookId`
       operationId: deactivateInlineHook
       responses:
@@ -13893,6 +14318,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InlineHook'
+              examples:
+                DeactivateAnInlineHook:
+                  $ref: '#/components/examples/InlineHookMgmtHTTPexampleDeactivate'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '404':
@@ -13900,11 +14328,11 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.inlineHooks.manage
+      - apiToken: []
+      - oauth2:
+        - okta.inlineHooks.manage
       tags:
-        - InlineHook
+      - InlineHook
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
@@ -14187,15 +14615,13 @@ paths:
           in: query
           schema:
             type: string
-            format: ISO 8601 compliant timestamp
-            default: 7 days prior to until
+            format: date-time
         - name: until
           description: Filters the upper time bound of the log events `published` property for bounded queries or persistence time for polling queries.
           in: query
           schema:
             type: string
-            format: ISO 8601 compliant timestamp
-            default: current time
+            format: date-time
         - name: after
           description: Retrieves the next page of results. Okta returns a link in the HTTP Header (`rel=next`) that includes the after query parameter
           in: query
@@ -23677,11 +24103,11 @@ paths:
           - Okta Identity Engine
   /integrations/api/v1/api-services:
     get:
-      summary: List all API Service Integration instances
+      summary: List all API service integration instances
       description: Lists all API Service Integration instances with a pagination option
       operationId: listApiServiceIntegrationInstances
       parameters:
-        - $ref: '#/components/parameters/queryAfter'
+      - $ref: '#/components/parameters/queryAfter'
       responses:
         '200':
           description: OK
@@ -23701,16 +24127,16 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
-        - oauth2:
-            - okta.oauthIntegrations.read
+      - apiToken: []
+      - oauth2:
+        - okta.oauthIntegrations.read
       tags:
-        - ApiServiceIntegrations
+      - ApiServiceIntegrations
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
     post:
-      summary: Create an API Service Integration instance
+      summary: Create an API service integration instance
       description: Creates and authorizes an API Service Integration instance
       operationId: createApiServiceIntegrationInstance
       requestBody:
@@ -23721,6 +24147,8 @@ paths:
             examples:
               postAPIServiceIntegrationRequestExample:
                 $ref: '#/components/examples/postAPIServiceIntegrationRequest'
+              postAPIServiceWithPropertiesIntegrationRequestExample:
+                $ref: '#/components/examples/postAPIServiceWithPropertiesIntegrationRequest'
         required: true
       responses:
         '201':
@@ -23732,6 +24160,8 @@ paths:
               examples:
                 APIServiceIntegrationResponseExample:
                   $ref: '#/components/examples/postAPIServiceIntegrationResponse'
+                APIServiceWithPropertiesIntegrationResponseExample:
+                  $ref: '#/components/examples/postAPIServiceWithPropertiesIntegrationResponse'
         '400':
           $ref: '#/components/responses/ErrorApiValidationFailed400'
         '401':
@@ -23741,9 +24171,11 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
-        - apiToken: []
+      - apiToken: []
+      - oauth2:
+        - okta.oauthIntegrations.manage
       tags:
-        - ApiServiceIntegrations
+      - ApiServiceIntegrations
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
@@ -44656,6 +45088,19 @@ components:
       required: true
       schema:
         type: string
+    inlineHookType:
+      name: type
+      description: One of the supported inline hook types
+      in: query
+      schema:
+        type: string
+        enum:
+        - com.okta.import.transform
+        - com.okta.oauth2.tokens.transform
+        - com.okta.saml.tokens.transform
+        - com.okta.user.credential.password.import
+        - com.okta.user.pre-registration
+        - com.okta.telephony.provider
     limitParameter:
       name: limit
       in: query
@@ -45925,7 +46370,7 @@ components:
         createdAt:
           type: string
           description: Timestamp when the API Service Integration instance was created
-          example: '2023-02-21T20:08:24.000Z'
+          example: 2023-02-21T20:08:24.000Z
           readOnly: true
         createdBy:
           type: string
@@ -45934,11 +46379,12 @@ components:
           readOnly: true
         grantedScopes:
           type: array
-          description: The list of Okta management scopes granted to the API Service Integration instance. See [Okta management OAuth 2.0 scopes](/oauth2/#okta-admin-management).
+          description: The list of Okta management scopes granted to the API Service
+            Integration instance. See [Okta management OAuth 2.0 scopes](/oauth2/#okta-admin-management).
           items:
             type: string
           example:
-            - okta.logs.read
+          - okta.logs.read
         id:
           type: string
           description: The ID of the API Service Integration instance
@@ -45946,12 +46392,18 @@ components:
           example: 0oa72lrepvp4WqEET1d9
         name:
           type: string
-          description: The name of the API service integration that corresponds with the `type` property. This is the full name of the API service integration listed in the Okta Integration Network (OIN) catalog.
+          description: The name of the API service integration that corresponds with
+            the `type` property. This is the full name of the API service integration
+            listed in the Okta Integration Network (OIN) catalog.
           readOnly: true
           example: My App Cloud Identity Engine
+        properties:
+          $ref: '#/components/schemas/AppProperties'
         type:
           type: string
-          description: The type of the API service integration. This string is an underscore-concatenated, lowercased API service integration name. For example, `my_api_log_integration`.
+          description: The type of the API service integration. This string is an
+            underscore-concatenated, lowercased API service integration name. For
+            example, `my_api_log_integration`.
           example: my_app_cie
         _links:
           $ref: '#/components/schemas/APIServiceIntegrationLinks'
@@ -45961,13 +46413,17 @@ components:
       properties:
         client_secret:
           type: string
-          description: The OAuth 2.0 client secret string. The client secret string is returned in the response of a Secret creation request. In other responses (such as list, activate, or deactivate requests), the client secret is returned as an undisclosed hashed value.
+          description: The OAuth 2.0 client secret string. The client secret string
+            is returned in the response of a Secret creation request. In other responses
+            (such as list, activate, or deactivate requests), the client secret is
+            returned as an undisclosed hashed value.
           example: DRUFXGF9XbLnS9k-Sla3x3POBiIxDreBCdZuFs5B
           readOnly: true
         created:
           type: string
-          description: Timestamp when the API Service Integration instance Secret was created
-          example: '2023-02-21T20:08:24.000Z'
+          description: Timestamp when the API Service Integration instance Secret
+            was created
+          example: 2023-02-21T20:08:24.000Z
           readOnly: true
         id:
           type: string
@@ -45976,8 +46432,9 @@ components:
           readOnly: true
         lastUpdated:
           type: string
-          description: Timestamp when the API Service Integration instance Secret was updated
-          example: '2023-02-21T20:08:24.000Z'
+          description: Timestamp when the API Service Integration instance Secret
+            was updated
+          example: 2023-02-21T20:08:24.000Z
           readOnly: true
         secret_hash:
           type: string
@@ -45987,23 +46444,27 @@ components:
         status:
           type: string
           enum:
-            - ACTIVE
-            - INACTIVE
+          - ACTIVE
+          - INACTIVE
           description: Status of the API Service Integration instance Secret
           example: ACTIVE
         _links:
           $ref: '#/components/schemas/APIServiceIntegrationSecretLinks'
           readOnly: true
       required:
-        - id
-        - status
-        - client_secret
-        - created
-        - lastUpdated
-        - secret_hash
-        - _links
+      - id
+      - status
+      - client_secret
+      - created
+      - lastUpdated
+      - secret_hash
+      - _links
     APIServiceIntegrationLinks:
-      description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available for the current status of an application using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification. This object is used for dynamic discovery of related resources and lifecycle operations.
+      description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288))
+        available for the current status of an application using the [JSON Hypertext
+        Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06)
+        specification. This object is used for dynamic discovery of related resources
+        and lifecycle operations.
       properties:
         client:
           $ref: '#/components/schemas/HrefObjectClientLink'
@@ -46013,7 +46474,11 @@ components:
           $ref: '#/components/schemas/HrefObjectSelfLink'
       readOnly: true
     APIServiceIntegrationSecretLinks:
-      description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available for the current status of an application using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification. This object is used for dynamic discovery of related resources and lifecycle operations.
+      description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288))
+        available for the current status of an application using the [JSON Hypertext
+        Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06)
+        specification. This object is used for dynamic discovery of related resources
+        and lifecycle operations.
       properties:
         activate:
           $ref: '#/components/schemas/HrefObjectActivateLink'
@@ -46554,6 +47019,23 @@ components:
           type: array
           items:
             type: string
+    AppProperties:
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: true
+      description: App instance properties
+      additionalProperties:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Name of the property
+            example: baseUrl
+          value:
+            type: string
+            description: Value of the property
+            example: https://example.com
+      type: object
     AppLink:
       type: object
       properties:
@@ -46643,12 +47125,7 @@ components:
         profile:
           $ref: '#/components/schemas/AppUserProfile'
         scope:
-          type: string
-          description: Indicates if the assignment is direct (`USER`) or by group membership (`GROUP`).
-          enum:
-            - USER
-            - GROUP
-          example: USER
+          $ref: '#/components/schemas/AppUserAssignmentType'
         status:
           $ref: '#/components/schemas/AppUserStatus'
         statusChanged:
@@ -46673,6 +47150,13 @@ components:
         - $ref: '#/components/schemas/AppUser'
         - required:
             - id
+    AppUserAssignmentType:
+      type: string
+      description: Indicates if the assignment is direct (`USER`) or by group membership (`GROUP`).
+      enum:
+        - USER
+        - GROUP
+      example: USER
     AppUserCredentials:
       description: |
         Specifies a user's credentials for the app.
@@ -46725,6 +47209,13 @@ components:
       properties:
         profile:
           $ref: '#/components/schemas/AppUserProfile'
+    AppUserScopeRequestPayload:
+      title: Scope
+      description: Updates the assigned user scope
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/AppUserAssignmentType'
     AppUserStatus:
       description: Status of an Application User
       example: ACTIVE
@@ -46783,6 +47274,7 @@ components:
       oneOf:
         - $ref: '#/components/schemas/AppUserCredentialsRequestPayload'
         - $ref: '#/components/schemas/AppUserProfileRequestPayload'
+        - $ref: '#/components/schemas/AppUserScopeRequestPayload'
     AppleClientSigning:
       description: |-
         Information used to generate the secret JSON Web Token for the token requests to Apple IdP
@@ -47782,6 +48274,7 @@ components:
             - CHALLENGE
             - LOGIN
             - NEVER
+            - NEVER_INCLUDING_RECOVERY
     AuthenticatorEnrollmentPolicyRuleActions:
       allOf:
         - $ref: '#/components/schemas/PolicyRuleActions'
@@ -47794,13 +48287,15 @@ components:
       properties:
         network:
           $ref: '#/components/schemas/PolicyNetworkCondition'
+        app:
+          $ref: '#/components/schemas/AppAndInstancePolicyRuleCondition'
         people:
           type: object
           description: Identifies Users and Groups that are used together
           properties:
             users:
               type: object
-              description: Specifies a set of Users to be included or excluded
+              description: Specifies a set of Uers to be included or excluded
               properties:
                 exclude:
                   type: array
@@ -50925,16 +51420,14 @@ components:
         - type: object
           properties:
             asns:
-              allOf:
-                - $ref: '#/components/schemas/NetworkZoneAsns'
-                - description: An array of ASNs for a Network Zone
+              $ref: '#/components/schemas/NetworkZoneAsns'
             proxyType:
               type: string
               description: The proxy type used for a Dynamic Network Zone
               enum:
                 - 'null'
                 - Any
-                - Tor
+                - TorAnonymizer
                 - NotTorAnonymizer
               x-enumDescriptions:
                 'null': (Or `""`) No proxy used
@@ -50942,9 +51435,7 @@ components:
                 Tor: Use Tor Anonymizer proxy for the Dynamic Zone.
                 NotTorAnonymizer: Use a non Tor Anonymizer proxy for the Dynamic Zone.
             locations:
-              allOf:
-                - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                - description: An array of geolocations for a Dynamic Network Zone
+              $ref: '#/components/schemas/NetworkZoneLocationArray'
     ECKeyJWK:
       description: Elliptic Curve Key in JWK format, currently used during enrollment to encrypt fulfillment requests to Yubico, or during activation to verify Yubico's JWS objects in fulfillment responses. The currently agreed protocol uses P-384.
       type: object
@@ -51313,9 +51804,7 @@ components:
               description: <div class="x-lifecycle-container"><x-lifecycle class="ea"></x-lifecycle></div>The list of ASNs associated with an Enhanced Dynamic Network Zone
               properties:
                 include:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneAsns'
-                    - description: An array of ASNs to include for an Enhanced Dynamic Network Zone
+                  $ref: '#/components/schemas/NetworkZoneAsns'
             locations:
               x-okta-lifecycle:
                 lifecycle: EA
@@ -51325,13 +51814,9 @@ components:
               description: <div class="x-lifecycle-container"><x-lifecycle class="ea"></x-lifecycle></div>The list of geolocations to include or exclude for an Enhanced Dynamic Network Zone
               properties:
                 include:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                    - description: An array of geolocations to include for an Enhanced Dynamic Network Zone
+                  $ref: '#/components/schemas/NetworkZoneLocationArray'
                 exclude:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                    - description: An array of geolocations to exclude for an Enhanced Dynamic Network Zone
+                  $ref: '#/components/schemas/NetworkZoneLocationArray'
             ipServiceCategories:
               x-okta-lifecycle:
                 lifecycle: EA
@@ -53347,6 +53832,7 @@ components:
         - XERO
         - YAHOO
         - YAHOOJP
+        - OKTA
     IdentitySourceSession:
       type: object
       properties:
@@ -53587,6 +54073,8 @@ components:
             capabilities:
               $ref: '#/components/schemas/CapabilitiesInboundProvisioningObject'
     InlineHook:
+      description: An inline hook object that specifies the details of the inline
+        hook
       type: object
       properties:
         channel:
@@ -53595,28 +54083,32 @@ components:
           type: string
           format: date-time
           readOnly: true
+          description: Date of the inline hook creation
         id:
           type: string
           readOnly: true
+          description: The unique identifier for the inline hook
         lastUpdated:
           type: string
           format: date-time
           readOnly: true
-        metadata:
-          type: object
-          description: Specific properties for the inline hook configuration, for example, `optOutServiceProtectionRateLimit` to opt-out of Telephony Service Protection Rate Limits when using the Telephony inline hook.
-          additionalProperties:
-            type: string
+          description: Date of the last inline hook update
         name:
           type: string
+          description: The display name of the inline hook
+          maximum: 255
+          minimum: 1
         status:
           $ref: '#/components/schemas/InlineHookStatus'
         type:
           $ref: '#/components/schemas/InlineHookType'
         version:
           type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
+          readOnly: true
         _links:
-          $ref: '#/components/schemas/LinksSelf'
+          $ref: '#/components/schemas/InlineHookLinks'
     InlineHookBasePayload:
       type: object
       properties:
@@ -53635,7 +54127,7 @@ components:
         eventTime:
           type: string
           description: The time the inline hook request was sent
-          example: '2020-01-17T21:23:56.000Z'
+          example: 2020-01-17T21:23:56.000Z
         eventTypeVersion:
           description: The inline hook version
           example: 1
@@ -53647,47 +54139,116 @@ components:
           $ref: '#/components/schemas/InlineHookChannelType'
         version:
           type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
       discriminator:
         propertyName: type
         mapping:
           HTTP: '#/components/schemas/InlineHookChannelHttp'
           OAUTH: '#/components/schemas/InlineHookChannelOAuth'
     InlineHookChannelConfig:
+      description: Properties of the communications channel that are used to contact
+        your external service
       type: object
       properties:
-        authScheme:
-          $ref: '#/components/schemas/InlineHookChannelConfigAuthScheme'
         headers:
           type: array
+          description: An optional list of key/value pairs for headers that you can
+            send with the request to the external service
           items:
             $ref: '#/components/schemas/InlineHookChannelConfigHeaders'
         method:
           type: string
+          description: The method of the Okta inline hook request
         uri:
           type: string
-    InlineHookChannelConfigAuthScheme:
+          description: The external service endpoint that executes the inline hook
+            handler. It must begin with `https://` and be reachable by Okta. No white
+            space is allowed in the URI.
+          maximum: 1024
+    InlineHookChannelConfigAuthSchemeBody:
+      description: The authentication scheme to use for this request
+      nullable: true
       type: object
       properties:
         key:
           type: string
+          description: The header name for the authorization server
         type:
           type: string
+          description: The authentication scheme type. Supported type&mdash;`HEADER`.
         value:
           type: string
+          description: The header value. This secret value is passed to your external
+            service endpoint. Your external service can check it as a security measure.
+    InlineHookChannelConfigAuthSchemeResponse:
+      description: The authentication scheme to use for this request
+      nullable: true
+      type: object
+      properties:
+        key:
+          type: string
+          description: The header name for the authorization server
+        type:
+          type: string
+          description: The authentication scheme type. Supported type&mdash;`HEADER`
+    InlineHookChannelConfigCreate:
+      description: Properties of the communications channel that are used to contact
+        your external service
+      type: object
+      properties:
+        headers:
+          type: array
+          description: An optional list of key/value pairs for headers that you can
+            send with the request to the external service.
+          items:
+            $ref: '#/components/schemas/InlineHookChannelConfigHeaders'
+        method:
+          type: string
+          description: The method of the Okta inline hook request
+        uri:
+          type: string
+          description: The external service endpoint that executes the inline hook
+            handler. It must begin with `https://` and be reachable by Okta. No white
+            space is allowed in the URI.
+          maximum: 1024
     InlineHookChannelConfigHeaders:
       type: object
       properties:
         key:
           type: string
+          description: The optional field or header name
         value:
           type: string
+          description: The value for the key
+    InlineHookChannelCreate:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/InlineHookChannelType'
+        version:
+          type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
+      discriminator:
+        propertyName: type
+        mapping:
+          HTTP: '#/components/schemas/InlineHookChannelHttpCreate'
+          OAUTH: '#/components/schemas/InlineHookChannelOAuthCreate'
     InlineHookChannelHttp:
       allOf:
         - $ref: '#/components/schemas/InlineHookChannel'
         - type: object
           properties:
             config:
-              $ref: '#/components/schemas/InlineHookChannelConfig'
+              $ref: '#/components/schemas/InlineHookHttpConfig'
+    InlineHookChannelHttpCreate:
+      allOf:
+        - $ref: '#/components/schemas/InlineHookChannelCreate'
+        - type: object
+          properties:
+            config:
+              $ref: '#/components/schemas/InlineHookHttpConfigCreate'
     InlineHookChannelOAuth:
       allOf:
         - $ref: '#/components/schemas/InlineHookChannel'
@@ -53695,51 +54256,221 @@ components:
           properties:
             config:
               $ref: '#/components/schemas/InlineHookOAuthChannelConfig'
+    InlineHookChannelOAuthCreate:
+      allOf:
+        - $ref: '#/components/schemas/InlineHookChannelCreate'
+        - type: object
+          properties:
+            config:
+              $ref: '#/components/schemas/InlineHookOAuthChannelConfigCreate'
     InlineHookChannelType:
       type: string
       enum:
-        - HTTP
-        - OAUTH
+      - HTTP
+      - OAUTH
+    InlineHookCreate:
+      description: An inline hook object that specifies the details of the inline
+        hook
+      type: object
+      properties:
+        channel:
+          $ref: '#/components/schemas/InlineHookChannelCreate'
+        name:
+          type: string
+          description: The display name of the inline hook
+          maximum: 255
+          minimum: 1
+        type:
+          $ref: '#/components/schemas/InlineHookType'
+        version:
+          type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
+    InlineHookCreateResponse:
+      description: An inline hook object that specifies the details of the inline
+        hook
+      type: object
+      properties:
+        channel:
+          $ref: '#/components/schemas/InlineHookChannel'
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Date of the inline hook creation
+        id:
+          type: string
+          readOnly: true
+          description: The unique identifier for the inline hook
+        lastUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Date of the last inline hook update
+        name:
+          type: string
+          description: The display name of the inline hook
+          maximum: 255
+          minimum: 1
+        status:
+          $ref: '#/components/schemas/InlineHookStatus'
+        type:
+          $ref: '#/components/schemas/InlineHookType'
+        version:
+          type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
+          readOnly: true
+        _links:
+          $ref: '#/components/schemas/InlineHookLinksCreate'
+    InlineHookHttpConfig:
+        allOf:
+        - $ref: '#/components/schemas/InlineHookChannelConfig'
+        - type: object
+          properties:
+            authScheme:
+              $ref: '#/components/schemas/InlineHookChannelConfigAuthSchemeResponse'
+    InlineHookHttpConfigCreate:
+      allOf:
+        - $ref: '#/components/schemas/InlineHookChannelConfigCreate'
+        - type: object
+          properties:
+            authScheme:
+              $ref: '#/components/schemas/InlineHookChannelConfigAuthSchemeBody'
+    InlineHookLinks:
+      allOf:
+        - $ref: '#/components/schemas/LinksSelf'
+        - type: object
+          properties:
+            activate:
+              description: URL to activate the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
+            deactivate:
+              description: URL to deactivate the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
+            delete:
+              description: URL to delete the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
+            execute:
+              description: URL to test the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
+    InlineHookLinksCreate:
+      allOf:
+        - $ref: '#/components/schemas/LinksSelf'
+        - type: object
+          properties:
+            deactivate:
+              description: URL to deactivate the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
+            execute:
+              description: URL to test the inline hook
+              allOf:
+              - $ref: '#/components/schemas/HrefObject'
     InlineHookOAuthBasicConfig:
       allOf:
         - $ref: '#/components/schemas/InlineHookChannelConfig'
-      type: object
-      properties:
-        authType:
-          type: string
-        clientId:
-          type: string
-        scope:
-          type: string
-        tokenUrl:
-          type: string
+        - type: object
+          properties:
+            clientId:
+              type: string
+              description: A publicly exposed string provided by the service that's used
+                to identify the OAuth app and build authorization URLs
+            scope:
+              type: string
+              description: Include the scopes that allow you to perform the actions on
+                the hook endpoint that you want to access
+            tokenUrl:
+              type: string
+              description: The URI where inline hooks can exchange an authorization code
+                for access and refresh tokens
     InlineHookOAuthChannelConfig:
       type: object
       properties:
         authType:
           type: string
+          description: The authentication method for the token endpoint
       discriminator:
         propertyName: authType
         mapping:
           client_secret_post: '#/components/schemas/InlineHookOAuthClientSecretConfig'
           private_key_jwt: '#/components/schemas/InlineHookOAuthPrivateKeyJwtConfig'
+    InlineHookOAuthChannelConfigCreate:
+      type: object
+      properties:
+        authType:
+          type: string
+          description: The authentication method for the token endpoint
+      discriminator:
+        propertyName: authType
+        mapping:
+          client_secret_post: '#/components/schemas/InlineHookOAuthClientSecretConfigCreate'
+          private_key_jwt: '#/components/schemas/InlineHookOAuthPrivateKeyJwtConfig'
     InlineHookOAuthClientSecretConfig:
       allOf:
         - $ref: '#/components/schemas/InlineHookOAuthBasicConfig'
-      type: object
-      properties:
-        clientSecret:
-          type: string
+        - $ref: '#/components/schemas/InlineHookOAuthChannelConfig'
+        - type: object
+          properties:
+            authScheme:
+              type: string
+              description: Not applicable. Must be `null`.
+              nullable: true
+    InlineHookOAuthClientSecretConfigCreate:
+      allOf:
+        - $ref: '#/components/schemas/InlineHookOAuthBasicConfig'
+        - $ref: '#/components/schemas/InlineHookOAuthChannelConfigCreate'
+        - type: object
+          properties:
+            clientSecret:
+              type: string
+              description: A private value provided by the service used to authenticate
+                the identity of the app to the service
+            method:
+              type: string
+              description: The method of the Okta inline hook request. Only accepts `POST`.
     InlineHookOAuthPrivateKeyJwtConfig:
       allOf:
         - $ref: '#/components/schemas/InlineHookOAuthBasicConfig'
-      type: object
-      properties:
-        hookKeyId:
-          type: string
+        - $ref: '#/components/schemas/InlineHookOAuthChannelConfig'
+        - type: object
+          properties:
+            authType:
+                type: string
+            authScheme:
+              type: string
+              description: Not applicable. Must be `null`.
+              nullable: true
+            hookKeyId:
+              type: string
+              description: An ID value of the hook key pair generated from the [Hook Keys
+                API](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/HookKey/#tag/HookKey)
+            method:
+              type: string
+              description: The method of the Okta inline hook request. Only accepts `POST`.
     InlineHookPayload:
       type: object
       x-okta-extensible: true
+    InlineHookReplace:
+      description: An inline hook object that specifies the details of the inline
+        hook
+      type: object
+      properties:
+        channel:
+          $ref: '#/components/schemas/InlineHookChannelCreate'
+        name:
+          type: string
+          description: The display name of the inline hook
+          maximum: 255
+          minimum: 1
+        version:
+          type: string
+          description: Version of the inline hook type. The currently supported version
+            is `1.0.0`.
     InlineHookRequestObject:
       description: The API request that triggered the inline hook
       type: object
@@ -53788,17 +54519,18 @@ components:
     InlineHookStatus:
       type: string
       enum:
-        - ACTIVE
-        - INACTIVE
+      - ACTIVE
+      - INACTIVE
     InlineHookType:
+      description: One of the inline hook types
       type: string
       enum:
-        - com.okta.import.transform
-        - com.okta.oauth2.tokens.transform
-        - com.okta.saml.tokens.transform
-        - com.okta.telephony.provider
-        - com.okta.user.credential.password.import
-        - com.okta.user.pre-registration
+      - com.okta.import.transform
+      - com.okta.oauth2.tokens.transform
+      - com.okta.saml.tokens.transform
+      - com.okta.telephony.provider
+      - com.okta.user.credential.password.import
+      - com.okta.user.pre-registration
     IssuerMode:
       type: string
       enum:
@@ -56587,6 +57319,10 @@ components:
               $ref: '#/components/schemas/PolicyPeopleCondition'
             identityProvider:
               $ref: '#/components/schemas/IdentityProviderPolicyRuleCondition'
+            risk:
+              $ref: '#/components/schemas/RiskPolicyRuleCondition'
+            riskScore:
+              $ref: '#/components/schemas/RiskScorePolicyRuleCondition'
     OktaSignOnPolicyRuleSignonActions:
       type: object
       properties:
@@ -57920,7 +58656,6 @@ components:
         minLength:
           description: Minimum length of the password recovery question answer
           type: integer
-          readOnly: true
           default: 4
     PasswordPolicyRecoveryQuestionProperties:
       type: object
@@ -58175,7 +58910,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         description:
           description: Description of the Policy
           type: string
@@ -58190,7 +58924,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         name:
           description: Name of the Policy
           type: string
@@ -58409,6 +59142,7 @@ components:
         - ANY
         - IOS
         - OSX
+        - CHROMEOS
         - OTHER
         - WINDOWS
     PolicyPlatformType:
@@ -59370,26 +60104,18 @@ components:
             - example: DISABLED
             - default: DISABLED
     Protocol:
+      description: IdP-specific protocol settings for endpoints, bindings, and algorithms used to connect with the IdP and validate messages
       type: object
       properties:
-        algorithms:
-          $ref: '#/components/schemas/ProtocolAlgorithms'
-        credentials:
-          $ref: '#/components/schemas/IdentityProviderCredentials'
-        endpoints:
-          $ref: '#/components/schemas/ProtocolEndpoints'
-        issuer:
-          $ref: '#/components/schemas/ProtocolEndpoint'
-        relayState:
-          $ref: '#/components/schemas/ProtocolRelayState'
-        scopes:
-          type: array
-          items:
-            type: string
-        settings:
-          $ref: '#/components/schemas/ProtocolSettings'
         type:
           $ref: '#/components/schemas/ProtocolType'
+      discriminator:
+        propertyName: type
+        mapping:
+          SAML2: '#/components/schemas/ProtocolSaml'
+          OAUTH2: '#/components/schemas/ProtocolOAuth'
+          OIDC: '#/components/schemas/ProtocolOidc'
+          MTLS: '#/components/schemas/ProtocolMtls'
     ProtocolAlgorithmRequestScope:
       description: Specifies whether to digitally sign authorization requests to the IdP
       example: REQUEST
@@ -59417,83 +60143,71 @@ components:
     ProtocolMtls:
       title: Mutual TLS Protocol
       description: Protocol settings for the [MTLS Protocol](https://tools.ietf.org/html/rfc5246#section-7.4.4)
-      type: object
-      properties:
-        credentials:
-          $ref: '#/components/schemas/MtlsCredentials'
-        endpoints:
-          $ref: '#/components/schemas/MtlsEndpoints'
-        type:
-          type: string
-          description: Mutual TLS
-          enum:
-            - MTLS
+      allOf:
+        - $ref: '#/components/schemas/Protocol'
+        - type: object
+          properties:
+            credentials:
+              $ref: '#/components/schemas/MtlsCredentials'
+            endpoints:
+              $ref: '#/components/schemas/MtlsEndpoints'
     ProtocolOAuth:
       title: OAuth 2.0 Protocol
       description: Protocol settings for authentication using the [OAuth 2.0 Authorization Code flow](https://tools.ietf.org/html/rfc6749#section-4.1)
-      type: object
-      properties:
-        credentials:
-          $ref: '#/components/schemas/OAuthCredentials'
-        endpoints:
-          $ref: '#/components/schemas/OAuthEndpoints'
-        scopes:
-          type: array
-          description: |-
-            IdP-defined permission bundles to request delegated access from the User
-            > **Note:** The [Identity Provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each Identity Provider.
-          items:
-            type: string
-            example: public_profile
-        type:
-          type: string
-          description: OAuth 2.0 Authorization Code flow
-          enum:
-            - OAUTH2
+      allOf:
+        - $ref: '#/components/schemas/Protocol'
+        - type: object
+          properties:
+            credentials:
+              $ref: '#/components/schemas/OAuthCredentials'
+            endpoints:
+              $ref: '#/components/schemas/OAuthEndpoints'
+            scopes:
+              type: array
+              description: |-
+                IdP-defined permission bundles to request delegated access from the User
+                > **Note:** The [Identity Provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each Identity Provider.
+              items:
+                type: string
+                example: public_profile
     ProtocolOidc:
       title: OpenID Connect Protocol
       description: Protocol settings for authentication using the [OpenID Connect Protocol](http://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth)
-      type: object
-      properties:
-        algorithms:
-          $ref: '#/components/schemas/OidcAlgorithms'
-        credentials:
-          $ref: '#/components/schemas/OAuthCredentials'
-        endpoints:
-          $ref: '#/components/schemas/OAuthEndpoints'
-        scopes:
-          type: array
-          description: |-
-            OpenID Connect and IdP-defined permission bundles to request delegated access from the User
-            > **Note:** The [Identity Provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each Identity Provider.
-          items:
-            type: string
-            example: openid
-        type:
-          type: string
-          description: OpenID Connect Authorization Code flow
-          enum:
-            - OIDC
+      allOf:
+        - $ref: '#/components/schemas/Protocol'
+        - type: object
+          properties:
+            algorithms:
+              $ref: '#/components/schemas/OidcAlgorithms'
+            credentials:
+              $ref: '#/components/schemas/OAuthCredentials'
+            endpoints:
+              $ref: '#/components/schemas/OAuthEndpoints'
+            scopes:
+              type: array
+              description: |-
+                OpenID Connect and IdP-defined permission bundles to request delegated access from the User
+                > **Note:** The [Identity Provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each Identity Provider.
+              items:
+                type: string
+                example: openid
     ProtocolSaml:
       title: SAML 2.0 Protocol
       description: Protocol settings for the [SAML 2.0 Authentication Request Protocol](http://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)
-      type: object
-      properties:
-        algorithms:
-          $ref: '#/components/schemas/SamlAlgorithms'
-        credentials:
-          $ref: '#/components/schemas/SamlCredentials'
-        endpoints:
-          $ref: '#/components/schemas/SamlEndpoints'
-        relayState:
-          $ref: '#/components/schemas/SamlRelayState'
-        settings:
-          $ref: '#/components/schemas/SamlSettings'
-        type:
-          type: string
-          description: SAML 2.0 protocol
-          enum:
-            - SAML2
+      allOf:
+       - $ref: '#/components/schemas/Protocol'
+       - type: object
+         properties:
+           algorithms:
+             $ref: '#/components/schemas/SamlAlgorithms'
+           credentials:
+             $ref: '#/components/schemas/SamlCredentials'
+           endpoints:
+             $ref: '#/components/schemas/SamlEndpoints'
+           relayState:
+             $ref: '#/components/schemas/SamlRelayState'
+           settings:
+             $ref: '#/components/schemas/SamlSettings'
     ProtocolAlgorithmType:
       type: object
       properties:
@@ -60792,6 +61506,8 @@ components:
       description: Permission type
       type: string
       enum:
+        - okta.agents.manage
+        - okta.agents.register
         - okta.apps.assignment.manage
         - okta.apps.manage
         - okta.apps.manageFirstPartyApps
@@ -60808,6 +61524,7 @@ components:
         - okta.devices.lifecycle.unsuspend
         - okta.devices.manage
         - okta.devices.read
+        - okta.directories.manage
         - okta.governance.accessCertifications.manage
         - okta.governance.accessRequests.manage
         - okta.groups.appAssignment.manage
@@ -60815,10 +61532,13 @@ components:
         - okta.groups.manage
         - okta.groups.members.manage
         - okta.groups.read
+        - okta.iam.read
         - okta.identityProviders.manage
         - okta.identityProviders.read
         - okta.profilesources.import.run
+        - okta.realms.manage
         - okta.support.cases.manage
+        - okta.users.apitokens.manage
         - okta.users.appAssignment.manage
         - okta.users.create
         - okta.users.credentials.expirePassword
@@ -60837,6 +61557,10 @@ components:
         - okta.users.manage
         - okta.users.read
         - okta.users.userprofile.manage
+        - okta.workflows.flows.read
+        - okta.workflows.flows.invoke
+        - okta.workflows.invoke
+        - okta.workflows.read
     RoleType:
       description: Standard role type
       type: string
@@ -62478,7 +63202,7 @@ components:
       type: string
     SplunkToken:
       description: The HEC token for your Splunk Cloud HTTP Event Collector. The token value is set at object creation, but isn't returned.
-      example: 11111111-1111-2222-2222-222222222222
+      example: a747a818-a4c4-4446-8a87-704216495a08
       writeOnly: true
       type: string
       pattern: "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[1-5][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
@@ -64060,7 +64784,9 @@ components:
           description: Specifies the button label for the `Submit` button at the bottom of the enrollment form
           default: Submit
         elements:
-          $ref: '#/components/schemas/UIElement'
+          type: array
+          items:
+            $ref: '#/components/schemas/UIElement'
         label:
           type: string
           description: Specifies the label at the top of the enrollment form under the logo
@@ -65701,8 +66427,8 @@ components:
             Enumerated value of the property.
 
             The value of the property is limited to one of the values specified in the enum definition. The list of values for the enum must consist of unique elements.
-        items:
-          $ref: '#/components/schemas/UserSchemaAttributeItems'
+          items:
+            $ref: '#/components/schemas/UserSchemaAttributeItems'
         externalName:
           type: string
           description: |-
@@ -65790,6 +66516,14 @@ components:
             - $ref: '#/components/schemas/UserSchemaAttributeType'
         unique:
           type: string
+        items:
+          type: object
+          nullable: true
+          properties:
+            type:
+              description: Type of property of the main type is an Array
+              allOf:
+                - $ref: '#/components/schemas/UserSchemaAttributeType'
       x-okta-allow-null-property-value-for-updates: true
     UserSchemaAttributeEnum:
       type: object
@@ -66757,18 +67491,23 @@ components:
       properties:
         grantedScopes:
           type: array
-          description: The list of Okta management scopes granted to the API Service Integration instance. See [Okta management OAuth 2.0 scopes](/oauth2/#okta-admin-management).
+          description: The list of Okta management scopes granted to the API Service
+            Integration instance. See [Okta management OAuth 2.0 scopes](/oauth2/#okta-admin-management).
           items:
             type: string
           example:
-            - okta.logs.read
+          - okta.logs.read
+        properties:
+          $ref: '#/components/schemas/AppProperties'
         type:
           type: string
-          description: The type of the API service integration. This string is an underscore-concatenated, lowercased API service integration name. For example, `my_api_log_integration`.
+          description: The type of the API service integration. This string is an
+            underscore-concatenated, lowercased API service integration name. For
+            example, `my_api_log_integration`.
           example: my_app_cie
       required:
-        - type
-        - grantedScopes
+      - type
+      - grantedScopes
     profile:
       description: Specific profile properties for the privileged account
       additionalProperties:
