@@ -121,7 +121,7 @@ class GroupsIT extends ITSupport {
         validateGroup(group, groupNameUpdated, 'Description updated')
     }
 
-    @Test(groups = "group1")
+    @Test (groups = "group1")
     @Scenario("group-user-operations")
     void groupUserOperationsTest() {
 
@@ -148,21 +148,15 @@ class GroupsIT extends ITSupport {
             .buildAndCreate(groupApi)
         registerForCleanup(group)
         validateGroup(group, groupName)
-        Thread.sleep(getTestOperationDelay())
+
         // 2. Add user to the group and validate user present in group
         groupApi.assignUserToGroup(group.getId(), user.getId())
 
-        Thread.sleep(getTestOperationDelay())
+        assertUserInGroup(user, group, groupApi, 5, getTestOperationDelay())
 
-        assertUserInGroup(user, group, groupApi, 10, getTestOperationDelay())
-
-        Thread.sleep(getTestOperationDelay())
         // 3. Remove user from group and validate user removed
         groupApi.unassignUserFromGroup(group.getId(), user.getId())
 
-        Thread.sleep(getTestOperationDelay())
-        Thread.sleep(5000)
-        assertUserNotInGroup(user, group, groupApi, 10, getTestOperationDelay())
+        assertUserNotInGroup(user, group, groupApi,5, getTestOperationDelay())
     }
-
 }
