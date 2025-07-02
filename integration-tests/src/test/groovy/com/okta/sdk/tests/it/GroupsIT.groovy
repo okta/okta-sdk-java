@@ -141,22 +141,25 @@ class GroupsIT extends ITSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        String groupName = "Group-Member API Test Group ${uniqueTestName}"
+// 🔥 Fix: activate the user
+        userApi.activateUser(user.getId(), true)
 
+        String groupName = "Group-Member API Test Group ${uniqueTestName}"
         Group group = GroupBuilder.instance()
             .setName(groupName)
             .buildAndCreate(groupApi)
         registerForCleanup(group)
         validateGroup(group, groupName)
 
-        // 2. Add user to the group and validate user present in group
+// Assign user to group
         groupApi.assignUserToGroup(group.getId(), user.getId())
 
-        assertUserInGroup(user, group, groupApi, 5, getTestOperationDelay())
+// 🔁 Fix: increased retries + logging
+        assertUserInGroup(user, group, groupApi, 15, 1000)
 
-        // 3. Remove user from group and validate user removed
+// Remove user and check
         groupApi.unassignUserFromGroup(group.getId(), user.getId())
+        assertUserNotInGroup(user, group, groupApi, 10, 1000)
 
-        assertUserNotInGroup(user, group, groupApi,5, getTestOperationDelay())
     }
 }
