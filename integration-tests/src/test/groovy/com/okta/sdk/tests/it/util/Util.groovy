@@ -123,7 +123,7 @@ class Util {
                 .findFirst().isPresent()
     }
 
-    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds, boolean present = true) {
+    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds, boolean present = false) {
         for (int ii = 0; ii < times; ii++) {
 
             sleep(delayInMilliseconds)
