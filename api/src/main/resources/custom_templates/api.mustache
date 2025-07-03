@@ -188,10 +188,10 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
             final String[] localVarAccepts = {
         {{#produces}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/produces}}
             };
-            final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+            final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts, localVarPath);
 
             final String[] localVarContentTypes = {
-        {{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}
+        "text/xml", {{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}
             };
             final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 

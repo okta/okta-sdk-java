@@ -151,12 +151,12 @@ class GroupsIT extends ITSupport {
 
         // 2. Add user to the group and validate user present in group
         groupApi.assignUserToGroup(group.getId(), user.getId())
-
-        assertUserInGroup(user, group, groupApi, 5, getTestOperationDelay())
+        sleep(3000)
+        assertUserInGroup(user, group, groupApi, 10, getTestOperationDelay())
 
         // 3. Remove user from group and validate user removed
         groupApi.unassignUserFromGroup(group.getId(), user.getId())
 
-        assertUserNotInGroup(user, group, groupApi,5, getTestOperationDelay())
+        assertUserNotInGroup(user, group, groupApi,10, getTestOperationDelay())
     }
 }

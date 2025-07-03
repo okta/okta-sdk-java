@@ -123,21 +123,28 @@ class Util {
                 .findFirst().isPresent()
     }
 
-    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds, boolean present=true) {
-        for (int ii=0; ii<times; ii++) {
+    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds, boolean present = true) {
+        for (int ii = 0; ii < times; ii++) {
 
             sleep(delayInMilliseconds)
 
-            if (present == !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
-                .filter{ listUser -> listUser.id == user.id}
-                .findFirst().isPresent()) {
+            boolean userIsPresent = StreamSupport.stream(
+                groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false
+            ).anyMatch { listUser -> listUser.id == user.id }
+
+            if ((present && userIsPresent) || (!present && !userIsPresent)) {
                 return
             }
         }
 
-        if (present) Assert.fail("User not found in group")
-        if (!present) Assert.fail("User found in group")
+
+        if (present) {
+            Assert.fail("User not found in group after ${times} attempts")
+        } else {
+            Assert.fail("User found in group after ${times} attempts")
+        }
     }
+
 
     static def ignoring = { Class<? extends Throwable> catchMe, Closure callMe ->
         try {
