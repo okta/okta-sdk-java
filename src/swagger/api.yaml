@@ -61317,6 +61317,10 @@ components:
           properties:
             signOn:
               $ref: '#/components/schemas/SamlApplicationSettingsSignOn'
+            app:
+              type: object
+              additionalProperties: true
+              description: Required placeholder to save defaultRelayState
     SamlApplicationSettingsSignOn:
       description: |-
         SAML 2.0 sign-on attributes.
