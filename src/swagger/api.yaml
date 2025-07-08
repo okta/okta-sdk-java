@@ -24424,9 +24424,11 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/StandardRole'
-                  - $ref: '#/components/schemas/CustomRole'
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/StandardRole'
+                    - $ref: '#/components/schemas/CustomRole'
               examples:
                 Standard Roles:
                   $ref: '#/components/examples/StandardRolesListResponseClient'
