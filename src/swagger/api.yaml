@@ -66417,6 +66417,9 @@ components:
     UserSchemaAttribute:
       type: object
       properties:
+        default:
+          nullable: true
+          type: object
         description:
           type: string
           description: Description of the property
