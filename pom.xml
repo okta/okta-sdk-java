@@ -229,6 +229,18 @@
     <build>
         <pluginManagement>
             <plugins>
+
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.8.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>central</publishingServerId>
+                        <autoPublish>true</autoPublish>
+                        <waitUntil>published</waitUntil>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -328,18 +340,6 @@
                         <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
                     </configuration>
                 </plugin>
-
-                <plugin>
-                    <groupId>org.sonatype.central</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>0.4.0</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <publishingServerId>central-portal-staging</publishingServerId>
-                        <tokenAuth>true</tokenAuth>
-                        <autoPublish>true</autoPublish>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -390,16 +390,5 @@
   <scm>
     <tag>okta-sdk-root-23.0.0</tag>
   </scm>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>central-portal-staging</id>
-            <url>https://central.sonatype.com/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>central-portal-staging</id>
-            <url>https://central.sonatype.com/content/repositories/releases</url>
-        </repository>
-    </distributionManagement>
 </project>
 
