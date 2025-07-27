@@ -7,29 +7,33 @@
   ~
   ~     http://www.apache.org/licenses/LICENSE-2.0
   ~
-  ~ Unless required by applicable law or agreed to in writing, software
+  ~ Unless required by applicable law or agreed to in writing, softwa
   ~ distributed under the License is distributed on an "AS IS" BASIS,
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
-
+<settings>
     <servers>
         <server>
-            <id>central-portal-staging</id> <!-- Must match <id> in pom.xml -->
-            <username>${env.CENTRAL_TOKEN_ID}</username>
-            <password>${env.CENTRAL_TOKEN_SECRET}</password>
+            <id>sonatype-nexus-snapshots</id>
+            <username>${env.OSSRH_USERNAME}</username>
+            <password>${env.OSSRH_SECRET}</password>
+        </server>
+        <server>
+            <id>sonatype-nexus-staging</id>
+            <username>${env.OSSRH_USERNAME}</username>
+            <password>${env.OSSRH_SECRET}</password>
         </server>
     </servers>
     <profiles>
         <profile>
-            <id>central-profile</id>
+            <id>securecentral</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <!--Override the repository (and pluginRepository) "central" from the
+               Maven Super POM -->
             <repositories>
                 <repository>
                     <id>central</id>
