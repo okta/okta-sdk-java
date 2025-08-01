@@ -59471,27 +59471,21 @@ components:
                 people:
                   $ref: '#/components/schemas/PolicyPeopleCondition'
     PostAuthSessionPolicyRuleRunWorkflow:
-      type: object
-      properties:
-        action:
-          type: string
-          enum:
-            - RUN_WORKFLOW
-        workflow:
-          type: object
-          description: This action runs a workflow
+      allOf:
+        - $ref: '#/components/schemas/PostAuthSessionFailureActionsObject'
+        - type: object
           properties:
-            id:
-              type: integer
-              description: The `id` of the workflow that runs.
+            workflow:
+              type: object
+              description: This action runs a workflow
+              properties:
+                id:
+                  type: integer
+                  description: The `id` of the workflow that runs.
     PostAuthSessionPolicyRuleTerminateSession:
-      type: object
-      properties:
-        action:
-          type: string
-          description: The action to take when post auth session evaluation detects a failure.
-          enum:
-            - TERMINATE_SESSION
+      allOf:
+        - $ref: '#/components/schemas/PostAuthSessionFailureActionsObject'
+        - type: object
     PreRegistrationInlineHook:
       type: object
       properties:
