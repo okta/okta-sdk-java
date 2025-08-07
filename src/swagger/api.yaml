@@ -59370,45 +59370,62 @@ components:
         - PENDING
         - SUSPENDED
     PossessionConstraint:
-      allOf:
-        - $ref: '#/components/schemas/AccessPolicyConstraint'
-        - type: object
-          properties:
-            deviceBound:
-              type: string
-              description: Indicates if device-bound Factors are required. This property is only set for `POSSESSION` constraints.
-              enum:
+          allOf:
+          - $ref: '#/components/schemas/AccessPolicyConstraint'
+          - type: object
+            properties:
+              deviceBound:
+                type: string
+                description: Indicates if device-bound Factors are required. This
+                  property is only set for `POSSESSION` constraints.
+                enum:
                 - OPTIONAL
                 - REQUIRED
-              default: OPTIONAL
-            hardwareProtection:
-              type: string
-              description: Indicates if any secrets or private keys used during authentication must be hardware protected and not exportable. This property is only set for `POSSESSION` constraints.
-              enum:
+                default: OPTIONAL
+              hardwareProtection:
+                type: string
+                description: Indicates if any secrets or private keys used during
+                  authentication must be hardware protected and not exportable. This
+                  property is only set for `POSSESSION` constraints.
+                enum:
                 - OPTIONAL
                 - REQUIRED
-              default: OPTIONAL
-            phishingResistant:
-              type: string
-              description: Indicates if phishing-resistant Factors are required. This property is only set for `POSSESSION` constraints.
-              enum:
+                default: OPTIONAL
+              phishingResistant:
+                type: string
+                description: Indicates if phishing-resistant Factors are required.
+                  This property is only set for `POSSESSION` constraints.
+                enum:
                 - OPTIONAL
                 - REQUIRED
-              default: OPTIONAL
-            userPresence:
-              type: string
-              description: Indicates if the user needs to approve an Okta Verify prompt or provide biometrics (meets NIST AAL2 requirements). This property is only set for `POSSESSION` constraints.
-              enum:
+                default: OPTIONAL
+              userPresence:
+                type: string
+                description: Indicates if the user needs to approve an Okta Verify
+                  prompt or provide biometrics (meets NIST AAL2 requirements). This
+                  property is only set for `POSSESSION` constraints.
+                enum:
                 - OPTIONAL
                 - REQUIRED
-              default: REQUIRED
-            userVerification:
-              type: string
-              description: Indicates the user interaction requirement (PIN or biometrics) to ensure verification of a possession factor
-              enum:
+                default: REQUIRED
+              userVerification:
+                type: string
+                description: Indicates the user interaction requirement (PIN or biometrics)
+                  to ensure verification of a possession factor
+                enum:
                 - OPTIONAL
                 - REQUIRED
-              default: OPTIONAL
+                default: OPTIONAL
+              userVerificationMethods:
+                description: Indicates which methods can be used for user verification.
+                  `userVerificationMethods` can only be used when `userVerification`
+                  is `REQUIRED`. `BIOMETRICS` is currently the only supported method.
+                type: array
+                items:
+                  type: string
+                  enum:
+                  - BIOMETRICS
+                  - PIN
     PostAuthKeepMeSignedInPrompt:
       type: object
       properties:
