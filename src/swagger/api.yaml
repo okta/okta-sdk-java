@@ -53359,6 +53359,86 @@ components:
           type: array
           items:
             type: string
+    IDVAuthorizationEndpoint:
+          description: IDV authorization endpoint
+          type: object
+          properties:
+            binding:
+              type: string
+              enum:
+              - HTTP-REDIRECT
+            url:
+              type: string
+              description: URL of the IDV `authorization` endpoint
+          readOnly: true
+    IDVCredentials:
+      description: Credentials for verifying requests to the IDV
+      type: object
+      properties:
+        bearer:
+          type: object
+          description: Client credential for `IDV_PERSONA` IdP type
+          properties:
+            apiKey:
+              type: string
+              description: The API key that you generate in your Persona dashboard
+          required:
+          - apiKey
+        client:
+          type: object
+          description: <x-lifecycle-container><x-lifecycle class="ea"></x-lifecycle>
+            <x-lifecycle class="oie"></x-lifecycle></x-lifecycle-container>Client
+            credentials for `IDV_CLEAR` and `IDV_INCODE` IdP types
+          properties:
+            client_id:
+              type: string
+              description: The client ID that you generate in your IDV
+            client_secret:
+              type: string
+              description: The client secret that you generate in your IDV
+          required:
+          - client_id
+          - client_secret
+          x-okta-lifecycle:
+            lifecycle: EA
+            isGenerallyAvailable: false
+            SKUs:
+            - Okta Identity Engine
+    IDVEndpoints:
+      description: Contains the endpoints for the IDV
+      type: object
+      properties:
+        authorization:
+          $ref: '#/components/schemas/IDVAuthorizationEndpoint'
+        par:
+          $ref: '#/components/schemas/IDVParEndpoint'
+        token:
+          $ref: '#/components/schemas/IDVTokenEndpoint'
+      readOnly: true
+    IDVParEndpoint:
+      description: IDV [PAR](https://datatracker.ietf.org/doc/html/rfc9126) endpoint
+      type: object
+      properties:
+        binding:
+          type: string
+          enum:
+          - HTTP-POST
+        url:
+          type: string
+          description: URL of the IDV `par` endpoint
+      readOnly: true
+    IDVTokenEndpoint:
+      description: IDV token endpoint
+      type: object
+      properties:
+        binding:
+          type: string
+          enum:
+          - HTTP-POST
+        url:
+          type: string
+          description: URL of the IDV `token` endpoint
+      readOnly: true
     IPNetworkZone:
       allOf:
         - $ref: '#/components/schemas/NetworkZone'
@@ -53813,28 +53893,31 @@ components:
         | `YAHOOJP`          | [Yahoo Japan](https://login.yahoo.co.jp/config/login)&nbsp;as the Identity Provider                                                                   | OpenID Connect         | `openid`, `profile`, `email`                                          |
       type: string
       enum:
-        - AMAZON
-        - APPLE
-        - DISCORD
-        - FACEBOOK
-        - GITHUB
-        - GITLAB
-        - GOOGLE
-        - LINKEDIN
-        - LOGINGOV
-        - LOGINGOV_SANDBOX
-        - MICROSOFT
-        - OIDC
-        - PAYPAL
-        - PAYPAL_SANDBOX
-        - SALESFORCE
-        - SAML2
-        - SPOTIFY
-        - X509
-        - XERO
-        - YAHOO
-        - YAHOOJP
-        - OKTA
+      - AMAZON
+      - APPLE
+      - DISCORD
+      - FACEBOOK
+      - GITHUB
+      - GITLAB
+      - GOOGLE
+      - IDV_CLEAR
+      - IDV_INCODE
+      - IDV_PERSONA
+      - LINKEDIN
+      - LOGINGOV
+      - LOGINGOV_SANDBOX
+      - MICROSOFT
+      - OIDC
+      - OKTA
+      - PAYPAL
+      - PAYPAL_SANDBOX
+      - SALESFORCE
+      - SAML2
+      - SPOTIFY
+      - X509
+      - XERO
+      - YAHOO
+      - YAHOOJP
     IdentitySourceSession:
       type: object
       properties:
@@ -56771,6 +56854,14 @@ components:
         - code
         - id_token
         - token
+    OAuthScopes:
+      description: |-
+        IdP-defined permission bundles to request delegated access from the user.
+        > **Note:** The [identity provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each IdP.
+      items:
+        type: string
+        example: public_profile
+      type: array
     OAuthTokenEndpoint:
       description: Endpoint for an [OAuth 2.0 Authorization Server (AS)](https://tools.ietf.org/html/rfc6749#page-18)
       type: object
@@ -60129,6 +60220,7 @@ components:
           OAUTH2: '#/components/schemas/ProtocolOAuth'
           OIDC: '#/components/schemas/ProtocolOidc'
           MTLS: '#/components/schemas/ProtocolMtls'
+          ID_PROOFING: "#/components/schemas/ProtocolIdVerification"
     ProtocolAlgorithmRequestScope:
       description: Specifies whether to digitally sign authorization requests to the IdP
       example: REQUEST
@@ -60153,6 +60245,19 @@ components:
       enum:
         - HTTP-POST
         - HTTP-REDIRECT
+    ProtocolIdVerification:
+      title: ID Verification
+      description: Protocol settings for the IDV
+      allOf:
+        - $ref: '#/components/schemas/Protocol'
+        - type: object
+          properties:
+            credentials:
+              $ref: '#/components/schemas/IDVCredentials'
+            endpoints:
+              $ref: '#/components/schemas/IDVEndpoints'
+            scopes:
+              $ref: '#/components/schemas/OAuthScopes'
     ProtocolMtls:
       title: Mutual TLS Protocol
       description: Protocol settings for the [MTLS Protocol](https://tools.ietf.org/html/rfc5246#section-7.4.4)
@@ -60176,13 +60281,7 @@ components:
             endpoints:
               $ref: '#/components/schemas/OAuthEndpoints'
             scopes:
-              type: array
-              description: |-
-                IdP-defined permission bundles to request delegated access from the User
-                > **Note:** The [Identity Provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each Identity Provider.
-              items:
-                type: string
-                example: public_profile
+              $ref: '#/components/schemas/OAuthScopes'
     ProtocolOidc:
       title: OpenID Connect Protocol
       description: Protocol settings for authentication using the [OpenID Connect Protocol](http://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth)
@@ -60197,13 +60296,7 @@ components:
             endpoints:
               $ref: '#/components/schemas/OAuthEndpoints'
             scopes:
-              type: array
-              description: |-
-                OpenID Connect and IdP-defined permission bundles to request delegated access from the User
-                > **Note:** The [Identity Provider type](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/IdentityProvider/#tag/IdentityProvider/operation/createIdentityProvider!path=type&t=request) table lists the scopes that are supported for each Identity Provider.
-              items:
-                type: string
-                example: openid
+              $ref: '#/components/schemas/OAuthScopes'
     ProtocolSaml:
       title: SAML 2.0 Protocol
       description: Protocol settings for the [SAML 2.0 Authentication Request Protocol](http://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)
@@ -60305,6 +60398,7 @@ components:
         - OAUTH2
         - OIDC
         - SAML2
+        - ID_PROOFING
     ProviderType:
       type: string
       enum:
