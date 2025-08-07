@@ -53601,6 +53601,18 @@ components:
           description: Base64url-encoded SHA-256 thumbprint of the DER encoding of an X.509 certificate
           type: string
           example: wzPVobIrveR1x-PCbjsFGNV-6zn7Rm9KuOWOG4Rk6jE
+    IdProofingMethod:
+      x-okta-lifecycle:
+        lifecycle: LIMITED_GA
+        isGenerallyAvailable: false
+        SKUs: []
+      allOf:
+      - $ref: '#/components/schemas/VerificationMethod'
+      - type: object
+        properties:
+          id:
+            type: string
+            description: ID for ID proofing entity
     IdentityProvider:
       type: object
       properties:
@@ -59379,6 +59391,7 @@ components:
       enum:
         - ASSURANCE
         - AUTH_METHOD_CHAIN
+        - ID_PROOFING
     PolicySubject:
       description: Specifies the behavior for establishing, validating, and matching a username for an IdP User
       type: object
@@ -67055,11 +67068,7 @@ components:
         - $ref: '#/components/schemas/HrefObject'
         - description: Link to the [Application Users](/openapi/okta-management/management/tag/ApplicationUsers/#tag/ApplicationUsers/operation/listApplicationUsers) resource
     VerificationMethod:
-      description: |-
-        Describes the method for verifying the user. The supported method types are `ASSURANCE` and `AUTH_METHOD_CHAIN`.
-
-         <x-lifecycle class="ea"></x-lifecycle> The method type `AUTH_METHOD_CHAIN` is an [Early Access](https://developer.okta.com/docs/api/openapi/okta-management/guides/release-lifecycle/#early-access-ea) (Self-Service) feature. You can 
-        enable the feature for your org from the **Settings** > **Features** page in the Admin Console.
+      description: The method used to verify a user
       type: object
       properties:
         type:
@@ -67069,6 +67078,7 @@ components:
         mapping:
           ASSURANCE: '#/components/schemas/AssuranceMethod'
           AUTH_METHOD_CHAIN: '#/components/schemas/AuthenticationMethodChainMethod'
+          ID_PROOFING: '#/components/schemas/IdProofingMethod'
     Version:
       description: The version specified as a [Semantic Version](https://semver.org/).
       type: string
