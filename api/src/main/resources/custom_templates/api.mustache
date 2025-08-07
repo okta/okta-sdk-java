@@ -191,7 +191,7 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
             final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts, localVarPath);
 
             final String[] localVarContentTypes = {
-        "text/xml", "application/json", {{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}
+        "text/xml", {{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}
             };
             final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
 
