@@ -15,16 +15,14 @@
   -->
 <settings>
     <servers>
+
         <server>
-            <id>sonatype-nexus-snapshots</id>
-            <username>${env.OSSRH_USERNAME}</username>
-            <password>${env.OSSRH_SECRET}</password>
+            <id>central</id>
+            <username>${env.MVN_USERNAME=</username>
+            <password>${env.MVN_TOKEN</password>
         </server>
-        <server>
-            <id>sonatype-nexus-staging</id>
-            <username>${env.OSSRH_USERNAME}</username>
-            <password>${env.OSSRH_SECRET}</password>
-        </server>
+
+
     </servers>
     <profiles>
         <profile>
