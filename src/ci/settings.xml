@@ -18,8 +18,8 @@
 
         <server>
             <id>central</id>
-            <username>${env.MVN_USERNAME=</username>
-            <password>${env.MVN_TOKEN</password>
+            <username>${env.MVN_USERNAME}</username>
+            <password>${env.MVN_TOKEN}</password>
         </server>
 
 
