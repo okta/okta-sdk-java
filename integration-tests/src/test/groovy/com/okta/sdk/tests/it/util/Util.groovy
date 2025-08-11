@@ -120,22 +120,23 @@ class Util {
         if (!present) Assert.fail("User found in group")
     }
 
+//    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi) {
+//        assertThat "User was found in group.", !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
+//                .filter{ listUser -> listUser.id == user.id}
+//                .findFirst().isPresent()
+//    }
+
+
     static void assertUserNotInGroup(User user, Group group, GroupApi groupApi) {
-        assertThat "User was found in group.", !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
-                .filter{ listUser -> listUser.id == user.id}
-                .findFirst().isPresent()
-    }
-
-
-    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int timeoutInSeconds) {
         await()
-            .atMost(timeoutInSeconds, SECONDS)
-            .pollInterval(1, SECONDS) // Optional: How often to check
+            .atMost(60, SECONDS) // Wait for a maximum of 60 seconds.
+            .pollInterval(2, SECONDS) // Check every 2 seconds.
             .untilAsserted(() -> {
                 boolean userIsPresent = StreamSupport.stream(
                     groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false
                 ).anyMatch(listUser -> listUser.id.equals(user.id));
 
+                // This assertion will be retried until it passes or the timeout is reached.
                 assertThat("User should not be present in the group.", userIsPresent, is(false));
             });
     }
