@@ -29,9 +29,9 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.notNullValue
-import static org.awaitility.Awaitility.await;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.hamcrest.Matchers.is;
+import static org.awaitility.Awaitility.await
+import static java.util.concurrent.TimeUnit.SECONDS
+import static org.hamcrest.Matchers.is
 
 class Util {
 
