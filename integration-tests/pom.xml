@@ -80,6 +80,11 @@
             <version>2.27.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope> <!-- or omit scope to default to compile -->
+        </dependency>
     </dependencies>
 
     <profiles>

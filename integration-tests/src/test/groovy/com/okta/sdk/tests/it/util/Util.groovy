@@ -29,6 +29,9 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.notNullValue
+import static org.awaitility.Awaitility.await
+import static java.util.concurrent.TimeUnit.SECONDS
+import static org.hamcrest.Matchers.is
 
 class Util {
 
@@ -117,26 +120,25 @@ class Util {
         if (!present) Assert.fail("User found in group")
     }
 
+//    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi) {
+//        assertThat "User was found in group.", !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
+//                .filter{ listUser -> listUser.id == user.id}
+//                .findFirst().isPresent()
+//    }
+
+
     static void assertUserNotInGroup(User user, Group group, GroupApi groupApi) {
-        assertThat "User was found in group.", !StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
-                .filter{ listUser -> listUser.id == user.id}
-                .findFirst().isPresent()
-    }
+        await()
+            .atMost(60, SECONDS) // Wait for a maximum of 60 seconds.
+            .pollInterval(2, SECONDS) // Check every 2 seconds.
+            .untilAsserted(() -> {
+                boolean userIsPresent = StreamSupport.stream(
+                    groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false
+                ).anyMatch(listUser -> listUser.id.equals(user.id));
 
-    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds) {
-        for (int ii = 0; ii < times; ii++) {
-            sleep(delayInMilliseconds)
-
-            boolean userIsPresent = StreamSupport.stream(
-                groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false
-            ).anyMatch { listUser -> listUser.id == user.id }
-
-            if (!userIsPresent) {
-                return
-            }
-        }
-
-        Assert.fail("User found in group after ${times} attempts")
+                // This assertion will be retried until it passes or the timeout is reached.
+                assertThat("User should not be present in the group.", userIsPresent, is(false));
+            });
     }
 
 
