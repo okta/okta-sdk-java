@@ -29,6 +29,9 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.notNullValue
+import static org.awaitility.Awaitility.await;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.hamcrest.Matchers.is;
 
 class Util {
 
@@ -123,20 +126,18 @@ class Util {
                 .findFirst().isPresent()
     }
 
-    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds) {
-        for (int ii = 0; ii < times; ii++) {
-            sleep(delayInMilliseconds)
 
-            boolean userIsPresent = StreamSupport.stream(
-                groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false
-            ).anyMatch { listUser -> listUser.id == user.id }
+    static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int timeoutInSeconds) {
+        await()
+            .atMost(timeoutInSeconds, SECONDS)
+            .pollInterval(1, SECONDS) // Optional: How often to check
+            .untilAsserted(() -> {
+                boolean userIsPresent = StreamSupport.stream(
+                    groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false
+                ).anyMatch(listUser -> listUser.id.equals(user.id));
 
-            if (!userIsPresent) {
-                return
-            }
-        }
-
-        Assert.fail("User found in group after ${times} attempts")
+                assertThat("User should not be present in the group.", userIsPresent, is(false));
+            });
     }
 
 
