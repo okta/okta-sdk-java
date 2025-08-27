@@ -49276,14 +49276,12 @@ components:
       properties:
         created:
           type: string
-          format: date-time
           readOnly: true
         id:
           type: string
           readOnly: true
         lastUpdated:
           type: string
-          format: date-time
           readOnly: true
         name:
           type: string
