@@ -7357,18 +7357,18 @@ paths:
             schema:
               $ref: '#/components/schemas/BehaviorRule'
             examples:
-              Behavior Rule Request:
+              BehaviorRuleRequest:
                 $ref: '#/components/examples/BehaviorRuleRequest'
         required: true
       responses:
-        '200':
+        '201':
           description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BehaviorRule'
               examples:
-                Behavior Rule Response:
+                BehaviorRuleReSponse:
                   $ref: '#/components/examples/BehaviorRuleResponse'
         '400':
           description: Bad Request
@@ -7406,9 +7406,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BehaviorRule'
-              examples:
-                Behavior Rule Response:
-                  $ref: '#/components/examples/BehaviorRuleResponse'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '404':
@@ -7442,7 +7439,7 @@ paths:
             schema:
               $ref: '#/components/schemas/BehaviorRule'
             examples:
-              Behavior Rule Request:
+              BehaviorRuleRequest:
                 $ref: '#/components/examples/BehaviorRuleRequest'
         required: true
       responses:
@@ -7453,7 +7450,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BehaviorRule'
               examples:
-                Behavior Rule Response:
+                BehaviorRuleReSponse:
                   $ref: '#/components/examples/BehaviorRuleResponse'
         '400':
           description: Bad Request
@@ -7530,7 +7527,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BehaviorRule'
               examples:
-                Behavior Rule Response:
+                BehaviorRuleReSponse:
                   $ref: '#/components/examples/BehaviorRuleResponse'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
@@ -7562,7 +7559,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BehaviorRule'
               examples:
-                Behavior Rule Response:
+                BehaviorRuleReSponse:
                   $ref: '#/components/examples/BehaviorRuleResponse'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
@@ -25056,7 +25053,7 @@ paths:
         isGenerallyAvailable: true
     delete:
       summary: Revoke a token for a client
-      description: Revokes the specified refresh and access tokens
+      description: Revokes the specified refresh token
       operationId: revokeTokenForUserAndClient
       responses:
         '204':
@@ -32118,8 +32115,8 @@ components:
         settings:
           velocityKph: 805
         status: ACTIVE
-        created: '2021-11-09 20:38:10.0'
-        lastUpdated: '2021-11-11 20:38:10.0'
+        created: '2021-11-09T20:38:10.000Z'
+        lastUpdated: '2021-11-11T20:38:10.000Z'
         _link:
           self:
             href: https://your-subdomain.okta.com/api/v1/behaviors/abcd1234
@@ -37155,7 +37152,7 @@ components:
       value:
         credResponses:
           - authenticatorEnrollmentId: fwf5ajzJEWqknX6lk0g4
-            credResponseJwe: eyJlcGsiOnsia3R5IjoiRUM...
+            credResponseJWE: eyJlcGsiOnsia3R5IjoiRUM...
         fulfillmentProvider: yubico
         pinResponseJwe: eyJl5IjoiRUMiLCJjcnYcGsiOnsia3...
         serial: '3632071'
@@ -53986,7 +53983,7 @@ components:
         type: string
         example: abcd1234
       required: true
-      description: ID of the Behavior Detection Rule
+      description: id of the Behavior Detection Rule
     pathBrandId:
       name: brandId
       in: path
@@ -58950,19 +58947,17 @@ components:
       properties:
         created:
           type: string
-          description: Timestamp when the Behavior Detection Rule was created
+          format: date-time
           readOnly: true
         id:
           type: string
-          description: ID of the Behavior Detection Rule
           readOnly: true
         lastUpdated:
           type: string
-          description: Timestamp when the Behavior Detection Rule was last modified
+          format: date-time
           readOnly: true
         name:
           type: string
-          description: Name of the Behavior Detection Rule
           maxLength: 128
         status:
           $ref: '#/components/schemas/LifecycleStatus'
@@ -59371,16 +59366,11 @@ components:
 
                 For example, `2025-01-01T18:30:45.000Z`
     ByDateTimeExpiry:
-      type: object
-      properties:
-        expiresAt:
-          $ref: '#/components/schemas/DateTime'
-
+      allOf:
+        - $ref: '#/components/schemas/DateTime'
     ByDurationExpiry:
-      type: object
-      properties:
-        expiresAt:
-          $ref: '#/components/schemas/TimeDuration'
+      allOf:
+        - $ref: '#/components/schemas/TimeDuration'
       description: |-
         A time duration specified as an [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations).
         Must be between 1 and 180 days inclusive.
@@ -69732,9 +69722,9 @@ components:
           default: 0
     PasswordPolicyPasswordSettingsBreachedProtection:
       x-okta-lifecycle:
-        lifecycle: GA
+        lifecycle: EA
         isGenerallyAvailable: true
-      description: Breached Protection settings
+      description: <x-lifecycle-container><x-lifecycle class="ea"></x-lifecycle></x-lifecycle-container>Breached Protection settings
       type: object
       properties:
         delegatedWorkflowId:
@@ -70191,6 +70181,12 @@ components:
           default: false
         type:
           $ref: '#/components/schemas/PolicyType'
+        _embedded:
+          type: object
+          additionalProperties:
+            type: object
+            properties: {}
+          readOnly: true
         _links:
           $ref: '#/components/schemas/PolicyLinks'
       required:
@@ -77077,8 +77073,13 @@ components:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
           properties:
+            factorType:
+              example: call
             profile:
               $ref: '#/components/schemas/UserFactorCallProfile'
+            provider:
+              enum:
+                - OKTA
     UserFactorCallProfile:
       type: object
       properties:
@@ -77100,8 +77101,13 @@ components:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
           properties:
+            factorType:
+              example: email
             profile:
               $ref: '#/components/schemas/UserFactorEmailProfile'
+            provider:
+              enum:
+                - OKTA
     UserFactorEmailProfile:
       type: object
       properties:
@@ -77149,6 +77155,9 @@ components:
           properties:
             profile:
               $ref: '#/components/schemas/UserFactorPushProfile'
+            provider:
+              enum:
+                - OKTA
     UserFactorPushProfile:
       type: object
       properties:
@@ -77291,8 +77300,13 @@ components:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
           properties:
+            factorType:
+              example: sms
             profile:
               $ref: '#/components/schemas/UserFactorSMSProfile'
+            provider:
+              enum:
+                - OKTA
     UserFactorSMSProfile:
       type: object
       properties:
@@ -77308,8 +77322,13 @@ components:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
           properties:
+            factorType:
+              example: question
             profile:
               $ref: '#/components/schemas/UserFactorSecurityQuestionProfile'
+            provider:
+              enum:
+                - OKTA
     UserFactorSecurityQuestionProfile:
       type: object
       properties:
@@ -77400,8 +77419,14 @@ components:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
           properties:
+            factorType:
+              example: token
             profile:
               $ref: '#/components/schemas/UserFactorTokenProfile'
+            provider:
+              enum:
+                - RSA
+                - SYMANTEC
             verify:
               oneOf:
                 - $ref: '#/components/schemas/UserFactorTokenVerifyRSA'
@@ -77426,8 +77451,13 @@ components:
             factorProfileId:
               description: ID of an existing Custom TOTP factor profile. To create this, see [Custom TOTP factor](https://help.okta.com/okta_help.htm?id=ext-mfa-totp).
               type: string
+            factorType:
+              example: token:hotp
             profile:
               $ref: '#/components/schemas/UserFactorTokenHOTPProfile'
+            provider:
+              enum:
+                - CUSTOM
     UserFactorTokenHOTPProfile:
       type: object
       properties:
@@ -77441,8 +77471,13 @@ components:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
           properties:
+            factorType:
+              example: token:hardware
             profile:
               $ref: '#/components/schemas/UserFactorTokenProfile'
+            provider:
+              enum:
+                - YUBICO
             verify:
               type: object
               properties:
@@ -77463,8 +77498,14 @@ components:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
           properties:
+            factorType:
+              example: token:software:totp
             profile:
               $ref: '#/components/schemas/UserFactorTokenProfile'
+            provider:
+              enum:
+                - OKTA
+                - GOOGLE
     UserFactorTokenVerifyRSA:
       title: RSA SecurID
       type: object
@@ -77508,8 +77549,13 @@ components:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
           properties:
+            factorType:
+              example: u2f
             profile:
               $ref: '#/components/schemas/UserFactorU2FProfile'
+            provider:
+              enum:
+                - FIDO
     UserFactorU2FProfile:
       type: object
       properties:
@@ -77615,12 +77661,11 @@ components:
             properties: {}
           readOnly: true
         _embedded:
-          description: Container for embedded resources.
-          type: object
-          nullable: true
-          additionalProperties:
-            type: object
-            nullable: true
+          allOf:
+            - additionalProperties:
+                type: object
+                nullable: true
+                readOnly: true
         _links:
           $ref: '#/components/schemas/UserFactorLinks'
     UserFactorVerifyResponseWaiting:
@@ -77692,16 +77737,26 @@ components:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
           properties:
+            factorType:
+              example: web
             profile:
               $ref: '#/components/schemas/UserFactorWebProfile'
+            provider:
+              enum:
+                - DUO
     UserFactorWebAuthn:
       title: webauthn
       allOf:
         - $ref: '#/components/schemas/UserFactor'
         - type: object
           properties:
+            factorType:
+              example: webauthn
             profile:
               $ref: '#/components/schemas/UserFactorWebAuthnProfile'
+            provider:
+              enum:
+                - FIDO
     UserFactorWebAuthnProfile:
       type: object
       properties:
@@ -78904,7 +78959,7 @@ components:
         authenticatorEnrollmentId:
           description: ID for a WebAuthn preregistration factor in Okta
           type: string
-        credResponseJwe:
+        credResponseJWE:
           description: Encrypted JSON Web Encryption (JWE) of the credential response from the fulfillment provider
           type: string
     WebAuthnPreregistrationFactor:
