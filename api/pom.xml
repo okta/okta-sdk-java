@@ -190,7 +190,7 @@
                                 <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <additionalProperties>serializableModel=true</additionalProperties>
-                            <skipValidateSpec>true</skipValidateSpec>
+                            <skipValidateSpec>false</skipValidateSpec>
                             <generateModelTests>false</generateModelTests>
                             <generateApiTests>false</generateApiTests>
                             <templateDirectory>src/main/resources/custom_templates</templateDirectory>
