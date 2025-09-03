@@ -36,7 +36,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <swagger-annotations.version>1.6.8</swagger-annotations.version>
-        <openapi-generator.version>7.11.0</openapi-generator.version>
+        <openapi-generator.version>7.15.0</openapi-generator.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
         <jsr305.version>3.0.2</jsr305.version>

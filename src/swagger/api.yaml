@@ -60119,6 +60119,8 @@ components:
           description: Unique label for the role
         permissions:
           type: array
+          items:
+            type: string
           description: Array of permissions that the role grants. See [Permissions](/openapi/okta-management/guides/permissions).
       required:
         - label
@@ -60132,29 +60134,26 @@ components:
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         description:
           description: Description of the policy
           type: string
-          default: null
+          nullable: true
         id:
           description: Identifier of the policy
           type: string
           readOnly: true
-          default: Assigned
         lastUpdated:
           description: Timestamp when the policy was last modified
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         name:
           description: Name of the policy
           type: string
         priority:
           description: Specifies the order in which this policy is evaluated in relation to the other policies
           type: integer
-          default: Last / Lowest Priority, for example `1`
+          default: 1
         status:
           allOf:
             - $ref: '#/components/schemas/LifecycleStatus'
@@ -61297,6 +61296,8 @@ components:
       properties:
         include:
           type: array
+          items:
+            type: object
           description: An array of key value pairs including Device Posture Check `variableNames`
           example:
             - variableName: macOSFirewall
@@ -62384,6 +62385,8 @@ components:
           type: array
           description: Another request has already been received for the settings for this email template
           readOnly: true
+          items:
+             type: object
         errorCode:
           type: string
           description: E0000254
@@ -70067,6 +70070,8 @@ components:
         domains:
           type: array
           description: List of blocked email domains
+          items:
+            type: string
     PinRequest:
       description: Pin request
       type: object
@@ -70158,29 +70163,26 @@ components:
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         description:
           description: Description of the policy
           type: string
-          default: null
+          nullable: true
         id:
           description: Identifier of the policy
           type: string
           readOnly: true
-          default: Assigned
         lastUpdated:
           description: Timestamp when the policy was last modified
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         name:
           description: Name of the policy
           type: string
         priority:
           description: Specifies the order in which this policy is evaluated in relation to the other policies
           type: integer
-          default: Last / Lowest Priority, for example `1`
+          default: 1
         status:
           allOf:
             - $ref: '#/components/schemas/LifecycleStatus'
@@ -70273,29 +70275,26 @@ components:
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         description:
           description: Description of the Policy
           type: string
-          default: null
+          nullable: true
         id:
           description: Identifier of the Policy
           type: string
           readOnly: true
-          default: Assigned
         lastUpdated:
           description: Timestamp when the policy was last modified
           type: string
           format: date-time
           readOnly: true
-          default: Assigned
         name:
           description: Name of the policy
           type: string
         priority:
           description: Specifies the order in which this policy is evaluated in relation to the other policies
           type: integer
-          default: Last / Lowest Priority, for example `1`
+          default: 1
         status:
           allOf:
             - $ref: '#/components/schemas/LifecycleStatus'
@@ -71631,9 +71630,8 @@ components:
     PublicAssetLinksWellKnownURI:
       description: The well-known URI content in a JSON array of objects format
       type: array
-      properties:
-        items:
-          type: object
+      items:
+        type: object
     PublicWebauthnSiteWellKnownURI:
       description: The well-known URI content in JSON object format
       type: object
@@ -71737,6 +71735,8 @@ components:
           readOnly: true
         domains:
           type: array
+          items:
+            type: string
           description: |-
             Array of allowed domains. No user in this realm can be created or updated unless they have a username and email from one of these domains.
 
@@ -71775,6 +71775,8 @@ components:
             Array of allowed domains. No user in this realm can be created or updated unless they have a username and email from one of these domains.
 
             The following characters aren't allowed in the domain name: `!$%^&()=*+,:;<>'[]|/?\`
+          items:
+            type: string
         name:
           type: string
           description: Name of a realm
@@ -71903,6 +71905,8 @@ components:
       properties:
         commands:
           type: array
+          items:
+            type: object
     RegistrationInlineHookSSRData:
       allOf:
         - $ref: '#/components/schemas/InlineHookBasePayload'
@@ -73357,14 +73361,6 @@ components:
       anyOf:
         - $ref: '#/components/schemas/SamlAttributeStatementExpression'
         - $ref: '#/components/schemas/SamlAttributeStatementGroup'
-      type: object
-      properties:
-        type:
-          type: string
-          description: The type of attribute statements object
-          enum:
-            - EXPRESSION
-            - GROUP
       discriminator:
         propertyName: type
         mapping:
@@ -78328,6 +78324,7 @@ components:
             - type: boolean
             - type: integer
             - type: array
+              items: {}
             - type: object
             - type: number
           description: If specified, assigns the value as the default value for the custom attribute. This is a nullable property. If you don't specify a value for this custom attribute during user creation or update, the `default` is used instead of setting the value to `null` or empty.
@@ -79096,6 +79093,8 @@ components:
       properties:
         representation:
           type: array
+          items:
+            type: object
           description: The well-known URI content in a JSON array of objects format
         _links:
           allOf:
