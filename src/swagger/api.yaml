@@ -77648,7 +77648,7 @@ components:
             - additionalProperties:
                 type: object
                 nullable: true
-                readOnly: true
+          readOnly: true
         _links:
           $ref: '#/components/schemas/UserFactorLinks'
     UserFactorVerifyResult:
