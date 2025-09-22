@@ -288,10 +288,25 @@
                     <configuration>
                         <!-- exclude generated enums coverage -->
                         <excludes>
-                            <exclude>**/com/okta/sdk/resource/**/*</exclude>
+                            <exclude>**/com/okta/sdk/resource/model/*</exclude>
                             <exclude>**/quickstart/**/*</exclude>
                         </excludes>
                     </configuration>
+                    <executions>
+                    <execution>
+                        <id>prepare-agent-integration</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report-integration</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report-integration</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
