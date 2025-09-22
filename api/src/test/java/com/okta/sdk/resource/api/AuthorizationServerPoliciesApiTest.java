@@ -16,12 +16,12 @@ import static org.mockito.Mockito.*;
 public class AuthorizationServerPoliciesApiTest {
 
     private ApiClient apiClient;
-    private AuthorizationServerPoliciesApi api;
+    private com.okta.sdk.resource.api.AuthorizationServerPoliciesApi api;
 
     @Before
     public void setUp() {
         apiClient = mock(ApiClient.class);
-        api = new AuthorizationServerPoliciesApi(apiClient);
+        api = new com.okta.sdk.resource.api.AuthorizationServerPoliciesApi(apiClient);
 
         when(apiClient.escapeString(anyString())).thenAnswer(inv -> inv.getArgument(0));
         when(apiClient.selectHeaderAccept(any(String[].class), anyString())).thenReturn("application/json");
