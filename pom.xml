@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright 2017 Okta
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -64,7 +49,6 @@
                 <type>pom</type>
             </dependency>
 
-            <!-- Inter project dependencies -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-api</artifactId>
@@ -76,7 +60,6 @@
                 <version>23.0.1</version>
             </dependency>
 
-            <!-- Other Okta Projects -->
             <dependency>
                 <groupId>com.okta.commons</groupId>
                 <artifactId>okta-config-check</artifactId>
@@ -99,21 +82,18 @@
                 <version>1.3.2</version>
             </dependency>
 
-            <!-- ITs -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-integration-tests</artifactId>
                 <version>23.0.1</version>
             </dependency>
 
-            <!-- Examples -->
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-examples-quickstart</artifactId>
                 <version>23.0.1</version>
             </dependency>
 
-            <!-- Logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -130,7 +110,6 @@
                 <version>1.3.14</version>
             </dependency>
 
-            <!-- Bouncy Castle -->
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk18on</artifactId>
@@ -143,7 +122,6 @@
                 <version>${bouncycastle.version}</version>
             </dependency>
 
-            <!-- JJWT -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
@@ -214,7 +192,6 @@
 
     <dependencies>
 
-        <!-- Test dependencies -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -258,9 +235,6 @@
                     <configuration>
                         <trimStackTrace>false</trimStackTrace>
                         <reuseForks>true</reuseForks>
-                        <!--<forkCount>2C</forkCount>
-                        <parallel>classes</parallel>
-                        <threadCount>5</threadCount>-->
                     </configuration>
                 </plugin>
                 <plugin>
@@ -268,16 +242,13 @@
                     <artifactId>maven-pmd-plugin</artifactId>
                     <configuration>
                         <excludeRoots>
-                            <!-- exclude the generated code from PMD, Findbugs will still run -->
                             <excludeRoot>${project.build.directory}/generated-sources/openapi</excludeRoot>
                         </excludeRoots>
                         <excludes>
-                            <!-- lang contains a few files copied from other projects -->
                             <exclude>**/lang/*.java</exclude>
                             <exclude>**/com/okta/sdk/impl/util/Base64.java</exclude>
                             <exclude>**/com/okta/sdk/impl/util/BaseNCodec.java</exclude>
                             <exclude>**/com/okta/sdk/impl/util/LinkedCaseInsensitiveMap</exclude>
-                            <!-- caching needs a little work -->
                             <exclude>**/com/okta/sdk/impl/ds/cache/WriteCacheFilter.java</exclude>
                         </excludes>
                     </configuration>
@@ -286,27 +257,36 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <configuration>
-                        <!-- exclude generated enums coverage -->
                         <excludes>
-                            <exclude>**/com/okta/sdk/resource/model/*</exclude>
+
                             <exclude>**/quickstart/**/*</exclude>
                         </excludes>
                     </configuration>
                     <executions>
-                    <execution>
-                        <id>prepare-agent-integration</id>
-                        <goals>
-                            <goal>prepare-agent-integration</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report-integration</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>report-integration</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                        <execution>
+                            <id>prepare-agent-integration</id>
+                            <goals>
+                                <goal>prepare-agent-integration</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>report-integration</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>report-integration</goal>
+                            </goals>
+                            <configuration>
+                                <classDirectories>
+                                    <classDirectory>${project.build.outputDirectory}</classDirectory>
+                                    <classDirectory>${project.build.testOutputDirectory}</classDirectory>
+                                </classDirectories>
+                                <sourceDirectories>
+                                    <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                                    <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
+                                </sourceDirectories>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -349,7 +329,6 @@
                     <artifactId>dependency-check-maven</artifactId>
                     <version>12.1.0</version>
                     <configuration>
-                        <!-- no js is used in this project -->
                         <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
                         <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
                     </configuration>
@@ -401,8 +380,7 @@
         </profile>
     </profiles>
 
-  <scm>
-    <tag>okta-sdk-root-23.0.0</tag>
-  </scm>
+    <scm>
+        <tag>okta-sdk-root-23.0.0</tag>
+    </scm>
 </project>
-
