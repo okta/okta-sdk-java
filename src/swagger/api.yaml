@@ -48063,14 +48063,25 @@ components:
             $ref: '#/components/schemas/AuthenticationMethod'
           type: array
         next:
-          type: array
-          description: The next steps of the authentication method chain. This is an array of `AuthenticationMethodChain`. Only supports one item in the array.
           items:
-            type: object
+            $ref: '#/components/schemas/AuthenticationMethodNext'
+          type: array
         reauthenticateIn:
           type: string
           description: |-
             Specifies how often the user should be prompted for authentication using duration format for the time period. 
+            For example, `PT2H30M` for two and a half hours. This parameter can't be set at the same time as the `reauthenticateIn` property on the `verificationMethod`.
+    AuthenticationMethodNext:
+      type: object
+      properties:
+        authenticationMethods:
+          items:
+            $ref: '#/components/schemas/AuthenticationMethod'
+          type: array
+        reauthenticateIn:
+          type: string
+          description: |-
+            Specifies how often the user should be prompted for authentication using duration format for the time period.
             For example, `PT2H30M` for two and a half hours. This parameter can't be set at the same time as the `reauthenticateIn` property on the `verificationMethod`.
     AuthenticationMethodChainMethod:
       x-okta-lifecycle:
