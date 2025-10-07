@@ -36,7 +36,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <swagger-annotations.version>1.6.8</swagger-annotations.version>
-        <openapi-generator.version>7.11.0</openapi-generator.version>
+        <openapi-generator.version>7.15.0</openapi-generator.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
         <jsr305.version>3.0.2</jsr305.version>
@@ -129,6 +129,27 @@
             <artifactId>handlebars-jackson2</artifactId>
             <version>4.3.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.okta.sdk</groupId>
+            <artifactId>okta-sdk-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -190,7 +211,7 @@
                                 <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <additionalProperties>serializableModel=true</additionalProperties>
-                            <skipValidateSpec>true</skipValidateSpec>
+                            <skipValidateSpec>false</skipValidateSpec>
                             <generateModelTests>false</generateModelTests>
                             <generateApiTests>false</generateApiTests>
                             <templateDirectory>src/main/resources/custom_templates</templateDirectory>
