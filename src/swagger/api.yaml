@@ -62401,6 +62401,9 @@ components:
           default: true
         nameFormat:
           $ref: '#/components/schemas/SamlNameIdFormat'
+        sendApplicationContext:
+          type: boolean
+          nullable: true
     SamlSigningAlgorithm:
       example: SHA-256
       type: string
