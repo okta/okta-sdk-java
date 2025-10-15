@@ -48052,6 +48052,13 @@ components:
             - OPTIONAL
             - REQUIRED
           default: OPTIONAL
+        userVerificationMethods:
+          type: array
+          items :
+            type : string
+            enum:
+              - BIOMETRICS
+          required: false
       required:
         - key
         - method
