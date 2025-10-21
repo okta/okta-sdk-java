@@ -1100,22 +1100,26 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
                                                                     protected <T> T processResponse(CloseableHttpResponse response, TypeReference<T> returnType) throws ApiException, IOException, ParseException {
                                                                         int statusCode = response.getCode();
-                                                                        lastStatusCodeByThread.put(Thread.currentThread().getId(), statusCode);
+                                                                        long threadId = Thread.currentThread().getId();
+                                                                        lastStatusCodeByThread.put(threadId, statusCode);
                                                                         if (statusCode == HttpStatus.SC_NO_CONTENT) {
                                                                         return null;
                                                                         }
 
                                                                         Map<String, List<String>> responseHeaders = transformResponseHeaders(response.getHeaders());
-                                                                            lastResponseHeadersByThread.put(Thread.currentThread().getId(), responseHeaders);
+                                                                            lastResponseHeadersByThread.put(threadId, responseHeaders);
 
-                                                                            if (isSuccessfulStatus(statusCode)) {
-                                                                            return this.deserialize(response, returnType);
-                                                                            } else {
-                                                                            String message = EntityUtils.toString(response.getEntity());
-                                                                            throw new ApiException(message, statusCode, responseHeaders, message);
-                                                                            }
-                                                                            }
-
+                                                                                try {
+                                                                                if (isSuccessfulStatus(statusCode)) {
+                                                                                return this.deserialize(response, returnType);
+                                                                                } else {
+                                                                                String message = EntityUtils.toString(response.getEntity());
+                                                                                throw new ApiException(message, statusCode, responseHeaders, message);
+                                                                                }
+                                                                                } finally {
+                                                                                cleanupThreadData(threadId);
+                                                                                }
+                                                                              }
                                                                         /**
                                                                         * Invoke API by sending HTTP request with the given options.
                                                                         *
@@ -1282,6 +1286,13 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             }
                                                                                             }
 
+                                                                                                    /**
+                                                                                                    * Removes thread-specific data from status and response header maps.
+                                                                                                    */
+                                                                                                    private void cleanupThreadData(long threadId) {
+                                                                                                    lastStatusCodeByThread.remove(threadId);
+                                                                                                    lastResponseHeadersByThread.remove(threadId);
+                                                                                                    }
 
                                                                                             /**
                                                                                             * Update query and header parameters based on authentication settings.
