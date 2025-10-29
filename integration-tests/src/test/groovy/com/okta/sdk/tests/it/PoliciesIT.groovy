@@ -26,7 +26,7 @@ import com.okta.sdk.resource.model.Application
 import com.okta.sdk.resource.model.ApplicationSignOnMode
 import com.okta.sdk.resource.model.LifecycleStatus
 import com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod
-import com.okta.sdk.resource.model.OAuthGrantType
+import com.okta.sdk.resource.model.GrantType
 import com.okta.sdk.resource.model.OAuthResponseType
 import com.okta.sdk.resource.model.OktaSignOnPolicy
 import com.okta.sdk.resource.model.OktaSignOnPolicyRule
@@ -137,7 +137,7 @@ class PoliciesIT extends ITSupport {
             .addRedirectUris("https://www.example.com")
             .setPostLogoutRedirectUris(Collections.singletonList("https://www.example.com/logout"))
             .setResponseTypes(Arrays.asList(OAuthResponseType.TOKEN, OAuthResponseType.CODE))
-            .setGrantTypes(Arrays.asList(OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE))
+            .setGrantTypes(Arrays.asList(GrantType.IMPLICIT, GrantType.AUTHORIZATION_CODE))
             .setApplicationType(OpenIdConnectApplicationType.NATIVE)
             .setClientId(UUID.randomUUID().toString())
             .setClientSecret(UUID.randomUUID().toString())

@@ -24,7 +24,7 @@
         <bouncycastle.version>1.78.1</bouncycastle.version>
         <jjwt.version>0.12.6</jjwt.version>
         <org.apache.httpcomponents.client5.version>5.3.1</org.apache.httpcomponents.client5.version>
-        <okta.sdk.previousVersion>23.0.1</okta.sdk.previousVersion>
+        <okta.sdk.previousVersion>24.0.0</okta.sdk.previousVersion>
         <okta.commons.version>2.0.1</okta.commons.version>
         <com.google.auto.service.version>1.1.1</com.google.auto.service.version>
         <github.slug>okta/okta-sdk-java</github.slug>
@@ -52,12 +52,12 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-api</artifactId>
-                <version>{project.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-impl</artifactId>
-                <version>{project.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -85,13 +85,13 @@
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-integration-tests</artifactId>
-                <version>{project.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-examples-quickstart</artifactId>
-                <version>{project.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>

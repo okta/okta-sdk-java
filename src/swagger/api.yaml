@@ -68402,6 +68402,7 @@ components:
           type: string
           example: West Coast users
           description: Name of the group
+      additionalProperties: true
       x-okta-extensible: true
     OktaUserRiskChangeEvent:
       description: The user risk level changed

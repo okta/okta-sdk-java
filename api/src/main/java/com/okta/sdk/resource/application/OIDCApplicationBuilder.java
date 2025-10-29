@@ -35,6 +35,10 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
 
     OIDCApplicationBuilder setConsentMethod(OpenIdConnectApplicationConsentMethod consentMethod);
 
+    OIDCApplicationBuilder setGrantTypes(List<com.okta.sdk.resource.model.GrantType> grantTypes);
+
+    OIDCApplicationBuilder addGrantTypes(com.okta.sdk.resource.model.GrantType grantType);
+
     OIDCApplicationBuilder setLogoUri(String logoUri);
 
     OIDCApplicationBuilder setPolicyUri(String policyUri);
@@ -62,6 +66,8 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
     OIDCApplicationBuilder setAutoKeyRotation(Boolean autoKeyRotation);
 
     OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod);
+
+    OIDCApplicationBuilder setJwks(List<com.okta.sdk.resource.model.ListJwk200ResponseInner> schemasJsonWebKeys);
 
     OIDCApplicationBuilder setImplicitAssignment(Boolean isImplicitAssignment);
 

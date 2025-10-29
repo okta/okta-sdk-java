@@ -22,6 +22,8 @@ import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.model.AuthenticationProvider;
+import com.okta.sdk.resource.model.AuthenticationProviderWritable;
+import com.okta.sdk.resource.model.AuthenticationProviderTypeWritable;
 import com.okta.sdk.resource.model.CreateUserRequest;
 import com.okta.sdk.resource.model.CreateUserRequestType;
 import com.okta.sdk.resource.model.PasswordCredential;
@@ -31,6 +33,7 @@ import com.okta.sdk.resource.model.PasswordCredentialHook;
 import com.okta.sdk.resource.model.RecoveryQuestionCredential;
 import com.okta.sdk.resource.model.User;
 import com.okta.sdk.resource.model.UserCredentials;
+import com.okta.sdk.resource.model.UserCredentialsWritable;
 import com.okta.sdk.resource.model.UserNextLogin;
 import com.okta.sdk.resource.model.UserProfile;
 
@@ -372,7 +375,10 @@ public class DefaultUserBuilder implements UserBuilder {
 
         // authentication provider
         if (provider != null) {
-            createCredentialsIfNeeded(createUserRequest).setProvider(provider);
+            AuthenticationProviderWritable providerWritable = new AuthenticationProviderWritable();
+            // Convert enum by name since they have the same values
+            providerWritable.setType(AuthenticationProviderTypeWritable.valueOf(provider.getType().name()));
+            createCredentialsIfNeeded(createUserRequest).setProvider(providerWritable);
         }
 
         // user password
@@ -412,9 +418,9 @@ public class DefaultUserBuilder implements UserBuilder {
         return createUserRequest;
     }
 
-    private UserCredentials createCredentialsIfNeeded(CreateUserRequest createUserRequest) {
+    private UserCredentialsWritable createCredentialsIfNeeded(CreateUserRequest createUserRequest) {
         if (createUserRequest.getCredentials() == null) {
-            UserCredentials credentials = new UserCredentials();
+            UserCredentialsWritable credentials = new UserCredentialsWritable();
             createUserRequest.setCredentials(credentials);
         }
         return createUserRequest.getCredentials();

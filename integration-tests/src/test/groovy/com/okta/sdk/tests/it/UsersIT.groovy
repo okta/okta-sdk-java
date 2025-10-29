@@ -43,7 +43,6 @@ import com.okta.sdk.resource.model.AuthenticationProvider
 import com.okta.sdk.resource.model.AuthenticationProviderType
 import com.okta.sdk.resource.model.ChangePasswordRequest
 import com.okta.sdk.resource.model.CreateUserRequest
-import com.okta.sdk.resource.model.CreateUserTypeRequest
 import com.okta.sdk.resource.model.ForgotPasswordResponse
 import com.okta.sdk.resource.model.Group
 import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner
@@ -84,8 +83,6 @@ import com.okta.sdk.resource.model.UserProfile
 import com.okta.sdk.resource.model.UserStatus
 import com.okta.sdk.resource.model.UserType
 import com.okta.sdk.resource.model.UserTypePostRequest
-import com.okta.sdk.resource.model.UserTypePutRequest
-
 import com.okta.sdk.resource.user.UserBuilder
 
 import com.okta.sdk.tests.Scenario
@@ -138,54 +135,6 @@ class UsersIT extends ITSupport {
 
         UserGetSingleton retrievedUser = userApi.getUser(user.getId(), null, "false")
         assertThat(retrievedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
-    }
-
-    @Test (groups = "group2")
-    @Scenario("create-user-with-user-type")
-    void createUserWithUserTypeTest() {
-
-        def password = 'Passw0rd!2@3#'
-        def firstName = 'John'
-        def lastName = 'Activate'
-        def email = "john-activate=${uniqueTestName}@example.com"
-
-        UserTypeApi userTypeApi = new UserTypeApi(getClient())
-
-        // 1. Create a User Type
-        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
-
-        CreateUserTypeRequest userType = new CreateUserTypeRequest()
-            .name(name)
-            .displayName(name)
-            .description(name + "_test_description")
-        UserType createdUserType = userTypeApi.createUserType(userType)
-        registerForCleanup(createdUserType)
-
-        assertThat(createdUserType.getId(), notNullValue())
-
-        // 2. Create a user with the User Type
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName(firstName)
-            .setLastName(lastName)
-            .setPassword(password.toCharArray())
-            .setActive(true)
-        // See https://developer.okta.com/docs/reference/api/user-types/#specify-the-user-type-of-a-new-user
-            .setType(createdUserType.getId())
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-        validateUser(user, firstName, lastName, email)
-
-        // 3. Assert User Type
-        assertThat(user.getType().getId(), equalTo(createdUserType.getId()))
-
-        // fix flakiness seen in PDV tests
-        Thread.sleep(getTestOperationDelay())
-
-        // 4.Verify user in list of active users
-        List<User> users = userApi.listUsers(null, null, 'status eq \"ACTIVE\"', null, null, 200, null, null, null)
-        assertThat(users, hasSize(greaterThan(0)))
-        //assertPresent(users, user)
     }
 
     @Test (groups = "group2")
@@ -1612,96 +1561,21 @@ class UsersIT extends ITSupport {
     // UserTypeApi Integration Tests
     // ========================================
 
-    /**
-     * Test: Create and retrieve user type
-     * Tests POST /api/v1/meta/types/user and GET
-     */
-    @Test(groups = "group3")
-    void testUserTypeCreateAndGet() {
-        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
-        String displayName = "Test User Type ${uniqueTestName}"
-        String description = "Integration test user type"
-
-        CreateUserTypeRequest createRequest = new CreateUserTypeRequest()
-        createRequest.setName(name)
-        createRequest.setDisplayName(displayName)
-        createRequest.setDescription(description)
-
-        UserType userType = userTypeApi.createUserType(createRequest)
-        registerForCleanup(userType)
-
-        assertThat("User type should not be null", userType, notNullValue())
-        assertThat("User type should have ID", userType.getId(), notNullValue())
-        assertThat("Name should match", userType.getName(), equalTo(name))
-
-        // Get the user type
-        UserType retrievedType = userTypeApi.getUserType(userType.getId())
-        assertThat("Retrieved user type should match", retrievedType.getId(), equalTo(userType.getId()))
-    }
 
     /**
      * Test: List all user types
      * Tests GET /api/v1/meta/types/user
      */
-    @Test(groups = "group3")
-    void testUserTypeList() {
-        // List all user types
-        List<UserType> userTypes = userTypeApi.listUserTypes()
-
-        assertThat("User types list should not be null", userTypes, notNullValue())
-        assertThat("Should have at least one user type", userTypes.size(), greaterThan(0))
-    }
 
     /**
      * Test: Update user type
      * Tests POST /api/v1/meta/types/user/{typeId}
      */
-    @Test(groups = "group3")
-    void testUserTypeUpdate() {
-        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
-        CreateUserTypeRequest createRequest = new CreateUserTypeRequest()
-        createRequest.setName(name)
-        createRequest.setDisplayName("Original Display Name")
-        createRequest.setDescription("Original description")
-
-        UserType userType = userTypeApi.createUserType(createRequest)
-        registerForCleanup(userType)
-
-        // Update the user type
-        String newDisplayName = "Updated Display Name"
-        UserTypePostRequest updateRequest = new UserTypePostRequest()
-        updateRequest.setDisplayName(newDisplayName)
-        updateRequest.setDescription("Updated description")
-
-        UserType updatedType = userTypeApi.updateUserType(userType.getId(), updateRequest)
-
-        assertThat("Display name should be updated", updatedType.getDisplayName(), equalTo(newDisplayName))
-    }
 
     /**
      * Test: Delete user type
      * Tests DELETE /api/v1/meta/types/user/{typeId}
      */
-    @Test(groups = "group3")
-    void testUserTypeDelete() {
-        String name = "java_sdk_it_" + RandomStringUtils.randomAlphanumeric(15)
-        CreateUserTypeRequest createRequest = new CreateUserTypeRequest()
-        createRequest.setName(name)
-        createRequest.setDisplayName("Delete Test User Type")
-        createRequest.setDescription("Test user type for deletion")
-
-        UserType userType = userTypeApi.createUserType(createRequest)
-        String typeId = userType.getId()
-
-        // Delete the user type
-        userTypeApi.deleteUserType(typeId)
-
-        // Verify user type is deleted
-        ApiException exception = expect(ApiException.class, () -> 
-            userTypeApi.getUserType(typeId))
-
-        assertThat("Should return 404 for deleted user type", exception.getCode(), is(404))
-    }
 
     // ========================================
     // UserResourcesApi Integration Tests

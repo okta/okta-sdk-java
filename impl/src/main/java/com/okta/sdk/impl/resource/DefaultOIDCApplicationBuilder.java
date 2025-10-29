@@ -29,7 +29,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     private com.okta.sdk.resource.model.OpenIdConnectApplicationType applicationType;
     private String clientUri;
     private com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod consentMethod;
-    private List<com.okta.sdk.resource.model.OAuthGrantType> grantTypes = new ArrayList<>();
+    private List<com.okta.sdk.resource.model.GrantType> grantTypes = new ArrayList<>();
     private String logoUri;
     private String policyUri;
     private String loginUrl;
@@ -42,7 +42,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     private String clientSecret;
     private Boolean autoKeyRotation;
     private com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
-    private List<com.okta.sdk.resource.model.SchemasJsonWebKey> schemasJsonWebKeys = new ArrayList<>();
+    private List<com.okta.sdk.resource.model.ListJwk200ResponseInner> schemasJsonWebKeys = new ArrayList<>();
     private Boolean isImplicitAssignment;
     private String inlineHookId;
 
@@ -65,13 +65,13 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setGrantTypes(List<com.okta.sdk.resource.model.OAuthGrantType> grantTypes) {
+    public OIDCApplicationBuilder setGrantTypes(List<com.okta.sdk.resource.model.GrantType> grantTypes) {
         this.grantTypes = grantTypes;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder addGrantTypes(com.okta.sdk.resource.model.OAuthGrantType grantType) {
+    public OIDCApplicationBuilder addGrantTypes(com.okta.sdk.resource.model.GrantType grantType) {
         this.grantTypes.add(grantType);
         return this;
     }
@@ -161,7 +161,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setJwks(List<com.okta.sdk.resource.model.SchemasJsonWebKey> schemasJsonWebKeys) {
+    public OIDCApplicationBuilder setJwks(List<com.okta.sdk.resource.model.ListJwk200ResponseInner> schemasJsonWebKeys) {
         this.schemasJsonWebKeys = schemasJsonWebKeys;
         return this;
     }
@@ -189,7 +189,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
 
         if (Strings.hasText(label)) application.setLabel(label);
 
-        if (Strings.hasText(name)) application.setName(name);
+        if (Strings.hasText(name)) application.setName(com.okta.sdk.resource.model.OpenIdConnectApplication.NameEnum.valueOf(name));
 
         application.setSignOnMode(com.okta.sdk.resource.model.ApplicationSignOnMode.OPENID_CONNECT);
 
@@ -296,9 +296,6 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
 
         if (Strings.hasText(redirectUrl))
             autoLoginApplicationSettingsSignOn.setRedirectUrl(redirectUrl);
-
-        if (Strings.hasText(autoLoginApplicationSettingsSignOn.getLoginUrl()))
-            openIdConnectApplicationSettings.setSignOn(autoLoginApplicationSettingsSignOn);
 
         if (!schemasJsonWebKeys.isEmpty()) {
             com.okta.sdk.resource.model.OpenIdConnectApplicationSettingsClientKeys openIdConnectApplicationSettingsClientKeys = new com.okta.sdk.resource.model.OpenIdConnectApplicationSettingsClientKeys();

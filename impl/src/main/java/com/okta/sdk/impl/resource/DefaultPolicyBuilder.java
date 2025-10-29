@@ -21,6 +21,7 @@ import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.PolicyApi;
 import com.okta.sdk.resource.model.LifecycleStatus;
 import com.okta.sdk.resource.model.Policy;
+import com.okta.sdk.resource.model.CreateOrUpdatePolicy;
 import com.okta.sdk.resource.model.PolicyType;
 
 import java.util.Objects;
@@ -77,14 +78,16 @@ public class DefaultPolicyBuilder<T extends PolicyBuilder> implements PolicyBuil
     @Override
     public Policy buildAndCreate(PolicyApi client) throws ApiException {
         try {
-            return client.createPolicy(build(), isActive);
+            CreateOrUpdatePolicy result = client.createPolicy(build(), isActive);
+            // Convert CreateOrUpdatePolicy to Policy by using the API to retrieve it
+            return client.getPolicy(result.getId(), null);
         } catch (ApiException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Policy build() {
-        Policy policy = new Policy();
+    private CreateOrUpdatePolicy build() {
+        CreateOrUpdatePolicy policy = new CreateOrUpdatePolicy();
 
         if (Strings.hasText(name)) policy.setName(name);
         if (Strings.hasText(description)) policy.setDescription(description);

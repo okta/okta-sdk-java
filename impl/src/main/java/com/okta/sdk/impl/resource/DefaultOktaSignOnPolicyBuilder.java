@@ -56,11 +56,13 @@ public class DefaultOktaSignOnPolicyBuilder extends DefaultPolicyBuilder<OktaSig
 
     @Override
     public OktaSignOnPolicy buildAndCreate(PolicyApi client) throws ApiException {
-        return (OktaSignOnPolicy) new PolicyApi(client.getApiClient()).createPolicy(build(), isActive);
+        CreateOrUpdatePolicy result = new PolicyApi(client.getApiClient()).createPolicy(build(), isActive);
+        // Fetch the created policy as OktaSignOnPolicy
+        return (OktaSignOnPolicy) client.getPolicy(result.getId(), null);
     }
 
-    private OktaSignOnPolicy build() {
-        OktaSignOnPolicy policy = new OktaSignOnPolicy();
+    private CreateOrUpdatePolicy build() {
+        CreateOrUpdatePolicy policy = new CreateOrUpdatePolicy();
 
         if (Strings.hasText(name)) policy.setName(name);
         if (Strings.hasText(description)) policy.setDescription(description);

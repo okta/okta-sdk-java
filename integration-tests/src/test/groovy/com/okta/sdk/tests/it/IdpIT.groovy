@@ -17,8 +17,8 @@ package com.okta.sdk.tests.it
 
 import com.okta.sdk.resource.api.IdentityProviderUsersApi
 import com.okta.sdk.resource.model.IdentityProvider
-import com.okta.sdk.resource.model.IdentityProviderCredentials
-import com.okta.sdk.resource.model.IdentityProviderCredentialsClient
+//import com.okta.sdk.resource.model.IdentityProviderCredentials
+//import com.okta.sdk.resource.model.IdentityProviderCredentialsClient
 import com.okta.sdk.resource.model.IdentityProviderIssuerMode
 import com.okta.sdk.resource.model.IdentityProviderPolicy
 import com.okta.sdk.resource.model.IdentityProviderType
@@ -28,16 +28,16 @@ import com.okta.sdk.resource.model.PolicyAccountLinkAction
 import com.okta.sdk.resource.model.PolicySubject
 import com.okta.sdk.resource.model.PolicySubjectMatchType
 import com.okta.sdk.resource.model.PolicyUserNameTemplate
-import com.okta.sdk.resource.model.Protocol
-import com.okta.sdk.resource.model.ProtocolAlgorithmType
-import com.okta.sdk.resource.model.ProtocolAlgorithmTypeSignature
-import com.okta.sdk.resource.model.ProtocolAlgorithmTypeSignatureScope
-import com.okta.sdk.resource.model.ProtocolAlgorithms
-import com.okta.sdk.resource.model.ProtocolEndpoint
+//import com.okta.sdk.resource.model.Protocol
+//import com.okta.sdk.resource.model.ProtocolAlgorithmType
+//import com.okta.sdk.resource.model.ProtocolAlgorithmTypeSignature
+//import com.okta.sdk.resource.model.ProtocolAlgorithmTypeSignatureScope
+//import com.okta.sdk.resource.model.ProtocolAlgorithms
+//import com.okta.sdk.resource.model.ProtocolEndpoint
 import com.okta.sdk.resource.model.ProtocolEndpointBinding
-import com.okta.sdk.resource.model.ProtocolEndpointType
-import com.okta.sdk.resource.model.ProtocolEndpoints
-import com.okta.sdk.resource.model.ProtocolType
+//import com.okta.sdk.resource.model.ProtocolEndpointType
+//import com.okta.sdk.resource.model.ProtocolEndpoints
+//import com.okta.sdk.resource.model.ProtocolType
 import com.okta.sdk.resource.model.Provisioning
 import com.okta.sdk.resource.model.ProvisioningAction
 import com.okta.sdk.resource.model.ProvisioningConditions
@@ -76,65 +76,65 @@ class IdpIT extends ITSupport {
         idp.setName(name)
         idp.setType(IdentityProviderType.OIDC)
         idp.setIssuerMode(IdentityProviderIssuerMode.ORG_URL)
-        Protocol protocol = new Protocol()
-
-        ProtocolAlgorithmType protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
-        ProtocolAlgorithmType protocolAlgorithmTypeRes = new ProtocolAlgorithmType()
-        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Req = new ProtocolAlgorithmTypeSignature()
-        protocolAlgorithmTypeSignature_Req.setScope(ProtocolAlgorithmTypeSignatureScope.REQUEST)
-        protocolAlgorithmTypeSignature_Req.setAlgorithm("SHA-256")
-        protocolAlgorithmTypeReq.setSignature(protocolAlgorithmTypeSignature_Req)
-        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Res = new ProtocolAlgorithmTypeSignature()
-        protocolAlgorithmTypeSignature_Res.setScope(ProtocolAlgorithmTypeSignatureScope.RESPONSE)
-        protocolAlgorithmTypeSignature_Res.setAlgorithm("SHA-256")
-        protocolAlgorithmTypeRes.setSignature(protocolAlgorithmTypeSignature_Res)
-
-        ProtocolAlgorithms protocolAlgorithms = new ProtocolAlgorithms()
-        protocolAlgorithms.setRequest(protocolAlgorithmTypeReq)
-        protocolAlgorithms.setResponse(protocolAlgorithmTypeRes)
-        protocol.setAlgorithms(protocolAlgorithms)
-        List<String> scopes = Arrays.asList("openid", "profile", "email")
-        protocol.setScopes(scopes)
-        protocol.setType(ProtocolType.OIDC)
-
-        ProtocolEndpoint protocolEndpointIssuer = new ProtocolEndpoint()
-        protocolEndpointIssuer.setUrl("https://idp.example.com")
-        protocol.setIssuer(protocolEndpointIssuer)
-        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
-        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
-        identityProviderCredentialsClient.setClientId("your-client-id")
-        identityProviderCredentialsClient.setClientSecret("your-client-secret")
-        identityProviderCredentials.setClient(identityProviderCredentialsClient)
-        protocol.setCredentials(identityProviderCredentials)
-
-        ProtocolEndpoints protocolEndpoints = new ProtocolEndpoints()
-        ProtocolEndpoint protocolEndpointAcs = new ProtocolEndpoint()
-        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.HTTP_POST)
-        protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
-
-        ProtocolEndpoint protocolEndpointAuthorization = new ProtocolEndpoint()
-        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.HTTP_POST)
-        protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize")
-
-        ProtocolEndpoint protocolEndpointToken = new ProtocolEndpoint()
-        protocolEndpointToken.setBinding(ProtocolEndpointBinding.HTTP_POST)
-        protocolEndpointToken.setUrl("https://idp.example.com/token")
-
-        ProtocolEndpoint protocolEndpointUserInfo = new ProtocolEndpoint()
-        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
-        protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo")
-
-        ProtocolEndpoint protocolEndpointJwks = new ProtocolEndpoint()
-        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
-        protocolEndpointJwks.setUrl("https://idp.example.com/keys")
-
-        protocolEndpoints.setAcs(protocolEndpointAcs)
-        protocolEndpoints.setAuthorization(protocolEndpointAuthorization)
-        protocolEndpoints.setToken(protocolEndpointToken)
-        protocolEndpoints.setUserInfo(protocolEndpointUserInfo)
-        protocolEndpoints.setJwks(protocolEndpointJwks)
-        protocol.setEndpoints(protocolEndpoints)
-        idp.setProtocol(protocol)
+//        Protocol protocol = new Protocol()
+//
+//        ProtocolAlgorithmType protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
+//        ProtocolAlgorithmType protocolAlgorithmTypeRes = new ProtocolAlgorithmType()
+//        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Req = new ProtocolAlgorithmTypeSignature()
+//        protocolAlgorithmTypeSignature_Req.setScope(ProtocolAlgorithmTypeSignatureScope.REQUEST)
+//        protocolAlgorithmTypeSignature_Req.setAlgorithm("SHA-256")
+//        protocolAlgorithmTypeReq.setSignature(protocolAlgorithmTypeSignature_Req)
+//        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Res = new ProtocolAlgorithmTypeSignature()
+//        protocolAlgorithmTypeSignature_Res.setScope(ProtocolAlgorithmTypeSignatureScope.RESPONSE)
+//        protocolAlgorithmTypeSignature_Res.setAlgorithm("SHA-256")
+//        protocolAlgorithmTypeRes.setSignature(protocolAlgorithmTypeSignature_Res)
+//
+//        ProtocolAlgorithms protocolAlgorithms = new ProtocolAlgorithms()
+//        protocolAlgorithms.setRequest(protocolAlgorithmTypeReq)
+//        protocolAlgorithms.setResponse(protocolAlgorithmTypeRes)
+//        protocol.setAlgorithms(protocolAlgorithms)
+//        List<String> scopes = Arrays.asList("openid", "profile", "email")
+//        protocol.setScopes(scopes)
+//        protocol.setType(ProtocolType.OIDC)
+//
+//        ProtocolEndpoint protocolEndpointIssuer = new ProtocolEndpoint()
+//        protocolEndpointIssuer.setUrl("https://idp.example.com")
+//        protocol.setIssuer(protocolEndpointIssuer)
+//        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+//        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+//        identityProviderCredentialsClient.setClientId("your-client-id")
+//        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+//        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+//        protocol.setCredentials(identityProviderCredentials)
+//
+//        ProtocolEndpoints protocolEndpoints = new ProtocolEndpoints()
+//        ProtocolEndpoint protocolEndpointAcs = new ProtocolEndpoint()
+//        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.HTTP_POST)
+//        protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
+//
+//        ProtocolEndpoint protocolEndpointAuthorization = new ProtocolEndpoint()
+//        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.HTTP_POST)
+//        protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize")
+//
+//        ProtocolEndpoint protocolEndpointToken = new ProtocolEndpoint()
+//        protocolEndpointToken.setBinding(ProtocolEndpointBinding.HTTP_POST)
+//        protocolEndpointToken.setUrl("https://idp.example.com/token")
+//
+//        ProtocolEndpoint protocolEndpointUserInfo = new ProtocolEndpoint()
+//        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
+//        protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo")
+//
+//        ProtocolEndpoint protocolEndpointJwks = new ProtocolEndpoint()
+//        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
+//        protocolEndpointJwks.setUrl("https://idp.example.com/keys")
+//
+//        protocolEndpoints.setAcs(protocolEndpointAcs)
+//        protocolEndpoints.setAuthorization(protocolEndpointAuthorization)
+//        protocolEndpoints.setToken(protocolEndpointToken)
+//        protocolEndpoints.setUserInfo(protocolEndpointUserInfo)
+//        protocolEndpoints.setJwks(protocolEndpointJwks)
+//        protocol.setEndpoints(protocolEndpoints)
+//        idp.setProtocol(protocol)
 
         IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
         PolicyAccountLink policyAccountLink = new PolicyAccountLink()
@@ -191,64 +191,64 @@ class IdpIT extends ITSupport {
         newIdp.setName(newName)
         newIdp.setType(IdentityProviderType.OIDC)
         newIdp.setIssuerMode(IdentityProviderIssuerMode.ORG_URL)
-        protocol = new Protocol()
-
-        protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
-        protocolAlgorithmTypeRes = new ProtocolAlgorithmType()
-        protocolAlgorithmTypeSignature_Req = new ProtocolAlgorithmTypeSignature()
-        protocolAlgorithmTypeSignature_Req.setScope(ProtocolAlgorithmTypeSignatureScope.REQUEST)
-        protocolAlgorithmTypeSignature_Req.setAlgorithm("SHA-256")
-        protocolAlgorithmTypeReq.setSignature(protocolAlgorithmTypeSignature_Req)
-        protocolAlgorithmTypeSignature_Res = new ProtocolAlgorithmTypeSignature()
-        protocolAlgorithmTypeSignature_Res.setScope(ProtocolAlgorithmTypeSignatureScope.RESPONSE)
-        protocolAlgorithmTypeSignature_Res.setAlgorithm("SHA-256")
-        protocolAlgorithmTypeRes.setSignature(protocolAlgorithmTypeSignature_Res)
-
-        protocolAlgorithms = new ProtocolAlgorithms()
-        protocolAlgorithms.setRequest(protocolAlgorithmTypeReq)
-        protocolAlgorithms.setResponse(protocolAlgorithmTypeRes)
-        protocol.setAlgorithms(protocolAlgorithms)
-        protocol.setScopes(scopes)
-        protocol.setType(ProtocolType.OIDC)
-
-        protocolEndpointIssuer = new ProtocolEndpoint()
+//        protocol = new Protocol()
+//
+//        protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
+//        protocolAlgorithmTypeRes = new ProtocolAlgorithmType()
+//        protocolAlgorithmTypeSignature_Req = new ProtocolAlgorithmTypeSignature()
+//        protocolAlgorithmTypeSignature_Req.setScope(ProtocolAlgorithmTypeSignatureScope.REQUEST)
+//        protocolAlgorithmTypeSignature_Req.setAlgorithm("SHA-256")
+//        protocolAlgorithmTypeReq.setSignature(protocolAlgorithmTypeSignature_Req)
+//        protocolAlgorithmTypeSignature_Res = new ProtocolAlgorithmTypeSignature()
+//        protocolAlgorithmTypeSignature_Res.setScope(ProtocolAlgorithmTypeSignatureScope.RESPONSE)
+//        protocolAlgorithmTypeSignature_Res.setAlgorithm("SHA-256")
+//        protocolAlgorithmTypeRes.setSignature(protocolAlgorithmTypeSignature_Res)
+//
+//        protocolAlgorithms = new ProtocolAlgorithms()
+//        protocolAlgorithms.setRequest(protocolAlgorithmTypeReq)
+//        protocolAlgorithms.setResponse(protocolAlgorithmTypeRes)
+//        protocol.setAlgorithms(protocolAlgorithms)
+//        protocol.setScopes(scopes)
+//        protocol.setType(ProtocolType.OIDC)
+//
+//        protocolEndpointIssuer = new ProtocolEndpoint()
         protocolEndpointIssuer.setUrl("https://idp.example.com/new")
         protocol.setIssuer(protocolEndpointIssuer)
-        identityProviderCredentials = new IdentityProviderCredentials()
-        identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
-        identityProviderCredentialsClient.setClientId("your-new-client-id")
-        identityProviderCredentialsClient.setClientSecret("your-new-client-secret")
-        identityProviderCredentials.setClient(identityProviderCredentialsClient)
-        protocol.setCredentials(identityProviderCredentials)
+//        identityProviderCredentials = new IdentityProviderCredentials()
+//        identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+//        identityProviderCredentialsClient.setClientId("your-new-client-id")
+//        identityProviderCredentialsClient.setClientSecret("your-new-client-secret")
+//        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+//        protocol.setCredentials(identityProviderCredentials)
 
-        protocolEndpoints = new ProtocolEndpoints()
-        protocolEndpointAcs = new ProtocolEndpoint()
-        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.HTTP_POST)
-        protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
-
-        protocolEndpointAuthorization = new ProtocolEndpoint()
-        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.HTTP_POST)
-        protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize_new")
-
-        protocolEndpointToken = new ProtocolEndpoint()
-        protocolEndpointToken.setBinding(ProtocolEndpointBinding.HTTP_POST)
-        protocolEndpointToken.setUrl("https://idp.example.com/token_new")
-
-        protocolEndpointUserInfo = new ProtocolEndpoint()
-        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
-        protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo_new")
-
-        protocolEndpointJwks = new ProtocolEndpoint()
-        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
-        protocolEndpointJwks.setUrl("https://idp.example.com/keys_new")
-
-        protocolEndpoints.setAcs(protocolEndpointAcs)
-        protocolEndpoints.setAuthorization(protocolEndpointAuthorization)
-        protocolEndpoints.setToken(protocolEndpointToken)
-        protocolEndpoints.setUserInfo(protocolEndpointUserInfo)
-        protocolEndpoints.setJwks(protocolEndpointJwks)
-        protocol.setEndpoints(protocolEndpoints)
-        newIdp.setProtocol(protocol)
+//        protocolEndpoints = new ProtocolEndpoints()
+//        protocolEndpointAcs = new ProtocolEndpoint()
+//        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.HTTP_POST)
+//        protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
+//
+//        protocolEndpointAuthorization = new ProtocolEndpoint()
+//        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.HTTP_POST)
+//        protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize_new")
+//
+//        protocolEndpointToken = new ProtocolEndpoint()
+//        protocolEndpointToken.setBinding(ProtocolEndpointBinding.HTTP_POST)
+//        protocolEndpointToken.setUrl("https://idp.example.com/token_new")
+//
+//        protocolEndpointUserInfo = new ProtocolEndpoint()
+//        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
+//        protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo_new")
+//
+//        protocolEndpointJwks = new ProtocolEndpoint()
+//        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
+//        protocolEndpointJwks.setUrl("https://idp.example.com/keys_new")
+//
+//        protocolEndpoints.setAcs(protocolEndpointAcs)
+//        protocolEndpoints.setAuthorization(protocolEndpointAuthorization)
+//        protocolEndpoints.setToken(protocolEndpointToken)
+//        protocolEndpoints.setUserInfo(protocolEndpointUserInfo)
+//        protocolEndpoints.setJwks(protocolEndpointJwks)
+//        protocol.setEndpoints(protocolEndpoints)
+//        newIdp.setProtocol(protocol)
 
         identityProviderPolicy = new IdentityProviderPolicy()
         policyAccountLink = new PolicyAccountLink()
@@ -322,65 +322,65 @@ class IdpIT extends ITSupport {
         idp.setName(name)
         idp.setType(IdentityProviderType.OIDC)
         idp.setIssuerMode(IdentityProviderIssuerMode.ORG_URL)
-        Protocol protocol = new Protocol()
+//        Protocol protocol = new Protocol()
+//
+//        ProtocolAlgorithmType protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
+//        ProtocolAlgorithmType protocolAlgorithmTypeRes = new ProtocolAlgorithmType()
+//        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Req = new ProtocolAlgorithmTypeSignature()
+//        protocolAlgorithmTypeSignature_Req.setScope(ProtocolAlgorithmTypeSignatureScope.REQUEST)
+//        protocolAlgorithmTypeSignature_Req.setAlgorithm("SHA-256")
+//        protocolAlgorithmTypeReq.setSignature(protocolAlgorithmTypeSignature_Req)
+//        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Res = new ProtocolAlgorithmTypeSignature()
+//        protocolAlgorithmTypeSignature_Res.setScope(ProtocolAlgorithmTypeSignatureScope.RESPONSE)
+//        protocolAlgorithmTypeSignature_Res.setAlgorithm("SHA-256")
+//        protocolAlgorithmTypeRes.setSignature(protocolAlgorithmTypeSignature_Res)
+//
+//        ProtocolAlgorithms protocolAlgorithms = new ProtocolAlgorithms()
+//        protocolAlgorithms.setRequest(protocolAlgorithmTypeReq)
+//        protocolAlgorithms.setResponse(protocolAlgorithmTypeRes)
+//        protocol.setAlgorithms(protocolAlgorithms)
+//        List<String> scopes = Arrays.asList("openid", "profile", "email")
+//        protocol.setScopes(scopes)
+//        protocol.setType(ProtocolType.OIDC)
+//
+//        ProtocolEndpoint protocolEndpointIssuer = new ProtocolEndpoint()
+//        protocolEndpointIssuer.setUrl("https://idp.example.com")
+//        protocol.setIssuer(protocolEndpointIssuer)
+//        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+//        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+//        identityProviderCredentialsClient.setClientId("your-client-id")
+//        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+//        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+//        protocol.setCredentials(identityProviderCredentials)
 
-        ProtocolAlgorithmType protocolAlgorithmTypeReq = new ProtocolAlgorithmType()
-        ProtocolAlgorithmType protocolAlgorithmTypeRes = new ProtocolAlgorithmType()
-        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Req = new ProtocolAlgorithmTypeSignature()
-        protocolAlgorithmTypeSignature_Req.setScope(ProtocolAlgorithmTypeSignatureScope.REQUEST)
-        protocolAlgorithmTypeSignature_Req.setAlgorithm("SHA-256")
-        protocolAlgorithmTypeReq.setSignature(protocolAlgorithmTypeSignature_Req)
-        ProtocolAlgorithmTypeSignature protocolAlgorithmTypeSignature_Res = new ProtocolAlgorithmTypeSignature()
-        protocolAlgorithmTypeSignature_Res.setScope(ProtocolAlgorithmTypeSignatureScope.RESPONSE)
-        protocolAlgorithmTypeSignature_Res.setAlgorithm("SHA-256")
-        protocolAlgorithmTypeRes.setSignature(protocolAlgorithmTypeSignature_Res)
-
-        ProtocolAlgorithms protocolAlgorithms = new ProtocolAlgorithms()
-        protocolAlgorithms.setRequest(protocolAlgorithmTypeReq)
-        protocolAlgorithms.setResponse(protocolAlgorithmTypeRes)
-        protocol.setAlgorithms(protocolAlgorithms)
-        List<String> scopes = Arrays.asList("openid", "profile", "email")
-        protocol.setScopes(scopes)
-        protocol.setType(ProtocolType.OIDC)
-
-        ProtocolEndpoint protocolEndpointIssuer = new ProtocolEndpoint()
-        protocolEndpointIssuer.setUrl("https://idp.example.com")
-        protocol.setIssuer(protocolEndpointIssuer)
-        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
-        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
-        identityProviderCredentialsClient.setClientId("your-client-id")
-        identityProviderCredentialsClient.setClientSecret("your-client-secret")
-        identityProviderCredentials.setClient(identityProviderCredentialsClient)
-        protocol.setCredentials(identityProviderCredentials)
-
-        ProtocolEndpoints protocolEndpoints = new ProtocolEndpoints()
-        ProtocolEndpoint protocolEndpointAcs = new ProtocolEndpoint()
-        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.HTTP_POST)
-        protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
-
-        ProtocolEndpoint protocolEndpointAuthorization = new ProtocolEndpoint()
-        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.HTTP_POST)
-        protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize")
-
-        ProtocolEndpoint protocolEndpointToken = new ProtocolEndpoint()
-        protocolEndpointToken.setBinding(ProtocolEndpointBinding.HTTP_POST)
-        protocolEndpointToken.setUrl("https://idp.example.com/token")
-
-        ProtocolEndpoint protocolEndpointUserInfo = new ProtocolEndpoint()
-        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
-        protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo")
-
-        ProtocolEndpoint protocolEndpointJwks = new ProtocolEndpoint()
-        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
-        protocolEndpointJwks.setUrl("https://idp.example.com/keys")
-
-        protocolEndpoints.setAcs(protocolEndpointAcs)
-        protocolEndpoints.setAuthorization(protocolEndpointAuthorization)
-        protocolEndpoints.setToken(protocolEndpointToken)
-        protocolEndpoints.setUserInfo(protocolEndpointUserInfo)
-        protocolEndpoints.setJwks(protocolEndpointJwks)
-        protocol.setEndpoints(protocolEndpoints)
-        idp.setProtocol(protocol)
+//        ProtocolEndpoints protocolEndpoints = new ProtocolEndpoints()
+//        ProtocolEndpoint protocolEndpointAcs = new ProtocolEndpoint()
+//        protocolEndpointAcs.setBinding(ProtocolEndpointBinding.HTTP_POST)
+//        protocolEndpointAcs.setType(ProtocolEndpointType.INSTANCE)
+//
+//        ProtocolEndpoint protocolEndpointAuthorization = new ProtocolEndpoint()
+//        protocolEndpointAuthorization.setBinding(ProtocolEndpointBinding.HTTP_POST)
+//        protocolEndpointAuthorization.setUrl("https://idp.example.com/authorize")
+//
+//        ProtocolEndpoint protocolEndpointToken = new ProtocolEndpoint()
+//        protocolEndpointToken.setBinding(ProtocolEndpointBinding.HTTP_POST)
+//        protocolEndpointToken.setUrl("https://idp.example.com/token")
+//
+//        ProtocolEndpoint protocolEndpointUserInfo = new ProtocolEndpoint()
+//        protocolEndpointUserInfo.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
+//        protocolEndpointUserInfo.setUrl("https://idp.example.com/userinfo")
+//
+//        ProtocolEndpoint protocolEndpointJwks = new ProtocolEndpoint()
+//        protocolEndpointJwks.setBinding(ProtocolEndpointBinding.HTTP_REDIRECT)
+//        protocolEndpointJwks.setUrl("https://idp.example.com/keys")
+//
+//        protocolEndpoints.setAcs(protocolEndpointAcs)
+//        protocolEndpoints.setAuthorization(protocolEndpointAuthorization)
+//        protocolEndpoints.setToken(protocolEndpointToken)
+//        protocolEndpoints.setUserInfo(protocolEndpointUserInfo)
+//        protocolEndpoints.setJwks(protocolEndpointJwks)
+//        protocol.setEndpoints(protocolEndpoints)
+//        idp.setProtocol(protocol)
 
         IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
         PolicyAccountLink policyAccountLink = new PolicyAccountLink()
@@ -454,19 +454,19 @@ class IdpIT extends ITSupport {
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.GOOGLE)
-        Protocol protocol = new Protocol()
+//        Protocol protocol = new Protocol()
+//
+//        List<String> scopes = Arrays.asList("openid", "profile", "email")
+//        protocol.setScopes(scopes)
+//        protocol.setType(ProtocolType.OAUTH2)
 
-        List<String> scopes = Arrays.asList("openid", "profile", "email")
-        protocol.setScopes(scopes)
-        protocol.setType(ProtocolType.OAUTH2)
-
-        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
-        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
-        identityProviderCredentialsClient.setClientId("your-client-id")
-        identityProviderCredentialsClient.setClientSecret("your-client-secret")
-        identityProviderCredentials.setClient(identityProviderCredentialsClient)
-        protocol.setCredentials(identityProviderCredentials)
-        idp.setProtocol(protocol)
+//        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+//        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+//        identityProviderCredentialsClient.setClientId("your-client-id")
+//        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+//        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+//        protocol.setCredentials(identityProviderCredentials)
+//        idp.setProtocol(protocol)
 
         IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
         PolicyAccountLink policyAccountLink = new PolicyAccountLink()
@@ -537,19 +537,19 @@ class IdpIT extends ITSupport {
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.FACEBOOK)
-        Protocol protocol = new Protocol()
+//        Protocol protocol = new Protocol()
+//
+//        List<String> scopes = Arrays.asList("public_profile", "email")
+//        protocol.setScopes(scopes)
+//        protocol.setType(ProtocolType.OAUTH2)
 
-        List<String> scopes = Arrays.asList("public_profile", "email")
-        protocol.setScopes(scopes)
-        protocol.setType(ProtocolType.OAUTH2)
-
-        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
-        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
-        identityProviderCredentialsClient.setClientId("your-client-id")
-        identityProviderCredentialsClient.setClientSecret("your-client-secret")
-        identityProviderCredentials.setClient(identityProviderCredentialsClient)
-        protocol.setCredentials(identityProviderCredentials)
-        idp.setProtocol(protocol)
+//        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+//        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+//        identityProviderCredentialsClient.setClientId("your-client-id")
+//        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+//        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+//        protocol.setCredentials(identityProviderCredentials)
+//        idp.setProtocol(protocol)
 
         IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
         PolicyAccountLink policyAccountLink = new PolicyAccountLink()
@@ -620,19 +620,19 @@ class IdpIT extends ITSupport {
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.MICROSOFT)
-        Protocol protocol = new Protocol()
+//        Protocol protocol = new Protocol()
+//
+//        List<String> scopes = Arrays.asList("openid", "email", "profile", "https://graph.microsoft.com/User.Read")
+//        protocol.setScopes(scopes)
+//        protocol.setType(ProtocolType.OAUTH2)
 
-        List<String> scopes = Arrays.asList("openid", "email", "profile", "https://graph.microsoft.com/User.Read")
-        protocol.setScopes(scopes)
-        protocol.setType(ProtocolType.OAUTH2)
-
-        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
-        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
-        identityProviderCredentialsClient.setClientId("your-client-id")
-        identityProviderCredentialsClient.setClientSecret("your-client-secret")
-        identityProviderCredentials.setClient(identityProviderCredentialsClient)
-        protocol.setCredentials(identityProviderCredentials)
-        idp.setProtocol(protocol)
+//        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+//        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+//        identityProviderCredentialsClient.setClientId("your-client-id")
+//        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+//        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+//        protocol.setCredentials(identityProviderCredentials)
+//        idp.setProtocol(protocol)
 
         IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
         PolicyAccountLink policyAccountLink = new PolicyAccountLink()
@@ -703,19 +703,19 @@ class IdpIT extends ITSupport {
         IdentityProvider idp = new IdentityProvider()
         idp.setName(name)
         idp.setType(IdentityProviderType.LINKEDIN)
-        Protocol protocol = new Protocol()
+        //Protocol protocol = new Protocol()
 
-        List<String> scopes = Arrays.asList("r_basicprofile", "r_emailaddress")
-        protocol.setScopes(scopes)
-        protocol.setType(ProtocolType.OAUTH2)
+//        List<String> scopes = Arrays.asList("r_basicprofile", "r_emailaddress")
+//        protocol.setScopes(scopes)
+//        protocol.setType(ProtocolType.OAUTH2)
 
-        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
-        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
-        identityProviderCredentialsClient.setClientId("your-client-id")
-        identityProviderCredentialsClient.setClientSecret("your-client-secret")
-        identityProviderCredentials.setClient(identityProviderCredentialsClient)
-        protocol.setCredentials(identityProviderCredentials)
-        idp.setProtocol(protocol)
+//        IdentityProviderCredentials identityProviderCredentials = new IdentityProviderCredentials()
+//        IdentityProviderCredentialsClient identityProviderCredentialsClient = new IdentityProviderCredentialsClient()
+//        identityProviderCredentialsClient.setClientId("your-client-id")
+//        identityProviderCredentialsClient.setClientSecret("your-client-secret")
+//        identityProviderCredentials.setClient(identityProviderCredentialsClient)
+//        protocol.setCredentials(identityProviderCredentials)
+//        idp.setProtocol(protocol)
 
         IdentityProviderPolicy identityProviderPolicy = new IdentityProviderPolicy()
         PolicyAccountLink policyAccountLink = new PolicyAccountLink()

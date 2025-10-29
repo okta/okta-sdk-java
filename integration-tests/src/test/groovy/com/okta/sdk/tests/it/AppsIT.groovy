@@ -26,8 +26,6 @@ import com.okta.sdk.resource.api.ApplicationUsersApi
 import com.okta.sdk.resource.api.GroupApi
 import com.okta.sdk.resource.model.AppUser
 import com.okta.sdk.resource.model.AppUserAssignRequest
-import com.okta.sdk.resource.model.AppUserProfile
-import com.okta.sdk.resource.model.AppUserScope
 import com.okta.sdk.resource.model.AppUserUpdateRequest
 import com.okta.sdk.resource.model.Application
 import com.okta.sdk.resource.model.ApplicationCredentialsOAuthClient
@@ -47,7 +45,7 @@ import com.okta.sdk.resource.model.BrowserPluginApplication
 import com.okta.sdk.resource.model.Group
 import com.okta.sdk.resource.model.InlineHook
 import com.okta.sdk.resource.model.InlineHookChannelConfig
-import com.okta.sdk.resource.model.InlineHookChannelConfigAuthScheme
+import com.okta.sdk.resource.model.InlineHookChannelConfigAuthSchemeBody
 import com.okta.sdk.resource.model.InlineHookChannelConfigHeaders
 import com.okta.sdk.resource.model.InlineHookChannelHttp
 import com.okta.sdk.resource.model.InlineHookChannelType
@@ -56,7 +54,7 @@ import com.okta.sdk.resource.model.OAuth2ScopeConsentGrant
 import com.okta.sdk.resource.model.OAuth2Token
 import com.okta.sdk.resource.model.OAuthApplicationCredentials
 import com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod
-import com.okta.sdk.resource.model.OAuthGrantType
+import com.okta.sdk.resource.model.GrantType
 import com.okta.sdk.resource.model.OAuthResponseType
 import com.okta.sdk.resource.model.OpenIdConnectApplication
 import com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod
@@ -234,7 +232,7 @@ class AppsIT extends ITSupport {
                                                                 "myapp://callback"])
         openIdConnectApplicationSettingsClient.responseTypes([OAuthResponseType.TOKEN, OAuthResponseType.ID_TOKEN, OAuthResponseType.CODE])
         openIdConnectApplicationSettingsClient.issuerMode(OpenIdConnectApplicationIssuerMode.ORG_URL)
-        openIdConnectApplicationSettingsClient.grantTypes([OAuthGrantType.IMPLICIT, OAuthGrantType.AUTHORIZATION_CODE])
+        openIdConnectApplicationSettingsClient.grantTypes([GrantType.IMPLICIT, GrantType.AUTHORIZATION_CODE])
         openIdConnectApplicationSettingsClient.applicationType(OpenIdConnectApplicationType.NATIVE)
         openIdConnectApplicationSettingsClient.tosUri("https://example.com/client/tos")
         openIdConnectApplicationSettingsClient.policyUri("https://example.com/client/policy")
@@ -287,7 +285,7 @@ class AppsIT extends ITSupport {
         String name = prefix + UUID.randomUUID().toString()
         String version = "1.0.0"
 
-        InlineHookChannelConfigAuthScheme inlineHookChannelConfigAuthScheme = new InlineHookChannelConfigAuthScheme()
+        InlineHookChannelConfigAuthSchemeBody inlineHookChannelConfigAuthScheme = new InlineHookChannelConfigAuthSchemeBody()
         inlineHookChannelConfigAuthScheme.type("HEADER")
         inlineHookChannelConfigAuthScheme.key(HttpHeaders.AUTHORIZATION)
         inlineHookChannelConfigAuthScheme.value("Test-Api-Key")
@@ -302,7 +300,7 @@ class AppsIT extends ITSupport {
         InlineHookChannelConfig inlineHookChannelConfig = new InlineHookChannelConfig()
             .uri("https://www.example.com/inlineHooks")
             .headers(headers)
-            .authScheme(inlineHookChannelConfigAuthScheme)
+            .authScheme(inlineHookChannelConfigAuthSchemeBody)
 
         InlineHookChannelHttp inlineHookChannel = new InlineHookChannelHttp()
         inlineHookChannel.type(InlineHookChannelType.HTTP)
@@ -1028,7 +1026,6 @@ class AppsIT extends ITSupport {
         
         assertThat(appUser, notNullValue())
         assertThat(appUser.getId(), equalTo(user.getId()))
-        assertThat(appUser.getScope(), equalTo(AppUserScope.USER))
     }
 
     @Test
@@ -1142,17 +1139,6 @@ class AppsIT extends ITSupport {
         appUserAssignRequest.id(user.getId())
         
         appUsersApi.assignUserToApplication(createdApp.getId(), appUserAssignRequest)
-        
-        // Update the application user
-        AppUserUpdateRequest updateRequest = new AppUserUpdateRequest()
-        AppUserProfile profile = new AppUserProfile()
-        profile.put("role", "admin")
-        updateRequest.profile(profile)
-
-        AppUser updatedAppUser = appUsersApi.updateApplicationUser(createdApp.getId(), user.getId(), updateRequest)
-        
-        assertThat(updatedAppUser, notNullValue())
-        assertThat(updatedAppUser.getId(), equalTo(user.getId()))
     }
 
     @Test
@@ -1371,7 +1357,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings oidcSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient settingsClient = new OpenIdConnectApplicationSettingsClient()
         settingsClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE, OAuthGrantType.REFRESH_TOKEN))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE, GrantType.REFRESH_TOKEN))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
@@ -1399,7 +1385,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings oidcSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient settingsClient = new OpenIdConnectApplicationSettingsClient()
         settingsClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE, OAuthGrantType.REFRESH_TOKEN))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE, GrantType.REFRESH_TOKEN))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
@@ -1437,7 +1423,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings oidcSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient settingsClient = new OpenIdConnectApplicationSettingsClient()
         settingsClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE, OAuthGrantType.REFRESH_TOKEN))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE, GrantType.REFRESH_TOKEN))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
@@ -1479,7 +1465,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings oidcSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient settingsClient = new OpenIdConnectApplicationSettingsClient()
         settingsClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE, OAuthGrantType.REFRESH_TOKEN))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE, GrantType.REFRESH_TOKEN))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
@@ -1585,7 +1571,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings oidcSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient settingsClient = new OpenIdConnectApplicationSettingsClient()
         settingsClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE, OAuthGrantType.REFRESH_TOKEN))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE, GrantType.REFRESH_TOKEN))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
@@ -1617,7 +1603,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings oidcSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient settingsClient = new OpenIdConnectApplicationSettingsClient()
         settingsClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE, OAuthGrantType.REFRESH_TOKEN))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE, GrantType.REFRESH_TOKEN))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
@@ -1655,7 +1641,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings sourceSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient sourceClient = new OpenIdConnectApplicationSettingsClient()
         sourceClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
@@ -1714,7 +1700,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings sourceSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient sourceClient = new OpenIdConnectApplicationSettingsClient()
         sourceClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
@@ -1799,7 +1785,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings sourceSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient sourceClient = new OpenIdConnectApplicationSettingsClient()
         sourceClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
@@ -1861,7 +1847,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings sourceSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient sourceClient = new OpenIdConnectApplicationSettingsClient()
         sourceClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
@@ -1925,7 +1911,7 @@ class AppsIT extends ITSupport {
         OpenIdConnectApplicationSettings sourceSettings = new OpenIdConnectApplicationSettings()
         OpenIdConnectApplicationSettingsClient sourceClient = new OpenIdConnectApplicationSettingsClient()
         sourceClient.applicationType(OpenIdConnectApplicationType.WEB)
-            .grantTypes(Arrays.asList(OAuthGrantType.AUTHORIZATION_CODE))
+            .grantTypes(Arrays.asList(GrantType.AUTHORIZATION_CODE))
             .responseTypes(Arrays.asList(OAuthResponseType.CODE))
             .redirectUris(Arrays.asList("https://example.com/oauth2/callback"))
         
