@@ -1,0 +1,129 @@
+version: 2.1
+
+orbs:
+  general-platform-helpers: okta/general-platform-helpers@1.8
+  platform-helpers: okta/platform-helpers@1
+  python: circleci/python@2.1.1
+  aws-cli: circleci/aws-cli@5.1
+
+aliases:
+
+  - &build_steps
+    - checkout
+    - run: java -version
+    - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true
+    - run: mvn test
+    - run:
+        no_output_timeout: 30m
+        command: |
+          ClassName=$(circleci tests glob "integration-tests/src/test/groovy/com/okta/sdk/tests/it/**IT.groovy" | circleci tests split --split-by=filesize | grep groovy | xargs -n 1 basename | sed -e 's/\.groovy$//' | tr '\n' ',' | sed 's/,*$//g')
+          echo $ClassName
+          cd ./integration-tests
+          mvn -Dtest=$ClassName test
+    - run:
+        when: on_fail
+        command: cat integration-tests/target/failsafe-reports/*IT.txt
+    - run:
+        when: on_fail
+        command: cat integration-tests/target/failsafe-reports/*dump*
+
+jobs:
+
+  jdk11:
+    docker:
+      - image: cimg/openjdk:11.0.22-node
+    environment:
+      JVM_OPTS: -Xmx3200m
+    resource_class: large
+    parallelism: 3
+    steps: *build_steps
+
+  jdk21:
+    docker:
+      - image: cimg/openjdk:21.0.2-node
+    environment:
+      JVM_OPTS: -Xmx3200m
+    resource_class: large
+    parallelism: 3
+    steps: *build_steps
+
+  snyk-scan:
+    docker:
+      - image: cimg/openjdk:21.0.2-node
+    steps:
+      - checkout
+      - run: npm install
+      - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true -DskipITs
+      - general-platform-helpers/step-run-snyk-monitor:
+          scan-all-projects: false
+          skip-unresolved: false
+          run-on-non-main: true
+          additional-arguments: "--maven-aggregate-project"
+
+  reversing-labs:
+    docker:
+      - image: cimg/openjdk:21.0.2-node
+    steps:
+      - checkout
+      - run: npm install
+      - run: mvn clean install -Pci -Dlicense.skip=true -Dmaven.test.skip.exec=true -DskipITs
+      # Necessary to Install rl wrapper
+      - run:
+          name: Install Python
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y python3 python3-pip
+            sudo pip install --upgrade pip
+      # Download the scanner from Okta Security
+      - run:
+          name: Download Reverse Labs Scanner
+          command: |
+            curl https://dso-resources.oktasecurity.com/scanner \
+              -H "x-api-key: $DSO_RLSECURE_TOKEN" \
+              --output rl_wrapper-0.0.2+35ababa-py3-none-any.whl
+      # Install the wrapper that was downloaded
+      - run:
+          name: Install RL Wrapper
+          command: |
+            pip install ./rl_wrapper-0.0.2+35ababa-py3-none-any.whl
+      # Setup the AWS profile
+      - aws-cli/setup:
+          profile_name: default
+          role_arn: $AWS_ARN
+          region: us-east-1
+      # Get the credentials and save to env
+      - run: >-
+          eval "$(aws configure export-credentials --profile default --format env)" 2> /dev/null
+      # Run the wrapper, do not change anything here
+      - run:
+          name: Run Reversing Labs Wrapper Scanner
+          command: |
+            echo "Scanning " ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/api
+            rl-wrapper \
+              --artifact ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/api \
+              --name $CIRCLE_PROJECT_REPONAME\
+              --version $CIRCLE_SHA1\
+              --repository $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME \
+              --commit $CIRCLE_SHA1 \
+              --build-env "circleci" \
+              --suppress_output
+workflows:
+  "Circle CI Tests":
+    jobs:
+      - jdk11
+      - jdk21
+      - platform-helpers/job-semgrep-scan:
+          name: "Scan with Semgrep"
+          context:
+            - static-analysis
+      - snyk-scan:
+          name: execute-snyk
+          requires:
+            - jdk21
+          context:
+            - static-analysis
+  "Malware Scanner":
+    jobs:
+      - reversing-labs:
+          context:
+            - static-analysis
