@@ -45,12 +45,14 @@ import com.okta.sdk.resource.model.AssignRoleToUserRequest
 import com.okta.sdk.resource.model.AuthenticationProvider
 import com.okta.sdk.resource.model.AuthenticationProviderType
 import com.okta.sdk.resource.model.ChangePasswordRequest
+import com.okta.sdk.resource.model.CreateOrUpdatePolicy
 import com.okta.sdk.resource.model.CreateUserRequest
 import com.okta.sdk.resource.model.ForgotPasswordResponse
 import com.okta.sdk.resource.model.Group
 import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner
 import com.okta.sdk.resource.model.OktaUserGroupProfile
 import com.okta.sdk.resource.model.PasswordCredential
+import com.okta.sdk.resource.model.PasswordPolicy
 import com.okta.sdk.resource.model.PasswordPolicyPasswordSettings
 import com.okta.sdk.resource.model.PasswordPolicyPasswordSettingsAge
 import com.okta.sdk.resource.model.PasswordPolicyRule
@@ -370,7 +372,17 @@ class UsersIT extends ITSupport {
 
         policy.setSettings(passwordPolicySettings)
 
-        policy = policyApi.replacePolicy(policy.getId(), policy)
+        CreateOrUpdatePolicy updatePolicy = new CreateOrUpdatePolicy()
+        updatePolicy.setName(policy.getName())
+        updatePolicy.setDescription(policy.getDescription())
+        updatePolicy.setType(policy.getType())
+        updatePolicy.setPriority(policy.getPriority())
+        updatePolicy.setStatus(policy.getStatus())
+        updatePolicy.setConditions(policy.getConditions())
+        updatePolicy.setSettings(policy.getSettings())
+        
+        CreateOrUpdatePolicy updatedPolicy = policyApi.replacePolicy(policy.getId(), updatePolicy)
+        policy = policyApi.getPolicy(updatedPolicy.getId(), null) as PasswordPolicy
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()
 
@@ -2020,7 +2032,7 @@ class UsersIT extends ITSupport {
         UpdateUserRequest updateRequest = new UpdateUserRequest()
         updateRequest.setProfile(updatedProfile)
         
-        User updatedUser = userApi.updateUser(user.getId(), updateRequest, true)
+        User updatedUser = userApi.updateUser(user.getId(), updateRequest, true, null)
         
         assertThat("Updated user should not be null", updatedUser, notNullValue())
         assertThat("City should be updated", updatedUser.getProfile().getCity(), equalTo("New York"))
@@ -2042,7 +2054,7 @@ class UsersIT extends ITSupport {
         String userId = user.getId()
         
         // First deactivate the user
-        userLifecycleApi.deactivateUser(userId, false)
+        userLifecycleApi.deactivateUser(userId, false, null)
         Thread.sleep(getTestOperationDelay())
         
         // Delete with sendEmail=false
