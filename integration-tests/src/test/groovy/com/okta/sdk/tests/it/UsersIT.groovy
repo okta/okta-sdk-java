@@ -372,14 +372,9 @@ class UsersIT extends ITSupport {
 
         policy.setSettings(passwordPolicySettings)
 
+        // Create a CreateOrUpdatePolicy wrapper with the actual policy instance
         CreateOrUpdatePolicy updatePolicy = new CreateOrUpdatePolicy()
-        updatePolicy.setName(policy.getName())
-        updatePolicy.setDescription(policy.getDescription())
-        updatePolicy.setType(policy.getType())
-        updatePolicy.setPriority(policy.getPriority())
-        updatePolicy.setStatus(policy.getStatus())
-        updatePolicy.setConditions(policy.getConditions())
-        updatePolicy.setSettings(policy.getSettings())
+        updatePolicy.setActualInstance(policy)
         
         CreateOrUpdatePolicy updatedPolicy = policyApi.replacePolicy(policy.getId(), updatePolicy)
         policy = policyApi.getPolicy(updatedPolicy.getId(), null) as PasswordPolicy
