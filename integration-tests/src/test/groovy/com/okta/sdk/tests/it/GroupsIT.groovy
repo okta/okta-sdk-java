@@ -272,11 +272,26 @@ class GroupsIT extends ITSupport {
         registerForCleanup(group)
         validateGroup(group, groupName)
 
-        // 2. Search the group by name using the 'q' parameter
-        List<Group> searchResults = groupApi.listGroups(groupName, null, null, null, null, null, null, null)
+        // 2. Search the group by name using the search parameter (wait for indexing)
+        String searchQuery = "profile.name eq \"${groupName}\""
+        
+        // Retry logic to handle indexing delay
+        List<Group> searchResults = null
+        int maxRetries = 10
+        int retryCount = 0
+        
+        while (retryCount < maxRetries) {
+            searchResults = groupApi.listGroups(null, null, null, null, null, searchQuery, null, null)
+            if (searchResults != null && !searchResults.isEmpty()) {
+                break
+            }
+            TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+            retryCount++
+        }
 
         // 3. Assert that the search returned our group
         assertThat(searchResults, notNullValue())
+        assertThat(searchResults, not(empty()))
         assertGroupPresent(searchResults, group)
     }
 
@@ -738,7 +753,22 @@ class GroupsIT extends ITSupport {
         assertUserNotInGroup(user, group, groupApi, 10, getTestOperationDelay())
 
         // 8. Verify the group can be searched
-        List<Group> searchResults = groupApi.listGroups(updatedName, null, null, null, null, null, null, null)
+        String searchQuery = "profile.name eq \"${updatedName}\""
+        
+        // Retry logic to handle indexing delay
+        List<Group> searchResults = null
+        int maxRetries = 10
+        int retryCount = 0
+        
+        while (retryCount < maxRetries) {
+            searchResults = groupApi.listGroups(null, null, null, null, null, searchQuery, null, null)
+            if (searchResults != null && !searchResults.isEmpty()) {
+                break
+            }
+            TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+            retryCount++
+        }
+        
         assertGroupPresent(searchResults, updatedGroup)
 
         // The group will be deleted in cleanup

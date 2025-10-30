@@ -24,6 +24,8 @@ import com.okta.sdk.resource.model.AgentType
 import com.okta.sdk.resource.model.AutoUpdateSchedule
 import com.okta.sdk.resource.model.ReleaseChannel
 import com.okta.sdk.tests.it.util.ITSupport
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.testng.SkipException
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.DataProvider
@@ -40,6 +42,7 @@ import static org.hamcrest.Matchers.*
  */
 class AgentPoolsIT extends ITSupport {
 
+    private static final Logger logger = LoggerFactory.getLogger(AgentPoolsIT.class)
     private AgentPoolsApi agentPoolsApi
     private String testPoolId
     private boolean hasAgentPools = false
@@ -48,12 +51,18 @@ class AgentPoolsIT extends ITSupport {
     void setUp() {
         agentPoolsApi = new AgentPoolsApi(getClient())
         // Attempt to find an existing agent pool to use for tests
-        List<AgentPool> agentPools = agentPoolsApi.listAgentPools(1, null, null)
-        if (agentPools && !agentPools.isEmpty()) {
-            testPoolId = agentPools.get(0).id
-            hasAgentPools = true
-        } else {
-            println "WARNING: No agent pools found in the organization. Dependent tests will be skipped."
+        try {
+            List<AgentPool> agentPools = agentPoolsApi.listAgentPools(1, null, null)
+            if (agentPools && !agentPools.isEmpty()) {
+                testPoolId = agentPools.get(0).id
+                hasAgentPools = true
+                logger.info("Found agent pool with ID: {}", testPoolId)
+            } else {
+                logger.warn("WARNING: No agent pools found in the organization. Dependent tests will be skipped.")
+            }
+        } catch (ApiException e) {
+            logger.warn("Error accessing agent pools: {}. Dependent tests will be skipped.", e.getMessage())
+            hasAgentPools = false
         }
     }
 
@@ -198,11 +207,17 @@ class AgentPoolsIT extends ITSupport {
         def invalidUpdateId = "invalid-update-id-12345"
         def dummyRequest = new AgentPoolUpdate(enabled: true)
 
-        expect(ApiException, { agentPoolsApi.getAgentPoolsUpdateSettings(invalidPoolId) })
-        expect(ApiException, { agentPoolsApi.createAgentPoolsUpdate(invalidPoolId, dummyRequest) })
+        expect(ApiException) {
+            agentPoolsApi.getAgentPoolsUpdateSettings(invalidPoolId)
+        }
+        expect(ApiException) {
+            agentPoolsApi.createAgentPoolsUpdate(invalidPoolId, dummyRequest)
+        }
 
         if (hasAgentPools) {
-            expect(ApiException, { agentPoolsApi.getAgentPoolsUpdateInstance(testPoolId, invalidUpdateId) })
+            expect(ApiException) {
+                agentPoolsApi.getAgentPoolsUpdateInstance(testPoolId, invalidUpdateId)
+            }
         }
     }
 }
