@@ -130,7 +130,7 @@ trait ClientProvider implements IHookable {
     }
 
     def getUniqueTestName() {
-        return "${getTestName()}-${UUID.randomUUID()}"
+        return "${UUID.randomUUID()}"
     }
 
     /**
