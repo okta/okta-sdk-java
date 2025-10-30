@@ -89,13 +89,16 @@ public class Quickstart {
             println("User created with ID: " + userId);
 
             // You can look up user by ID
-            println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId, null,"false").getProfile()).getLogin());
+            println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId, null, null).getProfile()).getLogin());
 
-            // or by Email
-            println("User lookup by Email: "+ Objects.requireNonNull(userApi.getUser(email, null,"false").getProfile()).getLogin());
+            // or by Email (using filter to search)
+            List<User> usersByEmail = userApi.listUsers(null, null, "profile.email eq \"" + email + "\"", null, null, null, null, null, null);
+            if (!usersByEmail.isEmpty()) {
+                println("User lookup by Email: " + Objects.requireNonNull(usersByEmail.get(0).getProfile()).getLogin());
+            }
 
             // get the list of users
-            List<com.okta.sdk.resource.model.User> users = userApi.listUsers(null, null, null, null, "status eq \"ACTIVE\"", null, null, null);
+            List<User> users = userApi.listUsers(null, null, "status eq \"ACTIVE\"", null, null, null, null, null, null);
 
             // get the first user in the collection
             println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());
