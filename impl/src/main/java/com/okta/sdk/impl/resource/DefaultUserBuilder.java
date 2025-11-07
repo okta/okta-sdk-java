@@ -30,7 +30,6 @@ import com.okta.sdk.resource.model.PasswordCredentialHashAlgorithm;
 import com.okta.sdk.resource.model.PasswordCredentialHook;
 import com.okta.sdk.resource.model.RecoveryQuestionCredential;
 import com.okta.sdk.resource.model.User;
-import com.okta.sdk.resource.model.UserCredentials;
 import com.okta.sdk.resource.model.UserNextLogin;
 import com.okta.sdk.resource.model.UserProfile;
 
