@@ -19470,17 +19470,7 @@ paths:
           in: query
           required: true
           schema:
-            type: string
-            enum:
-              - OKTA_SIGN_ON
-              - PASSWORD
-              - MFA_ENROLL
-              - IDP_DISCOVERY
-              - ACCESS_POLICY
-              - DEVICE_SIGNAL_COLLECTION
-              - PROFILE_ENROLLMENT
-              - POST_AUTH_SESSION
-              - ENTITY_RISK
+            $ref: '#/components/schemas/PolicyTypeParameter'
           description: Specifies the type of policy to return. The following policy types are available only with the Okta Identity Engine - `ACCESS_POLICY`, <x-lifecycle class="ea"></x-lifecycle> `DEVICE_SIGNAL_COLLECTION`, `PROFILE_ENROLLMENT`, `POST_AUTH_SESSION`, and `ENTITY_RISK`.
         - name: status
           in: query
@@ -19523,7 +19513,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Policy'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Policy'
               examples:
                 password:
                   $ref: '#/components/examples/password-policy-response'
@@ -19574,7 +19566,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateOrUpdatePolicy'
+              $ref: '#/components/schemas/Policy'
         required: true
       responses:
         '200':
@@ -19582,7 +19574,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateOrUpdatePolicy'
+                $ref: '#/components/schemas/Policy'
               examples:
                 password:
                   $ref: '#/components/examples/password-policy-response'
@@ -19728,7 +19720,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateOrUpdatePolicy'
+              $ref: '#/components/schemas/Policy'
         required: true
       responses:
         '200':
@@ -55357,6 +55349,102 @@ components:
             ResourceNotFound:
               $ref: '#/components/examples/NzErrorResourceNotFound'
   schemas:
+    # Common parameter enums (added to fix inline enum issues)
+    PreferHeader:
+      type: string
+      description: HTTP Prefer header for asynchronous operations
+      enum:
+        - respond-async
+    SortOrderParameter:
+      type: string
+      description: Sort order for list operations
+      enum:
+        - ASCENDING
+        - DESCENDING
+        - ASC
+        - DESC
+        - asc
+        - desc
+      default: ASCENDING
+    WellKnownUriPath:
+      type: string
+      description: Well-known URI path
+      enum:
+        - apple-app-site-association
+        - assetlinks.json
+        - webauthn
+    ContactTypeParameter:
+      type: string
+      description: Type of contact
+      enum:
+        - BILLING
+        - TECHNICAL
+    DeviceExpandParameter:
+      type: string
+      description: Includes associated user details and management status for the device
+      enum:
+        - user
+        - userSummary
+      x-enumDescriptions:
+        user: Lists full details for associated users
+        userSummary: Lists summaries for associated users
+    InlineHookTypeParameter:
+      type: string
+      description: One of the supported inline hook types
+      enum:
+        - com.okta.import.transform
+        - com.okta.oauth2.tokens.transform
+        - com.okta.saml.tokens.transform
+        - com.okta.user.credential.password.import
+        - com.okta.user.pre-registration
+        - com.okta.telephony.provider
+    PolicyTypeParameter:
+      type: string
+      description: Specifies the type of policy to return
+      enum:
+        - OKTA_SIGN_ON
+        - PASSWORD
+        - MFA_ENROLL
+        - IDP_DISCOVERY
+        - ACCESS_POLICY
+        - DEVICE_SIGNAL_COLLECTION
+        - PROFILE_ENROLLMENT
+        - POST_AUTH_SESSION
+        - ENTITY_RISK
+    YubikeyFilterParameter:
+      type: string
+      description: The expression used to filter tokens
+      enum:
+        - profile.email
+        - profile.serial
+        - activated
+        - user.id
+        - created
+        - status
+        - lastVerified
+    YubikeySortByParameter:
+      type: string
+      description: The value of how the tokens are sorted
+      enum:
+        - profile.email
+        - profile.serial
+        - activated
+        - user.id
+        - created
+        - status
+        - lastVerified
+    YubikeySortOrderParameter:
+      type: string
+      description: Specifies the sort order, either ASC or DESC
+      enum:
+        - ASC
+        - DESC
+    AssignmentTypeParameter:
+      type: string
+      description: Specifies the assignment type of the user
+      enum:
+        - USER
+        - GROUP
     AAGUIDAuthenticatorCharacteristics:
       description: Contains additional properties about custom AAGUID.
       type: object
@@ -55524,15 +55612,6 @@ components:
               description: Policy conditions aren't supported. Conditions are applied at the rule level for this policy type.
               default: null
               nullable: true
-            _embedded:
-              type: object
-              properties:
-                resourceType:
-                  type: string
-                  description: The resource that this policy controls. For the [Okta account management policy](https://developer.okta.com/docs/guides/okta-account-management-policy/main/#example-response), `END_USER_ACCOUNT_MANAGEMENT` is returned. For other policies, `APP` is returned.
-              additionalProperties:
-                type: object
-                properties: {}
     AccessPolicyConstraint:
       description: |-
         Consists of a `POSSESSION` constraint, a `KNOWLEDGE` constraint, or both. You can't configure an `INHERENCE` constraint, but an inherence factor can satisfy the second part of a 2FA assurance if no other constraints are specified.
@@ -57772,6 +57851,11 @@ components:
                   type: object
                   description: Specifies a set of groups whose users are to be included or excluded
                   properties:
+                    exclude:
+                      type: array
+                      description: Groups to be excluded
+                      items:
+                        type: string
                     include:
                       type: array
                       description: Groups to be included
@@ -59386,19 +59470,16 @@ components:
 
                 For example, `2025-01-01T18:30:45.000Z`
     ByDateTimeExpiry:
-      type: object
-      properties:
-        expiresAt:
-          $ref: '#/components/schemas/DateTime'
-
+      description: An [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations) formatted date and time.
+      format: date-time
+      example: '2024-12-01T00:00:00Z'
+      type: string
     ByDurationExpiry:
-      type: object
-      properties:
-        expiresAt:
-          $ref: '#/components/schemas/TimeDuration'
       description: |-
         A time duration specified as an [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations).
         Must be between 1 and 180 days inclusive.
+      type: string
+      example: P90D
     CAPTCHAInstance:
       title: CAPTCHAInstance
       description: ''
@@ -60152,7 +60233,7 @@ components:
         description:
           description: Description of the policy
           type: string
-          nullable: true
+          default: null
         id:
           description: Identifier of the policy
           type: string
@@ -60168,7 +60249,7 @@ components:
         priority:
           description: Specifies the order in which this policy is evaluated in relation to the other policies
           type: integer
-          default: 1
+          default: Last / Lowest Priority, for example `1`
         status:
           allOf:
             - $ref: '#/components/schemas/LifecycleStatus'
@@ -61311,9 +61392,14 @@ components:
       properties:
         include:
           type: array
+          description: An array of key value pairs including Device Posture Check `variableNames`
           items:
             type: object
-          description: An array of key value pairs including Device Posture Check `variableNames`
+            properties:
+              variableName:
+                type: string
+              value:
+                type: string
           example:
             - variableName: macOSFirewall
               value: '1'
@@ -61449,15 +61535,6 @@ components:
               description: Policy conditions aren't supported. Conditions are applied at the rule level for this policy type.
               default: null
               nullable: true
-            _embedded:
-              type: object
-              properties:
-                resourceType:
-                  type: string
-                  description: The resource that this policy controls. For the [Okta account management policy](https://developer.okta.com/docs/guides/okta-account-management-policy/main/#example-response), `END_USER_ACCOUNT_MANAGEMENT` is returned. For other policies, `APP` is returned.
-              additionalProperties:
-                type: object
-                properties: {}
     DeviceSignalCollectionPolicyRule:
       allOf:
         - $ref: '#/components/schemas/PolicyRule'
@@ -61706,9 +61783,11 @@ components:
         - type: object
           properties:
             asns:
-              allOf:
-                - $ref: '#/components/schemas/NetworkZoneAsns'
-                - description: An array of ASNs for a Network Zone
+              type: array
+              description: An array of ASNs for a Network Zone
+              items:
+                type: string
+              maximum: 75
             proxyType:
               type: string
               description: The proxy type used for a Dynamic Network Zone
@@ -61723,9 +61802,10 @@ components:
                 Tor: Use Tor Anonymizer proxy for the Dynamic Zone.
                 NotTorAnonymizer: Use a non Tor Anonymizer proxy for the Dynamic Zone.
             locations:
-              allOf:
-                - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                - description: An array of geolocations for a Dynamic Network Zone
+              type: array
+              description: An array of geolocations for a Dynamic Network Zone
+              items:
+                $ref: '#/components/schemas/NetworkZoneLocation'
     ECKeyJWK:
       description: Elliptic curve key in JSON Web Key (JWK) format. It's used during enrollment to encrypt fulfillment requests to Yubico, or during activation to verify Yubico's JWS (JSON Web Signature) objects in fulfillment responses. The currently agreed protocol uses P-384.
       type: object
@@ -62103,9 +62183,11 @@ components:
               description: The list of ASNs associated with an Enhanced Dynamic Network Zone
               properties:
                 include:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneAsns'
-                    - description: An array of ASNs to include for an Enhanced Dynamic Network Zone
+                  type: array
+                  description: An array of ASNs to include for an Enhanced Dynamic Network Zone
+                  items:
+                    type: string
+                  maximum: 75
             locations:
               x-okta-lifecycle:
                 lifecycle: GA
@@ -62115,13 +62197,15 @@ components:
               description: The list of geolocations to include or exclude for an Enhanced Dynamic Network Zone
               properties:
                 include:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                    - description: An array of geolocations to include for an Enhanced Dynamic Network Zone
+                  type: array
+                  description: An array of geolocations to include for an Enhanced Dynamic Network Zone
+                  items:
+                    $ref: '#/components/schemas/NetworkZoneLocation'
                 exclude:
-                  allOf:
-                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                    - description: An array of geolocations to exclude for an Enhanced Dynamic Network Zone
+                  type: array
+                  description: An array of geolocations to exclude for an Enhanced Dynamic Network Zone
+                  items:
+                    $ref: '#/components/schemas/NetworkZoneLocation'
             ipServiceCategories:
               x-okta-lifecycle:
                 lifecycle: GA
@@ -62401,7 +62485,7 @@ components:
           description: Another request has already been received for the settings for this email template
           readOnly: true
           items:
-             type: object
+            $ref: '#/components/schemas/ErrorCause'
         errorCode:
           type: string
           description: E0000254
@@ -63401,6 +63485,12 @@ components:
         _links:
           $ref: '#/components/schemas/LinksSelf'
       x-okta-allow-null-property-value-for-updates: true
+    GroupSchemaAttributeEnumValue:
+      description: Enum value can be either a string or an integer
+      nullable: true
+    UserSchemaAttributeEnumValue:
+      description: Enum value can be either a string or an integer
+      nullable: true
     GroupSchemaAttribute:
       type: object
       properties:
@@ -63409,9 +63499,7 @@ components:
           description: Description of the property
         enum:
           items:
-            anyOf:
-              - type: string
-              - type: integer
+            $ref: '#/components/schemas/GroupSchemaAttributeEnumValue'
           type: array
           nullable: true
           description: |-
@@ -66813,31 +66901,13 @@ components:
             - enc
     OAuth2ClientJsonSigningKeyRequest:
       title: Signing Key
-      allOf:
-        - $ref: '#/components/schemas/OAuth2ClientJsonWebKeyRequestBase'
       oneOf:
         - $ref: '#/components/schemas/OAuth2ClientJsonWebKeyRsaRequest'
         - $ref: '#/components/schemas/OAuth2ClientJsonWebKeyECRequest'
       description: A [JSON Web Key (JWK)](https://tools.ietf.org/html/rfc7517) is a JSON representation of a cryptographic key. Okta uses signing keys to verify the signature of a JWT when provided for the `private_key_jwt` client authentication method or for a signed authorize request object. Okta supports both RSA and Elliptic Curve (EC) keys for signing tokens.
-      type: object
-      properties:
-        alg:
-          type: string
-          description: Algorithm used in the key
-          example: RS256
-          nullable: false
-        use:
-          type: string
-          description: Acceptable use of the JSON Web Key
-          example: sig
-          nullable: false
-          enum:
-            - sig
     OAuth2ClientJsonSigningKeyResponse:
       title: Signing Key
       description: A [JSON Web Key (JWK)](https://tools.ietf.org/html/rfc7517) is a JSON representation of a cryptographic key. Okta uses signing keys to verify the signature of a JWT when provided for the `private_key_jwt` client authentication method or for a signed authorize request object. Okta supports both RSA and Elliptic Curve (EC) keys for signing tokens.
-      allOf:
-        - $ref: '#/components/schemas/OAuth2ClientJsonWebKeyResponseBase'
       oneOf:
         - $ref: '#/components/schemas/OAuth2ClientJsonWebKeyRsaResponse'
         - $ref: '#/components/schemas/OAuth2ClientJsonWebKeyECResponse'
@@ -70209,6 +70279,12 @@ components:
           default: false
         type:
           $ref: '#/components/schemas/PolicyType'
+        _embedded:
+          type: object
+          additionalProperties:
+            type: object
+            properties: {}
+          readOnly: true
         _links:
           $ref: '#/components/schemas/PolicyLinks'
       required:
@@ -71155,7 +71231,8 @@ components:
           readOnly: true
         properties:
           type: object
-          $ref: '#/components/schemas/ProfileMappingProperty'
+          additionalProperties:
+            $ref: '#/components/schemas/ProfileMappingProperty'
           readOnly: false
         source:
           $ref: '#/components/schemas/ProfileMappingSource'
@@ -71188,11 +71265,10 @@ components:
       properties:
         properties:
           type: object
-          $ref: '#/components/schemas/ProfileMappingProperty'
+          additionalProperties:
+            $ref: '#/components/schemas/ProfileMappingProperty'
       required:
         - properties
-        - expression
-        - pushStatus
     ProfileMappingSource:
       description: |-
         The parameter is the source of a profile mapping and is a valid [JSON Schema Draft 4](https://datatracker.ietf.org/doc/html/draft-zyp-json-schema-04) document with the following properties. The data type can be an app instance or an Okta object.
@@ -71751,12 +71827,12 @@ components:
           readOnly: true
         domains:
           type: array
-          items:
-            type: string
           description: |-
             Array of allowed domains. No user in this realm can be created or updated unless they have a username and email from one of these domains.
 
             The following characters aren't allowed in the domain name: `!$%^&()=*+,:;<>'[]|/?\`
+          items:
+            type: string
         id:
           description: Unique ID of the realm assignment
           type: string
@@ -71922,7 +71998,7 @@ components:
         commands:
           type: array
           items:
-            type: object
+            $ref: '#/components/schemas/InlineHookResponseCommands'
     RegistrationInlineHookSSRData:
       allOf:
         - $ref: '#/components/schemas/InlineHookBasePayload'
@@ -76736,15 +76812,7 @@ components:
             - DEPROVISIONED
             - PROVISIONED
         type:
-          type: object
-          description: |-
-            The user type that determines the schema for the user's profile. The `type` property is a map that identifies the [User Types](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserType/#tag/UserType).
-
-            Currently it contains a single element, `id`. It can be specified when creating a new user, and ca be updated by an admin on a full replace of an existing user (but not a partial update).
-          properties:
-            id:
-              type: string
-              description: The ID of the user type
+          $ref: '#/components/schemas/UserTypeReference'
         _embedded:
           type: object
           description: Embedded resources related to the user using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification
@@ -77415,9 +77483,7 @@ components:
             profile:
               $ref: '#/components/schemas/UserFactorTokenProfile'
             verify:
-              oneOf:
-                - $ref: '#/components/schemas/UserFactorTokenVerifyRSA'
-                - $ref: '#/components/schemas/UserFactorTokenVerifySymantec'
+              $ref: '#/components/schemas/UserFactorTokenVerify'
     UserFactorTokenFactorVerificationObject:
       type: object
       properties:
@@ -77477,6 +77543,10 @@ components:
           properties:
             profile:
               $ref: '#/components/schemas/UserFactorTokenProfile'
+    UserFactorTokenVerify:
+      oneOf:
+        - $ref: '#/components/schemas/UserFactorTokenVerifyRSA'
+        - $ref: '#/components/schemas/UserFactorTokenVerifySymantec'
     UserFactorTokenVerifyRSA:
       title: RSA SecurID
       type: object
@@ -77664,7 +77734,7 @@ components:
             - additionalProperties:
                 type: object
                 nullable: true
-          readOnly: true
+                readOnly: true
         _links:
           $ref: '#/components/schemas/UserFactorLinks'
     UserFactorVerifyResult:
@@ -78335,15 +78405,9 @@ components:
       type: object
       properties:
         default:
-          oneOf:
-            - type: string
-            - type: boolean
-            - type: integer
-            - type: array
-              items: {}
-            - type: object
-            - type: number
+          type: object
           description: If specified, assigns the value as the default value for the custom attribute. This is a nullable property. If you don't specify a value for this custom attribute during user creation or update, the `default` is used instead of setting the value to `null` or empty.
+          nullable: true
         description:
           type: string
           description: Description of the property
@@ -78355,9 +78419,7 @@ components:
 
             The value of the property is limited to one of the values specified in the enum definition. The list of values for the enum must consist of unique elements.
           items:
-            anyOf:
-              - type: string
-              - type: integer
+            $ref: '#/components/schemas/UserSchemaAttributeEnumValue'
         externalName:
           type: string
           description: |-
@@ -78373,6 +78435,9 @@ components:
           description: Identifies the type of data represented by the string
           allOf:
             - $ref: '#/components/schemas/UserSchemaAttributeFormat'
+        items:
+          $ref: '#/components/schemas/UserSchemaAttributeItems'
+          nullable: true
         master:
           allOf:
             - $ref: '#/components/schemas/UserSchemaAttributeMaster'
@@ -78813,6 +78878,16 @@ components:
       required:
         - name
         - displayName
+    UserTypeReference:
+      type: object
+      description: |-
+        A reference to a user type. The `type` property in the User object is a map that identifies the [User Types](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserType/#tag/UserType).
+
+        Currently it contains a single element, `id`. It can be specified when creating a new user, and can be updated by an admin on a full replace of an existing user (but not a partial update).
+      properties:
+        id:
+          type: string
+          description: The ID of the user type
     UserTypeCondition:
       description: <x-lifecycle class="oie"></x-lifecycle> Specifies which user types to include and/or exclude
       properties:
@@ -79109,9 +79184,9 @@ components:
       properties:
         representation:
           type: array
+          description: The well-known URI content in a JSON array of objects format
           items:
             type: object
-          description: The well-known URI content in a JSON array of objects format
         _links:
           allOf:
             - $ref: '#/components/schemas/LinksSelf'

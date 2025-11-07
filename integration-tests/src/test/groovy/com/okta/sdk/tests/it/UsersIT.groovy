@@ -45,7 +45,6 @@ import com.okta.sdk.resource.model.AssignRoleToUserRequest
 import com.okta.sdk.resource.model.AuthenticationProvider
 import com.okta.sdk.resource.model.AuthenticationProviderType
 import com.okta.sdk.resource.model.ChangePasswordRequest
-import com.okta.sdk.resource.model.CreateOrUpdatePolicy
 import com.okta.sdk.resource.model.CreateUserRequest
 import com.okta.sdk.resource.model.ForgotPasswordResponse
 import com.okta.sdk.resource.model.Group
@@ -372,11 +371,7 @@ class UsersIT extends ITSupport {
 
         policy.setSettings(passwordPolicySettings)
 
-        // Create a CreateOrUpdatePolicy wrapper with the actual policy instance
-        CreateOrUpdatePolicy updatePolicy = new CreateOrUpdatePolicy()
-        updatePolicy.setActualInstance(policy)
-        
-        CreateOrUpdatePolicy updatedPolicy = policyApi.replacePolicy(policy.getId(), updatePolicy)
+        Policy updatedPolicy = policyApi.replacePolicy(policy.getId(), policy)
         policy = policyApi.getPolicy(updatedPolicy.getId(), null) as PasswordPolicy
 
         def policyRuleName = "policyRule+" + UUID.randomUUID().toString()

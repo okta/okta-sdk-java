@@ -87,7 +87,7 @@ public class ReadmeSnippets {
 
     private void listAllUsers() throws ApiException {
         UserApi userApi = new UserApi(client);
-        List<User> users = userApi.listUsers("application/json", null, null, null, null, 5, null, null, null);
+        List<User> users = userApi.listUsers("application/json", null, null, 5, null, null, null, null);
 
         // stream
         users.stream()
@@ -99,10 +99,10 @@ public class ReadmeSnippets {
     private void userSearch() throws ApiException {
         UserApi userApi = new UserApi(client);
         // search by email
-        List<User> users = userApi.listUsers("application/json", null, "profile.email eq \"jcoder@example.com\"", null, null, 5, null, null, null);
+        List<User> users = userApi.listUsers("application/json", null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
 
         // filter parameter
-        userApi.listUsers("application/json", null, "status eq \"ACTIVE\"", null, null, null, null, null, null);
+        userApi.listUsers("application/json",null, null, null, "status eq \"ACTIVE\"",null, null, null);
     }
 
     private void createUser() throws ApiException {
@@ -134,7 +134,7 @@ public class ReadmeSnippets {
         userProfile.setNickName("Batman");
         updateUserRequest.setProfile(userProfile);
 
-        userApi.updateUser(user.getId(), updateUserRequest, true, null);
+        userApi.updateUser(user.getId(), updateUserRequest, true);
     }
 
     private void updateUserWithCustomAttributes() throws ApiException {
@@ -147,7 +147,7 @@ public class ReadmeSnippets {
 
         updateUserRequest.setProfile(userProfile);
 
-        userApi.updateUser(user.getId(), updateUserRequest, true, null);
+        userApi.updateUser(user.getId(), updateUserRequest, true);
     }
 
     private void deleteUser() throws ApiException {
@@ -164,7 +164,7 @@ public class ReadmeSnippets {
     private void listGroups() throws ApiException {
         GroupApi groupApi = new GroupApi(client);
 
-        List<com.okta.sdk.resource.model.Group> groups = groupApi.listGroups(null, null, null, null, 10, null, null, null);
+        List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null, null, null);
     }
 
     private void createGroup() throws ApiException {
@@ -216,9 +216,9 @@ public class ReadmeSnippets {
         UserFactorSMSProfile UserFactorSMSProfile = new UserFactorSMSProfile();
         UserFactorSMSProfile.setPhoneNumber("555 867 5309");
 
-        com.okta.sdk.resource.model.UserFactorSMS UserFactorSMS = new  com.okta.sdk.resource.model.UserFactorSMS();
-        UserFactorSMS.setProvider(String.valueOf(com.okta.sdk.resource.model.UserFactorProvider.OKTA));
-        UserFactorSMS.setFactorType(com.okta.sdk.resource.model.UserFactorType.SMS);
+        UserFactorSMS UserFactorSMS = new UserFactorSMS();
+        UserFactorSMS.setProvider(UserFactorProvider.OKTA);
+        UserFactorSMS.setFactorType(UserFactorType.SMS);
         UserFactorSMS.setProfile(UserFactorSMSProfile);
 
         userFactorApi.enrollFactor("userId", UserFactorSMS, true, "templateId", 30, true, null);
@@ -280,7 +280,7 @@ public class ReadmeSnippets {
     private void listPolicies() throws ApiException {
         PolicyApi policyApi = new PolicyApi(client);
 
-        com.okta.sdk.resource.model.Policy policies = policyApi.listPolicies("PASSWORD", "ACTIVE", null, null, null, null, null, null);
+        List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null, null, null, null, null, null);
     }
 
     private void getPolicy() throws ApiException {
@@ -353,7 +353,7 @@ public class ReadmeSnippets {
         String after = null;
 
         do {
-            users.addAll(userApi.listUsers("application/json", null, null, null, after, 200, null, null, null));
+            users.addAll(userApi.listUsers("application/json",null, after, 200, null, null, null, null));
             after = PaginationUtil.getAfter(userApi.getApiClient());
         } while (StringUtils.isNotBlank(after));
     }

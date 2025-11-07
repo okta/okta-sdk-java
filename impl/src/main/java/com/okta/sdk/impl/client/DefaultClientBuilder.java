@@ -52,6 +52,7 @@ import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 
 import com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
+import com.okta.sdk.resource.client.auth.Authentication;
 import com.okta.sdk.resource.model.GroupProfile;
 import com.okta.sdk.resource.model.OktaUserGroupProfile;
 import org.apache.hc.client5.http.auth.AuthScope;
@@ -375,7 +376,7 @@ public class DefaultClientBuilder implements ClientBuilder {
                     new OAuth2ClientCredentials(accessTokenRetrieverService);
 
                 // replace the default OAuth authentication with an auto-refreshing one
-                apiClient.replaceAuthentication("oauth2", oAuth2ClientCredentials);
+                apiClient.replaceAuthentication("oauth2", (Authentication) oAuth2ClientCredentials);
                 oAuth2ClientCredentials.refreshOAuth2AccessToken();
             }
         }

@@ -530,7 +530,7 @@ class GroupsIT extends ITSupport {
         // 5. Verify user is no longer in the group (with retry for eventual consistency)
         assertUserNotInGroup(user, group, groupApi, 10, getTestOperationDelay())
     }
-
+//TODO TEST DPOP
     // ========================================
     // Test 11: List Group Members (GET)
     // ========================================

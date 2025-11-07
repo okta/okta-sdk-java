@@ -22,8 +22,6 @@ import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.model.AuthenticationProvider;
-import com.okta.sdk.resource.model.AuthenticationProviderWritable;
-import com.okta.sdk.resource.model.AuthenticationProviderTypeWritable;
 import com.okta.sdk.resource.model.CreateUserRequest;
 import com.okta.sdk.resource.model.CreateUserRequestType;
 import com.okta.sdk.resource.model.PasswordCredential;
@@ -32,7 +30,7 @@ import com.okta.sdk.resource.model.PasswordCredentialHashAlgorithm;
 import com.okta.sdk.resource.model.PasswordCredentialHook;
 import com.okta.sdk.resource.model.RecoveryQuestionCredential;
 import com.okta.sdk.resource.model.User;
-import com.okta.sdk.resource.model.UserCredentialsWritable;
+import com.okta.sdk.resource.model.UserCredentials;
 import com.okta.sdk.resource.model.UserNextLogin;
 import com.okta.sdk.resource.model.UserProfile;
 
@@ -374,9 +372,9 @@ public class DefaultUserBuilder implements UserBuilder {
 
         // authentication provider
         if (provider != null) {
-            AuthenticationProviderWritable providerWritable = new AuthenticationProviderWritable();
+            com.okta.sdk.resource.model.AuthenticationProviderWritable providerWritable = new com.okta.sdk.resource.model.AuthenticationProviderWritable();
             // Convert enum by name since they have the same values
-            providerWritable.setType(AuthenticationProviderTypeWritable.valueOf(provider.getType().name()));
+            providerWritable.setType(com.okta.sdk.resource.model.AuthenticationProviderTypeWritable.valueOf(provider.getType().name()));
             createCredentialsIfNeeded(createUserRequest).setProvider(providerWritable);
         }
 
@@ -417,9 +415,9 @@ public class DefaultUserBuilder implements UserBuilder {
         return createUserRequest;
     }
 
-    private UserCredentialsWritable createCredentialsIfNeeded(CreateUserRequest createUserRequest) {
+    private com.okta.sdk.resource.model.UserCredentialsWritable createCredentialsIfNeeded(CreateUserRequest createUserRequest) {
         if (createUserRequest.getCredentials() == null) {
-            UserCredentialsWritable credentials = new UserCredentialsWritable();
+            com.okta.sdk.resource.model.UserCredentialsWritable credentials = new com.okta.sdk.resource.model.UserCredentialsWritable();
             createUserRequest.setCredentials(credentials);
         }
         return createUserRequest.getCredentials();

@@ -107,11 +107,15 @@ abstract class ITSupport implements ClientProvider {
     @AfterMethod
     void afterMethod(ITestResult result) {
         log.info("Finished " + result.getInstanceName() + " - " + result.getName())
-        cleanupResources()
+        // Cleanup moved to @AfterSuite - resources will be cleaned up after all tests complete
     }
 
     @AfterSuite()
     void stop() {
+        // Clean up all registered resources after all tests complete
+        cleanupResources()
+        
+
         if (testServer != null) {
             testServer.verify()
             testServer.stop()

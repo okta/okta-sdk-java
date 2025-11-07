@@ -77,10 +77,7 @@ trait ClientProvider implements IHookable {
 
     private ApiClient buildClient() {
 
-        ApiClient apiClient = Clients.builder()
-            .setConnectionTimeout(120)
-            .setRetryMaxAttempts(3)
-            .build()
+        ApiClient apiClient = Clients.builder().build()
         //apiClient.setDebugging(true)
         return apiClient
     }
