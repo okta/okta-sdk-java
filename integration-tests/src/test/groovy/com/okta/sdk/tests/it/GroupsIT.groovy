@@ -1320,19 +1320,37 @@ class GroupsIT extends ITSupport {
         // 2. Create two group rules
         GroupRule rule1 = createTestGroupRule(ruleName1, targetGroup.getId(), "String.stringContains(user.email, \"@test1.com\")")
         groupRulesToCleanup.add(rule1.getId())
-        
+
         GroupRule rule2 = createTestGroupRule(ruleName2, targetGroup.getId(), "String.stringContains(user.email, \"@test2.com\")")
         groupRulesToCleanup.add(rule2.getId())
 
-        // 3. List all group rules
-        List<GroupRule> allRules = groupRuleApi.listGroupRules(null, null, null, null)
-        
+        // Wait for indexing
+        TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+
+        // 3. List all group rules (with retry for indexing)
+        List<GroupRule> allRules = null
+        int maxRetries = 10
+        int retryCount = 0
+
+        while (retryCount < maxRetries) {
+            allRules = groupRuleApi.listGroupRules(null, null, null, null)
+            if (allRules != null && allRules.size() >= 2) {
+                // Check if both our rules are present
+                List<String> ruleIds = allRules.collect { it.getId() }
+                if (ruleIds.contains(rule1.getId()) && ruleIds.contains(rule2.getId())) {
+                    break
+                }
+            }
+            TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+            retryCount++
+        }
+
         // 4. Verify our rules are in the list
         assertThat("Rules list should not be empty", allRules, not(empty()))
         List<String> ruleIds = allRules.collect { it.getId() }
         assertThat("Rules list should contain first rule", ruleIds, hasItem(rule1.getId()))
         assertThat("Rules list should contain second rule", ruleIds, hasItem(rule2.getId()))
-        
+
         // 5. List with pagination
         List<GroupRule> limitedRules = groupRuleApi.listGroupRules(5, null, null, null)
         assertThat("Limited rules list should respect limit", limitedRules.size(), lessThanOrEqualTo(5))
