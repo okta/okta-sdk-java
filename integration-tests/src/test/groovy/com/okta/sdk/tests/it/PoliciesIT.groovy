@@ -509,6 +509,200 @@ class PoliciesIT extends ITSupport {
         policyApi.deletePolicyRule(policy.getId(), createdRule.getId())
     }
 
+    @Test (groups = "group2")
+    void testDeletePolicyAndRule() {
+        OktaSignOnPolicy testPolicy = null
+        PolicyRule testRule = null
+        
+        try {
+            // Create test policy using builder
+            testPolicy = OktaSignOnPolicyBuilder.instance()
+                .setName("policy-delete-" + UUID.randomUUID().toString())
+                .setDescription("Test policy for delete operations")
+                .setType(PolicyType.OKTA_SIGN_ON)
+                .setStatus(LifecycleStatus.ACTIVE)
+                .buildAndCreate(policyApi) as OktaSignOnPolicy
+            registerForCleanup(testPolicy)
+            
+            assertThat testPolicy, notNullValue()
+            assertThat testPolicy.getId(), notNullValue()
+            
+            // Create test rule
+            OktaSignOnPolicyRule policyRule = new OktaSignOnPolicyRule()
+            policyRule.name("rule-delete-" + UUID.randomUUID().toString())
+            policyRule.type(PolicyRuleType.SIGN_ON)
+            
+            OktaSignOnPolicyRuleActions actions = new OktaSignOnPolicyRuleActions()
+            OktaSignOnPolicyRuleSignonActions signOnActions = new OktaSignOnPolicyRuleSignonActions()
+            signOnActions.setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
+            signOnActions.setRequireFactor(false)
+            actions.setSignon(signOnActions)
+            policyRule.actions(actions)
+            
+            testRule = policyApi.createPolicyRule(testPolicy.getId(), policyRule, null, true)
+            
+            assertThat testRule, notNullValue()
+            assertThat testRule.getId(), notNullValue()
+            
+            Thread.sleep(testOperationDelay)
+            
+            // Delete the rule
+            policyApi.deletePolicyRule(testPolicy.getId(), testRule.getId())
+            
+            // Verify rule is deleted - should throw 404
+            expect(ApiException) {
+                policyApi.getPolicyRule(testPolicy.getId(), testRule.getId())
+            }
+            
+            testRule = null // Mark as deleted
+            
+            Thread.sleep(testOperationDelay)
+            
+            // Delete policy - must deactivate first
+            policyApi.deactivatePolicy(testPolicy.getId())
+            Thread.sleep(testOperationDelay)
+            
+            policyApi.deletePolicy(testPolicy.getId())
+            
+            // Verify policy is deleted - should throw 404
+            expect(ApiException) {
+                policyApi.getPolicy(testPolicy.getId(), null)
+            }
+            
+            testPolicy = null // Mark as deleted
+            
+        } finally {
+            // Cleanup if test fails partway
+            if (testRule != null && testPolicy != null) {
+                try {
+                    policyApi.deletePolicyRule(testPolicy.getId(), testRule.getId())
+                } catch (ApiException ignored) {}
+            }
+            if (testPolicy != null) {
+                try {
+                    policyApi.deactivatePolicy(testPolicy.getId())
+                    Thread.sleep(500)
+                    policyApi.deletePolicy(testPolicy.getId())
+                } catch (ApiException ignored) {}
+            }
+        }
+    }
+
+    @Test (groups = "group2")
+    void testPolicyRulePriorityOrder() {
+        OktaSignOnPolicy testPolicy = null
+        List<PolicyRule> createdRules = []
+        
+        try {
+            // Create test policy
+            testPolicy = OktaSignOnPolicyBuilder.instance()
+                .setName("policy-priority-" + UUID.randomUUID().toString())
+                .setDescription("Test policy for rule priority")
+                .setType(PolicyType.OKTA_SIGN_ON)
+                .setStatus(LifecycleStatus.ACTIVE)
+                .buildAndCreate(policyApi) as OktaSignOnPolicy
+            registerForCleanup(testPolicy)
+            
+            // Create three rules with different priorities
+            [1, 2, 3].each { priority ->
+                OktaSignOnPolicyRule rule = new OktaSignOnPolicyRule()
+                rule.name("rule-p${priority}-" + UUID.randomUUID().toString().substring(0, 20))
+                rule.type(PolicyRuleType.SIGN_ON)
+                rule.priority(priority)
+                
+                OktaSignOnPolicyRuleActions actions = new OktaSignOnPolicyRuleActions()
+                OktaSignOnPolicyRuleSignonActions signOnActions = new OktaSignOnPolicyRuleSignonActions()
+                signOnActions.setAccess(OktaSignOnPolicyRuleSignonActions.AccessEnum.ALLOW)
+                signOnActions.setRequireFactor(false)
+                actions.setSignon(signOnActions)
+                rule.actions(actions)
+                
+                def createdRule = policyApi.createPolicyRule(testPolicy.getId(), rule, null, true)
+                createdRules.add(createdRule)
+                
+                assertThat createdRule, notNullValue()
+                assertThat createdRule.getPriority(), notNullValue()
+            }
+            
+            Thread.sleep(testOperationDelay)
+            
+            // Retrieve all rules and verify they are ordered by priority
+            def allRules = policyApi.listPolicyRules(testPolicy.getId(), null)
+            
+            assertThat allRules, notNullValue()
+            assertThat allRules.size(), greaterThanOrEqualTo(3)
+            
+            // Verify the first 3 custom rules are in priority order
+            def customRules = allRules.findAll { it.name.startsWith("rule-p") }
+            assertThat customRules.size(), is(3)
+            
+        } finally {
+            // Cleanup rules
+            createdRules.each { rule ->
+                if (rule != null && testPolicy != null) {
+                    try {
+                        policyApi.deletePolicyRule(testPolicy.getId(), rule.getId())
+                    } catch (ApiException ignored) {}
+                }
+            }
+        }
+    }
+
+    @Test (groups = "group2")
+    void testListPoliciesWithFiltering() {
+        OktaSignOnPolicy activePolicy = null
+        OktaSignOnPolicy inactivePolicy = null
+        
+        try {
+            // Create active policy
+            activePolicy = OktaSignOnPolicyBuilder.instance()
+                .setName("policy-active-" + UUID.randomUUID().toString())
+                .setDescription("Test active policy for filtering")
+                .setType(PolicyType.OKTA_SIGN_ON)
+                .setStatus(LifecycleStatus.ACTIVE)
+                .buildAndCreate(policyApi) as OktaSignOnPolicy
+            registerForCleanup(activePolicy)
+            
+            // Create inactive policy
+            inactivePolicy = OktaSignOnPolicyBuilder.instance()
+                .setName("policy-inactive-" + UUID.randomUUID().toString())
+                .setDescription("Test inactive policy for filtering")
+                .setType(PolicyType.OKTA_SIGN_ON)
+                .setStatus(LifecycleStatus.INACTIVE)
+                .buildAndCreate(policyApi) as OktaSignOnPolicy
+            registerForCleanup(inactivePolicy)
+            
+            Thread.sleep(testOperationDelay)
+            
+            // List only ACTIVE policies - use empty strings instead of null
+            List<Policy> activePolicies = policyApi.listPolicies(
+                PolicyTypeParameter.OKTA_SIGN_ON, 
+                LifecycleStatus.ACTIVE.name(), 
+                "", "", "", "", "", ""
+            )
+            
+            assertThat activePolicies, notNullValue()
+            assertThat activePolicies, not(empty())
+            
+            def foundActive = activePolicies.any { it.getId() == activePolicy.getId() }
+            assertThat foundActive, is(true)
+            
+            // List only INACTIVE policies
+            List<Policy> inactivePolicies = policyApi.listPolicies(
+                PolicyTypeParameter.OKTA_SIGN_ON,
+                LifecycleStatus.INACTIVE.name(),
+                "", "", "", "", "", ""
+            )
+            
+            assertThat inactivePolicies, notNullValue()
+            def foundInactive = inactivePolicies.any { it.getId() == inactivePolicy.getId() }
+            assertThat foundInactive, is(true)
+            
+        } finally {
+            // Cleanup handled by registerForCleanup
+        }
+    }
+
     OktaSignOnPolicy randomSignOnPolicy() {
         return OktaSignOnPolicyBuilder.instance()
             .setName("policy+" + UUID.randomUUID().toString())

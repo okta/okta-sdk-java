@@ -26,6 +26,7 @@ import com.okta.sdk.resource.client.Pair
 import com.okta.sdk.resource.api.GroupApi
 import com.okta.sdk.resource.api.PolicyApi
 import com.okta.sdk.resource.api.UserApi
+import com.okta.sdk.resource.api.UserLifecycleApi
 import com.okta.sdk.resource.api.ApplicationApi
 import com.okta.sdk.resource.api.InlineHookApi
 import com.okta.sdk.resource.api.RealmApi
@@ -168,10 +169,11 @@ abstract class ITSupport implements ClientProvider {
         try {
             if (resource instanceof User) {
                 UserApi userApi = new UserApi(getClient())
+                UserLifecycleApi userLifecycleApi = new UserLifecycleApi(getClient())
                 User user = (User) resource
                 log.debug("Deleting user: {}", user.getId())
-                userApi.deactivateUser(user.getId(), false)
-                userApi.deleteUser(user.getId())
+                userLifecycleApi.deactivateUser(user.getId(), false, null)
+                userApi.deleteUser(user.getId(), false, null)
             } else if (resource instanceof Group) {
                 GroupApi groupApi = new GroupApi(getClient())
                 Group group = (Group) resource

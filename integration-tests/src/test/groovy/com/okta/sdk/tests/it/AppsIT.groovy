@@ -33,6 +33,16 @@ import com.okta.sdk.resource.model.ApplicationCredentialsOAuthClient
 import com.okta.sdk.resource.model.ApplicationFeature
 import com.okta.sdk.resource.model.ApplicationFeatureType
 import com.okta.sdk.resource.model.ApplicationGroupAssignment
+import com.okta.sdk.resource.model.CapabilitiesCreateObject
+import com.okta.sdk.resource.model.CapabilitiesUpdateObject
+import com.okta.sdk.resource.model.ChangeEnum
+import com.okta.sdk.resource.model.EnabledStatus
+import com.okta.sdk.resource.model.LifecycleCreateSettingObject
+import com.okta.sdk.resource.model.LifecycleDeactivateSettingObject
+import com.okta.sdk.resource.model.PasswordSettingObject
+import com.okta.sdk.resource.model.ProfileSettingObject
+import com.okta.sdk.resource.model.SeedEnum
+import com.okta.sdk.resource.model.UpdateFeatureForApplicationRequest
 import com.okta.sdk.resource.model.ApplicationLifecycleStatus
 import com.okta.sdk.resource.model.ApplicationSignOnMode
 import com.okta.sdk.resource.model.ApplicationVisibility
@@ -954,6 +964,415 @@ class AppsIT extends ITSupport {
     }
 
     // ========================================
+    // Test 24: Comprehensive Application Connections Lifecycle
+    // ========================================
+    @Test
+    void testComprehensiveApplicationConnectionsLifecycle() {
+        logger.info("Testing comprehensive Application Connections API lifecycle...")
+
+        // Create OIDC app for testing provisioning connections
+        OpenIdConnectApplication oidcApp = new OpenIdConnectApplication()
+        oidcApp.label(prefix + "connections-lifecycle-" + UUID.randomUUID().toString())
+        oidcApp.name(OpenIdConnectApplication.NameEnum.OIDC_CLIENT)
+        
+        OpenIdConnectApplicationSettingsClient clientSettings = new OpenIdConnectApplicationSettingsClient()
+        clientSettings.applicationType(OpenIdConnectApplicationType.WEB)
+        clientSettings.clientUri("https://example.com/client")
+        clientSettings.redirectUris(["https://example.com/oauth2/callback"])
+        clientSettings.responseTypes([OAuthResponseType.CODE])
+        clientSettings.grantTypes([GrantType.AUTHORIZATION_CODE])
+        
+        OpenIdConnectApplicationSettings oidcSettings = new OpenIdConnectApplicationSettings()
+        oidcSettings.oauthClient(clientSettings)
+        oidcApp.settings(oidcSettings)
+        
+        ApplicationCredentialsOAuthClient oauthCreds = new ApplicationCredentialsOAuthClient()
+        oauthCreds.clientId(UUID.randomUUID().toString())
+        oauthCreds.autoKeyRotation(true)
+        oauthCreds.tokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)
+        
+        OAuthApplicationCredentials appCreds = new OAuthApplicationCredentials()
+        appCreds.oauthClient(oauthCreds)
+        oidcApp.credentials(appCreds)
+        oidcApp.signOnMode(ApplicationSignOnMode.OPENID_CONNECT)
+        
+        OpenIdConnectApplication createdApp = 
+            applicationApi.createApplication(oidcApp, true, null) as OpenIdConnectApplication
+        registerForCleanup(createdApp)
+        
+        String appId = createdApp.getId()
+        logger.info("Created OIDC app {} for connections lifecycle testing", appId)
+        
+        Thread.sleep(2000) // Wait for app provisioning
+        
+        // ========== GET DEFAULT PROVISIONING CONNECTION ==========
+        logger.debug("Step 1: GET default provisioning connection")
+        
+        try {
+            def connection = connectionsApi.getDefaultProvisioningConnectionForApplication(appId)
+            logger.debug("Retrieved connection with status: {}", connection?.getStatus())
+            assertThat("Connection should be returned", connection, notNullValue())
+            if (connection.getProfile() != null) {
+                logger.debug("Connection profile auth scheme: {}", connection.getProfile().getAuthScheme())
+            }
+        } catch (ApiException e) {
+            // Some OIDC apps may not have default connection, which is okay
+            logger.debug("GET connection returned error (may be expected): {} - {}", e.getCode(), e.getMessage())
+            assertThat("Should return 404 if no connection exists", e.getCode(), is(404))
+        }
+        
+        // ========== UPDATE DEFAULT PROVISIONING CONNECTION ==========
+        logger.debug("Step 2: UPDATE default provisioning connection")
+        
+        try {
+            // Create update request with token-based auth
+            UpdateDefaultProvisioningConnectionForApplicationRequest updateRequest = 
+                new UpdateDefaultProvisioningConnectionForApplicationRequest()
+            
+            ProvisioningConnectionOauthRequestProfile profile = 
+                new ProvisioningConnectionOauthRequestProfile()
+            profile.authScheme(ProvisioningConnectionOauthAuthScheme.OAUTH2)
+            updateRequest.profile(profile)
+            
+            // Update without activation
+            def updatedConnection = connectionsApi.updateDefaultProvisioningConnectionForApplication(
+                appId, updateRequest, false)
+            
+            logger.debug("Updated connection: {}", updatedConnection)
+            assertThat("Updated connection should be returned", updatedConnection, notNullValue())
+            
+            // Update again with activation
+            def activatedConnection = connectionsApi.updateDefaultProvisioningConnectionForApplication(
+                appId, updateRequest, true)
+            
+            logger.debug("Updated and activated connection: {}", activatedConnection)
+            assertThat("Activated connection should be returned", activatedConnection, notNullValue())
+        } catch (ApiException e) {
+            // OIDC apps may not support provisioning connections
+            logger.debug("UPDATE connection returned error (may be expected for OIDC): {} - {}", 
+                e.getCode(), e.getMessage())
+            assertThat("Should return valid error code", 
+                e.getCode(), anyOf(is(400), is(403), is(404)))
+        }
+        
+        // ========== TEST IDEMPOTENCY ==========
+        logger.debug("Step 3: Test idempotency of activate/deactivate operations")
+        
+        try {
+            // Activate twice (should be idempotent)
+            connectionsApi.activateDefaultProvisioningConnectionForApplication(appId)
+            connectionsApi.activateDefaultProvisioningConnectionForApplication(appId)
+            logger.debug("Double activation succeeded (idempotent)")
+            
+            def afterActivate = connectionsApi.getDefaultProvisioningConnectionForApplication(appId)
+            logger.debug("Connection status after double activate: {}", afterActivate?.getStatus())
+            
+            // Deactivate twice (should be idempotent)
+            connectionsApi.deactivateDefaultProvisioningConnectionForApplication(appId)
+            connectionsApi.deactivateDefaultProvisioningConnectionForApplication(appId)
+            logger.debug("Double deactivation succeeded (idempotent)")
+            
+            def afterDeactivate = connectionsApi.getDefaultProvisioningConnectionForApplication(appId)
+            logger.debug("Connection status after double deactivate: {}", afterDeactivate?.getStatus())
+        } catch (ApiException e) {
+            // Expected for apps without provisioning support
+            logger.debug("Idempotency test returned error (expected for non-provisioning apps): {} - {}", 
+                e.getCode(), e.getMessage())
+        }
+        
+        // ========== TEST MULTIPLE UPDATES IN SUCCESSION ==========
+        logger.debug("Step 4: Test multiple updates in succession")
+        
+        try {
+            for (int i = 0; i < 3; i++) {
+                UpdateDefaultProvisioningConnectionForApplicationRequest updateReq = 
+                    new UpdateDefaultProvisioningConnectionForApplicationRequest()
+                
+                ProvisioningConnectionOauthRequestProfile prof = 
+                    new ProvisioningConnectionOauthRequestProfile()
+                prof.authScheme(ProvisioningConnectionOauthAuthScheme.OAUTH2)
+                updateReq.profile(prof)
+                
+                def result = connectionsApi.updateDefaultProvisioningConnectionForApplication(
+                    appId, updateReq, false)
+                
+                logger.debug("Multiple update iteration {}: {}", i, result != null ? "success" : "null")
+                assertThat("Update ${i} should return result", result, notNullValue())
+            }
+        } catch (ApiException e) {
+            logger.debug("Multiple updates test returned error: {} - {}", e.getCode(), e.getMessage())
+        }
+        
+        // ========== TEST JWKS ENDPOINT ==========
+        logger.debug("Step 5: Test JWKS endpoint")
+        
+        try {
+            def jwks = connectionsApi.getUserProvisioningConnectionJWKS(appId)
+            logger.debug("Retrieved JWKS: {}", jwks)
+            assertThat("JWKS response should not be null when supported", jwks, notNullValue())
+        } catch (ApiException e) {
+            // Expected for non-OAuth2 provisioning connections
+            logger.debug("JWKS endpoint returned error (expected for non-OAuth2): {} - {}", 
+                e.getCode(), e.getMessage())
+            assertThat("JWKS should return proper error code", 
+                e.getCode(), anyOf(is(400), is(401), is(404)))
+        }
+        
+        logger.info("Comprehensive connections lifecycle test completed")
+    }
+
+    // ========================================
+    // Test 25: Non-Provisioning App Connection Behavior
+    // ========================================
+    @Test
+    void testNonProvisioningAppConnectionBehavior() {
+        logger.info("Testing connection operations on non-provisioning app...")
+        
+        // Create bookmark app (doesn't support provisioning)
+        BookmarkApplication bookmarkApp = new BookmarkApplication()
+        bookmarkApp.name(BookmarkApplication.NameEnum.BOOKMARK)
+            .label(prefix + "non-provisioning-" + UUID.randomUUID().toString())
+            .signOnMode(ApplicationSignOnMode.BOOKMARK)
+        
+        BookmarkApplicationSettingsApplication settings = new BookmarkApplicationSettingsApplication()
+        settings.url("https://example.com/non-provisioning.html")
+            .requestIntegration(false)
+        
+        BookmarkApplicationSettings appSettings = new BookmarkApplicationSettings()
+        appSettings.app(settings)
+        bookmarkApp.settings(appSettings)
+        
+        BookmarkApplication createdApp = 
+            applicationApi.createApplication(bookmarkApp, true, null) as BookmarkApplication
+        registerForCleanup(createdApp)
+        
+        String appId = createdApp.getId()
+        logger.debug("Testing connections on non-provisioning bookmark app {}", appId)
+        
+        Thread.sleep(1000)
+        
+        // Try to get connection (should return 404 or minimal connection info)
+        try {
+            def connection = connectionsApi.getDefaultProvisioningConnectionForApplication(appId)
+            logger.debug("Non-provisioning app returned connection: {}", connection)
+            
+            // If connection exists, it should be UNKNOWN or DISABLED
+            if (connection != null && connection.getStatus() != null) {
+                assertThat("Non-provisioning app should have UNKNOWN or DISABLED status",
+                    connection.getStatus().toString(), 
+                    anyOf(equalTo("UNKNOWN"), equalTo("DISABLED")))
+            }
+        } catch (ApiException e) {
+            // Expected: 404 or 400 for apps without provisioning support
+            logger.debug("GET connection on non-provisioning app returned error: {} - {}", 
+                e.getCode(), e.getMessage())
+            assertThat("Should return 400 or 404 for non-provisioning apps",
+                e.getCode(), anyOf(is(400), is(404)))
+        }
+        
+        // Try to activate (should fail gracefully)
+        try {
+            connectionsApi.activateDefaultProvisioningConnectionForApplication(appId)
+            logger.debug("Activate on non-provisioning app did not throw error")
+        } catch (ApiException e) {
+            logger.debug("Activate on non-provisioning app returned error: {} - {}", 
+                e.getCode(), e.getMessage())
+            assertThat("Should return appropriate error code",
+                e.getCode(), anyOf(is(400), is(403), is(404)))
+        }
+        
+        // Try to update (should fail gracefully)
+        try {
+            UpdateDefaultProvisioningConnectionForApplicationRequest updateReq = 
+                new UpdateDefaultProvisioningConnectionForApplicationRequest()
+            
+            ProvisioningConnectionOauthRequestProfile profile = 
+                new ProvisioningConnectionOauthRequestProfile()
+            profile.authScheme(ProvisioningConnectionOauthAuthScheme.OAUTH2)
+            updateReq.profile(profile)
+            
+            connectionsApi.updateDefaultProvisioningConnectionForApplication(appId, updateReq, false)
+            logger.debug("Update on non-provisioning app did not throw error")
+        } catch (ApiException e) {
+            logger.debug("Update on non-provisioning app returned error: {} - {}", 
+                e.getCode(), e.getMessage())
+            assertThat("Should return appropriate error code",
+                e.getCode(), anyOf(is(400), is(401), is(403), is(404)))
+        }
+        
+        logger.info("Non-provisioning app connection behavior test completed")
+    }
+
+    // ========================================
+    // Test 26: OAuth App Provisioning Verification Error Handling
+    // ========================================
+    @Test
+    void testOAuthProvisioningVerificationErrorHandling() {
+        logger.info("Testing OAuth provisioning verification error handling...")
+        
+        String testAppId = "test_app_id_" + UUID.randomUUID().toString()
+        String invalidCode = "invalid_oauth_code"
+        String invalidState = "invalid_state"
+        
+        // Test with Office365
+        logger.debug("Testing OAuth verification with Office365")
+        try {
+            connectionsApi.verifyProvisioningConnectionForApplication(
+                OAuthProvisioningEnabledApp.OFFICE365,
+                testAppId,
+                invalidCode,
+                invalidState)
+            fail("Should have thrown ApiException for invalid OAuth params")
+        } catch (ApiException e) {
+            logger.debug("Office365 verification returned error (expected): {} - {}", 
+                e.getCode(), e.getMessage())
+            assertThat("Should return 400, 403, or 404 for invalid OAuth params",
+                e.getCode(), anyOf(is(400), is(403), is(404), is(500)))
+            assertThat("Error should have message", e.getMessage(), notNullValue())
+        }
+        
+        // Test with Google
+        logger.debug("Testing OAuth verification with Google")
+        try {
+            connectionsApi.verifyProvisioningConnectionForApplication(
+                OAuthProvisioningEnabledApp.GOOGLE,
+                testAppId,
+                invalidCode,
+                invalidState)
+            fail("Should have thrown ApiException for invalid OAuth params")
+        } catch (ApiException e) {
+            logger.debug("Google verification returned error (expected): {} - {}", 
+                e.getCode(), e.getMessage())
+            assertThat("Should return error for invalid OAuth params",
+                e.getCode(), anyOf(is(400), is(403), is(404), is(500)))
+        }
+        
+        // Test with Slack
+        logger.debug("Testing OAuth verification with Slack")
+        try {
+            connectionsApi.verifyProvisioningConnectionForApplication(
+                OAuthProvisioningEnabledApp.SLACK,
+                testAppId,
+                null, // null code
+                null) // null state
+            fail("Should have thrown ApiException for null OAuth params")
+        } catch (ApiException e) {
+            logger.debug("Slack verification returned error (expected): {} - {}", 
+                e.getCode(), e.getMessage())
+            assertThat("Should return error for null OAuth params",
+                e.getCode(), anyOf(is(400), is(403), is(404), is(500)))
+        }
+        
+        // Test with Zoom
+        logger.debug("Testing OAuth verification with Zoom")
+        try {
+            connectionsApi.verifyProvisioningConnectionForApplication(
+                OAuthProvisioningEnabledApp.ZOOMUS,
+                testAppId,
+                "", // empty code
+                "") // empty state
+            fail("Should have thrown ApiException for empty OAuth params")
+        } catch (ApiException e) {
+            logger.debug("Zoom verification returned error (expected): {} - {}", 
+                e.getCode(), e.getMessage())
+            assertThat("Should return error for empty OAuth params",
+                e.getCode(), anyOf(is(400), is(403), is(404), is(500)))
+        }
+        
+        logger.info("OAuth provisioning verification error handling test completed")
+    }
+
+    // ========================================
+    // Test 27: Connection Edge Cases and Boundary Conditions
+    // ========================================
+    @Test
+    void testConnectionEdgeCasesAndBoundaryConditions() {
+        logger.info("Testing connection edge cases and boundary conditions...")
+        
+        // Create OIDC app for edge case testing
+        OpenIdConnectApplication oidcApp = new OpenIdConnectApplication()
+        oidcApp.label(prefix + "edge-cases-" + UUID.randomUUID().toString())
+        oidcApp.name(OpenIdConnectApplication.NameEnum.OIDC_CLIENT)
+        
+        OpenIdConnectApplicationSettingsClient clientSettings = new OpenIdConnectApplicationSettingsClient()
+        clientSettings.applicationType(OpenIdConnectApplicationType.WEB)
+        clientSettings.clientUri("https://example.com")
+        clientSettings.redirectUris(["https://example.com/callback"])
+        clientSettings.responseTypes([OAuthResponseType.CODE])
+        clientSettings.grantTypes([GrantType.AUTHORIZATION_CODE])
+        
+        OpenIdConnectApplicationSettings oidcSettings = new OpenIdConnectApplicationSettings()
+        oidcSettings.oauthClient(clientSettings)
+        oidcApp.settings(oidcSettings)
+        
+        ApplicationCredentialsOAuthClient oauthCreds = new ApplicationCredentialsOAuthClient()
+        oauthCreds.clientId(UUID.randomUUID().toString())
+        oauthCreds.autoKeyRotation(true)
+        oauthCreds.tokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)
+        
+        OAuthApplicationCredentials appCreds = new OAuthApplicationCredentials()
+        appCreds.oauthClient(oauthCreds)
+        oidcApp.credentials(appCreds)
+        oidcApp.signOnMode(ApplicationSignOnMode.OPENID_CONNECT)
+        
+        OpenIdConnectApplication createdApp = 
+            applicationApi.createApplication(oidcApp, true, null) as OpenIdConnectApplication
+        registerForCleanup(createdApp)
+        
+        String appId = createdApp.getId()
+        logger.debug("Testing edge cases with app {}", appId)
+        
+        Thread.sleep(2000)
+        
+        // Edge Case 1: Update with null activate parameter (should use default)
+        logger.debug("Edge case 1: Update with null activate parameter")
+        try {
+            UpdateDefaultProvisioningConnectionForApplicationRequest updateReq = 
+                new UpdateDefaultProvisioningConnectionForApplicationRequest()
+            
+            ProvisioningConnectionOauthRequestProfile profile = 
+                new ProvisioningConnectionOauthRequestProfile()
+            profile.authScheme(ProvisioningConnectionOauthAuthScheme.OAUTH2)
+            updateReq.profile(profile)
+            
+            def result = connectionsApi.updateDefaultProvisioningConnectionForApplication(
+                appId, updateReq, null) // null activate parameter
+            
+            logger.debug("Update with null activate returned: {}", result)
+            assertThat("Should handle null activate parameter", result, notNullValue())
+        } catch (ApiException e) {
+            logger.debug("Update with null activate returned error: {} - {}", e.getCode(), e.getMessage())
+            // Expected for apps without provisioning support
+        }
+        
+        // Edge Case 2: Rapid activate/deactivate cycling
+        logger.debug("Edge case 2: Rapid activate/deactivate cycling")
+        try {
+            connectionsApi.activateDefaultProvisioningConnectionForApplication(appId)
+            connectionsApi.deactivateDefaultProvisioningConnectionForApplication(appId)
+            connectionsApi.activateDefaultProvisioningConnectionForApplication(appId)
+            connectionsApi.deactivateDefaultProvisioningConnectionForApplication(appId)
+            logger.debug("Rapid cycling succeeded")
+        } catch (ApiException e) {
+            logger.debug("Rapid cycling returned error: {} - {}", e.getCode(), e.getMessage())
+            // Expected for apps without provisioning support
+        }
+        
+        // Edge Case 3: Get connection immediately after creation
+        logger.debug("Edge case 3: Get connection immediately after app creation")
+        try {
+            def immediateConnection = connectionsApi.getDefaultProvisioningConnectionForApplication(appId)
+            logger.debug("Immediate GET after creation returned: {}", immediateConnection)
+            assertThat("Should be able to GET connection immediately", immediateConnection, notNullValue())
+        } catch (ApiException e) {
+            logger.debug("Immediate GET returned error: {} - {}", e.getCode(), e.getMessage())
+            assertThat("Should return 404 if no connection exists yet", e.getCode(), is(404))
+        }
+        
+        logger.info("Connection edge cases test completed")
+    }
+
+    // ========================================
     // APPLICATION USERS API TESTS
     // ========================================
 
@@ -1146,6 +1565,466 @@ class AppsIT extends ITSupport {
     // ========================================
     // APPLICATION GROUPS API TESTS
     // ========================================
+
+    /**
+     * Comprehensive test covering ALL Application Groups API operations.
+     * Mirrors C# SDK ApplicationGroupsApiTests comprehensive coverage.
+     * 
+     * ENDPOINTS TESTED (5):
+     * 1. PUT    /api/v1/apps/{appId}/groups/{groupId} - Assign group to application
+     * 2. GET    /api/v1/apps/{appId}/groups/{groupId} - Get application group assignment
+     * 3. GET    /api/v1/apps/{appId}/groups - List application group assignments
+     * 4. PATCH  /api/v1/apps/{appId}/groups/{groupId} - Update group assignment
+     * 5. DELETE /api/v1/apps/{appId}/groups/{groupId} - Unassign group from application
+     * 
+     * FEATURES TESTED:
+     * - Priority assignment and updates
+     * - Query filtering (q parameter)
+     * - Pagination (limit parameter)
+     * - Expand parameters (expand=group)
+     * - Full CRUD lifecycle
+     * - Error handling (404 verification)
+     */
+    @Test
+    void testComprehensiveApplicationGroupsLifecycle() {
+        logger.info("Testing comprehensive Application Groups API lifecycle...")
+        
+        // Create multiple groups for testing
+        Group group1 = GroupBuilder.instance()
+            .setName("app-group-test-1-" + UUID.randomUUID().toString())
+            .setDescription("Integration test group 1 for app assignment")
+            .buildAndCreate(new GroupApi(getClient()))
+        registerForCleanup(group1)
+        
+        Group group2 = GroupBuilder.instance()
+            .setName("app-group-test-2-" + UUID.randomUUID().toString())
+            .setDescription("Integration test group 2 for app assignment")
+            .buildAndCreate(new GroupApi(getClient()))
+        registerForCleanup(group2)
+        
+        Group group3 = GroupBuilder.instance()
+            .setName("app-group-test-3-" + UUID.randomUUID().toString())
+            .setDescription("Integration test group 3 for app assignment")
+            .buildAndCreate(new GroupApi(getClient()))
+        registerForCleanup(group3)
+        
+        // Create a test application
+        BookmarkApplication app = new BookmarkApplication()
+        app.name(BookmarkApplication.NameEnum.BOOKMARK)
+            .label(prefix + "groups-comprehensive-" + UUID.randomUUID().toString())
+            .signOnMode(ApplicationSignOnMode.BOOKMARK)
+        
+        BookmarkApplicationSettingsApplication settingsApp = new BookmarkApplicationSettingsApplication()
+        settingsApp.url("https://example.com/bookmark-groups.htm")
+        
+        BookmarkApplicationSettings settings = new BookmarkApplicationSettings()
+        settings.app(settingsApp)
+        app.settings(settings)
+        
+        BookmarkApplication createdApp = applicationApi.createApplication(app, true, null) as BookmarkApplication
+        registerForCleanup(createdApp)
+        
+        Thread.sleep(2000) // Wait for app to be fully ready
+        
+        // ========================================
+        // 1. ASSIGN GROUPS WITH PRIORITIES
+        // ========================================
+        
+        logger.info("Testing ASSIGN group operations with priorities...")
+        
+        ApplicationGroupAssignment assignment1 = new ApplicationGroupAssignment()
+        assignment1.priority(0)
+        
+        ApplicationGroupAssignment createdAssignment1 = applicationGroupsApi.assignGroupToApplication(
+            createdApp.getId(), group1.getId(), assignment1)
+        
+        assertThat(createdAssignment1, notNullValue())
+        assertThat(createdAssignment1.getId(), equalTo(group1.getId()))
+        assertThat(createdAssignment1.getPriority(), equalTo(0))
+        assertThat(createdAssignment1.getLinks(), notNullValue())
+        assertThat(createdAssignment1.getLinks().getApp(), notNullValue())
+        assertThat(createdAssignment1.getLinks().getGroup(), notNullValue())
+        
+        ApplicationGroupAssignment assignment2 = new ApplicationGroupAssignment()
+        assignment2.priority(1)
+        
+        ApplicationGroupAssignment createdAssignment2 = applicationGroupsApi.assignGroupToApplication(
+            createdApp.getId(), group2.getId(), assignment2)
+        
+        assertThat(createdAssignment2.getPriority(), equalTo(1))
+        
+        ApplicationGroupAssignment assignment3 = new ApplicationGroupAssignment()
+        assignment3.priority(2)
+        
+        ApplicationGroupAssignment createdAssignment3 = applicationGroupsApi.assignGroupToApplication(
+            createdApp.getId(), group3.getId(), assignment3)
+        
+        assertThat(createdAssignment3.getPriority(), equalTo(2))
+        
+        Thread.sleep(2000) // Wait for assignments to be indexed
+        
+        // ========================================
+        // 2. GET SPECIFIC ASSIGNMENT
+        // ========================================
+        
+        logger.info("Testing GET specific assignment...")
+        
+        ApplicationGroupAssignment retrievedAssignment = applicationGroupsApi.getApplicationGroupAssignment(
+            createdApp.getId(), group1.getId(), null)
+        
+        assertThat(retrievedAssignment, notNullValue())
+        assertThat(retrievedAssignment.getId(), equalTo(group1.getId()))
+        assertThat(retrievedAssignment.getPriority(), equalTo(0))
+        assertThat(retrievedAssignment.getLinks(), notNullValue())
+        
+        // ========================================
+        // 3. GET WITH EXPAND PARAMETER
+        // ========================================
+        
+        logger.info("Testing GET with expand parameter...")
+        
+        ApplicationGroupAssignment expandedAssignment = applicationGroupsApi.getApplicationGroupAssignment(
+            createdApp.getId(), group2.getId(), "group")
+        
+        assertThat(expandedAssignment, notNullValue())
+        assertThat(expandedAssignment.getId(), equalTo(group2.getId()))
+        // Note: The expand parameter is accepted but embedded data handling depends on API response
+        
+        // ========================================
+        // 4. LIST ALL ASSIGNMENTS
+        // ========================================
+        
+        logger.info("Testing LIST all assignments...")
+        
+        List<ApplicationGroupAssignment> allAssignments = applicationGroupsApi.listApplicationGroupAssignments(
+            createdApp.getId(), null, null, null, null)
+        
+        assertThat(allAssignments, notNullValue())
+        assertThat(allAssignments.size(), greaterThanOrEqualTo(3))
+        
+        List<String> assignedGroupIds = allAssignments.stream()
+            .map(ApplicationGroupAssignment::getId)
+            .collect()
+        
+        assertThat(assignedGroupIds, hasItem(group1.getId()))
+        assertThat(assignedGroupIds, hasItem(group2.getId()))
+        assertThat(assignedGroupIds, hasItem(group3.getId()))
+        
+        // Verify priorities are correct
+        ApplicationGroupAssignment group1Assignment = allAssignments.find { it.getId() == group1.getId() }
+        assertThat(group1Assignment.getPriority(), equalTo(0))
+        
+        ApplicationGroupAssignment group2Assignment = allAssignments.find { it.getId() == group2.getId() }
+        assertThat(group2Assignment.getPriority(), equalTo(1))
+        
+        // ========================================
+        // 5. LIST WITH EXPAND PARAMETER
+        // ========================================
+        
+        logger.info("Testing LIST with expand parameter...")
+        
+        List<ApplicationGroupAssignment> expandedAssignments = applicationGroupsApi.listApplicationGroupAssignments(
+            createdApp.getId(), null, null, null, "group")
+        
+        assertThat(expandedAssignments, notNullValue())
+        assertThat(expandedAssignments.size(), greaterThanOrEqualTo(3))
+        
+        // ========================================
+        // 6. LIST WITH PAGINATION (LIMIT)
+        // ========================================
+        
+        logger.info("Testing LIST with pagination...")
+        
+        List<ApplicationGroupAssignment> limitedAssignments = applicationGroupsApi.listApplicationGroupAssignments(
+            createdApp.getId(), null, null, 2, null)
+        
+        assertThat(limitedAssignments, notNullValue())
+        assertThat(limitedAssignments.size(), lessThanOrEqualTo(2))
+        
+        // ========================================
+        // 7. LIST WITH QUERY FILTER
+        // ========================================
+        
+        logger.info("Testing LIST with query filter...")
+        
+        // Get the group name for filtering
+        GroupApi groupApi = new GroupApi(getClient())
+        Group retrievedGroup1 = groupApi.getGroup(group1.getId())
+        String groupName = retrievedGroup1.profile.name
+        String groupNamePrefix = groupName.length() > 10 ? groupName.substring(0, 10) : groupName
+        
+        List<ApplicationGroupAssignment> filteredAssignments = applicationGroupsApi.listApplicationGroupAssignments(
+            createdApp.getId(), groupNamePrefix, null, null, null)
+        
+        assertThat(filteredAssignments, notNullValue())
+        assertThat(filteredAssignments.size(), greaterThanOrEqualTo(1))
+        
+        // Verify our group is in the filtered results
+        boolean foundGroup1 = filteredAssignments.any { it.getId() == group1.getId() }
+        assertThat("Query filter should return matching group", foundGroup1, is(true))
+        
+        // ========================================
+        // 8. UPDATE GROUP ASSIGNMENT (PRIORITY)
+        // ========================================
+        
+        logger.info("Testing UPDATE group assignment priority...")
+        
+        // Update priority from 0 to 5 using JSON Patch
+        List<Map<String, Object>> patchOperations = [
+            [
+                op: "replace",
+                path: "/priority",
+                value: 5
+            ]
+        ]
+        
+        ApplicationGroupAssignment updatedAssignment = applicationGroupsApi.updateGroupAssignmentToApplication(
+            createdApp.getId(), group1.getId(), patchOperations)
+        
+        assertThat(updatedAssignment, notNullValue())
+        assertThat(updatedAssignment.getId(), equalTo(group1.getId()))
+        assertThat(updatedAssignment.getPriority(), equalTo(5))
+        assertThat(updatedAssignment.getLinks(), notNullValue())
+        
+        Thread.sleep(1000)
+        
+        // Verify update persisted
+        ApplicationGroupAssignment verifyUpdated = applicationGroupsApi.getApplicationGroupAssignment(
+            createdApp.getId(), group1.getId(), null)
+        assertThat(verifyUpdated.getPriority(), equalTo(5))
+        
+        // Update priority again to test multiple updates
+        patchOperations = [
+            [
+                op: "replace",
+                path: "/priority",
+                value: 10
+            ]
+        ]
+        
+        ApplicationGroupAssignment secondUpdate = applicationGroupsApi.updateGroupAssignmentToApplication(
+            createdApp.getId(), group1.getId(), patchOperations)
+        
+        assertThat(secondUpdate.getPriority(), equalTo(10))
+        
+        Thread.sleep(1000)
+        
+        // ========================================
+        // 9. UNASSIGN GROUP FROM APPLICATION
+        // ========================================
+        
+        logger.info("Testing UNASSIGN group operations...")
+        
+        // Unassign group2
+        applicationGroupsApi.unassignApplicationFromGroup(createdApp.getId(), group2.getId())
+        
+        Thread.sleep(1000)
+        
+        // Verify unassignment (should return 404)
+        ApiException exception = expect(ApiException.class, () -> 
+            applicationGroupsApi.getApplicationGroupAssignment(createdApp.getId(), group2.getId(), null))
+        
+        assertThat("Should return 404 for unassigned group", exception.getCode(), is(404))
+        
+        // Verify group2 is no longer in the list
+        List<ApplicationGroupAssignment> afterUnassign = applicationGroupsApi.listApplicationGroupAssignments(
+            createdApp.getId(), null, null, null, null)
+        
+        List<String> remainingGroupIds = afterUnassign.stream()
+            .map(ApplicationGroupAssignment::getId)
+            .collect()
+        
+        assertThat(remainingGroupIds, not(hasItem(group2.getId())))
+        assertThat(remainingGroupIds, hasItem(group1.getId()))
+        assertThat(remainingGroupIds, hasItem(group3.getId()))
+        
+        // ========================================
+        // 10. IDEMPOTENCY TEST
+        // ========================================
+        
+        logger.info("Testing assignment idempotency...")
+        
+        // Re-assign group2 with different priority
+        ApplicationGroupAssignment reAssignment = new ApplicationGroupAssignment()
+        reAssignment.priority(15)
+        
+        ApplicationGroupAssignment reAssigned = applicationGroupsApi.assignGroupToApplication(
+            createdApp.getId(), group2.getId(), reAssignment)
+        
+        assertThat(reAssigned.getId(), equalTo(group2.getId()))
+        assertThat(reAssigned.getPriority(), equalTo(15))
+        
+        Thread.sleep(1000)
+        
+        // ========================================
+        // 11. ERROR HANDLING
+        // ========================================
+        
+        logger.info("Testing error handling scenarios...")
+        
+        // Test GET with non-existent group ID
+        String nonExistentGroupId = "00g_nonexistent_group"
+        ApiException getError = expect(ApiException.class, () -> 
+            applicationGroupsApi.getApplicationGroupAssignment(createdApp.getId(), nonExistentGroupId, null))
+        
+        assertThat("Should return 404 for non-existent group", getError.getCode(), is(404))
+        
+        // Test UPDATE with non-existent group ID
+        ApiException updateError = expect(ApiException.class, () -> 
+            applicationGroupsApi.updateGroupAssignmentToApplication(
+                createdApp.getId(), nonExistentGroupId, [[op: "replace", path: "/priority", value: 99]]))
+        
+        assertThat("Should return 404 for updating non-existent assignment", updateError.getCode(), is(404))
+        
+        // Clean up remaining assignments
+        applicationGroupsApi.unassignApplicationFromGroup(createdApp.getId(), group1.getId())
+        applicationGroupsApi.unassignApplicationFromGroup(createdApp.getId(), group2.getId())
+        applicationGroupsApi.unassignApplicationFromGroup(createdApp.getId(), group3.getId())
+        
+        logger.info("Comprehensive Application Groups lifecycle test completed successfully!")
+    }
+
+    /**
+     * Test error handling for Application Groups API operations.
+     * Tests various error scenarios including non-existent apps and groups.
+     */
+    @Test
+    void testApplicationGroupsErrorHandling() {
+        logger.info("Testing Application Groups API error handling...")
+        
+        // Create a group for testing
+        Group group = GroupBuilder.instance()
+            .setName("group-error-test-" + UUID.randomUUID().toString())
+            .buildAndCreate(new GroupApi(getClient()))
+        registerForCleanup(group)
+        
+        String nonExistentAppId = "0oa_nonexistent_app_id"
+        String nonExistentGroupId = "00g_nonexistent_group_id"
+        
+        // Test assigning group to non-existent app
+        ApiException assignError = expect(ApiException.class, () -> {
+            ApplicationGroupAssignment assignment = new ApplicationGroupAssignment()
+            applicationGroupsApi.assignGroupToApplication(nonExistentAppId, group.getId(), assignment)
+        })
+        assertThat("Should return 404 for non-existent app", assignError.getCode(), is(404))
+        
+        // Test getting assignment from non-existent app
+        ApiException getError = expect(ApiException.class, () -> 
+            applicationGroupsApi.getApplicationGroupAssignment(nonExistentAppId, group.getId(), null))
+        assertThat("Should return 404 for non-existent app", getError.getCode(), is(404))
+        
+        // Test listing assignments for non-existent app
+        ApiException listError = expect(ApiException.class, () -> 
+            applicationGroupsApi.listApplicationGroupAssignments(nonExistentAppId, null, null, null, null))
+        assertThat("Should return 404 for non-existent app", listError.getCode(), is(404))
+        
+        // Test updating assignment for non-existent app
+        ApiException updateError = expect(ApiException.class, () -> 
+            applicationGroupsApi.updateGroupAssignmentToApplication(
+                nonExistentAppId, group.getId(), [[op: "replace", path: "/priority", value: 5]]))
+        assertThat("Should return 404 for non-existent app", updateError.getCode(), is(404))
+        
+        // Test unassigning from non-existent app
+        ApiException unassignError = expect(ApiException.class, () -> 
+            applicationGroupsApi.unassignApplicationFromGroup(nonExistentAppId, group.getId()))
+        assertThat("Should return 404 for non-existent app", unassignError.getCode(), is(404))
+        
+        logger.info("Application Groups error handling test completed successfully!")
+    }
+
+    /**
+     * Test priority updates and validation for group assignments.
+     * Tests various priority values and update scenarios.
+     */
+    @Test
+    void testApplicationGroupsPriorityManagement() {
+        logger.info("Testing Application Groups priority management...")
+        
+        // Create groups
+        Group group1 = GroupBuilder.instance()
+            .setName("group-priority-1-" + UUID.randomUUID().toString())
+            .buildAndCreate(new GroupApi(getClient()))
+        registerForCleanup(group1)
+        
+        Group group2 = GroupBuilder.instance()
+            .setName("group-priority-2-" + UUID.randomUUID().toString())
+            .buildAndCreate(new GroupApi(getClient()))
+        registerForCleanup(group2)
+        
+        // Create app
+        BookmarkApplication app = new BookmarkApplication()
+        app.name(BookmarkApplication.NameEnum.BOOKMARK)
+            .label(prefix + "groups-priority-" + UUID.randomUUID().toString())
+            .signOnMode(ApplicationSignOnMode.BOOKMARK)
+        
+        BookmarkApplicationSettingsApplication settingsApp = new BookmarkApplicationSettingsApplication()
+        settingsApp.url("https://example.com/bookmark-priority.htm")
+        
+        BookmarkApplicationSettings settings = new BookmarkApplicationSettings()
+        settings.app(settingsApp)
+        app.settings(settings)
+        
+        BookmarkApplication createdApp = applicationApi.createApplication(app, true, null) as BookmarkApplication
+        registerForCleanup(createdApp)
+        
+        Thread.sleep(1000)
+        
+        // Test assigning with priority 0
+        ApplicationGroupAssignment assignment1 = new ApplicationGroupAssignment()
+        assignment1.priority(0)
+        
+        ApplicationGroupAssignment created1 = applicationGroupsApi.assignGroupToApplication(
+            createdApp.getId(), group1.getId(), assignment1)
+        assertThat(created1.getPriority(), equalTo(0))
+        
+        // Test assigning with higher priority
+        ApplicationGroupAssignment assignment2 = new ApplicationGroupAssignment()
+        assignment2.priority(50)
+        
+        ApplicationGroupAssignment created2 = applicationGroupsApi.assignGroupToApplication(
+            createdApp.getId(), group2.getId(), assignment2)
+        assertThat(created2.getPriority(), equalTo(50))
+        
+        Thread.sleep(1000)
+        
+        // Test updating priorities
+        def priorities = [1, 10, 25, 99]
+        
+        for (int newPriority : priorities) {
+            List<Map<String, Object>> patchOperations = [
+                [
+                    op: "replace",
+                    path: "/priority",
+                    value: newPriority
+                ]
+            ]
+            
+            ApplicationGroupAssignment updated = applicationGroupsApi.updateGroupAssignmentToApplication(
+                createdApp.getId(), group1.getId(), patchOperations)
+            
+            assertThat("Priority should be updated to ${newPriority}", updated.getPriority(), equalTo(newPriority))
+            Thread.sleep(500)
+        }
+        
+        // Test swapping priorities
+        List<Map<String, Object>> patchOps1 = [[op: "replace", path: "/priority", value: 100]]
+        List<Map<String, Object>> patchOps2 = [[op: "replace", path: "/priority", value: 0]]
+        
+        applicationGroupsApi.updateGroupAssignmentToApplication(createdApp.getId(), group1.getId(), patchOps1)
+        applicationGroupsApi.updateGroupAssignmentToApplication(createdApp.getId(), group2.getId(), patchOps2)
+        
+        Thread.sleep(1000)
+        
+        ApplicationGroupAssignment verify1 = applicationGroupsApi.getApplicationGroupAssignment(
+            createdApp.getId(), group1.getId(), null)
+        ApplicationGroupAssignment verify2 = applicationGroupsApi.getApplicationGroupAssignment(
+            createdApp.getId(), group2.getId(), null)
+        
+        assertThat(verify1.getPriority(), equalTo(100))
+        assertThat(verify2.getPriority(), equalTo(0))
+        
+        logger.info("Application Groups priority management test completed successfully!")
+    }
 
     @Test
     void testAssignGroupToApplication() {
@@ -1674,6 +2553,398 @@ class AppsIT extends ITSupport {
             // 403 = Forbidden, 404 = Not Found
             assertThat(e.getCode(), anyOf(is(400), is(403), is(404)))
         }
+    }
+
+    // ========================================
+    // Test 28: Comprehensive Application Features Lifecycle
+    // ========================================
+    @Test
+    void testComprehensiveApplicationFeaturesLifecycle() {
+        logger.info("Testing comprehensive Application Features API lifecycle...")
+
+        // Create OIDC app for testing provisioning features
+        OpenIdConnectApplication oidcApp = new OpenIdConnectApplication()
+        oidcApp.label(prefix + "features-lifecycle-" + UUID.randomUUID().toString())
+        oidcApp.name(OpenIdConnectApplication.NameEnum.OIDC_CLIENT)
+        
+        OpenIdConnectApplicationSettingsClient clientSettings = new OpenIdConnectApplicationSettingsClient()
+        clientSettings.applicationType(OpenIdConnectApplicationType.WEB)
+        clientSettings.clientUri("https://example.com/client")
+        clientSettings.redirectUris(["https://example.com/oauth2/callback"])
+        clientSettings.responseTypes([OAuthResponseType.CODE])
+        clientSettings.grantTypes([GrantType.AUTHORIZATION_CODE])
+        
+        OpenIdConnectApplicationSettings oidcSettings = new OpenIdConnectApplicationSettings()
+        oidcSettings.oauthClient(clientSettings)
+        oidcApp.settings(oidcSettings)
+        
+        ApplicationCredentialsOAuthClient oauthCreds = new ApplicationCredentialsOAuthClient()
+        oauthCreds.clientId(UUID.randomUUID().toString())
+        oauthCreds.autoKeyRotation(true)
+        oauthCreds.tokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)
+        
+        OAuthApplicationCredentials appCreds = new OAuthApplicationCredentials()
+        appCreds.oauthClient(oauthCreds)
+        oidcApp.credentials(appCreds)
+        oidcApp.signOnMode(ApplicationSignOnMode.OPENID_CONNECT)
+        
+        OpenIdConnectApplication createdApp = 
+            applicationApi.createApplication(oidcApp, true, null) as OpenIdConnectApplication
+        registerForCleanup(createdApp)
+        
+        String appId = createdApp.getId()
+        logger.info("Created OIDC app {} for features lifecycle testing", appId)
+        
+        Thread.sleep(2000) // Wait for app provisioning
+        
+        // Setup provisioning connection (required for features to work)
+        logger.debug("Setting up provisioning connection...")
+        try {
+            UpdateDefaultProvisioningConnectionForApplicationRequest provReq = 
+                new UpdateDefaultProvisioningConnectionForApplicationRequest()
+            
+            ProvisioningConnectionOauthRequestProfile profile = 
+                new ProvisioningConnectionOauthRequestProfile()
+            profile.authScheme(ProvisioningConnectionOauthAuthScheme.OAUTH2)
+            provReq.profile(profile)
+            
+            connectionsApi.updateDefaultProvisioningConnectionForApplication(appId, provReq, true)
+            Thread.sleep(2000)
+            logger.debug("Provisioning connection activated")
+        } catch (ApiException e) {
+            logger.debug("Provisioning setup returned: {} - {}", e.getCode(), e.getMessage())
+        }
+        
+        ApplicationFeaturesApi featuresApi = new ApplicationFeaturesApi(getClient())
+        
+        // ========== LIST ALL FEATURES ==========
+        logger.debug("Step 1: LIST all features")
+        
+        boolean provisioningSupported = true
+        List<ApplicationFeature> featuresList = null
+        
+        try {
+            featuresList = featuresApi.listFeaturesForApplication(appId)
+            logger.debug("Listed {} features", featuresList?.size() ?: 0)
+            
+            if (featuresList != null && !featuresList.isEmpty()) {
+                for (ApplicationFeature feature : featuresList) {
+                    logger.debug("  - Feature: {}, Status: {}", feature.getName(), feature.getStatus())
+                    assertThat("Feature should have name", feature.getName(), notNullValue())
+                    assertThat("Feature should have status", feature.getStatus(), notNullValue())
+                    assertThat("Feature should have description", feature.getDescription(), notNullValue())
+                }
+            }
+        } catch (ApiException e) {
+            if (e.getMessage().contains("Provisioning is not supported")) {
+                provisioningSupported = false
+                logger.debug("Provisioning not supported for this app type, testing error scenarios...")
+            } else {
+                throw e
+            }
+        }
+        
+        if (!provisioningSupported) {
+            // ========== COMPREHENSIVE ERROR TESTING FOR UNSUPPORTED APPS ==========
+            logger.debug("Testing all error scenarios for non-provisioning app...")
+            
+            // Test LIST with error
+            ApiException listEx = expect(ApiException.class, () -> 
+                featuresApi.listFeaturesForApplication(appId))
+            assertThat("LIST should return 400 for unsupported provisioning", listEx.getCode(), is(400))
+            assertThat("Error message should mention provisioning", 
+                listEx.getMessage(), containsString("Provisioning"))
+            
+            // Test GET USER_PROVISIONING with error
+            ApiException getUserProvEx = expect(ApiException.class, () ->
+                featuresApi.getFeatureForApplication(appId, ApplicationFeatureType.USER_PROVISIONING))
+            assertThat("GET USER_PROVISIONING should return error", getUserProvEx.getCode(), anyOf(is(400), is(404)))
+            
+            // Test GET INBOUND_PROVISIONING with error
+            ApiException getInboundProvEx = expect(ApiException.class, () ->
+                featuresApi.getFeatureForApplication(appId, ApplicationFeatureType.INBOUND_PROVISIONING))
+            assertThat("GET INBOUND_PROVISIONING should return error", getInboundProvEx.getCode(), anyOf(is(400), is(404)))
+            
+            // Test UPDATE USER_PROVISIONING with error
+            UpdateFeatureForApplicationRequest updateReq = new UpdateFeatureForApplicationRequest()
+            // Leave all fields null for minimal request
+            
+            ApiException updateUserProvEx = expect(ApiException.class, () ->
+                featuresApi.updateFeatureForApplication(appId, ApplicationFeatureType.USER_PROVISIONING, updateReq))
+            assertThat("UPDATE USER_PROVISIONING should return error", updateUserProvEx.getCode(), anyOf(is(400), is(404)))
+            
+            // Test UPDATE INBOUND_PROVISIONING with error
+            UpdateFeatureForApplicationRequest inboundUpdateReq = new UpdateFeatureForApplicationRequest()
+            
+            ApiException updateInboundProvEx = expect(ApiException.class, () ->
+                featuresApi.updateFeatureForApplication(appId, ApplicationFeatureType.INBOUND_PROVISIONING, inboundUpdateReq))
+            assertThat("UPDATE INBOUND_PROVISIONING should return error", updateInboundProvEx.getCode(), anyOf(is(400), is(404)))
+            
+            logger.info("All error scenarios validated for non-provisioning app")
+            return
+        }
+        
+        // ========== SUCCESS PATH: PROVISIONING IS SUPPORTED ==========
+        
+        // ========== GET USER_PROVISIONING FEATURE ==========
+        logger.debug("Step 2: GET USER_PROVISIONING feature")
+        
+        ApplicationFeature userProvFeature = null
+        try {
+            userProvFeature = featuresApi.getFeatureForApplication(appId, ApplicationFeatureType.USER_PROVISIONING)
+            logger.debug("Retrieved USER_PROVISIONING feature: {}", userProvFeature)
+            
+            assertThat("Feature should have name", userProvFeature.getName(), notNullValue())
+            assertThat("Feature name should be USER_PROVISIONING", 
+                userProvFeature.getName(), equalTo(ApplicationFeatureType.USER_PROVISIONING))
+            assertThat("Feature should have status", userProvFeature.getStatus(), notNullValue())
+            assertThat("Feature should have description", userProvFeature.getDescription(), notNullValue())
+            
+            if (userProvFeature.getLinks() != null) {
+                assertThat("Feature should have self link", userProvFeature.getLinks().getSelf(), notNullValue())
+            }
+        } catch (ApiException e) {
+            if (e.getCode() == 404) {
+                logger.debug("USER_PROVISIONING feature not available for this app type")
+            } else {
+                throw e
+            }
+        }
+        
+        // ========== UPDATE USER_PROVISIONING FEATURE ==========
+        if (userProvFeature != null) {
+            logger.debug("Step 3: UPDATE USER_PROVISIONING feature")
+            
+            try {
+                // Create update request with lifecycle create enabled
+                LifecycleCreateSettingObject lifecycleCreate = new LifecycleCreateSettingObject()
+                lifecycleCreate.status(EnabledStatus.ENABLED)
+                
+                CapabilitiesCreateObject createCaps = new CapabilitiesCreateObject()
+                createCaps.lifecycleCreate(lifecycleCreate)
+                
+                // Create password settings
+                PasswordSettingObject passwordSettings = new PasswordSettingObject()
+                passwordSettings.status(EnabledStatus.ENABLED)
+                passwordSettings.seed(SeedEnum.RANDOM)
+                passwordSettings.change(ChangeEnum.CHANGE)
+                
+                // Create profile settings
+                ProfileSettingObject profileSettings = new ProfileSettingObject()
+                profileSettings.status(EnabledStatus.ENABLED)
+                
+                // Create lifecycle deactivate settings
+                LifecycleDeactivateSettingObject lifecycleDeactivate = new LifecycleDeactivateSettingObject()
+                lifecycleDeactivate.status(EnabledStatus.ENABLED)
+                
+                CapabilitiesUpdateObject updateCaps = new CapabilitiesUpdateObject()
+                updateCaps.password(passwordSettings)
+                updateCaps.profile(profileSettings)
+                updateCaps.lifecycleDeactivate(lifecycleDeactivate)
+                
+                UpdateFeatureForApplicationRequest updateRequest = new UpdateFeatureForApplicationRequest()
+                updateRequest.create(createCaps)
+                updateRequest.update(updateCaps)
+                
+                ApplicationFeature updatedFeature = featuresApi.updateFeatureForApplication(
+                    appId, ApplicationFeatureType.USER_PROVISIONING, updateRequest)
+                
+                logger.debug("Updated USER_PROVISIONING feature: {}", updatedFeature)
+                assertThat("Updated feature should not be null", updatedFeature, notNullValue())
+                assertThat("Updated feature name should match", 
+                    updatedFeature.getName(), equalTo(ApplicationFeatureType.USER_PROVISIONING))
+                
+                // Verify update persisted
+                ApplicationFeature verifyFeature = featuresApi.getFeatureForApplication(
+                    appId, ApplicationFeatureType.USER_PROVISIONING)
+                assertThat("Should retrieve updated feature", verifyFeature, notNullValue())
+                assertThat("Retrieved feature should match", 
+                    verifyFeature.getName(), equalTo(ApplicationFeatureType.USER_PROVISIONING))
+                
+                // Test partial update
+                logger.debug("Step 4: Test partial UPDATE")
+                
+                LifecycleCreateSettingObject partialLifecycle = new LifecycleCreateSettingObject()
+                partialLifecycle.status(EnabledStatus.DISABLED)
+                
+                CapabilitiesCreateObject partialCreate = new CapabilitiesCreateObject()
+                partialCreate.lifecycleCreate(partialLifecycle)
+                
+                UpdateFeatureForApplicationRequest partialRequest = new UpdateFeatureForApplicationRequest()
+                partialRequest.create(partialCreate)
+                
+                ApplicationFeature partialUpdated = featuresApi.updateFeatureForApplication(
+                    appId, ApplicationFeatureType.USER_PROVISIONING, partialRequest)
+                
+                assertThat("Partial update should succeed", partialUpdated, notNullValue())
+                logger.debug("Partial update succeeded")
+                
+            } catch (ApiException e) {
+                logger.debug("UPDATE operation returned: {} - {}", e.getCode(), e.getMessage())
+                // Some app types may not support update operations
+            }
+        }
+        
+        // ========== GET INBOUND_PROVISIONING FEATURE ==========
+        logger.debug("Step 5: GET INBOUND_PROVISIONING feature")
+        
+        ApplicationFeature inboundProvFeature = null
+        try {
+            inboundProvFeature = featuresApi.getFeatureForApplication(appId, ApplicationFeatureType.INBOUND_PROVISIONING)
+            logger.debug("Retrieved INBOUND_PROVISIONING feature: {}", inboundProvFeature)
+            
+            assertThat("Feature should have name", inboundProvFeature.getName(), notNullValue())
+            assertThat("Feature name should be INBOUND_PROVISIONING", 
+                inboundProvFeature.getName(), equalTo(ApplicationFeatureType.INBOUND_PROVISIONING))
+            assertThat("Feature should have status", inboundProvFeature.getStatus(), notNullValue())
+            assertThat("Feature should have description", inboundProvFeature.getDescription(), notNullValue())
+        } catch (ApiException e) {
+            if (e.getCode() == 404) {
+                logger.debug("INBOUND_PROVISIONING feature not available for this app type")
+            } else {
+                throw e
+            }
+        }
+        
+        // ========== UPDATE INBOUND_PROVISIONING FEATURE ==========
+        if (inboundProvFeature != null) {
+            logger.debug("Step 6: UPDATE INBOUND_PROVISIONING feature")
+            
+            try {
+                // Create update request for inbound provisioning
+                UpdateFeatureForApplicationRequest inboundUpdateReq = new UpdateFeatureForApplicationRequest()
+                
+                ApplicationFeature updatedInbound = featuresApi.updateFeatureForApplication(
+                    appId, ApplicationFeatureType.INBOUND_PROVISIONING, inboundUpdateReq)
+                
+                logger.debug("Updated INBOUND_PROVISIONING feature: {}", updatedInbound)
+                assertThat("Updated inbound feature should not be null", updatedInbound, notNullValue())
+                
+                // Verify update persisted
+                ApplicationFeature verifyInbound = featuresApi.getFeatureForApplication(
+                    appId, ApplicationFeatureType.INBOUND_PROVISIONING)
+                assertThat("Should retrieve updated inbound feature", verifyInbound, notNullValue())
+                
+            } catch (ApiException e) {
+                logger.debug("INBOUND_PROVISIONING update returned: {} - {}", e.getCode(), e.getMessage())
+            }
+        }
+        
+        // ========== TEST COLLECTION ENUMERATION ==========
+        logger.debug("Step 7: Test collection enumeration")
+        
+        try {
+            List<ApplicationFeature> enumeratedFeatures = featuresApi.listFeaturesForApplication(appId)
+            int enumeratedCount = enumeratedFeatures?.size() ?: 0
+            
+            logger.debug("Enumerated {} features", enumeratedCount)
+            
+            if (enumeratedFeatures != null && !enumeratedFeatures.isEmpty()) {
+                for (ApplicationFeature feature : enumeratedFeatures) {
+                    assertThat("Each enumerated feature should not be null", feature, notNullValue())
+                    assertThat("Each feature should have name", feature.getName(), notNullValue())
+                }
+            }
+        } catch (ApiException e) {
+            logger.debug("Collection enumeration returned: {} - {}", e.getCode(), e.getMessage())
+        }
+        
+        logger.info("Comprehensive features lifecycle test completed")
+    }
+
+    // ========================================
+    // Test 29: Application Features Error Handling
+    // ========================================
+    @Test
+    void testApplicationFeaturesErrorHandling() {
+        logger.info("Testing Application Features API error handling...")
+        
+        ApplicationFeaturesApi featuresApi = new ApplicationFeaturesApi(getClient())
+        
+        String nonExistentAppId = "0oa" + UUID.randomUUID().toString().replace("-", "").substring(0, 17)
+        
+        // Test LIST with non-existent app
+        logger.debug("Testing LIST features with non-existent app")
+        ApiException listEx = expect(ApiException.class, () ->
+            featuresApi.listFeaturesForApplication(nonExistentAppId))
+        assertThat("Should return 404 for non-existent app", listEx.getCode(), is(404))
+        assertThat("Error should have message", listEx.getMessage(), notNullValue())
+        
+        // Test GET with non-existent app
+        logger.debug("Testing GET feature with non-existent app")
+        ApiException getEx = expect(ApiException.class, () ->
+            featuresApi.getFeatureForApplication(nonExistentAppId, ApplicationFeatureType.USER_PROVISIONING))
+        assertThat("Should return 404 for non-existent app", getEx.getCode(), is(404))
+        assertThat("Error should have message", getEx.getMessage(), notNullValue())
+        
+        // Test UPDATE with non-existent app
+        logger.debug("Testing UPDATE feature with non-existent app")
+        UpdateFeatureForApplicationRequest updateReq = new UpdateFeatureForApplicationRequest()
+        // Leave all fields null for minimal request
+        
+        ApiException updateEx = expect(ApiException.class, () ->
+            featuresApi.updateFeatureForApplication(nonExistentAppId, ApplicationFeatureType.USER_PROVISIONING, updateReq))
+        assertThat("Should return 404 for non-existent app", updateEx.getCode(), is(404))
+        assertThat("Error should have message", updateEx.getMessage(), notNullValue())
+        
+        logger.info("Application Features error handling test completed")
+    }
+
+    // ========================================
+    // Test 30: Application Features Without Provisioning
+    // ========================================
+    @Test
+    void testApplicationFeaturesWithoutProvisioning() {
+        logger.info("Testing Application Features on app without provisioning...")
+        
+        // Create OIDC app WITHOUT provisioning setup
+        OpenIdConnectApplication oidcApp = new OpenIdConnectApplication()
+        oidcApp.label(prefix + "features-no-prov-" + UUID.randomUUID().toString())
+        oidcApp.name(OpenIdConnectApplication.NameEnum.OIDC_CLIENT)
+        
+        OpenIdConnectApplicationSettingsClient clientSettings = new OpenIdConnectApplicationSettingsClient()
+        clientSettings.applicationType(OpenIdConnectApplicationType.WEB)
+        clientSettings.clientUri("https://example.com")
+        clientSettings.redirectUris(["https://example.com/callback"])
+        clientSettings.responseTypes([OAuthResponseType.CODE])
+        clientSettings.grantTypes([GrantType.AUTHORIZATION_CODE])
+        
+        OpenIdConnectApplicationSettings oidcSettings = new OpenIdConnectApplicationSettings()
+        oidcSettings.oauthClient(clientSettings)
+        oidcApp.settings(oidcSettings)
+        
+        ApplicationCredentialsOAuthClient oauthCreds = new ApplicationCredentialsOAuthClient()
+        oauthCreds.clientId(UUID.randomUUID().toString())
+        oauthCreds.autoKeyRotation(true)
+        oauthCreds.tokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod.CLIENT_SECRET_POST)
+        
+        OAuthApplicationCredentials appCreds = new OAuthApplicationCredentials()
+        appCreds.oauthClient(oauthCreds)
+        oidcApp.credentials(appCreds)
+        oidcApp.signOnMode(ApplicationSignOnMode.OPENID_CONNECT)
+        
+        OpenIdConnectApplication createdApp = 
+            applicationApi.createApplication(oidcApp, true, null) as OpenIdConnectApplication
+        registerForCleanup(createdApp)
+        
+        String appId = createdApp.getId()
+        logger.debug("Created app {} without provisioning", appId)
+        
+        Thread.sleep(1000)
+        
+        ApplicationFeaturesApi featuresApi = new ApplicationFeaturesApi(getClient())
+        
+        // Try to list features without provisioning enabled
+        logger.debug("Attempting to list features without provisioning")
+        ApiException exception = expect(ApiException.class, () ->
+            featuresApi.listFeaturesForApplication(appId))
+        
+        // Should return error (typically 400) when provisioning is not enabled
+        assertThat("Should return error without provisioning", 
+            exception.getCode(), anyOf(is(400), is(404)))
+        assertThat("Error message should be descriptive", exception.getMessage(), notNullValue())
+        
+        logger.info("Verified appropriate error for app without provisioning")
     }
 
     // ========================================
