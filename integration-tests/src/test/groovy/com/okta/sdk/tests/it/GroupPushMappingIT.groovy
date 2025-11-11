@@ -342,8 +342,9 @@ class GroupPushMappingIT extends ITSupport {
         }
 
         // List with filtering by sourceGroupId
+        // Parameter order: appId, after, limit, lastUpdated, sourceGroupId, status
         List<GroupPushMapping> filteredBySource = groupPushMappingApi.listGroupPushMappings(
-            app.getId(), sourceGroup1.getId(), null, null, null, null)
+            app.getId(), null, null, null, sourceGroup1.getId(), null)
 
         assertThat("Filtered list should not be null", filteredBySource, notNullValue())
         assertThat("Filtered list should contain mapping 1", 
@@ -355,8 +356,9 @@ class GroupPushMappingIT extends ITSupport {
         }
 
         // List with filtering by status (ACTIVE)
+        // Parameter order: appId, after, limit, lastUpdated, sourceGroupId, status
         List<GroupPushMapping> activeOnly = groupPushMappingApi.listGroupPushMappings(
-            app.getId(), null, null, GroupPushMappingStatus.ACTIVE, null, null)
+            app.getId(), null, null, null, null, GroupPushMappingStatus.ACTIVE)
 
         assertThat("Active mappings list should not be null", activeOnly, notNullValue())
         List<String> activeIds = activeOnly.collect { it.getId() }
@@ -368,8 +370,9 @@ class GroupPushMappingIT extends ITSupport {
         }
 
         // List with filtering by status (INACTIVE)
+        // Parameter order: appId, after, limit, lastUpdated, sourceGroupId, status
         List<GroupPushMapping> inactiveOnly = groupPushMappingApi.listGroupPushMappings(
-            app.getId(), null, null, GroupPushMappingStatus.INACTIVE, null, null)
+            app.getId(), null, null, null, null, GroupPushMappingStatus.INACTIVE)
 
         assertThat("Inactive mappings list should not be null", inactiveOnly, notNullValue())
         List<String> inactiveIds = inactiveOnly.collect { it.getId() }
@@ -380,17 +383,22 @@ class GroupPushMappingIT extends ITSupport {
         }
 
         // List with limit parameter
+        // Parameter order: appId, after, limit, lastUpdated, sourceGroupId, status
         List<GroupPushMapping> limitedMappings = groupPushMappingApi.listGroupPushMappings(
-            app.getId(), null, null, null, 2, null)
+            app.getId(), null, 2, null, null, null)
 
         assertThat("Limited mappings list should not be null", limitedMappings, notNullValue())
         assertThat("Limited list should respect limit", limitedMappings.size(), lessThanOrEqualTo(2))
 
         // List with lastUpdated filter
-        OffsetDateTime yesterday = OffsetDateTime.now().minus(1, ChronoUnit.DAYS)
-        String lastUpdatedFilter = yesterday.toString()
+        // API expects ISO 8601 format with UTC timezone without microseconds: YYYY-MM-DDTHH:mm:ssZ
+        OffsetDateTime yesterday = OffsetDateTime.now(java.time.ZoneOffset.UTC)
+            .minus(1, ChronoUnit.DAYS)
+            .truncatedTo(ChronoUnit.SECONDS) // Remove microseconds
+        String lastUpdatedFilter = yesterday.format(java.time.format.DateTimeFormatter.ISO_INSTANT)
+        // Parameter order: appId, after, limit, lastUpdated, sourceGroupId, status
         List<GroupPushMapping> recentMappings = groupPushMappingApi.listGroupPushMappings(
-            app.getId(), null, lastUpdatedFilter, null, null, null)
+            app.getId(), null, null, lastUpdatedFilter, null, null)
 
         assertThat("Recent mappings list should not be null", recentMappings, notNullValue())
         List<String> recentIds = recentMappings.collect { it.getId() }

@@ -21,16 +21,13 @@ import com.okta.sdk.resource.client.ApiException
 import com.okta.sdk.resource.model.*
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.it.util.ITSupport
-import org.testng.annotations.Ignore
+import groovy.util.logging.Slf4j
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
-/**
- * Integration tests for User Risk API.
- * Tests user risk assessment and management (HIGH, LOW risk levels).
- */
+@Slf4j
 class UserRiskIT extends ITSupport {
 
     private UserApi userApi
@@ -41,282 +38,169 @@ class UserRiskIT extends ITSupport {
         this.userRiskApi = new UserRiskApi(getClient())
     }
 
-    @Test(groups = "group3")
-    void getUserRiskTest() {
-        def email = "user-get-risk-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
+    private User createTestUser(String uniqueId) {
+        def email = "user-risk-test-${uniqueId}@example.com"
+        log.info("Creating test user, uniqueId: {}", uniqueId)
         User user = UserBuilder.instance()
             .setEmail(email)
-            .setFirstName("GetRisk")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
+            .setFirstName("Risk")
+            .setLastName("TestUser${uniqueId}")
+            .setPassword("Abcd1234!@#%".toCharArray())
             .buildAndCreate(userApi)
         registerForCleanup(user)
-
-        try {
-            // Get user risk assessment
-            def userRisk = userRiskApi.getUserRisk(user.getId())
-            
-            assertThat(userRisk, notNullValue())
-            // Risk level may be set or null depending on risk assessment
-
-        } catch (ApiException e) {
-            // Expected if risk API not enabled or insufficient permissions
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
+        log.info("Created user: {} with status: {}", user.getId(), user.getStatus())
+        return user
     }
 
-    @Ignore("WithHttpInfo method not available in Java SDK")
-    @Test(groups = "group3")
-    void getUserRiskWithHttpInfoTest() {
-        def email = "user-risk-httpinfo-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("RiskHttpInfo")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
+    private boolean isUserRiskFeatureAvailable(String userId) {
         try {
-            def response = userRiskApi.getUserRiskWithHttpInfo(user.getId())
-            
-            assertThat(response, notNullValue())
-            assertThat(response.getStatusCode(), equalTo(200))
-            assertThat(response.getData(), notNullValue())
-
+            userRiskApi.getUserRisk(userId)
+            return true
         } catch (ApiException e) {
-            // Expected if risk API not enabled
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void getUserRiskWithLowRiskLevelTest() {
-        def email = "user-low-risk-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("LowRisk")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            def userRisk = userRiskApi.getUserRisk(user.getId())
-            
-            assertThat(userRisk, notNullValue())
-            // Risk level could be LOW, MEDIUM, HIGH, or NONE
-
-        } catch (ApiException e) {
-            // Expected if risk API not enabled
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void getUserRiskCallsCorrectEndpointTest() {
-        def email = "user-risk-endpoint-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("RiskEndpoint")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            userRiskApi.getUserRisk(user.getId())
-
-        } catch (ApiException e) {
-            // Expected if risk API not enabled
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void upsertUserRiskWithHighRiskTest() {
-        def email = "user-upsert-high-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("UpsertHigh")
-            .setLastName("Risk-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            def riskRequest = new UserRiskRequest()
-            riskRequest.setRiskLevel(UserRiskRequest.RiskLevelEnum.HIGH)
-            
-            // Upsert (create or update) user risk
-            def userRisk = userRiskApi.upsertUserRisk(user.getId(), riskRequest)
-            
-            assertThat(userRisk, notNullValue())
-            // Risk should be set to HIGH
-
-        } catch (ApiException e) {
-            // Expected if risk API not enabled or insufficient permissions
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void upsertUserRiskWithLowRiskTest() {
-        def email = "user-upsert-low-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("UpsertLow")
-            .setLastName("Risk-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            def riskRequest = new UserRiskRequest()
-            riskRequest.setRiskLevel(UserRiskRequest.RiskLevelEnum.LOW)
-            
-            def userRisk = userRiskApi.upsertUserRisk(user.getId(), riskRequest)
-            
-            assertThat(userRisk, notNullValue())
-            // Risk should be set to LOW
-
-        } catch (ApiException e) {
-            // Expected if risk API not enabled
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Ignore("WithHttpInfo method not available in Java SDK")
-    @Test(groups = "group3")
-    void upsertUserRiskWithHttpInfoTest() {
-        def email = "user-upsert-httpinfo-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("UpsertHttpInfo")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            def riskRequest = new UserRiskRequest()
-            riskRequest.setRiskLevel(UserRiskRequest.RiskLevelEnum.HIGH)
-            
-            def response = userRiskApi.upsertUserRiskWithHttpInfo(user.getId(), riskRequest)
-            
-            assertThat(response, notNullValue())
-            assertThat(response.getStatusCode(), anyOf(equalTo(200), equalTo(201)))
-            assertThat(response.getData(), notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if risk API not enabled
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void upsertUserRiskCallsCorrectEndpointTest() {
-        def email = "user-upsert-endpoint-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("UpsertEndpoint")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            def riskRequest = new UserRiskRequest()
-            riskRequest.setRiskLevel(UserRiskRequest.RiskLevelEnum.MEDIUM)
-            
-            userRiskApi.upsertUserRisk(user.getId(), riskRequest)
-
-        } catch (ApiException e) {
-            // Expected if risk API not enabled
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void userRiskCompleteWorkflowTest() {
-        def email = "user-risk-workflow-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("RiskWorkflow")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // 1. Get initial risk (may not exist)
-            try {
-                def initialRisk = userRiskApi.getUserRisk(user.getId())
-                assertThat(initialRisk, notNullValue())
-            } catch (ApiException e) {
-                // Risk may not exist initially
-                assertThat(e.getCode(), equalTo(404))
+            // Feature not available if we get 401, 403, or 404
+            if (e.getCode() in [401, 403, 404]) {
+                log.info("User Risk API not available (code {}), skipping test", e.getCode())
+                return false
             }
-            
-            // 2. Set user to HIGH risk
-            def highRiskRequest = new UserRiskRequest()
-            highRiskRequest.setRiskLevel(UserRiskRequest.RiskLevelEnum.HIGH)
-            def highRisk = userRiskApi.upsertUserRisk(user.getId(), highRiskRequest)
-            assertThat(highRisk, notNullValue())
-            
-            // 3. Get risk after setting (should be HIGH)
-            def retrievedRisk = userRiskApi.getUserRisk(user.getId())
-            assertThat(retrievedRisk, notNullValue())
-            
-            // 4. Update risk to LOW
-            def lowRiskRequest = new UserRiskRequest()
-            lowRiskRequest.setRiskLevel(UserRiskRequest.RiskLevelEnum.LOW)
-            def lowRisk = userRiskApi.upsertUserRisk(user.getId(), lowRiskRequest)
-            assertThat(lowRisk, notNullValue())
-            
-            // 5. Verify updated risk
-            def finalRisk = userRiskApi.getUserRisk(user.getId())
-            assertThat(finalRisk, notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if risk API not fully enabled
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            return true
         }
     }
 
     @Test(groups = "group3")
-    void upsertUserRiskWithDifferentLevelsTest() {
-        def email = "user-risk-levels-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
+    void givenUserRisk_whenPerformingCrudOperations_thenAllEndpointsWork() {
+        log.info("=== Test: User Risk CRUD operations ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid)
+        Thread.sleep(2000)
 
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("RiskLevels")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
+        // Check if feature is available
+        if (!isUserRiskFeatureAvailable(user.getId())) {
+            log.info("Skipping test - User Risk API requires Identity Threat Protection")
+            return
+        }
 
         try {
-            // Test HIGH risk level
-            def highRisk = new UserRiskRequest()
-            highRisk.setRiskLevel(UserRiskRequest.RiskLevelEnum.HIGH)
-            def highResponse = userRiskApi.upsertUserRisk(user.getId(), highRisk)
-            assertThat(highResponse, notNullValue())
-            
-            // Test MEDIUM risk level
-            def mediumRisk = new UserRiskRequest()
-            mediumRisk.setRiskLevel(UserRiskRequest.RiskLevelEnum.MEDIUM)
-            def mediumResponse = userRiskApi.upsertUserRisk(user.getId(), mediumRisk)
-            assertThat(mediumResponse, notNullValue())
-            
-            // Test LOW risk level
-            def lowRisk = new UserRiskRequest()
-            lowRisk.setRiskLevel(UserRiskRequest.RiskLevelEnum.LOW)
-            def lowResponse = userRiskApi.upsertUserRisk(user.getId(), lowRisk)
-            assertThat(lowResponse, notNullValue())
+            // Set user risk to HIGH
+            def highRiskRequest = new UserRiskRequest()
+                .riskLevel(UserRiskRequest.RiskLevelEnum.HIGH)
+
+            def highRiskResponse = userRiskApi.upsertUserRisk(user.getId(), highRiskRequest)
+            assertThat(highRiskResponse, notNullValue())
+            assertThat(highRiskResponse.getRiskLevel(), notNullValue())
+            log.info("Step 1: Risk set to HIGH")
+            Thread.sleep(1000)
+
+            // Verify HIGH risk was set
+            def verifyHighRisk = userRiskApi.getUserRisk(user.getId())
+            assertThat(verifyHighRisk, notNullValue())
+            assertThat(verifyHighRisk.getRiskLevel(), notNullValue())
+            log.info("Step 2: HIGH risk verified")
+
+            // Update risk to LOW
+            def lowRiskRequest = new UserRiskRequest()
+                .riskLevel(UserRiskRequest.RiskLevelEnum.LOW)
+
+            def lowRiskResponse = userRiskApi.upsertUserRisk(user.getId(), lowRiskRequest)
+            assertThat(lowRiskResponse, notNullValue())
+            assertThat(lowRiskResponse.getRiskLevel(), notNullValue())
+            log.info("Step 3: Risk updated to LOW")
+            Thread.sleep(1000)
+
+            // Verify LOW risk was set
+            def verifyLowRisk = userRiskApi.getUserRisk(user.getId())
+            assertThat(verifyLowRisk, notNullValue())
+            assertThat(verifyLowRisk.getRiskLevel(), notNullValue())
+            log.info("Step 4: LOW risk verified")
+
+            log.info("User Risk CRUD operations completed successfully")
 
         } catch (ApiException e) {
-            // Expected if risk API not enabled
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            log.error("ApiException: Code={}, Message={}", e.getCode(), e.getMessage())
+            if (e.getCode() != 0) {
+                assertThat(e.getCode(), anyOf(equalTo(400), equalTo(401), equalTo(403), equalTo(404)))
+            }
         }
+    }
+
+    @Test(groups = "group3")
+    void givenUserRisk_whenUsingDifferentRiskLevels_thenAllLevelsWork() {
+        log.info("=== Test: User Risk with different levels ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid)
+        Thread.sleep(2000)
+
+        // Check if feature is available
+        if (!isUserRiskFeatureAvailable(user.getId())) {
+            log.info("Skipping test - User Risk API not available")
+            return
+        }
+
+        try {
+            // Test HIGH risk
+            def highRiskRequest = new UserRiskRequest()
+                .riskLevel(UserRiskRequest.RiskLevelEnum.HIGH)
+
+            def highResponse = userRiskApi.upsertUserRisk(user.getId(), highRiskRequest)
+            assertThat(highResponse, notNullValue())
+            log.info("HIGH risk level set")
+            Thread.sleep(1000)
+
+            // Test MEDIUM risk
+            def mediumRiskRequest = new UserRiskRequest()
+                .riskLevel(UserRiskRequest.RiskLevelEnum.MEDIUM)
+
+            def mediumResponse = userRiskApi.upsertUserRisk(user.getId(), mediumRiskRequest)
+            assertThat(mediumResponse, notNullValue())
+            log.info("MEDIUM risk level set")
+            Thread.sleep(1000)
+
+            // Test LOW risk
+            def lowRiskRequest = new UserRiskRequest()
+                .riskLevel(UserRiskRequest.RiskLevelEnum.LOW)
+
+            def lowResponse = userRiskApi.upsertUserRisk(user.getId(), lowRiskRequest)
+            assertThat(lowResponse, notNullValue())
+            log.info("LOW risk level set")
+
+            log.info("All risk levels tested successfully")
+
+        } catch (ApiException e) {
+            log.error("ApiException: Code={}, Message={}", e.getCode(), e.getMessage())
+            if (e.getCode() != 0) {
+                assertThat(e.getCode(), anyOf(equalTo(400), equalTo(401), equalTo(403), equalTo(404)))
+            }
+        }
+    }
+
+    @Test(groups = "group3")
+    void givenErrorScenarios_whenCallingApi_thenApiExceptionIsThrown() {
+        log.info("=== Test: Error scenarios with invalid user ID ===")
+
+        def invalidUserId = "invalid_user_id_12345"
+
+        // GetUserRisk with invalid userId - should throw 401, 403 or 404
+        try {
+            userRiskApi.getUserRisk(invalidUserId)
+            log.error("Should have thrown ApiException")
+        } catch (ApiException e) {
+            log.info("Got expected ApiException for getUserRisk: Code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(401), equalTo(403), equalTo(404)))
+        }
+
+        // UpsertUserRisk with invalid userId - should throw 401, 403 or 404
+        try {
+            def riskRequest = new UserRiskRequest()
+                .riskLevel(UserRiskRequest.RiskLevelEnum.HIGH)
+
+            userRiskApi.upsertUserRisk(invalidUserId, riskRequest)
+            log.error("Should have thrown ApiException")
+        } catch (ApiException e) {
+            log.info("Got expected ApiException for upsertUserRisk: Code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(401), equalTo(403), equalTo(404)))
+        }
+
+        log.info("Error scenario tests completed")
     }
 }

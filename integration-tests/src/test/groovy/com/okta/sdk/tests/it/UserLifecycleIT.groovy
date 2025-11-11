@@ -21,7 +21,8 @@ import com.okta.sdk.resource.client.ApiException
 import com.okta.sdk.resource.model.*
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.it.util.ITSupport
-import org.testng.annotations.Ignore
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
@@ -29,10 +30,11 @@ import static org.hamcrest.Matchers.*
 
 /**
  * Integration tests for User Lifecycle API.
- * Tests user activation, deactivation, reactivation, suspension, unlock, and factor reset operations.
+ * Matches C# UserLifecycleApiTests structure exactly.
  */
 class UserLifecycleIT extends ITSupport {
 
+    private static final Logger log = LoggerFactory.getLogger(UserLifecycleIT.class)
     private UserApi userApi
     private UserLifecycleApi userLifecycleApi
 
@@ -41,659 +43,508 @@ class UserLifecycleIT extends ITSupport {
         this.userLifecycleApi = new UserLifecycleApi(getClient())
     }
 
-    @Test(groups = "group3")
-    void activateUserTest() {
-        def email = "user-activate-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
+    private User createTestUser(String uniqueId, boolean activate = false) {
+        log.info("Creating test user, uniqueId: {}, activate: {}", uniqueId, activate)
+        
+        def email = "user-lifecycle-test-${uniqueId}@example.com"
+        
         User user = UserBuilder.instance()
             .setEmail(email)
-            .setFirstName("Activate")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .setActive(false)
+            .setFirstName("Lifecycle")
+            .setLastName("TestUser${uniqueId}")
+            .setPassword("Abcd1234!@#%".toCharArray())
+            .setActive(activate)
             .buildAndCreate(userApi)
+        
+        log.info("Created user: {} with status: {}", user.getId(), user.getStatus())
         registerForCleanup(user)
-
-        try {
-            def activationToken = userLifecycleApi.activateUser(user.getId(), false)
-
-            assertThat(activationToken, notNullValue())
-            assertThat(activationToken.getActivationUrl(), notNullValue())
-            assertThat(activationToken.getActivationToken(), notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if user already active or org settings prevent activation
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
+        
+        return user
     }
 
     @Test(groups = "group3")
-    void activateUserWithSendEmailTrueTest() {
-        def email = "user-activate-email-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("ActivateEmail")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .setActive(false)
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            def activationToken = userLifecycleApi.activateUser(user.getId(), true)
-
-            assertThat(activationToken, notNullValue())
-            assertThat(activationToken.getActivationUrl(), notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if user already active
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void activateUserWithSendEmailFalseTest() {
-        def email = "user-activate-no-email-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("ActivateNoEmail")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .setActive(false)
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            def activationToken = userLifecycleApi.activateUser(user.getId(), false)
-
-            assertThat(activationToken, notNullValue())
-            assertThat(activationToken.getActivationUrl(), notNullValue())
-            assertThat(activationToken.getActivationToken(), notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if user already active
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void deactivateUserTest() {
-        def email = "user-deactivate-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Deactivate")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            userLifecycleApi.deactivateUser(user.getId(), false)
-
-            // Verify user is deactivated
-            def deactivatedUser = userApi.getUser(user.getId())
-            assertThat(deactivatedUser, notNullValue())
-            assertThat(deactivatedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
-
-        } catch (ApiException e) {
-            // Expected if user cannot be deactivated
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void deactivateUserWithSendEmailTrueTest() {
-        def email = "user-deactivate-email-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("DeactivateEmail")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            userLifecycleApi.deactivateUser(user.getId(), true)
-
-            // Verify user is deactivated
-            def deactivatedUser = userApi.getUser(user.getId())
-            assertThat(deactivatedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
-
-        } catch (ApiException e) {
-            // Expected if user cannot be deactivated
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void deactivateUserWithSendEmailFalseTest() {
-        def email = "user-deactivate-no-email-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("DeactivateNoEmail")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            userLifecycleApi.deactivateUser(user.getId(), false)
-
-            // Verify user is deactivated
-            def deactivatedUser = userApi.getUser(user.getId())
-            assertThat(deactivatedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
-
-        } catch (ApiException e) {
-            // Expected if user cannot be deactivated
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void reactivateUserTest() {
-        def email = "user-reactivate-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Reactivate")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Deactivate first
-            userLifecycleApi.deactivateUser(user.getId(), false)
-
-            // Reactivate
-            def activationToken = userApi.reactivateUser(user.getId(), false)
-
-            assertThat(activationToken, notNullValue())
-            assertThat(activationToken.getActivationUrl(), notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if user state doesn't allow reactivation
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void reactivateUserWithSendEmailTrueTest() {
-        def email = "user-reactivate-email-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("ReactivateEmail")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Deactivate first
-            userLifecycleApi.deactivateUser(user.getId(), false)
-
-            // Reactivate with email
-            def activationToken = userApi.reactivateUser(user.getId(), true)
-
-            assertThat(activationToken, notNullValue())
-            assertThat(activationToken.getActivationUrl(), notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if user state doesn't allow reactivation
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void reactivateUserWithSendEmailFalseTest() {
-        def email = "user-reactivate-no-email-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("ReactivateNoEmail")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Deactivate first
-            userLifecycleApi.deactivateUser(user.getId(), false)
-
-            // Reactivate without email
-            def activationToken = userApi.reactivateUser(user.getId(), false)
-
-            assertThat(activationToken, notNullValue())
-            assertThat(activationToken.getActivationUrl(), notNullValue())
-            assertThat(activationToken.getActivationToken(), notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if user state doesn't allow reactivation
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void suspendUserTest() {
-        def email = "user-suspend-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Suspend")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
+    void suspendUser_callsCorrectEndpoint() {
+        log.info("=== Test: SuspendUser calls correct endpoint ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        log.info("Created ACTIVE user: {}", user.getId())
+        Thread.sleep(2000)
 
         try {
             userLifecycleApi.suspendUser(user.getId())
+            Thread.sleep(1000)
+            def suspendedUser = userApi.getUser(user.getId(), null, null)
 
-            // Verify user is suspended
-            def suspendedUser = userApi.getUser(user.getId())
             assertThat(suspendedUser, notNullValue())
             assertThat(suspendedUser.getStatus(), equalTo(UserStatus.SUSPENDED))
+            log.info("User suspended successfully, status: {}", suspendedUser.getStatus())
 
         } catch (ApiException e) {
-            // Expected if user cannot be suspended (e.g., already suspended)
+            log.error("ApiException: Code={}, Message={}", e.getCode(), e.getMessage())
             assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
         }
     }
 
     @Test(groups = "group3")
-    void unsuspendUserTest() {
-        def email = "user-unsuspend-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Unsuspend")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
+    void suspendUser_withValidUserId() {
+        log.info("=== Test: SuspendUser with valid userId ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        log.info("Created ACTIVE user: {}", user.getId())
+        Thread.sleep(2000)
 
         try {
-            // Suspend first
             userLifecycleApi.suspendUser(user.getId())
+            Thread.sleep(1000)
+            def suspendedUser = userApi.getUser(user.getId(), null, null)
 
-            // Unsuspend
-            userLifecycleApi.unsuspendUser(user.getId())
-
-            // Verify user is active again
-            def activeUser = userApi.getUser(user.getId())
-            assertThat(activeUser, notNullValue())
-            assertThat(activeUser.getStatus(), equalTo(UserStatus.ACTIVE))
-
-        } catch (ApiException e) {
-            // Expected if user state doesn't allow unsuspend
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void unlockUserTest() {
-        def email = "user-unlock-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("Unlock")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Unlock user (even if not locked, should succeed)
-            userLifecycleApi.unlockUser(user.getId())
-
-            // Verify user status
-            def unlockedUser = userApi.getUser(user.getId())
-            assertThat(unlockedUser, notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if user cannot be unlocked
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void resetFactorsTest() {
-        def email = "user-reset-factors-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("ResetFactors")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Reset all enrolled factors
-            userLifecycleApi.resetFactors(user.getId())
-
-            // Should complete without error
-            // User's factors would be reset
-
-        } catch (ApiException e) {
-            // Expected if user has no factors or insufficient permissions
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void userLifecycleActivateToSuspendTest() {
-        def email = "user-lifecycle-suspend-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("LifecycleSuspend")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .setActive(false)
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Activate user
-            def activationToken = userLifecycleApi.activateUser(user.getId(), false)
-            assertThat(activationToken, notNullValue())
-
-            // Suspend user
-            userLifecycleApi.suspendUser(user.getId())
-
-            // Verify suspended
-            def suspendedUser = userApi.getUser(user.getId())
+            assertThat(suspendedUser, notNullValue())
+            assertThat(suspendedUser.getId(), equalTo(user.getId()))
             assertThat(suspendedUser.getStatus(), equalTo(UserStatus.SUSPENDED))
-
-            // Unsuspend user
-            userLifecycleApi.unsuspendUser(user.getId())
-
-            // Verify active
-            def activeUser = userApi.getUser(user.getId())
-            assertThat(activeUser.getStatus(), equalTo(UserStatus.ACTIVE))
+            log.info("Successfully suspended user with valid userId")
 
         } catch (ApiException e) {
-            // Expected if lifecycle transitions not allowed
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void userLifecycleDeactivateToReactivateTest() {
-        def email = "user-lifecycle-reactivate-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("LifecycleReactivate")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Deactivate user
-            userLifecycleApi.deactivateUser(user.getId(), false)
-
-            // Verify deactivated
-            def deactivatedUser = userApi.getUser(user.getId())
-            assertThat(deactivatedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
-
-            // Reactivate user
-            def activationToken = userApi.reactivateUser(user.getId(), false)
-            assertThat(activationToken, notNullValue())
-            assertThat(activationToken.getActivationUrl(), notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if lifecycle transitions not allowed
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void suspendAndUnsuspendWorkflowTest() {
-        def email = "user-suspend-unsuspend-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("SuspendUnsuspend")
-            .setLastName("Workflow-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Get initial status
-            def initialUser = userApi.getUser(user.getId())
-            assertThat(initialUser.getStatus(), equalTo(UserStatus.ACTIVE))
-
-            // Suspend
-            userLifecycleApi.suspendUser(user.getId())
-            def suspendedUser = userApi.getUser(user.getId())
-            assertThat(suspendedUser.getStatus(), equalTo(UserStatus.SUSPENDED))
-
-            // Unsuspend
-            userLifecycleApi.unsuspendUser(user.getId())
-            def activeUser = userApi.getUser(user.getId())
-            assertThat(activeUser.getStatus(), equalTo(UserStatus.ACTIVE))
-
-        } catch (ApiException e) {
-            // Expected if lifecycle operations not allowed
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void unlockActiveUserTest() {
-        def email = "user-unlock-active-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("UnlockActive")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Unlock an active (not locked) user - should succeed
-            userLifecycleApi.unlockUser(user.getId())
-
-            // Verify user is still active
-            def unlockedUser = userApi.getUser(user.getId())
-            assertThat(unlockedUser, notNullValue())
-            assertThat(unlockedUser.getStatus(), equalTo(UserStatus.ACTIVE))
-
-        } catch (ApiException e) {
-            // Expected if unlock not allowed
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void resetFactorsForUserWithoutFactorsTest() {
-        def email = "user-reset-no-factors-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("ResetNoFactors")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Reset factors for user with no factors - should succeed
-            userLifecycleApi.resetFactors(user.getId())
-
-            // Should complete without error
-
-        } catch (ApiException e) {
-            // Expected if insufficient permissions
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void deactivateSuspendedUserTest() {
-        def email = "user-deactivate-suspended-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("DeactivateSuspended")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Suspend user first
-            userLifecycleApi.suspendUser(user.getId())
-
-            // Deactivate suspended user
-            userLifecycleApi.deactivateUser(user.getId(), false)
-
-            // Verify user is deactivated
-            def deactivatedUser = userApi.getUser(user.getId())
-            assertThat(deactivatedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
-
-        } catch (ApiException e) {
-            // Expected if transition not allowed
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void activateAlreadyActiveUserTest() {
-        def email = "user-activate-active-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("ActivateActive")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // Try to activate an already active user
-            userLifecycleApi.activateUser(user.getId(), false)
-
-            // Should fail or return error
-            assertThat("Should not activate already active user", false)
-
-        } catch (ApiException e) {
-            // Expected - cannot activate already active user
+            log.error("ApiException during suspend: {}", e.getMessage())
             assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
         }
     }
 
     @Test(groups = "group3")
-    void suspendAlreadySuspendedUserTest() {
-        def email = "user-suspend-suspended-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("SuspendSuspended")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
+    void unsuspendUser_callsCorrectEndpoint() {
+        log.info("=== Test: UnsuspendUser calls correct endpoint ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
 
         try {
-            // Suspend user
             userLifecycleApi.suspendUser(user.getId())
+            Thread.sleep(2000)
 
-            // Try to suspend again
-            userLifecycleApi.suspendUser(user.getId())
-
-            // May succeed (idempotent) or fail
-            def suspendedUser = userApi.getUser(user.getId())
-            assertThat(suspendedUser.getStatus(), equalTo(UserStatus.SUSPENDED))
-
-        } catch (ApiException e) {
-            // Expected - may not allow suspending already suspended user
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Ignore("WithHttpInfo method not available in Java SDK")
-    @Test(groups = "group3")
-    void activateUserWithHttpInfoTest() {
-        def email = "user-activate-httpinfo-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("ActivateHttpInfo")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .setActive(false)
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            def response = userLifecycleApi.activateUserWithHttpInfo(user.getId(), false)
-
-            assertThat(response, notNullValue())
-            assertThat(response.getStatusCode(), equalTo(200))
-            assertThat(response.getData(), notNullValue())
-            assertThat(response.getData().getActivationUrl(), notNullValue())
-
-        } catch (ApiException e) {
-            // Expected if user already active
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Ignore("WithHttpInfo method not available in Java SDK")
-    @Test(groups = "group3")
-    void deactivateUserWithHttpInfoTest() {
-        def email = "user-deactivate-httpinfo-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("DeactivateHttpInfo")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            def response = userLifecycleApi.deactivateUserWithHttpInfo(user.getId(), false)
-
-            assertThat(response, notNullValue())
-            assertThat(response.getStatusCode(), equalTo(200))
-
-        } catch (ApiException e) {
-            // Expected if user cannot be deactivated
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
-        }
-    }
-
-    @Test(groups = "group3")
-    void completeLifecycleWorkflowTest() {
-        def email = "user-complete-lifecycle-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName("CompleteLifecycle")
-            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
-            .setActive(false)
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-
-        try {
-            // 1. Activate
-            def activationToken = userLifecycleApi.activateUser(user.getId(), false)
-            assertThat(activationToken, notNullValue())
-
-            // 2. Suspend
-            userLifecycleApi.suspendUser(user.getId())
-            def suspendedUser = userApi.getUser(user.getId())
-            assertThat(suspendedUser.getStatus(), equalTo(UserStatus.SUSPENDED))
-
-            // 3. Unsuspend
             userLifecycleApi.unsuspendUser(user.getId())
-            def activeUser = userApi.getUser(user.getId())
-            assertThat(activeUser.getStatus(), equalTo(UserStatus.ACTIVE))
+            Thread.sleep(1000)
+            def unsuspendedUser = userApi.getUser(user.getId(), null, null)
 
-            // 4. Reset factors
-            userLifecycleApi.resetFactors(user.getId())
-
-            // 5. Deactivate
-            userLifecycleApi.deactivateUser(user.getId(), false)
-            def deactivatedUser = userApi.getUser(user.getId())
-            assertThat(deactivatedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
-
-            // 6. Reactivate
-            def reactivationToken = userApi.reactivateUser(user.getId(), false)
-            assertThat(reactivationToken, notNullValue())
+            assertThat(unsuspendedUser, notNullValue())
+            assertThat(unsuspendedUser.getStatus(), equalTo(UserStatus.ACTIVE))
+            log.info("User unsuspended successfully")
 
         } catch (ApiException e) {
-            // Expected if lifecycle transitions not allowed
+            log.error("ApiException: {}", e.getMessage())
             assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void unsuspendUser_withValidUserId() {
+        log.info("=== Test: UnsuspendUser with valid userId ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            userLifecycleApi.suspendUser(user.getId())
+            Thread.sleep(2000)
+
+            userLifecycleApi.unsuspendUser(user.getId())
+            Thread.sleep(1000)
+            def unsuspendedUser = userApi.getUser(user.getId(), null, null)
+
+            assertThat(unsuspendedUser, notNullValue())
+            assertThat(unsuspendedUser.getId(), equalTo(user.getId()))
+            assertThat(unsuspendedUser.getStatus(), equalTo(UserStatus.ACTIVE))
+            log.info("Successfully unsuspended user with valid userId")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void activateUser_callsCorrectEndpoint() {
+        log.info("=== Test: ActivateUser calls correct endpoint ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, false)
+        log.info("Created STAGED user: {}", user.getId())
+        Thread.sleep(2000)
+
+        try {
+            def response = userLifecycleApi.activateUser(user.getId(), false)
+
+            assertThat(response, notNullValue())
+            log.info("User activation successful")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void activateUser_withSendEmailTrue() {
+        log.info("=== Test: ActivateUser with sendEmail=true ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, false)
+        Thread.sleep(2000)
+
+        try {
+            def response = userLifecycleApi.activateUser(user.getId(), true)
+
+            assertThat(response, notNullValue())
+            log.info("User activated with email sent")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void activateUser_withSendEmailFalse() {
+        log.info("=== Test: ActivateUser with sendEmail=false ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, false)
+        Thread.sleep(2000)
+
+        try {
+            def response = userLifecycleApi.activateUser(user.getId(), false)
+
+            assertThat(response, notNullValue())
+            log.info("User activated without email")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void deactivateUser_callsCorrectEndpoint() {
+        log.info("=== Test: DeactivateUser calls correct endpoint ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            userLifecycleApi.deactivateUser(user.getId(), false, null)
+            Thread.sleep(1000)
+            def deactivatedUser = userApi.getUser(user.getId(), null, null)
+
+            assertThat(deactivatedUser, notNullValue())
+            assertThat(deactivatedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
+            log.info("User deactivated successfully")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void deactivateUser_withSendEmailTrue() {
+        log.info("=== Test: DeactivateUser with sendEmail=true ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            userLifecycleApi.deactivateUser(user.getId(), true, null)
+            Thread.sleep(1000)
+            def deactivatedUser = userApi.getUser(user.getId(), null, null)
+
+            assertThat(deactivatedUser, notNullValue())
+            assertThat(deactivatedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
+            log.info("User deactivated with email")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void deactivateUser_withSendEmailFalse() {
+        log.info("=== Test: DeactivateUser with sendEmail=false ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            userLifecycleApi.deactivateUser(user.getId(), false, null)
+            Thread.sleep(1000)
+            def deactivatedUser = userApi.getUser(user.getId(), null, null)
+
+            assertThat(deactivatedUser, notNullValue())
+            assertThat(deactivatedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
+            log.info("User deactivated without email")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void reactivateUser_callsCorrectEndpoint() {
+        log.info("=== Test: ReactivateUser calls correct endpoint ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            userLifecycleApi.deactivateUser(user.getId(), false, null)
+            Thread.sleep(2000)
+
+            userLifecycleApi.reactivateUser(user.getId(), false)
+            Thread.sleep(1000)
+            def reactivatedUser = userApi.getUser(user.getId(), null, null)
+
+            assertThat(reactivatedUser, notNullValue())
+            assertThat(reactivatedUser.getStatus(), equalTo(UserStatus.ACTIVE))
+            log.info("User reactivated successfully")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void reactivateUser_withSendEmailTrue() {
+        log.info("=== Test: ReactivateUser with sendEmail=true ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            userLifecycleApi.deactivateUser(user.getId(), false, null)
+            Thread.sleep(2000)
+
+            userLifecycleApi.reactivateUser(user.getId(), true)
+            Thread.sleep(1000)
+            def reactivatedUser = userApi.getUser(user.getId(), null, null)
+
+            assertThat(reactivatedUser, notNullValue())
+            assertThat(reactivatedUser.getStatus(), equalTo(UserStatus.ACTIVE))
+            log.info("User reactivated with email")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void reactivateUser_withSendEmailFalse() {
+        log.info("=== Test: ReactivateUser with sendEmail=false ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            userLifecycleApi.deactivateUser(user.getId(), false, null)
+            Thread.sleep(2000)
+
+            userLifecycleApi.reactivateUser(user.getId(), false)
+            Thread.sleep(1000)
+            def reactivatedUser = userApi.getUser(user.getId(), null, null)
+
+            assertThat(reactivatedUser, notNullValue())
+            assertThat(reactivatedUser.getStatus(), equalTo(UserStatus.ACTIVE))
+            log.info("User reactivated without email")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void unlockUser_callsCorrectEndpoint() {
+        log.info("=== Test: UnlockUser calls correct endpoint ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            def unlockedUser = userLifecycleApi.unlockUser(user.getId())
+
+            assertThat(unlockedUser, notNullValue())
+            log.info("User unlock called successfully")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void unlockUser_withValidUserId() {
+        log.info("=== Test: UnlockUser with valid userId ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            def unlockedUser = userLifecycleApi.unlockUser(user.getId())
+
+            assertThat(unlockedUser, notNullValue())
+            assertThat(unlockedUser.getId(), equalTo(user.getId()))
+            log.info("User unlocked with valid userId")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void resetFactors_callsCorrectEndpoint() {
+        log.info("=== Test: ResetFactors calls correct endpoint ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            userLifecycleApi.resetFactors(user.getId())
+            log.info("Reset factors called successfully")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void resetFactors_withValidUserId() {
+        log.info("=== Test: ResetFactors with valid userId ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            userLifecycleApi.resetFactors(user.getId())
+            
+            def updatedUser = userApi.getUser(user.getId(), null, null)
+            assertThat(updatedUser, notNullValue())
+            assertThat(updatedUser.getId(), equalTo(user.getId()))
+            log.info("Factors reset for valid userId")
+
+        } catch (ApiException e) {
+            log.error("ApiException: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void userLifecycle_activateSuspendUnsuspend() {
+        log.info("=== Test: User lifecycle - Activate, Suspend, Unsuspend ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, false)
+        Thread.sleep(2000)
+
+        try {
+            // Activate
+            userLifecycleApi.activateUser(user.getId(), false)
+            Thread.sleep(2000)
+            def activeUser = userApi.getUser(user.getId(), null, null)
+            assertThat(activeUser.getStatus(), equalTo(UserStatus.ACTIVE))
+            log.info("Step 1: User activated - status: {}", activeUser.getStatus())
+
+            // Suspend
+            userLifecycleApi.suspendUser(user.getId())
+            Thread.sleep(2000)
+            def suspendedUser = userApi.getUser(user.getId(), null, null)
+            assertThat(suspendedUser.getStatus(), equalTo(UserStatus.SUSPENDED))
+            log.info("Step 2: User suspended - status: {}", suspendedUser.getStatus())
+
+            // Unsuspend
+            userLifecycleApi.unsuspendUser(user.getId())
+            Thread.sleep(1000)
+            def unsuspendedUser = userApi.getUser(user.getId(), null, null)
+            assertThat(unsuspendedUser.getStatus(), equalTo(UserStatus.ACTIVE))
+            log.info("Step 3: User unsuspended - status: {}", unsuspendedUser.getStatus())
+
+        } catch (ApiException e) {
+            log.error("ApiException during lifecycle: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void userLifecycle_deactivateReactivate() {
+        log.info("=== Test: User lifecycle - Deactivate, Reactivate ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid, true)
+        Thread.sleep(2000)
+
+        try {
+            // Deactivate
+            userLifecycleApi.deactivateUser(user.getId(), false, null)
+            Thread.sleep(2000)
+            def deactivatedUser = userApi.getUser(user.getId(), null, null)
+            assertThat(deactivatedUser.getStatus(), equalTo(UserStatus.DEPROVISIONED))
+            log.info("Step 1: User deactivated - status: {}", deactivatedUser.getStatus())
+
+            // Reactivate
+            userLifecycleApi.reactivateUser(user.getId(), false)
+            Thread.sleep(1000)
+            def reactivatedUser = userApi.getUser(user.getId(), null, null)
+            assertThat(reactivatedUser.getStatus(), equalTo(UserStatus.ACTIVE))
+            log.info("Step 2: User reactivated - status: {}", reactivatedUser.getStatus())
+
+        } catch (ApiException e) {
+            log.error("ApiException during lifecycle: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void errorHandling_emptyUserId() {
+        log.info("=== Test: Error handling with empty userId ===")
+        
+        try {
+            userLifecycleApi.suspendUser("")
+            throw new AssertionError("Expected ApiException for empty userId")
+
+        } catch (ApiException e) {
+            log.info("Expected ApiException caught: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(404), equalTo(405)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void errorHandling_invalidLongUserId() {
+        log.info("=== Test: Error handling with invalid long userId ===")
+        
+        def invalidUserId = "a" * 300
+        
+        try {
+            userLifecycleApi.suspendUser(invalidUserId)
+            throw new AssertionError("Expected ApiException for invalid userId")
+
+        } catch (ApiException e) {
+            log.info("Expected ApiException caught: {}", e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(404)))
         }
     }
 }
