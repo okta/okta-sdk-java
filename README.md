@@ -540,7 +540,8 @@ do {
 
 ### Thread Safety
 
-Every instance of the SDK `Client` is thread-safe. You **should** use the same instance throughout the entire lifecycle of your application. Each instance has its own Connection pool and Caching resources that are automatically released when the instance is garbage collected.
+~~Every instance of the SDK `Client` is thread-safe. You **should** use the same instance throughout the entire lifecycle of your application. Each instance has its own Connection pool and Caching resources that are automatically released when the instance is garbage collected.~~
+The current version of the SDK uses an internal cache manager that is shared across all `Client` instances within the same JVM. It is not safe for a multi-threaded application to create multiple `Client` instances. You **must** use a single `Client` instance throughout the entire lifecycle of your application. It might lead to a sub-optimal caching behavior and memory leaks if multiple `Client` instances are created.
 
 <a name="spring-support"></a>
 ## Inject the Okta Java SDK in Spring
