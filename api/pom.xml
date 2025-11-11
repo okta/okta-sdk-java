@@ -43,6 +43,7 @@
         <jsr305.version>3.0.2</jsr305.version>
         <junit.version>4.13.2</junit.version>
         <com.github.jknack.handlebars.version>4.4.0</com.github.jknack.handlebars.version>
+        <junit-version>5.10.2</junit-version>
     </properties>
 
     <dependencies>
@@ -143,7 +144,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
+            <version>${junit-version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

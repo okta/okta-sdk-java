@@ -487,7 +487,8 @@ class GroupsIT extends ITSupport {
         groupApi.assignUserToGroup(group.getId(), user.getId())
 
         // 4. Verify user is in the group (with retry for eventual consistency)
-        assertUserInGroup(user, group, groupApi, 10, getTestOperationDelay())
+        // Use explicit 500ms delay between retries to allow for API eventual consistency
+        assertUserInGroup(user, group, groupApi, 10, 500)
     }
 
     // ========================================
@@ -522,13 +523,14 @@ class GroupsIT extends ITSupport {
 
         // 3. Assign user to the group first
         groupApi.assignUserToGroup(group.getId(), user.getId())
-        assertUserInGroup(user, group, groupApi, 10, getTestOperationDelay())
+        // Use explicit 500ms delay between retries to allow for API eventual consistency
+        assertUserInGroup(user, group, groupApi, 10, 500)
 
         // 4. Unassign user from the group
         groupApi.unassignUserFromGroup(group.getId(), user.getId())
 
         // 5. Verify user is no longer in the group (with retry for eventual consistency)
-        assertUserNotInGroup(user, group, groupApi, 10, getTestOperationDelay())
+        assertUserNotInGroup(user, group, groupApi, 10, 500)
     }
 //TODO TEST DPOP
     // ========================================
@@ -570,7 +572,8 @@ class GroupsIT extends ITSupport {
         int maxRetries = 10
         int retryCount = 0
         while (retryCount < maxRetries) {
-            TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+            // Use explicit 500ms delay to allow for API eventual consistency
+            TimeUnit.MILLISECONDS.sleep(500)
             groupMembers = groupApi.listGroupUsers(group.getId(), null, null)
             if (groupMembers.size() >= 3) {
                 break
@@ -730,7 +733,8 @@ class GroupsIT extends ITSupport {
 
         // 4. Add user to the group and verify
         groupApi.assignUserToGroup(group.getId(), user.getId())
-        assertUserInGroup(user, group, groupApi, 10, getTestOperationDelay())
+        // Use explicit 500ms delay between retries to allow for API eventual consistency
+        assertUserInGroup(user, group, groupApi, 10, 500)
 
         // 5. List group members and verify user is present
         List<User> members = groupApi.listGroupUsers(group.getId(), null, null)
@@ -750,7 +754,7 @@ class GroupsIT extends ITSupport {
 
         // 7. Remove user from group and verify
         groupApi.unassignUserFromGroup(group.getId(), user.getId())
-        assertUserNotInGroup(user, group, groupApi, 10, getTestOperationDelay())
+        assertUserNotInGroup(user, group, groupApi, 10, 500)
 
         // 8. Verify the group can be searched
         String searchQuery = "profile.name eq \"${updatedName}\""
