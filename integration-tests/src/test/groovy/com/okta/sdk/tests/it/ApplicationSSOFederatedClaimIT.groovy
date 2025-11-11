@@ -106,7 +106,10 @@ class ApplicationSSOFederatedClaimIT extends ITSupport {
 
     @Test
     void testComprehensiveFederatedClaimOperations() {
-        logger.info("Testing comprehensive Application SSO Federated Claim API operations...")
+        logger.info("Starting comprehensive federated claim operations test...")
+
+        // Clean up any existing claims first to ensure clean state
+        cleanupAllClaims(testAppId)
 
         // ==================== CREATE OPERATIONS ====================
         logger.info("Test 1: Create Federated Claim")
@@ -186,6 +189,9 @@ class ApplicationSSOFederatedClaimIT extends ITSupport {
 
         // Replace second claim
         logger.info("Test 6: Replace Second Federated Claim")
+
+        // Wait to ensure timestamp difference between create and replace operations
+        Thread.sleep(1000)
 
         def replaceClaim2 = new FederatedClaim()
             .name("manager")
@@ -412,6 +418,9 @@ class ApplicationSSOFederatedClaimIT extends ITSupport {
     void testMultipleClaimsListing() {
         logger.info("Testing listing multiple federated claims...")
 
+        // Clean up any existing claims first to ensure clean state
+        cleanupAllClaims(testAppId)
+
         // Verify empty list initially
         def emptyList = federatedClaimApi.listFederatedClaims(testAppId)
         assertThat("Initial claims list should be empty", emptyList, empty())
@@ -475,6 +484,9 @@ class ApplicationSSOFederatedClaimIT extends ITSupport {
     @Test
     void testDifferentExpressions() {
         logger.info("Testing different Okta Expression Language expressions...")
+
+        // Clean up any existing claims first to ensure clean state
+        cleanupAllClaims(testAppId)
 
         def expressions = [
             "user_email": "user.profile.email",
@@ -628,5 +640,28 @@ class ApplicationSSOFederatedClaimIT extends ITSupport {
         federatedClaimApi.deleteFederatedClaim(testAppId, createdClaim.getId())
 
         logger.info("Timestamp validation test completed successfully!")
+    }
+
+    /**
+     * Helper method to clean up all existing claims for an app
+     * This ensures each test starts with a clean state
+     */
+    private void cleanupAllClaims(String appId) {
+        try {
+            def existingClaims = federatedClaimApi.listFederatedClaims(appId)
+            existingClaims.each { claim ->
+                try {
+                    federatedClaimApi.deleteFederatedClaim(appId, claim.getId())
+                    logger.debug("Deleted existing claim: ${claim.getId()} (${claim.getName()})")
+                } catch (Exception e) {
+                    logger.warn("Failed to delete claim ${claim.getId()}: ${e.message}")
+                }
+            }
+            if (existingClaims.size() > 0) {
+                logger.info("Cleaned up ${existingClaims.size()} existing claims")
+            }
+        } catch (Exception e) {
+            logger.warn("Failed to list/cleanup existing claims: ${e.message}")
+        }
     }
 }
