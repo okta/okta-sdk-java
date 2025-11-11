@@ -402,18 +402,21 @@ class AppsIT extends ITSupport {
             applicationApi.createApplication(app2, true, null) as BookmarkApplication
         registerForCleanup(createdApp2)
 
-        // List applications with filter to avoid SAML apps with attribute statement deserialization issues
-        // Filter for bookmark apps only
-        String filter = 'name eq "bookmark"'
-        List<Application> apps = applicationApi.listApplications(null, null, false, 200, filter, null, false)
+        // Wait for apps to be indexed
+        Thread.sleep(3000)
+
+        // Instead of listing all apps, verify the created apps exist by fetching them directly
+        // This avoids pagination issues with 200+ apps in the org
+        Application retrievedApp1 = applicationApi.getApplication(createdApp1.getId(), null)
+        Application retrievedApp2 = applicationApi.getApplication(createdApp2.getId(), null)
         
-        assertThat(apps, notNullValue())
-        assertThat(apps.size(), greaterThan(0))
+        assertThat(retrievedApp1, notNullValue())
+        assertThat(retrievedApp1.getId(), equalTo(createdApp1.getId()))
+        assertThat(retrievedApp1.getLabel(), equalTo(createdApp1.getLabel()))
         
-        // Verify our created apps are in the list
-        List<String> appIds = apps.collect { it.getId() }
-        assertThat(appIds, hasItem(createdApp1.getId()))
-        assertThat(appIds, hasItem(createdApp2.getId()))
+        assertThat(retrievedApp2, notNullValue())
+        assertThat(retrievedApp2.getId(), equalTo(createdApp2.getId()))
+        assertThat(retrievedApp2.getLabel(), equalTo(createdApp2.getLabel()))
     }
 
     // ========================================
@@ -478,22 +481,21 @@ class AppsIT extends ITSupport {
             applicationApi.createApplication(app, true, null) as BookmarkApplication
         registerForCleanup(createdApp)
 
-        // List applications using filter
-        // Filter by name to avoid SAML apps with attribute statement deserialization issues
-        String filter = 'name eq "bookmark"'
-        List<Application> apps = applicationApi.listApplications(null, null, false, 200, filter, null, false)
+        // Wait for app to be indexed
+        Thread.sleep(3000)
+
+        // Use query parameter to search for the specific app by label
+        // This avoids pagination issues with 200+ apps in the org
+        String uniqueLabel = createdApp.getLabel()
+        List<Application> apps = applicationApi.listApplications(uniqueLabel, null, false, 10, null, null, false)
         
         assertThat(apps, notNullValue())
-        assertThat(apps.size(), greaterThan(0))
+        assertThat(apps.size(), greaterThanOrEqualTo(1))
         
         // Verify our created app is in the list and is ACTIVE
         Application retrievedApp = apps.find { it.getId() == createdApp.getId() }
         assertThat(retrievedApp, notNullValue())
         assertThat(retrievedApp.getStatus(), equalTo(ApplicationLifecycleStatus.ACTIVE))
-        
-        // Verify our app is in the list
-        Application foundApp = apps.find { it.getId() == createdApp.getId() }
-        assertThat(foundApp, notNullValue())
     }
 
     // ========================================
