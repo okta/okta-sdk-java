@@ -7,7 +7,6 @@ import com.okta.sdk.resource.api.UserCredApi
 import com.okta.sdk.resource.model.*
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.it.util.ITSupport
-import groovy.util.logging.Slf4j
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
@@ -17,7 +16,6 @@ import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 import static org.testng.Assert.fail
 
-@Slf4j
 class UserCredIT extends ITSupport {
 
     private UserApi userApi

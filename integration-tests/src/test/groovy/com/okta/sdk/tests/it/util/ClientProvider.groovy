@@ -49,19 +49,17 @@ import org.testng.IHookCallBack
 import org.testng.IHookable
 import org.testng.ITestResult
 import org.testng.annotations.AfterMethod
-import org.testng.annotations.Listeners
 
 /**
  * Creates a thread local client for a test method to use. The client may be connected to an actual Okta instance or a Test Server.
  */
-@Listeners(ClientProvider)
 trait ClientProvider implements IHookable {
 
-    private Logger log = LoggerFactory.getLogger(ClientProvider)
+    Logger log = LoggerFactory.getLogger(ClientProvider)
 
-    private ThreadLocal<ApiClient> threadLocal = new ThreadLocal<>()
-    private ThreadLocal<String> testName = new ThreadLocal<>()
-    private List<Object> toBeDeleted = []
+    ThreadLocal<ApiClient> threadLocal = new ThreadLocal<>()
+    ThreadLocal<String> testName = new ThreadLocal<>()
+    List<Object> toBeDeleted = []
 
     ApiClient getClient(String scenarioId = null) {
         ApiClient client = threadLocal.get()

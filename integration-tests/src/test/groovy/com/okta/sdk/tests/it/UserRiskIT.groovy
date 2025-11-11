@@ -21,13 +21,11 @@ import com.okta.sdk.resource.client.ApiException
 import com.okta.sdk.resource.model.*
 import com.okta.sdk.resource.user.UserBuilder
 import com.okta.sdk.tests.it.util.ITSupport
-import groovy.util.logging.Slf4j
 import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
-@Slf4j
 class UserRiskIT extends ITSupport {
 
     private UserApi userApi
