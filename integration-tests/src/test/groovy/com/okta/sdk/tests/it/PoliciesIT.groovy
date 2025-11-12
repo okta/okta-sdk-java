@@ -386,14 +386,14 @@ class PoliciesIT extends ITSupport {
         while (retryCount < maxRetries && createdRule == null) {
             try {
                 createdRule = policyApi.createPolicyRule(policy.getId(), oktaSignOnPolicyRule, null, true) as OktaSignOnPolicyRule
-                logger.info("Successfully created policy rule on attempt ${retryCount + 1}")
+                log.info("Successfully created policy rule on attempt ${retryCount + 1}")
             } catch (ApiException e) {
                 lastException = e
                 String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
                 if (errorCode == "E0000009" || e.getCause() instanceof java.net.SocketTimeoutException) {
                     retryCount++
                     if (retryCount < maxRetries) {
-                        logger.warn("Policy rule creation failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
+                        log.warn("Policy rule creation failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
                         Thread.sleep(2000)
                     }
                 } else {
@@ -579,14 +579,14 @@ class PoliciesIT extends ITSupport {
             while (retryCount < maxRetries && testRule == null) {
                 try {
                     testRule = policyApi.createPolicyRule(testPolicy.getId(), policyRule, null, true)
-                    logger.info("Successfully created policy rule on attempt ${retryCount + 1}")
+                    log.info("Successfully created policy rule on attempt ${retryCount + 1}")
                 } catch (ApiException e) {
                     lastException = e
                     String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
                     if (errorCode == "E0000009" || e.getCause() instanceof java.net.SocketTimeoutException) {
                         retryCount++
                         if (retryCount < maxRetries) {
-                            logger.warn("Policy rule creation failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
+                            log.warn("Policy rule creation failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
                             Thread.sleep(2000)
                         }
                     } else {
