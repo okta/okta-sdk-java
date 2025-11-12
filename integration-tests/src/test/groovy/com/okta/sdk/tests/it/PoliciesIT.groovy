@@ -207,7 +207,7 @@ class PoliciesIT extends ITSupport {
         policyApi.deactivatePolicyRule(accessPolicy.getId(), createdAccessPolicyRule.getId())
         policyApi.deletePolicyRule(accessPolicy.getId(), createdAccessPolicyRule.getId())
 
-        Thread.sleep(testOperationDelay)
+        Thread.sleep(500)
 
         // get policy rule expect 404
         expect(ApiException) {
@@ -362,6 +362,8 @@ class PoliciesIT extends ITSupport {
                 .buildAndCreate(policyApi) as OktaSignOnPolicy
         registerForCleanup(policy)
 
+        Thread.sleep(500) // Allow policy to be fully created
+
         String ruleName = "policyRule+" + UUID.randomUUID().toString()
 
         OktaSignOnPolicyRule oktaSignOnPolicyRule = new OktaSignOnPolicyRule()
@@ -375,13 +377,41 @@ class PoliciesIT extends ITSupport {
         actions.setSignon(signOnActions)
         oktaSignOnPolicyRule.actions(actions)
 
-        OktaSignOnPolicyRule createdRule =
-                policyApi.createPolicyRule(policy.getId(), oktaSignOnPolicyRule, null, true) as OktaSignOnPolicyRule
+        // Retry logic for rule creation in parallel execution
+        OktaSignOnPolicyRule createdRule = null
+        int maxRetries = 3
+        int retryCount = 0
+        Exception lastException = null
+
+        while (retryCount < maxRetries && createdRule == null) {
+            try {
+                createdRule = policyApi.createPolicyRule(policy.getId(), oktaSignOnPolicyRule, null, true) as OktaSignOnPolicyRule
+                logger.info("Successfully created policy rule on attempt ${retryCount + 1}")
+            } catch (ApiException e) {
+                lastException = e
+                String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
+                if (errorCode == "E0000009" || e.getCause() instanceof java.net.SocketTimeoutException) {
+                    retryCount++
+                    if (retryCount < maxRetries) {
+                        logger.warn("Policy rule creation failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
+                        Thread.sleep(2000)
+                    }
+                } else {
+                    throw e
+                }
+            }
+        }
+
+        if (createdRule == null) {
+            throw lastException
+        }
 
         assertThat(createdRule, notNullValue())
         assertThat(createdRule.getId(), notNullValue())
         assertThat(createdRule.getName(), is(ruleName))
         assertThat(createdRule.getType(), is(PolicyRuleType.SIGN_ON))
+
+        Thread.sleep(500) // Allow rule to be fully created
 
         // Retrieve the rule
         PolicyRule retrievedRule = policyApi.getPolicyRule(policy.getId(), createdRule.getId())
@@ -392,6 +422,7 @@ class PoliciesIT extends ITSupport {
 
         // Cleanup
         policyApi.deactivatePolicyRule(policy.getId(), createdRule.getId())
+        Thread.sleep(500)
         policyApi.deletePolicyRule(policy.getId(), createdRule.getId())
     }
 
@@ -493,14 +524,14 @@ class PoliciesIT extends ITSupport {
 
         // Activate the rule
         policyApi.activatePolicyRule(policy.getId(), createdRule.getId())
-        Thread.sleep(testOperationDelay)
+        Thread.sleep(500)
 
         PolicyRule activatedRule = policyApi.getPolicyRule(policy.getId(), createdRule.getId())
         assertThat(activatedRule.getStatus(), is(LifecycleStatus.ACTIVE))
 
         // Deactivate the rule - this succeeds but status may remain ACTIVE (API behavior)
         policyApi.deactivatePolicyRule(policy.getId(), createdRule.getId())
-        Thread.sleep(testOperationDelay)
+        Thread.sleep(500)
 
         // Note: Policy rules may not have their status change to INACTIVE after deactivation,
         // but deactivation is still required before deletion
@@ -527,7 +558,9 @@ class PoliciesIT extends ITSupport {
             assertThat testPolicy, notNullValue()
             assertThat testPolicy.getId(), notNullValue()
             
-            // Create test rule
+            Thread.sleep(500) // Allow policy to be fully created
+            
+            // Create test rule with retry logic for parallel execution
             OktaSignOnPolicyRule policyRule = new OktaSignOnPolicyRule()
             policyRule.name("rule-delete-" + UUID.randomUUID().toString())
             policyRule.type(PolicyRuleType.SIGN_ON)
@@ -539,12 +572,37 @@ class PoliciesIT extends ITSupport {
             actions.setSignon(signOnActions)
             policyRule.actions(actions)
             
-            testRule = policyApi.createPolicyRule(testPolicy.getId(), policyRule, null, true)
+            int maxRetries = 3
+            int retryCount = 0
+            Exception lastException = null
+
+            while (retryCount < maxRetries && testRule == null) {
+                try {
+                    testRule = policyApi.createPolicyRule(testPolicy.getId(), policyRule, null, true)
+                    logger.info("Successfully created policy rule on attempt ${retryCount + 1}")
+                } catch (ApiException e) {
+                    lastException = e
+                    String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
+                    if (errorCode == "E0000009" || e.getCause() instanceof java.net.SocketTimeoutException) {
+                        retryCount++
+                        if (retryCount < maxRetries) {
+                            logger.warn("Policy rule creation failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
+                            Thread.sleep(2000)
+                        }
+                    } else {
+                        throw e
+                    }
+                }
+            }
+
+            if (testRule == null) {
+                throw lastException
+            }
             
             assertThat testRule, notNullValue()
             assertThat testRule.getId(), notNullValue()
             
-            Thread.sleep(testOperationDelay)
+            Thread.sleep(500) // Allow rule to be fully created
             
             // Delete the rule
             policyApi.deletePolicyRule(testPolicy.getId(), testRule.getId())
@@ -556,11 +614,11 @@ class PoliciesIT extends ITSupport {
             
             testRule = null // Mark as deleted
             
-            Thread.sleep(testOperationDelay)
+            Thread.sleep(500) // Allow deletion to propagate
             
             // Delete policy - must deactivate first
             policyApi.deactivatePolicy(testPolicy.getId())
-            Thread.sleep(testOperationDelay)
+            Thread.sleep(500)
             
             policyApi.deletePolicy(testPolicy.getId())
             
@@ -624,7 +682,7 @@ class PoliciesIT extends ITSupport {
                 assertThat createdRule.getPriority(), notNullValue()
             }
             
-            Thread.sleep(testOperationDelay)
+            Thread.sleep(500)
             
             // Retrieve all rules and verify they are ordered by priority
             def allRules = policyApi.listPolicyRules(testPolicy.getId(), null)

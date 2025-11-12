@@ -84,14 +84,40 @@ class ApplicationPoliciesIT extends ITSupport {
         testAppId = createdApp.getId()
         registerForCleanup(createdApp)
 
-        // Create a test authentication policy
+        // Create a test authentication policy with retry logic for parallel execution
         Policy testPolicy = new Policy()
         testPolicy.type(PolicyType.ACCESS_POLICY)
             .status(LifecycleStatus.ACTIVE)
             .name(prefix + "auth-policy-" + UUID.randomUUID().toString())
             .description("Test policy for ApplicationPoliciesApi integration tests")
 
-        Policy createdPolicy = policyApi.createPolicy(testPolicy, true)
+        Policy createdPolicy = null
+        int maxRetries = 3
+        int retryCount = 0
+        Exception lastException = null
+        
+        while (retryCount < maxRetries && createdPolicy == null) {
+            try {
+                createdPolicy = policyApi.createPolicy(testPolicy, true)
+                logger.info("Successfully created test policy on attempt ${retryCount + 1}")
+            } catch (ApiException e) {
+                lastException = e
+                if (e.getCause() instanceof java.net.SocketTimeoutException) {
+                    retryCount++
+                    if (retryCount < maxRetries) {
+                        logger.warn("Policy creation timed out in setup, retrying (${retryCount}/${maxRetries})...")
+                        Thread.sleep(2000) // Wait before retry
+                    }
+                } else {
+                    throw e // Re-throw if it's not a timeout
+                }
+            }
+        }
+        
+        if (createdPolicy == null) {
+            throw new RuntimeException("Failed to create policy in setup after ${maxRetries} attempts due to timeout", lastException)
+        }
+        
         testPolicyId = createdPolicy.getId()
         registerForCleanup(createdPolicy)
 
@@ -158,14 +184,40 @@ class ApplicationPoliciesIT extends ITSupport {
     void testPolicyReplacement() {
         logger.info("Testing policy replacement...")
 
-        // Arrange - Create second policy
+        // Arrange - Create second policy with retry logic for timeout handling
         Policy secondPolicy = new Policy()
         secondPolicy.type(PolicyType.ACCESS_POLICY)
             .status(LifecycleStatus.ACTIVE)
             .name(prefix + "auth-policy-2-" + UUID.randomUUID().toString())
             .description("Second test policy")
 
-        Policy createdSecondPolicy = policyApi.createPolicy(secondPolicy, true)
+        Policy createdSecondPolicy = null
+        int maxRetries = 3
+        int retryCount = 0
+        Exception lastException = null
+        
+        while (retryCount < maxRetries && createdSecondPolicy == null) {
+            try {
+                createdSecondPolicy = policyApi.createPolicy(secondPolicy, true)
+                logger.info("Successfully created second policy on attempt ${retryCount + 1}")
+            } catch (ApiException e) {
+                lastException = e
+                if (e.getCause() instanceof java.net.SocketTimeoutException) {
+                    retryCount++
+                    if (retryCount < maxRetries) {
+                        logger.warn("Policy creation timed out, retrying (${retryCount}/${maxRetries})...")
+                        Thread.sleep(2000) // Wait before retry
+                    }
+                } else {
+                    throw e // Re-throw if it's not a timeout
+                }
+            }
+        }
+        
+        if (createdSecondPolicy == null) {
+            throw new AssertionError("Failed to create policy after ${maxRetries} attempts due to timeout", lastException)
+        }
+        
         String secondPolicyId = createdSecondPolicy.getId()
         registerForCleanup(createdSecondPolicy)
 
