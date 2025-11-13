@@ -3129,6 +3129,238 @@ paths:
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
+  /api/v1/apps/{appId}/group-push/mappings:
+    parameters:
+      - $ref: '#/components/parameters/pathAppId'
+    get:
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: true
+      summary: List all group push mappings
+      description: Lists all group push mappings with pagination support
+      operationId: listGroupPushMappings
+      parameters:
+        - name: after
+          description: Specifies the pagination cursor for the next page of mappings
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Specifies the number of results returned
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            maximum: 1000
+            minimum: 1
+        - name: lastUpdated
+          description: |-
+            Filters group push mappings by last updated date. The `lastUpdated` parameter supports the following format: `YYYY-MM-DDTHH:mm:ssZ`. This filters mappings updated on or after the specified date and time in UTC.
+
+            If you don't specify a value, all group push mappings are returned.
+          in: query
+          schema:
+            type: string
+            example: '2025-01-01T00:00:00Z'
+        - name: sourceGroupId
+          description: Filters group push mappings by source group ID. If you don't specify a value, all group push mappings are returned.
+          in: query
+          schema:
+            type: string
+            example: 00g00000000000000000
+        - name: status
+          description: Filters group push mappings by status. If you don't specify a value, all group push mappings are returned.
+          in: query
+          schema:
+            $ref: '#/components/schemas/GroupPushMappingStatus'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupPushMapping'
+        '401':
+          $ref: '#/components/responses/ErrorInvalidToken401'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+        - apiToken: []
+        - oauth2:
+            - okta.apps.read
+            - okta.groups.read
+      tags:
+        - GroupPushMapping
+    post:
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: true
+      summary: Create a group push mapping
+      description: |-
+        Creates or links a group push mapping.
+
+        **Note:** Either `targetGroupId` or `targetGroupName` must be provided, but not both. If `targetGroupId` is provided, it links to an existing group. If `targetGroupName` is provided, it creates a new group.
+      operationId: createGroupPushMapping
+      x-codegen-request-body-name: body
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupPushMappingRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupPushMapping'
+        '400':
+          $ref: '#/components/responses/ErrorApiValidationFailed400'
+        '401':
+          $ref: '#/components/responses/ErrorInvalidToken401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Access Denied:
+                  $ref: '#/components/examples/ErrorAccessDenied'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+        - apiToken: []
+        - oauth2:
+            - okta.apps.manage
+            - okta.groups.manage
+      tags:
+        - GroupPushMapping
+  /api/v1/apps/{appId}/group-push/mappings/{mappingId}:
+    parameters:
+      - $ref: '#/components/parameters/pathAppId'
+      - $ref: '#/components/parameters/pathGroupPushMappingId'
+    get:
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: true
+      summary: Retrieve a group push mapping
+      description: Retrieves a group push mapping by ID
+      operationId: getGroupPushMapping
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupPushMapping'
+        '401':
+          $ref: '#/components/responses/ErrorInvalidToken401'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '404':
+          $ref: '#/components/responses/ErrorResourceNotFound404'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+        - apiToken: []
+        - oauth2:
+            - okta.apps.read
+            - okta.groups.read
+      tags:
+        - GroupPushMapping
+    patch:
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: true
+      summary: Update a group push mapping
+      description: Updates the status of a group push mapping
+      operationId: updateGroupPushMapping
+      x-codegen-request-body-name: body
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGroupPushMappingRequest'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupPushMapping'
+        '400':
+          $ref: '#/components/responses/ErrorApiValidationFailed400'
+        '401':
+          $ref: '#/components/responses/ErrorInvalidToken401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Access Denied:
+                  $ref: '#/components/examples/ErrorAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorResourceNotFound404'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+        - apiToken: []
+        - oauth2:
+            - okta.apps.manage
+            - okta.groups.manage
+      tags:
+        - GroupPushMapping
+    delete:
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: true
+      summary: Delete a group push mapping
+      description: Deletes a specific group push mapping. The group push mapping must be in an `INACTIVE` state.
+      operationId: deleteGroupPushMapping
+      parameters:
+        - in: query
+          name: deleteTargetGroup
+          description: If set to `true`, the target group is also deleted. If set to `false`, the target group isn't deleted.
+          required: true
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/ErrorInvalidToken401'
+        '403':
+          description: Forbidden
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Access Denied:
+                  $ref: '#/components/examples/ErrorAccessDenied'
+        '404':
+          $ref: '#/components/responses/ErrorResourceNotFound404'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+        - apiToken: []
+        - oauth2:
+            - okta.apps.manage
+            - okta.groups.manage
+      tags:
+        - GroupPushMapping
   /api/v1/apps/{appId}/groups:
     parameters:
       - $ref: '#/components/parameters/pathAppId'
@@ -45371,6 +45603,14 @@ components:
       schema:
         type: string
         example: 00g1emaKYZTWRYYRRTSK
+    pathGroupPushMappingId:
+      name: mappingId
+      description: Group push mapping ID
+      in: path
+      required: true
+      schema:
+        type: string
+        example: gPm00000000000000000
     pathGroupRuleId:
       name: groupRuleId
       description: The `id` of the group rule
@@ -46656,6 +46896,19 @@ components:
       properties:
         assignUserToRealm:
           $ref: '#/components/schemas/AssignUserToRealm'
+    ActiveDirectoryGroupScope:
+      description: The scope of the group in Active Directory
+      type: string
+      enum:
+        - DOMAIN_LOCAL
+        - GLOBAL
+        - UNIVERSAL
+    ActiveDirectoryGroupType:
+      description: The type of the group in Active Directory
+      type: string
+      enum:
+        - DISTRIBUTION
+        - SECURITY
     AdminConsoleSettings:
       title: Okta Admin Console Settings
       description: Settings specific to the Okta Admin Console
@@ -46975,6 +47228,56 @@ components:
       enum:
         - APP
         - APP_TYPE
+    AppConfig:
+      description: Additional app configuration for group push mappings. Currently only required for Active Directory.
+      type: object
+      properties:
+        type:
+          type: string
+          $ref: '#/components/schemas/AppConfigType'
+      discriminator:
+        propertyName: type
+        mapping:
+          ACTIVE_DIRECTORY: '#/components/schemas/AppConfigActiveDirectory'
+    AppConfigActiveDirectory:
+      allOf:
+        - $ref: '#/components/schemas/AppConfig'
+      type: object
+      properties:
+        distinguishedName:
+          description: The distinguished name of the group in Active Directory
+          type: string
+        groupScope:
+          $ref: '#/components/schemas/ActiveDirectoryGroupScope'
+        groupType:
+          $ref: '#/components/schemas/ActiveDirectoryGroupType'
+        samAccountName:
+          description: The SAM account name of the group in Active Directory
+          type: string
+      required:
+        - distinguishedName
+        - groupScope
+        - groupType
+        - samAccountName
+    AppConfigType:
+      description: The type of the app configuration
+      type: string
+      enum:
+        - ACTIVE_DIRECTORY
+    AppConnectionUserProvisionJWKList:
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonWebKey'
+      required:
+        - keys
+    AppConnectionUserProvisionJWKResponse:
+      properties:
+        jwks:
+          $ref: '#/components/schemas/AppConnectionUserProvisionJWKList'
+      required:
+        - jwks
     AppCsrPkcs10:
       description: Base64URL-encoded CSR in DER format
       format: base64
@@ -50225,6 +50528,26 @@ components:
           description: The name of the Brand
       required:
         - name
+    CreateGroupPushMappingRequest:
+      type: object
+      properties:
+        appConfig:
+          type: object
+          $ref: '#/components/schemas/AppConfig'
+        sourceGroupId:
+          description: The ID of the source group for the group push mapping
+          type: string
+        status:
+          type: string
+          $ref: '#/components/schemas/GroupPushMappingStatusUpsert'
+        targetGroupId:
+          description: The ID of the existing target group for the group push mapping. This is used to link to an existing group. Required if `targetGroupName` is not provided.
+          type: string
+        targetGroupName:
+          description: The name of the target group for the group push mapping. This is used when creating a new downstream group. If the group already exists, it links to the existing group. Required if `targetGroupId` is not provided.
+          type: string
+      required:
+        - sourceGroupId
     CreateGroupRuleRequest:
       type: object
       properties:
@@ -52803,6 +53126,80 @@ components:
       anyOf:
         - $ref: '#/components/schemas/OktaUserGroupProfile'
         - $ref: '#/components/schemas/OktaActiveDirectoryGroupProfile'
+    GroupPushMapping:
+      type: object
+      properties:
+        appConfig:
+          type: object
+          readOnly: true
+          $ref: '#/components/schemas/AppConfig'
+        created:
+          description: Timestamp when the group push mapping was created
+          type: string
+          format: date-time
+          readOnly: true
+        errorSummary:
+          description: The error message summary if the latest push failed
+          type: string
+          readOnly: true
+        id:
+          description: The ID of the group push mapping
+          type: string
+          readOnly: true
+        lastPush:
+          description: Timestamp when the group push mapping was pushed
+          type: string
+          format: date-time
+          readOnly: true
+        lastUpdated:
+          description: Timestamp when the group push mapping was last updated
+          type: string
+          format: date-time
+          readOnly: true
+        sourceGroupId:
+          description: The ID of the source group for the group push mapping
+          type: string
+          readOnly: true
+        status:
+          description: The status of the group push mapping
+          type: string
+          $ref: '#/components/schemas/GroupPushMappingStatus'
+          readOnly: true
+        targetGroupId:
+          description: The ID of the target group for the group push mapping
+          type: string
+          readOnly: true
+        _links:
+          $ref: '#/components/schemas/GroupPushMappingLinks'
+    GroupPushMappingLinks:
+      description: Discoverable resources related to the group push mapping
+      type: object
+      properties:
+        app:
+          $ref: '#/components/schemas/HrefObjectAppLink'
+        sourceGroup:
+          $ref: '#/components/schemas/HrefObjectGroupLink'
+        targetGroup:
+          $ref: '#/components/schemas/HrefObjectGroupLink'
+    GroupPushMappingStatus:
+      description: The status of the group push mapping
+      type: string
+      enum:
+        - ACTIVE
+        - ERROR
+        - INACTIVE
+      x-enumDescriptions:
+        ACTIVE: The group push mapping is active and Okta pushes membership changes to the target group
+        INACTIVE: The group push mapping is inactive and Okta doesn't push membership changes to the target group
+        ERROR: The group push mapping is in an error state and Okta doesn't push membership changes to the target group
+    GroupPushMappingStatusUpsert:
+      description: The status of the group push mapping
+      title: GroupPushMappingStatus
+      default: ACTIVE
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
     GroupRule:
       type: object
       properties:
@@ -64972,6 +65369,20 @@ components:
     UpdateEmailDomain:
       allOf:
         - $ref: '#/components/schemas/BaseEmailDomain'
+    UpdateGroupPushMappingRequest:
+      type: object
+      properties:
+        status:
+          description: |-
+            The status of the group push mapping.
+
+            If changing the group push mapping status to `ACTIVE`, Okta performs an initial push to the target group, and then begins pushing membership changes.
+
+            If changing the group push mapping status to `INACTIVE`, Okta stops pushing membership changes to the target group.
+          type: string
+          $ref: '#/components/schemas/GroupPushMappingStatusUpsert'
+      required:
+        - status
     UpdateIamRoleRequest:
       type: object
       properties:
