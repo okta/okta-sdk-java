@@ -28,6 +28,12 @@ import com.okta.commons.lang.Classes;
  * </pre>
  *
  * <p>See the {@link ClientBuilder ClientBuilder} JavaDoc for extensive documentation on client configuration.</p>
+ * <p>
+ * <b>IMPORTANT - Multi-Threading Warning:</b> Creating multiple ApiClient instances in a multi-threaded
+ * application is <b>NOT SUPPORTED</b>. The SDK uses an internal cache manager that is shared across all
+ * ApiClient instances within the same JVM. You <b>MUST</b> use a single ApiClient instance throughout
+ * the entire lifecycle of your application to avoid cache inconsistencies and memory leaks.
+ * </p>
  *
  * @see ClientBuilder
  * @since 0.5.0
@@ -36,6 +42,10 @@ public final class Clients {
 
     /**
      * Returns new {@link ClientBuilder} instance, used to construct {@link com.okta.sdk.resource.client.ApiClient} instances.
+     * <p>
+     * <b>Note:</b> Only create ONE ApiClient instance per application. Creating multiple instances in
+     * multi-threaded applications is not supported and may cause issues.
+     * </p>
      *
      * @return new {@link ClientBuilder} instance, used to construct {@link com.okta.sdk.resource.client.ApiClient} instances.
      */

@@ -173,14 +173,6 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
             if (httpClient == null) throw new IllegalArgumentException("httpClient cannot be null");
             if (cacheManager == null) throw new IllegalArgumentException("cacheManager cannot be null");
 
-            // MULTITHREADING WARNING: Creating multiple ApiClient instances in a multi-threaded application
-            // is not supported and may lead to cache inconsistencies and memory leaks. The internal cache
-            // manager is shared across all ApiClient instances within the same JVM. You must use a single
-            // ApiClient instance throughout the entire lifecycle of your application.
-            // See: https://github.com/okta/okta-sdk-java/blob/master/README.md#thread-safety
-            log.warn("Creating ApiClient instance. Note: Multiple ApiClient instances in multi-threaded " +
-                     "applications are not supported. Use a single instance throughout your application lifecycle.");
-
             objectMapper = new ObjectMapper();
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);

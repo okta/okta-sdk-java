@@ -311,6 +311,9 @@ public class DefaultClientBuilder implements ClientBuilder {
     @Override
     public ApiClient build() {
 
+        // MULTITHREADING WARNING: Track and warn about multiple instances
+        com.okta.sdk.impl.util.MultiThreadingWarningUtil.recordInstanceCreation();
+
         if (!this.clientConfig.isCacheManagerEnabled()) {
             log.debug("CacheManager disabled. Defaulting to DisabledCacheManager");
             this.cacheManager = Caches.newDisabledCacheManager();
