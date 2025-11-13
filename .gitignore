@@ -11,6 +11,9 @@
 # Maven:
 target
 
+# Eclipse build output:
+bin/
+
 # Gradle:
 .idea/gradle.xml
 .idea/libraries
