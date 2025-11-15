@@ -313,6 +313,9 @@ class GroupsIT extends ITSupport {
         registerForCleanup(group)
         validateGroup(group, groupName)
 
+        // Allow time for group to be indexed
+        Thread.sleep(2000)
+
         // 2. Search the group by search parameter (wait for indexing)
         String searchQuery = "profile.name eq \"${groupName}\""
 
@@ -350,9 +353,23 @@ class GroupsIT extends ITSupport {
         registerForCleanup(group)
         validateGroup(group, groupName)
 
-        // 2. Filter groups by type OKTA_GROUP
+        // Allow time for group to be indexed
+        Thread.sleep(2000)
+
+        // 2. Filter groups by type OKTA_GROUP with retry logic
         String filterQuery = "type eq \"OKTA_GROUP\""
-        List<Group> filteredGroups = groupApi.listGroups(null, filterQuery, null, null, null, null, null, null)
+        List<Group> filteredGroups = null
+        int maxRetries = 10
+        int retryCount = 0
+
+        while (retryCount < maxRetries && (filteredGroups == null || !isGroupPresent(filteredGroups, group))) {
+            filteredGroups = groupApi.listGroups(null, filterQuery, null, null, null, null, null, null)
+            if (filteredGroups != null && isGroupPresent(filteredGroups, group)) {
+                break
+            }
+            TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+            retryCount++
+        }
 
         // 3. Assert that filtered results contain only OKTA_GROUP types
         assertThat(filteredGroups, notNullValue())
