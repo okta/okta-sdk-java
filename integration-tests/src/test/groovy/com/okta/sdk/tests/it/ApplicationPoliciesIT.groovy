@@ -85,12 +85,6 @@ class ApplicationPoliciesIT extends ITSupport {
         registerForCleanup(createdApp)
 
         // Create a test authentication policy with retry logic for parallel execution
-        Policy testPolicy = new Policy()
-        testPolicy.type(PolicyType.ACCESS_POLICY)
-            .status(LifecycleStatus.ACTIVE)
-            .name(prefix + "auth-policy-" + UUID.randomUUID().toString())
-            .description("Test policy for ApplicationPoliciesApi integration tests")
-
         Policy createdPolicy = null
         int maxRetries = 3
         int retryCount = 0
@@ -98,24 +92,34 @@ class ApplicationPoliciesIT extends ITSupport {
         
         while (retryCount < maxRetries && createdPolicy == null) {
             try {
+                // Create new policy object with unique name each time
+                Policy testPolicy = new Policy()
+                testPolicy.type(PolicyType.ACCESS_POLICY)
+                    .status(LifecycleStatus.ACTIVE)
+                    .name(prefix + "auth-policy-" + UUID.randomUUID().toString())
+                    .description("Test policy for ApplicationPoliciesApi integration tests")
+                
                 createdPolicy = policyApi.createPolicy(testPolicy, true)
                 logger.info("Successfully created test policy on attempt ${retryCount + 1}")
             } catch (ApiException e) {
                 lastException = e
-                if (e.getCause() instanceof java.net.SocketTimeoutException) {
+                String errorMsg = e.getResponseBody() ?: e.getMessage()
+                // Check for timeout or name conflict errors
+                if (e.getCause() instanceof java.net.SocketTimeoutException || 
+                    errorMsg?.contains("Policy name already in use")) {
                     retryCount++
                     if (retryCount < maxRetries) {
-                        logger.warn("Policy creation timed out in setup, retrying (${retryCount}/${maxRetries})...")
+                        logger.warn("Policy creation failed (${errorMsg?.contains("name") ? "name conflict" : "timeout"}), retrying (${retryCount}/${maxRetries})...")
                         Thread.sleep(2000) // Wait before retry
                     }
                 } else {
-                    throw e // Re-throw if it's not a timeout
+                    throw e // Re-throw if it's not a timeout or name conflict
                 }
             }
         }
         
         if (createdPolicy == null) {
-            throw new RuntimeException("Failed to create policy in setup after ${maxRetries} attempts due to timeout", lastException)
+            throw new RuntimeException("Failed to create policy in setup after ${maxRetries} attempts", lastException)
         }
         
         testPolicyId = createdPolicy.getId()
@@ -184,13 +188,7 @@ class ApplicationPoliciesIT extends ITSupport {
     void testPolicyReplacement() {
         logger.info("Testing policy replacement...")
 
-        // Arrange - Create second policy with retry logic for timeout handling
-        Policy secondPolicy = new Policy()
-        secondPolicy.type(PolicyType.ACCESS_POLICY)
-            .status(LifecycleStatus.ACTIVE)
-            .name(prefix + "auth-policy-2-" + UUID.randomUUID().toString())
-            .description("Second test policy")
-
+        // Arrange - Create second policy with retry logic for timeout and name conflict handling
         Policy createdSecondPolicy = null
         int maxRetries = 3
         int retryCount = 0
@@ -198,24 +196,34 @@ class ApplicationPoliciesIT extends ITSupport {
         
         while (retryCount < maxRetries && createdSecondPolicy == null) {
             try {
+                // Create new policy object with unique name each time
+                Policy secondPolicy = new Policy()
+                secondPolicy.type(PolicyType.ACCESS_POLICY)
+                    .status(LifecycleStatus.ACTIVE)
+                    .name(prefix + "auth-policy-2-" + UUID.randomUUID().toString())
+                    .description("Second test policy")
+                
                 createdSecondPolicy = policyApi.createPolicy(secondPolicy, true)
                 logger.info("Successfully created second policy on attempt ${retryCount + 1}")
             } catch (ApiException e) {
                 lastException = e
-                if (e.getCause() instanceof java.net.SocketTimeoutException) {
+                String errorMsg = e.getResponseBody() ?: e.getMessage()
+                // Check for timeout or name conflict errors
+                if (e.getCause() instanceof java.net.SocketTimeoutException || 
+                    errorMsg?.contains("Policy name already in use")) {
                     retryCount++
                     if (retryCount < maxRetries) {
-                        logger.warn("Policy creation timed out, retrying (${retryCount}/${maxRetries})...")
+                        logger.warn("Policy creation failed (${errorMsg?.contains("name") ? "name conflict" : "timeout"}), retrying (${retryCount}/${maxRetries})...")
                         Thread.sleep(2000) // Wait before retry
                     }
                 } else {
-                    throw e // Re-throw if it's not a timeout
+                    throw e // Re-throw if it's not a timeout or name conflict
                 }
             }
         }
         
         if (createdSecondPolicy == null) {
-            throw new AssertionError("Failed to create policy after ${maxRetries} attempts due to timeout", lastException)
+            throw new AssertionError("Failed to create policy after ${maxRetries} attempts", lastException)
         }
         
         String secondPolicyId = createdSecondPolicy.getId()
@@ -521,14 +529,44 @@ class ApplicationPoliciesIT extends ITSupport {
         assertThat(appWithFirstPolicy.getLinks().getAccessPolicy().getHref(), containsString(testPolicyId))
         logger.info("Step 2: First policy assigned successfully")
 
-        // Step 3: Create and assign second policy
-        Policy secondPolicy = new Policy()
-        secondPolicy.type(PolicyType.ACCESS_POLICY)
-            .status(LifecycleStatus.ACTIVE)
-            .name(prefix + "lifecycle-policy-2-" + UUID.randomUUID().toString())
-            .description("Second policy for lifecycle test")
-
-        Policy createdSecondPolicy = policyApi.createPolicy(secondPolicy, true)
+        // Step 3: Create and assign second policy with retry logic
+        Policy createdSecondPolicy = null
+        int maxRetries = 3
+        int retryCount = 0
+        Exception lastException = null
+        
+        while (retryCount < maxRetries && createdSecondPolicy == null) {
+            try {
+                // Create new policy object with unique name each time
+                Policy secondPolicy = new Policy()
+                secondPolicy.type(PolicyType.ACCESS_POLICY)
+                    .status(LifecycleStatus.ACTIVE)
+                    .name(prefix + "lifecycle-policy-2-" + UUID.randomUUID().toString())
+                    .description("Second policy for lifecycle test")
+                
+                createdSecondPolicy = policyApi.createPolicy(secondPolicy, true)
+                logger.info("Successfully created second lifecycle policy on attempt ${retryCount + 1}")
+            } catch (ApiException e) {
+                lastException = e
+                String errorMsg = e.getResponseBody() ?: e.getMessage()
+                // Check for timeout or name conflict errors
+                if (e.getCause() instanceof java.net.SocketTimeoutException || 
+                    errorMsg?.contains("Policy name already in use")) {
+                    retryCount++
+                    if (retryCount < maxRetries) {
+                        logger.warn("Lifecycle policy creation failed (${errorMsg?.contains("name") ? "name conflict" : "timeout"}), retrying (${retryCount}/${maxRetries})...")
+                        Thread.sleep(2000) // Wait before retry
+                    }
+                } else {
+                    throw e // Re-throw if it's not a timeout or name conflict
+                }
+            }
+        }
+        
+        if (createdSecondPolicy == null) {
+            throw new AssertionError("Failed to create lifecycle policy after ${maxRetries} attempts", lastException)
+        }
+        
         String secondPolicyId = createdSecondPolicy.getId()
         registerForCleanup(createdSecondPolicy)
 

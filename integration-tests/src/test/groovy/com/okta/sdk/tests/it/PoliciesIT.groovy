@@ -485,12 +485,39 @@ class PoliciesIT extends ITSupport {
 
         assertThat(policy.getName(), is(originalName))
 
-        // Update the policy
+        Thread.sleep(1000) // Allow policy to be fully created
+
+        // Update the policy with retry logic
         String updatedName = "updated-policy+" + UUID.randomUUID().toString()
         policy.setName(updatedName)
         policy.setDescription("Updated description")
 
-        Policy updatedPolicy = policyApi.replacePolicy(policy.getId(), policy)
+        Policy updatedPolicy = null
+        int maxRetries = 3
+        int retryCount = 0
+        Exception lastException = null
+
+        while (retryCount < maxRetries && updatedPolicy == null) {
+            try {
+                updatedPolicy = policyApi.replacePolicy(policy.getId(), policy)
+            } catch (ApiException e) {
+                lastException = e
+                String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
+                if (errorCode == "E0000009" || e.getCause() instanceof java.net.SocketTimeoutException) {
+                    retryCount++
+                    if (retryCount < maxRetries) {
+                        log.warn("Policy replacement failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
+                        Thread.sleep(2000)
+                    }
+                } else {
+                    throw e
+                }
+            }
+        }
+
+        if (updatedPolicy == null) {
+            throw lastException
+        }
 
         assertThat(updatedPolicy, notNullValue())
         assertThat(updatedPolicy.getName(), is(updatedName))
@@ -508,6 +535,8 @@ class PoliciesIT extends ITSupport {
             .buildAndCreate(policyApi) as OktaSignOnPolicy
         registerForCleanup(policy)
 
+        Thread.sleep(1000) // Allow policy to be fully created
+
         String originalRuleName = "policyRule+" + UUID.randomUUID().toString()
 
         OktaSignOnPolicyRule oktaSignOnPolicyRule = new OktaSignOnPolicyRule()
@@ -521,22 +550,74 @@ class PoliciesIT extends ITSupport {
         actions.setSignon(signOnActions)
         oktaSignOnPolicyRule.actions(actions)
 
-        OktaSignOnPolicyRule createdRule =
-            policyApi.createPolicyRule(policy.getId(), oktaSignOnPolicyRule, null, true) as OktaSignOnPolicyRule
+        // Create rule with retry logic
+        OktaSignOnPolicyRule createdRule = null
+        int maxRetries = 3
+        int retryCount = 0
+        Exception lastException = null
+
+        while (retryCount < maxRetries && createdRule == null) {
+            try {
+                createdRule = policyApi.createPolicyRule(policy.getId(), oktaSignOnPolicyRule, null, true) as OktaSignOnPolicyRule
+            } catch (ApiException e) {
+                lastException = e
+                String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
+                if (errorCode == "E0000009" || e.getCause() instanceof java.net.SocketTimeoutException) {
+                    retryCount++
+                    if (retryCount < maxRetries) {
+                        log.warn("Policy rule creation failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
+                        Thread.sleep(2000)
+                    }
+                } else {
+                    throw e
+                }
+            }
+        }
+
+        if (createdRule == null) {
+            throw lastException
+        }
 
         assertThat(createdRule.getName(), is(originalRuleName))
 
-        // Update the rule
+        Thread.sleep(1000) // Allow rule to be fully created
+
+        // Update the rule with retry logic
         String updatedRuleName = "updated-rule+" + UUID.randomUUID().toString()
         createdRule.setName(updatedRuleName)
 
-        PolicyRule updatedRule = policyApi.replacePolicyRule(policy.getId(), createdRule.getId(), createdRule)
+        PolicyRule updatedRule = null
+        retryCount = 0
+        lastException = null
+
+        while (retryCount < maxRetries && updatedRule == null) {
+            try {
+                updatedRule = policyApi.replacePolicyRule(policy.getId(), createdRule.getId(), createdRule)
+            } catch (ApiException e) {
+                lastException = e
+                String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
+                if (errorCode == "E0000009" || e.getCause() instanceof java.net.SocketTimeoutException) {
+                    retryCount++
+                    if (retryCount < maxRetries) {
+                        log.warn("Policy rule replacement failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
+                        Thread.sleep(2000)
+                    }
+                } else {
+                    throw e
+                }
+            }
+        }
+
+        if (updatedRule == null) {
+            throw lastException
+        }
 
         assertThat(updatedRule, notNullValue())
         assertThat(updatedRule.getName(), is(updatedRuleName))
 
         // Cleanup
         policyApi.deactivatePolicyRule(policy.getId(), createdRule.getId())
+        Thread.sleep(500)
         policyApi.deletePolicyRule(policy.getId(), createdRule.getId())
     }
 
@@ -707,7 +788,9 @@ class PoliciesIT extends ITSupport {
                 .buildAndCreate(policyApi) as OktaSignOnPolicy
             registerForCleanup(testPolicy)
 
-            // Create three rules with different priorities
+            Thread.sleep(1000) // Allow policy to be fully created
+
+            // Create three rules with different priorities and retry logic
             [1, 2, 3].each { priority ->
                 OktaSignOnPolicyRule rule = new OktaSignOnPolicyRule()
                 rule.name("rule-p${priority}-" + UUID.randomUUID().toString().substring(0, 20))
@@ -721,14 +804,43 @@ class PoliciesIT extends ITSupport {
                 actions.setSignon(signOnActions)
                 rule.actions(actions)
 
-                def createdRule = policyApi.createPolicyRule(testPolicy.getId(), rule, null, true)
+                PolicyRule createdRule = null
+                int maxRetries = 3
+                int retryCount = 0
+                Exception lastException = null
+
+                while (retryCount < maxRetries && createdRule == null) {
+                    try {
+                        createdRule = policyApi.createPolicyRule(testPolicy.getId(), rule, null, true)
+                        log.info("Successfully created policy rule on attempt ${retryCount + 1}")
+                    } catch (ApiException e) {
+                        lastException = e
+                        String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
+                        if (errorCode == "E0000009" || e.getCause() instanceof java.net.SocketTimeoutException) {
+                            retryCount++
+                            if (retryCount < maxRetries) {
+                                log.warn("Policy rule creation failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
+                                Thread.sleep(2000)
+                            }
+                        } else {
+                            throw e
+                        }
+                    }
+                }
+
+                if (createdRule == null) {
+                    throw lastException
+                }
+
                 createdRules.add(createdRule)
 
                 assertThat createdRule, notNullValue()
                 assertThat createdRule.getPriority(), notNullValue()
+                
+                Thread.sleep(500) // Brief delay between rule creations
             }
 
-            Thread.sleep(500)
+            Thread.sleep(1000) // Allow all rules to be fully created
 
             // Retrieve all rules and verify they are ordered by priority
             def allRules = policyApi.listPolicyRules(testPolicy.getId(), null)
@@ -746,6 +858,7 @@ class PoliciesIT extends ITSupport {
                 if (rule != null && testPolicy != null) {
                     try {
                         policyApi.deletePolicyRule(testPolicy.getId(), rule.getId())
+                        Thread.sleep(200)
                     } catch (ApiException ignored) {}
                 }
             }
@@ -767,6 +880,8 @@ class PoliciesIT extends ITSupport {
                 .buildAndCreate(policyApi) as OktaSignOnPolicy
             registerForCleanup(activePolicy)
 
+            Thread.sleep(1000) // Allow active policy to be fully created
+
             // Create inactive policy
             inactivePolicy = OktaSignOnPolicyBuilder.instance()
                 .setName("policy-inactive-" + UUID.randomUUID().toString())
@@ -778,12 +893,37 @@ class PoliciesIT extends ITSupport {
 
             Thread.sleep(testOperationDelay)
 
-            // List only ACTIVE policies - use empty strings instead of null
-            List<Policy> activePolicies = policyApi.listPolicies(
-                PolicyTypeParameter.OKTA_SIGN_ON,
-                LifecycleStatus.ACTIVE.name(),
-                "", "", "", "", "", ""
-            )
+            // List only ACTIVE policies with retry logic
+            List<Policy> activePolicies = null
+            int maxRetries = 3
+            int retryCount = 0
+            Exception lastException = null
+
+            while (retryCount < maxRetries && activePolicies == null) {
+                try {
+                    activePolicies = policyApi.listPolicies(
+                        PolicyTypeParameter.OKTA_SIGN_ON,
+                        LifecycleStatus.ACTIVE.name(),
+                        "", "", "", "", "", ""
+                    )
+                } catch (ApiException e) {
+                    lastException = e
+                    String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
+                    if (errorCode == "E0000009" || e.getCause() instanceof java.net.SocketTimeoutException) {
+                        retryCount++
+                        if (retryCount < maxRetries) {
+                            log.warn("List policies failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
+                            Thread.sleep(2000)
+                        }
+                    } else {
+                        throw e
+                    }
+                }
+            }
+
+            if (activePolicies == null) {
+                throw lastException
+            }
 
             assertThat activePolicies, notNullValue()
             assertThat activePolicies, not(empty())
@@ -791,12 +931,36 @@ class PoliciesIT extends ITSupport {
             def foundActive = activePolicies.any { it.getId() == activePolicy.getId() }
             assertThat foundActive, is(true)
 
-            // List only INACTIVE policies
-            List<Policy> inactivePolicies = policyApi.listPolicies(
-                PolicyTypeParameter.OKTA_SIGN_ON,
-                LifecycleStatus.INACTIVE.name(),
-                "", "", "", "", "", ""
-            )
+            // List only INACTIVE policies with retry logic
+            List<Policy> inactivePolicies = null
+            retryCount = 0
+            lastException = null
+
+            while (retryCount < maxRetries && inactivePolicies == null) {
+                try {
+                    inactivePolicies = policyApi.listPolicies(
+                        PolicyTypeParameter.OKTA_SIGN_ON,
+                        LifecycleStatus.INACTIVE.name(),
+                        "", "", "", "", "", ""
+                    )
+                } catch (ApiException e) {
+                    lastException = e
+                    String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
+                    if (errorCode == "E0000009" || e.getCause() instanceof java.net.SocketTimeoutException) {
+                        retryCount++
+                        if (retryCount < maxRetries) {
+                            log.warn("List policies failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
+                            Thread.sleep(2000)
+                        }
+                    } else {
+                        throw e
+                    }
+                }
+            }
+
+            if (inactivePolicies == null) {
+                throw lastException
+            }
 
             assertThat inactivePolicies, notNullValue()
             def foundInactive = inactivePolicies.any { it.getId() == inactivePolicy.getId() }

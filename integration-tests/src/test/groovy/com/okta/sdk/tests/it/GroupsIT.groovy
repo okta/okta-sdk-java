@@ -248,6 +248,9 @@ class GroupsIT extends ITSupport {
 
         validateGroup(createdGroup, groupName)
 
+        // Allow time for the group to be indexed and available in list results
+        Thread.sleep(1000)
+
         // 2. List all groups and find the group created
         List<Group> groups = groupApi.listGroups(null, null, null, null, null, null, null, null)
 
