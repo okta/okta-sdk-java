@@ -485,7 +485,7 @@ class PoliciesIT extends ITSupport {
 
         assertThat(policy.getName(), is(originalName))
 
-        Thread.sleep(2000) // Increased delay for policy creation
+        Thread.sleep(3000) // Increased delay for policy creation (JDK 11 compatibility)
 
         // Update the policy with retry logic
         String updatedName = "updated-policy+" + UUID.randomUUID().toString()
@@ -493,7 +493,7 @@ class PoliciesIT extends ITSupport {
         policy.setDescription("Updated description")
 
         Policy updatedPolicy = null
-        int maxRetries = 3
+        int maxRetries = 5
         int retryCount = 0
         Exception lastException = null
 
@@ -507,7 +507,7 @@ class PoliciesIT extends ITSupport {
                     retryCount++
                     if (retryCount < maxRetries) {
                         log.warn("Policy replacement failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
-                        Thread.sleep(3000)
+                        Thread.sleep(5000)
                     }
                 } else {
                     throw e
@@ -535,7 +535,7 @@ class PoliciesIT extends ITSupport {
             .buildAndCreate(policyApi) as OktaSignOnPolicy
         registerForCleanup(policy)
 
-        Thread.sleep(2000) // Increased delay for policy creation
+        Thread.sleep(3000) // Increased delay for policy creation (JDK 11 compatibility)
 
         String originalRuleName = "policyRule+" + UUID.randomUUID().toString()
 
@@ -552,7 +552,7 @@ class PoliciesIT extends ITSupport {
 
         // Create rule with retry logic
         OktaSignOnPolicyRule createdRule = null
-        int maxRetries = 3
+        int maxRetries = 5
         int retryCount = 0
         Exception lastException = null
 
@@ -566,7 +566,7 @@ class PoliciesIT extends ITSupport {
                     retryCount++
                     if (retryCount < maxRetries) {
                         log.warn("Policy rule creation failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
-                        Thread.sleep(3000)
+                        Thread.sleep(5000)
                     }
                 } else {
                     throw e
@@ -580,7 +580,7 @@ class PoliciesIT extends ITSupport {
 
         assertThat(createdRule.getName(), is(originalRuleName))
 
-        Thread.sleep(2000) // Increased delay for rule creation
+        Thread.sleep(3000) // Increased delay for rule creation (JDK 11 compatibility)
 
         // Update the rule with retry logic
         String updatedRuleName = "updated-rule+" + UUID.randomUUID().toString()
@@ -600,7 +600,7 @@ class PoliciesIT extends ITSupport {
                     retryCount++
                     if (retryCount < maxRetries) {
                         log.warn("Policy rule replacement failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
-                        Thread.sleep(3000)
+                        Thread.sleep(5000)
                     }
                 } else {
                     throw e
@@ -788,7 +788,7 @@ class PoliciesIT extends ITSupport {
                 .buildAndCreate(policyApi) as OktaSignOnPolicy
             registerForCleanup(testPolicy)
 
-            Thread.sleep(2000) // Increased delay for policy creation
+            Thread.sleep(3000) // Increased delay for policy creation (JDK 11 compatibility)
 
             // Create three rules with different priorities and retry logic
             [1, 2, 3].each { priority ->
@@ -805,7 +805,7 @@ class PoliciesIT extends ITSupport {
                 rule.actions(actions)
 
                 PolicyRule createdRule = null
-                int maxRetries = 3
+                int maxRetries = 5
                 int retryCount = 0
                 Exception lastException = null
 
@@ -820,7 +820,7 @@ class PoliciesIT extends ITSupport {
                             retryCount++
                             if (retryCount < maxRetries) {
                                 log.warn("Policy rule creation failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
-                                Thread.sleep(3000)
+                                Thread.sleep(5000)
                             }
                         } else {
                             throw e
@@ -837,14 +837,14 @@ class PoliciesIT extends ITSupport {
                 assertThat createdRule, notNullValue()
                 assertThat createdRule.getPriority(), notNullValue()
                 
-                Thread.sleep(1000) // Increased delay between rule creations
+                Thread.sleep(2000) // Increased delay between rule creations
             }
 
-            Thread.sleep(2000) // Increased delay for all rules to be fully created
+            Thread.sleep(3000) // Increased delay for all rules to be fully created (JDK 11 compatibility)
 
             // Retrieve all rules and verify they are ordered by priority
             def allRules = null
-            int maxRetries = 3
+            int maxRetries = 5
             int retryCount = 0
             Exception lastException = null
             while (retryCount < maxRetries && allRules == null) {
@@ -857,7 +857,7 @@ class PoliciesIT extends ITSupport {
                         retryCount++
                         if (retryCount < maxRetries) {
                             log.warn("List policy rules failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
-                            Thread.sleep(3000)
+                            Thread.sleep(5000)
                         }
                     } else {
                         throw e
@@ -903,7 +903,7 @@ class PoliciesIT extends ITSupport {
                 .buildAndCreate(policyApi) as OktaSignOnPolicy
             registerForCleanup(activePolicy)
 
-            Thread.sleep(2000) // Increased delay for active policy creation
+            Thread.sleep(3000) // Increased delay for active policy creation (JDK 11 compatibility)
 
             // Create inactive policy
             inactivePolicy = OktaSignOnPolicyBuilder.instance()
@@ -914,11 +914,11 @@ class PoliciesIT extends ITSupport {
                 .buildAndCreate(policyApi) as OktaSignOnPolicy
             registerForCleanup(inactivePolicy)
 
-            Thread.sleep(2000) // Increased delay for inactive policy creation
+            Thread.sleep(3000) // Increased delay for inactive policy creation (JDK 11 compatibility)
 
             // List only ACTIVE policies with retry logic
             List<Policy> activePolicies = null
-            int maxRetries = 3
+            int maxRetries = 5
             int retryCount = 0
             Exception lastException = null
 
@@ -936,7 +936,7 @@ class PoliciesIT extends ITSupport {
                         retryCount++
                         if (retryCount < maxRetries) {
                             log.warn("List policies failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
-                            Thread.sleep(3000)
+                            Thread.sleep(5000)
                         }
                     } else {
                         throw e
@@ -973,7 +973,7 @@ class PoliciesIT extends ITSupport {
                         retryCount++
                         if (retryCount < maxRetries) {
                             log.warn("List policies failed (${errorCode}), retrying (${retryCount}/${maxRetries})...")
-                            Thread.sleep(3000)
+                            Thread.sleep(5000)
                         }
                     } else {
                         throw e

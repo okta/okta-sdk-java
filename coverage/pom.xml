@@ -42,12 +42,6 @@
                             <goal>report-aggregate</goal>
                         </goals>
                         <phase>verify</phase>
-
-                        <configuration>
-                            <excludes>
-                                <exclude>com/okta/sdk/resource/model/**/*</exclude>
-                            </excludes>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
